@@ -1,0 +1,57 @@
+{
+  "name": "meowtopia-web",
+  "version": "1.0.0",
+  "description": "Meowtopia web application - Virtual cat universe management portal",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0",
+    "axios": "^1.5.0",
+    "@tanstack/react-query": "^4.35.0",
+    "zustand": "^4.4.3",
+    "react-hook-form": "^7.46.1",
+    "react-hot-toast": "^2.4.1",
+    "@heroicons/react": "^2.0.18",
+    "clsx": "^2.0.0",
+    "framer-motion": "^10.16.4",
+    "date-fns": "^2.30.0",
+    "@headlessui/react": "^1.7.17"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.15",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.29",
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vitest": "^0.34.4"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "meowtopia",
+    "blockchain",
+    "cats",
+    "nft",
+    "web3"
+  ],
+  "author": "Meowtopia Team",
+  "license": "MIT"
+}
