@@ -1,0 +1,52 @@
+FROM golang:1.21-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git make bash
+
+# Set working directory
+WORKDIR /chainrice
+
+# Copy go mod files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the binary
+RUN make install
+
+# Final stage
+FROM alpine:latest
+
+# Install ca-certificates for HTTPS requests
+RUN apk --no-cache add ca-certificates curl
+
+# Copy the binary from builder stage
+COPY --from=builder /go/bin/chainriced /usr/local/bin/
+
+# Create chainrice user
+RUN addgroup -g 1001 chainrice && \
+    adduser -D -s /bin/sh -u 1001 -G chainrice chainrice
+
+# Create directory for chainrice data
+RUN mkdir -p /home/chainrice/.chainrice && \
+    chown -R chainrice:chainrice /home/chainrice
+
+# Switch to chainrice user
+USER chainrice
+
+# Set working directory
+WORKDIR /home/chainrice
+
+# Expose ports
+EXPOSE 26656 26657 1317 9090
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:26657/health || exit 1
+
+# Default command
+CMD ["chainriced", "start"] 
