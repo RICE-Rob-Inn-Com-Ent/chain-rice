@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # Blockchain service
+  blockchain:
+    build:
+      context: .
+      dockerfile: Dockerfile.blockchain
+    container_name: chainrice-blockchain
+    ports:
+      - "26656:26656"  # P2P
+      - "26657:26657"  # RPC
+      - "26658:26658"  # ABCI
+      - "1317:1317"    # API
+      - "9090:9090"    # gRPC
+      - "9091:9091"    # gRPC-Web
+    volumes:
+      - blockchain_data:/root/.chainrice
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Database for backend
+  postgres:
+    image: postgres:15-alpine
+    container_name: chainrice-postgres
+    environment:
+      POSTGRES_DB: meowtopia
+      POSTGRES_USER: meowtopia
+      POSTGRES_PASSWORD: meowtopia_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Redis for backend
+  redis:
+    image: redis:7-alpine
+    container_name: chainrice-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Backend service
+  backend:
+    build:
+      context: ./meowtopia/backend
+      dockerfile: Dockerfile
+    container_name: chainrice-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://meowtopia:meowtopia_password@postgres:5432/meowtopia
+      - REDIS_URL=redis://redis:6379
+      - BLOCKCHAIN_RPC_URL=http://blockchain:26657
+      - BLOCKCHAIN_API_URL=http://blockchain:1317
+    depends_on:
+      - postgres
+      - redis
+      - blockchain
+    volumes:
+      - ./meowtopia/backend:/app
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Web frontend service
+  web-frontend:
+    build:
+      context: ./meowtopia/frontend/web
+      dockerfile: Dockerfile
+      target: development
+    container_name: chainrice-web-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_BLOCKCHAIN_RPC=http://localhost:26657
+      - VITE_BLOCKCHAIN_API=http://localhost:1317
+    depends_on:
+      - backend
+    volumes:
+      - ./meowtopia/frontend/web:/app
+      - /app/node_modules
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+networks:
+  chainrice-network:
+    driver: bridge
+
+volumes:
+  blockchain_data:
+  postgres_data:
+  redis_data:
