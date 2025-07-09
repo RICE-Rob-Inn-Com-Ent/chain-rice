@@ -1,8 +1,8 @@
 package app
 
 import (
-	_ "chain-rice/x/chainrice/module"
-	chainricemoduletypes "chain-rice/x/chainrice/types"
+	_ "chainrice/x/chainrice/module"
+	chainricemoduletypes "chainrice/x/chainrice/types"
 	"time"
 
 	runtimev1alpha1 "cosmossdk.io/api/cosmos/app/runtime/v1alpha1"

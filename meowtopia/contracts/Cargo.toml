@@ -1,0 +1,36 @@
+[workspace]
+members = [
+    "mwt_dao_cw20",
+    "mwt_dao_cw721",
+    "mwt_dao_cw1155", 
+    "mwt_dao_cw4",
+    "mwt_dao_cw3",
+    "mwt_dao_cw1",
+    "mwt_dao_cw_staking",
+    "mwt_dao_cw_governance",
+    "mwt_dao_cw_vault",
+    "mwt_dao_cw_marketplace",
+    "mwt_dao_cw_oracle",
+    "mwt_dao_cw_escrow",
+    "mwt_dao_cw_lottery",
+    "mwt_dao_cw_nft_marketplace",
+    "mwt_dao_cw_dex",
+    "mwt_dao_cw_insurance",
+    "mwt_dao_cw_identity",
+    "mwt_dao_cw_reputation",
+    "mwt_dao_cw_attestation",
+    "mwt_dao_cw_verifiable_credentials"
+]
+
+[profile.release]
+opt-level = 3
+debug = false
+strip = "symbols"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true
+strip = "none" 

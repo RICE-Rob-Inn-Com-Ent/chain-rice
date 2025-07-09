@@ -1,237 +1,57 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// Components
-import Layout from './components/Layout';
-import LoadingSpinner from './components/LoadingSpinner';
+import { RouteInterface } from "@/types/interfaces/RouteInterface";
+import { appRoutes } from "@/types/routes/routes";
+import { useSession } from "@/layouts/modules/Cookies";
+import Auth from "@/pages/Auth";
 
-// Pages
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import DashboardPage from './pages/DashboardPage';
-import CatsPage from './pages/CatsPage';
-import CatDetailPage from './pages/CatDetailPage';
-import BreedingPage from './pages/BreedingPage';
-import MarketplacePage from './pages/MarketplacePage';
-import TournamentPage from './pages/TournamentPage';
-import WalletPage from './pages/WalletPage';
-import ProfilePage from './pages/ProfilePage';
-import SettingsPage from './pages/SettingsPage';
+import "@/layouts/styles/tailwind.css";
+import { mainStyles } from "@/layouts/styles/mainStyles";
 
-// Hooks
-import { useAuth } from './hooks/useAuth';
-
-// Providers
-import { AuthProvider } from './providers/AuthProvider';
-import { WalletProvider } from './providers/WalletProvider';
-import { GameProvider } from './providers/GameProvider';
-
-// Create query client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 30, // 30 minutes
-    },
-  },
-});
-
-// Protected Route Component
-interface ProtectedRouteProps {
-  children: React.ReactNode;
+function renderRoutes(routes: RouteInterface[]) {
+  return routes.map((route: RouteInterface) => {
+    if (route.children) {
+      return (
+        <Route key={route.path} path={route.path} element={route.element}>
+          {renderRoutes(route.children)}
+        </Route>
+      );
+    }
+    return <Route key={route.path} path={route.path} element={route.element} />;
+  });
 }
 
-function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, loading } = useAuth();
+const App: React.FC = () => {
+  const { loading, authenticated } = useSession();
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className={mainStyles.container}>
+        <div className="p-8 text-center">Loading...</div>
+      </div>
+    );
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (!authenticated) {
+    return <Auth />;
   }
 
-  return <>{children}</>;
-}
-
-// Public Route Component (redirect if authenticated)
-function PublicRoute({ children }: ProtectedRouteProps) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (user) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return <>{children}</>;
-}
-
-function AppRoutes() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<HomePage />} />
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <PublicRoute>
-            <RegisterPage />
-          </PublicRoute>
-        }
-      />
-
-      {/* Protected Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <DashboardPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/cats"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <CatsPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/cats/:catId"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <CatDetailPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/breeding"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <BreedingPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/marketplace"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <MarketplacePage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/tournaments"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <TournamentPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/wallet"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <WalletPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ProfilePage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <SettingsPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Catch all route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        {renderRoutes(appRoutes)}
+        <Route path="*" element={<Navigate to="/auth/login" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <WalletProvider>
-          <GameProvider>
-            <Router>
-              <div className="min-h-screen bg-gray-50">
-                <AppRoutes />
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    duration: 4000,
-                    style: {
-                      background: '#363636',
-                      color: '#fff',
-                    },
-                    success: {
-                      duration: 3000,
-                      style: {
-                        background: '#10B981',
-                      },
-                    },
-                    error: {
-                      duration: 5000,
-                      style: {
-                        background: '#EF4444',
-                      },
-                    },
-                  }}
-                />
-              </div>
-            </Router>
-          </GameProvider>
-        </WalletProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  );
-}
+};
 
 export default App;
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

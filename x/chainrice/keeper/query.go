@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/types"
 )
 
 var _ types.QueryServer = queryServer{}

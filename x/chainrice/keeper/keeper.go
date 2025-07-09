@@ -8,7 +8,7 @@ import (
 	corestore "cosmossdk.io/core/store"
 	"github.com/cosmos/cosmos-sdk/codec"
 
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/types"
 )
 
 type Keeper struct {

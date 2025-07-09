@@ -1,10 +1,10 @@
 {
-    "folders": [
-        {
-            "path": "."
-        },
-        {
-            "path": "../meowtopia"
-        }
-    ]
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.ignoreLimitWarning": true
+  }
 }

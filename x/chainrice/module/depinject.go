@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"chain-rice/x/chainrice/keeper"
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/keeper"
+	"chainrice/x/chainrice/types"
 )
 
 var _ depinject.OnePerModuleType = AppModule{}

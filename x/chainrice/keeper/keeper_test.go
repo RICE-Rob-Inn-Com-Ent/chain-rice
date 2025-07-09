@@ -13,9 +13,9 @@ import (
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"chain-rice/x/chainrice/keeper"
-	module "chain-rice/x/chainrice/module"
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/keeper"
+	module "chainrice/x/chainrice/module"
+	"chainrice/x/chainrice/types"
 )
 
 type fixture struct {

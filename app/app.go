@@ -45,15 +45,15 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v10/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v10/modules/core/keeper"
 
-	"chain-rice/docs"
-	chainricemodulekeeper "chain-rice/x/chainrice/keeper"
+	"chainrice/docs"
+	chainricemodulekeeper "chainrice/x/chainrice/keeper"
 )
 
 const (
 	// Name is the name of the application.
 	Name = "chain-rice"
 	// AccountAddressPrefix is the prefix for accounts addresses.
-	AccountAddressPrefix = "cosmos"
+	AccountAddressPrefix = "crice"
 	// ChainCoinType is the coin type of the chain.
 	ChainCoinType = 118
 )
@@ -191,7 +191,7 @@ func New(
 	app.App = appBuilder.Build(db, traceStore, baseAppOptions...)
 
 	// register legacy modules
-	if err := app.registerIBCModules(appOpts); err != nil {
+	if err := app.registerIBCModules(); err != nil {
 		panic(err)
 	}
 

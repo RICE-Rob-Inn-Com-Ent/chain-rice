@@ -1,0 +1,43 @@
+# 🐹 Use Go 1.24+ for Cosmos SDK
+FROM golang:1.24-alpine AS builder
+
+# 📦 Install essential build tools
+RUN apk add --no-cache git make bash
+
+# 📁 Set working directory
+WORKDIR /chain-rice
+
+# 🧠 Copy go.mod and go.sum first to cache dependencies
+COPY go.mod go.sum ./
+
+# ⬇️ Download dependencies
+RUN go mod download
+
+# 📦 Copy source code
+COPY . .
+
+# 🔨 Build the blockchain binary
+ENV GO111MODULE=on
+RUN make install
+
+# 🐧 Final runtime image
+FROM alpine:latest
+
+# 📜 Add CA certificates (for secure HTTP)
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# 🚚 Copy built binary from builder stage
+COPY --from=builder /go/bin/chainrice /usr/local/bin/chainrice
+
+# 🚪 Expose blockchain ports
+EXPOSE 26656 26657 26658 1317 9090 9091
+
+# 🚀 Run the node
+# Copy the start script
+COPY scripts/start-blockchain.sh /start-blockchain.sh
+RUN chmod +x /start-blockchain.sh
+
+# Use sh to run the script (Alpine uses sh, not bash)
+ENTRYPOINT ["/bin/sh", "/start-blockchain.sh"]

@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"chain-rice/x/chainrice/keeper"
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/keeper"
+	"chainrice/x/chainrice/types"
 )
 
 func TestMsgUpdateParams(t *testing.T) {

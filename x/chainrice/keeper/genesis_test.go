@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"testing"
 
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/types"
 
 	"github.com/stretchr/testify/require"
 )

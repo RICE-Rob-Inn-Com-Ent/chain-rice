@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/types"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module.

@@ -3,7 +3,7 @@ package chainrice
 import (
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/types"
 )
 
 // AutoCLIOptions implements the autocli.HasAutoCLIConfig interface.

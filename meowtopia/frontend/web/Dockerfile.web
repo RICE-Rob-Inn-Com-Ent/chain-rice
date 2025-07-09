@@ -1,0 +1,24 @@
+# 🌐 Use Node.js (Debian-based for better compatibility)
+FROM node:18-slim
+
+# 📁 Set working directory
+WORKDIR /app
+
+# 🔧 Enable corepack and set up correct Yarn version
+RUN corepack enable && corepack prepare yarn@4.9.1 --activate
+
+# 📦 Copy package files and install dependencies with timeout settings
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+# 📦 Copy the full frontend codebase
+COPY . .
+
+# 🚪 Expose the Vite dev server port
+EXPOSE 3000
+
+# 🧪 Set default env
+ENV NODE_ENV=development
+
+# 🚀 Start the Vite development server
+CMD ["yarn", "dev", "--host", "0.0.0.0", "--port", "3001"]

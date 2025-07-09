@@ -1,6 +1,7 @@
-BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-COMMIT := $(shell git log -1 --format='%H')
-APPNAME := chainrice
+BRANCH ?= unknown
+COMMIT ?= unknown
+VERSION ?= dev
+APPNAME := chain-rice
 
 # do not override user values
 ifeq (,$(VERSION))
@@ -13,7 +14,7 @@ endif
 
 # Update the ldflags with the app, client & server names
 ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=$(APPNAME) \
-	-X github.com/cosmos/cosmos-sdk/version.AppName=$(APPNAME)d \
+	-X github.com/cosmos/cosmos-sdk/version.AppName=$(APPNAME) \
 	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
 
@@ -54,8 +55,8 @@ all: install
 install:
 	@echo "--> ensure dependencies have not been modified"
 	@go mod verify
-	@echo "--> installing $(APPNAME)d"
-	@go install $(BUILD_FLAGS) -mod=readonly ./cmd/$(APPNAME)d
+	@echo "--> installing $(APPNAME)"
+	@go install $(BUILD_FLAGS) -mod=readonly ./cmd/chainrice
 
 .PHONY: all install
 
@@ -103,3 +104,7 @@ govulncheck:
 	@govulncheck ./...
 
 .PHONY: govet govulncheck
+
+web:
+	@echo "Starting ChainRice Web Platform (Cafe Interface)..."
+	./scripts/start-web.sh

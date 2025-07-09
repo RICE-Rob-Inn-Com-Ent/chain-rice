@@ -14,8 +14,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
 
-	"chain-rice/x/chainrice/keeper"
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/keeper"
+	"chainrice/x/chainrice/types"
 )
 
 var (

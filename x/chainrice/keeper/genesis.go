@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"chain-rice/x/chainrice/types"
+	"chainrice/x/chainrice/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.

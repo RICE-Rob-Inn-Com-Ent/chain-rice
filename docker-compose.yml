@@ -1,0 +1,76 @@
+version: "3.8"
+
+networks:
+  chain-rice-network:
+    driver: bridge
+
+services:
+  # Chain-Rice Blockchain Service
+  chain-rice-blockchain:
+    build:
+      context: .
+      dockerfile: Dockerfile.blockchain
+      args:
+        BUILD_ENV: development
+        BUILD_NUMBER: 1
+        BUILD_DATE: "2025-01-01"
+        BUILD_VERSION: 1.0.0
+        BUILD_COMMIT: 1234567890
+    container_name: chain-rice-blockchain
+    ports:
+      - "26657:26657"
+      - "26656:26656"
+      - "1317:1317"
+    restart: unless-stopped
+    environment:
+      - MINIMUM_GAS_PRICES=0.00000001crice
+    volumes:
+      - /mnt/docker/blockchain-data:/root/.chainrice
+    networks:
+      - chain-rice-network
+
+  # Meowtopia Backend Service
+  meowtopia-backend:
+    build:
+      context: ./meowtopia/backend
+      dockerfile: Dockerfile.backend
+      args:
+        BUILD_ENV: development
+        BUILD_NUMBER: 1
+        BUILD_DATE: "2025-01-01"
+        BUILD_VERSION: 1.0.0
+        BUILD_COMMIT: 1234567890
+    container_name: meowtopia-backend
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    depends_on:
+      - chain-rice-blockchain
+    volumes:
+      - ./meowtopia/backend:/app
+    working_dir: /app
+    networks:
+      - chain-rice-network
+
+  # Meowtopia Frontend Service
+  meowtopia-frontend:
+    build:
+      context: ./meowtopia/frontend/web
+      dockerfile: Dockerfile.web
+      args:
+        BUILD_ENV: development
+        BUILD_NUMBER: 1
+        BUILD_DATE: "2025-01-01"
+        BUILD_VERSION: 1.0.0
+        BUILD_COMMIT: 1234567890
+    container_name: meowtopia-frontend
+    ports:
+      - "3000:3001"
+    restart: unless-stopped
+    depends_on:
+      - meowtopia-backend
+    volumes:
+      - ./meowtopia/frontend/web:/app
+    working_dir: /app
+    networks:
+      - chain-rice-network
