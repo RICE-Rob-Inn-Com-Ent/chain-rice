@@ -1,5 +1,12 @@
 import React from "react";
-import { CheckboxInterface } from "@/types/interfaces/CheckboxInterface";
+
+export interface CheckboxInterface {
+  label: React.ReactNode;
+  checked: boolean;
+  onChange: () => void;
+  required?: boolean;
+  className?: string;
+}
 
 const Checkbox: React.FC<CheckboxInterface> = ({
   label,

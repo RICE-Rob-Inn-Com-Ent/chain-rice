@@ -1,49 +1,200 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import { RouteInterface } from "@/types/interfaces/RouteInterface";
-import { appRoutes } from "@/types/routes/routes";
-import { useSession } from "@/layouts/modules/Cookies";
-import Auth from "@/pages/Auth";
+// Import auth configuration
+import { authSettings, passwordPolicy } from "./modules/auth/configs/general";
+import { authPageMessages } from "./modules/auth/configs/pages";
 
-import "@/layouts/styles/tailwind.css";
-import { mainStyles } from "@/layouts/styles/mainStyles";
+// ============================================================================
+// GLOBAL APP CONFIGURATION
+// ============================================================================
 
-function renderRoutes(routes: RouteInterface[]) {
-  return routes.map((route: RouteInterface) => {
-    if (route.children) {
-      return (
-        <Route key={route.path} path={route.path} element={route.element}>
-          {renderRoutes(route.children)}
-        </Route>
-      );
-    }
-    return <Route key={route.path} path={route.path} element={route.element} />;
-  });
+interface RouteInterface {
+  path: string;
+  label: string;
+  slug: string;
+  element: React.ReactNode;
+  icon?: React.ReactNode;
+  children?: RouteInterface[];
+}
+
+interface AppConfig {
+  // App Identity
+  name: string;
+  logo: string;
+  theme: "light" | "dark" | "auto";
+
+  // Global UI Configuration
+  ui: {
+    language: string;
+    dateFormat: string;
+    timeFormat: string;
+    currency: string;
+    showPasswordStrength: boolean;
+    showSocialLogin: boolean;
+    showRememberMe: boolean;
+    showMarketingOptIn: boolean;
+  };
+
+  // App Styles
+  styles: {
+    container: string;
+    loading: string;
+    error: string;
+  };
+
+  // App Messages
+  messages: {
+    loading: string;
+    error: string;
+  };
+
+  // Routing Configuration
+  routes: RouteInterface[];
+  fallbackRoute: string;
+}
+
+const appConfig: AppConfig = {
+  // App Identity
+  name: "Meowtopia",
+  logo: "/img/logos/chc-logo-color.png",
+  theme: "light",
+
+  // Global UI Configuration
+  ui: {
+    language: "pl",
+    dateFormat: "DD/MM/YYYY",
+    timeFormat: "HH:mm",
+    currency: "PLN",
+    showPasswordStrength: authSettings.enableTwoFactor,
+    showSocialLogin: authSettings.enableSocialLogin,
+    showRememberMe: authSettings.enableRememberMe,
+    showMarketingOptIn: false,
+  },
+
+  // App Styles
+  styles: {
+    container: "flex items-center justify-center min-h-screen min-w-screen",
+    loading: "p-8 text-center text-lg",
+    error: "p-4 text-center text-red-600",
+  },
+
+  // App Messages - Using auth configuration for consistency
+  messages: {
+    loading: authPageMessages.common.loading,
+    error: authPageMessages.common.error,
+  },
+
+  // Routing Configuration
+  routes: [
+    {
+      path: "/docs/*",
+      label: "Docs",
+      slug: "docs",
+      element: null, // Will be set dynamically
+    },
+    {
+      path: "/auth/*",
+      label: "Auth",
+      slug: "auth",
+      element: null, // Will be set dynamically
+    },
+    {
+      path: "/admin",
+      label: "Admin",
+      slug: "admin",
+      element: null, // Will be set dynamically
+    },
+    {
+      path: "/user",
+      label: "User",
+      slug: "user",
+      element: null, // Will be set dynamically
+    },
+  ],
+  fallbackRoute: "/auth",
+};
+
+// --- Lazy-loaded pages ---
+const Auth = lazy(() => import("./modules/auth/Auth"));
+const Docs = lazy(() => import("./modules/docs/Docs"));
+const CookiesBanner = lazy(() => import("./components/CookiesBanner"));
+// Placeholder components for Admin and User
+const Admin: React.FC = () => <div>Admin Page (Coming Soon)</div>;
+const User: React.FC = () => <div>User Page (Coming Soon)</div>;
+
+// --- Set route elements dynamically ---
+const routesWithElements = appConfig.routes.map((route: RouteInterface) => ({
+  ...route,
+  element:
+    route.slug === "docs" ? (
+      <Docs />
+    ) : route.slug === "auth" ? (
+      <Auth />
+    ) : route.slug === "admin" ? (
+      <Admin />
+    ) : route.slug === "user" ? (
+      <User />
+    ) : null,
+}));
+
+// --- Render routes recursively ---
+function renderRoutes(routes: RouteInterface[]): React.ReactNode[] {
+  return routes.map((route) =>
+    route.children ? (
+      <Route key={route.path} path={route.path} element={route.element}>
+        {renderRoutes(route.children)}
+      </Route>
+    ) : (
+      <Route key={route.path} path={route.path} element={route.element} />
+    )
+  );
 }
 
 const App: React.FC = () => {
-  const { loading, authenticated } = useSession();
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
-  if (loading) {
-    return (
-      <div className={mainStyles.container}>
-        <div className="p-8 text-center">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!authenticated) {
-    return <Auth />;
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    setAuthenticated(!!token);
+    setLoading(false);
+  }, []);
 
   return (
     <BrowserRouter>
-      <Routes>
-        {renderRoutes(appRoutes)}
-        <Route path="*" element={<Navigate to="/auth/login" replace />} />
-      </Routes>
+      <Suspense
+        fallback={
+          <div className={appConfig.styles.container}>
+            <div className={appConfig.styles.loading}>
+              {appConfig.messages.loading}
+            </div>
+          </div>
+        }
+      >
+        <CookiesBanner />
+        {loading ? (
+          <div className={appConfig.styles.container}>
+            <div className={appConfig.styles.loading}>
+              {appConfig.messages.loading}
+            </div>
+          </div>
+        ) : !authenticated ? (
+          <Routes>
+            <Route path="/auth/*" element={<Auth />} />
+            <Route path="*" element={<Navigate to="/auth/login" replace />} />
+          </Routes>
+        ) : (
+          <Routes>
+            {renderRoutes(routesWithElements)}
+            <Route
+              path="*"
+              element={<Navigate to={appConfig.fallbackRoute} replace />}
+            />
+          </Routes>
+        )}
+      </Suspense>
     </BrowserRouter>
   );
 };

@@ -1,6 +1,19 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-import { FieldInterface } from "@/types/interfaces/FieldInterface";
+
+export interface FieldInterface {
+  label: string;
+  icon?: string;
+  type?: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  required?: boolean;
+  className?: string;
+}
+
+export type FieldArrayInterface = FieldInterface[];
 
 const Field: React.FC<FieldInterface> = ({
   label,

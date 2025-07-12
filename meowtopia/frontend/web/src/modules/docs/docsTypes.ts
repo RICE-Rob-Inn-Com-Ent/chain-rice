@@ -1,6 +1,12 @@
-import { AppRoute } from "@/types/routes/routes";
+export interface DocsRoute {
+  path: string;
+  label: string;
+  slug: string;
+  file: string;
+  title: string;
+}
 
-export const docsRoutes: AppRoute[] = [
+export const docsRoutes: DocsRoute[] = [
   {
     path: "/docs",
     label: "Dokumentacja główna",
@@ -212,31 +218,52 @@ export const docsRoutes: AppRoute[] = [
     title: "Token Whitepaper",
   },
   {
+    path: "/docs/developer-info",
+    label: "Developer Info",
+    slug: "developer-info",
+    file: "legal/developer-info.md",
+    title: "Developer Info",
+  },
+  {
+    path: "/docs/registration-info",
+    label: "Registration Info",
+    slug: "registration-info",
+    file: "legal/registration-info.md",
+    title: "Registration Info",
+  },
+  {
+    path: "/docs/third-party-licenses",
+    label: "Third Party Licenses",
+    slug: "third-party-licenses",
+    file: "legal/third-party-licenses.md",
+    title: "Third Party Licenses",
+  },
+  {
     path: "/docs/partner-contract",
-    label: "Umowa partnerska",
+    label: "Partner Contract",
     slug: "partner-contract",
     file: "webapp/partner-contract.md",
-    title: "Token Whitepaper",
+    title: "Partner Contract",
   },
   {
     path: "/docs/partner-panel-tos",
-    label: "Token Whitepaper",
+    label: "Partner Panel TOS",
     slug: "partner-panel-tos",
     file: "webapp/partner-panel-tos.md",
-    title: "Token Whitepaper",
+    title: "Partner Panel TOS",
   },
   {
     path: "/docs/user-privacy",
-    label: "Token Whitepaper",
+    label: "User Privacy",
     slug: "user-privacy",
     file: "webapp/user-privacy.md",
-    title: "Token Whitepaper",
+    title: "User Privacy",
   },
   {
     path: "/docs/user-tos",
-    label: "Token Whitepaper",
+    label: "User TOS",
     slug: "user-tos",
     file: "webapp/user-tos.md",
-    title: "Token Whitepaper",
+    title: "User TOS",
   },
-];
+]; 

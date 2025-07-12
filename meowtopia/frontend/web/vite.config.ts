@@ -22,4 +22,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  define: {
+    // Make environment variables available to the app
+    'process.env.REACT_APP_API_URL': JSON.stringify(process.env.REACT_APP_API_URL || 'http://localhost:8000'),
+    'process.env.REACT_APP_BASE_URL': JSON.stringify(process.env.REACT_APP_BASE_URL || 'http://localhost:3001'),
+    'process.env.REACT_APP_GOOGLE_CLIENT_ID': JSON.stringify(process.env.REACT_APP_GOOGLE_CLIENT_ID || ''),
+    'process.env.REACT_APP_FACEBOOK_CLIENT_ID': JSON.stringify(process.env.REACT_APP_FACEBOOK_CLIENT_ID || ''),
+    'process.env.REACT_APP_GITHUB_CLIENT_ID': JSON.stringify(process.env.REACT_APP_GITHUB_CLIENT_ID || ''),
+  },
 });
