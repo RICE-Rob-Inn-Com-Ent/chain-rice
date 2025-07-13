@@ -18,10 +18,12 @@ import type {
   ResetPasswordFormData 
 } from "./interfaces/pages";
 import { validateField, makeApiCall, handleAuthError } from "./utils";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Auth: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
   
   // Form states
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -80,8 +82,9 @@ const Auth: React.FC = () => {
   // LOGIN LOGIC
   // ============================================================================
 
-  const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+  const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     setLoginData(prev => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -124,6 +127,9 @@ const Auth: React.FC = () => {
         localStorage.setItem("remember_me", "true");
       }
 
+      // Update auth context with user data
+      login(response.user);
+
       setSuccess(loginMessages.success);
       
       // Redirect after success
@@ -147,8 +153,9 @@ const Auth: React.FC = () => {
   // REGISTER LOGIC
   // ============================================================================
 
-  const handleRegisterInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+  const handleRegisterInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     setRegisterData(prev => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -248,7 +255,7 @@ const Auth: React.FC = () => {
   // FORGOT PASSWORD LOGIC
   // ============================================================================
 
-  const handleForgotPasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleForgotPasswordInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForgotPasswordData(prev => ({
       ...prev,
@@ -298,7 +305,7 @@ const Auth: React.FC = () => {
   // RESET PASSWORD LOGIC
   // ============================================================================
 
-  const handleResetPasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleResetPasswordInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setResetPasswordData(prev => ({
       ...prev,

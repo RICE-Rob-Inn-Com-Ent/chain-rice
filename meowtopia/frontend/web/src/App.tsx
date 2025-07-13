@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { authSettings, passwordPolicy } from "./modules/auth/configs/general";
 import { authPageMessages } from "./modules/auth/configs/pages";
 
+// Import authentication context
+import { AuthProvider } from "./contexts/AuthContext";
+
 // ============================================================================
 // GLOBAL APP CONFIGURATION
 // ============================================================================
@@ -101,6 +104,12 @@ const appConfig: AppConfig = {
       element: null, // Will be set dynamically
     },
     {
+      path: "/accounting/*",
+      label: "Accounting",
+      slug: "accounting",
+      element: null, // Will be set dynamically
+    },
+    {
       path: "/admin",
       label: "Admin",
       slug: "admin",
@@ -120,6 +129,7 @@ const appConfig: AppConfig = {
 const Auth = lazy(() => import("./modules/auth/Auth"));
 const Docs = lazy(() => import("./modules/docs/Docs"));
 const CookiesBanner = lazy(() => import("./components/CookiesBanner"));
+const Accounting = lazy(() => import("./modules/accounting/Accounting"));
 // Placeholder components for Admin and User
 const Admin: React.FC = () => <div>Admin Page (Coming Soon)</div>;
 const User: React.FC = () => <div>User Page (Coming Soon)</div>;
@@ -132,6 +142,8 @@ const routesWithElements = appConfig.routes.map((route: RouteInterface) => ({
       <Docs />
     ) : route.slug === "auth" ? (
       <Auth />
+    ) : route.slug === "accounting" ? (
+      <Accounting />
     ) : route.slug === "admin" ? (
       <Admin />
     ) : route.slug === "user" ? (
@@ -163,39 +175,41 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Suspense
-        fallback={
-          <div className={appConfig.styles.container}>
-            <div className={appConfig.styles.loading}>
-              {appConfig.messages.loading}
+    <AuthProvider>
+      <BrowserRouter>
+        <Suspense
+          fallback={
+            <div className={appConfig.styles.container}>
+              <div className={appConfig.styles.loading}>
+                {appConfig.messages.loading}
+              </div>
             </div>
-          </div>
-        }
-      >
-        <CookiesBanner />
-        {loading ? (
-          <div className={appConfig.styles.container}>
-            <div className={appConfig.styles.loading}>
-              {appConfig.messages.loading}
+          }
+        >
+          <CookiesBanner />
+          {loading ? (
+            <div className={appConfig.styles.container}>
+              <div className={appConfig.styles.loading}>
+                {appConfig.messages.loading}
+              </div>
             </div>
-          </div>
-        ) : !authenticated ? (
-          <Routes>
-            <Route path="/auth/*" element={<Auth />} />
-            <Route path="*" element={<Navigate to="/auth/login" replace />} />
-          </Routes>
-        ) : (
-          <Routes>
-            {renderRoutes(routesWithElements)}
-            <Route
-              path="*"
-              element={<Navigate to={appConfig.fallbackRoute} replace />}
-            />
-          </Routes>
-        )}
-      </Suspense>
-    </BrowserRouter>
+          ) : !authenticated ? (
+            <Routes>
+              <Route path="/auth/*" element={<Auth />} />
+              <Route path="*" element={<Navigate to="/auth/login" replace />} />
+            </Routes>
+          ) : (
+            <Routes>
+              {renderRoutes(routesWithElements)}
+              <Route
+                path="*"
+                element={<Navigate to={appConfig.fallbackRoute} replace />}
+              />
+            </Routes>
+          )}
+        </Suspense>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

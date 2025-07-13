@@ -10,7 +10,7 @@ interface ResetPasswordProps {
   loading: boolean;
   error: string;
   success: string;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
   onBackToLogin: () => void;
 }
