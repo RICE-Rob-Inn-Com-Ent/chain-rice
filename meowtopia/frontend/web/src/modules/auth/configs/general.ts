@@ -13,11 +13,13 @@ export const authSettings = {
 };
 
 export const passwordPolicy = {
+  socialLogin: true,
+  passwordStrength: true,
+  rememberMe: true,
   minLength: 8,
   requireUppercase: true,
   requireLowercase: true,
   requireNumbers: true,
   requireSpecialChars: true,
   preventCommonPasswords: true,
-  preventPersonalInfo: true,
 };

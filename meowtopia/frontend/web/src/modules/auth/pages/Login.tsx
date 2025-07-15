@@ -4,10 +4,11 @@ import Field from "../../../components/Field";
 import Checkbox from "../../../components/Checkbox";
 import Message from "../../../components/Message";
 import { loginMessages } from "../configs/pages";
-import type { LoginFormData } from "../interfaces/pages";
+import type { LoginPage } from "../interfaces/pages";
+import { Title } from "../../../components/Title";
 
 interface LoginProps {
-  formData: LoginFormData;
+  formData: LoginPage;
   loading: boolean;
   error: string;
   success: string;
@@ -32,17 +33,9 @@ const Login: React.FC<LoginProps> = ({
   const messages = loginMessages;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <>
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {messages.title}
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            {messages.subtitle}
-          </p>
-        </div>
-
+        <Title />
         <form onSubmit={onSubmit} className="mt-8 space-y-6">
           <div className="space-y-4">
             <Field
@@ -92,7 +85,9 @@ const Login: React.FC<LoginProps> = ({
           </div>
 
           {error && <Message message={error} />}
-          {success && <div className="text-green-600 text-center">{success}</div>}
+          {success && (
+            <div className="text-green-600 text-center">{success}</div>
+          )}
 
           <Button
             type="submit"
@@ -115,7 +110,7 @@ const Login: React.FC<LoginProps> = ({
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

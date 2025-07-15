@@ -25,21 +25,5 @@ export interface ButtonConfig {
   disabled?: boolean;
 } 
 export interface CommonMessages {
-  loading: string;
-  error: string;
-  success: string;
-  cancel: string;
-  save: string;
-  delete: string;
-  edit: string;
-  view: string;
-  back: string;
-  next: string;
-  previous: string;
-  submit: string;
-  reset: string;
-  close: string;
-  confirm: string;
-  yes: string;
-  no: string;
+
 }

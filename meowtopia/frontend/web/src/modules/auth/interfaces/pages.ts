@@ -1,10 +1,10 @@
-export interface LoginFormData {
+export interface LoginPage {
   email: string;
   password: string;
   rememberMe: boolean;
 }
 
-export interface RegisterFormData {
+export interface RegisterPage {
   fullName: string;
   email: string;
   password: string;
@@ -13,16 +13,15 @@ export interface RegisterFormData {
   marketing?: boolean;
 }
 
-export interface ForgotPasswordFormData {
+export interface ForgotPasswordPage {
   email: string;
 }
 
-export interface ResetPasswordFormData {
+export interface ResetPasswordPage {
   password: string;
   confirmPassword: string;
 }
 
-// Unified interface for all auth pages
 export interface AuthMessages {
   title: string;
   subtitle: string;

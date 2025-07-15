@@ -9,16 +9,15 @@ export interface AuthConfig {
     maxLoginAttempts: number;
     lockoutDuration: number;
   };
-
-  // Password Policy
+  // Password Policy Settings
   passwordPolicy: {
+    showPasswordStrength: boolean;
     minLength: number;
     requireUppercase: boolean;
     requireLowercase: boolean;
     requireNumbers: boolean;
     requireSpecialChars: boolean;
     preventCommonPasswords: boolean;
-    preventPersonalInfo: boolean;
   };
 }
 

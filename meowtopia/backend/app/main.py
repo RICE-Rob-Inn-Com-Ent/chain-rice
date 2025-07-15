@@ -4,7 +4,7 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.openapi.utils import get_openapi
 
 # Import API routers
-from app.api.v1.endpoints import auth, cats, cafe
+from app.api.v1.auth.endpoints import router as auth_router
 
 app = FastAPI(
     title="Meowtopia API",
@@ -71,9 +71,7 @@ app.add_middleware(
 )
 
 # Include API routers
-app.include_router(auth.router, prefix="/api/v1")
-app.include_router(cats.router, prefix="/api/v1")
-app.include_router(cafe.router, prefix="/api/v1")
+app.include_router(auth_router, prefix="/api/v1/auth")
 
 @app.get("/")
 def read_root():
@@ -148,30 +146,6 @@ def custom_openapi():
             "name": "Users",
             "description": "User profile and account management"
         },
-        {
-            "name": "Cats",
-            "description": "Virtual cat management and interactions"
-        },
-        {
-            "name": "Game",
-            "description": "Game mechanics and activities"
-        },
-        {
-            "name": "Cafe Management",
-            "description": "Complete cafe management system including inventory, staff, customers, orders, and analytics"
-        },
-        {
-            "name": "Blockchain",
-            "description": "Blockchain and smart contract interactions"
-        },
-        {
-            "name": "Tournaments",
-            "description": "Competitive gameplay and tournaments"
-        },
-        {
-            "name": "Analytics",
-            "description": "Game statistics and analytics"
-        }
     ]
     
     app.openapi_schema = openapi_schema

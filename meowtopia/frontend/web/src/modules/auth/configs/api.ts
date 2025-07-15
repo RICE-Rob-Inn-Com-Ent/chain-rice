@@ -104,7 +104,6 @@ export const apiEndpoints: { endpoints: { [key: string]: ApiEndpoint } } = {
     },
   },
 };
-
 // ============================================================================
 // SOCIAL PROVIDERS API CONFIGURATION
 // ============================================================================
@@ -138,3 +137,4 @@ export const socialProviders: SocialProvider[] = [
     redirectUri: `${import.meta.env.VITE_APP_BASE_URL}/auth/callback/github`,
   },
 ];
+

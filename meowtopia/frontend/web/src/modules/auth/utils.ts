@@ -2,7 +2,7 @@
 // AUTHENTICATION UTILITY FUNCTIONS
 // ============================================================================
 
-import { ValidationRule, ApiEndpoint } from "./interfaces";
+import { ValidationRule, ApiEndpoint } from "./interfaces/styles";
 
 // ============================================================================
 // VALIDATION UTILITIES

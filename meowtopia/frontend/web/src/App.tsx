@@ -31,10 +31,6 @@ interface AppConfig {
     dateFormat: string;
     timeFormat: string;
     currency: string;
-    showPasswordStrength: boolean;
-    showSocialLogin: boolean;
-    showRememberMe: boolean;
-    showMarketingOptIn: boolean;
   };
 
   // App Styles
@@ -48,6 +44,21 @@ interface AppConfig {
   messages: {
     loading: string;
     error: string;
+    success: string;
+    cancel: string;
+    save: string;
+    delete: string;
+    edit: string;
+    view: string;
+    back: string;
+    next: string;
+    previous: string;
+    submit: string;
+    reset: string;
+    close: string;
+    confirm: string;
+    yes: string;
+    no: string;
   };
 
   // Routing Configuration
@@ -67,10 +78,6 @@ const appConfig: AppConfig = {
     dateFormat: "DD/MM/YYYY",
     timeFormat: "HH:mm",
     currency: "PLN",
-    showPasswordStrength: authSettings.enableTwoFactor,
-    showSocialLogin: authSettings.enableSocialLogin,
-    showRememberMe: authSettings.enableRememberMe,
-    showMarketingOptIn: false,
   },
 
   // App Styles
@@ -84,6 +91,12 @@ const appConfig: AppConfig = {
   messages: {
     loading: authPageMessages.common.loading,
     error: authPageMessages.common.error,
+    success: authPageMessages.common.success,
+    cancel: authPageMessages.common.cancel,
+    save: authPageMessages.common.save,
+    delete: authPageMessages.common.delete,
+    edit: authPageMessages.common.edit,
+    view: authPageMessages.common.view,
   },
 
   // Routing Configuration
@@ -119,7 +132,7 @@ const appConfig: AppConfig = {
 // --- Lazy-loaded pages ---
 const Auth = lazy(() => import("./modules/auth/Auth"));
 const Docs = lazy(() => import("./modules/docs/Docs"));
-const CookiesBanner = lazy(() => import("./components/CookiesBanner"));
+const CookiesBanner = lazy(() => import("./layouts/CookiesBanner"));
 // Placeholder components for Admin and User
 const Admin: React.FC = () => <div>Admin Page (Coming Soon)</div>;
 const User: React.FC = () => <div>User Page (Coming Soon)</div>;

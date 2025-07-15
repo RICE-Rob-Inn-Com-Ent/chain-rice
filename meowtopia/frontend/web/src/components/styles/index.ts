@@ -25,3 +25,23 @@ export interface ButtonStyles {
   success: string;
   loading: string;
 }
+
+export interface CommonStyles {
+  container: string;
+  form: string;
+  title: string;
+  subtitle: string;
+  button: string;
+  link: string;
+  success: string;
+  error: string;
+  // Additional properties used in styles.ts
+  primaryButton: string;
+  secondaryButton: string;
+  outlineButton: string;
+  ghostButton: string;
+  dangerButton: string;
+  input: string;
+  label: string;
+  loading: string;
+} 
