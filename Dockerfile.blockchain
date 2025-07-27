@@ -35,8 +35,8 @@ COPY --from=builder /go/bin/chainrice /usr/local/bin/chainrice
 EXPOSE 26656 26657 26658 1317 9090 9091
 
 # 🚀 Run the node
-# Copy the start script
-COPY scripts/start-blockchain.sh /start-blockchain.sh
+# Copy the simplified start script
+COPY scripts/start-blockchain-simple.sh /start-blockchain.sh
 RUN chmod +x /start-blockchain.sh
 
 # Use sh to run the script (Alpine uses sh, not bash)

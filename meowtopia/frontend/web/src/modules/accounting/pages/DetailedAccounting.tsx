@@ -18,7 +18,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '@/components/Button';
+import Button from '@/components/Controller';
 import Field from '@/components/Field';
 import Card from '@/components/Card';
 import Message from '@/components/Message';

@@ -8,7 +8,7 @@ NC='\033[0m'
 
 # --- Host logic (start container) ---
 echo -e "${BLUE}⛓️  Starting Blockchain service...${NC}"
-docker-compose up -d chain-rice-blockchain
+docker compose up -d chain-rice-blockchain
 echo -e "${GREEN}✅ Blockchain started!${NC}\n"
 echo -e "${YELLOW}🔗 Blockchain Endpoints:${NC}"
 echo -e "  🟢 RPC:        http://localhost:26657"

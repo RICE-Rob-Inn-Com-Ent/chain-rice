@@ -19,9 +19,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import Button from '@/components/Button';
+import Button from '@/components/Controller';
 import Field from '@/components/Field';
-import Table, { TableColumn } from '@/components/Table';
+import Table, { TableColumn } from '@/layouts/Table';
 import Card from '@/components/Card';
 import Message from '@/components/Message';
 import AdminOnly from '@/components/AdminOnly';

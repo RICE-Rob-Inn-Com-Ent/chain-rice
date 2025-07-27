@@ -8,7 +8,7 @@ NC='\033[0m'
 echo -e "${BLUE}🚀 Starting all Meowtopia services...${NC}"
 
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 echo -e "${GREEN}✅ All services started!${NC}\n"
 

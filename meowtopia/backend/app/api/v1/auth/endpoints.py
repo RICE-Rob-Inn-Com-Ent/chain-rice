@@ -1,13 +1,28 @@
-from fastapi import APIRouter, UploadFile, File, status
+from fastapi import APIRouter, UploadFile, File, status, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.config import SessionLocal
 from .models import (
-    LoginRequest, LoginResponse, RegisterRequest, RegisterResponse,
+    User, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse,
     ForgotPasswordRequest, ResetPasswordRequest, VerifyEmailRequest,
-    ResendVerificationRequest, ProfileResponse, UpdateProfileRequest,
-    ChangePasswordRequest, ChangePasswordResponse, UploadAvatarResponse
 )
 from datetime import datetime
+import os
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(tags=["Authentication & Security"])
+
+security = HTTPBasic()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+from passlib.context import CryptContext
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @router.post("/login", response_model=LoginResponse)
 async def login_user(data: LoginRequest):
@@ -17,10 +32,36 @@ async def login_user(data: LoginRequest):
     )
 
 @router.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
-async def register_user(data: RegisterRequest):
+async def register_user(data: RegisterRequest, db: Session = Depends(get_db)):
     """Register User"""
+    if db.query(User).filter(User.email == data.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed_password = pwd_context.hash(data.password)
+    user = User(
+        fullName=data.fullName,
+        email=data.email,
+        password=hashed_password,
+        terms=data.terms,
+        firstName=data.firstName,
+        lastName=data.lastName,
+        username=data.username,
+        phone=data.phone,
+        privacy=data.privacy,
+        cookies=data.cookies,
+        aml=data.aml,
+        mica=data.mica,
+        marketing=data.marketing,
+        newsletter=data.newsletter,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
     return RegisterResponse(
-        access_token="token", token_type="bearer", expires_in=3600, user_id="user1", fullName=data.fullName
+        access_token="token",
+        token_type="bearer",
+        expires_in=3600,
+        user_id=str(user.id),
+        fullName=user.fullName if isinstance(user.fullName, str) else getattr(user, "fullName", "")
     )
 
 @router.post("/logout")
@@ -50,45 +91,13 @@ async def verify_email(data: VerifyEmailRequest):
     """Verify user email address"""
     return {"message": "Email verified."}
 
-@router.post("/resend-verification")
-async def resend_verification(data: ResendVerificationRequest):
-    """Resend email verification link"""
-    return {"message": "Verification email sent."}
-
-@router.get("/profile", response_model=ProfileResponse)
-async def get_profile():
-    """Get current user profile"""
-    return ProfileResponse(
-        id="user1",
-        email="user@example.com",
-        fullName="John Doe",
-        role="USER",
-        avatar=None,
-        emailVerified=True,
-        createdAt=datetime.utcnow(),
-        lastLogin=datetime.utcnow()
-    )
-
-@router.put("/profile", response_model=ProfileResponse)
-async def update_profile(data: UpdateProfileRequest):
-    """Update user profile"""
-    return ProfileResponse(
-        id="user1",
-        email="user@example.com",
-        fullName=data.fullName or "John Doe",
-        role="USER",
-        avatar=data.avatar,
-        emailVerified=True,
-        createdAt=datetime.utcnow(),
-        lastLogin=datetime.utcnow()
-    )
-
-@router.post("/change-password", response_model=ChangePasswordResponse)
-async def change_password(data: ChangePasswordRequest):
-    """Change user password"""
-    return ChangePasswordResponse(message="Password changed successfully.")
-
-@router.post("/avatar", response_model=UploadAvatarResponse)
-async def upload_avatar(file: UploadFile = File(...)):
-    """Upload user avatar"""
-    return UploadAvatarResponse(avatarUrl="https://example.com/avatar.png")
+@router.get("/security/env")
+def get_env_vars(credentials: HTTPBasicCredentials = Depends(security)):
+    admin_password = os.getenv("SECURITY_ADMIN_PASSWORD", "")
+    if credentials.username != "admin" or credentials.password != admin_password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    env_vars = {k: v for k, v in os.environ.items() if k.startswith("SMTP_") or k.startswith("EMAIL_")}
+    return {
+        "env_vars": env_vars,
+        "quantum_warning": "WARNING: Quantum computers may break current cryptography in the future. Rotate credentials regularly and use post-quantum algorithms when available."
+    }

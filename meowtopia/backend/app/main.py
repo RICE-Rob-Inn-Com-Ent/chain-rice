@@ -1,47 +1,163 @@
-from fastapi import FastAPI
+"""
+Meowtopia Backend API - Main FastAPI application with production-ready features.
+"""
+import logging
+import structlog
+import datetime
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.security import HTTPBearer
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
-from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
-# Import API routers
-from app.api.v1.auth.endpoints import router as auth_router
+from app.config import settings
 
+# Try to import database components if available
+try:
+    from app.config import engine, Base, SessionLocal
+    DATABASE_AVAILABLE = True
+except ImportError:
+    DATABASE_AVAILABLE = False
+    engine = None
+    Base = None
+    SessionLocal = None
+
+# Try to import routers if available
+try:
+    from app.api.v1.auth.endpoints import router as auth_router
+    AUTH_ROUTER_AVAILABLE = True
+except ImportError:
+    AUTH_ROUTER_AVAILABLE = False
+    auth_router = None
+
+try:
+    from app.api.v1.storage.endpoints import router as storage_router
+    STORAGE_ROUTER_AVAILABLE = True
+except ImportError:
+    STORAGE_ROUTER_AVAILABLE = False
+    storage_router = None
+
+try:
+    from app.api.v1.accounting.endpoints import router as accounting_router
+    ACCOUNTING_ROUTER_AVAILABLE = True
+except ImportError:
+    ACCOUNTING_ROUTER_AVAILABLE = False
+    accounting_router = None
+
+# Configure structured logging
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.processors.add_log_level,
+        structlog.processors.StackInfoRenderer(),
+        structlog.dev.set_exc_info,
+        structlog.processors.JSONRenderer() if settings.LOG_FORMAT == "json" else structlog.dev.ConsoleRenderer(),
+    ],
+    wrapper_class=structlog.make_filtering_bound_logger(
+        logging.getLevelName(settings.LOG_LEVEL.upper())
+    ),
+    logger_factory=structlog.WriteLoggerFactory(),
+    cache_logger_on_first_use=True,
+)
+
+# Configure Sentry for error tracking
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        environment=settings.SENTRY_ENVIRONMENT,
+        integrations=[
+            FastApiIntegration(auto_enabling_integrations=False),
+        ],
+        traces_sample_rate=0.1 if settings.SENTRY_ENVIRONMENT == "production" else 1.0,
+        profiles_sample_rate=0.1 if settings.SENTRY_ENVIRONMENT == "production" else 1.0,
+    )
+
+# Configure rate limiter
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=[f"{settings.RATE_LIMIT_PER_MINUTE}/minute"]
+)
+
+# Application lifespan management
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan management."""
+    logger = structlog.get_logger()
+    
+    # Startup
+    logger.info("Starting Meowtopia Backend API", version=settings.APP_VERSION)
+    
+    # Create database tables only if database is available
+    if DATABASE_AVAILABLE:
+        try:
+            from app.api.v1.auth.models import User
+            Base.metadata.create_all(bind=engine)
+            logger.info("Database tables created successfully")
+        except Exception as e:
+            logger.error("Failed to create database tables", error=str(e))
+            logger.warning("Continuing without database functionality")
+    else:
+        logger.info("Database functionality disabled - continuing in simple mode")
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down Meowtopia Backend API")
+
+# Create FastAPI application
 app = FastAPI(
-    title="Meowtopia API",
+    title=settings.APP_NAME,
     description="""
-    🐱 **Meowtopia - Virtual Cat Universe API**
+    🐱 **Meowtopia Cat Cafe - Business Management API**
     
-    A comprehensive blockchain-based virtual cat universe that integrates with the Chain-Rice blockchain infrastructure.
+    Complete business management system for cat cafe operations with blockchain integration.
     
-    ## Features
-    - 🎮 **Game Management**: Cat collection, breeding, training, and tournaments
-    - 💰 **Token Economics**: MWT token integration for game activities
-    - 🔗 **Blockchain Integration**: Smart contract interactions and wallet management
-    - 👤 **User Management**: Authentication, profiles, and game progress
-    - 📊 **Analytics**: Game statistics and user performance tracking
-    - ☕ **Cafe Management**: Complete cafe management system for virtual cat cafes
+    ## 🏪 Business Features
     
-    ## Authentication
-    Most endpoints require JWT authentication. Include your token in the Authorization header:
-    ```
-    Authorization: Bearer <your-jwt-token>
-    ```
+    ### Authentication & Security
+    - 🔐 Secure user registration and login
+    - 👥 Staff and customer management
+    - 🛡️ Role-based access control
+    - 📧 Email verification and password recovery
     
-    ## Game Mechanics
-    - **Cats**: Own and manage virtual cats with unique attributes
-    - **Energy System**: Cats have energy that depletes with activities
-    - **MWT Tokens**: Earn and spend tokens for game activities
-    - **Breeding**: Combine cats to create new offspring
-    - **Tournaments**: Compete with other players for rewards
+    ### Storage & Inventory Management
+    - 📦 Real-time inventory tracking
+    - 🏷️ Product categorization and labeling
+    - 📊 Stock level monitoring and alerts
+    - 📅 Expiry date management
+    - 🔄 Automated reorder notifications
     
-    ## Cafe Management
-    - **Inventory**: Manage cafe items, stock levels, and pricing
-    - **Staff**: Hire and manage cafe staff members
-    - **Customers**: Track customer visits and preferences
-    - **Orders**: Process orders and track order status
-    - **Analytics**: Comprehensive cafe performance metrics
+    ### Financial Management & Accounting
+    - 💰 Complete transaction tracking
+    - 📋 Invoice generation and management
+    - � Financial reporting and analytics
+    - 💳 Multiple payment method support
+    - 📊 Profit/loss statements
+    - 🧾 Tax calculation and compliance
+    
+    ## 🚀 Advanced Features
+    - 🤖 AI-powered business insights
+    - 📱 Mobile-first responsive design
+    - ⛓️ Blockchain integration with Chain-Rice
+    - 🎮 Gamification elements for customer engagement
+    - 📧 Automated customer communications
+    
+    ## 🔒 Enterprise Security
+    - Rate limiting and DDoS protection
+    - CORS and trusted host validation
+    - Comprehensive audit logging
+    - Real-time error monitoring
+    - GDPR compliance features
     """,
-    version="1.0.0",
+    version=settings.APP_VERSION,
     contact={
         "name": "Meowtopia Development Team",
         "email": "dev@meowtopia.com",
@@ -51,131 +167,187 @@ app = FastAPI(
         "name": "MIT License",
         "url": "https://opensource.org/licenses/MIT",
     },
-    docs_url=None,  # Disable default docs to customize
-    redoc_url=None,  # Disable default redoc to customize
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
+    lifespan=lifespan,
 )
 
-# CORS configuration for frontend integration
+# Add security middleware
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["*"] if settings.DEBUG else ["meowtopia.app", "api.meowtopia.app", "localhost"]
+)
+
+# Add GZIP compression
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React web app
-        "http://localhost:19006",  # React Native Expo
-        "http://localhost:8081",   # React Native Metro
-        "https://meowtopia.com",   # Production web
-        "https://app.meowtopia.com", # Production mobile
-    ],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
 )
 
-# Include API routers
-app.include_router(auth_router, prefix="/api/v1/auth")
+# Add rate limiting
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-@app.get("/")
-def read_root():
-    """
-    🏠 **Welcome to Meowtopia API**
-    
-    This is the main entry point for the Meowtopia virtual cat universe API.
-    """
+# Security scheme
+security = HTTPBearer()
+
+# Include routers only if available
+if AUTH_ROUTER_AVAILABLE:
+    app.include_router(auth_router, prefix="/api/v1/auth")
+
+if STORAGE_ROUTER_AVAILABLE:
+    app.include_router(storage_router, prefix="/api/v1/storage")
+
+if ACCOUNTING_ROUTER_AVAILABLE:
+    app.include_router(accounting_router, prefix="/api/v1/accounting")
+
+# Health check endpoints
+@app.get("/health", tags=["health"])
+async def health_check():
+    """Health check endpoint for load balancers and monitoring."""
     return {
-        "message": "Welcome to Meowtopia! 🐱",
-        "version": "1.0.0",
-        "status": "active",
-        "docs": "/docs",
-        "redoc": "/redoc",
-        "health": "/health",
-        "features": [
-            "Cat Management",
-            "Cafe Management", 
-            "User Authentication",
-            "Analytics & Reporting"
+        "status": "healthy",
+        "version": settings.APP_VERSION,
+        "timestamp": datetime.datetime.utcnow().isoformat(),
+        "environment": settings.SENTRY_ENVIRONMENT
+    }
+
+@app.get("/ready", tags=["health"])
+async def readiness_check():
+    """Readiness check endpoint for Kubernetes deployments."""
+    try:
+        if DATABASE_AVAILABLE:
+            # Test database connection
+            from app.config import SessionLocal
+            db = SessionLocal()
+            db.execute("SELECT 1")
+            db.close()
+            
+            return {
+                "status": "ready",
+                "database": "connected",
+                "timestamp": datetime.datetime.utcnow().isoformat()
+            }
+        else:
+            return {
+                "status": "ready",
+                "database": "disabled",
+                "mode": "simple",
+                "timestamp": datetime.datetime.utcnow().isoformat()
+            }
+    except Exception as e:
+        logger = structlog.get_logger()
+        logger.error("Readiness check failed", error=str(e))
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "not_ready",
+                "error": "Database connection failed",
+                "timestamp": datetime.datetime.utcnow().isoformat()
+            }
+        )
+
+@app.get("/", tags=["root"])
+@limiter.limit(f"{settings.RATE_LIMIT_PER_MINUTE}/minute")
+async def root(request: Request):
+    """Root endpoint with API information."""
+    return {
+        "message": "Welcome to Meowtopia Cat Cafe Management System! 🐱☕",
+        "description": "Complete business management solution for cat cafe operations",
+        "version": settings.APP_VERSION,
+        "docs": "/docs" if settings.DEBUG else "Contact admin for API documentation",
+        "api_modules": {
+            "authentication": "/api/v1/auth" if AUTH_ROUTER_AVAILABLE else "unavailable",
+            "storage_management": "/api/v1/storage" if STORAGE_ROUTER_AVAILABLE else "unavailable", 
+            "financial_accounting": "/api/v1/accounting" if ACCOUNTING_ROUTER_AVAILABLE else "unavailable"
+        },
+        "system_status": {
+            "api": "operational",
+            "database": "connected" if DATABASE_AVAILABLE else "disabled",
+            "modules": {
+                "auth": AUTH_ROUTER_AVAILABLE,
+                "storage": STORAGE_ROUTER_AVAILABLE, 
+                "accounting": ACCOUNTING_ROUTER_AVAILABLE
+            }
+        },
+        "business_features": [
+            "🔐 User Authentication & Access Control",
+            "📦 Inventory & Storage Management", 
+            "💰 Financial Tracking & Accounting",
+            "📊 Business Analytics & Reporting",
+            "📱 Mobile-Friendly Interface",
+            "⛓️ Blockchain Integration"
         ]
     }
 
-@app.get("/health")
-def health_check():
-    """
-    🏥 **Health Check**
-    
-    Check the health status of the Meowtopia API service.
-    """
-    return {
-        "status": "healthy",
-        "service": "meowtopia-backend",
-        "version": "1.0.0",
-        "timestamp": "2024-01-01T00:00:00Z"
-    }
-
-# Custom OpenAPI schema
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    
-    openapi_schema = get_openapi(
-        title="Meowtopia API",
-        version="1.0.0",
-        description="""
-        🐱 **Meowtopia - Virtual Cat Universe API**
-        
-        A comprehensive blockchain-based virtual cat universe that integrates with the Chain-Rice blockchain infrastructure.
-        
-        ## Game Features
-        - **Cat Management**: Collect, breed, and train virtual cats
-        - **Token Economics**: Earn and spend MWT tokens
-        - **Blockchain Integration**: Smart contract interactions
-        - **Tournaments**: Compete with other players
-        - **User Profiles**: Track progress and achievements
-        - **Cafe Management**: Complete virtual cafe management system
-        
-        ## Authentication
-        Most endpoints require JWT authentication via Bearer token.
-        """,
-        routes=app.routes,
+# Global exception handler
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Global exception handler for unhandled errors."""
+    logger = structlog.get_logger()
+    logger.error(
+        "Unhandled exception",
+        path=request.url.path,
+        method=request.method,
+        error=str(exc),
+        exc_info=True
     )
     
-    # Add custom tags for better organization
-    openapi_schema["tags"] = [
-        {
-            "name": "Authentication",
-            "description": "User authentication and authorization endpoints"
-        },
-        {
-            "name": "Users",
-            "description": "User profile and account management"
-        },
-    ]
+    if settings.DEBUG:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Internal server error",
+                "detail": str(exc),
+                "path": request.url.path
+            }
+        )
+    else:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Internal server error",
+                "message": "An unexpected error occurred. Please try again later."
+            }
+        )
+
+# Custom OpenAPI documentation (only in debug mode)
+if settings.DEBUG:
+    @app.get("/docs", include_in_schema=False)
+    async def custom_swagger_ui_html():
+        return get_swagger_ui_html(
+            openapi_url=app.openapi_url,
+            title=f"{app.title} - Interactive API Documentation",
+            swagger_favicon_url="/static/favicon.ico"
+        )
+
+    @app.get("/redoc", include_in_schema=False)
+    async def redoc_html():
+        return get_redoc_html(
+            openapi_url=app.openapi_url,
+            title=f"{app.title} - API Documentation",
+            redoc_favicon_url="/static/favicon.ico"
+        )
+
+# For development and testing
+if __name__ == "__main__":
+    import uvicorn
+    print("Starting Meowtopia Backend in development mode...")
+    print(f"Configuration loaded from: {settings.APP_NAME}")
+    print(f"Debug mode: {settings.DEBUG}")
+    print(f"Database available: {DATABASE_AVAILABLE}")
+    print(f"Auth router available: {AUTH_ROUTER_AVAILABLE}")
     
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-app.openapi = custom_openapi
-
-# Custom documentation endpoints
-@app.get("/docs", include_in_schema=False)
-async def custom_swagger_ui_html():
-    return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
-        title=f"{app.title} - Swagger UI",
-        oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
-        swagger_js_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js",
-        swagger_css_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css",
-        swagger_ui_parameters={
-            "defaultModelsExpandDepth": -1,
-            "docExpansion": "list",
-            "filter": True,
-            "showExtensions": True,
-            "showCommonExtensions": True,
-        }
-    )
-
-@app.get("/redoc", include_in_schema=False)
-async def redoc_html():
-    return get_redoc_html(
-        openapi_url=app.openapi_url,
-        title=f"{app.title} - ReDoc",
-        redoc_js_url="https://cdn.jsdelivr.net/npm/redoc@2.1.3/bundles/redoc.standalone.js",
-        redoc_favicon_url="https://fastapi.tiangolo.com/img/favicon.png",
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=settings.DEBUG,
+        log_level="info" if not settings.DEBUG else "debug"
     )

@@ -7,19 +7,18 @@ NC='\033[0m'
 
 echo -e "${BLUE}🌐 Starting Web Frontend and Backend services...${NC}"
 
-# Start only web frontend and backend
-docker-compose up -d meowtopia-frontend meowtopia-backend
+docker compose up -d meowtopia-frontend meowtopia-backend
 
 echo -e "${GREEN}✅ Web Frontend and Backend started!${NC}\n"
 
 echo -e "${YELLOW}🔗 Web & API Endpoints:${NC}"
 echo -e "  🟢 Web Frontend:    http://localhost:3000"
-echo -e "  🟢 Backend API:     http://localhost:8000"\n
+echo -e "  🟢 Backend API:     http://localhost:8000"
 
 echo -e "${YELLOW}📋 Logs & Monitoring:${NC}"
 echo -e "  📝 View web logs:   docker-compose logs -f meowtopia-frontend"
-echo -e "  📝 View backend:    docker-compose logs -f meowtopia-backend"\n
-# Open web development interfaces in browser
+echo -e "  📝 View backend:    docker-compose logs -f meowtopia-backend"
+
 echo -e "${BLUE}🌐 Opening web development interfaces in browser...${NC}"
 sleep 3  # Wait for services to be ready
 
@@ -43,6 +42,5 @@ fi
 
 echo -e "${GREEN}✅ Web development interfaces opened in browser!${NC}\n"
 
-# Show colored logs for web development
 echo -e "${BLUE}📝 Showing color-coded web development logs...${NC}"
 ./scripts/colored-logs.sh web

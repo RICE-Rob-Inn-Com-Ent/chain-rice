@@ -22,12 +22,15 @@ RUN pip install "poetry==$POETRY_VERSION" \
 # 📁 Set working directory
 WORKDIR /app
 
-# 📦 Copy source code first
-COPY . .
+# 📦 Copy dependency files first for better caching
+COPY pyproject.toml poetry.lock ./
 
-# ⬇️ Install Python dependencies
-RUN poetry install --only main --no-interaction --no-ansi && \
-    poetry show uvicorn
+# 📦 Set Poetry config and install dependencies as root
+RUN poetry config virtualenvs.create false \
+ && poetry install --only main --no-interaction --no-ansi
+
+# 📦 Copy source code
+COPY . .
 
 # 👤 Create a non-root user
 RUN adduser --disabled-password --gecos '' appuser \
@@ -41,5 +44,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
-# 🚀 Run FastAPI/Django via Uvicorn using Poetry
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# 🚀 Run FastAPI via Uvicorn using Poetry
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

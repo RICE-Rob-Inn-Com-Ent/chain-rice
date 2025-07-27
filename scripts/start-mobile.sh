@@ -92,7 +92,7 @@ if [ ! -d "mobile-backend/node_modules" ]; then
 fi
 
 # Start only the backend needed for mobile dev
-docker-compose up -d meowtopia-backend
+docker compose up -d meowtopia-backend
 
 print_success "Backend started for mobile development."
 
@@ -131,7 +131,7 @@ echo ""
 # Function to cleanup on exit
 cleanup() {
     print_status "Stopping mobile services..."
-    docker-compose down
+    docker compose down
     print_success "Mobile services stopped"
     exit 0
 }
@@ -145,7 +145,7 @@ print_status "Mobile backend is running. Press Ctrl+C to stop."
 while true; do
     sleep 10
     # Check if services are still running
-    if ! docker-compose ps | grep -q "Up"; then
+    if ! docker compose ps | grep -q "Up"; then
         print_error "Services stopped unexpectedly"
         break
     fi
@@ -153,7 +153,7 @@ done
 
 # Start blockchain and backend (required for mobile development)
 echo -e "${BLUE}⛓️  Starting blockchain and backend services...${NC}"
-docker-compose up -d chain-rice-blockchain meowtopia-backend
+docker compose up -d chain-rice-blockchain meowtopia-backend
 
 echo -e "${GREEN}✅ Mobile development environment started!${NC}\n"
 

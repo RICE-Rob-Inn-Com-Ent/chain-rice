@@ -90,7 +90,7 @@ fi
 
 # Start test database and services
 print_status "Starting test environment..."
-docker-compose -f docker-compose.test.yml up -d postgres redis blockchain
+docker compose -f docker-compose.test.yml up -d postgres redis blockchain
 
 # Wait for services to be ready
 print_status "Waiting for test services to be ready..."
@@ -176,7 +176,7 @@ fi
 
 # Stop test services
 print_status "Stopping test environment..."
-docker-compose -f docker-compose.test.yml down
+docker compose -f docker-compose.test.yml down
 
 # Display test results
 echo ""

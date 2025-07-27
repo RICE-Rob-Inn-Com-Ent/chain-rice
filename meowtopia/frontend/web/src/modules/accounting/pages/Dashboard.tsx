@@ -19,9 +19,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
-import Button from '@/components/Button';
+import Button from '@/components/Controller';
 import Card from '@/components/Card';
-import Table, { TableColumn } from '@/components/Table';
+import Table, { TableColumn } from '@/layouts/Table';
 import { validateField, makeApiCall, formatCurrency, generateMockInvoices } from "../utils";
 import type { Invoice, Payment, DashboardData, CategoryStats, TrendData } from "../types";
 import AdminOnly from "../../../components/AdminOnly";

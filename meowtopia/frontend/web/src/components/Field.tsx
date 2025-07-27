@@ -1,99 +1,86 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 
-export interface FieldInterface {
-  label: string;
-  icon?: string;
-  type?: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-  placeholder?: string;
-  required?: boolean;
-  className?: string;
-  min?: string | number;
-  max?: string | number;
-  step?: string | number;
-  readOnly?: boolean;
+export interface FieldConfig {
+  tag: "input" | "textarea" | "select";
+  type?:
+    | "text"
+    | "password"
+    | "email"
+    | "number"
+    | "radio"
+    | "checkbox"
+    | "date"
+    | "file"
+    | "search"
+    | "tel"
+    | "url";
+  role?: "default" | "error" | "success";
+  size?: "sm" | "md" | "lg";
   children?: React.ReactNode;
+  icon?: string;
+  placeholder?: string;
+  value?: string;
+  checked?: boolean;
+  onChange?:
+    | React.ChangeEventHandler<HTMLInputElement>
+    | React.ChangeEventHandler<HTMLTextAreaElement>
+    | React.ChangeEventHandler<HTMLSelectElement>;
 }
 
-export type FieldArrayInterface = FieldInterface[];
-
-const Field: React.FC<FieldInterface> = ({
-  label,
-  icon,
+export const Field: React.FC<FieldConfig> = ({
+  tag = "input",
   type = "text",
-  name,
-  value,
-  onChange,
+  role = "default",
+  size = "md",
   placeholder,
-  required = false,
-  className = "",
-  min,
-  max,
-  step,
-  readOnly = false,
+  value,
+  checked,
+  icon,
   children,
+  onChange,
 }) => {
-  const baseInputClasses = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500";
-  const readOnlyClasses = readOnly ? "bg-gray-100 cursor-not-allowed" : "";
-  
-  const renderInput = () => {
-    switch (type) {
-      case "textarea":
-        return (
-          <textarea
-            name={name}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            required={required}
-            readOnly={readOnly}
-            className={`${baseInputClasses} ${readOnlyClasses} resize-vertical min-h-[80px]`}
-          />
-        );
-      case "select":
-        return (
-          <select
-            name={name}
-            value={value}
-            onChange={onChange}
-            required={required}
-            disabled={readOnly}
-            className={`${baseInputClasses} ${readOnlyClasses}`}
-          >
-            {children}
-          </select>
-        );
-      default:
-        return (
-          <input
-            type={type}
-            name={name}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            required={required}
-            min={min}
-            max={max}
-            step={step}
-            readOnly={readOnly}
-            className={`${baseInputClasses} ${readOnlyClasses}`}
-          />
-        );
-    }
+  const Tag = tag;
+  const isCheckboxOrRadio = type === "checkbox" || type === "radio";
+  const defaultClasses =
+    "border-2 outline-none transition-colors duration-200 w-full";
+  const roleClasses = {
+    "default": "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
+    "error": "border-red-500 focus:border-red-600 focus:ring-red-500",
+    "success": "border-green-500 focus:border-green-600 focus:ring-green-500",
   };
+  const sizeClasses = {
+    "sm": "px-2 py-1 text-sm rounded-md",
+    "md": "px-3 py-2 text-base rounded-md",
+    "lg": "px-4 py-2 text-lg rounded-md",
+  };
+  const className = `${defaultClasses} ${roleClasses[role]} ${sizeClasses[size]}`;
+
+  if (isCheckboxOrRadio) {
+    return (
+      <label className={className}>
+        <input
+          type={type}
+          checked={checked}
+          onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+          className={className}
+        />
+        {children}
+      </label>
+    );
+  }
 
   return (
-    <div className={className}>
-      {icon && <Icon icon={icon} />}
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      {renderInput()}
-    </div>
+    <label className={className}>
+      <Icon icon={`material-symbols-light:${icon}`} className={className} />
+      <Tag
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange as any}
+        className={className}
+      />
+      {children}
+    </label>
   );
 };
-
-export default Field;

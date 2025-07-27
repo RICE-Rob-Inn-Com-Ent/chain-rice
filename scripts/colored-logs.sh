@@ -47,11 +47,11 @@ show_colored_logs() {
         echo -e "${PURPLE}📝 Showing color-coded logs for all services...${NC}"
         echo -e "${GREY}🔗 Blockchain (Grey)${NC} | ${YELLOW}🔧 Backend (Yellow)${NC} | ${BLUE}🌐 Web (Blue)${NC} | ${RED}📱 Mobile (Red)${NC} | ${GREEN}🤖 Android (Green)${NC} | ${LIGHT_GREY}🍎 iOS (Light Grey)${NC}"
         echo ""
-        docker-compose logs -f | colorize_logs
+        docker compose logs -f | colorize_logs
     else
         # Show specific services
         echo -e "${PURPLE}📝 Showing color-coded logs for: $services${NC}"
-        docker-compose logs -f $services | colorize_logs
+        docker compose logs -f $services | colorize_logs
     fi
 }
 
