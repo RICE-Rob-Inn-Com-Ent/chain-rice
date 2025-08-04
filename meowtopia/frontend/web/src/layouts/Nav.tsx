@@ -1,46 +1,64 @@
 import React from "react";
-import { Click } from "@/components/Click";
+import { Click, ClickConfig } from "@/components/Click";
 
-export function useNavConfig() {
-  return {
-    navConfig: {
-      className: "bg-red-50 p-6 rounded-lg shadow-md max-w-md mx-auto",
-    },
-    ulConfig: {
-      className: "flex items-center",
-    },
-    liConfig: {
-      className: "flex items-center",
-    },
-    caffeConfig: {
-      type: "button" as const,
-      role: "primary" as const,
-      state: "pressed" as const,
-      ariaLabel: "Кав'ярня",
-      to: "/caffe",
-      icon: "cup",
-      children: "Кав'ярня"
-
-    },
-    storageConfig: {
-      type: "button" as const,
-      role: "primary" as const,
-      state: "pressed" as const,
-      ariaLabel: "Склад",
-      to: "/storage",
-      icon: "warehouse",
-      children: "Склад"
-    },
-  };
+export interface NavConfig {
+  variant: "admin" | "user";
 }
-export const Nav: React.FC = () => {
-  const config = useNavConfig();
+
+const linkConfig = {
+  caffeLink: {
+    type: "button",
+    role: "primary",
+    state: "pressed",
+    ariaLabel: "Link do Kawiarni",
+    to: "/cafe",
+    icon: "cafe",
+    children: "Kawiarnia",
+  } as ClickConfig,
+    usersLink: {
+    type: "button",
+    role: "primary",
+    state: "pressed",
+    ariaLabel: "Link do Użytkowników",
+    to: "/users",
+    icon: "users",
+    children: "Użytkownicy",
+  } as ClickConfig,
+  storageLink: {
+    type: "button",
+    role: "primary",
+    state: "pressed",
+    ariaLabel: "Link do Magazynu",
+    to: "/storage",
+    icon: "storage",
+    children: "Magazyn",
+  } as ClickConfig,
+  accountingLink: {
+    type: "button",
+    role: "primary",
+    state: "pressed",
+    ariaLabel: "Link do Księgowości",
+    to: "/accounting",
+    icon: "accounting",
+    children: "Księgowość",
+  } as ClickConfig,
+};
+
+export const Nav: React.FC<NavConfig> = ({ variant }) => {
+  const variantClasses = {
+    "admin": "flex flex-col",
+    "user": "flex flex-row",
+  };
+  const className = variantClasses[variant];
 
   return (
-    <nav {...config.navConfig}>
-      <ul {...config.ulConfig}>
-        <li {...config.liConfig}>
-          <Click {...config.caffeConfig} />
+    <nav className={className}>
+      <ul className={className}>
+        <li className={className}>
+          <Click {...linkConfig.caffeLink} />
+          <Click {...linkConfig.usersLink} />
+          <Click {...linkConfig.storageLink} />
+          <Click {...linkConfig.accountingLink} />
         </li>
       </ul>
     </nav>

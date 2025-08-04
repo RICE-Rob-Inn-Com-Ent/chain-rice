@@ -30,9 +30,9 @@ export const Click: React.FC<ClickConfig> = ({
   };
 
   const stateClasses = {
-    "": "",
     "pressed": "active:scale-[.98] active:opacity-90",
     "loading": "relative text-transparent pointer-events-none",
+    "": "",
   };
 
   const className = `${roleClasses[role]} ${stateClasses[state]}`;

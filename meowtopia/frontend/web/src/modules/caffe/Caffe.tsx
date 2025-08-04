@@ -1,3 +1,5 @@
 import React from "react";
 
-export const Caffe: React.FC = () => <div>Caffe</div>;
+const Caffe: React.FC = () => <div>Caffe</div>;
+
+export default Caffe;

@@ -6,13 +6,13 @@ import { Click } from "@/components/Click";
 import { Container, ContainerConfigs } from "@/components/Container";
 import { useStorageConfig } from "./configs/storageConfig";
 
-const Storage: React.FC = {ContainerConfigs} => {
+const Storage: React.FC = () => {
   const config = useStorageConfig();
 
   const StorageMain: React.FC = () => (
     <>
       <Container tag="div" variant="section">
-{children}
+        <Text {...config.pageTitle} />
       </Container>
 
       <Container variant="card">

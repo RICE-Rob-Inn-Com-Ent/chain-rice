@@ -1,6 +1,6 @@
 import React from "react";
 
-export interface ContainerConfigs extends React.HTMLAttributes<HTMLElement> {
+export interface ContainerConfig extends React.HTMLAttributes<HTMLElement> {
   tag?:
     | "div"
     | "form"
@@ -22,10 +22,10 @@ export interface ContainerConfigs extends React.HTMLAttributes<HTMLElement> {
     | "loader-medium"
     | "loader-large"
     | "loader-global";
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export const Container: React.FC<ContainerConfigs> = ({
+export const Container: React.FC<ContainerConfig> = ({
   tag = "div",
   variant = "default",
   children,
@@ -33,9 +33,9 @@ export const Container: React.FC<ContainerConfigs> = ({
 }) => {
   const Tag = tag;
   const variantClasses = {
-    "default": "p-4",
-    "form": "p-6 bg-white shadow rounded-md space-y-4",
-    "card": "bg-white shadow-md rounded-xl p-5",
+    "default": "flex flex-row",
+    "form": "flex flex-col",
+    "card": "bg-green shadow-md rounded-xl p-5",
     "section": "py-8 px-4 sm:px-8",
     "panel": "bg-gray-100 p-4 rounded-md",
     "boxed": "border border-gray-200 p-4 rounded",

@@ -1,6 +1,6 @@
-import type { TextProps } from "@/components/Text";
-import type { FieldProps } from "@/components/Field";
-import type { ClickProps } from "@/components/Click";
+import type { TextConfig } from "@/components/Text";
+import type { FieldConfig } from "@/components/Field";
+import type { ClickConfig } from "@/components/Click";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -149,15 +149,15 @@ export function useAccountingConfig() {
     // Page configs
     pageTitle: {
       tag: "h2" as const,
+      variant: "title-2",
       children: "Moduł Księgowy",
-      className: "mt-6 text-center text-3xl font-extrabold text-gray-900",
-    } as TextProps,
+    } as TextConfig,
 
     pageDescription: {
       tag: "p" as const,
+      variant: "title-2"
       children: "Zarządzanie finansami, fakturami i płatnościami",
-      className: "mt-2 text-center text-sm text-gray-600",
-    } as TextProps,
+    } as TextConfig,
 
     // Dashboard cards
     dashboardCard: {
@@ -167,7 +167,7 @@ export function useAccountingConfig() {
       ariaLabel: "Przejdź do dashboardu finansowego",
       className: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500",
       onClick: () => navigate("/admin/accounting/dashboard"),
-    } as ClickProps,
+    } as ClickConfig,
 
     invoicesCard: {
       tag: "button",
@@ -176,7 +176,7 @@ export function useAccountingConfig() {
       ariaLabel: "Przejdź do zarządzania fakturami",
       className: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
       onClick: () => navigate("/admin/accounting/invoices"),
-    } as ClickProps,
+    } as ClickConfig,
 
     paymentsCard: {
       tag: "button",
@@ -185,7 +185,7 @@ export function useAccountingConfig() {
       ariaLabel: "Przejdź do zarządzania płatnościami",
       className: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500",
       onClick: () => navigate("/admin/accounting/payments"),
-    } as ClickProps,
+    } as ClickConfig,
 
     reportsCard: {
       tag: "button",
@@ -194,14 +194,14 @@ export function useAccountingConfig() {
       ariaLabel: "Przejdź do raportów finansowych",
       className: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500",
       onClick: () => navigate("/admin/accounting/reports"),
-    } as ClickProps,
+    } as ClickConfig,
 
     // Invoice form config
     invoiceTitle: {
       tag: "h3" as const,
       children: "Utwórz nową fakturę",
       className: "text-lg font-medium text-gray-900 mb-4",
-    } as TextProps,
+    } as TextConfig,
 
     clientNameField: {
       tag: "input",
@@ -212,7 +212,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: invoiceData.clientName,
       onChange: handleInvoiceInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     amountField: {
       tag: "input",
@@ -223,7 +223,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: invoiceData.amount.toString(),
       onChange: handleInvoiceInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     descriptionField: {
       tag: "textarea",
@@ -233,7 +233,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: invoiceData.description,
       onChange: handleInvoiceInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     dueDateField: {
       tag: "input",
@@ -243,7 +243,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: invoiceData.dueDate,
       onChange: handleInvoiceInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     createInvoiceButton: {
       tag: "button",
@@ -252,14 +252,14 @@ export function useAccountingConfig() {
       ariaLabel: "Utwórz fakturę",
       className: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50",
       disabled: loading,
-    } as ClickProps,
+    } as ClickConfig,
 
     // Payment form config
     paymentTitle: {
       tag: "h3" as const,
       children: "Zarejestruj płatność",
       className: "text-lg font-medium text-gray-900 mb-4",
-    } as TextProps,
+    } as TextConfig,
 
     invoiceIdField: {
       tag: "input",
@@ -270,7 +270,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: paymentData.invoiceId,
       onChange: handlePaymentInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     paymentAmountField: {
       tag: "input",
@@ -281,7 +281,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: paymentData.amount.toString(),
       onChange: handlePaymentInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     paymentMethodField: {
       tag: "select",
@@ -290,7 +290,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: paymentData.method,
       onChange: handlePaymentInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     paymentDateField: {
       tag: "input",
@@ -300,7 +300,7 @@ export function useAccountingConfig() {
       className: "mb-4",
       value: paymentData.date,
       onChange: handlePaymentInputChange,
-    } as FieldProps,
+    } as FieldConfig,
 
     registerPaymentButton: {
       tag: "button",
@@ -309,7 +309,7 @@ export function useAccountingConfig() {
       ariaLabel: "Zarejestruj płatność",
       className: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50",
       disabled: loading,
-    } as ClickProps,
+    } as ClickConfig,
 
     // Navigation buttons
     backButton: {
@@ -319,19 +319,19 @@ export function useAccountingConfig() {
       ariaLabel: "Powrót do księgowości",
       className: "w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
       onClick: () => navigate("/admin/accounting"),
-    } as ClickProps,
+    } as ClickConfig,
 
     // Error and success messages
     errorText: error ? {
       tag: "span" as const,
       className: "text-sm text-red-600",
       children: error,
-    } as TextProps : null,
+    } as TextConfig : null,
 
     successText: success ? {
       tag: "span" as const,
       className: "text-sm text-green-600",
       children: success,
-    } as TextProps : null,
+    } as TextConfig : null,
   };
 }

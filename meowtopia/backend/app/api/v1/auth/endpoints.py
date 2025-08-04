@@ -9,6 +9,7 @@ from datetime import datetime
 import os
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from typing import List
 
 router = APIRouter(tags=["Authentication & Security"])
 
@@ -90,6 +91,75 @@ async def reset_password(data: ResetPasswordRequest):
 async def verify_email(data: VerifyEmailRequest):
     """Verify user email address"""
     return {"message": "Email verified."}
+
+@router.get("/users", response_model=List[dict])
+async def get_users(db: Session = Depends(get_db), credentials: HTTPBasicCredentials = Depends(security)):
+    """Pobiera listę wszystkich użytkowników (tylko dla adminów)"""
+    admin_password = os.getenv("SECURITY_ADMIN_PASSWORD", "")
+    if credentials.username != "admin" or credentials.password != admin_password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    
+    users = db.query(User).all()
+    
+    return [
+        {
+            "id": user.id,
+            "fullName": user.fullName,
+            "email": user.email,
+            "firstName": user.firstName,
+            "lastName": user.lastName,
+            "username": user.username,
+            "phone": user.phone,
+            "terms": user.terms,
+            "privacy": user.privacy,
+            "cookies": user.cookies,
+            "aml": user.aml,
+            "mica": user.mica,
+            "marketing": user.marketing,
+            "newsletter": user.newsletter,
+            "created_at": user.created_at,
+            "updated_at": user.updated_at,
+        }
+        for user in users
+    ]
+
+@router.get("/get-user-id")
+def get_user_id(credentials: HTTPBasicCredentials = Depends(security)):
+    """Pobiera ID aktualnego użytkownika (admin)"""
+    admin_password = os.getenv("SECURITY_ADMIN_PASSWORD", "")
+    if credentials.username != "admin" or credentials.password != admin_password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    return {"user_id": "admin"}
+
+@router.get("/user/{user_id}", response_model=dict)
+async def get_user_by_id(user_id: int, db: Session = Depends(get_db), credentials: HTTPBasicCredentials = Depends(security)):
+    """Pobiera konkretnego użytkownika po ID (tylko dla adminów)"""
+    admin_password = os.getenv("SECURITY_ADMIN_PASSWORD", "")
+    if credentials.username != "admin" or credentials.password != admin_password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "id": user.id,
+        "fullName": user.fullName,
+        "email": user.email,
+        "firstName": user.firstName,
+        "lastName": user.lastName,
+        "username": user.username,
+        "phone": user.phone,
+        "terms": user.terms,
+        "privacy": user.privacy,
+        "cookies": user.cookies,
+        "aml": user.aml,
+        "mica": user.mica,
+        "marketing": user.marketing,
+        "newsletter": user.newsletter,
+        "created_at": user.created_at,
+        "updated_at": user.updated_at,
+    }
 
 @router.get("/security/env")
 def get_env_vars(credentials: HTTPBasicCredentials = Depends(security)):

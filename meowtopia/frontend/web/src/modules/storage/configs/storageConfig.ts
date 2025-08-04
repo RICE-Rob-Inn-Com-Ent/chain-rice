@@ -5,8 +5,95 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 
-export const useStorageConfig() {
+export const useStorageConfig = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  
+  const [uploadData, setUploadData] = useState({
+    file: null,
+    description: "",
+    tags: "",
+    isPublic: false,
+  });
+  
+  const [downloadData, setDownloadData] = useState({
+    fileId: "",
+  });
+  
+  const [manageData, setManageData] = useState({
+    fileId: "",
+    action: "delete",
+  });
 
+  const handleUploadInputChange = (e: any) => {
+    const { name, value, type, checked, files } = e.target;
+    setUploadData(prev => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : type === "file" ? files[0] : value
+    }));
+  };
+
+  const handleDownloadInputChange = (e: any) => {
+    const { name, value } = e.target;
+    setDownloadData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleManageInputChange = (e: any) => {
+    const { name, value } = e.target;
+    setManageData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleUploadSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      // TODO: Implement upload logic
+      setSuccess("Plik został przesłany pomyślnie!");
+    } catch (err) {
+      setError("Błąd podczas przesyłania pliku");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownloadSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      // TODO: Implement download logic
+      setSuccess("Plik został pobrany pomyślnie!");
+    } catch (err) {
+      setError("Błąd podczas pobierania pliku");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleManageSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      // TODO: Implement manage logic
+      setSuccess("Akcja została wykonana pomyślnie!");
+    } catch (err) {
+      setError("Błąd podczas wykonywania akcji");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
     // Page configs
     pageTitle: {
       tag: "h2" as const,
@@ -32,6 +119,7 @@ export const useStorageConfig() {
       type: "file" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "file",
       onChange: handleUploadInputChange,
     } as FieldConfig,
 
@@ -39,6 +127,7 @@ export const useStorageConfig() {
       tag: "textarea" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "description",
       placeholder: "Opcjonalny opis pliku...",
       value: uploadData.description,
       onChange: handleUploadInputChange,
@@ -49,6 +138,7 @@ export const useStorageConfig() {
       type: "text" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "tags",
       placeholder: "tag1, tag2, tag3",
       value: uploadData.tags,
       onChange: handleUploadInputChange,
@@ -59,6 +149,7 @@ export const useStorageConfig() {
       type: "checkbox" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "isPublic",
       checked: uploadData.isPublic,
       onChange: handleUploadInputChange,
       children: "Udostępnij publicznie",
@@ -83,6 +174,7 @@ export const useStorageConfig() {
       type: "text" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "fileId",
       placeholder: "Wprowadź ID pliku",
       value: downloadData.fileId,
       onChange: handleDownloadInputChange,
@@ -107,6 +199,7 @@ export const useStorageConfig() {
       type: "text" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "fileId",
       placeholder: "Wprowadź ID pliku",
       value: manageData.fileId,
       onChange: handleManageInputChange,
@@ -116,6 +209,7 @@ export const useStorageConfig() {
       tag: "select" as const,
       role: "default" as const,
       size: "md" as const,
+      name: "action",
       value: manageData.action,
       onChange: handleManageInputChange,
     } as FieldConfig,
@@ -173,5 +267,10 @@ export const useStorageConfig() {
       variant: "success" as const,
       children: success,
     } as TextConfig : null,
+
+    // Event handlers
+    handleUploadSubmit,
+    handleDownloadSubmit,
+    handleManageSubmit,
   };
 }

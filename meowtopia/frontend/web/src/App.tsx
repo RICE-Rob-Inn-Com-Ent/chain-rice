@@ -1,16 +1,13 @@
 import ReactDOM from "react-dom/client";
 import React, { Suspense, useEffect, useState, lazy } from "react";
 import { BrowserRouter } from "react-router-dom";
+import axios from "axios";
 import "./tailwind.css";
-import { Container as LoadingContainer } from "./components/Container";
-import { Text as LoadingComponent } from "./components/Text";
+import { Container, ContainerConfig } from "./components/Container";
+import { Text, TextConfig } from "./components/Text";
 
-// Modules lazy
-const Docs = lazy(() => import("./modules/docs/Docs"));
 const Auth = lazy(() => import("./modules/auth/Auth"));
 
-
-// Main lazy
 const Admin = lazy(() =>
   import("./main/Admin").then((main) => ({ default: main.Admin }))
 );
@@ -18,7 +15,6 @@ const User = lazy(() =>
   import("./main/User").then((main) => ({ default: main.User }))
 );
 
-// Layouts lazy
 const Cookies = lazy(() =>
   import("./layouts/Cookies").then((layout) => ({
     default: layout.Cookies,
@@ -26,15 +22,6 @@ const Cookies = lazy(() =>
 );
 const Nav = lazy(() =>
   import("./layouts/Nav").then((layout) => ({ default: layout.Nav }))
-);
-
-// Loading component using Text
-const LoadingText: React.FC = () => (
-  <LoadingContainer tag="div" variant="default">
-    <LoadingComponent tag="p" variant="body">
-      Loading...
-    </LoadingComponent>
-  </LoadingContainer>
 );
 
 const config = {
@@ -50,13 +37,19 @@ const config = {
     window: window,
   },
   suspenseConfig: {
-    fallback: undefined as React.ReactNode,
-  },
+    tag: "span",
+    variant: "body",
+    children: "Loading...",
+  } as TextConfig,
   authConfig: {
     containerClassName: "auth-container",
     redirectAfterLogin: "/admin",
     enableRememberMe: true,
   },
+  mainConfig: {
+    tag: "main",
+    variant: "default",
+  } as ContainerConfig,
   adminConfig: {
     containerClassName: "admin-container",
     enableNotifications: true,
@@ -70,29 +63,30 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
+
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
     setAuthenticated(!!token);
     setLoading(false);
   }, []);
 
   return (
     <BrowserRouter {...config.routerConfig}>
-      {/* Main application Suspense with large component loader */}
-      <Suspense fallback={<LoadingText />}>
+      <Suspense fallback={<Text {...config.suspenseConfig} />}>
         {loading ? (
-          <LoadingText />
+          <Text {...config.suspenseConfig} />
         ) : !authenticated ? (
-          // Auth module with medium component loader
-          <Suspense fallback={<LoadingText />}>
+          <Suspense fallback={<Text {...config.suspenseConfig} />}>
             <Auth />
           </Suspense>
         ) : (
-          // Admin module with nested Suspense for different components
-          <Suspense fallback={<LoadingText />}>
-            <Nav />
-            <Admin />
-            <Suspense fallback={<LoadingText />}>
-              <Cookies />
-            </Suspense>
+          <Suspense fallback={<Text {...config.suspenseConfig} />}>
+            <Container {...config.mainConfig}>
+              <Nav variant={authenticated ? "admin" : "user"} />
+              <Admin />
+            </Container>
           </Suspense>
         )}
       </Suspense>
