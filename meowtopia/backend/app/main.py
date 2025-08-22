@@ -52,6 +52,13 @@ except ImportError:
     ACCOUNTING_ROUTER_AVAILABLE = False
     accounting_router = None
 
+try:
+    from app.api.v1.cafe.endpoints import router as cafe_router
+    CAFE_ROUTER_AVAILABLE = True
+except ImportError:
+    CAFE_ROUTER_AVAILABLE = False
+    cafe_router = None
+
 # Configure structured logging
 structlog.configure(
     processors=[
@@ -138,7 +145,7 @@ app = FastAPI(
     ### Financial Management & Accounting
     - 💰 Complete transaction tracking
     - 📋 Invoice generation and management
-    - � Financial reporting and analytics
+    - Financial reporting and analytics
     - 💳 Multiple payment method support
     - 📊 Profit/loss statements
     - 🧾 Tax calculation and compliance
@@ -207,6 +214,10 @@ if STORAGE_ROUTER_AVAILABLE:
 if ACCOUNTING_ROUTER_AVAILABLE:
     app.include_router(accounting_router, prefix="/api/v1/accounting")
 
+# Moduł kawiarni (PL): logika biznesowa menu, koty, rezerwacje, zamówienia
+if CAFE_ROUTER_AVAILABLE:
+    app.include_router(cafe_router, prefix="/api/v1/cafe")
+
 # Health check endpoints
 @app.get("/health", tags=["health"])
 async def health_check():
@@ -265,7 +276,8 @@ async def root(request: Request):
         "api_modules": {
             "authentication": "/api/v1/auth" if AUTH_ROUTER_AVAILABLE else "unavailable",
             "storage_management": "/api/v1/storage" if STORAGE_ROUTER_AVAILABLE else "unavailable", 
-            "financial_accounting": "/api/v1/accounting" if ACCOUNTING_ROUTER_AVAILABLE else "unavailable"
+            "financial_accounting": "/api/v1/accounting" if ACCOUNTING_ROUTER_AVAILABLE else "unavailable",
+            "cafe_management": "/api/v1/cafe" if CAFE_ROUTER_AVAILABLE else "unavailable"
         },
         "system_status": {
             "api": "operational",
@@ -273,7 +285,8 @@ async def root(request: Request):
             "modules": {
                 "auth": AUTH_ROUTER_AVAILABLE,
                 "storage": STORAGE_ROUTER_AVAILABLE, 
-                "accounting": ACCOUNTING_ROUTER_AVAILABLE
+                "accounting": ACCOUNTING_ROUTER_AVAILABLE,
+                "cafe": CAFE_ROUTER_AVAILABLE
             }
         },
         "business_features": [
@@ -343,6 +356,7 @@ if __name__ == "__main__":
     print(f"Debug mode: {settings.DEBUG}")
     print(f"Database available: {DATABASE_AVAILABLE}")
     print(f"Auth router available: {AUTH_ROUTER_AVAILABLE}")
+    print(f"Cafe router available: {CAFE_ROUTER_AVAILABLE}")
     
     uvicorn.run(
         "main:app",

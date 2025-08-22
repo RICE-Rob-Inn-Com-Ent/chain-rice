@@ -24,6 +24,9 @@ const Nav = lazy(() =>
   import("./layouts/Nav").then((layout) => ({ default: layout.Nav }))
 );
 
+// Konfiguracja aplikacji (PL):
+// - Zachowujemy strukturę konfiguracyjną i przenosimy dynamiczne właściwości do obiektów konfiguracyjnych
+// - Pozwala to na czystsze komponenty i łatwiejsze testy/utrzymanie
 const config = {
   appConfig: {
     enableStrictMode: true,
@@ -61,10 +64,20 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
+  // Ustawienie bazowego URL dla axios (PL):
+  // - Preferujemy proxy "/api" z Vite (vite.config.ts) w dev/Docker
+  // - Fallback do zmiennej środowiskowej jeśli dostępna
+  useEffect(() => {
+    const baseURL =
+      (process.env.REACT_APP_API_URL as string) ||
+      (import.meta as any).env?.VITE_API_URL ||
+      "/api";
+    axios.defaults.baseURL = baseURL;
+  }, []);
+
+  // Inicjalizacja stanu uwierzytelnienia (PL)
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    console.log("Token from localStorage:", token); // Додано для відлагодження
-
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
@@ -73,16 +86,18 @@ const App: React.FC = () => {
     setLoading(false);
   }, []);
 
-  // Функція для оновлення стану аутентифікації
+  // Funkcja do aktualizacji stanu uwierzytelnienia (PL)
   const updateAuthState = () => {
     const token = localStorage.getItem("access_token");
     setAuthenticated(!!token);
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
     }
   };
 
-  // Перевіряємо токен при зміні URL
+  // Aktualizacja przy zmianie ścieżki (PL)
   useEffect(() => {
     updateAuthState();
   }, [window.location.pathname]);
