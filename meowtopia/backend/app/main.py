@@ -52,6 +52,22 @@ except ImportError:
     ACCOUNTING_ROUTER_AVAILABLE = False
     accounting_router = None
 
+# 🐱 Router dla zarządzania kotami
+try:
+    from app.api.v1.cats.endpoints import router as cats_router
+    CATS_ROUTER_AVAILABLE = True
+except ImportError:
+    CATS_ROUTER_AVAILABLE = False
+    cats_router = None
+
+# ☕ Router dla kawiarni
+try:
+    from app.api.v1.caffe.endpoints import router as caffe_router
+    CAFFE_ROUTER_AVAILABLE = True
+except ImportError:
+    CAFFE_ROUTER_AVAILABLE = False
+    caffe_router = None
+
 # Configure structured logging
 structlog.configure(
     processors=[
@@ -207,6 +223,12 @@ if STORAGE_ROUTER_AVAILABLE:
 if ACCOUNTING_ROUTER_AVAILABLE:
     app.include_router(accounting_router, prefix="/api/v1/accounting")
 
+if CATS_ROUTER_AVAILABLE:
+    app.include_router(cats_router, prefix="/api/v1/cats")
+
+if CAFFE_ROUTER_AVAILABLE:
+    app.include_router(caffe_router, prefix="/api/v1/caffe")
+
 # Health check endpoints
 @app.get("/health", tags=["health"])
 async def health_check():
@@ -265,7 +287,9 @@ async def root(request: Request):
         "api_modules": {
             "authentication": "/api/v1/auth" if AUTH_ROUTER_AVAILABLE else "unavailable",
             "storage_management": "/api/v1/storage" if STORAGE_ROUTER_AVAILABLE else "unavailable", 
-            "financial_accounting": "/api/v1/accounting" if ACCOUNTING_ROUTER_AVAILABLE else "unavailable"
+            "financial_accounting": "/api/v1/accounting" if ACCOUNTING_ROUTER_AVAILABLE else "unavailable",
+            "cats_management": "/api/v1/cats" if CATS_ROUTER_AVAILABLE else "unavailable",
+            "caffe_management": "/api/v1/caffe" if CAFFE_ROUTER_AVAILABLE else "unavailable"
         },
         "system_status": {
             "api": "operational",
@@ -273,7 +297,9 @@ async def root(request: Request):
             "modules": {
                 "auth": AUTH_ROUTER_AVAILABLE,
                 "storage": STORAGE_ROUTER_AVAILABLE, 
-                "accounting": ACCOUNTING_ROUTER_AVAILABLE
+                "accounting": ACCOUNTING_ROUTER_AVAILABLE,
+                "cats": CATS_ROUTER_AVAILABLE,
+                "caffe": CAFFE_ROUTER_AVAILABLE
             }
         },
         "business_features": [

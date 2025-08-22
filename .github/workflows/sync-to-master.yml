@@ -1,0 +1,233 @@
+name: Synchronizacja i Zarządzanie Branchami
+# Workflow do kontroli nad branchami i synchronizacji projektów
+# Autor: System automatyzacji Chain Rice
+# Data: 2025-01-18
+
+on:
+  push:
+    branches:
+      - development
+      - master
+      - meowtopia
+      - vengeance-69
+  pull_request:
+    branches:
+      - development
+      - master
+      - meowtopia
+      - vengeance-69
+
+env:
+  BLOCKCHAIN_IMAGE: chain-rice-blockchain
+  MEOWTOPIA_BACKEND_IMAGE: meowtopia-backend
+  MEOWTOPIA_FRONTEND_IMAGE: meowtopia-frontend
+  VENGEANCE69_BACKEND_IMAGE: vengeance69-backend
+  VENGEANCE69_FRONTEND_IMAGE: vengeance69-frontend
+
+jobs:
+  # Sprawdzanie które pliki zostały zmienione
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      blockchain: ${{ steps.changes.outputs.blockchain }}
+      meowtopia: ${{ steps.changes.outputs.meowtopia }}
+      vengeance69: ${{ steps.changes.outputs.vengeance69 }}
+      blockchain-data: ${{ steps.changes.outputs.blockchain-data }}
+    steps:
+      - name: Pobieranie kodu
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Wykrywanie zmian w projektach
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            blockchain:
+              - 'app/**'
+              - 'cmd/**'
+              - 'x/**'
+              - 'proto/**'
+              - '*.go'
+              - 'go.mod'
+              - 'go.sum'
+              - 'Dockerfile.blockchain'
+            meowtopia:
+              - 'meowtopia/**'
+            vengeance69:
+              - 'vengeance-69/**'
+            blockchain-data:
+              - 'blockchain-data/**'
+
+  # Synchronizacja development z master (tylko blockchain i blockchain-data)
+  sync-to-master:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      github.ref == 'refs/heads/development' && 
+      (needs.detect-changes.outputs.blockchain == 'true' || 
+       needs.detect-changes.outputs.blockchain-data == 'true')
+    steps:
+      - name: Pobieranie kodu
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Konfiguracja Git
+        run: |
+          git config --global user.name "Chain Rice Bot"
+          git config --global user.email "bot@chainrice.dev"
+
+      - name: Synchronizacja blockchain i blockchain-data do master
+        run: |
+          # Przełączenie na master
+          git checkout master
+          git pull origin master
+          
+          # Merge tylko blockchain i blockchain-data z development
+          git checkout development -- app cmd x proto blockchain-data
+          git checkout development -- *.go go.mod go.sum Dockerfile.blockchain
+          
+          # Commit zmian
+          git add .
+          if git diff --staged --quiet; then
+            echo "Brak zmian do zsynchronizowania"
+          else
+            git commit -m "sync: Synchronizacja blockchain i blockchain-data z development [skip ci]"
+            git push origin master
+          fi
+
+  # Build i deploy blockchain (tylko na master)
+  deploy-blockchain:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, sync-to-master]
+    if: |
+      github.ref == 'refs/heads/master' && 
+      needs.detect-changes.outputs.blockchain == 'true'
+    steps:
+      - name: Pobieranie kodu
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build blockchain
+        run: |
+          echo "🔗 Budowanie blockchain na master branch"
+          make build
+          
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build blockchain Docker image
+        run: |
+          docker build -f Dockerfile.blockchain -t ${{ env.BLOCKCHAIN_IMAGE }}:latest .
+          echo "✅ Blockchain image zbudowany pomyślnie"
+
+  # Deploy Meowtopia (tylko na branch meowtopia)
+  deploy-meowtopia:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      (github.ref == 'refs/heads/meowtopia' || 
+       github.ref == 'refs/heads/development') && 
+      needs.detect-changes.outputs.meowtopia == 'true'
+    steps:
+      - name: Pobieranie kodu
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Meowtopia images
+        run: |
+          echo "🐱 Budowanie Meowtopia (Kocia Kawiarnia)"
+          
+          # Backend (FastAPI)
+          docker build -f meowtopia/backend/Dockerfile.backend \
+            -t ${{ env.MEOWTOPIA_BACKEND_IMAGE }}:latest \
+            meowtopia/backend
+            
+          # Frontend (React + TypeScript)
+          docker build -f meowtopia/frontend/web/Dockerfile.web \
+            -t ${{ env.MEOWTOPIA_FRONTEND_IMAGE }}:latest \
+            meowtopia/frontend/web
+            
+          echo "✅ Meowtopia images zbudowane pomyślnie"
+
+      - name: Test Meowtopia Backend
+        run: |
+          echo "🧪 Testowanie Meowtopia Backend"
+          cd meowtopia/backend
+          # Dodaj testy gdy będą dostępne
+          echo "Backend tests - TODO"
+
+  # Deploy Vengeance-69 (tylko na branch vengeance-69)  
+  deploy-vengeance69:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      github.ref == 'refs/heads/vengeance-69' && 
+      needs.detect-changes.outputs.vengeance69 == 'true'
+    steps:
+      - name: Pobieranie kodu
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Vengeance-69 images
+        run: |
+          echo "⚡ Budowanie Vengeance-69"
+          
+          # Backend (FastAPI)
+          if [ -f "vengeance-69/backend/Dockerfile.backend" ]; then
+            docker build -f vengeance-69/backend/Dockerfile.backend \
+              -t ${{ env.VENGEANCE69_BACKEND_IMAGE }}:latest \
+              vengeance-69/backend
+          fi
+            
+          # Frontend (React + TypeScript)
+          if [ -f "vengeance-69/frontend/web/Dockerfile.web" ]; then
+            docker build -f vengeance-69/frontend/web/Dockerfile.web \
+              -t ${{ env.VENGEANCE69_FRONTEND_IMAGE }}:latest \
+              vengeance-69/frontend/web
+          fi
+            
+          echo "✅ Vengeance-69 images zbudowane pomyślnie"
+
+  # Sprawdzanie bezpieczeństwa i jakości kodu
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobieranie kodu
+        uses: actions/checkout@v4
+
+      - name: Skanowanie bezpieczeństwa
+        run: |
+          echo "🔒 Sprawdzanie bezpieczeństwa projektu"
+          # Dodaj skanowanie bezpieczeństwa
+          echo "Security scan - TODO"
+
+      - name: Sprawdzanie jakości kodu
+        run: |
+          echo "📊 Analiza jakości kodu"
+          # Dodaj sprawdzanie jakości kodu
+          echo "Code quality check - TODO"
+
+  # Powiadomienia o statusie
+  notify:
+    runs-on: ubuntu-latest
+    needs: [deploy-blockchain, deploy-meowtopia, deploy-vengeance69]
+    if: always()
+    steps:
+      - name: Powiadomienie o statusie
+        run: |
+          echo "📢 Status deployment:"
+          echo "Blockchain: ${{ needs.deploy-blockchain.result }}"
+          echo "Meowtopia: ${{ needs.deploy-meowtopia.result }}"
+          echo "Vengeance-69: ${{ needs.deploy-vengeance69.result }}"
