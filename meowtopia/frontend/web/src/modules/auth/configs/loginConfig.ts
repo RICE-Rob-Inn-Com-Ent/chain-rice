@@ -23,10 +23,11 @@ export function useLoginConfig() {
       });
       if (response.data?.access_token) {
         localStorage.setItem("access_token", response.data.access_token);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.access_token}`;
       }
       setSuccess("Zalogowano pomyślnie!");
       setTimeout(() => {
-        window.location.href = "/admin";
+        window.location.reload();
       }, 1000);
     } catch (err: any) {
       const msg = err?.response?.data?.message || null;
@@ -36,7 +37,8 @@ export function useLoginConfig() {
 
   return {
     formConfig: {
-      className: "bg-red-50 p-6 rounded-lg shadow-md max-w-md mx-auto",
+      tag: "form",
+      variant: "form",
       onSubmit: handleSubmit,
     },
     containerConfig: {

@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3001,
+    port: 3000,
     host: "0.0.0.0",
     open: false,
     fs: {
@@ -33,7 +33,7 @@ export default defineConfig({
       process.env.REACT_APP_API_URL || "http://meowtopia-backend:8000"
     ),
     "process.env.REACT_APP_BASE_URL": JSON.stringify(
-      process.env.REACT_APP_BASE_URL || "http://meowtopia-frontend:3001"
+      process.env.REACT_APP_BASE_URL || "http://meowtopia-frontend:3000"
     ),
     "process.env.REACT_APP_GOOGLE_CLIENT_ID": JSON.stringify(
       process.env.REACT_APP_GOOGLE_CLIENT_ID || ""

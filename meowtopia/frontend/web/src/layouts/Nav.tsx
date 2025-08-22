@@ -11,7 +11,7 @@ const linkConfig = {
     role: "primary",
     state: "pressed",
     ariaLabel: "Link do Kawiarni",
-    to: "/cafe",
+    to: "/admin",
     icon: "cafe",
     children: "Kawiarnia",
   } as ClickConfig,
@@ -20,7 +20,7 @@ const linkConfig = {
     role: "primary",
     state: "pressed",
     ariaLabel: "Link do Użytkowników",
-    to: "/users",
+    to: "/admin/users",
     icon: "users",
     children: "Użytkownicy",
   } as ClickConfig,
@@ -29,7 +29,7 @@ const linkConfig = {
     role: "primary",
     state: "pressed",
     ariaLabel: "Link do Magazynu",
-    to: "/storage",
+    to: "/admin/storage",
     icon: "storage",
     children: "Magazyn",
   } as ClickConfig,
@@ -38,13 +38,11 @@ const linkConfig = {
     role: "primary",
     state: "pressed",
     ariaLabel: "Link do Księgowości",
-    to: "/accounting",
+    to: "/admin/accounting",
     icon: "accounting",
     children: "Księgowość",
   } as ClickConfig,
-};
-
-export const Nav: React.FC<NavConfig> = ({ variant }) => {
+};export const Nav: React.FC<NavConfig> = ({ variant }) => {
   const variantClasses = {
     "admin": "flex flex-col",
     "user": "flex flex-row",

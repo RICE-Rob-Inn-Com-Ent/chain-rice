@@ -1,4 +1,5 @@
 import React from "react";
+import { Container } from "@/components/Container";
 import { Icon } from "@iconify/react";
 import { Text } from "@/components/Text";
 import { Field } from "@/components/Field";
@@ -9,7 +10,7 @@ const Login: React.FC = () => {
   const config = useLoginConfig();
 
   return (
-    <form {...config.formConfig}>
+    <Container {...config.formConfig}>
       <Text {...config.titleText} />
       <div {...config.containerConfig}>
         <Field {...config.emailField} />
@@ -26,7 +27,7 @@ const Login: React.FC = () => {
       <Text {...config.registerText} />
       <Click {...config.registerClick} />
       <Text {...config.useSocialText} />
-    </form>
+    </Container>
   );
 };
 

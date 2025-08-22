@@ -45,7 +45,7 @@ Token MWT służy do:
 | Inwestorzy i granty   | 10%    | 100 000 000 |
 | Płynność i listing    | 5%     | 50 000 000  |
 
-> _Tokeny zespołu są zamrożone na 24 miesiące i uwalniane liniowo._
+> _Tokeny zespołu są zamrożone na 36 miesiecy i uwalniane liniowo._
 
 ---
 
@@ -54,7 +54,7 @@ Token MWT służy do:
 - **MiCA (EU 2023/1114)** – klasyfikacja jako token użytkowy bez funkcji inwestycyjnej.
 - **RODO / GDPR** – brak powiązania tokena z danymi osobowymi.
 - **AML / KYC** – wymagane dla transakcji przekraczających określone progi.
-- **Licencja CASP** – planowana rejestracja w Estonii lub na Litwie.
+- **Licencja CASP** – planowana rejestracja w Litwie, Estonii lub Niemczech.
 
 ---
 

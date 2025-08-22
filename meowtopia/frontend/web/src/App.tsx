@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
 import React, { Suspense, useEffect, useState, lazy } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import "./tailwind.css";
 import { Container, ContainerConfig } from "./components/Container";
@@ -63,6 +63,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
+    console.log("Token from localStorage:", token); // Додано для відлагодження
 
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -72,6 +73,20 @@ const App: React.FC = () => {
     setLoading(false);
   }, []);
 
+  // Функція для оновлення стану аутентифікації
+  const updateAuthState = () => {
+    const token = localStorage.getItem("access_token");
+    setAuthenticated(!!token);
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+  };
+
+  // Перевіряємо токен при зміні URL
+  useEffect(() => {
+    updateAuthState();
+  }, [window.location.pathname]);
+
   return (
     <BrowserRouter {...config.routerConfig}>
       <Suspense fallback={<Text {...config.suspenseConfig} />}>
@@ -79,13 +94,19 @@ const App: React.FC = () => {
           <Text {...config.suspenseConfig} />
         ) : !authenticated ? (
           <Suspense fallback={<Text {...config.suspenseConfig} />}>
-            <Auth />
+            <Routes>
+              <Route path="/auth/*" element={<Auth />} />
+              <Route path="*" element={<Auth />} />
+            </Routes>
           </Suspense>
         ) : (
           <Suspense fallback={<Text {...config.suspenseConfig} />}>
             <Container {...config.mainConfig}>
               <Nav variant={authenticated ? "admin" : "user"} />
-              <Admin />
+              <Routes>
+                <Route path="/admin/*" element={<Admin />} />
+                <Route path="/" element={<Admin />} />
+              </Routes>
             </Container>
           </Suspense>
         )}

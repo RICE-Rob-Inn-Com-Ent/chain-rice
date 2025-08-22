@@ -9,7 +9,6 @@ export interface TableColumn {
 
 export interface TableConfig {
   tableName?: string;
-  apiEndpoint?: string;
   columns?: TableColumn[];
   headChildren?: React.ReactNode;
   bodyChildren?: React.ReactNode;
@@ -21,27 +20,13 @@ interface TableData {
 
 export const Table: React.FC<TableConfig> = ({
   tableName,
-  apiEndpoint,
   columns = [],
   headChildren,
   bodyChildren,
 }) => {
   const [data, setData] = useState<TableData[]>([]);
-
-  useEffect(() => {
-    if (apiEndpoint) {
-      fetchData();
-    }
-  }, [apiEndpoint]);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(apiEndpoint!);
-      setData(response.data);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  };
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const formatValue = (value: any, type?: string) => {
     if (value === null || value === undefined) return "-";
@@ -60,6 +45,18 @@ export const Table: React.FC<TableConfig> = ({
 
   return (
     <div>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+      
+      {loading && (
+        <div className="text-center py-4">
+          Завантаження...
+        </div>
+      )}
+
       <table table-name={tableName}>
         <thead>
           <tr>
@@ -71,7 +68,7 @@ export const Table: React.FC<TableConfig> = ({
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
+          {!loading && !error && data.length > 0 ? (
             data.map((row, index) => (
               <tr key={row.id || index}>
                 {columns.length > 0 ? (
@@ -85,11 +82,11 @@ export const Table: React.FC<TableConfig> = ({
                 )}
               </tr>
             ))
-          ) : (
+          ) : !loading && !error ? (
             <tr>
               <td colSpan={columns.length || 1}>Brak danych do wyświetlenia</td>
             </tr>
-          )}
+          ) : null}
         </tbody>
       </table>
     </div>

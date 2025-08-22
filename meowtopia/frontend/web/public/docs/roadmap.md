@@ -8,7 +8,7 @@
 
 - ✅ Określenie misji, wizji i wartości
 - ✅ Wstępne badanie rynku i analiza potrzeb
-- ⚠️ [Uwaga Praca](job) Zawiązanie zespołu oraz określenie podstawowych celów
+- ✅ Zawiązanie zespołu oraz określenie podstawowych celów
 
 ---
 
@@ -60,11 +60,11 @@
 ## TLR 5 – MVP (Minimalna Wersja Produktu)
 
 - Uruchomienie platformy MVP:
-  - ✅ Kawiarnia: (POS, roboty, ⏳interakcje)
+  - ✅ Kawiarnia: (POS, ⏳Robot, ⏳interakcje)
   - [x] Aplikacja: (Web3, Android, iOS)
-  - [x] Blockchain (token, lojalność, DAO)
+  - ⏳ Blockchain (token, lojalność, DAO)
 - [x] Integracja z miejskimi systemami i NGO
-- [x] Start programu grantowego i pierwsze zbiórki
+- ⏳ Start programu grantowego i pierwsze zbiórki
 - ✅ Otwarcie na inwestorów i ambasadorów projektu
 
 ---
