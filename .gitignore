@@ -86,8 +86,6 @@ temp/
 config/gentx/
 config/priv_validator_key.json
 config/node_key.json
-blockchain-data/
-vengeance-69/
 
 # Docker
 .dockerignore

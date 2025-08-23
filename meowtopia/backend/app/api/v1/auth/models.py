@@ -11,6 +11,7 @@ class User(Base):
     fullName = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
+    role = Column(String, nullable=False, default="user")  # "admin" or "user"
     terms = Column(Boolean, nullable=False)
     firstName = Column(String, nullable=True)
     lastName = Column(String, nullable=True)
@@ -36,6 +37,7 @@ class LoginResponse(BaseModel):
     expires_in: int
     user_id: str
     fullName: str
+    role: str  # Added role field
 
 class RegisterRequest(BaseModel):
     fullName: str

@@ -1,0 +1,28 @@
+name: Deploy master with blockchain profile
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build images with bake (blockchain + backend + web)
+        run: |
+          docker buildx bake -f docker-bake.hcl
+
+      - name: Compose up with blockchain profile
+        env:
+          API_PORT: 8000
+        run: |
+          docker compose --profile blockchain --profile app up -d
+
+

@@ -14,6 +14,8 @@ services:
         BUILD_VERSION: ${BUILD_VERSION}
         BUILD_COMMIT: ${BUILD_COMMIT}
     container_name: chain-rice-blockchain
+    profiles:
+      - blockchain
     ports:
       - "26657:26657"
       - "26656:26656"
@@ -29,9 +31,15 @@ services:
   meowtopia-db:
     image: postgres:17
     container_name: meowtopia-db
+    profiles:
+      - app
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-meowtopia}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
     volumes:
@@ -50,6 +58,8 @@ services:
         BUILD_VERSION: ${BUILD_VERSION}
         BUILD_COMMIT: ${BUILD_COMMIT}
     container_name: meowtopia-backend
+    profiles:
+      - app
     ports:
       - "${API_PORT}:8000"
     restart: unless-stopped
@@ -60,6 +70,11 @@ services:
       - chain-rice-network
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-meowtopia-db}
+      POSTGRES_DB: ${POSTGRES_DB:-meowtopia}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     depends_on:
       - meowtopia-db
 
@@ -74,6 +89,8 @@ services:
         BUILD_VERSION: ${BUILD_VERSION}
         BUILD_COMMIT: ${BUILD_COMMIT}
     container_name: meowtopia-frontend
+    profiles:
+      - app
     ports:
       - "3000:3000"
     restart: unless-stopped
