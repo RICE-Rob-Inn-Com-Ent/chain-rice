@@ -21,8 +21,8 @@ services:
       - "26656:26656"
       - "1317:1317"
     restart: unless-stopped
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     volumes:
       - ${BLOCKCHAIN_DATA_DIR:-./blockchain-data}:/root/.chainrice
     networks:
@@ -34,8 +34,8 @@ services:
     profiles:
       - app
     restart: unless-stopped
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-meowtopia}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -61,15 +61,15 @@ services:
     profiles:
       - app
     ports:
-      - "${API_PORT}:8000"
+      - "8000:8000"
     restart: unless-stopped
     volumes:
       - ./meowtopia/backend:/app
     working_dir: /app
     networks:
       - chain-rice-network
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST:-meowtopia-db}
       POSTGRES_DB: ${POSTGRES_DB:-meowtopia}

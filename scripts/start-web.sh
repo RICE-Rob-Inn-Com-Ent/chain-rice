@@ -7,20 +7,23 @@ NC='\033[0m'
 
 echo -e "${BLUE}🌐 Starting Web Frontend and Backend services...${NC}"
 
-docker compose up -d meowtopia-frontend meowtopia-backend
+# Start services with the app profile
+docker compose --profile app up -d meowtopia-frontend meowtopia-backend meowtopia-db
 
 echo -e "${GREEN}✅ Web Frontend and Backend started!${NC}\n"
 
 echo -e "${YELLOW}🔗 Web & API Endpoints:${NC}"
 echo -e "  🟢 Web Frontend:    http://localhost:3000"
 echo -e "  🟢 Backend API:     http://localhost:8000"
+echo -e "  🟢 Database:        localhost:5432"
 
 echo -e "${YELLOW}📋 Logs & Monitoring:${NC}"
-echo -e "  📝 View web logs:   docker-compose logs -f meowtopia-frontend"
-echo -e "  📝 View backend:    docker-compose logs -f meowtopia-backend"
+echo -e "  📝 View web logs:   docker compose logs -f meowtopia-frontend"
+echo -e "  📝 View backend:    docker compose logs -f meowtopia-backend"
+echo -e "  📝 View database:   docker compose logs -f meowtopia-db"
 
 echo -e "${BLUE}🌐 Opening web development interfaces in browser...${NC}"
-sleep 3  # Wait for services to be ready
+sleep 5  # Wait for services to be ready
 
 # Open web frontend
 if command -v xdg-open > /dev/null; then

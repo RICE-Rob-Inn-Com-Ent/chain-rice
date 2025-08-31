@@ -36,7 +36,6 @@ class Settings:
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
-        "http://localhost:3001",
         "https://meowtopia.app",
         "https://game.meowtopia.app"
     ]
@@ -138,29 +137,3 @@ except ImportError:
     engine = None
     SessionLocal = None
     Base = None
-
-
-# Gunicorn Callback Functions
-def post_fork(server, worker):
-    """Called just after a worker has been forked."""
-    server.log.info("Worker spawned (pid: %s)", worker.pid)
-
-
-def pre_fork(server, worker):
-    """Called just before a worker is forked."""
-    pass
-
-
-def when_ready(server):
-    """Called just after the server is started."""
-    server.log.info("Server is ready. Spawning workers")
-
-
-def worker_int(worker):
-    """Called just after a worker receives the INT or QUIT signal."""
-    worker.log.info("worker received INT or QUIT signal")
-
-
-def on_exit(server):
-    """Called just before shutting down the server."""
-    server.log.info("Server is shutting down.")
