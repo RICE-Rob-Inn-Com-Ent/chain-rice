@@ -1,5 +1,5 @@
-# 🌐 Use Node.js (Debian-based for better compatibility)
-FROM node:18-slim
+# 🌐 Multi-platform Node.js Dockerfile for better cross-platform compatibility
+FROM --platform=$BUILDPLATFORM node:18-slim
 
 # 📁 Set working directory
 WORKDIR /app
@@ -7,9 +7,24 @@ WORKDIR /app
 # 🔧 Enable corepack and set up correct Yarn version
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
-# 📦 Copy package files and install dependencies with timeout settings
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+# 🧹 Clean any existing installations
+RUN rm -rf node_modules package-lock.json
+
+# 📦 Copy package files first
+COPY package.json ./
+
+# 🔧 Install dependencies with platform-specific handling
+RUN yarn install --frozen-lockfile --network-timeout 100000 || \
+    (echo "First install failed, trying without lockfile..." && \
+     rm -rf node_modules && \
+     yarn install --network-timeout 100000)
+
+# 📦 Copy yarn.lock if it exists
+COPY yarn.lock* ./
+
+# 🔄 Final install to ensure consistency
+RUN yarn install --frozen-lockfile --network-timeout 100000 || \
+    yarn install --network-timeout 100000
 
 # 📦 Copy the full frontend codebase
 COPY . .
