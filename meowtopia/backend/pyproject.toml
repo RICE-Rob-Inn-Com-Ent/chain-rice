@@ -9,39 +9,38 @@ description = "Backend system for ERP, AI assistant, cafe robots, and analytics"
 authors = ["Code-Rice <infocoderice@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-# Uncomment the following line when Poetry officially supports 'package-mode'
-# package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
+
+# --- Core backend ---
 fastapi = "^0.111.0"
 uvicorn = {extras = ["standard"], version = "^0.32.0"}
-sqlalchemy = "^2.0.30"
-alembic = "^1.13.1"
-psycopg2-binary = "^2.9.9"
-asyncpg = "^0.29.0"
 pydantic = "^2.7.1"
 pydantic-settings = "^2.2.1"
 python-dotenv = "^1.0.1"
 python-multipart = "^0.0.20"
+email-validator = "^2.1.0"
+
+# --- Database & ORM ---
+sqlalchemy = "^2.0.30"
+sqlalchemy-utils = "^0.41.1"
+alembic = "^1.13.1"
+psycopg2-binary = "^2.9.9"
+asyncpg = "^0.29.0"
+
+# --- Security & Auth ---
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
-python-dateutil = "^2.9.0.post0"
-PyYAML = "^6.0.1"
-openai = "^1.30.1"
-langchain = "^0.2.0"
-redis = "^5.0.1"
-celery = "^5.3.4"
-flower = "^2.0.1"
-prometheus-client = "^0.20.0"
-structlog = "^24.1.0"
-sentry-sdk = {extras = ["fastapi"], version = "^2.7.0"}
-requests = "^2.32.2"
-tqdm = "^4.66.4"
-numpy = "^1.26.4"
-pandas = "^2.2.2"
-email-validator = "^2.1.0"
-jinja2 = "^3.1.3"
+argon2-cffi = "^23.1.0"
+cryptography = "^42.0.5"
+fastapi-users = "^14.0.1"
+
+# --- Rate limiting ---
+fastapi-limiter = "^0.1.6"
+slowapi = "^0.1.9"
+
+# --- ERP-specific utils (файли, звіти, QR/barcodes) ---
 aiofiles = "^23.2.1"
 pillow = "^10.2.0"
 qrcode = "^7.4.2"
@@ -49,23 +48,39 @@ python-barcode = "^0.15.1"
 reportlab = "^4.1.0"
 openpyxl = "^3.1.2"
 xlsxwriter = "^3.2.0"
-cryptography = "^42.0.5"
-bcrypt = "^4.0.0,<4.2.0"
-argon2-cffi = "^23.1.0"
-# Additional ERP-specific packages
-sqlalchemy-utils = "^0.41.1"
-# API documentation
-fastapi-users = "^14.0.1"
-fastapi-limiter = "^0.1.6"
-slowapi = "^0.1.9"
+PyYAML = "^6.0.1"
+
+[tool.poetry.group.ai.dependencies]
+# --- AI & Analytics ---
+openai = "^1.30.1"
+langchain = "^0.2.0"
+numpy = "^1.26.4"
+pandas = "^2.2.2"
+tqdm = "^4.66.4"
+
+[tool.poetry.group.ops.dependencies]
+# --- Background tasks & monitoring ---
+redis = "^5.0.1"
+celery = "^5.3.4"
+flower = "^2.0.1"
+prometheus-client = "^0.20.0"
+structlog = "^24.1.0"
+sentry-sdk = {extras = ["fastapi"], version = "^2.7.0"}
 
 [tool.poetry.group.dev.dependencies]
+# --- Testing ---
 pytest = "^8.0.0"
 pytest-asyncio = "^0.24.0"
-httpx = "^0.27.0"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.12.0"
+pytest-xdist = "^3.5.0"
+pytest-benchmark = "^4.0.0"
 factory-boy = "^3.3.0"
 faker = "^24.2.0"
+httpx = "^0.27.0"
 coverage = "^7.4.3"
+
+# --- Code quality ---
 black = "^24.4.2"
 isort = "^5.13.2"
 mypy = "^1.10.0"
@@ -73,10 +88,8 @@ flake8 = "^7.0.0"
 bandit = "^1.7.7"
 safety = "^2.3.5"
 pre-commit = "^3.7.0"
+
+# --- Deployment / Ops tools ---
 gunicorn = "^21.2.0"
 supervisor = "^4.2.5"
-pytest-cov = "^4.1.0"
-pytest-mock = "^3.12.0"
-pytest-xdist = "^3.5.0"
-pytest-benchmark = "^4.0.0"
 locust = "^2.24.0"
