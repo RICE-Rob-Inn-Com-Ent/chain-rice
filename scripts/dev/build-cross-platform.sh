@@ -18,7 +18,7 @@ echo "📦 Building frontend for linux/amd64 and linux/arm64..."
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --tag meowtopia-frontend:latest \
-  --file meowtopia/frontend/web/Dockerfile.web \
+  --file meowtopia/frontend/web/Dockerfile.web.npm \
   ./meowtopia/frontend/web \
   --load
 

@@ -2,14 +2,23 @@
 
 Цей гід допоможе вам зібрати Chain Rice проект на будь-якій платформі (Windows, macOS, Linux).
 
-## 🚨 Проблема з Rollup
+## 🚨 Проблеми з залежностями
 
+### Проблема з Rollup
 Якщо ви отримуєте помилку:
 ```
 Error: Cannot find module @rollup/rollup-linux-x64-gnu
 ```
 
 Це означає, що npm/yarn встановив неправильні платформно-специфічні залежності для вашого контейнера.
+
+### Проблема з Yarn 4
+Якщо ви отримуєте помилку:
+```
+Usage Error: Couldn't find the node_modules state file - running an install might help (findPackageLocation)
+```
+
+Це проблема з Yarn 4 станом файлів. Використовується npm замість Yarn для стабільності.
 
 ## 🔧 Рішення
 
@@ -30,7 +39,7 @@ docker buildx create --name multiplatform --use
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --tag meowtopia-frontend:latest \
-  --file meowtopia/frontend/web/Dockerfile.web \
+  --file meowtopia/frontend/web/Dockerfile.web.npm \
   ./meowtopia/frontend/web
 
 # Зберіть backend для всіх платформ
@@ -92,11 +101,12 @@ docker buildx inspect --bootstrap
 
 ## 📝 Нотатки
 
-- Основний `Dockerfile.web` тепер має вбудовану крос-платформну підтримку
+- Використовується `Dockerfile.web.npm` для frontend (npm замість Yarn для стабільності)
 - Всі Dockerfile підтримують `linux/amd64` та `linux/arm64`
 - Скрипт `build-cross-platform.sh` автоматизує весь процес
 - При проблемах з залежностями, Dockerfile автоматично спробує альтернативні методи встановлення
 - Крос-платформна підтримка працює автоматично без додаткових налаштувань
+- npm використовується замість Yarn 4 через проблеми зі станом файлів
 
 ## 🎯 Результат
 
