@@ -103,14 +103,64 @@ govulncheck:
 	@go tool golang.org/x/vuln/cmd/govulncheck@latest
 	@govulncheck ./...
 
-.PHONY: govet govulncheck dev linux windows mac build-all up down down-no-clean restart logs open status clean clean-images web help
+.PHONY: govet govulncheck check setup prepare windows-setup dev linux windows mac build-all up down down-no-clean restart logs open status clean clean-images web help
+
+###################
+### Setup & Prep ###
+###################
+
+# Check system requirements
+check:
+	@echo "🔍 Checking system requirements..."
+	@if [ -f "scripts/setup/check-system.sh" ]; then \
+		chmod +x scripts/setup/check-system.sh && \
+		./scripts/setup/check-system.sh; \
+	elif [ -f "scripts/setup/check-system.ps1" ]; then \
+		powershell -ExecutionPolicy Bypass -File scripts/setup/check-system.ps1; \
+	elif [ -f "scripts/setup/check-system.bat" ]; then \
+		scripts/setup/check-system.bat; \
+	else \
+		echo "❌ System check script not found"; \
+		exit 1; \
+	fi
+
+# Setup development environment
+setup:
+	@echo "🛠️ Setting up development environment..."
+	@if [ -f "scripts/setup/setup-environment.sh" ]; then \
+		chmod +x scripts/setup/setup-environment.sh && \
+		./scripts/setup/setup-environment.sh; \
+	elif [ -f "scripts/setup/setup-environment.ps1" ]; then \
+		powershell -ExecutionPolicy Bypass -File scripts/setup/setup-environment.ps1; \
+	elif [ -f "scripts/setup/setup-environment.bat" ]; then \
+		scripts/setup/setup-environment.bat; \
+	else \
+		echo "❌ Setup script not found"; \
+		exit 1; \
+	fi
+
+# Prepare environment (check + setup)
+prepare: check setup
+	@echo "✅ Environment preparation completed!"
+
+# Quick setup for Windows users
+windows-setup:
+	@echo "🪟 Setting up for Windows..."
+	@if [ -f "scripts/setup/setup-environment.bat" ]; then \
+		scripts/setup/setup-environment.bat; \
+	else \
+		echo "❌ Windows setup script not found"; \
+		exit 1; \
+	fi
+
+.PHONY: check setup prepare windows-setup
 
 ###################
 ### Development ###
 ###################
 
-# Development environment
-dev:
+# Development environment (with auto-setup)
+dev: prepare
 	@echo "🚀 Starting complete development environment..."
 	./scripts/dev/start-dev.sh
 
@@ -127,12 +177,12 @@ mac:
 	@echo "🍎 Building for macOS platforms..."
 	./scripts/platforms/build-mac.sh
 
-build-all:
+build-all: prepare
 	@echo "🌍 Building for all platforms..."
 	./scripts/platforms/build-all.sh
 
-# Docker operations
-up:
+# Docker operations (with auto-setup)
+up: prepare
 	@echo "🚀 Starting services..."
 	./scripts/docker/docker-helper.sh up
 
@@ -174,8 +224,8 @@ clean-images:
 	@docker image prune -a -f
 	@echo "✅ Docker images cleaned!"
 
-# Legacy web command
-web:
+# Web development (with auto-setup)
+web: prepare
 	@echo "Starting ChainRice Web Platform (Cafe Interface)..."
 	./scripts/dev/start-web.sh
 
@@ -183,9 +233,16 @@ web:
 help:
 	@echo "🚀 Chain Rice Development Commands"
 	@echo ""
+	@echo "🛠️  Setup & Preparation:"
+	@echo "  make check        - Check system requirements"
+	@echo "  make setup        - Setup development environment"
+	@echo "  make prepare      - Check + setup (recommended first run)"
+	@echo "  make windows-setup - Quick setup for Windows users"
+	@echo ""
 	@echo "📋 Development:"
-	@echo "  make dev          - Start complete development environment"
-	@echo "  make up           - Start services"
+	@echo "  make dev          - Start complete development environment (auto-setup)"
+	@echo "  make web          - Start web services only (auto-setup)"
+	@echo "  make up           - Start services (auto-setup)"
 	@echo "  make down         - Stop services and clean Docker cache"
 	@echo "  make down-no-clean - Stop services (keep cache)"
 	@echo "  make restart      - Restart services"
@@ -197,7 +254,7 @@ help:
 	@echo "  make linux        - Build for Linux platforms"
 	@echo "  make windows      - Build for Windows platforms"
 	@echo "  make mac          - Build for macOS platforms"
-	@echo "  make build-all    - Build for all platforms"
+	@echo "  make build-all    - Build for all platforms (auto-setup)"
 	@echo ""
 	@echo "🧪 Testing:"
 	@echo "  make test         - Run Go tests"
@@ -211,3 +268,7 @@ help:
 	@echo ""
 	@echo "📚 Documentation:"
 	@echo "  See docs/DEVELOPMENT.md for detailed setup instructions"
+	@echo ""
+	@echo "💡 Quick Start:"
+	@echo "  make prepare      - First time setup"
+	@echo "  make dev          - Start everything"
