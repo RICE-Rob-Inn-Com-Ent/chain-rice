@@ -12,9 +12,17 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.security import HTTPBearer
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
+try:
+    from slowapi import Limiter, _rate_limit_exceeded_handler
+    from slowapi.util import get_remote_address
+    from slowapi.errors import RateLimitExceeded
+    RATE_LIMITING_AVAILABLE = True
+except ImportError:
+    RATE_LIMITING_AVAILABLE = False
+    Limiter = None
+    _rate_limit_exceeded_handler = None
+    get_remote_address = None
+    RateLimitExceeded = None
 import sentry_sdk
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 
@@ -76,22 +84,32 @@ structlog.configure(
 )
 
 # Configure Sentry for error tracking
-if settings.SENTRY_DSN:
-    sentry_sdk.init(
-        dsn=settings.SENTRY_DSN,
-        environment=settings.SENTRY_ENVIRONMENT,
-        integrations=[
-            FastApiIntegration(auto_enabling_integrations=False),
-        ],
-        traces_sample_rate=0.1 if settings.SENTRY_ENVIRONMENT == "production" else 1.0,
-        profiles_sample_rate=0.1 if settings.SENTRY_ENVIRONMENT == "production" else 1.0,
-    )
+if settings.SENTRY_DSN and settings.SENTRY_DSN != "your-sentry-dsn-here":
+    try:
+        sentry_sdk.init(
+            dsn=settings.SENTRY_DSN,
+            environment=settings.SENTRY_ENVIRONMENT,
+            integrations=[
+                FastApiIntegration(),
+            ],
+            traces_sample_rate=0.1 if settings.SENTRY_ENVIRONMENT == "production" else 1.0,
+            profiles_sample_rate=0.1 if settings.SENTRY_ENVIRONMENT == "production" else 1.0,
+        )
+        logger = structlog.get_logger()
+        logger.info("Sentry initialized successfully")
+    except Exception as e:
+        logger = structlog.get_logger()
+        logger.warning("Failed to initialize Sentry", error=str(e))
+        logger.info("Continuing without Sentry error tracking")
 
 # Configure rate limiter
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=[f"{settings.RATE_LIMIT_PER_MINUTE}/minute"]
-)
+if RATE_LIMITING_AVAILABLE:
+    limiter = Limiter(
+        key_func=get_remote_address,
+        default_limits=[f"{settings.RATE_LIMIT_PER_MINUTE}/minute"]
+    )
+else:
+    limiter = None
 
 # Application lifespan management
 @asynccontextmanager
@@ -176,15 +194,16 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # Add rate limiting
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+if RATE_LIMITING_AVAILABLE and limiter:
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Security scheme
 security = HTTPBearer()
@@ -250,7 +269,6 @@ async def readiness_check():
         )
 
 @app.get("/", tags=["root"])
-@limiter.limit(f"{settings.RATE_LIMIT_PER_MINUTE}/minute")
 async def root(request: Request):
     """Root endpoint with API information."""
     return {

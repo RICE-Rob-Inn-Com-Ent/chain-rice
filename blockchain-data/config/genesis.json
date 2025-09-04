@@ -16,7 +16,22 @@
         "sig_verify_cost_ed25519": "590",
         "sig_verify_cost_secp256k1": "1000"
       },
-      "accounts": []
+      "accounts": [
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "pub_key": null,
+          "account_number": "0",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "pub_key": null,
+          "account_number": "0",
+          "sequence": "0"
+        }
+      ]
     },
     "authz": {
       "authorization": []
@@ -26,8 +41,32 @@
         "send_enabled": [],
         "default_send_enabled": true
       },
-      "balances": [],
-      "supply": [],
+      "balances": [
+        {
+          "address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "coins": [
+            {
+              "denom": "stake",
+              "amount": "1000000000"
+            }
+          ]
+        },
+        {
+          "address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "coins": [
+            {
+              "denom": "stake",
+              "amount": "1000000000000"
+            }
+          ]
+        }
+      ],
+      "supply": [
+        {
+          "denom": "stake",
+          "amount": "1000000000000"
+        }
+      ],
       "denom_metadata": [],
       "send_enabled": []
     },
@@ -258,10 +297,46 @@
         "bond_denom": "stake",
         "min_commission_rate": "0.000000000000000000"
       },
-      "last_total_power": "0",
+      "last_total_power": "1000000000000",
       "last_validator_powers": [],
-      "validators": [],
-      "delegations": [],
+      "validators": [
+        {
+          "address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "pub_key": {
+            "type": "tendermint/PubKeyEd25519",
+            "value": "ifYDtB0xfGyiYuEqC4U3wKYeRjAEpJvPqvEWHmiFWDs="
+          },
+          "power": "1000000",
+          "name": "validator",
+          "commission": "0.100000000000000000",
+          "max_commission": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        },
+        {
+          "address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "pub_key": {
+            "type": "tendermint/PubKeyEd25519",
+            "value": "ifYDtB0xfGyiYuEqC4U3wKYeRjAEpJvPqvEWHmiFWDs="
+          },
+          "power": "1000000000000",
+          "name": "validator",
+          "commission": "0.100000000000000000",
+          "max_commission": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        }
+      ],
+      "delegations": [
+        {
+          "delegator_address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "validator_address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "shares": "1000000.000000000000000000"
+        },
+        {
+          "delegator_address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "validator_address": "DA2CCAB6763E27FA147DAB49EDA405B45AC9624C",
+          "shares": "1000000000000.000000000000000000"
+        }
+      ],
       "unbonding_delegations": [],
       "redelegations": [],
       "exported": false
