@@ -33,7 +33,9 @@ Get up and running with Chain Rice in under 5 minutes!
 make dev          # Start everything
 make status       # Check if services are running
 make logs         # View logs
-make down         # Stop everything
+make down         # Stop everything and clean cache
+make down-no-clean # Stop everything (keep cache)
+make clean        # Clean Docker cache manually
 make help         # Show all commands
 ```
 

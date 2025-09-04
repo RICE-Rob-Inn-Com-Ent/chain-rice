@@ -67,7 +67,8 @@ make dev
 
 # Service management
 make up           # Start services
-make down         # Stop services
+make down         # Stop services and clean cache
+make down-no-clean # Stop services (keep cache)
 make restart      # Restart services
 make status       # Check status
 make logs         # View logs
@@ -77,6 +78,10 @@ make open         # Open all interfaces
 make linux        # Build for Linux
 make windows      # Build for Windows
 make mac          # Build for macOS
+
+# Cleanup
+make clean        # Clean Docker cache
+make clean-images # Clean images only
 
 # Help
 make help         # Show all commands
@@ -88,7 +93,8 @@ make help         # Show all commands
 ```bash
 make dev          # Start complete development environment
 make up           # Start all services
-make down         # Stop all services
+make down         # Stop all services and clean Docker cache
+make down-no-clean # Stop all services (keep cache)
 make restart      # Restart all services
 make status       # Show service status
 make logs         # View colored logs from all services
@@ -109,6 +115,12 @@ make test         # Run Go tests
 make test-unit    # Run unit tests only
 make test-race    # Run tests with race detection
 make lint         # Run code linter
+```
+
+### 🧹 Cleanup Commands
+```bash
+make clean        # Clean Docker cache and volumes
+make clean-images # Clean Docker images only
 ```
 
 ### 📚 Help & Documentation
@@ -437,6 +449,7 @@ docker-compose -f docker-compose.prod.yml up -d
 
 - **Development Guide**: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) - Complete setup and usage guide
 - **Cross-Platform Build**: [docs/CROSS_PLATFORM_BUILD.md](docs/CROSS_PLATFORM_BUILD.md) - Multi-platform build instructions
+- **Docker Cache Management**: [docs/DOCKER_CACHE_MANAGEMENT.md](docs/DOCKER_CACHE_MANAGEMENT.md) - Cache cleaning strategies
 - **Scripts Documentation**: [scripts/README.md](scripts/README.md) - Scripts directory guide
 - **API Documentation**: http://localhost:8000/docs (when running)
 - **Blockchain Docs**: [Cosmos SDK Documentation](https://docs.cosmos.network/)

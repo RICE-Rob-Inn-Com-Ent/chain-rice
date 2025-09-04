@@ -103,7 +103,7 @@ govulncheck:
 	@go tool golang.org/x/vuln/cmd/govulncheck@latest
 	@govulncheck ./...
 
-.PHONY: govet govulncheck dev linux windows mac build-all up down restart logs open status web help
+.PHONY: govet govulncheck dev linux windows mac build-all up down down-no-clean restart logs open status clean clean-images web help
 
 ###################
 ### Development ###
@@ -139,6 +139,13 @@ up:
 down:
 	@echo "🛑 Stopping services..."
 	./scripts/docker/docker-helper.sh down
+	@echo "🧹 Cleaning Docker cache..."
+	@docker system prune -f --volumes || true
+	@echo "✅ Docker cache cleaned!"
+
+down-no-clean:
+	@echo "🛑 Stopping services (keeping cache)..."
+	./scripts/docker/docker-helper.sh down
 
 restart:
 	@echo "🔄 Restarting services..."
@@ -157,6 +164,16 @@ status:
 	@echo "📊 Service status..."
 	./scripts/docker/docker-helper.sh status
 
+clean:
+	@echo "🧹 Cleaning Docker cache and volumes..."
+	@docker system prune -a --volumes -f
+	@echo "✅ Docker cache and volumes cleaned!"
+
+clean-images:
+	@echo "🧹 Cleaning Docker images only..."
+	@docker image prune -a -f
+	@echo "✅ Docker images cleaned!"
+
 # Legacy web command
 web:
 	@echo "Starting ChainRice Web Platform (Cafe Interface)..."
@@ -169,7 +186,8 @@ help:
 	@echo "📋 Development:"
 	@echo "  make dev          - Start complete development environment"
 	@echo "  make up           - Start services"
-	@echo "  make down         - Stop services"
+	@echo "  make down         - Stop services and clean Docker cache"
+	@echo "  make down-no-clean - Stop services (keep cache)"
 	@echo "  make restart      - Restart services"
 	@echo "  make logs         - View colored logs"
 	@echo "  make status       - Show service status"
@@ -186,6 +204,10 @@ help:
 	@echo "  make test-unit    - Run unit tests"
 	@echo "  make test-race    - Run tests with race detection"
 	@echo "  make lint         - Run linter"
+	@echo ""
+	@echo "🧹 Cleanup:"
+	@echo "  make clean        - Clean Docker cache and volumes"
+	@echo "  make clean-images - Clean Docker images only"
 	@echo ""
 	@echo "📚 Documentation:"
 	@echo "  See docs/DEVELOPMENT.md for detailed setup instructions"
