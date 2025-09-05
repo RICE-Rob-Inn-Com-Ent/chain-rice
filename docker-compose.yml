@@ -24,6 +24,7 @@ services:
     # env_file:
     #   - .env
     volumes:
+      - ${BLOCKCHAIN_DATA_DIR:-./blockchain-data}:/root/.chain-rice
       - ${BLOCKCHAIN_DATA_DIR:-./blockchain-data}:/root/.chainrice
     networks:
       - chain-rice-network

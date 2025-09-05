@@ -4,7 +4,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import "../tailwind.css";
 
 const Admin = lazy(() => import("./elements/admin/index"));
-const Auth = lazy(() => import("./elements/auth/index"));
+const Auth = lazy(() => import("./elements/auth/routes"));
 const Main = lazy(() => import("./elements/main/index"));
 
 const App = () => {

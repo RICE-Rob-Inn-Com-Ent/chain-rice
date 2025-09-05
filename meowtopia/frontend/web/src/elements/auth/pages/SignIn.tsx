@@ -11,7 +11,9 @@ export const SignIn: React.FC<any> = ({}) => {
         <UI.Form tag="input" type="checkbox" />
         Zapamiętaj mnie
       </UI.Text>
-      <UI.Click tag="button" type="submit">
+      <UI.Click tag="button" type="submit" onClick={() => {
+        console.log("Zaloguj się");
+      }}>
         Zaloguj się
       </UI.Click>
       <UI.Click tag="a" url="/forgot-pass">
@@ -24,11 +26,15 @@ export const SignIn: React.FC<any> = ({}) => {
         </UI.Click>
       </UI.Text>
       <UI.Text tag="p">Lub zaloguj sie za pomoca</UI.Text>
-      <UI.Click tag="button" type="button">
+      <UI.Click tag="button" type="button" onClick={() => {
+        console.log("Zaloguj się za pomoca Google");
+      }}>
         <Icon icon="mdi:google" width="20" height="20" />
         Google
       </UI.Click>
-      <UI.Click tag="button" type="button">
+      <UI.Click tag="button" type="button" onClick={() => {
+        console.log("Zaloguj się za pomoca Facebook");
+      }}>
         <Icon icon="mdi:facebook" width="20" height="20" />
         Facebook
       </UI.Click>

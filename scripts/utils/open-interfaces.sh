@@ -127,6 +127,27 @@ echo -e "  📊 Blockchain Info:     http://localhost:26657/blockchain"
 echo -e "  🌐 Network Info:        http://localhost:26657/net_info"
 echo -e "  🔧 Node Info (REST):    http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info\n"
 
+# --- Autodetect and open all published container ports (best-effort) ---
+echo -e "${PURPLE}🔎 Autodetecting published container ports and opening base URLs...${NC}"
+
+# Gather name|ports lines, extract host ports like 0.0.0.0:PORT->, [::]:PORT-> or :::PORT->
+docker ps --format '{{.Names}}|{{.Ports}}' | while IFS='|' read -r cname cports; do
+    # Skip empty mappings
+    [ -z "$cports" ] && continue
+    # Split by comma
+    IFS=',' read -ra mappings <<< "$cports"
+    for m in "${mappings[@]}"; do
+        # Trim leading/trailing spaces
+        m="${m## }"; m="${m%% }"
+        # Extract host port before ->
+        host_port=$(echo "$m" | sed -nE 's/.*\[::\]:([0-9]+)->.*/\1/p; s/.*0\.0\.0\.0:([0-9]+)->.*/\1/p; s/.*:::([0-9]+)->.*/\1/p')
+        if [ -n "$host_port" ]; then
+            # Try opening the base URL; many services expose HTTP on these ports
+            open_url "http://localhost:${host_port}" "${cname} on :${host_port} (auto)"
+        fi
+    done
+done
+
 echo -e "${YELLOW}💡 Tips:${NC}"
 echo -e "  • Use Ctrl+Click to open links in new tabs"
 echo -e "  • Bookmark these URLs for quick access"
