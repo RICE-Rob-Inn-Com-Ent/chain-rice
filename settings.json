@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "enableBlockchain": false,
+    "enableApp": true
+  },
+  "frontend": {
+    "port": 3000,
+    "openOnStart": true
+  },
+  "backend": {
+    "port": 8000
+  },
+  "compose": {
+    "rebuildOnDev": false
+  }
+}

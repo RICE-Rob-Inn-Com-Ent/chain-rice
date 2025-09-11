@@ -1,0 +1,8 @@
+node_modules
+blockchain-data
+blockchain-data-backup
+**/dist
+**/build
+**/.venv
+**/__pycache__
+**/*.lock

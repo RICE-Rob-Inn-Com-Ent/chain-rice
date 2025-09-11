@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 🚀 Development Environment Startup Script
-# Starts the complete development environment with blockchain
+# Starts the complete development environment (blockchain optional via settings.json)
 
 set -e
 
@@ -26,11 +26,30 @@ export BUILD_DATE=$(date +%Y-%m-%d)
 export BUILD_VERSION=0.1.0
 export BUILD_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "dev")
 
-echo -e "${YELLOW}📦 Building services...${NC}"
-docker-compose build
+SETTINGS_FILE="$(dirname "$0")/../../settings.json"
+ENABLE_BLOCKCHAIN=true
+REBUILD=false
 
-echo -e "${GREEN}🚀 Starting all services...${NC}"
-docker-compose --profile app --profile blockchain up -d
+if [ -f "$SETTINGS_FILE" ]; then
+    # Parse minimal JSON without jq to keep memory/dep low
+    raw=$(cat "$SETTINGS_FILE")
+    case "$raw" in *"enableBlockchain"*false*) ENABLE_BLOCKCHAIN=false;; esac
+    case "$raw" in *"rebuildOnDev"*true*) REBUILD=true;; esac
+fi
+
+echo -e "${YELLOW}📦 Building services...${NC}"
+if [ "$REBUILD" = true ]; then
+    docker compose build --no-cache || docker-compose build --no-cache
+else
+    docker compose build || docker-compose build
+fi
+
+echo -e "${GREEN}🚀 Starting services...${NC}"
+if [ "$ENABLE_BLOCKCHAIN" = true ]; then
+    docker compose --profile app --profile blockchain up -d || docker-compose --profile app --profile blockchain up -d
+else
+    docker compose --profile app up -d || docker-compose --profile app up -d
+fi
 
 echo -e "${GREEN}⏳ Waiting for services to be ready...${NC}"
 sleep 10
@@ -41,8 +60,12 @@ echo -e "${YELLOW}🌐 Available services:${NC}"
 echo -e "  • Web Frontend:     http://localhost:3000"
 echo -e "  • Backend API:      http://localhost:8000"
 echo -e "  • API Docs:         http://localhost:8000/docs"
-echo -e "  • Blockchain API:   http://localhost:1317"
-echo -e "  • Blockchain RPC:   http://localhost:26657"
+if [ "$ENABLE_BLOCKCHAIN" = true ]; then
+  echo -e "  • Blockchain API:   http://localhost:1317"
+  echo -e "  • Blockchain RPC:   http://localhost:26657"
+else
+  echo -e "  • Blockchain:       disabled by settings.json"
+fi
 echo ""
 echo -e "${YELLOW}📝 Useful commands:${NC}"
 echo -e "  • View logs:        make logs"

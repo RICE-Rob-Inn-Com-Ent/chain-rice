@@ -85,7 +85,7 @@ services:
   meowtopia-frontend:
     build:
       context: ./meowtopia/frontend/web
-      dockerfile: Dockerfile.web.npm
+      dockerfile: Dockerfile.web
       platforms:
         - linux/amd64
         - linux/arm64

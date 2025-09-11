@@ -8,6 +8,19 @@ NC='\033[0m'
 
 echo -e "${PURPLE}🌐 Opening all development interfaces...${NC}"
 
+# Read settings.json to optionally skip opening
+SETTINGS_FILE="$(dirname "$0")/../../settings.json"
+OPEN_ON_START=true
+if [ -f "$SETTINGS_FILE" ]; then
+    raw=$(cat "$SETTINGS_FILE")
+    case "$raw" in *"openOnStart"*false*) OPEN_ON_START=false;; esac
+fi
+
+if [ "$OPEN_ON_START" != true ]; then
+    echo -e "${YELLOW}⚠️  Skipping browser opening (settings.json openOnStart=false)${NC}"
+    exit 0
+fi
+
 # Function to check if URL is accessible
 check_url() {
     local url="$1"
