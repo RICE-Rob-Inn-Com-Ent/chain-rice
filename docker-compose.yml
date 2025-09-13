@@ -109,5 +109,60 @@ services:
     networks:
       - chain-rice-network
 
+  senior-ops:
+    build:
+      context: ./apps/senior-ops
+      dockerfile: Dockerfile
+    container_name: senior-ops
+    profiles:
+      - apps
+    ports:
+      - "8088:8088"
+      - "9098:9098"
+    environment:
+      SENIOR_OPS_HTTP_ADDR: ":8088"
+    networks:
+      - chain-rice-network
+
+  astro-vision-api:
+    build:
+      context: ./apps/astro-vision
+      dockerfile: Dockerfile.api
+    container_name: astro-vision-api
+    profiles:
+      - apps
+    ports:
+      - "8089:8089"
+    environment:
+      REDIS_URL: redis://astro-vision-redis:6379/0
+    depends_on:
+      - astro-vision-redis
+    networks:
+      - chain-rice-network
+
+  astro-vision-worker:
+    build:
+      context: ./apps/astro-vision
+      dockerfile: Dockerfile.worker
+    container_name: astro-vision-worker
+    profiles:
+      - apps
+    environment:
+      REDIS_URL: redis://astro-vision-redis:6379/0
+    depends_on:
+      - astro-vision-redis
+    networks:
+      - chain-rice-network
+
+  astro-vision-redis:
+    image: redis:7
+    container_name: astro-vision-redis
+    profiles:
+      - apps
+    ports:
+      - "6379:6379"
+    networks:
+      - chain-rice-network
+
 volumes:
   meowtopia-db-data:

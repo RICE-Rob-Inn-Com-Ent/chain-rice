@@ -103,7 +103,7 @@ govulncheck:
 	@go tool golang.org/x/vuln/cmd/govulncheck@latest
 	@govulncheck ./...
 
-.PHONY: govet govulncheck check setup prepare windows-setup dev linux windows mac build-all up down down-no-clean restart logs open status clean clean-images web help
+.PHONY: govet govulncheck check setup prepare windows-setup dev linux windows mac build-all up down down-no-clean restart logs open status clean clean-images web help senior-ops astro-vision
 
 ###################
 ### Setup & Prep ###
@@ -163,6 +163,12 @@ windows-setup:
 dev: prepare
 	@echo "🚀 Starting complete development environment..."
 	./scripts/dev/start-dev.sh
+
+# Run additional demo apps profile
+apps:
+	@echo "🚀 Starting additional senior apps (senior-ops, astro-vision)..."
+	docker compose --profile apps up -d --build
+	@echo "🌐 Open: senior-ops http://localhost:8088/health, astro-vision http://localhost:8089/health"
 
 # Platform-specific builds
 linux:
@@ -228,6 +234,17 @@ clean-images:
 web: prepare
 	@echo "Starting ChainRice Web Platform (Cafe Interface)..."
 	./scripts/dev/start-web.sh
+
+# Convenience targets for local runs
+senior-ops:
+	@echo "🏁 Building & running senior-ops (Docker)"
+	docker compose up -d --build senior-ops
+	@echo "Health: http://localhost:8088/health"
+
+astro-vision:
+	@echo "🏁 Building & running astro-vision (Docker)"
+	docker compose up -d --build astro-vision-api astro-vision-worker astro-vision-redis
+	@echo "Health: http://localhost:8089/health"
 
 # Help command
 help:
