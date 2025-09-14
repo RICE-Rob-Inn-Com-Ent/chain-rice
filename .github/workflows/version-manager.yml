@@ -1,0 +1,158 @@
+name: Version Manager for Subrepos
+
+on:
+  workflow_dispatch:
+    inputs:
+      subrepo:
+        description: 'Subrepo to manage version for'
+        required: true
+        default: 'chain-rice'
+        type: choice
+        options:
+          - chain-rice
+          - meowtopia
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'bump-patch'
+        type: choice
+        options:
+          - bump-patch
+          - bump-minor
+          - bump-major
+          - get-version
+          - set-version
+      custom_version:
+        description: 'Custom version (only for set-version action)'
+        required: false
+        type: string
+
+jobs:
+  version-manager:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pull subrepo
+        run: |
+          chmod +x .github/git-subrepo-manager.sh
+          ./.github/git-subrepo-manager.sh pull ${{ github.event.inputs.subrepo }}
+
+      - name: Get current version
+        id: current_version
+        run: |
+          SUBREPO="${{ github.event.inputs.subrepo }}"
+          if [ "$SUBREPO" = "chain-rice" ]; then
+            # Read version from go.mod or config files
+            VERSION=$(grep -o 'version.*=.*"[^"]*"' apps/chain-rice/go.mod | head -1 | sed 's/.*"\([^"]*\)".*/\1/' || echo "1.0.0")
+          elif [ "$SUBREPO" = "meowtopia" ]; then
+            # Read version from package.json
+            VERSION=$(cd apps/meowtopia && node -p "require('./package.json').version" || echo "1.0.0")
+          fi
+          echo "current_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
+
+      - name: Calculate new version
+        id: new_version
+        run: |
+          CURRENT="${{ steps.current_version.outputs.current_version }}"
+          ACTION="${{ github.event.inputs.action }}"
+          CUSTOM="${{ github.event.inputs.custom_version }}"
+          
+          if [ "$ACTION" = "set-version" ] && [ -n "$CUSTOM" ]; then
+            NEW_VERSION="$CUSTOM"
+          else
+            # Parse current version (assume semver format)
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+            
+            case "$ACTION" in
+              "bump-major")
+                NEW_VERSION="$((MAJOR + 1)).0.0"
+                ;;
+              "bump-minor")
+                NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+                ;;
+              "bump-patch")
+                NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+                ;;
+              "get-version")
+                NEW_VERSION="$CURRENT"
+                ;;
+            esac
+          fi
+          
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Update version in chain-rice
+        if: github.event.inputs.subrepo == 'chain-rice' && github.event.inputs.action != 'get-version'
+        run: |
+          NEW_VERSION="${{ steps.new_version.outputs.new_version }}"
+          cd apps/chain-rice
+          
+          # Update version in go.mod if it exists
+          if grep -q "version.*=" go.mod; then
+            sed -i "s/version.*=.*\".*\"/version = \"$NEW_VERSION\"/" go.mod
+          fi
+          
+          # Update version in config files
+          if [ -f "config.yml" ]; then
+            sed -i "s/version:.*/version: $NEW_VERSION/" config.yml
+          fi
+          
+          # Create or update VERSION file
+          echo "$NEW_VERSION" > VERSION
+          
+          echo "Updated chain-rice version to $NEW_VERSION"
+
+      - name: Update version in meowtopia
+        if: github.event.inputs.subrepo == 'meowtopia' && github.event.inputs.action != 'get-version'
+        run: |
+          NEW_VERSION="${{ steps.new_version.outputs.new_version }}"
+          cd apps/meowtopia
+          
+          # Update version in package.json
+          npm version "$NEW_VERSION" --no-git-tag-version || {
+            # Fallback: manual update
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              pkg.version = '$NEW_VERSION';
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+            "
+          }
+          
+          echo "Updated meowtopia version to $NEW_VERSION"
+
+      - name: Commit and push changes
+        if: github.event.inputs.action != 'get-version'
+        run: |
+          SUBREPO="${{ github.event.inputs.subrepo }}"
+          NEW_VERSION="${{ steps.new_version.outputs.new_version }}"
+          
+          cd "apps/$SUBREPO"
+          
+          # Configure git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Add and commit changes
+          git add .
+          git commit -m "Bump version to $NEW_VERSION" || echo "No changes to commit"
+          
+          # Push changes
+          git push origin main || git push origin master || echo "Push failed"
+          
+          # Go back to root and push subrepo
+          cd ../..
+          ./.github/git-subrepo-manager.sh push "$SUBREPO"
+
+      - name: Output version information
+        run: |
+          echo "Subrepo: ${{ github.event.inputs.subrepo }}"
+          echo "Action: ${{ github.event.inputs.action }}"
+          echo "Current version: ${{ steps.current_version.outputs.current_version }}"
+          echo "New version: ${{ steps.new_version.outputs.new_version }}"

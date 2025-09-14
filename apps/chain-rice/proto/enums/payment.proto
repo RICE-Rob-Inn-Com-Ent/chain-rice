@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package chainrice.chainrice.enums;
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// PaymentMethod represents payment method
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_BANK_TRANSFER = 1; // Bank transfer
+  PAYMENT_METHOD_CASH = 2; // Cash
+  PAYMENT_METHOD_CARD = 3; // Payment card
+  PAYMENT_METHOD_CHECK = 4; // Check
+  PAYMENT_METHOD_CRYPTO = 5; // Cryptocurrency
+  PAYMENT_METHOD_OTHER = 6; // Other
+}
+
+// PaymentStatus represents payment status
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1; // Pending
+  PAYMENT_STATUS_PAID = 2; // Paid
+  PAYMENT_STATUS_OVERDUE = 3; // Overdue
+  PAYMENT_STATUS_PARTIAL = 4; // Partially paid
+  PAYMENT_STATUS_CANCELLED = 5; // Cancelled
+}
+
+// InvoiceStatus represents invoice status
+enum InvoiceStatus {
+  INVOICE_STATUS_UNSPECIFIED = 0;
+  INVOICE_STATUS_PENDING = 1; // Pending
+  INVOICE_STATUS_PAID = 2; // Paid
+  INVOICE_STATUS_OVERDUE = 3; // Overdue
+  INVOICE_STATUS_CANCELLED = 4; // Cancelled
+  INVOICE_STATUS_DRAFT = 5; // Draft
+}
+
+// InvoiceType represents invoice type
+enum InvoiceType {
+  INVOICE_TYPE_UNSPECIFIED = 0;
+  INVOICE_TYPE_SALE = 1; // Sale invoice
+  INVOICE_TYPE_PURCHASE = 2; // Purchase invoice
+  INVOICE_TYPE_CREDIT_NOTE = 3; // Credit note
+  INVOICE_TYPE_DEBIT_NOTE = 4; // Debit note
+  INVOICE_TYPE_PROFORMA = 5; // Proforma invoice
+}

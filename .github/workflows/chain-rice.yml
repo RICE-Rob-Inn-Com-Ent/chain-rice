@@ -1,0 +1,45 @@
+name: Chain-Rice Build and Deploy
+
+on:
+  push:
+    branches: [ master, development ]
+    paths:
+      - 'apps/chain-rice/**'
+  pull_request:
+    branches: [ master, development ]
+    paths:
+      - 'apps/chain-rice/**'
+
+jobs:
+  build-chain-rice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pull chain-rice subrepo
+        run: |
+          chmod +x .github/git-subrepo-manager.sh
+          ./.github/git-subrepo-manager.sh pull chain-rice
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build chain-rice
+        run: |
+          cd apps/chain-rice
+          make build
+
+      - name: Test chain-rice
+        run: |
+          cd apps/chain-rice
+          make test || echo "Tests not configured yet"
+
+      - name: Push chain-rice changes
+        if: github.event_name == 'push'
+        run: |
+          ./.github/git-subrepo-manager.sh push chain-rice

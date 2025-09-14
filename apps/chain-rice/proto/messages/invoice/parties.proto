@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package chainrice.chainrice.invoice;
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// Party represents a transaction party (seller/buyer)
+message Party {
+  // Basic information
+  string name = 1;
+  string nip = 2; // Tax Identification Number
+  string regon = 3; // REGON number (optional)
+  
+  // Address
+  Address address = 4;
+  
+  // Banking information
+  BankAccount bank_account = 5;
+  
+  // Additional information
+  string email = 6;
+  string phone = 7;
+  string website = 8;
+  string additional_info = 9; // e.g. "Cat House Cafe"
+}
+
+// Address represents an address
+message Address {
+  string street = 1;
+  string city = 2;
+  string postal_code = 3;
+  string country = 4;
+  string region = 5; // state/province
+}
+
+// BankAccount represents a bank account
+message BankAccount {
+  string bank_name = 1;
+  string account_number = 2;
+  string currency = 3;
+  string swift_code = 4; // optional
+}

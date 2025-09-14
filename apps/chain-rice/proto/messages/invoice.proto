@@ -1,0 +1,5 @@
+// This file has been split into modules in the /invoice/ directory
+// Use: import "messages/invoice/index.proto";
+
+// DEPRECATED: Use messages/invoice/invoice.proto instead of this file
+// This file will be removed in future versions

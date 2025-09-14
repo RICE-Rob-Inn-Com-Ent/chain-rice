@@ -1,0 +1,12 @@
+:root {
+  --gap: 12px;
+}
+.app {
+  font-family: system-ui, sans-serif;
+  padding: var(--gap);
+}
+.title {
+  color: #0b5fff;
+}
+
+

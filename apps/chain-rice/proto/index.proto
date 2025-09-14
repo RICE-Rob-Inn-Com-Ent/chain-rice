@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package chainrice.chainrice;
+
+// Import all components
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+
+// Import organized modules
+import "enums/index.proto";
+import "messages/index.proto";
+import "services/index.proto";
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// This is the main entry point for the ChainRice protocol buffer definitions
+// It imports all enums, messages, and services in an organized structure

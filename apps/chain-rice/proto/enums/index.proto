@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package chainrice.chainrice.enums;
+
+// Import all enum definitions
+import "enums/payment.proto";
+import "enums/tax.proto";
+import "enums/cafe.proto";
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// This file serves as a central import point for all enum definitions
+// Enables easy importing of all enums in other parts of the system

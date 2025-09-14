@@ -1,0 +1,269 @@
+{
+  "folders": [
+    {
+      "name": "🧑‍💻Dev|🌍Root",
+      "path": "."
+    },
+    {
+      "name": "🧑‍💻Dev|🏗️Stacks",
+      "path": "./stacks"
+    },
+    {
+      "name": "⛓️CRICE|🏠Root",
+      "path": "./apps/chain-rice"
+    },
+    {
+      "name": "⛓️CRICE|🧠AI",
+      "path": "./apps/chain-rice/ai"
+    },
+    {
+      "name": "⛓️CRICE|🐹API",
+      "path": "./apps/chain-rice/api"
+    },
+    {
+      "name": "⛓️CRICE|🐳Containers",
+      "path": "./apps/chain-rice/containers"
+    },
+    {
+      "name": "⛓️CRICE|🐘Data",
+      "path": "./apps/chain-rice/data"
+    },
+    {
+      "name": "⛓️CRICE|⚛️Frontend",
+      "path": "./apps/chain-rice/frontend"
+    },
+    {
+      "name": "⛓️CRICE|📦Proto",
+      "path": "./apps/chain-rice/proto"
+    },
+    {
+      "name": "🐱MWT|🏠Root",
+      "path": "./apps/meowtopia"
+    },
+    {
+      "name": "🐱 MWT|⚛️Frontend",
+      "path": "./apps/meowtopia/frontend"
+    },
+    {
+      "name": "🐱 MWT|🎮Game",
+      "path": "./apps/meowtopia/game"
+    }
+  ],
+  "settings": {
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.suggest.autoImports": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "files.associations": {
+      "*.proto": "protobuf"
+    },
+    "protoc": {
+      "path": "/usr/local/bin/protoc",
+      "compile_on_save": true,
+      "options": [
+        "--proto_path=${workspaceFolder}/apps/chain-rice/proto",
+        "--go_out=${workspaceFolder}/apps/chain-rice/go/pkg/proto",
+        "--go-grpc_out=${workspaceFolder}/apps/chain-rice/go/pkg/proto"
+      ]
+    },
+    "go.toolsManagement.checkForUpdates": "local",
+    "go.useLanguageServer": true,
+    "go.gopath": "${workspaceFolder}",
+    "go.goroot": "/usr/local/go",
+    "python.defaultInterpreterPath": "/usr/bin/python3",
+    "python.terminal.activateEnvironment": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black",
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/__pycache__": true,
+      "**/*.pyc": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/.git": true,
+      "**/chain-data": true
+    },
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.iconTheme": "material-icon-theme"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-eslint",
+      "golang.go",
+      "ms-python.python",
+      "ms-python.flake8",
+      "ms-python.black-formatter",
+      "zxh404.vscode-proto3",
+      "pkief.material-icon-theme",
+      "ms-vscode.vscode-json",
+      "redhat.vscode-yaml",
+      "ms-kubernetes-tools.vscode-kubernetes-tools",
+      "ms-vscode-remote.remote-containers"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "🌍 Install All Dependencies",
+        "type": "shell",
+        "command": "make",
+        "args": ["install"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "🚀 Start All Services",
+        "type": "shell",
+        "command": "make",
+        "args": ["start"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "🍚 Start ChainRice",
+        "type": "shell",
+        "command": "make",
+        "args": ["chainrice"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "🐱 Start Meowtopia",
+        "type": "shell",
+        "command": "make",
+        "args": ["meowtopia"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "🛑 Stop All Services",
+        "type": "shell",
+        "command": "make",
+        "args": ["stop"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "📊 Check Status",
+        "type": "shell",
+        "command": "make",
+        "args": ["status"],
+        "group": "test",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "🌐 Open Interfaces",
+        "type": "shell",
+        "command": "make",
+        "args": ["open"],
+        "group": "test",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "🐳 Docker Start",
+        "type": "shell",
+        "command": "make",
+        "args": ["docker"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🍚 ChainRice Go API",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}/apps/chain-rice/go/cmd/accounting-api",
+        "cwd": "${workspaceFolder}/apps/chain-rice/go",
+        "env": {
+          "DATABASE_URL": "sqlite:///./accounting.db",
+          "GRPC_PORT": "9090",
+          "HTTP_PORT": "8004"
+        }
+      },
+      {
+        "name": "🐱 Meowtopia Go API",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}/apps/chain-rice/go/cmd/meowtopia-api",
+        "cwd": "${workspaceFolder}/apps/chain-rice/go",
+        "env": {
+          "DATABASE_URL": "sqlite:///./meowtopia.db",
+          "GRPC_PORT": "9091",
+          "HTTP_PORT": "8006"
+        }
+      },
+      {
+        "name": "🤖 Python AI Service",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/apps/chain-rice/python/main.py",
+        "cwd": "${workspaceFolder}/apps/chain-rice/python",
+        "env": {
+          "API_PORT": "8005"
+        }
+      }
+    ]
+  }
+}

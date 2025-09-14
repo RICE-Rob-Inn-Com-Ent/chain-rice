@@ -1,0 +1,15 @@
+name: examples_dart_hello
+description: Simple hello world Dart CLI
+version: 1.0.0
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.24.0
+
+executables:
+  examples_dart_hello: bin/main.dart
+
+

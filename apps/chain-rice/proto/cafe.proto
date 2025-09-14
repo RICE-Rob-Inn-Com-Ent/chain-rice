@@ -1,0 +1,10 @@
+// DEPRECATED: This file has been split into organized modules
+// Use: import "messages/cafe/index.proto";
+
+syntax = "proto3";
+
+package chainrice.chainrice;
+
+import "messages/cafe/index.proto";
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";

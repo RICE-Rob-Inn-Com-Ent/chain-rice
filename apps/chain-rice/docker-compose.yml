@@ -1,0 +1,196 @@
+version: '3.8'
+
+services:
+  # Blockchain Node
+  chainrice-node:
+    build:
+      context: ./go
+      dockerfile: ../docker/Dockerfile.chainrice
+    container_name: chainrice-node
+    ports:
+      - "1317:1317"  # REST API
+      - "26656:26656"  # P2P
+      - "26657:26657"  # RPC
+    volumes:
+      - chainrice-data:/root/.chainrice
+      - ./go/chain-data:/root/.chainrice/config
+    environment:
+      - CHAIN_ID=chainrice-1
+      - MONIKER=chainrice-validator
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Go API Server (Accounting)
+  accounting-api:
+    build:
+      context: ./go
+      dockerfile: ../docker/Dockerfile.go-api
+    container_name: accounting-api
+    ports:
+      - "8004:8004"  # HTTP API
+      - "9090:9090"  # gRPC
+    volumes:
+      - accounting-data:/app/data
+      - ./go/pkg/proto:/app/pkg/proto:ro
+    environment:
+      - DATABASE_URL=sqlite:///app/data/accounting.db
+      - GRPC_PORT=9090
+      - HTTP_PORT=8004
+      - BLOCKCHAIN_RPC=http://chainrice-node:26657
+    depends_on:
+      - chainrice-node
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Python AI Service
+  python-ai:
+    build:
+      context: ./python
+      dockerfile: ../docker/Dockerfile.python-ai
+    container_name: python-ai
+    ports:
+      - "8005:8005"
+    volumes:
+      - ai-uploads:/app/uploads
+      - ./python:/app:ro
+    environment:
+      - API_PORT=8005
+      - ACCOUNTING_API_URL=http://accounting-api:8004
+      - ACCOUNTING_GRPC_URL=accounting-api:9090
+    depends_on:
+      - accounting-api
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src:ro
+    environment:
+      - VITE_API_URL=http://localhost:8004
+      - VITE_AI_API_URL=http://localhost:8005
+      - VITE_BLOCKCHAIN_RPC=http://localhost:1317
+    depends_on:
+      - accounting-api
+      - python-ai
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Meowtopia Frontend (Cat Cafe Admin)
+  meowtopia-frontend:
+    build:
+      context: ../meowtopia
+      dockerfile: ../chain-rice/docker/Dockerfile.frontend
+    container_name: meowtopia-frontend
+    ports:
+      - "5174:5173"
+    volumes:
+      - ../meowtopia/src:/app/src:ro
+    environment:
+      - VITE_API_URL=http://localhost:8006
+      - VITE_BLOCKCHAIN_RPC=http://localhost:1317
+    depends_on:
+      - meowtopia-api
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # Meowtopia API
+  meowtopia-api:
+    build:
+      context: ./go
+      dockerfile: ../docker/Dockerfile.go-api
+    container_name: meowtopia-api
+    ports:
+      - "8006:8006"  # HTTP API
+      - "9091:9091"  # gRPC
+    volumes:
+      - meowtopia-data:/app/data
+      - ./go/pkg/proto:/app/pkg/proto:ro
+    environment:
+      - DATABASE_URL=sqlite:///app/data/meowtopia.db
+      - GRPC_PORT=9091
+      - HTTP_PORT=8006
+      - BLOCKCHAIN_RPC=http://chainrice-node:26657
+      - SERVICE_NAME=meowtopia
+    depends_on:
+      - chainrice-node
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+
+  # PostgreSQL (Optional - for production)
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=chainrice
+      - POSTGRES_USER=chainrice
+      - POSTGRES_PASSWORD=chainrice123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+  # Redis (Optional - for caching)
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+  # Nginx (Load Balancer)
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - meowtopia-frontend
+      - accounting-api
+      - meowtopia-api
+      - python-ai
+    networks:
+      - chainrice-network
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  chainrice-data:
+  accounting-data:
+  meowtopia-data:
+  ai-uploads:
+  postgres-data:
+  redis-data:
+
+networks:
+  chainrice-network:
+    driver: bridge

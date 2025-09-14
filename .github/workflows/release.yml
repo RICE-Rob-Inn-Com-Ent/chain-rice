@@ -1,21 +1,19 @@
-# This workflow is useful if you want to automate the process of:
+# This workflow creates releases for subrepos (chain-rice and meowtopia)
+# when you push a new tag with a "v" prefix (version).
 #
-# a) Creating a new prelease when you push a new tag with a "v" prefix (version).
+# The workflow will:
+# 1. Pull the specific subrepo based on the tag
+# 2. Build and package the subrepo
+# 3. Create a release with the built assets
 #
-#    This type of prerelease is meant to be used for production: alpha, beta, rc, etc. types of releases.
-#    After the prerelease is created, you need to make your changes on the release page at the relevant
-#    Github page and publish your release.
-#
-# b) Creating/updating the "latest" prerelease when you push to your default branch.
-#
-#    This type of prelease is useful to make your bleeding-edge binaries available to advanced users.
-#
-# The workflow will not run if there is no tag pushed with a "v" prefix and no change pushed to your
-# default branch.
-on: push
+# Tag format: v<subrepo>-<version> (e.g., vchain-rice-1.0.0, vmeowtopia-2.1.0)
+on:
+  push:
+    tags:
+      - 'v*-*'
 
 jobs:
-  might_release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,34 +21,82 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Prepare Release Variables
-        id: vars
-        uses: ignite/cli/actions/release/vars@main
+      - name: Parse tag and subrepo
+        id: parse
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          
+          # Extract subrepo and version from tag (e.g., vchain-rice-1.0.0 -> chain-rice)
+          SUBREPO=$(echo $TAG_NAME | sed 's/^v//' | cut -d'-' -f1)
+          VERSION=$(echo $TAG_NAME | sed 's/^v//' | cut -d'-' -f2-)
+          
+          echo "subrepo=$SUBREPO" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          echo "Tag: $TAG_NAME"
+          echo "Subrepo: $SUBREPO"
+          echo "Version: $VERSION"
 
-      - name: Issue Release Assets
-        uses: ignite/cli/actions/cli@main
-        if: ${{ steps.vars.outputs.should_release == 'true' }}
-        with:
-          args: chain build --release --release.prefix ${{ steps.vars.outputs.tarball_prefix }} -t linux:amd64 -t darwin:amd64 -t darwin:arm64 -y
-        env:
-          DO_NOT_TRACK: 1
-          GOFLAGS: "-buildvcs=false"
+      - name: Pull specific subrepo
+        run: |
+          chmod +x .github/git-subrepo-manager.sh
+          ./.github/git-subrepo-manager.sh pull ${{ steps.parse.outputs.subrepo }}
 
-      - name: Delete the "latest" Release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
-        if: ${{ steps.vars.outputs.is_release_type_latest == 'true' }}
-        with:
-          tag_name: ${{ steps.vars.outputs.tag_name }}
-          delete_release: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build chain-rice (if applicable)
+        if: steps.parse.outputs.subrepo == 'chain-rice'
+        run: |
+          cd apps/chain-rice
+          make build
+          # Create release directory
+          mkdir -p ../../release
+          # Copy built binaries
+          cp build/chainrice* ../../release/ || true
+          cp -r build/ ../../release/chain-rice-build/ || true
+
+      - name: Build meowtopia (if applicable)
+        if: steps.parse.outputs.subrepo == 'meowtopia'
+        run: |
+          cd apps/meowtopia
+          yarn install
+          yarn build
+          # Create release directory
+          mkdir -p ../../release
+          # Copy built files
+          cp -r dist/ ../../release/meowtopia-dist/ || true
+          cp -r build/ ../../release/meowtopia-build/ || true
+          # Copy package files
+          cp package.json ../../release/meowtopia-package.json || true
+          cp yarn.lock ../../release/meowtopia-yarn.lock || true
+
+      - name: Create release archive
+        run: |
+          cd release
+          tar -czf ../${{ steps.parse.outputs.subrepo }}-${{ steps.parse.outputs.version }}.tar.gz *
+          cd ..
+          ls -la *.tar.gz
 
       - name: Publish the Release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.vars.outputs.should_release == 'true' }}
         with:
-          tag_name: ${{ steps.vars.outputs.tag_name }}
-          files: release/*
-          prerelease: true
+          tag_name: ${{ steps.parse.outputs.tag_name }}
+          files: |
+            ${{ steps.parse.outputs.subrepo }}-${{ steps.parse.outputs.version }}.tar.gz
+            release/*
+          name: ${{ steps.parse.outputs.subrepo }} ${{ steps.parse.outputs.version }}
+          body: |
+            Release of ${{ steps.parse.outputs.subrepo }} version ${{ steps.parse.outputs.version }}
+            
+            ## Changes
+            - Built and packaged ${{ steps.parse.outputs.subrepo }}
+            - Includes all necessary files and dependencies
+            
+            ## Installation
+            Extract the archive and follow the README instructions for ${{ steps.parse.outputs.subrepo }}.
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push subrepo back to remote
+        run: |
+          ./.github/git-subrepo-manager.sh push ${{ steps.parse.outputs.subrepo }}

@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  app:
+    image: examples-docker-hello:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - APP_NAME=examples-docker-hello-swarm
+      - PORT=8080
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: ingress
+
+

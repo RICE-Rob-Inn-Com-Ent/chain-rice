@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package chainrice.chainrice.invoice;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+import "enums/payment.proto";
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// Payment represents payment information
+message Payment {
+  // Payment method
+  .chainrice.chainrice.enums.PaymentMethod method = 1;
+  
+  // Amounts
+  double total_amount = 2;
+  double paid_amount = 3;
+  double remaining_amount = 4;
+  string currency = 5;
+  
+  // Dates
+  string due_date = 6;
+  google.protobuf.Timestamp paid_at = 7 [(gogoproto.stdtime) = true];
+  
+  // Payment status
+  .chainrice.chainrice.enums.PaymentStatus status = 8;
+  
+  // Bank transfer information
+  BankTransfer bank_transfer = 9;
+  
+  // Additional information
+  string reference_number = 10;
+  string notes = 11;
+}
+
+// Use enums from enums/payment.proto
+
+// BankTransfer represents bank transfer information
+message BankTransfer {
+  string bank_name = 1;
+  string account_number = 2;
+  string swift_code = 3;
+  string reference = 4; // transfer title
+}

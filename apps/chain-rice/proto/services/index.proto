@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package chainrice.chainrice.services;
+
+// Import all service definitions
+import "services/query.proto";
+import "services/tx.proto";
+import "services/accounting.proto";
+import "services/cafe.proto";
+
+option go_package = "chain-rice/x/chainrice/types";
+
+// This file serves as a central import point for all service definitions

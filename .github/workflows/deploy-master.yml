@@ -1,4 +1,4 @@
-name: Deploy master with blockchain profile
+name: Deploy master with subrepos
 
 on:
   push:
@@ -15,6 +15,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Pull all subrepos
+        run: |
+          chmod +x .github/git-subrepo-manager.sh
+          ./.github/git-subrepo-manager.sh pull-all
+
+      - name: Build chain-rice blockchain
+        run: |
+          cd apps/chain-rice
+          make build
+
+      - name: Build meowtopia web app
+        run: |
+          cd apps/meowtopia
+          yarn install
+          yarn build
+
       - name: Build images with bake (blockchain + backend + web)
         run: |
           docker buildx bake -f docker-bake.hcl
@@ -24,5 +40,9 @@ jobs:
           API_PORT: 8000
         run: |
           docker compose --profile blockchain --profile app up -d
+
+      - name: Push all subrepos after deployment
+        run: |
+          ./.github/git-subrepo-manager.sh push-all
 
 

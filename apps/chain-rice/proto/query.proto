@@ -1,0 +1,10 @@
+// DEPRECATED: This file has been moved to services/query.proto
+// Use: import "services/query.proto";
+
+syntax = "proto3";
+
+package chainrice.chainrice;
+
+import "services/query.proto";
+
+option go_package = "chain-rice/x/chainrice/types";

@@ -1,274 +1,277 @@
-BRANCH ?= unknown
-COMMIT ?= unknown
-VERSION ?= dev
-APPNAME := chain-rice
+# 🌍 Rice-Dev Ecosystem - Головне управління
 
-# do not override user values
-ifeq (,$(VERSION))
-  VERSION := $(shell git describe --exact-match 2>/dev/null)
-  # if VERSION is empty, then populate it with branch name and raw commit hash
-  ifeq (,$(VERSION))
-    VERSION := $(BRANCH)-$(COMMIT)
-  endif
-endif
+.PHONY: help install build start stop clean proto frontend go-api python-ai meowtopia docker all-services chainrice meowtopia blockchain
 
-# Update the ldflags with the app, client & server names
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=$(APPNAME) \
-	-X github.com/cosmos/cosmos-sdk/version.AppName=$(APPNAME) \
-	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
-	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT)
-
-BUILD_FLAGS := -ldflags '$(ldflags)'
-
-##############
-###  Test  ###
-##############
-
-test-unit:
-	@echo Running unit tests...
-	@go test -mod=readonly -v -timeout 30m ./...
-
-test-race:
-	@echo Running unit tests with race condition reporting...
-	@go test -mod=readonly -v -race -timeout 30m ./...
-
-test-cover:
-	@echo Running unit tests and creating coverage report...
-	@go test -mod=readonly -v -timeout 30m -coverprofile=$(COVER_FILE) -covermode=atomic ./...
-	@go tool cover -html=$(COVER_FILE) -o $(COVER_HTML_FILE)
-	@rm $(COVER_FILE)
-
-bench:
-	@echo Running unit tests with benchmarking...
-	@go test -mod=readonly -v -timeout 30m -bench=. ./...
-
-test: govet govulncheck test-unit
-
-.PHONY: test test-unit test-race test-cover bench
-
-#################
-###  Install  ###
-#################
-
-all: install
-
-install:
-	@echo "--> ensure dependencies have not been modified"
-	@go mod verify
-	@echo "--> installing $(APPNAME)"
-	@go install $(BUILD_FLAGS) -mod=readonly ./cmd/chainrice
-
-.PHONY: all install
-
-##################
-###  Protobuf  ###
-##################
-
-# Use this target if you do not want to use Ignite for generating proto files
-
-proto-deps:
-	@echo "Installing proto deps"
-	@echo "Proto deps present, run 'go tool' to see them"
-
-proto-gen:
-	@echo "Generating protobuf files..."
-	@ignite generate proto-go --yes
-
-.PHONY: proto-gen
-
-#################
-###  Linting  ###
-#################
-
-lint:
-	@echo "--> Running linter"
-	@go tool github.com/golangci/golangci-lint/cmd/golangci-lint run ./... --timeout 15m
-
-lint-fix:
-	@echo "--> Running linter and fixing issues"
-	@go tool github.com/golangci/golangci-lint/cmd/golangci-lint run ./... --fix --timeout 15m
-
-.PHONY: lint lint-fix
-
-###################
-### Development ###
-###################
-
-govet:
-	@echo Running go vet...
-	@go vet ./...
-
-govulncheck:
-	@echo Running govulncheck...
-	@go tool golang.org/x/vuln/cmd/govulncheck@latest
-	@govulncheck ./...
-
-.PHONY: govet govulncheck check setup prepare windows-setup dev linux windows mac build-all up down down-no-clean restart logs open status clean clean-images web help
-
-###################
-### Setup & Prep ###
-###################
-
-# Check system requirements
-check:
-	@echo "🔍 Checking system requirements..."
-	@if [ -f "scripts/setup/check-system.sh" ]; then \
-		chmod +x scripts/setup/check-system.sh && \
-		./scripts/setup/check-system.sh; \
-	elif [ -f "scripts/setup/check-system.ps1" ]; then \
-		powershell -ExecutionPolicy Bypass -File scripts/setup/check-system.ps1; \
-	elif [ -f "scripts/setup/check-system.bat" ]; then \
-		scripts/setup/check-system.bat; \
-	else \
-		echo "❌ System check script not found"; \
-		exit 1; \
-	fi
-
-# Setup development environment
-setup:
-	@echo "🛠️ Setting up development environment..."
-	@if [ -f "scripts/setup/setup-environment.sh" ]; then \
-		chmod +x scripts/setup/setup-environment.sh && \
-		./scripts/setup/setup-environment.sh; \
-	elif [ -f "scripts/setup/setup-environment.ps1" ]; then \
-		powershell -ExecutionPolicy Bypass -File scripts/setup/setup-environment.ps1; \
-	elif [ -f "scripts/setup/setup-environment.bat" ]; then \
-		scripts/setup/setup-environment.bat; \
-	else \
-		echo "❌ Setup script not found"; \
-		exit 1; \
-	fi
-
-# Prepare environment (check + setup)
-prepare: check setup
-	@echo "✅ Environment preparation completed!"
-
-# Quick setup for Windows users
-windows-setup:
-	@echo "🪟 Setting up for Windows..."
-	@if [ -f "scripts/setup/setup-environment.bat" ]; then \
-		scripts/setup/setup-environment.bat; \
-	else \
-		echo "❌ Windows setup script not found"; \
-		exit 1; \
-	fi
-
-.PHONY: check setup prepare windows-setup
-
-###################
-### Development ###
-###################
-
-# Development environment (with auto-setup)
-dev: prepare
-	@echo "🚀 Starting complete development environment..."
-	./scripts/dev/start-dev.sh
-
-# Platform-specific builds
-linux:
-	@echo "🐧 Building for Linux platforms..."
-	./scripts/platforms/build-linux.sh
-
-windows:
-	@echo "🪟 Building for Windows platforms..."
-	./scripts/platforms/build-windows.sh
-
-mac:
-	@echo "🍎 Building for macOS platforms..."
-	./scripts/platforms/build-mac.sh
-
-build-all: prepare
-	@echo "🌍 Building for all platforms..."
-	./scripts/platforms/build-all.sh
-
-# Docker operations (with auto-setup)
-up: prepare
-	@echo "🚀 Starting services..."
-	./scripts/docker/docker-helper.sh up
-
-down:
-	@echo "🛑 Stopping services..."
-	./scripts/docker/docker-helper.sh down
-	@echo "🧹 Cleaning Docker cache..."
-	@docker system prune -f --volumes || true
-	@echo "✅ Docker cache cleaned!"
-
-down-no-clean:
-	@echo "🛑 Stopping services (keeping cache)..."
-	./scripts/docker/docker-helper.sh down
-
-restart:
-	@echo "🔄 Restarting services..."
-	./scripts/docker/docker-helper.sh restart
-
-logs:
-	@echo "📝 Showing logs..."
-	./scripts/logs/colored-logs.sh
-
-# Utilities
-open:
-	@echo "🌐 Opening development interfaces..."
-	./scripts/utils/open-interfaces.sh
-
-status:
-	@echo "📊 Service status..."
-	./scripts/docker/docker-helper.sh status
-
-clean:
-	@echo "🧹 Cleaning Docker cache and volumes..."
-	@docker system prune -a --volumes -f
-	@echo "✅ Docker cache and volumes cleaned!"
-
-clean-images:
-	@echo "🧹 Cleaning Docker images only..."
-	@docker image prune -a -f
-	@echo "✅ Docker images cleaned!"
-
-# Web development (with auto-setup)
-web: prepare
-	@echo "Starting ChainRice Web Platform (Cafe Interface)..."
-	./scripts/dev/start-web.sh
-
-# Help command
+# Default target
 help:
-	@echo "🚀 Chain Rice Development Commands"
+	@echo "🌍 Rice-Dev Ecosystem - Команди управління:"
 	@echo ""
-	@echo "🛠️  Setup & Preparation:"
-	@echo "  make check        - Check system requirements"
-	@echo "  make setup        - Setup development environment"
-	@echo "  make prepare      - Check + setup (recommended first run)"
-	@echo "  make windows-setup - Quick setup for Windows users"
+	@echo "📦 Встановлення та збірка:"
+	@echo "  make install     - Встановити всі залежності для всіх додатків"
+	@echo "  make build       - Зібрати всі сервіси"
+	@echo "  make proto       - Генерувати protobuf файли для всіх додатків"
 	@echo ""
-	@echo "📋 Development:"
-	@echo "  make dev          - Start complete development environment (auto-setup)"
-	@echo "  make web          - Start web services only (auto-setup)"
-	@echo "  make up           - Start services (auto-setup)"
-	@echo "  make down         - Stop services and clean Docker cache"
-	@echo "  make down-no-clean - Stop services (keep cache)"
-	@echo "  make restart      - Restart services"
-	@echo "  make logs         - View colored logs"
-	@echo "  make status       - Show service status"
-	@echo "  make open         - Open all development interfaces"
+	@echo "🚀 Запуск екосистеми:"
+	@echo "  make start       - Запустити всю екосистему"
+	@echo "  make docker      - Запустити через Docker Compose"
+	@echo "  make chainrice   - Запустити тільки ChainRice"
+	@echo "  make meowtopia   - Запустити тільки Meowtopia"
 	@echo ""
-	@echo "🏗️  Platform Builds:"
-	@echo "  make linux        - Build for Linux platforms"
-	@echo "  make windows      - Build for Windows platforms"
-	@echo "  make mac          - Build for macOS platforms"
-	@echo "  make build-all    - Build for all platforms (auto-setup)"
+	@echo "🔧 Окремі сервіси:"
+	@echo "  make blockchain  - Запустити блокчейн ноду"
+	@echo "  make frontend    - Запустити ChainRice фронтенд"
+	@echo "  make meowtopia-frontend - Запустити Meowtopia фронтенд"
+	@echo "  make go-api      - Запустити ChainRice Go API"
+	@echo "  make meowtopia-api - Запустити Meowtopia Go API"
+	@echo "  make python-ai   - Запустити Python AI сервіс"
 	@echo ""
-	@echo "🧪 Testing:"
-	@echo "  make test         - Run Go tests"
-	@echo "  make test-unit    - Run unit tests"
-	@echo "  make test-race    - Run tests with race detection"
-	@echo "  make lint         - Run linter"
+	@echo "🛑 Управління:"
+	@echo "  make stop        - Зупинити всі сервіси"
+	@echo "  make clean       - Очистити всі збірки"
+	@echo "  make status      - Перевірити статус всіх сервісів"
+	@echo "  make check-services - Перевірити статус через скрипт"
 	@echo ""
-	@echo "🧹 Cleanup:"
-	@echo "  make clean        - Clean Docker cache and volumes"
-	@echo "  make clean-images - Clean Docker images only"
+	@echo "🌐 Інтерфейси:"
+	@echo "  make open        - Відкрити всі інтерфейси в браузері"
+	@echo "  make open-chainrice - Відкрити ChainRice інтерфейси"
+	@echo "  make open-meowtopia - Відкрити Meowtopia інтерфейси"
 	@echo ""
-	@echo "📚 Documentation:"
-	@echo "  See docs/DEVELOPMENT.md for detailed setup instructions"
+	@echo "🚀 Швидкі команди:"
+	@echo "  make quick       - Швидкий запуск (встановити + запустити + відкрити)"
+	@echo "  make dev-setup   - Налаштування середовища розробки"
+	@echo "  make full-reset  - Повний скид екосистеми"
+	@echo "  make backup      - Створити backup баз даних"
+	@echo "  make show-logs   - Показати логи всіх сервісів"
+
+# Installation
+install:
+	@echo "📦 Встановлення залежностей для всієї екосистеми..."
+	@echo "🔧 Встановлення ChainRice..."
+	@cd apps/chain-rice && make install
+	@echo "🐱 Встановлення Meowtopia..."
+	@cd apps/meowtopia && make install
+	@echo "📦 Встановлення Go залежностей..."
+	@cd apps/chain-rice/go && go mod tidy
+	@echo "📦 Встановлення Python залежностей..."
+	@cd apps/chain-rice/python && pip install -r requirements.txt
+	@echo "✅ Всі залежності встановлено"
+
+# Build
+build: proto
+	@echo "🔨 Збірка всієї екосистеми..."
+	@cd apps/chain-rice && make build
+	@cd apps/meowtopia && make build
+	@echo "✅ Вся екосистема зібрана"
+
+# Generate protobuf files
+proto:
+	@echo "📡 Генерація protobuf файлів для всіх додатків..."
+	@cd apps/chain-rice && make proto
+	@echo "✅ Protobuf файли згенеровано"
+
+# Start entire ecosystem
+start:
+	@echo "🚀 Запуск всієї екосистеми Rice-Dev..."
+	@make -j6 blockchain chainrice-go-api meowtopia-go-api python-ai chainrice-frontend meowtopia-frontend
+	@echo "✅ Вся екосистема запущена"
+
+# Docker
+docker:
+	@echo "🐳 Запуск через Docker Compose..."
+	@cd apps/chain-rice && docker-compose up --build -d
+	@echo "✅ Docker контейнери запущені"
+
+# ChainRice ecosystem
+chainrice:
+	@echo "🍚 Запуск ChainRice екосистеми..."
+	@make -j4 blockchain chainrice-go-api python-ai chainrice-frontend
+	@echo "✅ ChainRice запущений"
+
+# Meowtopia ecosystem
+meowtopia:
+	@echo "🐱 Запуск Meowtopia екосистеми..."
+	@make -j3 blockchain meowtopia-go-api meowtopia-frontend
+	@echo "✅ Meowtopia запущений"
+
+# Individual services
+blockchain:
+	@echo "⛓️ Запуск блокчейн ноди..."
+	@cd apps/chain-rice/go && ./build/chainrice start --home ./chain-data
+
+chainrice-go-api:
+	@echo "🔧 Запуск ChainRice Go API..."
+	@cd apps/chain-rice/go && ./build/accounting-api
+
+meowtopia-go-api:
+	@echo "🔧 Запуск Meowtopia Go API..."
+	@cd apps/chain-rice/go && ./build/meowtopia-api
+
+python-ai:
+	@echo "🤖 Запуск Python AI сервісу..."
+	@cd apps/chain-rice/python && python main.py
+
+chainrice-frontend:
+	@echo "🌐 Запуск ChainRice фронтенду..."
+	@cd apps/chain-rice/frontend && npm run dev
+
+meowtopia-frontend:
+	@echo "🐱 Запуск Meowtopia фронтенду..."
+	@cd apps/meowtopia && npm run dev -- --port 5174
+
+# Aliases for convenience
+frontend: chainrice-frontend
+go-api: chainrice-go-api
+
+# Stop all services
+stop:
+	@echo "🛑 Зупинка всіх сервісів..."
+	@pkill -f "chainrice" || true
+	@pkill -f "accounting-api" || true
+	@pkill -f "meowtopia-api" || true
+	@pkill -f "python main.py" || true
+	@pkill -f "npm run dev" || true
+	@docker-compose -f apps/chain-rice/docker-compose.yml down 2>/dev/null || true
+	@echo "✅ Всі сервіси зупинено"
+
+# Clean all builds
+clean:
+	@echo "🧹 Очищення всіх збірок..."
+	@cd apps/chain-rice && make clean
+	@cd apps/meowtopia && make clean
+	@rm -rf apps/chain-rice/*.db
+	@rm -rf apps/meowtopia/*.db
+	@echo "✅ Всі збірки очищено"
+
+# Open interfaces
+open:
+	@echo "🌐 Відкриття всіх інтерфейсів..."
+	@xdg-open http://localhost:5173 2>/dev/null || open http://localhost:5173 2>/dev/null || echo "Відкрийте http://localhost:5173 в браузері"
+	@xdg-open http://localhost:5174 2>/dev/null || open http://localhost:5174 2>/dev/null || echo "Відкрийте http://localhost:5174 в браузері"
+	@xdg-open http://localhost:1317 2>/dev/null || open http://localhost:1317 2>/dev/null || echo "Відкрийте http://localhost:1317 в браузері"
 	@echo ""
-	@echo "💡 Quick Start:"
-	@echo "  make prepare      - First time setup"
-	@echo "  make dev          - Start everything"
+	@echo "🍚 ChainRice (Бухгалтерія):"
+	@echo "  📊 Фронтенд: http://localhost:5173"
+	@echo "  🔧 API: http://localhost:8004"
+	@echo "  🤖 AI: http://localhost:8005"
+	@echo ""
+	@echo "🐱 Meowtopia (Кафе з котами):"
+	@echo "  🏠 Фронтенд: http://localhost:5174"
+	@echo "  🔧 API: http://localhost:8006"
+	@echo ""
+	@echo "⛓️ Блокчейн:"
+	@echo "  🌐 REST API: http://localhost:1317"
+	@echo "  🔗 RPC: http://localhost:26657"
+
+open-chainrice:
+	@echo "🍚 Відкриття ChainRice інтерфейсів..."
+	@xdg-open http://localhost:5173 2>/dev/null || open http://localhost:5173 2>/dev/null || echo "Відкрийте http://localhost:5173 в браузері"
+	@xdg-open http://localhost:8004 2>/dev/null || open http://localhost:8004 2>/dev/null || echo "Відкрийте http://localhost:8004 в браузері"
+	@xdg-open http://localhost:8005 2>/dev/null || open http://localhost:8005 2>/dev/null || echo "Відкрийте http://localhost:8005 в браузері"
+
+open-meowtopia:
+	@echo "🐱 Відкриття Meowtopia інтерфейсів..."
+	@xdg-open http://localhost:5174 2>/dev/null || open http://localhost:5174 2>/dev/null || echo "Відкрийте http://localhost:5174 в браузері"
+	@xdg-open http://localhost:8006 2>/dev/null || open http://localhost:8006 2>/dev/null || echo "Відкрийте http://localhost:8006 в браузері"
+
+# Status check
+status:
+	@echo "📊 Статус всіх сервісів Rice-Dev екосистеми:"
+	@echo ""
+	@echo "🍚 ChainRice:"
+	@echo "  Фронтенд (5173):" && curl -s http://localhost:5173 > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "  API (8004):" && curl -s http://localhost:8004/health > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "  AI (8005):" && curl -s http://localhost:8005/health > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo ""
+	@echo "🐱 Meowtopia:"
+	@echo "  Фронтенд (5174):" && curl -s http://localhost:5174 > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "  API (8006):" && curl -s http://localhost:8006/health > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo ""
+	@echo "⛓️ Блокчейн:"
+	@echo "  REST API (1317):" && curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "  RPC (26657):" && curl -s http://localhost:26657/status > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+
+# Development mode
+dev:
+	@echo "🔄 Запуск в режимі розробки..."
+	@make start
+
+# Test all applications
+test:
+	@echo "🧪 Запуск тестів для всієї екосистеми..."
+	@cd apps/chain-rice && make test
+	@cd apps/meowtopia && make test
+	@echo "✅ Всі тести пройдені"
+
+# Database operations
+db-init:
+	@echo "🗄️ Ініціалізація баз даних..."
+	@cd apps/chain-rice && make db-init
+	@cd apps/meowtopia && make db-init
+	@echo "✅ Бази даних ініціалізовані"
+
+# Logs
+logs:
+	@echo "📋 Показ логів всіх сервісів..."
+	@echo "ChainRice API логі:"
+	@cd apps/chain-rice && make logs 2>/dev/null || echo "Логі недоступні"
+	@echo "Meowtopia API логі:"
+	@cd apps/meowtopia && make logs 2>/dev/null || echo "Логі недоступні"
+
+# Reset everything
+reset: stop clean
+	@echo "🔄 Повний скид екосистеми..."
+	@make install
+	@make build
+	@echo "✅ Екосистема повністю скинута та готова до запуску"
+
+# Quick start (install + build + start + open)
+quick:
+	@echo "⚡ Швидкий запуск екосистеми..."
+	@make install
+	@make build
+	@make start &
+	@sleep 10
+	@make open
+	@echo "✅ Екосистема запущена та відкрита в браузері"
+
+# Check if services are running
+check-services:
+	@echo "🔍 Перевірка статусу сервісів..."
+	@./check-status.sh
+
+# Development setup
+dev-setup:
+	@echo "🛠️ Налаштування середовища розробки..."
+	@make install
+	@make proto
+	@make build
+	@echo "✅ Середовище розробки готове"
+
+# Full reset
+full-reset: stop clean
+	@echo "🔄 Повний скид екосистеми..."
+	@make install
+	@make build
+	@make db-init
+	@echo "✅ Екосистема повністю скинута та готова до запуску"
+
+# Show logs
+show-logs:
+	@echo "📋 Показ логів сервісів..."
+	@echo "ChainRice API логі:"
+	@cd apps/chain-rice && make logs 2>/dev/null || echo "Логі недоступні"
+	@echo "Meowtopia API логі:"
+	@cd apps/meowtopia && make logs 2>/dev/null || echo "Логі недоступні"
+
+# Backup databases
+backup:
+	@echo "💾 Створення резервної копії баз даних..."
+	@mkdir -p backups/$(shell date +%Y%m%d_%H%M%S)
+	@cp apps/chain-rice/*.db backups/$(shell date +%Y%m%d_%H%M%S)/ 2>/dev/null || echo "Немає баз даних для backup"
+	@echo "✅ Backup створено"
+
+# Restore databases
+restore:
+	@echo "📂 Відновлення баз даних..."
+	@ls backups/ 2>/dev/null || echo "Немає backup файлів"
+	@echo "Використовуйте: make restore-backup BACKUP_DIR=назва_папки"

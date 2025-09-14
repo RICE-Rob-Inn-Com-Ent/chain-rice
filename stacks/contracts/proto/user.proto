@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package examples.user;
+
+option go_package = "examples/user";
+
+message UserId {
+  string id = 1;
+}
+
+message UserProfile {
+  string id = 1;
+  string email = 2;
+  string display_name = 3;
+}
+
+service UserService {
+  rpc GetUser (UserId) returns (UserProfile);
+}
+
+

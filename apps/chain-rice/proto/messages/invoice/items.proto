@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package chainrice.chainrice.invoice;
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// InvoiceItem represents a single invoice item
+message InvoiceItem {
+  // Basic product/service information
+  string name = 1;
+  string description = 2;
+  string category = 3;
+  string unit = 4; // unit of measure (pcs, kg, m, etc.)
+  
+  // Quantity and prices
+  double quantity = 5;
+  double unit_price_net = 6; // net unit price
+  double unit_price_gross = 7; // gross unit price
+  
+  // Amounts
+  double net_amount = 8; // net amount
+  double gross_amount = 9; // gross amount
+  
+  // Taxes
+  double vat_rate = 10; // VAT rate in percentage (e.g. 8.0 for 8%)
+  double vat_amount = 11; // VAT amount
+  
+  // Additional information
+  string product_code = 12; // product/service code
+  string notes = 13;
+}
+
+// ItemCategory represents a product/service category
+message ItemCategory {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string parent_category_id = 4; // for category hierarchy
+  bool is_active = 5;
+}

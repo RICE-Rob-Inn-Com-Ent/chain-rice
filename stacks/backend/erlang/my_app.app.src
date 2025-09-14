@@ -1,0 +1,11 @@
+{application, my_app,
+ [{description, "Minimal Erlang app"},
+  {vsn, "0.1.0"},
+  {modules, [my_app_app, my_app_sup, my_module]},
+  {registered, [my_app_sup]},
+  {applications, [kernel, stdlib]},
+  {mod, {my_app_app, []}},
+  {env, []}
+ ]}.
+
+

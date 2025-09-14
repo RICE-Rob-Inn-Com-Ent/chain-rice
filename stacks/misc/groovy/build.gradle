@@ -1,0 +1,21 @@
+plugins {
+    id 'application'
+    id 'groovy'
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    implementation localGroovy()
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+}
+
+application {
+    mainClass = 'App'
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+

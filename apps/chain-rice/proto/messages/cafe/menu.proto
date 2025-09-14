@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package chainrice.chainrice.cafe;
+
+import "google/protobuf/timestamp.proto";
+import "gogoproto/gogo.proto";
+import "enums/cafe.proto";
+
+option go_package = "github.com/chainrice/chainrice/x/chainrice/types";
+
+// Menu item
+message MenuItem {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string category = 5; // food, drinks, desserts
+  string image_url = 6;
+  bool is_available = 7;
+  repeated string allergens = 8;
+  int32 preparation_time = 9; // in minutes
+  double rating = 10;
+  int32 order_count = 11;
+  google.protobuf.Timestamp created_at = 12 [(gogoproto.stdtime) = true];
+  google.protobuf.Timestamp updated_at = 13 [(gogoproto.stdtime) = true];
+}
+
+// Customer reservation
+message Reservation {
+  string id = 1;
+  string customer_name = 2;
+  string customer_phone = 3;
+  string customer_email = 4;
+  int32 party_size = 5;
+  google.protobuf.Timestamp reservation_date = 6 [(gogoproto.stdtime) = true];
+  int32 duration_minutes = 7;
+  string special_requests = 8;
+  string status = 9; // pending, confirmed, cancelled, completed
+  string table_number = 10;
+  double total_cost = 11;
+  google.protobuf.Timestamp created_at = 12 [(gogoproto.stdtime) = true];
+  google.protobuf.Timestamp updated_at = 13 [(gogoproto.stdtime) = true];
+}
+
+// Order
+message Order {
+  string id = 1;
+  string reservation_id = 2;
+  string customer_name = 3;
+  repeated OrderItem items = 4;
+  double subtotal = 5;
+  double tax_amount = 6;
+  double total_amount = 7;
+  string status = 8; // pending, confirmed, preparing, ready, delivered, cancelled
+  google.protobuf.Timestamp created_at = 9 [(gogoproto.stdtime) = true];
+  google.protobuf.Timestamp updated_at = 10 [(gogoproto.stdtime) = true];
+}
+
+// Order item
+message OrderItem {
+  string id = 1;
+  string menu_item_id = 2;
+  string name = 3;
+  double price = 4;
+  int32 quantity = 5;
+  string special_instructions = 6;
+}
+
+// Table
+message Table {
+  string id = 1;
+  string number = 2;
+  int32 capacity = 3;
+  string location = 4;
+  bool is_available = 5;
+  string status = 6; // available, occupied, reserved, maintenance
+}
+
+// Customer
+message Customer {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string address = 5;
+  google.protobuf.Timestamp created_at = 6 [(gogoproto.stdtime) = true];
+  google.protobuf.Timestamp updated_at = 7 [(gogoproto.stdtime) = true];
+}

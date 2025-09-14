@@ -1,0 +1,5 @@
+{:app/name "examples-clojure-hello"
+ :greeting {:prefix "Hello"
+            :name   "World"}}
+
+
