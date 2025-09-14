@@ -1,0 +1,99 @@
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": false,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": false,
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "vueIndentScriptAndStyle": false,
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": false,
+  "overrides": [
+    {
+      "files": "*.go",
+      "options": {
+        "parser": "go-template"
+      }
+    },
+    {
+      "files": "*.rs",
+      "options": {
+        "parser": "rust"
+      }
+    },
+    {
+      "files": "*.swift",
+      "options": {
+        "parser": "swift"
+      }
+    },
+    {
+      "files": "*.kt",
+      "options": {
+        "parser": "kotlin"
+      }
+    },
+    {
+      "files": "*.java",
+      "options": {
+        "parser": "java"
+      }
+    },
+    {
+      "files": "*.py",
+      "options": {
+        "parser": "python"
+      }
+    },
+    {
+      "files": "*.proto",
+      "options": {
+        "parser": "protobuf"
+      }
+    },
+    {
+      "files": "*.gradle",
+      "options": {
+        "parser": "gradle"
+      }
+    },
+    {
+      "files": "*.xml",
+      "options": {
+        "parser": "xml"
+      }
+    },
+    {
+      "files": "*.sql",
+      "options": {
+        "parser": "sql"
+      }
+    },
+    {
+      "files": "*.hcl",
+      "options": {
+        "parser": "hcl"
+      }
+    },
+    {
+      "files": "*.tf",
+      "options": {
+        "parser": "hcl"
+      }
+    },
+    {
+      "files": "*.tfvars",
+      "options": {
+        "parser": "hcl"
+      }
+    }
+  ]
+}
