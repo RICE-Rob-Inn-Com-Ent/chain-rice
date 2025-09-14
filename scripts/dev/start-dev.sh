@@ -27,10 +27,10 @@ export BUILD_VERSION=0.1.0
 export BUILD_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "dev")
 
 echo -e "${YELLOW}📦 Building services...${NC}"
-docker-compose build
+docker compose build
 
 echo -e "${GREEN}🚀 Starting all services...${NC}"
-docker-compose --profile app --profile blockchain up -d
+docker compose --profile app --profile blockchain up -d
 
 echo -e "${GREEN}⏳ Waiting for services to be ready...${NC}"
 sleep 10
@@ -46,8 +46,11 @@ echo -e "  • Blockchain RPC:   http://localhost:26657"
 echo ""
 echo -e "${YELLOW}📝 Useful commands:${NC}"
 echo -e "  • View logs:        make logs"
-echo -e "  • Stop services:    make stop"
+echo -e "  • Stop services:    make down"
 echo -e "  • Restart:          make restart"
 echo -e "  • Open interfaces:  make open"
+
+echo -e "${BLUE}🌐 Opening development interfaces...${NC}"
+./scripts/utils/open-interfaces.sh || true
 echo ""
 echo -e "${GREEN}🎉 Happy coding!${NC}"

@@ -46,4 +46,4 @@ fi
 echo -e "${GREEN}✅ Web development interfaces opened in browser!${NC}\n"
 
 echo -e "${BLUE}📝 Showing color-coded web development logs...${NC}"
-./scripts/colored-logs.sh web
+./scripts/logs/colored-logs.sh app
