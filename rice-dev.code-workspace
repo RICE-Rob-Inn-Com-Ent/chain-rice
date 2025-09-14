@@ -5,48 +5,52 @@
       "path": "."
     },
     {
-      "name": "🧑‍💻Dev|🏗️Stacks",
-      "path": "./stacks"
+      "name": "🧑‍💻Dev|📚Stacks",
+      "path": "stacks"
     },
     {
-      "name": "⛓️CRICE|🏠Root",
-      "path": "./apps/chain-rice"
+      "name": "💎🗄️BACKEND|🐹Go⛓️CRICE",
+      "path": "apps/chain-rice/backend/go"
     },
     {
-      "name": "⛓️CRICE|🧠AI",
-      "path": "./apps/chain-rice/ai"
+      "name": "💎🗄️BACKEND|🐍Python🤖AI",
+      "path": "apps/chain-rice/backend/python"
     },
     {
-      "name": "⛓️CRICE|🐹API",
-      "path": "./apps/chain-rice/api"
+      "name": "💎🗂️CONTRACTS|📝Proto💪Buf",
+      "path": "apps/chain-rice/contracts/proto"
     },
     {
-      "name": "⛓️CRICE|🐳Containers",
-      "path": "./apps/chain-rice/containers"
+      "name": "💎🗂️CONTRACTS|🦀Rust🧠Smart",
+      "path": "apps/chain-rice/contracts/rust"
     },
     {
-      "name": "⛓️CRICE|🐘Data",
-      "path": "./apps/chain-rice/data"
+      "name": "💎🖼️FRONTEND|⚛️React🎨UI",
+      "path": "apps/chain-rice/frontend/react"
     },
     {
-      "name": "⛓️CRICE|⚛️Frontend",
-      "path": "./apps/chain-rice/frontend"
+      "name": "💎🖼️FRONTEND|🌐NextJS🔍SEO",
+      "path": "apps/chain-rice/frontend/next"
     },
     {
-      "name": "⛓️CRICE|📦Proto",
-      "path": "./apps/chain-rice/proto"
+      "name": "💎🧪FUNCTIONS|👩‍🔬Julia⚗️Simulations",
+      "path": "apps/chain-rice/functions/julia"
     },
     {
-      "name": "🐱MWT|🏠Root",
-      "path": "./apps/meowtopia"
+      "name": "💎🏗️INFRASTRUCTURE|🐳Docker⚓Containers",
+      "path": "apps/chain-rice/infrastructure/docker"
     },
     {
-      "name": "🐱 MWT|⚛️Frontend",
-      "path": "./apps/meowtopia/frontend"
+      "name": "💎🏗️INFRASTRUCTURE|🪄Ansible⚙️Automation",
+      "path": "apps/chain-rice/infrastructure/ansible"
     },
     {
-      "name": "🐱 MWT|🎮Game",
-      "path": "./apps/meowtopia/game"
+      "name": "💎🏗️INFRASTRUCTURE|🌱Terraform🔧Provisioning",
+      "path": "apps/chain-rice/infrastructure/terraform"
+    },
+    {
+      "name": "💎🏗️INFRASTRUCTURE|❄️Nix🧊Reproducibility",
+      "path": "apps/chain-rice/infrastructure/nix"
     }
   ],
   "settings": {
@@ -96,7 +100,10 @@
     },
     "terminal.integrated.cwd": "${workspaceFolder}",
     "workbench.colorTheme": "Default Dark+",
-    "workbench.iconTheme": "material-icon-theme"
+    "workbench.iconTheme": "material-icon-theme",
+    "ocaml.sandbox": {
+      "kind": "global"
+    }
   },
   "extensions": {
     "recommendations": [

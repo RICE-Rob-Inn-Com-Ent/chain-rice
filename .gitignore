@@ -107,3 +107,5 @@ coverage/
 .local/
 local/
 vengeance-69/
+
+.fake

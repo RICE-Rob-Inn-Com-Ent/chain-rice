@@ -1,0 +1,89 @@
+This test exercises the "go_file_diagnostics" MCP tool.
+
+-- flags --
+-mcp
+
+-- settings.json --
+{
+    "mcpTools": {
+        "go_file_diagnostics": true
+    }
+}
+
+-- go.mod --
+module example.com
+
+-- a/main.go --
+package main
+
+func foo() {} //@loc(foo, "foo")
+
+//@mcptool("go_file_diagnostics", `{"file":"$WORKDIR/a/main.go"}`, output=unused)
+//@diag(foo, re"unused")
+-- @unused --
+2:5-2:8: [Information] function "foo" is unused
+Fix:
+--- $WORKDIR/a/main.go
++++ $WORKDIR/a/main.go
+@@ -1,6 +1,6 @@
+ package main
+ 
+-func foo() {} //@loc(foo, "foo")
++ //@loc(foo, "foo")
+ 
+ //@mcptool("go_file_diagnostics", `{"file":"$WORKDIR/a/main.go"}`, output=unused)
+ //@diag(foo, re"unused")
+
+
+-- b/main.go --
+package main
+
+func _() {
+	_ = deprecated([]string{"a"}, "a") //@loc(inline, "deprecated")
+
+	_ = deprecated([]string{"a"}, "a") //@loc(inline2, "deprecated")
+}
+
+//go:fix inline
+func deprecated(slice []string, s string) bool {
+	return proposed(slice, s, true)
+}
+
+func proposed(_ []string, _ string, _ bool) bool {
+	return false // fake
+}
+
+//@mcptool("go_file_diagnostics", `{"file":"$WORKDIR/b/main.go"}`, output=diagnoseInline)
+//@diag(inline, re"inline")
+//@diag(inline2, re"inline")
+-- @diagnoseInline --
+3:5-3:35: [Hint] Call of main.deprecated should be inlined
+Fix:
+--- $WORKDIR/b/main.go
++++ $WORKDIR/b/main.go
+@@ -1,7 +1,7 @@
+ package main
+ 
+ func _() {
+-	_ = deprecated([]string{"a"}, "a") //@loc(inline, "deprecated")
++	_ = proposed([]string{"a"}, "a", true) //@loc(inline, "deprecated")
+ 
+ 	_ = deprecated([]string{"a"}, "a") //@loc(inline2, "deprecated")
+ }
+
+
+5:5-5:35: [Hint] Call of main.deprecated should be inlined
+Fix:
+--- $WORKDIR/b/main.go
++++ $WORKDIR/b/main.go
+@@ -3,7 +3,7 @@
+ func _() {
+ 	_ = deprecated([]string{"a"}, "a") //@loc(inline, "deprecated")
+ 
+-	_ = deprecated([]string{"a"}, "a") //@loc(inline2, "deprecated")
++	_ = proposed([]string{"a"}, "a", true) //@loc(inline2, "deprecated")
+ }
+ 
+ //go:fix inline
+
+
