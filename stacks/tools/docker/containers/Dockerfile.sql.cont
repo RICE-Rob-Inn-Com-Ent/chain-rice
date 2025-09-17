@@ -1,0 +1,14 @@
+FROM postgres:15-alpine
+
+# Copy initialization scripts
+COPY *.sql /docker-entrypoint-initdb.d/
+
+# Set environment variables
+ENV POSTGRES_DB=app_db
+ENV POSTGRES_USER=app_user
+ENV POSTGRES_PASSWORD=app_password
+
+EXPOSE 5432
+
+# Use the default PostgreSQL entrypoint
+CMD ["postgres"]

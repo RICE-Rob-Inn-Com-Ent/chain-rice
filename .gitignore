@@ -106,6 +106,26 @@ coverage/
 # Local development
 .local/
 local/
+.clj-kondo/
+.lsp/
+bin/
+pkg/
 vengeance-69/
 
 .fake
+
+# 🧹 Кеші та інструменти розробки (видаляємо з кореня)
+.clj-kondo/
+.lsp/
+bin/
+pkg/
+
+# 📁 Стек-специфічні кеші (правильні місця)
+stacks/clojure/.clj-kondo/.cache/
+stacks/go/bin/
+stacks/go/pkg/
+stacks/go/.cache/
+stacks/.lsp/
+
+# 🔧 Тимчасові скрипти
+clean-root.sh

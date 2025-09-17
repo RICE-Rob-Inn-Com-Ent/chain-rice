@@ -1,56 +1,28 @@
 {
   "folders": [
     {
-      "name": "🧑‍💻Dev|🌍Root",
+      "name": "🌍Root",
       "path": "."
     },
     {
-      "name": "🧑‍💻Dev|📚Stacks",
-      "path": "stacks"
+      "name": "🎨Frontend",
+      "path": "stacks/frontend"
     },
     {
-      "name": "💎🗄️BACKEND|🐹Go⛓️CRICE",
-      "path": "apps/chain-rice/backend/go"
+      "name": "🗄️Backend",
+      "path": "stacks/backend"
     },
     {
-      "name": "💎🗄️BACKEND|🐍Python🤖AI",
-      "path": "apps/chain-rice/backend/python"
+      "name": "🛠️Tools",
+      "path": "stacks/tools"
     },
     {
-      "name": "💎🗂️CONTRACTS|📝Proto💪Buf",
-      "path": "apps/chain-rice/contracts/proto"
+      "name": "🍚ChainRice",
+      "path": "apps/chain-rice/"
     },
     {
-      "name": "💎🗂️CONTRACTS|🦀Rust🧠Smart",
-      "path": "apps/chain-rice/contracts/rust"
-    },
-    {
-      "name": "💎🖼️FRONTEND|⚛️React🎨UI",
-      "path": "apps/chain-rice/frontend/react"
-    },
-    {
-      "name": "💎🖼️FRONTEND|🌐NextJS🔍SEO",
-      "path": "apps/chain-rice/frontend/next"
-    },
-    {
-      "name": "💎🧪FUNCTIONS|👩‍🔬Julia⚗️Simulations",
-      "path": "apps/chain-rice/functions/julia"
-    },
-    {
-      "name": "💎🏗️INFRASTRUCTURE|🐳Docker⚓Containers",
-      "path": "apps/chain-rice/infrastructure/docker"
-    },
-    {
-      "name": "💎🏗️INFRASTRUCTURE|🪄Ansible⚙️Automation",
-      "path": "apps/chain-rice/infrastructure/ansible"
-    },
-    {
-      "name": "💎🏗️INFRASTRUCTURE|🌱Terraform🔧Provisioning",
-      "path": "apps/chain-rice/infrastructure/terraform"
-    },
-    {
-      "name": "💎🏗️INFRASTRUCTURE|❄️Nix🧊Reproducibility",
-      "path": "apps/chain-rice/infrastructure/nix"
+      "name": "🐱Meowtopia",
+      "path": "apps/meowtopia/"
     }
   ],
   "settings": {
@@ -61,21 +33,24 @@
       "source.fixAll.eslint": "explicit"
     },
     "files.associations": {
-      "*.proto": "protobuf"
+      "*.proto": "protobuf",
+      "Dockerfile.*": "dockerfile"
     },
     "protoc": {
       "path": "/usr/local/bin/protoc",
       "compile_on_save": true,
       "options": [
-        "--proto_path=${workspaceFolder}/apps/chain-rice/proto",
-        "--go_out=${workspaceFolder}/apps/chain-rice/go/pkg/proto",
-        "--go-grpc_out=${workspaceFolder}/apps/chain-rice/go/pkg/proto"
+        "--proto_path=${workspaceFolder}/apps/chain-rice/contracts/proto",
+        "--go_out=${workspaceFolder}/apps/chain-rice/backend/go/pkg/proto",
+        "--go-grpc_out=${workspaceFolder}/apps/chain-rice/backend/go/pkg/proto"
       ]
     },
     "go.toolsManagement.checkForUpdates": "local",
     "go.useLanguageServer": true,
-    "go.gopath": "${workspaceFolder}",
+    "go.gopath": "${env:HOME}/go",
     "go.goroot": "/usr/local/go",
+    "go.gocache": "${env:HOME}/.cache/go-build",
+    "go.gomodcache": "${env:HOME}/go/pkg/mod",
     "python.defaultInterpreterPath": "/usr/bin/python3",
     "python.terminal.activateEnvironment": true,
     "python.linting.enabled": true,
@@ -102,7 +77,11 @@
     "workbench.colorTheme": "Default Dark+",
     "workbench.iconTheme": "material-icon-theme",
     "ocaml.sandbox": {
-      "kind": "global"
+      "kind": "dune",
+      "root": "${workspaceFolder:🧑‍💻Dev|🌍Root}/stacks"
+    },
+    "files.watcherExclude": {
+      "**/target": true
     }
   },
   "extensions": {
@@ -240,8 +219,8 @@
         "type": "go",
         "request": "launch",
         "mode": "auto",
-        "program": "${workspaceFolder}/apps/chain-rice/go/cmd/accounting-api",
-        "cwd": "${workspaceFolder}/apps/chain-rice/go",
+        "program": "${workspaceFolder}/apps/chain-rice/backend/go",
+        "cwd": "${workspaceFolder}/apps/chain-rice/backend/go",
         "env": {
           "DATABASE_URL": "sqlite:///./accounting.db",
           "GRPC_PORT": "9090",
@@ -249,24 +228,11 @@
         }
       },
       {
-        "name": "🐱 Meowtopia Go API",
-        "type": "go",
-        "request": "launch",
-        "mode": "auto",
-        "program": "${workspaceFolder}/apps/chain-rice/go/cmd/meowtopia-api",
-        "cwd": "${workspaceFolder}/apps/chain-rice/go",
-        "env": {
-          "DATABASE_URL": "sqlite:///./meowtopia.db",
-          "GRPC_PORT": "9091",
-          "HTTP_PORT": "8006"
-        }
-      },
-      {
         "name": "🤖 Python AI Service",
         "type": "python",
         "request": "launch",
-        "program": "${workspaceFolder}/apps/chain-rice/python/main.py",
-        "cwd": "${workspaceFolder}/apps/chain-rice/python",
+        "program": "${workspaceFolder}/apps/chain-rice/backend/python/main.py",
+        "cwd": "${workspaceFolder}/apps/chain-rice/backend/python",
         "env": {
           "API_PORT": "8005"
         }

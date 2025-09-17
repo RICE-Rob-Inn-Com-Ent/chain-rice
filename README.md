@@ -1,289 +1,366 @@
 # 🌍 Rice-Dev Ecosystem
 
-**Повна екосистема додатків з блокчейн інтеграцією**
+## A comprehensive development ecosystem with reusable stacks and complete applications
 
-Rice-Dev - це комплексна платформа, що включає два основні додатки, які працюють на спільному блокчейні Cosmos SDK:
+Rice-Dev is a modern development platform that combines **technology stacks** for rapid prototyping and **complete applications** for real-world solutions, all unified under a single workspace.
 
-- **🍚 ChainRice** - Бухгалтерська система з AI розпізнаванням чеків
-- **🐱 Meowtopia** - Адміністративна система для кафе з котами
+## 🗂️ What's Inside
 
-## 🚀 Швидкий старт
+### 🧱 Stacks (`stacks/`)
 
-### Системні вимоги
+Reusable technology templates and tools:
 
-- **Go 1.21+** - для блокчейну та API
-- **Node.js 18+** - для React фронтенду
-- **Python 3.11+** - для AI сервісу
-- **Docker** (опціонально) - для контейнеризації
+- **🏗️ Frameworks** - Frontend frameworks (Angular, React/Next.js, Nuxt, Vue, Flutter)
+- **🗣️ Languages** - Programming language stacks (Go, Python, Rust, Java, C#, etc.)
+- **🛠️ Tools** - Development tools (Docker, Terraform, Ansible, Bash, Nix)
+- **🎮 Unity** - Game development templates
 
-### Встановлення та запуск
+### 🚀 Apps (`apps/`)
+
+Complete production-ready applications:
+
+- **🍚 ChainRice** - Blockchain accounting system with AI receipt recognition
+- **🐱 Meowtopia** - Cat cafe management system with gaming integration
+
+### 🔧 Root (`/`)
+
+Ecosystem orchestration and configuration:
+
+- **Makefile** - Unified build and deployment commands
+- **VS Code Workspace** - Multi-root development environment
+- **Documentation** - Architecture guides and usage instructions
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Git** - Version control
+- **Make** - Build automation
+- **Docker** (optional) - Containerization
+- **Cursor** (recommended) - Development environment
+
+### Getting Started
 
 ```bash
-# Клонуйте репозиторій
+# Clone the repository
 git clone <repository-url>
 cd rice-dev
 
-# Встановіть всі залежності
-make install
+# Open in Cursor (recommended)
+cursor rice-dev.code-workspace
 
-# Запустіть всю екосистему
-make start
+# Install everything and start all services
+make up
 
-# Відкрийте інтерфейси в браузері
-make open
+# Or step by step:
+make install    # Install all dependencies
+make build      # Build all services
+make start      # Start all applications
+make open       # Open all interfaces
+
+# Check status
+make status
 ```
 
-### Швидкий запуск (все в одній команді)
+## 🎯 How It Works
+
+### For Learning & Prototyping
+
+Use **stacks** to quickly set up development environments:
 
 ```bash
-make quick  # Встановить, зібере, запустить та відкриє все
+# Explore Go development
+cd stacks/langs/go
+make setup
+make build
+make test
+
+# Try React/Next.js framework
+cd stacks/frontend/typescript/next
+yarn install
+yarn dev
+
+# Experiment with Docker containers
+cd stacks/tools/docker
+docker-compose up
 ```
 
-## 🎯 Управління з кореня
+### For Production Applications
 
-### Основні команди
+Use **apps** for complete solutions:
 
 ```bash
-# Екосистема
-make start              # Запустити всю екосистему
-make stop               # Зупинити всі сервіси
-make status             # Перевірити статус сервісів
-make clean              # Очистити всі збірки
-
-# Окремі додатки
-make chainrice          # Запустити тільки ChainRice
-make meowtopia          # Запустити тільки Meowtopia
-
-# Docker
-make docker             # Запустити через Docker Compose
-
-# Інтерфейси
-make open               # Відкрити всі інтерфейси
-make open-chainrice     # Відкрити ChainRice інтерфейси
-make open-meowtopia     # Відкрити Meowtopia інтерфейси
-```
-
-## 🌐 Доступні інтерфейси
-
-Після запуску `make start`:
-
-### 🍚 ChainRice (Бухгалтерія)
-- **Фронтенд**: http://localhost:5173
-- **API**: http://localhost:8004
-- **AI сервіс**: http://localhost:8005
-
-### 🐱 Meowtopia (Кафе з котами)
-- **Фронтенд**: http://localhost:5174
-- **API**: http://localhost:8006
-
-### ⛓️ Блокчейн
-- **REST API**: http://localhost:1317
-- **RPC**: http://localhost:26657
-
-## 📊 Функції екосистеми
-
-### 🍚 ChainRice - Бухгалтерська система
-
-#### AI розпізнавання чеків
-- Автоматичне розпізнавання чеків з фото/PDF
-- EasyOCR + Tesseract для багатомовного розпізнавання
-- Автоматичне заповнення даних інвойсів
-- Підтримка української, польської, англійської мов
-
-#### Управління інвойсами
-- Створення та редагування інвойсів
-- Автоматичний розрахунок ПДВ
-- Категоризація витрат
-- Історія з фільтрацією та пошуком
-
-#### Дашборд з графіками
-- Статистика доходів та витрат
-- Графіки по місяцях (лінійні та стовпчасті)
-- Кругові діаграми по категоріях
-- Аналіз тенденцій та прогнози
-
-#### Blockchain інтеграція
-- Запис транзакцій в блокчейн
-- Незмінність записів для аудиту
-- Smart contracts для автоматизації
-- Децентралізоване зберігання даних
-
-### 🐱 Meowtopia - Кафе з котами
-
-#### Управління котами
-- Каталог котів з фотографіями
-- Детальна інформація (вік, порода, характер)
-- Система усиновлення з заявками
-- Відстеження здоров'я та активності
-
-#### Меню кафе
-- Управління стравами та напоями
-- Категорії (їжа, напої, десерти)
-- Інформація про алергени
-- Рейтинг популярності страв
-
-#### Бронювання столиків
-- Онлайн система бронювання
-- Управління розкладом роботи
-- Спеціальні запити клієнтів
-- SMS/email сповіщення
-
-#### Система замовлень
-- Прийом замовлень від клієнтів
-- Відстеження статусу приготування
-- Автоматичний розрахунок вартості
-- Інтеграція з платіжними системами
-
-## 🏗️ Архітектура
-
-### Структура проекту
-
-```
-rice-dev/
-├── Makefile                    # Головне управління
-├── README.md                   # Цей файл
-├── apps/
-│   ├── chain-rice/            # Бухгалтерська система
-│   │   ├── frontend/          # React фронтенд
-│   │   ├── go/                # Go API сервер
-│   │   ├── python/            # Python AI сервіс
-│   │   ├── proto/             # Protobuf схеми
-│   │   └── docker/            # Docker конфігурація
-│   └── meowtopia/             # Кафе з котами
-│       ├── src/               # React фронтенд
-│       ├── Makefile           # Локальне управління
-│       └── package.json       # Залежності
-```
-
-### Технологічний стек
-
-#### Frontend
-- **React 19** + **TypeScript**
-- **Tailwind CSS** для стилізації
-- **React Query** для кешування API
-- **Recharts** для графіків
-- **React Hook Form** + **Zod** для форм
-
-#### Backend
-- **Go 1.21** для API серверів
-- **gRPC** + **HTTP REST** для комунікації
-- **SQLite** для локального зберігання
-- **Protobuf** для типізованих API
-
-#### AI/ML
-- **Python 3.11** + **FastAPI**
-- **EasyOCR** + **Tesseract** для OCR
-- **OpenCV** для обробки зображень
-- **PIL** для роботи з зображеннями
-
-#### Blockchain
-- **Cosmos SDK** для блокчейну
-- **Tendermint** для консенсусу
-- **gRPC** для блокчейн API
-- **Protobuf** для схеми блокчейну
-
-## 🔧 Розробка
-
-### Локальна розробка
-
-```bash
-# Розробка ChainRice
+# Run ChainRice accounting system
 cd apps/chain-rice
 make start
 
-# Розробка Meowtopia
+# Run Meowtopia cafe management
 cd apps/meowtopia
 make start
 
-# Розробка з кореня
-make chainrice    # Тільки ChainRice
-make meowtopia    # Тільки Meowtopia
-make start        # Все разом
+# Or run everything from root
+make chainrice    # Start ChainRice only
+make meowtopia    # Start Meowtopia only
+make start        # Start everything
 ```
 
-### Docker розробка
+## 📚 Stacks Overview
+
+### 🏗️ Frameworks (`stacks/frameworks/`)
+
+| Framework | Description | Technologies |
+|-----------|-------------|-------------|
+| **Angular** | Angular framework setup | TypeScript, Angular CLI, RxJS |
+| **Next.js** | React with Next.js | React 19, TypeScript, Tailwind CSS, Vite |
+| **Vue** | Vue.js framework | Vue 3, Composition API, TypeScript |
+| **Flutter** | Mobile development | Dart, Flutter SDK, Material Design |
+
+### 🗣️ Languages (`stacks/langs/`)
+
+| Language | Description | Use Cases |
+|----------|-------------|-----------|
+| **Go** | Systems programming | APIs, microservices, blockchain |
+| **Python** | General purpose | AI/ML, data science, web backends |
+| **Rust** | Systems programming | Performance-critical applications |
+| **Java** | Enterprise development | Large-scale applications |
+| **C#** | Microsoft ecosystem | .NET applications, games |
+| **JavaScript/TypeScript** | Web development | Frontend, Node.js backends |
+| **Clojure** | Functional programming | Data processing, concurrent systems |
+| **Solidity** | Smart contracts | Blockchain development |
+| **Proto** | Protocol Buffers | API definitions, gRPC services |
+
+### 🛠️ Tools (`stacks/tools/`)
+
+| Tool | Description | Purpose |
+|------|-------------|---------|
+| **Docker** | Containerization | Application packaging, deployment |
+| **Terraform** | Infrastructure as Code | Cloud resource management |
+| **Ansible** | Configuration Management | Server automation |
+| **Bash** | Shell scripting | Automation, build scripts |
+| **Makefile** | Build automation | Consistent build processes |
+| **Nix** | Package management | Reproducible environments |
+
+## 🚀 Apps Overview
+
+### 🍚 ChainRice
+
+#### Blockchain Accounting System
+
+- **AI Receipt Recognition** - Automatic receipt processing with OCR
+- **Invoice Management** - Create, edit, and track invoices
+- **Tax Compliance** - Automated tax calculations and reporting
+- **Blockchain Integration** - Immutable transaction records
+- **Multi-language Support** - Ukrainian, Polish, English
+
+**Tech Stack**: Cosmos SDK, Go, React, Python, PostgreSQL
+
+### 🐱 Meowtopia
+
+#### Cat Cafe Management System
+
+- **Cat Management** - Track cats, adoptions, health records
+- **Menu System** - Manage cafe menu, orders, payments
+- **Reservation System** - Table bookings and scheduling
+- **Gaming Integration** - Rewards system with blockchain
+- **Real-time Updates** - WebSocket-based live updates
+
+**Tech Stack**: React, Node.js, Rust, GraphQL, PostgreSQL
+
+## 🔧 Root Commands
+
+### Ecosystem Management
 
 ```bash
-# Запуск через Docker
-make docker
-
-# Зупинка Docker контейнерів
-docker-compose -f apps/chain-rice/docker-compose.yml down
+make help           # Show all available commands
+make up             # Install everything and start all services
+make down           # Stop all containers and services
+make install        # Install all dependencies
+make build          # Build all projects
+make start          # Start all applications
+make stop           # Stop all services
+make status         # Check service status
+make clean          # Clean all builds
+make test           # Run all tests
 ```
 
-### Тестування
+### Application Control
 
 ```bash
-# Тести всієї екосистеми
-make test
-
-# Тести окремих додатків
-cd apps/chain-rice && make test
-cd apps/meowtopia && make test
+make chainrice      # Start ChainRice only
+make meowtopia      # Start Meowtopia only
+make docker         # Start with Docker Compose
 ```
 
-## 🚀 Deployment
-
-### Production
+### Development
 
 ```bash
-# Використання Docker Compose з production профілем
-cd apps/chain-rice
-docker-compose --profile production up -d
+make dev            # Development mode with hot reload and auto-open
+make dev-setup      # Set up development environment
+make quick          # Install + build + start + open
+make logs           # Show application logs
+make backup         # Backup databases
 ```
 
-### Kubernetes
+## 🌐 Available Services
+
+After running `make start`, access:
+
+### 🍚 ChainRice Services
+
+- **Frontend**: <http://localhost:5173>
+- **API**: <http://localhost:8004>
+- **AI Service**: <http://localhost:8005>
+
+### 🐱 Meowtopia Services
+
+- **Frontend**: <http://localhost:5174>
+- **API**: <http://localhost:8006>
+
+### ⛓️ Blockchain
+
+- **REST API**: <http://localhost:1317>
+- **RPC**: <http://localhost:26657>
+
+## 🏗️ Architecture
+
+```text
+Rice-Dev Ecosystem
+├── 🧱 Stacks (Reusable Templates)
+│   ├── 🏗️ Frameworks → Frontend templates
+│   ├── 🗣️ Languages → Backend templates  
+│   ├── 🛠️ Tools → DevOps templates
+│   └── 🎮 Unity → Game templates
+│
+├── 🚀 Apps (Complete Solutions)
+│   ├── 🍚 ChainRice → Accounting + AI + Blockchain
+│   └── 🐱 Meowtopia → Cafe + Gaming + Blockchain
+│
+└── 🔧 Root (Orchestration)
+    ├── Makefile → Unified commands
+    ├── Workspace → VS Code configuration
+    └── Documentation → Guides and references
+```
+
+## 💡 Usage Patterns
+
+### 1. **Learning Mode**
+
+Explore individual stacks to learn technologies:
 
 ```bash
-# Deployment в Kubernetes
-kubectl apply -f k8s/
+cd stacks/langs/rust
+make setup && make build
 ```
 
-## 📈 Моніторинг
+### 2. **Prototyping Mode**
 
-### Статус сервісів
+Combine stacks for rapid prototyping:
 
 ```bash
-# Перевірити статус всіх сервісів
-make status
-
-# Показати логі
-make logs
+cp -r stacks/frameworks/next my-project
+cp -r stacks/langs/go/modules my-project/backend
 ```
 
-### Health Checks
+### 3. **Production Mode**
 
-- **ChainRice API**: http://localhost:8004/health
-- **Meowtopia API**: http://localhost:8006/health
-- **Python AI**: http://localhost:8005/health
-- **Blockchain**: http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info
+Use complete apps as reference or foundation:
 
-## 🔐 Безпека
+```bash
+cd apps/meowtopia
+make deploy
+```
 
-- **CORS** налаштований для фронтенду
-- **Input validation** через protobuf схеми
-- **SQL injection** захист через prepared statements
-- **HTTPS/gRPC** шифрування в транзиті
-- **Blockchain** валідація транзакцій
+### 4. **Development Mode**
 
-## 📚 Документація
+Work on the entire ecosystem:
 
-- **Архітектура**: [apps/chain-rice/ARCHITECTURE.md](apps/chain-rice/ARCHITECTURE.md)
-- **ChainRice**: [apps/chain-rice/README.md](apps/chain-rice/README.md)
-- **Meowtopia**: [apps/meowtopia/README.md](apps/meowtopia/README.md)
+```bash
+cursor rice-dev.code-workspace
+make dev-setup
+make dev
+```
 
-## 🤝 Внесок у розробку
+## 🔐 Configuration
 
-1. Fork репозиторій
-2. Створіть feature branch
-3. Зробіть зміни
-4. Додайте тести
-5. Створіть Pull Request
+### Environment Variables
 
-## 📄 Ліцензія
+Each stack and app includes environment templates:
 
-MIT License - дивіться файл [LICENSE](LICENSE) для деталей.
+- `stacks/*/env.example` - Stack-specific variables
+- `apps/*/env.example` - Application-specific variables
+- Root `.env.example` - Ecosystem-wide variables
+
+### Cursor Workspace
+
+The `rice-dev.code-workspace` provides:
+
+- Multi-root workspace with all stacks and apps
+- Language-specific settings and extensions
+- Unified tasks for building and running
+- Integrated terminal configurations
+
+### Docker Support
+
+Most stacks and apps include Docker configurations:
+
+- `docker-compose.yml` - Multi-service orchestration
+- `Dockerfile` - Individual service containers
+- `.dockerignore` - Optimized build contexts
+
+## 🎯 Benefits
+
+### For Developers
+
+- **🚀 Rapid Setup** - Pre-configured development environments
+- **📚 Learning Resources** - Comprehensive examples across technologies
+- **🔧 Best Practices** - Battle-tested patterns and configurations
+- **🎨 Consistency** - Uniform development experience
+
+### For Teams
+
+- **📋 Standardization** - Consistent project structures
+- **⚡ Efficiency** - Reduced setup and configuration time
+- **🤝 Knowledge Sharing** - Centralized expertise and patterns
+- **🔄 Maintainability** - Clear separation of concerns
+
+### For Projects
+
+- **🧩 Flexibility** - Mix and match technologies as needed
+- **📈 Scalability** - Proven patterns for growth
+- **✅ Quality** - Built-in testing and deployment practices
+- **📖 Documentation** - Comprehensive guides and examples
+
+## 🤝 Contributing
+
+1. **Fork** the repository
+2. **Create** a feature branch
+3. **Add** your stack, tool, or app
+4. **Follow** existing patterns and documentation
+5. **Test** your changes
+6. **Submit** a pull request
+
+### Adding a New Stack
+
+```bash
+mkdir stacks/langs/your-language
+cd stacks/langs/your-language
+# Add README.md, Makefile, and example code
+```
+
+### Adding a New App
+
+```bash
+mkdir apps/your-app
+cd apps/your-app
+# Add ARCHITECTURE.md, README.md, and source code
+```
+
+## 📄 License
+
+MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Rice-Dev Ecosystem** - сучасна платформа для бухгалтерії та управління бізнесом з інтеграцією блокчейн технологій та AI. 🚀
+**Rice-Dev Ecosystem** - Empowering developers with reusable stacks and production-ready applications. 🚀
+
+*Ready to build something amazing? Start with `make quick` and explore the possibilities!*

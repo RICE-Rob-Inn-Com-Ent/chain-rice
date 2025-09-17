@@ -1,9 +1,0 @@
-FROM python:3.12-alpine
-WORKDIR /app
-COPY app.sh /app/app.sh
-RUN chmod +x /app/app.sh
-ENV PORT=8080 APP_NAME=examples-docker-hello
-EXPOSE 8080
-CMD ["/app/app.sh"]
-
-

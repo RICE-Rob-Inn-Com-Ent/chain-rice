@@ -1,0 +1,16 @@
+FROM dart:stable AS build
+
+WORKDIR /app
+COPY pubspec.yaml pubspec.lock ./
+RUN dart pub get
+
+COPY . .
+RUN dart compile exe bin/main.dart -o bin/server
+
+FROM scratch
+COPY --from=build /runtime/ /
+COPY --from=build /app/bin/server /app/bin/
+
+EXPOSE 8080
+
+CMD ["/app/bin/server"]

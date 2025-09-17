@@ -1,471 +1,382 @@
-# Architektura ChainRice
+# 🏗️ Rice-Dev Ecosystem Architecture
 
-## 🌟 Przegląd Systemu
+## 🌟 Overview
 
-**ChainRice** to zaawansowany ekosystem blockchain zbudowany na Cosmos SDK, integrujący platformę webową do zarządzania kawiarnią z platformą mobilną do gier, wszystko połączone z ujednoliconym backendem blockchain.
+**Rice-Dev** is a comprehensive development ecosystem organized into **stacks** and **apps**, providing reusable components and complete applications for rapid development across multiple technologies and domains.
 
-## 🏗️ Architektura Wysokiego Poziomu
+## 🗂️ Project Structure
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        ChainRice Ecosystem                     │
-├─────────────────────────────────────────────────────────────────┤
-│  Frontend Layer (Warstwa Frontend)                            │
-│  ┌─────────────────┐    ┌─────────────────┐                   │
-│  │   Web Platform  │    │  Mobile Platform│                   │
-│  │   (Cafe UI)     │    │   (Gry)         │                   │
-│  │                 │    │                 │                   │
-│  │ • Vite + React  │    │ • Android/Kotlin│                   │
-│  │ • Tailwind CSS  │    │ • iOS/Swift     │                   │
-│  │ • TypeScript    │    │ • Jetpack Compose│                  │
-│  │ • CosmosJS      │    │ • Flutter       │                   │
-│  └─────────────────┘    └─────────────────┘                   │
-├─────────────────────────────────────────────────────────────────┤
-│  Backend Services Layer (Warstwa Usług Backend)               │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────┐ │
-│  │   Web Backend   │    │  Mobile Backend │    │   Game      │ │
-│  │   (FastAPI)     │    │   (Node.js)     │    │   Engine    │ │
-│  │                 │    │                 │    │   (Rust)    │ │
-│  │ • REST API      │    │ • GraphQL API   │    │             │ │
-│  │ • WebSocket     │    │ • WebSocket     │    │ • Game Logic│ │
-│  │ • JWT Auth      │    │ • JWT Auth      │    │ • Physics   │ │
-│  └─────────────────┘    └─────────────────┘    └─────────────┘ │
-├─────────────────────────────────────────────────────────────────┤
-│  Blockchain Layer (Warstwa Blockchain)                        │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                    Cosmos SDK App                          ││
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ ││
-│  │  │   Tendermint│  │  Cosmos SDK │  │   Custom Modules    │ ││
-│  │  │   Core      │  │   Modules   │  │                     │ ││
-│  │  │             │  │             │  │ • Cafe Management   │ ││
-│  │  │ • Consensus │  │ • Bank      │  │ • Game Rewards      │ ││
-│  │  │ • P2P       │  │ • Staking   │  │ • NFT Marketplace  │ ││
-│  │  │ • RPC       │  │ • Gov       │  │ • DeFi Protocols   │ ││
-│  │  └─────────────┘  └─────────────┘  └─────────────────────┘ ││
-│  └─────────────────────────────────────────────────────────────┘│
-├─────────────────────────────────────────────────────────────────┤
-│  Data Layer (Warstwa Danych)                                  │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────┐ │
-│  │   PostgreSQL    │    │     Redis       │    │   IPFS      │ │
-│  │   (Primary DB)  │    │   (Cache/Queue) │    │ (File Store)│ │
-│  │                 │    │                 │    │             │ │
-│  │ • User Data     │    │ • Session Store │    │ • Game Assets│ │
-│  │ • Orders        │    │ • Rate Limiting │    │ • NFT Images│ │
-│  │ • Game Scores   │    │ • Real-time Data│    │ • Documents │ │
-│  └─────────────────┘    └─────────────────┘    └─────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
+```text
+rice-dev/
+├── Makefile                    # Root orchestration
+├── README.md                   # Main documentation
+├── ARCHITECTURE.md             # This file
+├── LICENSE                     # MIT License
+├── rice-dev.code-workspace     # VS Code workspace configuration
+├── .gitignore                  # Git ignore rules
+├── pkg/                        # Go module cache
+│   └── mod/                    # Go dependencies cache
+├── stacks/                     # 🧱 Technology Stacks
+│   ├── frameworks/             # Frontend frameworks
+│   ├── langs/                  # Programming languages
+│   ├── tools/                  # Development tools
+│   ├── unity/                  # Game development
+│   └── pkg/                    # Stack-level packages
+└── apps/                       # 🚀 Complete Applications
+    ├── chain-rice/             # Blockchain accounting system
+    └── meowtopia/              # Cat cafe management system
 ```
 
-## 🔧 Komponenty Systemu
+## 🧱 Stacks Architecture
 
-### 🌐 Frontend Layer
+### Philosophy
 
-#### Web Platform (Platforma Web)
-- **Lokalizacja**: `meowtopia/frontend/web`
-- **Technologie**: Vite + React 19 + Tailwind CSS + TypeScript
-- **Port**: 3000
-- **Funkcje**:
-  - Zarządzanie kawiarnią (menu, zamówienia, płatności)
-  - Dashboard administratora
-  - Integracja z blockchain (portfele, transakcje)
-  - Real-time updates (WebSocket)
+**Stacks** are reusable technology components that provide:
 
-#### Mobile Platform (Platforma Mobilna)
-- **Lokalizacja**: `meowtopia/frontend/mobile`
-- **Android**: Kotlin + Jetpack Compose
-- **iOS**: Swift + SwiftUI
-- **Funkcje**:
-  - Gry mobilne z integracją blockchain
-  - System nagród i osiągnięć
-  - Multiplayer gaming
-  - Push notifications
+- **Templates** for rapid project initialization
+- **Best practices** for each technology
+- **Example implementations** and patterns
+- **Development tools** and configurations
+- **Learning resources** and documentation
 
-### 🚀 Backend Services Layer
+### Stack Categories
 
-#### Web Backend (FastAPI)
-- **Lokalizacja**: `meowtopia/backend`
-- **Port**: 8000
-- **Technologie**: Python 3.12 + FastAPI + PostgreSQL
-- **Funkcje**:
-  - REST API dla platformy web
-  - Uwierzytelnianie JWT
-  - Zarządzanie użytkownikami i rolami
-  - Przetwarzanie zamówień kawiarni
-  - Integracja z blockchain
+#### 🏗️ Frameworks (`stacks/frameworks/`)
 
-#### Mobile Backend (Node.js)
-- **Port**: 8001
-- **Technologie**: Node.js + Express + GraphQL
-- **Funkcje**:
-  - GraphQL API dla aplikacji mobilnych
-  - Real-time gaming features
-  - Push notifications
-  - Game state management
-  - Leaderboards i achievements
+Frontend framework implementations and templates:
 
-#### Game Engine (Rust)
-- **Port**: 8002
-- **Technologie**: Rust + Tokio + WebSocket
-- **Funkcje**:
-  - Game logic i physics
-  - Real-time multiplayer
-  - AI opponents
-  - Game state synchronization
-  - Performance optimization
-
-### ⛓️ Blockchain Layer
-
-#### Cosmos SDK Application
-- **Lokalizacja**: `apps/chain-rice/`
-- **Porty**: RPC (26657), REST (1317), P2P (26656)
-- **Technologie**: Go + Cosmos SDK + Tendermint
-- **Funkcje**:
-  - Custom blockchain modules
-  - Smart contracts
-  - DeFi protocols
-  - NFT marketplace
-  - Governance
-
-#### Custom Modules
-- **Cafe Management Module**: Zarządzanie kawiarnią na blockchain
-- **Game Rewards Module**: System nagród za gry
-- **NFT Marketplace Module**: Handel NFT
-- **DeFi Protocols Module**: Protokoły DeFi
-- **Tax Control Module**: 🇵🇱 Kompleksowy system kontroli podatkowej dla Polski
-  - Moduł podatników (NIP, REGON, dane firmy)
-  - Moduł dokumentów podatkowych (VAT, faktury, paragony)
-  - Moduł JPK (generowanie JPK_VAT, JPK_V7M, JPK_FA)
-  - Moduł zgodności podatkowej (monitoring, audyty)
-  - Integracja z KSeF, e-Urządem, NBP API
-
-### 🗄️ Data Layer
-
-#### PostgreSQL (Primary Database)
-- **Port**: 5432
-- **Funkcje**:
-  - User management
-  - Order processing
-  - Game scores i leaderboards
-  - Transaction history
-  - Analytics data
-  - Tax records and compliance data
-  - JPK generation and storage
-  - Taxpayer information
-
-#### Redis (Cache & Queue)
-- **Port**: 6379
-- **Funkcje**:
-  - Session storage
-  - Rate limiting
-  - Real-time data caching
-  - Message queue
-  - Pub/Sub messaging
-  - Tax calculation cache
-  - JPK generation queue
-  - Compliance monitoring cache
-
-#### IPFS (File Storage)
-- **Funkcje**:
-  - Game assets storage
-  - NFT images i metadata
-  - Document storage
-  - Media files
-  - Decentralized file system
-  - Tax documents storage
-  - JPK files storage
-  - Audit trail documents
-
-## 🔄 Przepływ Danych
-
-### 1. Web Platform Flow
-```
-React UI → FastAPI → PostgreSQL
-    ↓
-WebSocket → Real-time Updates
-    ↓
-CosmosJS → Blockchain API → Custom Modules
+```text
+frameworks/
+├── angular/                    # Angular framework stack
+├── flutter/                    # Flutter mobile framework
+├── next/                       # Next.js React framework
+│   ├── apis/                   # API layer examples
+│   ├── react/                  # React components
+│   ├── services/               # Service layer
+│   ├── ui/                     # UI components
+│   ├── utils/                  # Utility functions
+│   ├── web/                    # Web-specific implementations
+│   ├── package.json            # Dependencies
+│   ├── vite.config.ts          # Build configuration
+│   └── tsconfig.json           # TypeScript configuration
+├── vue/                        # Vue.js framework stack
+├── eslint.config.js            # Shared linting configuration
+├── tailwind.config.js          # Shared styling configuration
+└── tsconfig.json               # Shared TypeScript configuration
 ```
 
-### 2. Mobile Platform Flow
-```
-Mobile App → GraphQL API → Node.js Backend
-    ↓
-WebSocket → Real-time Gaming
-    ↓
-Rust Game Engine → Game State
-    ↓
-Blockchain Integration → Rewards & NFTs
-```
+**Purpose**: Provides ready-to-use frontend framework setups with modern tooling, best practices, and example implementations.
 
-### 3. Blockchain Integration Flow
-```
-Frontend → API Gateway → Backend Services
-    ↓
-Blockchain Client → Cosmos SDK
-    ↓
-Custom Modules → State Changes
-    ↓
-Event Emission → Real-time Updates
-```
+#### 🗣️ Languages (`stacks/langs/`)
 
-### 4. Tax System Flow
-```
-Tax Portal → Tax API → Blockchain Tax Module
-    ↓
-JPK Generation → KSeF Integration
-    ↓
-Compliance Monitoring → Audit System
-    ↓
-Real-time Updates → Tax Dashboard
-```
+Programming language stacks with examples and tools:
 
-## 🌐 Porty i Serwisy
-
-### Development Environment
-- **Frontend Web**: 3000 (Vite dev server)
-- **Backend API**: 8000 (FastAPI)
-- **Mobile Backend**: 8001 (Node.js)
-- **Game Engine**: 8002 (Rust)
-- **Tax API**: 8003 (FastAPI Tax Service)
-- **JPK Service**: 8004 (Node.js JPK Generator)
-- **Audit Service**: 8005 (Python Audit Service)
-- **PostgreSQL**: 5432
-- **Redis**: 6379
-- **Blockchain RPC**: 26657
-- **Blockchain REST**: 1317
-- **Blockchain P2P**: 26656
-
-### Production Environment
-- **Load Balancer**: 80, 443
-- **API Gateway**: 8080
-- **Backend Services**: 8000-8002
-- **Tax Services**: 8003-8005
-- **Database**: 5432
-- **Cache**: 6379
-- **Blockchain**: 26657, 1317, 26656
-
-## 🐳 Docker Orchestration
-
-### Development Profiles
-```yaml
-# docker-compose.yml
-services:
-  # Web platform
-  web-frontend:
-    build: ./meowtopia/frontend/web
-    ports: ["3000:3000"]
-    profiles: ["web"]
-  
-  # Backend services
-  web-backend:
-    build: ./meowtopia/backend
-    ports: ["8000:8000"]
-    profiles: ["api"]
-  
-  mobile-backend:
-    build: ./meowtopia/backend-mobile
-    ports: ["8001:8001"]
-    profiles: ["mobile"]
-  
-  # Blockchain
-  blockchain:
-    build: ./apps/chain-rice
-    ports: ["26657:26657", "1317:1317"]
-    profiles: ["blockchain"]
-  
-  # Data layer
-  postgres:
-    image: postgres:15
-    ports: ["5432:5432"]
-    profiles: ["data"]
-  
-  redis:
-    image: redis:7
-    ports: ["6379:6379"]
-    profiles: ["data"]
+```text
+langs/
+├── c#/                         # C# .NET stack
+├── c++/                        # C++ development stack
+├── clojure/                    # Clojure functional programming
+├── dart/                       # Dart language stack
+├── elixir/                     # Elixir/Phoenix stack
+├── erlang/                     # Erlang/OTP stack
+├── f#/                         # F# functional programming
+├── go/                         # Go language stack
+│   ├── modules/                # Go modules examples
+│   ├── shared/                 # Shared Go packages
+│   ├── tests/                  # Testing examples
+│   ├── go.mod                  # Module definition
+│   └── Makefile                # Go-specific commands
+├── groovy/                     # Groovy/Gradle stack
+├── haskell/                    # Haskell functional programming
+├── java/                       # Java development stack
+├── julia/                      # Julia scientific computing
+├── kotlin/                     # Kotlin development stack
+├── ocaml/                      # OCaml functional programming
+├── octave/                     # Octave/MATLAB alternative
+├── php/                        # PHP web development
+├── proto/                      # Protocol Buffers
+│   ├── enums/                  # Enum definitions
+│   ├── messages/               # Message definitions
+│   ├── services/               # Service definitions
+│   └── packages/               # Package configurations
+├── python/                     # Python development stack
+├── rust/                       # Rust systems programming
+├── scala/                      # Scala JVM language
+├── solidity/                   # Solidity smart contracts
+├── sql/                        # SQL database stack
+└── swift/                      # Swift iOS/macOS development
 ```
 
-## 🔧 Konfiguracja Środowiska
+**Purpose**: Provides language-specific templates, examples, and development environments for rapid prototyping and learning.
 
-### Environment Variables
+#### 🛠️ Tools (`stacks/tools/`)
+
+Development and deployment tools:
+
+```text
+tools/
+├── ansible/                    # Infrastructure automation
+├── bash/                       # Shell scripting utilities
+│   ├── build.csh              # C shell build scripts
+│   ├── setup.bash             # Bash setup scripts
+│   ├── start.sh               # Startup scripts
+│   └── env.example            # Environment template
+├── docker/                     # Container orchestration
+│   ├── containers/            # Container definitions
+│   ├── docker-compose.yml     # Multi-container setup
+│   └── k8s-deployment.yaml    # Kubernetes deployment
+├── makefile/                   # Build automation
+│   ├── common.mk              # Common make targets
+│   ├── config.mk              # Configuration variables
+│   └── Makefile               # Main makefile
+├── nix/                        # Nix package management
+├── terraform/                  # Infrastructure as code
+│   ├── *.tf                   # Terraform configurations
+│   ├── .gitignore             # Terraform-specific ignores
+│   └── Makefile               # Terraform commands
+```
+
+**Purpose**: Provides development tools, automation scripts, and infrastructure-as-code templates.
+
+#### 🎮 Unity (`stacks/unity/`)
+
+Game development with Unity:
+
+```text
+unity/
+├── ARCHITECTURE.md             # Unity architecture guide
+└── README.md                   # Unity development guide
+```
+
+**Purpose**: Unity game development templates and best practices.
+
+## 🚀 Apps Architecture
+
+### Philosophy (Apps)
+
+**Apps** are complete, production-ready applications that demonstrate:
+
+- **Real-world implementations** using stacks
+- **Integration patterns** between technologies
+- **Business logic** and domain modeling
+- **Deployment strategies** and operations
+- **End-to-end functionality**
+
+### Current Applications
+
+#### 🍚 ChainRice (`apps/chain-rice/`)
+
+Blockchain-based accounting system:
+
+```text
+chain-rice/
+├── ARCHITECTURE.md             # Application architecture
+├── README.md                   # Application documentation
+└── docker-compose.yml          # Container orchestration
+```
+
+**Technology Stack**:
+
+- **Blockchain**: Cosmos SDK + Tendermint
+- **Backend**: Go + gRPC
+- **Frontend**: React + TypeScript
+- **AI/ML**: Python + FastAPI
+- **Database**: PostgreSQL + Redis
+
+**Features**:
+
+- AI-powered receipt recognition
+- Automated invoice processing
+- Blockchain transaction recording
+- Tax compliance and reporting
+- Multi-language OCR support
+
+#### 🐱 Meowtopia (`apps/meowtopia/`)
+
+Cat cafe management system:
+
+```text
+meowtopia/
+├── frontend/                   # React frontend
+├── game/                       # Game components
+├── ARCHITECTURE.md             # Application architecture
+├── README.md                   # Application documentation
+└── node_modules/               # Dependencies
+```
+
+**Technology Stack**:
+
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: Node.js + GraphQL
+- **Game Engine**: Rust + WebSocket
+- **Database**: PostgreSQL + Redis
+- **Blockchain**: Cosmos SDK integration
+
+**Features**:
+
+- Cat management and adoption system
+- Cafe menu and ordering system
+- Table reservation system
+- Gaming integration with rewards
+- Real-time updates and notifications
+
+## 🔄 Ecosystem Workflow
+
+### Development Flow
+
+1. **Stack Selection**: Choose appropriate stacks from `stacks/` directory
+2. **Template Usage**: Copy and customize stack templates
+3. **Integration**: Combine multiple stacks for complex applications
+4. **Application Development**: Build complete apps in `apps/` directory
+5. **Deployment**: Use stack tools for deployment and operations
+
+### Stack to App Relationship
+
+```text
+Stacks (Templates & Tools)  →  Apps (Complete Solutions)
+     ↓                              ↓
+frameworks/next/            →  meowtopia/frontend/
+langs/go/                   →  chain-rice/backend/
+langs/python/               →  chain-rice/ai-service/
+tools/docker/               →  */docker-compose.yml
+tools/terraform/            →  Infrastructure deployment
+```
+
+## 🏛️ Architectural Principles
+
+### 1. **Separation of Concerns**
+
+- **Stacks**: Focus on technology-specific templates and tools
+- **Apps**: Focus on business logic and user requirements
+- **Root**: Focus on ecosystem orchestration
+
+### 2. **Reusability**
+
+- Stacks provide reusable components across projects
+- Common patterns are extracted into shared stacks
+- Tools and configurations are standardized
+
+### 3. **Modularity**
+
+- Each stack is self-contained and independent
+- Apps can mix and match stacks as needed
+- Clear interfaces between components
+
+### 4. **Scalability**
+
+- Horizontal scaling through microservices (apps)
+- Vertical scaling through technology stacks
+- Infrastructure scaling through tools stacks
+
+### 5. **Developer Experience**
+
+- VS Code workspace configuration for unified development
+- Consistent Makefile patterns across stacks and apps
+- Comprehensive documentation and examples
+
+## 🔧 Configuration Management
+
+### Workspace Configuration (`rice-dev.code-workspace`)
+
+- Multi-root workspace setup
+- Language-specific settings
+- Extension recommendations
+- Task definitions for common operations
+
+### Environment Management
+
+- Stack-specific environment configurations
+- Shared configuration patterns
+- Environment variable templates
+- Development vs. production settings
+
+### Build System
+
+- Root-level Makefile for ecosystem orchestration
+- Stack-specific build configurations
+- App-specific deployment scripts
+- Consistent command patterns
+
+## 🚀 Getting Started
+
+### For Stack Development
+
 ```bash
-# Build Configuration
-BUILD_ENV=development
-BUILD_NUMBER=1
-BUILD_VERSION=0.1.0
+# Navigate to specific stack
+cd stacks/langs/go
 
-# Database Configuration
-POSTGRES_DB=meowtopia
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_HOST=postgres
-
-# Redis Configuration
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_PASSWORD=
-
-# Blockchain Configuration
-CHAIN_ID=chainrice-local
-RPC_URL=http://localhost:26657
-REST_URL=http://localhost:1317
-
-# API Configuration
-API_PORT=8000
-MOBILE_API_PORT=8001
-GAME_ENGINE_PORT=8002
+# Follow stack-specific README
+make setup
+make build
+make test
 ```
 
-### Service Configuration
+### For App Development
+
 ```bash
-# Web Frontend
-VITE_API_URL=http://localhost:8000
-VITE_BLOCKCHAIN_RPC_URL=http://localhost:26657
-VITE_CHAIN_ID=chainrice-local
+# Navigate to specific app
+cd apps/meowtopia
 
-# Mobile Backend
-GRAPHQL_ENDPOINT=http://localhost:8001/graphql
-WEBSOCKET_URL=ws://localhost:8001/ws
-
-# Game Engine
-GAME_ENGINE_URL=http://localhost:8002
-WEBSOCKET_GAME_URL=ws://localhost:8002/ws
+# Follow app-specific README
+make install
+make start
+make deploy
 ```
 
-## 🚀 Deployment Strategy
+### For Ecosystem Management
 
-### Development
 ```bash
-# Start all services
-make dev
-
-# Start specific profiles
-make up --profile web
-make up --profile api
-make up --profile blockchain
+# From root directory
+make install    # Install all dependencies
+make start      # Start all applications
+make stop       # Stop all services
+make clean      # Clean all builds
 ```
 
-### Production
-```bash
-# Build production images
-make build-prod
+## 📊 Benefits of This Architecture
 
-# Deploy to production
-make deploy-prod
+### For Developers
 
-# Scale services
-make scale-backend=3
-make scale-frontend=2
-```
+- **Rapid Prototyping**: Use stacks for quick project setup
+- **Learning Resources**: Comprehensive examples across technologies
+- **Best Practices**: Battle-tested patterns and configurations
+- **Consistency**: Uniform development experience
 
-## 📊 Monitoring i Observability
+### For Organizations
 
-### Health Checks
-- **Backend Services**: `/health` endpoint
-- **Database**: Connection pool monitoring
-- **Redis**: Memory and connection monitoring
-- **Blockchain**: Node status and sync status
+- **Standardization**: Consistent development practices
+- **Efficiency**: Reduced setup and configuration time
+- **Knowledge Sharing**: Centralized expertise and patterns
+- **Maintainability**: Clear separation of concerns
 
-### Logging
-- **Structured Logging**: JSON format across all services
-- **Log Levels**: DEBUG, INFO, WARN, ERROR
-- **Centralized Logging**: ELK Stack or similar
-- **Request Tracing**: Distributed tracing with Jaeger
+### For Projects
 
-### Metrics
-- **Application Metrics**: Prometheus + Grafana
-- **Infrastructure Metrics**: Node Exporter
-- **Custom Metrics**: Business logic metrics
-- **Alerting**: AlertManager for critical issues
+- **Flexibility**: Mix and match technologies as needed
+- **Scalability**: Proven patterns for growth
+- **Quality**: Built-in testing and deployment practices
+- **Documentation**: Comprehensive guides and examples
 
-## 🔐 Security Architecture
+## 🎯 Future Roadmap
 
-### Authentication & Authorization
-- **JWT Tokens**: Stateless authentication
-- **Role-Based Access Control**: Granular permissions
-- **OAuth2 Integration**: Social login support
-- **Multi-Factor Authentication**: Enhanced security
+### Stack Expansion
 
-### Network Security
-- **TLS/SSL**: End-to-end encryption
-- **CORS Configuration**: Cross-origin resource sharing
-- **Rate Limiting**: DDoS protection
-- **Firewall Rules**: Network segmentation
+- Additional language stacks (Ruby, Zig, etc.)
+- More framework options (Svelte, Solid.js, etc.)
+- Enhanced tooling stacks (monitoring, security, etc.)
 
-### Data Security
-- **Encryption at Rest**: Database encryption
-- **Encryption in Transit**: TLS for all communications
-- **Key Management**: Secure key storage
-- **Data Anonymization**: Privacy protection
+### App Development
 
-## 🎯 Performance Optimization
+- More domain-specific applications
+- Cross-stack integration examples
+- Performance optimization patterns
 
-### Caching Strategy
-- **Redis Caching**: Application-level caching
-- **CDN**: Static asset delivery
-- **Database Query Caching**: Query result caching
-- **API Response Caching**: Response caching
+### Ecosystem Features
 
-### Database Optimization
-- **Connection Pooling**: Efficient database connections
-- **Query Optimization**: Indexed queries
-- **Read Replicas**: Read scaling
-- **Partitioning**: Data partitioning
-
-### Blockchain Optimization
-- **Transaction Batching**: Batch multiple transactions
-- **Gas Optimization**: Efficient smart contracts
-- **State Pruning**: Reduce blockchain size
-- **Light Client Support**: Efficient client connections
-
-## 🔄 CI/CD Pipeline
-
-### Build Pipeline
-1. **Code Commit** → GitHub
-2. **Automated Testing** → Unit, Integration, E2E tests
-3. **Security Scanning** → SAST, DAST, dependency scanning
-4. **Build Images** → Docker images for all services
-5. **Deploy to Staging** → Automated staging deployment
-6. **Production Deployment** → Manual approval required
-
-### Quality Gates
-- **Code Coverage**: Minimum 80% coverage
-- **Security Scan**: No critical vulnerabilities
-- **Performance Tests**: Response time requirements
-- **Integration Tests**: All services working together
-
-## 📚 Dokumentacja Techniczna
-
-### API Documentation
-- **Swagger UI**: http://localhost:8000/docs
-- **GraphQL Playground**: http://localhost:8001/graphql
-- **OpenAPI Specs**: Auto-generated from code
-- **Postman Collections**: Pre-configured API tests
-
-### Architecture Decision Records (ADRs)
-- **ADR-001**: Technology Stack Selection
-- **ADR-002**: Database Design Decisions
-- **ADR-003**: Blockchain Integration Strategy
-- **ADR-004**: Security Implementation
-
-### Development Guidelines
-- **Code Style**: ESLint + Prettier configuration
-- **Testing Strategy**: Unit, Integration, E2E testing
-- **Documentation**: JSDoc + README standards
-- **Git Workflow**: Feature branches + PR reviews
-
-## 🎯 Wnioski
-
-Architektura ChainRice została zaprojektowana jako **nowoczesny, skalowalny ekosystem** łączący tradycyjne aplikacje webowe z technologią blockchain:
-
-- **Modular Design**: Każdy komponent może być rozwijany niezależnie
-- **Microservices Architecture**: Łatwe skalowanie i maintenance
-- **Blockchain Integration**: Seamless integration z Cosmos SDK
-- **Multi-Platform Support**: Web, mobile, i blockchain
-- **Production Ready**: Monitoring, logging, security, i deployment
-
-Ta architektura zapewnia solidne fundamenty dla rozwoju zaawansowanych aplikacji blockchain z doskonałym doświadczeniem użytkownika.
+- Automated stack updates
+- Dependency management tools
+- Integration testing frameworks
+- Documentation generation
 
 ---
 
-*Dokumentacja architektury została stworzona w języku polskim zgodnie z preferencjami projektu.*
+*This architecture enables rapid development while maintaining high code quality and consistency across the entire Rice-Dev ecosystem.*

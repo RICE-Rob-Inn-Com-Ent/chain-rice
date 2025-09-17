@@ -1,0 +1,12 @@
+FROM groovy:4.0-jdk17
+
+WORKDIR /app
+
+COPY . .
+
+# Install Grape dependencies if @Grab is used
+RUN groovy -e "println 'Checking Groovy installation'"
+
+EXPOSE 8080
+
+CMD ["groovy", "app.groovy"]

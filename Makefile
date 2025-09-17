@@ -1,60 +1,70 @@
-# 🌍 Rice-Dev Ecosystem - Головне управління
+# 🌍 Rice-Dev Ecosystem - Main Management
 
-.PHONY: help install build start stop clean proto frontend go-api python-ai meowtopia docker all-services chainrice meowtopia blockchain
+.PHONY: help up down open install build start stop clean proto frontend go-api python-ai meowtopia docker all-services chainrice meowtopia blockchain dev
 
 # Default target
 help:
-	@echo "🌍 Rice-Dev Ecosystem - Команди управління:"
+	@echo "🌍 Rice-Dev Ecosystem - Management Commands:"
 	@echo ""
-	@echo "📦 Встановлення та збірка:"
-	@echo "  make install     - Встановити всі залежності для всіх додатків"
-	@echo "  make build       - Зібрати всі сервіси"
-	@echo "  make proto       - Генерувати protobuf файли для всіх додатків"
+	@echo "📦 Installation & Build:"
+	@echo "  make up          - Install everything and start all services"
+	@echo "  make install     - Install all dependencies for all applications"
+	@echo "  make build       - Build all services"
+	@echo "  make proto       - Generate protobuf files for all applications"
 	@echo ""
-	@echo "🚀 Запуск екосистеми:"
-	@echo "  make start       - Запустити всю екосистему"
-	@echo "  make docker      - Запустити через Docker Compose"
-	@echo "  make chainrice   - Запустити тільки ChainRice"
-	@echo "  make meowtopia   - Запустити тільки Meowtopia"
+	@echo "🚀 Service Management:"
+	@echo "  make start       - Start entire ecosystem"
+	@echo "  make down        - Stop all containers and services"
+	@echo "  make docker      - Start via Docker Compose"
+	@echo "  make chainrice   - Start only ChainRice"
+	@echo "  make meowtopia   - Start only Meowtopia"
 	@echo ""
-	@echo "🔧 Окремі сервіси:"
-	@echo "  make blockchain  - Запустити блокчейн ноду"
-	@echo "  make frontend    - Запустити ChainRice фронтенд"
-	@echo "  make meowtopia-frontend - Запустити Meowtopia фронтенд"
-	@echo "  make go-api      - Запустити ChainRice Go API"
-	@echo "  make meowtopia-api - Запустити Meowtopia Go API"
-	@echo "  make python-ai   - Запустити Python AI сервіс"
+	@echo "🔧 Individual Services:"
+	@echo "  make blockchain  - Start blockchain node"
+	@echo "  make frontend    - Start ChainRice frontend"
+	@echo "  make meowtopia-frontend - Start Meowtopia frontend"
+	@echo "  make go-api      - Start ChainRice Go API"
+	@echo "  make meowtopia-api - Start Meowtopia Go API"
+	@echo "  make python-ai   - Start Python AI service"
 	@echo ""
-	@echo "🛑 Управління:"
-	@echo "  make stop        - Зупинити всі сервіси"
-	@echo "  make clean       - Очистити всі збірки"
-	@echo "  make status      - Перевірити статус всіх сервісів"
-	@echo "  make check-services - Перевірити статус через скрипт"
+	@echo "🛑 Management:"
+	@echo "  make stop        - Stop all services"
+	@echo "  make clean       - Clean all builds"
+	@echo "  make status      - Check status of all services"
+	@echo "  make check-services - Check status via script"
 	@echo ""
-	@echo "🌐 Інтерфейси:"
-	@echo "  make open        - Відкрити всі інтерфейси в браузері"
-	@echo "  make open-chainrice - Відкрити ChainRice інтерфейси"
-	@echo "  make open-meowtopia - Відкрити Meowtopia інтерфейси"
+	@echo "🌐 Interfaces:"
+	@echo "  make open        - Open all interfaces in browser"
+	@echo "  make open-chainrice - Open ChainRice interfaces"
+	@echo "  make open-meowtopia - Open Meowtopia interfaces"
 	@echo ""
-	@echo "🚀 Швидкі команди:"
-	@echo "  make quick       - Швидкий запуск (встановити + запустити + відкрити)"
-	@echo "  make dev-setup   - Налаштування середовища розробки"
-	@echo "  make full-reset  - Повний скид екосистеми"
-	@echo "  make backup      - Створити backup баз даних"
-	@echo "  make show-logs   - Показати логи всіх сервісів"
+	@echo "🚀 Quick Commands:"
+	@echo "  make dev         - Development mode with hot reload and auto-open"
+	@echo "  make quick       - Quick start (install + build + start + open)"
+	@echo "  make dev-setup   - Development environment setup"
+	@echo "  make full-reset  - Full ecosystem reset"
+	@echo "  make backup      - Create database backup"
+	@echo "  make show-logs   - Show logs of all services"
+
+# Main commands
+up: install build start open
+	@echo "✅ Rice-Dev ecosystem is up and running!"
+
+down: stop
+	@echo "✅ Rice-Dev ecosystem is down"
 
 # Installation
 install:
-	@echo "📦 Встановлення залежностей для всієї екосистеми..."
-	@echo "🔧 Встановлення ChainRice..."
+	@echo "📦 Installing dependencies for entire ecosystem..."
+	@echo "🔧 Installing ChainRice..."
 	@cd apps/chain-rice && make install
-	@echo "🐱 Встановлення Meowtopia..."
+	@echo "🐱 Installing Meowtopia..."
 	@cd apps/meowtopia && make install
-	@echo "📦 Встановлення Go залежностей..."
+	@echo "📦 Installing Go dependencies..."
 	@cd apps/chain-rice/go && go mod tidy
-	@echo "📦 Встановлення Python залежностей..."
+	@echo "📦 Installing Python dependencies..."
 	@cd apps/chain-rice/python && pip install -r requirements.txt
-	@echo "✅ Всі залежності встановлено"
+	@echo "✅ All dependencies installed"
 
 # Build
 build: proto
@@ -144,21 +154,21 @@ clean:
 
 # Open interfaces
 open:
-	@echo "🌐 Відкриття всіх інтерфейсів..."
-	@xdg-open http://localhost:5173 2>/dev/null || open http://localhost:5173 2>/dev/null || echo "Відкрийте http://localhost:5173 в браузері"
-	@xdg-open http://localhost:5174 2>/dev/null || open http://localhost:5174 2>/dev/null || echo "Відкрийте http://localhost:5174 в браузері"
-	@xdg-open http://localhost:1317 2>/dev/null || open http://localhost:1317 2>/dev/null || echo "Відкрийте http://localhost:1317 в браузері"
+	@echo "🌐 Opening all development interfaces..."
+	@xdg-open http://localhost:5173 2>/dev/null || open http://localhost:5173 2>/dev/null || echo "Open http://localhost:5173 in browser"
+	@xdg-open http://localhost:5174 2>/dev/null || open http://localhost:5174 2>/dev/null || echo "Open http://localhost:5174 in browser"
+	@xdg-open http://localhost:1317 2>/dev/null || open http://localhost:1317 2>/dev/null || echo "Open http://localhost:1317 in browser"
 	@echo ""
-	@echo "🍚 ChainRice (Бухгалтерія):"
-	@echo "  📊 Фронтенд: http://localhost:5173"
+	@echo "🍚 ChainRice (Accounting):"
+	@echo "  📊 Frontend: http://localhost:5173"
 	@echo "  🔧 API: http://localhost:8004"
 	@echo "  🤖 AI: http://localhost:8005"
 	@echo ""
-	@echo "🐱 Meowtopia (Кафе з котами):"
-	@echo "  🏠 Фронтенд: http://localhost:5174"
+	@echo "🐱 Meowtopia (Cat Cafe):"
+	@echo "  🏠 Frontend: http://localhost:5174"
 	@echo "  🔧 API: http://localhost:8006"
 	@echo ""
-	@echo "⛓️ Блокчейн:"
+	@echo "⛓️ Blockchain:"
 	@echo "  🌐 REST API: http://localhost:1317"
 	@echo "  🔗 RPC: http://localhost:26657"
 
@@ -175,25 +185,32 @@ open-meowtopia:
 
 # Status check
 status:
-	@echo "📊 Статус всіх сервісів Rice-Dev екосистеми:"
+	@echo "📊 Status of all Rice-Dev ecosystem services:"
 	@echo ""
 	@echo "🍚 ChainRice:"
-	@echo "  Фронтенд (5173):" && curl -s http://localhost:5173 > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
-	@echo "  API (8004):" && curl -s http://localhost:8004/health > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
-	@echo "  AI (8005):" && curl -s http://localhost:8005/health > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "  Frontend (5173):" && curl -s http://localhost:5173 > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
+	@echo "  API (8004):" && curl -s http://localhost:8004/health > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
+	@echo "  AI (8005):" && curl -s http://localhost:8005/health > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
 	@echo ""
 	@echo "🐱 Meowtopia:"
-	@echo "  Фронтенд (5174):" && curl -s http://localhost:5174 > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
-	@echo "  API (8006):" && curl -s http://localhost:8006/health > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "  Frontend (5174):" && curl -s http://localhost:5174 > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
+	@echo "  API (8006):" && curl -s http://localhost:8006/health > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
 	@echo ""
-	@echo "⛓️ Блокчейн:"
-	@echo "  REST API (1317):" && curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
-	@echo "  RPC (26657):" && curl -s http://localhost:26657/status > /dev/null 2>&1 && echo "    ✅ Активний" || echo "    ❌ Неактивний"
+	@echo "⛓️ Blockchain:"
+	@echo "  REST API (1317):" && curl -s http://localhost:1317/cosmos/base/tendermint/v1beta1/node_info > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
+	@echo "  RPC (26657):" && curl -s http://localhost:26657/status > /dev/null 2>&1 && echo "    ✅ Active" || echo "    ❌ Inactive"
 
-# Development mode
+# Development mode with hot reload and auto-open
 dev:
-	@echo "🔄 Запуск в режимі розробки..."
-	@make start
+	@echo "🔄 Starting development mode with hot reload..."
+	@make install
+	@make build
+	@echo "🚀 Starting services with hot reload..."
+	@make -j6 blockchain chainrice-go-api meowtopia-go-api python-ai chainrice-frontend meowtopia-frontend &
+	@sleep 8
+	@echo "🌐 Opening development interfaces..."
+	@make open
+	@echo "✅ Development mode active with hot reload and interfaces open"
 
 # Test all applications
 test:

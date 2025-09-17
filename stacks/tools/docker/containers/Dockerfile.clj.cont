@@ -1,0 +1,13 @@
+FROM clojure:openjdk-17-lein
+
+WORKDIR /app
+
+COPY project.clj .
+RUN lein deps
+
+COPY . .
+RUN lein uberjar
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "target/uberjar/app-standalone.jar"]

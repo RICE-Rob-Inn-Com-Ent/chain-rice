@@ -1,0 +1,210 @@
+version: "3.9"
+services:
+  app:
+    image: examples-docker-hello:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - APP_NAME=examples-docker-hello-swarm
+      - PORT=8080
+    ports:
+      - "8080:8080"
+
+  # Language containers
+  python:
+    image: rice-dev/python:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.py.cont
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+
+  go:
+    image: rice-dev/go:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.go.cont
+    ports:
+      - "8081:8080" # HTTP API
+      - "26656:26656" # P2P
+      - "26657:26657" # RPC
+      - "1317:1317" # REST API
+      - "9090:9090" # gRPC
+    environment:
+      - COSMOS_SDK_MODE=development
+
+  rust:
+    image: rice-dev/rust:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.rs.cont
+    ports:
+      - "8082:8080"
+
+  java:
+    image: rice-dev/java:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.java.cont
+    ports:
+      - "8083:8080"
+
+  csharp:
+    image: rice-dev/csharp:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.cs.cont
+    ports:
+      - "8084:80"
+
+  kotlin:
+    image: rice-dev/kotlin:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.kt.cont
+    ports:
+      - "8085:8080"
+
+  php:
+    image: rice-dev/php:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.php.cont
+    ports:
+      - "8086:80"
+
+  dart:
+    image: rice-dev/dart:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.dart.cont
+    ports:
+      - "8087:8080"
+
+  clojure:
+    image: rice-dev/clojure:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.clj.cont
+    ports:
+      - "8088:8080"
+
+  cpp:
+    image: rice-dev/cpp:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.cpp.cont
+    ports:
+      - "8089:8080"
+
+  erlang:
+    image: rice-dev/erlang:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.erl.cont
+    ports:
+      - "8090:8080"
+
+  elixir:
+    image: rice-dev/elixir:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.ex.cont
+    ports:
+      - "4000:4000"
+
+  fsharp:
+    image: rice-dev/fsharp:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.fs.cont
+    ports:
+      - "8091:8080"
+
+  groovy:
+    image: rice-dev/groovy:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.groovy.cont
+    ports:
+      - "8092:8080"
+
+  haskell:
+    image: rice-dev/haskell:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.hs.cont
+    ports:
+      - "8093:8080"
+
+  julia:
+    image: rice-dev/julia:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.jl.cont
+    ports:
+      - "8094:8080"
+
+  octave:
+    image: rice-dev/octave:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.m.cont
+    ports:
+      - "8095:8080"
+
+  ocaml:
+    image: rice-dev/ocaml:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.ml.cont
+    ports:
+      - "8096:8080"
+
+  scala:
+    image: rice-dev/scala:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.scala.cont
+    ports:
+      - "8097:8080"
+
+  swift:
+    image: rice-dev/swift:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.swift.cont
+    ports:
+      - "8098:8080"
+
+  solidity:
+    image: rice-dev/solidity:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.sol.cont
+    ports:
+      - "8099:8080"
+
+  sql:
+    image: rice-dev/sql:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.sql.cont
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=app_db
+      - POSTGRES_USER=app_user
+      - POSTGRES_PASSWORD=app_password
+
+  proto:
+    image: rice-dev/proto:latest
+    build:
+      context: ./containers
+      dockerfile: Dockerfile.proto.cont
+    ports:
+      - "9090:9090"
