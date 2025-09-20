@@ -1,0 +1,171 @@
+syntax = "proto3";
+
+package healthcare.pharmacy.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/drug_type.proto";
+import "../enums/stock_status.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/pharmacy/messages";
+
+// Drug manufacturer
+message DrugManufacturer {
+  string manufacturer_id = 1;
+  string name = 2;
+  string country = 3;
+  string contact_info = 4;
+  string website = 5;
+  bool is_active = 6;
+}
+
+// Drug dosage form
+message DosageForm {
+  string form_id = 1;
+  string form_name = 2; // tablet, capsule, liquid, injection, etc.
+  string description = 3;
+  string unit_of_measure = 4; // mg, ml, units, etc.
+}
+
+// Drug strength
+message DrugStrength {
+  string strength_id = 1;
+  double strength_value = 2;
+  string strength_unit = 3;
+  string dosage_form = 4;
+}
+
+// Drug model
+message Drug {
+  string drug_id = 1;
+  string generic_name = 2;
+  string brand_name = 3;
+  string ndc_number = 4; // National Drug Code
+  string upc_code = 5; // Universal Product Code
+  healthcare.pharmacy.enums.DrugType drug_type = 6;
+  healthcare.pharmacy.enums.DrugClassification classification = 7;
+  healthcare.pharmacy.enums.DrugSchedule schedule = 8;
+  repeated DrugStrength strengths = 9;
+  repeated DosageForm dosage_forms = 10;
+  DrugManufacturer manufacturer = 11;
+  string description = 12;
+  string indications = 13;
+  string contraindications = 14;
+  string side_effects = 15;
+  string interactions = 16;
+  string storage_requirements = 17;
+  string administration_instructions = 18;
+  double unit_price = 19;
+  string price_unit = 20;
+  int32 current_stock = 21;
+  int32 minimum_stock_level = 22;
+  int32 maximum_stock_level = 23;
+  int32 reorder_point = 24;
+  int32 reorder_quantity = 25;
+  healthcare.pharmacy.enums.StockStatus stock_status = 26;
+  google.protobuf.Timestamp expiration_date = 27;
+  google.protobuf.Timestamp last_restocked = 28;
+  google.protobuf.Timestamp created_at = 29;
+  google.protobuf.Timestamp updated_at = 30;
+  string created_by = 31;
+  string updated_by = 32;
+  bool is_active = 33;
+  string notes = 34;
+}
+
+// Drug request for creating/updating
+message DrugRequest {
+  string generic_name = 1;
+  string brand_name = 2;
+  string ndc_number = 3;
+  string upc_code = 4;
+  healthcare.pharmacy.enums.DrugType drug_type = 5;
+  healthcare.pharmacy.enums.DrugClassification classification = 6;
+  healthcare.pharmacy.enums.DrugSchedule schedule = 7;
+  repeated DrugStrength strengths = 8;
+  repeated DosageForm dosage_forms = 9;
+  string manufacturer_id = 10;
+  string description = 11;
+  string indications = 12;
+  string contraindications = 13;
+  string side_effects = 14;
+  string interactions = 15;
+  string storage_requirements = 16;
+  string administration_instructions = 17;
+  double unit_price = 18;
+  string price_unit = 19;
+  int32 minimum_stock_level = 20;
+  int32 maximum_stock_level = 21;
+  int32 reorder_point = 22;
+  int32 reorder_quantity = 23;
+  string notes = 24;
+}
+
+// Drug response
+message DrugResponse {
+  bool success = 1;
+  string message = 2;
+  Drug drug = 3;
+}
+
+// List drugs request
+message ListDrugsRequest {
+  string generic_name = 1;
+  string brand_name = 2;
+  string ndc_number = 3;
+  healthcare.pharmacy.enums.DrugType drug_type = 4;
+  healthcare.pharmacy.enums.DrugClassification classification = 5;
+  healthcare.pharmacy.enums.StockStatus stock_status = 6;
+  string manufacturer_id = 7;
+  bool low_stock_only = 8;
+  bool out_of_stock_only = 9;
+  int32 page_size = 10;
+  string page_token = 11;
+}
+
+// List drugs response
+message ListDrugsResponse {
+  repeated Drug drugs = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Drug search request
+message DrugSearchRequest {
+  string query = 1;
+  healthcare.pharmacy.enums.DrugType drug_type = 2;
+  healthcare.pharmacy.enums.DrugClassification classification = 3;
+  bool in_stock_only = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+// Drug inventory update request
+message DrugInventoryUpdateRequest {
+  string drug_id = 1;
+  int32 quantity_change = 2;
+  string reason = 3;
+  string updated_by = 4;
+  google.protobuf.Timestamp expiration_date = 5;
+}
+
+// Drug inventory update response
+message DrugInventoryUpdateResponse {
+  bool success = 1;
+  string message = 2;
+  Drug drug = 3;
+  int32 previous_stock = 4;
+  int32 new_stock = 5;
+}
+
+// Drug summary
+message DrugSummary {
+  string drug_id = 1;
+  string generic_name = 2;
+  string brand_name = 3;
+  healthcare.pharmacy.enums.StockStatus stock_status = 4;
+  int32 current_stock = 5;
+  int32 minimum_stock_level = 6;
+  double unit_price = 7;
+  google.protobuf.Timestamp expiration_date = 8;
+  bool needs_reorder = 9;
+}

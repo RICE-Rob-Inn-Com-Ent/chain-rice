@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// Teacher status states.
+package education.teachers.enums;
+
+option go_package = "github.com/rice-dev/education/teachers/enums;teachersenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.teachers.enums";
+
+// Employment/engagement status of a teacher.
+enum TeacherStatus {
+  TEACHER_STATUS_UNSPECIFIED = 0; // Unknown
+  TEACHER_STATUS_ACTIVE = 1;      // Currently teaching
+  TEACHER_STATUS_INACTIVE = 2;    // Temporarily inactive
+  TEACHER_STATUS_ON_LEAVE = 3;    // On leave
+  TEACHER_STATUS_RETIRED = 4;     // Retired
+  TEACHER_STATUS_CONTRACT = 5;    // Contract/adjunct
+}
+
+

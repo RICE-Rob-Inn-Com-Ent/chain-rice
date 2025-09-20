@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+// Message definitions for Exam answers/responses.
+package education.exams.messages;
+
+import "google/protobuf/timestamp.proto";
+import "AUTO/modules/education/exams/enums/exam_result.proto";
+
+option go_package = "github.com/rice-dev/education/exams/messages;examsmessages";
+option java_multiple_files = true;
+option java_package = "com.rice.education.exams.messages";
+
+// A student's answer to an exam question.
+message Answer {
+  // Unique identifier for the answer.
+  string id = 1;
+
+  // Parent exam ID.
+  string exam_id = 2;
+
+  // Question ID.
+  string question_id = 3;
+
+  // Student ID.
+  string student_id = 4;
+
+  // Answer text or selected choice value.
+  string response = 5;
+
+  // Awarded points for this answer.
+  double awarded_points = 6;
+
+  // Overall result status for this student's exam (optional per answer context).
+  education.exams.enums.ExamResultStatus result_status = 7;
+
+  // Timestamp when the answer was submitted.
+  google.protobuf.Timestamp submitted_at = 8;
+}
+
+

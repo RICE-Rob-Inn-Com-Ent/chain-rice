@@ -1,0 +1,579 @@
+syntax = "proto3";
+
+package gaming.game_core.messages;
+
+import "gaming/game_core/enums/game_modes.proto";
+import "gaming/game_core/enums/session_status.proto";
+import "gaming/game_core/enums/player_roles.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/game_core/messages";
+
+// Базовий клас події гри
+message GameEvent {
+  // Унікальний ідентифікатор події
+  string event_id = 1;
+  
+  // Тип події
+  GameEventType type = 2;
+  
+  // Ідентифікатор гравця
+  string player_id = 3;
+  
+  // Ідентифікатор сесії
+  string session_id = 4;
+  
+  // Час події
+  google.protobuf.Timestamp timestamp = 5;
+  
+  // Додаткові дані події
+  map<string, string> event_data = 6;
+  
+  // Версія події
+  string version = 7;
+}
+
+// Типи подій гри
+enum GameEventType {
+  GAME_EVENT_TYPE_UNSPECIFIED = 0;
+  
+  // Сесія створена
+  GAME_EVENT_TYPE_SESSION_CREATED = 1;
+  
+  // Сесія розпочата
+  GAME_EVENT_TYPE_SESSION_STARTED = 2;
+  
+  // Сесія завершена
+  GAME_EVENT_TYPE_SESSION_ENDED = 3;
+  
+  // Сесія призупинена
+  GAME_EVENT_TYPE_SESSION_PAUSED = 4;
+  
+  // Сесія відновлена
+  GAME_EVENT_TYPE_SESSION_RESUMED = 5;
+  
+  // Гравець приєднався
+  GAME_EVENT_TYPE_PLAYER_JOINED = 6;
+  
+  // Гравець покинув
+  GAME_EVENT_TYPE_PLAYER_LEFT = 7;
+  
+  // Гравець вбитий
+  GAME_EVENT_TYPE_PLAYER_KILLED = 8;
+  
+  // Гравець воскрес
+  GAME_EVENT_TYPE_PLAYER_RESPAWNED = 9;
+  
+  // Гравець отримав досвід
+  GAME_EVENT_TYPE_PLAYER_EXPERIENCE_GAINED = 10;
+  
+  // Гравець підвищив рівень
+  GAME_EVENT_TYPE_PLAYER_LEVEL_UP = 11;
+  
+  // Гравець отримав очки
+  GAME_EVENT_TYPE_PLAYER_SCORE_GAINED = 12;
+  
+  // Гравець отримав предмет
+  GAME_EVENT_TYPE_PLAYER_ITEM_GAINED = 13;
+  
+  // Гравець втратив предмет
+  GAME_EVENT_TYPE_PLAYER_ITEM_LOST = 14;
+  
+  // Гравець використав предмет
+  GAME_EVENT_TYPE_PLAYER_ITEM_USED = 15;
+  
+  // Гравець отримав навичку
+  GAME_EVENT_TYPE_PLAYER_SKILL_GAINED = 16;
+  
+  // Гравець отримав досягнення
+  GAME_EVENT_TYPE_PLAYER_ACHIEVEMENT_UNLOCKED = 17;
+  
+  // Гравець завершив ціль
+  GAME_EVENT_TYPE_PLAYER_OBJECTIVE_COMPLETED = 18;
+  
+  // Гравець пройшов чекпоінт
+  GAME_EVENT_TYPE_PLAYER_CHECKPOINT_REACHED = 19;
+  
+  // Гравець досягнув фінішу
+  GAME_EVENT_TYPE_PLAYER_FINISH_LINE_REACHED = 20;
+  
+  // Гравець перемістився
+  GAME_EVENT_TYPE_PLAYER_MOVED = 21;
+  
+  // Гравець повернувся
+  GAME_EVENT_TYPE_PLAYER_ROTATED = 22;
+  
+  // Гравець почав взаємодію
+  GAME_EVENT_TYPE_PLAYER_INTERACTION_STARTED = 23;
+  
+  // Гравець закінчив взаємодію
+  GAME_EVENT_TYPE_PLAYER_INTERACTION_ENDED = 24;
+  
+  // Гравець почав атаку
+  GAME_EVENT_TYPE_PLAYER_ATTACK_STARTED = 25;
+  
+  // Гравець закінчив атаку
+  GAME_EVENT_TYPE_PLAYER_ATTACK_ENDED = 26;
+  
+  // Гравець отримав урон
+  GAME_EVENT_TYPE_PLAYER_DAMAGE_TAKEN = 27;
+  
+  // Гравець завдав урону
+  GAME_EVENT_TYPE_PLAYER_DAMAGE_DEALT = 28;
+  
+  // Гравець отримав лікування
+  GAME_EVENT_TYPE_PLAYER_HEALED = 29;
+  
+  // Гравець застосував зілля
+  GAME_EVENT_TYPE_PLAYER_POTION_USED = 30;
+  
+  // Гравець застосував зброю
+  GAME_EVENT_TYPE_PLAYER_WEAPON_USED = 31;
+  
+  // Гравець застосував броню
+  GAME_EVENT_TYPE_PLAYER_ARMOR_USED = 32;
+  
+  // Гравець застосував навичку
+  GAME_EVENT_TYPE_PLAYER_SKILL_USED = 33;
+  
+  // Гравець застосував спеціальну здатність
+  GAME_EVENT_TYPE_PLAYER_ABILITY_USED = 34;
+  
+  // Гравець застосував ультимативну здатність
+  GAME_EVENT_TYPE_PLAYER_ULTIMATE_USED = 35;
+  
+  // Гравець застосував комбо
+  GAME_EVENT_TYPE_PLAYER_COMBO_USED = 36;
+  
+  // Гравець застосував критичний удар
+  GAME_EVENT_TYPE_PLAYER_CRITICAL_HIT = 37;
+  
+  // Гравець застосував уклонення
+  GAME_EVENT_TYPE_PLAYER_DODGE = 38;
+  
+  // Гравець застосував блок
+  GAME_EVENT_TYPE_PLAYER_BLOCK = 39;
+  
+  // Гравець застосував парирування
+  GAME_EVENT_TYPE_PLAYER_PARRY = 40;
+  
+  // Гравець застосував контратаку
+  GAME_EVENT_TYPE_PLAYER_COUNTER_ATTACK = 41;
+  
+  // Гравець застосував відступ
+  GAME_EVENT_TYPE_PLAYER_RETREAT = 42;
+  
+  // Гравець застосував атаку
+  GAME_EVENT_TYPE_PLAYER_CHARGE = 43;
+  
+  // Гравець застосував стрибок
+  GAME_EVENT_TYPE_PLAYER_JUMP = 44;
+  
+  // Гравець застосував біг
+  GAME_EVENT_TYPE_PLAYER_RUN = 45;
+  
+  // Гравець застосував ходьбу
+  GAME_EVENT_TYPE_PLAYER_WALK = 46;
+  
+  // Гравець застосував присідання
+  GAME_EVENT_TYPE_PLAYER_CROUCH = 47;
+  
+  // Гравець застосував лежання
+  GAME_EVENT_TYPE_PLAYER_PRONE = 48;
+  
+  // Гравець застосував політ
+  GAME_EVENT_TYPE_PLAYER_FLY = 49;
+  
+  // Гравець застосував плавання
+  GAME_EVENT_TYPE_PLAYER_SWIM = 50;
+  
+  // Гравець застосував лазання
+  GAME_EVENT_TYPE_PLAYER_CLIMB = 51;
+  
+  // Гравець застосував телепортацію
+  GAME_EVENT_TYPE_PLAYER_TELEPORT = 52;
+  
+  // Гравець застосував портал
+  GAME_EVENT_TYPE_PLAYER_PORTAL_USED = 53;
+  
+  // Гравець застосував магію
+  GAME_EVENT_TYPE_PLAYER_MAGIC_USED = 54;
+  
+  // Гравець застосував заклинання
+  GAME_EVENT_TYPE_PLAYER_SPELL_CAST = 55;
+  
+  // Гравець застосував ритуал
+  GAME_EVENT_TYPE_PLAYER_RITUAL_PERFORMED = 56;
+  
+  // Гравець застосував молитву
+  GAME_EVENT_TYPE_PLAYER_PRAYER_SAID = 57;
+  
+  // Гравець застосував медитацію
+  GAME_EVENT_TYPE_PLAYER_MEDITATION = 58;
+  
+  // Гравець застосував фокус
+  GAME_EVENT_TYPE_PLAYER_FOCUS = 59;
+  
+  // Гравець застосував концентрацію
+  GAME_EVENT_TYPE_PLAYER_CONCENTRATION = 60;
+  
+  // Гравець застосував розслаблення
+  GAME_EVENT_TYPE_PLAYER_RELAXATION = 61;
+  
+  // Гравець застосував відпочинок
+  GAME_EVENT_TYPE_PLAYER_REST = 62;
+  
+  // Гравець застосував сон
+  GAME_EVENT_TYPE_PLAYER_SLEEP = 63;
+  
+  // Гравець застосував пробудження
+  GAME_EVENT_TYPE_PLAYER_WAKE_UP = 64;
+  
+  // Гравець застосував їжу
+  GAME_EVENT_TYPE_PLAYER_FOOD_CONSUMED = 65;
+  
+  // Гравець застосував напій
+  GAME_EVENT_TYPE_PLAYER_DRINK_CONSUMED = 66;
+  
+  // Гравець застосував отруту
+  GAME_EVENT_TYPE_PLAYER_POISON_TAKEN = 67;
+  
+  // Гравець застосував антидот
+  GAME_EVENT_TYPE_PLAYER_ANTIDOTE_USED = 68;
+  
+  // Гравець застосував ліки
+  GAME_EVENT_TYPE_PLAYER_MEDICINE_USED = 69;
+  
+  // Гравець застосував бинт
+  GAME_EVENT_TYPE_PLAYER_BANDAGE_USED = 70;
+  
+  // Гравець застосував шприц
+  GAME_EVENT_TYPE_PLAYER_SYRINGE_USED = 71;
+  
+  // Гравець застосував таблетки
+  GAME_EVENT_TYPE_PLAYER_PILLS_TAKEN = 72;
+  
+  // Гравець застосував капсули
+  GAME_EVENT_TYPE_PLAYER_CAPSULES_TAKEN = 73;
+  
+  // Гравець застосував порошок
+  GAME_EVENT_TYPE_PLAYER_POWDER_USED = 74;
+  
+  // Гравець застосував крем
+  GAME_EVENT_TYPE_PLAYER_CREAM_APPLIED = 75;
+  
+  // Гравець застосував мазь
+  GAME_EVENT_TYPE_PLAYER_OINTMENT_APPLIED = 76;
+  
+  // Гравець застосував гель
+  GAME_EVENT_TYPE_PLAYER_GEL_APPLIED = 77;
+  
+  // Гравець застосував спрей
+  GAME_EVENT_TYPE_PLAYER_SPRAY_USED = 78;
+  
+  // Гравець застосував інгалятор
+  GAME_EVENT_TYPE_PLAYER_INHALER_USED = 79;
+  
+  // Гравець застосував пластир
+  GAME_EVENT_TYPE_PLAYER_PATCH_APPLIED = 80;
+  
+  // Гравець застосував пов'язку
+  GAME_EVENT_TYPE_PLAYER_WRAP_APPLIED = 81;
+  
+  // Гравець застосував шину
+  GAME_EVENT_TYPE_PLAYER_SPLINT_APPLIED = 82;
+  
+  // Гравець застосував гіпс
+  GAME_EVENT_TYPE_PLAYER_CAST_APPLIED = 83;
+  
+  // Гравець застосував протез
+  GAME_EVENT_TYPE_PLAYER_PROSTHESIS_USED = 84;
+  
+  // Гравець застосував інвалідний візок
+  GAME_EVENT_TYPE_PLAYER_WHEELCHAIR_USED = 85;
+  
+  // Гравець застосував милиці
+  GAME_EVENT_TYPE_PLAYER_CRUTCHES_USED = 86;
+  
+  // Гравець застосував тростину
+  GAME_EVENT_TYPE_PLAYER_CANE_USED = 87;
+  
+  // Гравець застосував окуляри
+  GAME_EVENT_TYPE_PLAYER_GLASSES_WORN = 88;
+  
+  // Гравець застосував контактні лінзи
+  GAME_EVENT_TYPE_PLAYER_CONTACTS_WORN = 89;
+  
+  // Гравець застосував слуховий апарат
+  GAME_EVENT_TYPE_PLAYER_HEARING_AID_USED = 90;
+  
+  // Гравець застосував протез зуба
+  GAME_EVENT_TYPE_PLAYER_DENTAL_PROSTHESIS_USED = 91;
+  
+  // Гравець застосував зубну щітку
+  GAME_EVENT_TYPE_PLAYER_TOOTHBRUSH_USED = 92;
+  
+  // Гравець застосував зубну пасту
+  GAME_EVENT_TYPE_PLAYER_TOOTHPASTE_USED = 93;
+  
+  // Гравець застосував зубну нитку
+  GAME_EVENT_TYPE_PLAYER_DENTAL_FLOSS_USED = 94;
+  
+  // Гравець застосував ополіскувач
+  GAME_EVENT_TYPE_PLAYER_MOUTHWASH_USED = 95;
+  
+  // Гравець застосував жувальну гумку
+  GAME_EVENT_TYPE_PLAYER_GUM_CHEWED = 96;
+  
+  // Гравець застосував цукерки
+  GAME_EVENT_TYPE_PLAYER_CANDY_EATEN = 97;
+  
+  // Гравець застосував шоколад
+  GAME_EVENT_TYPE_PLAYER_CHOCOLATE_EATEN = 98;
+  
+  // Гравець застосував морозиво
+  GAME_EVENT_TYPE_PLAYER_ICE_CREAM_EATEN = 99;
+  
+  // Гравець застосував торт
+  GAME_EVENT_TYPE_PLAYER_CAKE_EATEN = 100;
+  
+  // Гравець застосував печиво
+  GAME_EVENT_TYPE_PLAYER_COOKIE_EATEN = 101;
+  
+  // Гравець застосував кекс
+  GAME_EVENT_TYPE_PLAYER_CUPCAKE_EATEN = 102;
+  
+  // Гравець застосував пончик
+  GAME_EVENT_TYPE_PLAYER_DONUT_EATEN = 103;
+  
+  // Гравець застосував вафлі
+  GAME_EVENT_TYPE_PLAYER_WAFFLE_EATEN = 104;
+  
+  // Гравець застосував панкейки
+  GAME_EVENT_TYPE_PLAYER_PANCAKE_EATEN = 105;
+  
+  // Гравець застосував тост
+  GAME_EVENT_TYPE_PLAYER_TOAST_EATEN = 106;
+  
+  // Гравець застосував бутерброд
+  GAME_EVENT_TYPE_PLAYER_SANDWICH_EATEN = 107;
+  
+  // Гравець застосував бургер
+  GAME_EVENT_TYPE_PLAYER_BURGER_EATEN = 108;
+  
+  // Гравець застосував хот-дог
+  GAME_EVENT_TYPE_PLAYER_HOT_DOG_EATEN = 109;
+  
+  // Гравець застосував піцу
+  GAME_EVENT_TYPE_PLAYER_PIZZA_EATEN = 110;
+  
+  // Гравець застосував пасту
+  GAME_EVENT_TYPE_PLAYER_PASTA_EATEN = 111;
+  
+  // Гравець застосував рис
+  GAME_EVENT_TYPE_PLAYER_RICE_EATEN = 112;
+  
+  // Гравець застосував картоплю
+  GAME_EVENT_TYPE_PLAYER_POTATO_EATEN = 113;
+  
+  // Гравець застосував моркву
+  GAME_EVENT_TYPE_PLAYER_CARROT_EATEN = 114;
+  
+  // Гравець застосував броколі
+  GAME_EVENT_TYPE_PLAYER_BROCCOLI_EATEN = 115;
+  
+  // Гравець застосував шпинат
+  GAME_EVENT_TYPE_PLAYER_SPINACH_EATEN = 116;
+  
+  // Гравець застосував салат
+  GAME_EVENT_TYPE_PLAYER_SALAD_EATEN = 117;
+  
+  // Гравець застосував помідори
+  GAME_EVENT_TYPE_PLAYER_TOMATO_EATEN = 118;
+  
+  // Гравець застосував огірки
+  GAME_EVENT_TYPE_PLAYER_CUCUMBER_EATEN = 119;
+  
+  // Гравець застосував цибулю
+  GAME_EVENT_TYPE_PLAYER_ONION_EATEN = 120;
+  
+  // Гравець застосував часник
+  GAME_EVENT_TYPE_PLAYER_GARLIC_EATEN = 121;
+  
+  // Гравець застосував перець
+  GAME_EVENT_TYPE_PLAYER_PEPPER_EATEN = 122;
+  
+  // Гравець застосував сіль
+  GAME_EVENT_TYPE_PLAYER_SALT_USED = 123;
+  
+  // Гравець застосував цукор
+  GAME_EVENT_TYPE_PLAYER_SUGAR_USED = 124;
+  
+  // Гравець застосував спеції
+  GAME_EVENT_TYPE_PLAYER_SPICES_USED = 125;
+  
+  // Гравець застосував травы
+  GAME_EVENT_TYPE_PLAYER_HERBS_USED = 126;
+  
+  // Гравець застосував соус
+  GAME_EVENT_TYPE_PLAYER_SAUCE_USED = 127;
+  
+  // Гравець застосував олію
+  GAME_EVENT_TYPE_PLAYER_OIL_USED = 128;
+  
+  // Гравець застосував оцет
+  GAME_EVENT_TYPE_PLAYER_VINEGAR_USED = 129;
+  
+  // Гравець застосував лимон
+  GAME_EVENT_TYPE_PLAYER_LEMON_USED = 130;
+  
+  // Гравець застосував лайм
+  GAME_EVENT_TYPE_PLAYER_LIME_USED = 131;
+  
+  // Гравець застосував апельсин
+  GAME_EVENT_TYPE_PLAYER_ORANGE_USED = 132;
+  
+  // Гравець застосував яблуко
+  GAME_EVENT_TYPE_PLAYER_APPLE_EATEN = 133;
+  
+  // Гравець застосував банан
+  GAME_EVENT_TYPE_PLAYER_BANANA_EATEN = 134;
+  
+  // Гравець застосував виноград
+  GAME_EVENT_TYPE_PLAYER_GRAPES_EATEN = 135;
+  
+  // Гравець застосував полуницю
+  GAME_EVENT_TYPE_PLAYER_STRAWBERRY_EATEN = 136;
+  
+  // Гравець застосував малину
+  GAME_EVENT_TYPE_PLAYER_RASPBERRY_EATEN = 137;
+  
+  // Гравець застосував чорницю
+  GAME_EVENT_TYPE_PLAYER_BLUEBERRY_EATEN = 138;
+  
+  // Гравець застосував вишню
+  GAME_EVENT_TYPE_PLAYER_CHERRY_EATEN = 139;
+  
+  // Гравець застосував персик
+  GAME_EVENT_TYPE_PLAYER_PEACH_EATEN = 140;
+  
+  // Гравець застосував грушу
+  GAME_EVENT_TYPE_PLAYER_PEAR_EATEN = 141;
+  
+  // Гравець застосував сливу
+  GAME_EVENT_TYPE_PLAYER_PLUM_EATEN = 142;
+  
+  // Гравець застосував абрикос
+  GAME_EVENT_TYPE_PLAYER_APRICOT_EATEN = 143;
+  
+  // Гравець застосував інжир
+  GAME_EVENT_TYPE_PLAYER_FIG_EATEN = 144;
+  
+  // Гравець застосував фінік
+  GAME_EVENT_TYPE_PLAYER_DATE_EATEN = 145;
+  
+  // Гравець застосував інжир
+  GAME_EVENT_TYPE_PLAYER_FIG_EATEN = 146;
+  
+  // Гравець застосував кокос
+  GAME_EVENT_TYPE_PLAYER_COCONUT_EATEN = 147;
+  
+  // Гравець застосував ананас
+  GAME_EVENT_TYPE_PLAYER_PINEAPPLE_EATEN = 148;
+  
+  // Гравець застосував манго
+  GAME_EVENT_TYPE_PLAYER_MANGO_EATEN = 149;
+  
+  // Гравець застосував папайю
+  GAME_EVENT_TYPE_PLAYER_PAPAYA_EATEN = 150;
+  
+  // Гравець застосував ківі
+  GAME_EVENT_TYPE_PLAYER_KIWI_EATEN = 151;
+  
+  // Гравець застосував гранат
+  GAME_EVENT_TYPE_PLAYER_POMEGRANATE_EATEN = 152;
+  
+  // Гравець застосував авокадо
+  GAME_EVENT_TYPE_PLAYER_AVOCADO_EATEN = 153;
+  
+  // Гравець застосував лимон
+  GAME_EVENT_TYPE_PLAYER_LEMON_EATEN = 154;
+  
+  // Гравець застосував лайм
+  GAME_EVENT_TYPE_PLAYER_LIME_EATEN = 155;
+  
+  // Гравець застосував апельсин
+  GAME_EVENT_TYPE_PLAYER_ORANGE_EATEN = 156;
+  
+  // Гравець застосував грейпфрут
+  GAME_EVENT_TYPE_PLAYER_GRAPEFRUIT_EATEN = 157;
+  
+  // Гравець застосував мандарин
+  GAME_EVENT_TYPE_PLAYER_TANGERINE_EATEN = 158;
+  
+  // Гравець застосував клементин
+  GAME_EVENT_TYPE_PLAYER_CLEMENTINE_EATEN = 159;
+  
+  // Гравець застосував сацума
+  GAME_EVENT_TYPE_PLAYER_SATSUMA_EATEN = 160;
+  
+  // Гравець застосував юзу
+  GAME_EVENT_TYPE_PLAYER_YUZU_EATEN = 161;
+  
+  // Гравець застосував бергамот
+  GAME_EVENT_TYPE_PLAYER_BERGAMOT_EATEN = 162;
+  
+  // Гравець застосував цитрон
+  GAME_EVENT_TYPE_PLAYER_CITRON_EATEN = 163;
+  
+  // Гравець застосував помело
+  GAME_EVENT_TYPE_PLAYER_POMELO_EATEN = 164;
+  
+  // Гравець застосував танжело
+  GAME_EVENT_TYPE_PLAYER_TANGELO_EATEN = 165;
+  
+  // Гравець застосував мінеола
+  GAME_EVENT_TYPE_PLAYER_MINEOLA_EATEN = 166;
+  
+  // Гравець застосував ортанік
+  GAME_EVENT_TYPE_PLAYER_ORTANIQUE_EATEN = 167;
+  
+  // Гравець застосував танжело
+  GAME_EVENT_TYPE_PLAYER_TANGELO_EATEN = 168;
+  
+  // Гравець застосував мінеола
+  GAME_EVENT_TYPE_PLAYER_MINEOLA_EATEN = 169;
+  
+  // Гравець застосував ортанік
+  GAME_EVENT_TYPE_PLAYER_ORTANIQUE_EATEN = 170;
+  
+  // Гравець застосував танжело
+  GAME_EVENT_TYPE_PLAYER_TANGELO_EATEN = 171;
+  
+  // Гравець застосував мінеола
+  GAME_EVENT_TYPE_PLAYER_MINEOLA_EATEN = 172;
+  
+  // Гравець застосував ортанік
+  GAME_EVENT_TYPE_PLAYER_ORTANIQUE_EATEN = 173;
+  
+  // Гравець застосував танжело
+  GAME_EVENT_TYPE_PLAYER_TANGELO_EATEN = 174;
+  
+  // Гравець застосував мінеола
+  GAME_EVENT_TYPE_PLAYER_MINEOLA_EATEN = 175;
+  
+  // Гравець застосував ортанік
+  GAME_EVENT_TYPE_PLAYER_ORTANIQUE_EATEN = 176;
+  
+  // Гравець застосував танжело
+  GAME_EVENT_TYPE_PLAYER_TANGELO_EATEN = 177;
+  
+  // Гравець застосував мінеола
+  GAME_EVENT_TYPE_PLAYER_MINEOLA_EATEN = 178;
+  
+  // Гравець застосував ортанік
+  GAME_EVENT_TYPE_PLAYER_ORTANIQUE_EATEN = 179;
+  
+  // Гравець застосував танжело
+  GAME_EVENT_TYPE_PLAYER_TANGELO_EATEN = 180;
+}

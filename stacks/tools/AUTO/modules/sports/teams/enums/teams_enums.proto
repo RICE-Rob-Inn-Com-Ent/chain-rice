@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package sports.teams.v1;
+
+option go_package = "github.com/rice-dev/sports/teams/v1";
+
+// TeamStatus represents the current status of a team
+enum TeamStatus {
+  TEAM_STATUS_UNSPECIFIED = 0;
+  TEAM_STATUS_ACTIVE = 1;           // Team is active and competing
+  TEAM_STATUS_INACTIVE = 2;         // Team is inactive
+  TEAM_STATUS_SUSPENDED = 3;        // Team is suspended
+  TEAM_STATUS_DISBANDED = 4;        // Team has been disbanded
+  TEAM_STATUS_ON_HIATUS = 5;        // Team is on hiatus
+  TEAM_STATUS_FORMING = 6;          // Team is in formation
+  TEAM_STATUS_MERGED = 7;           // Team has been merged with another
+  TEAM_STATUS_RELOCATED = 8;        // Team has relocated
+}
+
+// TeamType represents the type of team
+enum TeamType {
+  TEAM_TYPE_UNSPECIFIED = 0;
+  TEAM_TYPE_PROFESSIONAL = 1;       // Professional team
+  TEAM_TYPE_SEMI_PROFESSIONAL = 2;  // Semi-professional team
+  TEAM_TYPE_AMATEUR = 3;            // Amateur team
+  TEAM_TYPE_YOUTH = 4;              // Youth team
+  TEAM_TYPE_ACADEMY = 5;            // Academy team
+  TEAM_TYPE_RESERVE = 6;            // Reserve team
+  TEAM_TYPE_WOMEN = 7;              // Women's team
+  TEAM_TYPE_MEN = 8;                // Men's team
+  TEAM_TYPE_MIXED = 9;              // Mixed gender team
+  TEAM_TYPE_CLUB = 10;              // Club team
+  TEAM_TYPE_NATIONAL = 11;          // National team
+  TEAM_TYPE_REGIONAL = 12;          // Regional team
+}
+
+// TeamCategory represents the category or level of the team
+enum TeamCategory {
+  TEAM_CATEGORY_UNSPECIFIED = 0;
+  TEAM_CATEGORY_SENIOR = 1;         // Senior team
+  TEAM_CATEGORY_JUNIOR = 2;         // Junior team
+  TEAM_CATEGORY_YOUTH = 3;          // Youth team
+  TEAM_CATEGORY_U21 = 4;            // Under-21 team
+  TEAM_CATEGORY_U19 = 5;            // Under-19 team
+  TEAM_CATEGORY_U17 = 6;            // Under-17 team
+  TEAM_CATEGORY_U15 = 7;            // Under-15 team
+  TEAM_CATEGORY_U13 = 8;            // Under-13 team
+  TEAM_CATEGORY_MASTERS = 9;        // Masters team (older players)
+  TEAM_CATEGORY_VETERANS = 10;      // Veterans team
+}
+
+// OwnershipType represents the type of ownership of the team
+enum OwnershipType {
+  OWNERSHIP_TYPE_UNSPECIFIED = 0;
+  OWNERSHIP_TYPE_PRIVATE = 1;       // Privately owned
+  OWNERSHIP_TYPE_PUBLIC = 2;        // Publicly owned
+  OWNERSHIP_TYPE_FAN_OWNED = 3;     // Fan-owned (member-owned)
+  OWNERSHIP_TYPE_GOVERNMENT = 4;    // Government owned
+  OWNERSHIP_TYPE_CLUB = 5;          // Club-owned
+  OWNERSHIP_TYPE_CORPORATE = 6;     // Corporate owned
+  OWNERSHIP_TYPE_FRANCHISE = 7;     // Franchise
+  OWNERSHIP_TYPE_COOPERATIVE = 8;   // Cooperative
+}
+
+// StadiumOwnership represents the ownership of the team's stadium
+enum StadiumOwnership {
+  STADIUM_OWNERSHIP_UNSPECIFIED = 0;
+  STADIUM_OWNERSHIP_OWNED = 1;      // Team owns the stadium
+  STADIUM_OWNERSHIP_RENTED = 2;     // Team rents the stadium
+  STADIUM_OWNERSHIP_SHARED = 3;     // Stadium is shared with other teams
+  STADIUM_OWNERSHIP_MUNICIPAL = 4;  // Stadium is owned by municipality
+  STADIUM_OWNERSHIP_PRIVATE = 5;    // Stadium is privately owned
+  STADIUM_OWNERSHIP_TEMPORARY = 6;  // Temporary arrangement
+}
+
+// CoachRole represents the role of coaching staff
+enum CoachRole {
+  COACH_ROLE_UNSPECIFIED = 0;
+  COACH_ROLE_HEAD_COACH = 1;        // Head coach/manager
+  COACH_ROLE_ASSISTANT_COACH = 2;   // Assistant coach
+  COACH_ROLE_GOALKEEPER_COACH = 3;  // Goalkeeper coach
+  COACH_ROLE_FITNESS_COACH = 4;     // Fitness coach
+  COACH_ROLE_TACTICAL_COACH = 5;    // Tactical coach
+  COACH_ROLE_YOUTH_COACH = 6;       // Youth coach
+  COACH_ROLE_ACADEMY_COACH = 7;     // Academy coach
+  COACH_ROLE_ANALYST = 8;           // Performance analyst
+  COACH_ROLE_SCOUT = 9;             // Scout
+  COACH_ROLE_PHYSIOTHERAPIST = 10;  // Physiotherapist
+  COACH_ROLE_DOCTOR = 11;           // Team doctor
+  COACH_ROLE_PSYCHOLOGIST = 12;     // Sports psychologist
+}
+
+// TeamFormation represents common team formations
+enum TeamFormation {
+  TEAM_FORMATION_UNSPECIFIED = 0;
+  // Football/Soccer formations
+  TEAM_FORMATION_4_4_2 = 1;         // 4-4-2 formation
+  TEAM_FORMATION_4_3_3 = 2;         // 4-3-3 formation
+  TEAM_FORMATION_3_5_2 = 3;         // 3-5-2 formation
+  TEAM_FORMATION_4_2_3_1 = 4;       // 4-2-3-1 formation
+  TEAM_FORMATION_3_4_3 = 5;         // 3-4-3 formation
+  TEAM_FORMATION_5_3_2 = 6;         // 5-3-2 formation
+  TEAM_FORMATION_4_1_4_1 = 7;       // 4-1-4-1 formation
+  TEAM_FORMATION_3_6_1 = 8;         // 3-6-1 formation
+  // Basketball formations
+  TEAM_FORMATION_2_3_ZONE = 9;      // 2-3 zone defense
+  TEAM_FORMATION_3_2_ZONE = 10;     // 3-2 zone defense
+  TEAM_FORMATION_MAN_TO_MAN = 11;   // Man-to-man defense
+  TEAM_FORMATION_PRESS = 12;        // Press defense
+  // Baseball formations
+  TEAM_FORMATION_INFIELD_SHIFT = 13; // Infield shift
+  TEAM_FORMATION_OUTFIELD_SHIFT = 14; // Outfield shift
+  TEAM_FORMATION_DOUBLE_PLAY = 15;   // Double play positioning
+  // Other
+  TEAM_FORMATION_CUSTOM = 99;       // Custom formation
+}

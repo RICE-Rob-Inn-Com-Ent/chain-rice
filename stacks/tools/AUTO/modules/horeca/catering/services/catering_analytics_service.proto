@@ -1,0 +1,211 @@
+syntax = "proto3";
+
+package horeca.catering.services;
+
+import "google/protobuf/timestamp.proto";
+
+// Catering Analytics Service - Sales reports and KPIs
+service CateringAnalyticsService {
+  // Get sales summary
+  rpc GetSalesSummary(GetSalesSummaryRequest) returns (GetSalesSummaryResponse);
+  
+  // Get revenue analytics
+  rpc GetRevenueAnalytics(GetRevenueAnalyticsRequest) returns (GetRevenueAnalyticsResponse);
+  
+  // Get order analytics
+  rpc GetOrderAnalytics(GetOrderAnalyticsRequest) returns (GetOrderAnalyticsResponse);
+  
+  // Get customer analytics
+  rpc GetCustomerAnalytics(GetCustomerAnalyticsRequest) returns (GetCustomerAnalyticsResponse);
+  
+  // Get menu performance
+  rpc GetMenuPerformance(GetMenuPerformanceRequest) returns (GetMenuPerformanceResponse);
+  
+  // Get service type analytics
+  rpc GetServiceTypeAnalytics(GetServiceTypeAnalyticsRequest) returns (GetServiceTypeAnalyticsResponse);
+  
+  // Get profitability analysis
+  rpc GetProfitabilityAnalysis(GetProfitabilityAnalysisRequest) returns (GetProfitabilityAnalysisResponse);
+  
+  // Get trend analysis
+  rpc GetTrendAnalysis(GetTrendAnalysisRequest) returns (GetTrendAnalysisResponse);
+}
+
+// Request/Response messages
+message GetSalesSummaryRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string period = 3; // daily, weekly, monthly, yearly
+}
+
+message GetSalesSummaryResponse {
+  double total_revenue = 1;
+  int32 total_orders = 2;
+  double average_order_value = 3;
+  double total_cost = 4;
+  double gross_profit = 5;
+  double profit_margin = 6;
+  repeated SalesDataPoint data_points = 7;
+}
+
+message GetRevenueAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string group_by = 3; // day, week, month, service_type, customer
+}
+
+message GetRevenueAnalyticsResponse {
+  repeated RevenueDataPoint revenue_data = 1;
+  double total_revenue = 2;
+  double revenue_growth = 3;
+  repeated ServiceTypeRevenue service_type_revenue = 4;
+}
+
+message GetOrderAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetOrderAnalyticsResponse {
+  int32 total_orders = 1;
+  int32 completed_orders = 2;
+  int32 canceled_orders = 3;
+  double completion_rate = 4;
+  double cancellation_rate = 5;
+  double average_guest_count = 6;
+  repeated OrderStatusCount status_counts = 7;
+}
+
+message GetCustomerAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetCustomerAnalyticsResponse {
+  int32 total_customers = 1;
+  int32 new_customers = 2;
+  int32 returning_customers = 3;
+  double customer_retention_rate = 4;
+  double average_customer_value = 5;
+  repeated CustomerSegment segments = 6;
+}
+
+message GetMenuPerformanceRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string menu_id = 3;
+}
+
+message GetMenuPerformanceResponse {
+  repeated MenuItemPerformance items = 1;
+  double total_menu_revenue = 2;
+  double average_item_rating = 3;
+  repeated CategoryPerformance categories = 4;
+}
+
+message GetServiceTypeAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetServiceTypeAnalyticsResponse {
+  repeated ServiceTypePerformance service_types = 1;
+  string most_popular_service = 2;
+  string most_profitable_service = 3;
+}
+
+message GetProfitabilityAnalysisRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetProfitabilityAnalysisResponse {
+  double total_revenue = 1;
+  double total_costs = 2;
+  double gross_profit = 3;
+  double net_profit = 4;
+  double profit_margin = 5;
+  repeated CostBreakdown cost_breakdown = 6;
+}
+
+message GetTrendAnalysisRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string metric = 3; // revenue, orders, customers, profit
+}
+
+message GetTrendAnalysisResponse {
+  repeated TrendDataPoint trend_data = 1;
+  double trend_direction = 2; // positive or negative
+  double trend_strength = 3;
+  string trend_description = 4;
+}
+
+// Data structures
+message SalesDataPoint {
+  google.protobuf.Timestamp date = 1;
+  double revenue = 2;
+  int32 orders = 3;
+  double average_order_value = 4;
+}
+
+message RevenueDataPoint {
+  google.protobuf.Timestamp date = 1;
+  double revenue = 2;
+  int32 orders = 3;
+}
+
+message ServiceTypeRevenue {
+  string service_type = 1;
+  double revenue = 2;
+  int32 orders = 3;
+  double percentage = 4;
+}
+
+message OrderStatusCount {
+  string status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message CustomerSegment {
+  string segment = 1;
+  int32 count = 2;
+  double revenue = 3;
+  double percentage = 4;
+}
+
+message MenuItemPerformance {
+  string item_id = 1;
+  string item_name = 2;
+  int32 orders = 3;
+  double revenue = 4;
+  double average_rating = 5;
+  double popularity_score = 6;
+}
+
+message CategoryPerformance {
+  string category = 1;
+  int32 items = 2;
+  double revenue = 3;
+  double average_rating = 4;
+}
+
+message ServiceTypePerformance {
+  string service_type = 1;
+  int32 orders = 2;
+  double revenue = 3;
+  double average_order_value = 4;
+  double profit_margin = 5;
+}
+
+message CostBreakdown {
+  string cost_category = 1;
+  double amount = 2;
+  double percentage = 3;
+}
+
+message TrendDataPoint {
+  google.protobuf.Timestamp date = 1;
+  double value = 2;
+}

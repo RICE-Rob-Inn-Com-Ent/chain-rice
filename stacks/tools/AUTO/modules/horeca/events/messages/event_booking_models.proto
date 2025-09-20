@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package horeca.events.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+
+// Event booking information
+message EventBooking {
+  string booking_id = 1;
+  string event_id = 2;
+  string customer_id = 3;
+  string customer_name = 4;
+  string customer_email = 5;
+  string customer_phone = 6;
+  
+  BookingStatus status = 7;
+  google.protobuf.Timestamp booking_date = 8;
+  google.protobuf.Timestamp event_date = 9;
+  
+  google.protobuf.Money total_amount = 10;
+  google.protobuf.Money deposit_amount = 11;
+  google.protobuf.Money balance_amount = 12;
+  google.protobuf.Money paid_amount = 13;
+  
+  repeated Payment payment_history = 14;
+  repeated BookingModification modifications = 15;
+  
+  string special_requests = 16;
+  string booking_notes = 17;
+  
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// Booking status
+enum BookingStatus {
+  BOOKING_STATUS_UNSPECIFIED = 0;
+  BOOKING_STATUS_PENDING = 1;
+  BOOKING_STATUS_CONFIRMED = 2;
+  BOOKING_STATUS_PAID = 3;
+  BOOKING_STATUS_CANCELED = 4;
+  BOOKING_STATUS_REFUNDED = 5;
+  BOOKING_STATUS_COMPLETED = 6;
+}
+
+// Payment information
+message Payment {
+  string payment_id = 1;
+  string booking_id = 2;
+  PaymentMethod method = 3;
+  google.protobuf.Money amount = 4;
+  PaymentStatus status = 5;
+  google.protobuf.Timestamp payment_date = 6;
+  string transaction_id = 7;
+  string notes = 8;
+}
+
+// Payment method
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_CASH = 1;
+  PAYMENT_METHOD_CARD = 2;
+  PAYMENT_METHOD_BANK_TRANSFER = 3;
+  PAYMENT_METHOD_CHECK = 4;
+  PAYMENT_METHOD_ONLINE = 5;
+}
+
+// Payment status
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_COMPLETED = 2;
+  PAYMENT_STATUS_FAILED = 3;
+  PAYMENT_STATUS_REFUNDED = 4;
+}
+
+// Booking modification
+message BookingModification {
+  string modification_id = 1;
+  string booking_id = 2;
+  string modification_type = 3;
+  string description = 4;
+  google.protobuf.Money cost_change = 5;
+  string user_id = 6;
+  google.protobuf.Timestamp modified_at = 7;
+  string notes = 8;
+}

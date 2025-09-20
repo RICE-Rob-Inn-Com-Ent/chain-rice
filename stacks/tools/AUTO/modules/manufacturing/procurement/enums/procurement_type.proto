@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package manufacturing.procurement.enums;
+
+// Procurement type enumeration
+// Defines the different types of procurement processes
+enum ProcurementType {
+  // Default value - should not be used
+  PROCUREMENT_TYPE_UNSPECIFIED = 0;
+  
+  // Direct procurement from suppliers
+  DIRECT = 1;
+  
+  // Competitive bidding process
+  COMPETITIVE_BIDDING = 2;
+  
+  // Request for proposal (RFP) process
+  REQUEST_FOR_PROPOSAL = 3;
+  
+  // Request for quotation (RFQ) process
+  REQUEST_FOR_QUOTATION = 4;
+  
+  // Framework agreement procurement
+  FRAMEWORK_AGREEMENT = 5;
+  
+  // Emergency procurement
+  EMERGENCY = 6;
+  
+  // Single source procurement
+  SINGLE_SOURCE = 7;
+  
+  // Multi-source procurement
+  MULTI_SOURCE = 8;
+}
+
+// Procurement status enumeration
+enum ProcurementStatus {
+  // Default value - should not be used
+  PROCUREMENT_STATUS_UNSPECIFIED = 0;
+  
+  // Procurement request is being prepared
+  DRAFT = 1;
+  
+  // Procurement request is pending approval
+  PENDING_APPROVAL = 2;
+  
+  // Procurement request is approved
+  APPROVED = 3;
+  
+  // Procurement request is rejected
+  REJECTED = 4;
+  
+  // Procurement is in progress
+  IN_PROGRESS = 5;
+  
+  // Procurement is completed
+  COMPLETED = 6;
+  
+  // Procurement is cancelled
+  CANCELLED = 7;
+  
+  // Procurement is on hold
+  ON_HOLD = 8;
+  
+  // Procurement is under review
+  UNDER_REVIEW = 9;
+  
+  // Procurement is awaiting supplier response
+  AWAITING_SUPPLIER_RESPONSE = 10;
+}
+
+// Purchase order status enumeration
+enum PurchaseOrderStatus {
+  // Default value - should not be used
+  PURCHASE_ORDER_STATUS_UNSPECIFIED = 0;
+  
+  // Purchase order is created
+  CREATED = 1;
+  
+  // Purchase order is sent to supplier
+  SENT = 2;
+  
+  // Purchase order is acknowledged by supplier
+  ACKNOWLEDGED = 3;
+  
+  // Purchase order is confirmed
+  CONFIRMED = 4;
+  
+  // Purchase order is in production
+  IN_PRODUCTION = 5;
+  
+  // Purchase order is shipped
+  SHIPPED = 6;
+  
+  // Purchase order is delivered
+  DELIVERED = 7;
+  
+  // Purchase order is received
+  RECEIVED = 8;
+  
+  // Purchase order is invoiced
+  INVOICED = 9;
+  
+  // Purchase order is paid
+  PAID = 10;
+  
+  // Purchase order is closed
+  CLOSED = 11;
+  
+  // Purchase order is cancelled
+  CANCELLED = 12;
+}
+
+// Payment terms enumeration
+enum PaymentTerms {
+  // Default value - should not be used
+  PAYMENT_TERMS_UNSPECIFIED = 0;
+  
+  // Payment due immediately
+  IMMEDIATE = 1;
+  
+  // Payment due in 7 days
+  NET_7 = 2;
+  
+  // Payment due in 15 days
+  NET_15 = 3;
+  
+  // Payment due in 30 days
+  NET_30 = 4;
+  
+  // Payment due in 45 days
+  NET_45 = 5;
+  
+  // Payment due in 60 days
+  NET_60 = 6;
+  
+  // Payment due in 90 days
+  NET_90 = 7;
+  
+  // Payment due on delivery
+  DUE_ON_DELIVERY = 8;
+  
+  // Payment due on receipt
+  DUE_ON_RECEIPT = 9;
+  
+  // Payment due end of month
+  END_OF_MONTH = 10;
+}

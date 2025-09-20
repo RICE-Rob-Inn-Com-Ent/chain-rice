@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package sports.matches.v1;
+
+option go_package = "github.com/rice-dev/sports/matches/v1";
+
+// MatchStatus represents the current status of a match
+enum MatchStatus {
+  MATCH_STATUS_UNSPECIFIED = 0;
+  MATCH_STATUS_SCHEDULED = 1;     // Match is scheduled but not started
+  MATCH_STATUS_LIVE = 2;          // Match is currently being played
+  MATCH_STATUS_HALFTIME = 3;      // Match is at halftime
+  MATCH_STATUS_FINISHED = 4;      // Match has finished
+  MATCH_STATUS_CANCELLED = 5;     // Match was cancelled
+  MATCH_STATUS_POSTPONED = 6;     // Match was postponed
+  MATCH_STATUS_SUSPENDED = 7;     // Match was suspended
+  MATCH_STATUS_ABANDONED = 8;     // Match was abandoned
+}
+
+// MatchType represents the type of match
+enum MatchType {
+  MATCH_TYPE_UNSPECIFIED = 0;
+  MATCH_TYPE_REGULAR = 1;         // Regular season match
+  MATCH_TYPE_PLAYOFF = 2;         // Playoff match
+  MATCH_TYPE_CHAMPIONSHIP = 3;    // Championship match
+  MATCH_TYPE_FRIENDLY = 4;        // Friendly/exhibition match
+  MATCH_TYPE_CUP = 5;             // Cup competition match
+  MATCH_TYPE_QUALIFIER = 6;       // Qualification match
+  MATCH_TYPE_FINAL = 7;           // Final match
+  MATCH_TYPE_SEMI_FINAL = 8;      // Semi-final match
+  MATCH_TYPE_QUARTER_FINAL = 9;   // Quarter-final match
+}
+
+// MatchResult represents the result of a completed match
+enum MatchResult {
+  MATCH_RESULT_UNSPECIFIED = 0;
+  MATCH_RESULT_HOME_WIN = 1;      // Home team won
+  MATCH_RESULT_AWAY_WIN = 2;      // Away team won
+  MATCH_RESULT_DRAW = 3;          // Match ended in a draw
+  MATCH_RESULT_PENDING = 4;       // Result is pending
+}
+
+// MatchPhase represents the current phase of the match
+enum MatchPhase {
+  MATCH_PHASE_UNSPECIFIED = 0;
+  MATCH_PHASE_PRE_MATCH = 1;      // Before the match starts
+  MATCH_PHASE_FIRST_HALF = 2;     // First half
+  MATCH_PHASE_HALFTIME = 3;       // Halftime break
+  MATCH_PHASE_SECOND_HALF = 4;    // Second half
+  MATCH_PHASE_EXTRA_TIME = 5;     // Extra time (if applicable)
+  MATCH_PHASE_PENALTIES = 6;      // Penalty shootout (if applicable)
+  MATCH_PHASE_POST_MATCH = 7;     // After the match
+}
+
+// WeatherCondition represents weather conditions during the match
+enum WeatherCondition {
+  WEATHER_CONDITION_UNSPECIFIED = 0;
+  WEATHER_CONDITION_SUNNY = 1;    // Clear and sunny
+  WEATHER_CONDITION_CLOUDY = 2;   // Cloudy
+  WEATHER_CONDITION_RAINY = 3;    // Rainy
+  WEATHER_CONDITION_SNOWY = 4;    // Snowy
+  WEATHER_CONDITION_FOGGY = 5;    // Foggy
+  WEATHER_CONDITION_WINDY = 6;    // Windy
+  WEATHER_CONDITION_STORMY = 7;   // Stormy
+  WEATHER_CONDITION_INDOORS = 8;  // Indoor venue
+}
+
+// MatchImportance represents the importance level of the match
+enum MatchImportance {
+  MATCH_IMPORTANCE_UNSPECIFIED = 0;
+  MATCH_IMPORTANCE_LOW = 1;       // Low importance
+  MATCH_IMPORTANCE_MEDIUM = 2;    // Medium importance
+  MATCH_IMPORTANCE_HIGH = 3;      // High importance
+  MATCH_IMPORTANCE_CRITICAL = 4;  // Critical importance
+}

@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package government.citizens.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "../enums/citizen_status.proto";
+
+// Подія громадянина
+message CitizenEvent {
+  string event_id = 1;                      // Унікальний ідентифікатор події
+  string citizen_id = 2;                    // ID громадянина
+  EventType event_type = 3;                 // Тип події
+  google.protobuf.Timestamp timestamp = 4;  // Час події
+  string description = 5;                   // Опис події
+  google.protobuf.Any event_data = 6;       // Додаткові дані події
+  string user_id = 7;                       // ID користувача, що виконав дію
+  string source_system = 8;                 // Система-джерело події
+}
+
+// Типи подій
+enum EventType {
+  EVENT_TYPE_UNSPECIFIED = 0;
+  EVENT_TYPE_REGISTRATION = 1;              // Реєстрація громадянина
+  EVENT_TYPE_UPDATE_INFO = 2;               // Оновлення інформації
+  EVENT_TYPE_STATUS_CHANGE = 3;             // Зміна статусу
+  EVENT_TYPE_ADDRESS_CHANGE = 4;            // Зміна адреси
+  EVENT_TYPE_CONTACT_UPDATE = 5;            // Оновлення контактів
+  EVENT_TYPE_DOCUMENT_ADDED = 6;            // Додавання документа
+  EVENT_TYPE_DOCUMENT_UPDATED = 7;          // Оновлення документа
+  EVENT_TYPE_DOCUMENT_EXPIRED = 8;          // Завершення дії документа
+  EVENT_TYPE_DOCUMENT_REVOKED = 9;          // Анулювання документа
+  EVENT_TYPE_CITIZEN_SUSPENDED = 10;        // Призупинення громадянина
+  EVENT_TYPE_CITIZEN_REACTIVATED = 11;      // Реактивація громадянина
+  EVENT_TYPE_CITIZEN_DECEASED = 12;         // Реєстрація смерті
+  EVENT_TYPE_DELETE_REQUEST = 13;           // Запит на видалення
+  EVENT_TYPE_AUDIT_LOG = 14;                // Аудит
+}
+
+// Подія реєстрації
+message RegistrationEvent {
+  string citizen_id = 1;
+  string registration_type = 2;             // Тип реєстрації (нова, повторна)
+  string registration_reason = 3;           // Причина реєстрації
+  string previous_citizen_id = 4;           // Попередній ID (якщо є)
+}
+
+// Подія зміни статусу
+message StatusChangeEvent {
+  string citizen_id = 1;
+  CitizenStatus old_status = 2;
+  CitizenStatus new_status = 3;
+  string reason = 4;                        // Причина зміни
+  string authorized_by = 5;                 // Хто авторизував зміну
+}
+
+// Подія зміни адреси
+message AddressChangeEvent {
+  string citizen_id = 1;
+  string old_address = 2;                   // Попередня адреса
+  string new_address = 3;                   // Нова адреса
+  string change_reason = 4;                 // Причина зміни
+  google.protobuf.Timestamp effective_date = 5; // Дата вступу в силу
+}
+
+// Подія документа
+message DocumentEvent {
+  string citizen_id = 1;
+  string document_id = 2;
+  string document_type = 3;
+  string action = 4;                        // Дія (додано, оновлено, видалено)
+  string document_number = 5;
+  string reason = 6;                        // Причина дії
+}
+
+// Запит на створення події
+message CreateEventRequest {
+  string citizen_id = 1;
+  EventType event_type = 2;
+  string description = 3;
+  google.protobuf.Any event_data = 4;
+  string user_id = 5;
+  string source_system = 6;
+}
+
+// Результат створення події
+message EventResponse {
+  bool success = 1;
+  string message = 2;
+  CitizenEvent event = 3;
+}
+
+// Запит на отримання подій
+message GetEventsRequest {
+  string citizen_id = 1;
+  EventType event_type = 2;
+  google.protobuf.Timestamp from_date = 3;
+  google.protobuf.Timestamp to_date = 4;
+  int32 page_number = 5;
+  int32 page_size = 6;
+}
+
+// Результат пошуку подій
+message EventsResponse {
+  repeated CitizenEvent events = 1;
+  int32 total_count = 2;
+  int32 page_number = 3;
+  int32 page_size = 4;
+}

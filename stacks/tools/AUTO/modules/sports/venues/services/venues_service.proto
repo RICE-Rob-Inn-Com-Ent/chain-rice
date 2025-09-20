@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sports.venues.v1;
+
+import "sports/venues/messages/venues_messages.proto";
+
+option go_package = "github.com/rice-dev/sports/venues/v1";
+
+// VenueService provides operations for managing sports venues
+service VenueService {
+  // CreateVenue creates a new sports venue
+  rpc CreateVenue(CreateVenueRequest) returns (CreateVenueResponse);
+
+  // GetVenue retrieves a venue by its ID
+  rpc GetVenue(GetVenueRequest) returns (GetVenueResponse);
+
+  // ListVenues retrieves a list of venues with optional filtering
+  rpc ListVenues(ListVenuesRequest) returns (ListVenuesResponse);
+
+  // UpdateVenue updates an existing venue
+  rpc UpdateVenue(UpdateVenueRequest) returns (UpdateVenueResponse);
+
+  // DeleteVenue deletes a venue by its ID
+  rpc DeleteVenue(DeleteVenueRequest) returns (DeleteVenueResponse);
+}

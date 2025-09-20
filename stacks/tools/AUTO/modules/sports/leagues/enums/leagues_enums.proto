@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package sports.leagues.v1;
+
+option go_package = "github.com/rice-dev/sports/leagues/v1";
+
+// LeagueStatus represents the current status of a league
+enum LeagueStatus {
+  LEAGUE_STATUS_UNSPECIFIED = 0;
+  LEAGUE_STATUS_PREPARING = 1;    // League is being set up
+  LEAGUE_STATUS_ACTIVE = 2;       // League is currently running
+  LEAGUE_STATUS_PAUSED = 3;       // League is temporarily paused
+  LEAGUE_STATUS_COMPLETED = 4;    // League season has ended
+  LEAGUE_STATUS_CANCELLED = 5;    // League was cancelled
+}
+
+// SportType represents the type of sport for the league
+enum SportType {
+  SPORT_TYPE_UNSPECIFIED = 0;
+  SPORT_TYPE_FOOTBALL = 1;        // Association football/soccer
+  SPORT_TYPE_BASKETBALL = 2;      // Basketball
+  SPORT_TYPE_BASEBALL = 3;        // Baseball
+  SPORT_TYPE_AMERICAN_FOOTBALL = 4; // American football
+  SPORT_TYPE_HOCKEY = 5;          // Ice hockey
+  SPORT_TYPE_TENNIS = 6;          // Tennis
+  SPORT_TYPE_CRICKET = 7;         // Cricket
+  SPORT_TYPE_RUGBY = 8;           // Rugby
+  SPORT_TYPE_VOLLEYBALL = 9;      // Volleyball
+  SPORT_TYPE_GOLF = 10;           // Golf
+  SPORT_TYPE_OTHER = 99;          // Other sport types
+}
+
+// LeagueTier represents the level or tier of the league
+enum LeagueTier {
+  LEAGUE_TIER_UNSPECIFIED = 0;
+  LEAGUE_TIER_AMATEUR = 1;        // Amateur level
+  LEAGUE_TIER_SEMI_PROFESSIONAL = 2; // Semi-professional
+  LEAGUE_TIER_PROFESSIONAL = 3;   // Professional
+  LEAGUE_TIER_ELITE = 4;          // Elite/top tier
+}
+
+// SeasonType represents the type of season
+enum SeasonType {
+  SEASON_TYPE_UNSPECIFIED = 0;
+  SEASON_TYPE_REGULAR = 1;        // Regular season
+  SEASON_TYPE_PLAYOFF = 2;        // Playoff season
+  SEASON_TYPE_PRESEASON = 3;      // Preseason
+  SEASON_TYPE_FRIENDLY = 4;       // Friendly matches
+}
+
+// LeagueFormat represents the format of the league
+enum LeagueFormat {
+  LEAGUE_FORMAT_UNSPECIFIED = 0;
+  LEAGUE_FORMAT_ROUND_ROBIN = 1;  // Round-robin tournament
+  LEAGUE_FORMAT_KNOCKOUT = 2;     // Single/double elimination
+  LEAGUE_FORMAT_GROUP_STAGE = 3;  // Group stage then knockout
+  LEAGUE_FORMAT_LEAGUE_TABLE = 4; // League table format
+  LEAGUE_FORMAT_MIXED = 5;        // Mixed format
+}

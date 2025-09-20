@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package logistics.customs.enums;
+
+// Results of customs clearance process
+enum CustomsClearanceResult {
+  CUSTOMS_CLEARANCE_RESULT_UNSPECIFIED = 0;
+  CUSTOMS_CLEARANCE_RESULT_APPROVED = 1;        // Approved for entry/exit
+  CUSTOMS_CLEARANCE_RESULT_CONDITIONAL_APPROVAL = 2; // Approved with conditions
+  CUSTOMS_CLEARANCE_RESULT_REJECTED = 3;         // Rejected - not cleared
+  CUSTOMS_CLEARANCE_RESULT_DETENTION = 4;        // Goods detained
+  CUSTOMS_CLEARANCE_RESULT_SEIZURE = 5;          // Goods seized
+  CUSTOMS_CLEARANCE_RESULT_RETURN_TO_SENDER = 6; // Return to sender required
+  CUSTOMS_CLEARANCE_RESULT_DESTRUCTION = 7;      // Destruction ordered
+  CUSTOMS_CLEARANCE_RESULT_UNDER_INVESTIGATION = 8; // Under investigation
+}

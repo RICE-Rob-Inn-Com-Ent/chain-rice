@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package commerce.inventory.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/inventory_status.proto";
+import "../enums/inventory_type.proto";
+import "../enums/inventory_priority.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/inventory/messages";
+
+// Stock item message representing a single item in inventory
+message StockItem {
+  // Unique identifier for the stock item
+  string id = 1;
+  
+  // Product identifier this stock item represents
+  string product_id = 2;
+  
+  // Warehouse identifier where this item is located
+  string warehouse_id = 3;
+  
+  // Current quantity available
+  int32 quantity = 4;
+  
+  // Reserved quantity for pending orders
+  int32 reserved_quantity = 5;
+  
+  // Minimum stock level for reorder alerts
+  int32 minimum_stock_level = 6;
+  
+  // Maximum stock level
+  int32 maximum_stock_level = 7;
+  
+  // Current status of the stock item
+  commerce.inventory.enums.InventoryStatus status = 8;
+  
+  // Type of inventory item
+  commerce.inventory.enums.InventoryType type = 9;
+  
+  // Priority level for this stock item
+  commerce.inventory.enums.InventoryPriority priority = 10;
+  
+  // Cost per unit of this item
+  double unit_cost = 11;
+  
+  // Selling price per unit
+  double unit_price = 12;
+  
+  // Batch or lot number for tracking
+  string batch_number = 13;
+  
+  // Serial number for unique items
+  string serial_number = 14;
+  
+  // Expiration date for perishable items
+  google.protobuf.Timestamp expiration_date = 15;
+  
+  // Date when this stock item was created
+  google.protobuf.Timestamp created_at = 16;
+  
+  // Date when this stock item was last updated
+  google.protobuf.Timestamp updated_at = 17;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 18;
+  
+  // Notes or comments about this stock item
+  string notes = 19;
+  
+  // Location within the warehouse (shelf, bin, etc.)
+  string location = 20;
+}

@@ -1,0 +1,837 @@
+syntax = "proto3";
+
+package crm_hr.hr.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/hr/messages/employee.proto";
+import "crm_hr/hr/messages/timesheet.proto";
+import "crm_hr/hr/messages/payroll.proto";
+import "crm_hr/hr/enums/employee_role.proto";
+import "crm_hr/hr/enums/job_position.proto";
+import "crm_hr/hr/enums/payroll_status.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/hr/services";
+
+// HrService provides comprehensive HR management functionality
+service HrService {
+  // Employee Management
+  rpc CreateEmployee(CreateEmployeeRequest) returns (Employee);
+  rpc GetEmployee(GetEmployeeRequest) returns (Employee);
+  rpc UpdateEmployee(UpdateEmployeeRequest) returns (Employee);
+  rpc DeleteEmployee(DeleteEmployeeRequest) returns (google.protobuf.Empty);
+  rpc ListEmployees(ListEmployeesRequest) returns (ListEmployeesResponse);
+  
+  // Employee Business Operations
+  rpc UpdateEmployeeStatus(UpdateEmployeeStatusRequest) returns (Employee);
+  rpc AssignManager(AssignManagerRequest) returns (Employee);
+  rpc TransferEmployee(TransferEmployeeRequest) returns (Employee);
+  rpc PromoteEmployee(PromoteEmployeeRequest) returns (Employee);
+  rpc GetEmployeeProfile(GetEmployeeProfileRequest) returns (EmployeeProfile);
+  rpc UpdateEmployeeProfile(UpdateEmployeeProfileRequest) returns (EmployeeProfile);
+  
+  // Timesheet Management
+  rpc CreateTimesheet(CreateTimesheetRequest) returns (Timesheet);
+  rpc GetTimesheet(GetTimesheetRequest) returns (Timesheet);
+  rpc UpdateTimesheet(UpdateTimesheetRequest) returns (Timesheet);
+  rpc DeleteTimesheet(DeleteTimesheetRequest) returns (google.protobuf.Empty);
+  rpc ListTimesheets(ListTimesheetsRequest) returns (ListTimesheetsResponse);
+  
+  // Timesheet Business Operations
+  rpc SubmitTimesheet(SubmitTimesheetRequest) returns (Timesheet);
+  rpc ApproveTimesheet(ApproveTimesheetRequest) returns (Timesheet);
+  rpc RejectTimesheet(RejectTimesheetRequest) returns (Timesheet);
+  rpc GetEmployeeTimesheets(GetEmployeeTimesheetsRequest) returns (GetEmployeeTimesheetsResponse);
+  rpc GetTimesheetSummary(GetTimesheetSummaryRequest) returns (TimesheetSummary);
+  
+  // Time Entry Management
+  rpc CreateTimeEntry(CreateTimeEntryRequest) returns (TimeEntry);
+  rpc GetTimeEntry(GetTimeEntryRequest) returns (TimeEntry);
+  rpc UpdateTimeEntry(UpdateTimeEntryRequest) returns (TimeEntry);
+  rpc DeleteTimeEntry(DeleteTimeEntryRequest) returns (google.protobuf.Empty);
+  rpc ListTimeEntries(ListTimeEntriesRequest) returns (ListTimeEntriesResponse);
+  
+  // Time Off Management
+  rpc CreateTimeOffRequest(CreateTimeOffRequestRequest) returns (TimeOffRequest);
+  rpc GetTimeOffRequest(GetTimeOffRequestRequest) returns (TimeOffRequest);
+  rpc UpdateTimeOffRequest(UpdateTimeOffRequestRequest) returns (TimeOffRequest);
+  rpc DeleteTimeOffRequest(DeleteTimeOffRequestRequest) returns (google.protobuf.Empty);
+  rpc ListTimeOffRequests(ListTimeOffRequestsRequest) returns (ListTimeOffRequestsResponse);
+  
+  // Time Off Business Operations
+  rpc ApproveTimeOffRequest(ApproveTimeOffRequestRequest) returns (TimeOffRequest);
+  rpc RejectTimeOffRequest(RejectTimeOffRequestRequest) returns (TimeOffRequest);
+  rpc GetEmployeeTimeOffRequests(GetEmployeeTimeOffRequestsRequest) returns (GetEmployeeTimeOffRequestsResponse);
+  rpc GetTimeOffBalance(GetTimeOffBalanceRequest) returns (TimeOffBalance);
+  
+  // Attendance Management
+  rpc CreateAttendanceRecord(CreateAttendanceRecordRequest) returns (AttendanceRecord);
+  rpc GetAttendanceRecord(GetAttendanceRecordRequest) returns (AttendanceRecord);
+  rpc UpdateAttendanceRecord(UpdateAttendanceRecordRequest) returns (AttendanceRecord);
+  rpc DeleteAttendanceRecord(DeleteAttendanceRecordRequest) returns (google.protobuf.Empty);
+  rpc ListAttendanceRecords(ListAttendanceRecordsRequest) returns (ListAttendanceRecordsResponse);
+  
+  // Attendance Business Operations
+  rpc ClockIn(ClockInRequest) returns (AttendanceRecord);
+  rpc ClockOut(ClockOutRequest) returns (AttendanceRecord);
+  rpc GetEmployeeAttendance(GetEmployeeAttendanceRequest) returns (GetEmployeeAttendanceResponse);
+  rpc GetAttendanceSummary(GetAttendanceSummaryRequest) returns (AttendanceSummary);
+  
+  // Work Schedule Management
+  rpc CreateWorkSchedule(CreateWorkScheduleRequest) returns (WorkSchedule);
+  rpc GetWorkSchedule(GetWorkScheduleRequest) returns (WorkSchedule);
+  rpc UpdateWorkSchedule(UpdateWorkScheduleRequest) returns (WorkSchedule);
+  rpc DeleteWorkSchedule(DeleteWorkScheduleRequest) returns (google.protobuf.Empty);
+  rpc ListWorkSchedules(ListWorkSchedulesRequest) returns (ListWorkSchedulesResponse);
+  
+  // Payroll Management
+  rpc CreatePayroll(CreatePayrollRequest) returns (Payroll);
+  rpc GetPayroll(GetPayrollRequest) returns (Payroll);
+  rpc UpdatePayroll(UpdatePayrollRequest) returns (Payroll);
+  rpc DeletePayroll(DeletePayrollRequest) returns (google.protobuf.Empty);
+  rpc ListPayrolls(ListPayrollsRequest) returns (ListPayrollsResponse);
+  
+  // Payroll Business Operations
+  rpc ProcessPayroll(ProcessPayrollRequest) returns (Payroll);
+  rpc ApprovePayroll(ApprovePayrollRequest) returns (Payroll);
+  rpc GeneratePayrollReport(GeneratePayrollReportRequest) returns (PayrollReport);
+  rpc GetEmployeePayrolls(GetEmployeePayrollsRequest) returns (GetEmployeePayrollsResponse);
+  rpc GetPayrollSummary(GetPayrollSummaryRequest) returns (PayrollSummary);
+  
+  // Analytics and Reporting
+  rpc GetEmployeeAnalytics(GetEmployeeAnalyticsRequest) returns (EmployeeAnalyticsResponse);
+  rpc GetAttendanceAnalytics(GetAttendanceAnalyticsRequest) returns (AttendanceAnalyticsResponse);
+  rpc GetPayrollAnalytics(GetPayrollAnalyticsRequest) returns (PayrollAnalyticsResponse);
+  rpc GetEmployeeProductivityReport(GetEmployeeProductivityReportRequest) returns (EmployeeProductivityReportResponse);
+}
+
+// Employee Management Requests/Responses
+message CreateEmployeeRequest {
+  string employee_number = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  crm_hr.hr.enums.EmployeeRole role = 5;
+  crm_hr.hr.enums.JobPosition position = 6;
+  string department = 7;
+  string team = 8;
+  string manager_id = 9;
+  string employment_type = 10;
+  google.protobuf.Money salary = 11;
+  string salary_currency = 12;
+  string pay_frequency = 13;
+  google.protobuf.Timestamp hire_date = 14;
+  string office_location = 15;
+  string work_schedule = 16;
+  map<string, string> custom_fields = 17;
+}
+
+message GetEmployeeRequest {
+  string id = 1;
+}
+
+message UpdateEmployeeRequest {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  crm_hr.hr.enums.EmployeeRole role = 5;
+  crm_hr.hr.enums.JobPosition position = 6;
+  string department = 7;
+  string team = 8;
+  string manager_id = 9;
+  google.protobuf.Money salary = 10;
+  string office_location = 11;
+  string work_schedule = 12;
+  map<string, string> custom_fields = 13;
+}
+
+message DeleteEmployeeRequest {
+  string id = 1;
+}
+
+message ListEmployeesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  string order_by = 4;
+  string department = 5;
+  string team = 6;
+  crm_hr.hr.enums.EmployeeRole role = 7;
+  crm_hr.hr.enums.JobPosition position = 8;
+  string employment_status = 9;
+}
+
+message ListEmployeesResponse {
+  repeated Employee employees = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Employee Business Operations
+message UpdateEmployeeStatusRequest {
+  string employee_id = 1;
+  string employment_status = 2;
+  string reason = 3;
+  google.protobuf.Timestamp effective_date = 4;
+}
+
+message AssignManagerRequest {
+  string employee_id = 1;
+  string manager_id = 2;
+  string reason = 3;
+  google.protobuf.Timestamp effective_date = 4;
+}
+
+message TransferEmployeeRequest {
+  string employee_id = 1;
+  string new_department = 2;
+  string new_team = 3;
+  string new_manager_id = 4;
+  string reason = 5;
+  google.protobuf.Timestamp effective_date = 6;
+}
+
+message PromoteEmployeeRequest {
+  string employee_id = 1;
+  crm_hr.hr.enums.EmployeeRole new_role = 2;
+  crm_hr.hr.enums.JobPosition new_position = 3;
+  google.protobuf.Money new_salary = 4;
+  string reason = 5;
+  google.protobuf.Timestamp effective_date = 6;
+}
+
+message GetEmployeeProfileRequest {
+  string employee_id = 1;
+}
+
+message UpdateEmployeeProfileRequest {
+  string employee_id = 1;
+  string professional_summary = 2;
+  string career_objectives = 3;
+  repeated string key_achievements = 4;
+  repeated WorkExperience work_experience = 5;
+  repeated Education education = 6;
+  repeated Certification certifications = 7;
+  repeated Skill skills = 8;
+  repeated Language languages = 9;
+  repeated Reference references = 10;
+  string linkedin_url = 11;
+  string github_url = 12;
+  string portfolio_url = 13;
+  string website_url = 14;
+}
+
+// Timesheet Management
+message CreateTimesheetRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string period_type = 4;
+  repeated TimeEntry time_entries = 5;
+  string notes = 6;
+}
+
+message GetTimesheetRequest {
+  string id = 1;
+}
+
+message UpdateTimesheetRequest {
+  string id = 1;
+  repeated TimeEntry time_entries = 2;
+  string notes = 3;
+}
+
+message DeleteTimesheetRequest {
+  string id = 1;
+}
+
+message ListTimesheetsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  string status = 6;
+}
+
+message ListTimesheetsResponse {
+  repeated Timesheet timesheets = 1;
+  string next_page_token = 2;
+}
+
+// Timesheet Business Operations
+message SubmitTimesheetRequest {
+  string timesheet_id = 1;
+  string submitted_by = 2;
+  string notes = 3;
+}
+
+message ApproveTimesheetRequest {
+  string timesheet_id = 1;
+  string approved_by = 2;
+  string notes = 3;
+}
+
+message RejectTimesheetRequest {
+  string timesheet_id = 1;
+  string rejected_by = 2;
+  string rejection_reason = 3;
+}
+
+message GetEmployeeTimesheetsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message GetEmployeeTimesheetsResponse {
+  repeated Timesheet timesheets = 1;
+  string next_page_token = 2;
+  TimesheetSummary summary = 3;
+}
+
+message GetTimesheetSummaryRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message TimesheetSummary {
+  string employee_id = 1;
+  google.protobuf.Duration total_hours = 2;
+  google.protobuf.Duration regular_hours = 3;
+  google.protobuf.Duration overtime_hours = 4;
+  google.protobuf.Duration vacation_hours = 5;
+  google.protobuf.Duration sick_hours = 6;
+  google.protobuf.Duration holiday_hours = 7;
+  int32 total_entries = 8;
+  int32 approved_entries = 9;
+  int32 pending_entries = 10;
+  google.protobuf.Timestamp calculated_at = 11;
+}
+
+// Time Entry Management
+message CreateTimeEntryRequest {
+  string timesheet_id = 1;
+  google.protobuf.Timestamp date = 2;
+  google.protobuf.Timestamp start_time = 3;
+  google.protobuf.Timestamp end_time = 4;
+  string entry_type = 5;
+  string project_id = 6;
+  string project_name = 7;
+  string task_id = 8;
+  string task_name = 9;
+  string client_id = 10;
+  string client_name = 11;
+  string description = 12;
+  string notes = 13;
+  repeated string tags = 14;
+  bool is_billable = 15;
+  string location = 16;
+  string work_location_type = 17;
+  map<string, string> custom_fields = 18;
+}
+
+message GetTimeEntryRequest {
+  string id = 1;
+}
+
+message UpdateTimeEntryRequest {
+  string id = 1;
+  google.protobuf.Timestamp start_time = 2;
+  google.protobuf.Timestamp end_time = 3;
+  string entry_type = 4;
+  string project_id = 5;
+  string project_name = 6;
+  string task_id = 7;
+  string task_name = 8;
+  string client_id = 9;
+  string client_name = 10;
+  string description = 11;
+  string notes = 12;
+  repeated string tags = 13;
+  bool is_billable = 14;
+  string location = 15;
+  string work_location_type = 16;
+  map<string, string> custom_fields = 17;
+}
+
+message DeleteTimeEntryRequest {
+  string id = 1;
+}
+
+message ListTimeEntriesRequest {
+  string timesheet_id = 1;
+  string employee_id = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  string entry_type = 7;
+  string project_id = 8;
+  string client_id = 9;
+}
+
+message ListTimeEntriesResponse {
+  repeated TimeEntry time_entries = 1;
+  string next_page_token = 2;
+}
+
+// Time Off Management
+message CreateTimeOffRequestRequest {
+  string employee_id = 1;
+  string request_type = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  string reason = 5;
+  string description = 6;
+  string priority = 7;
+  string coverage_employee_id = 8;
+  string coverage_notes = 9;
+  bool requires_coverage = 10;
+  repeated string attachments = 11;
+  map<string, string> custom_fields = 12;
+}
+
+message GetTimeOffRequestRequest {
+  string id = 1;
+}
+
+message UpdateTimeOffRequestRequest {
+  string id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string reason = 4;
+  string description = 5;
+  string priority = 6;
+  string coverage_employee_id = 7;
+  string coverage_notes = 8;
+  bool requires_coverage = 9;
+  repeated string attachments = 10;
+  map<string, string> custom_fields = 11;
+}
+
+message DeleteTimeOffRequestRequest {
+  string id = 1;
+}
+
+message ListTimeOffRequestsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  string request_type = 6;
+  string status = 7;
+  string priority = 8;
+}
+
+message ListTimeOffRequestsResponse {
+  repeated TimeOffRequest time_off_requests = 1;
+  string next_page_token = 2;
+}
+
+// Time Off Business Operations
+message ApproveTimeOffRequestRequest {
+  string request_id = 1;
+  string approved_by = 2;
+  string approval_notes = 3;
+}
+
+message RejectTimeOffRequestRequest {
+  string request_id = 1;
+  string rejected_by = 2;
+  string rejection_reason = 3;
+}
+
+message GetEmployeeTimeOffRequestsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message GetEmployeeTimeOffRequestsResponse {
+  repeated TimeOffRequest time_off_requests = 1;
+  string next_page_token = 2;
+  TimeOffBalance balance = 3;
+}
+
+message GetTimeOffBalanceRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp as_of_date = 2;
+}
+
+message TimeOffBalance {
+  string employee_id = 1;
+  google.protobuf.Duration vacation_balance = 2;
+  google.protobuf.Duration sick_balance = 3;
+  google.protobuf.Duration personal_balance = 4;
+  google.protobuf.Duration total_balance = 5;
+  google.protobuf.Duration used_this_year = 6;
+  google.protobuf.Duration remaining_this_year = 7;
+  google.protobuf.Timestamp calculated_at = 8;
+}
+
+// Attendance Management
+message CreateAttendanceRecordRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp date = 2;
+  google.protobuf.Timestamp clock_in_time = 3;
+  google.protobuf.Timestamp clock_out_time = 4;
+  string status = 5;
+  string attendance_type = 6;
+  string location = 7;
+  string work_location_type = 8;
+  repeated BreakRecord breaks = 9;
+  string notes = 10;
+  map<string, string> custom_fields = 11;
+}
+
+message GetAttendanceRecordRequest {
+  string id = 1;
+}
+
+message UpdateAttendanceRecordRequest {
+  string id = 1;
+  google.protobuf.Timestamp clock_in_time = 2;
+  google.protobuf.Timestamp clock_out_time = 3;
+  string status = 4;
+  string attendance_type = 5;
+  string location = 6;
+  string work_location_type = 7;
+  repeated BreakRecord breaks = 8;
+  string notes = 9;
+  map<string, string> custom_fields = 10;
+}
+
+message DeleteAttendanceRecordRequest {
+  string id = 1;
+}
+
+message ListAttendanceRecordsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  string status = 6;
+  string attendance_type = 7;
+}
+
+message ListAttendanceRecordsResponse {
+  repeated AttendanceRecord attendance_records = 1;
+  string next_page_token = 2;
+}
+
+// Attendance Business Operations
+message ClockInRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp clock_in_time = 2;
+  string location = 3;
+  string work_location_type = 4;
+  string notes = 5;
+}
+
+message ClockOutRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp clock_out_time = 2;
+  string location = 3;
+  string notes = 4;
+}
+
+message GetEmployeeAttendanceRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message GetEmployeeAttendanceResponse {
+  repeated AttendanceRecord attendance_records = 1;
+  string next_page_token = 2;
+  AttendanceSummary summary = 3;
+}
+
+message GetAttendanceSummaryRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message AttendanceSummary {
+  string employee_id = 1;
+  int32 total_days = 2;
+  int32 present_days = 3;
+  int32 absent_days = 4;
+  int32 late_days = 5;
+  int32 early_departure_days = 6;
+  google.protobuf.Duration total_hours = 7;
+  google.protobuf.Duration average_daily_hours = 8;
+  google.protobuf.Duration total_break_time = 9;
+  double attendance_rate = 10;
+  google.protobuf.Timestamp calculated_at = 11;
+}
+
+// Work Schedule Management
+message CreateWorkScheduleRequest {
+  string employee_id = 1;
+  string schedule_type = 2;
+  string name = 3;
+  string description = 4;
+  repeated ScheduleDay schedule_days = 5;
+  google.protobuf.Timestamp effective_start_date = 6;
+  google.protobuf.Timestamp effective_end_date = 7;
+  string notes = 8;
+  map<string, string> custom_fields = 9;
+}
+
+message GetWorkScheduleRequest {
+  string id = 1;
+}
+
+message UpdateWorkScheduleRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  repeated ScheduleDay schedule_days = 4;
+  google.protobuf.Timestamp effective_start_date = 5;
+  google.protobuf.Timestamp effective_end_date = 6;
+  bool is_active = 7;
+  string notes = 8;
+  map<string, string> custom_fields = 9;
+}
+
+message DeleteWorkScheduleRequest {
+  string id = 1;
+}
+
+message ListWorkSchedulesRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string schedule_type = 4;
+  bool is_active = 5;
+}
+
+message ListWorkSchedulesResponse {
+  repeated WorkSchedule work_schedules = 1;
+  string next_page_token = 2;
+}
+
+// Payroll Management
+message CreatePayrollRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp pay_period_start = 2;
+  google.protobuf.Timestamp pay_period_end = 3;
+  google.protobuf.Timestamp pay_date = 4;
+  string pay_frequency = 5;
+  google.protobuf.Money gross_pay = 6;
+  google.protobuf.Money net_pay = 7;
+  double regular_hours = 8;
+  double overtime_hours = 9;
+  repeated PayrollDeduction deductions = 10;
+  repeated PayrollTax taxes = 11;
+  repeated PayrollBenefit benefits = 12;
+  string payment_method = 13;
+  string bank_account = 14;
+  string notes = 15;
+  map<string, string> custom_fields = 16;
+}
+
+message GetPayrollRequest {
+  string id = 1;
+}
+
+message UpdatePayrollRequest {
+  string id = 1;
+  google.protobuf.Money gross_pay = 2;
+  google.protobuf.Money net_pay = 3;
+  double regular_hours = 4;
+  double overtime_hours = 5;
+  repeated PayrollDeduction deductions = 6;
+  repeated PayrollTax taxes = 7;
+  repeated PayrollBenefit benefits = 8;
+  string payment_method = 9;
+  string bank_account = 10;
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+}
+
+message DeletePayrollRequest {
+  string id = 1;
+}
+
+message ListPayrollsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  crm_hr.hr.enums.PayrollStatus status = 6;
+  string pay_frequency = 7;
+}
+
+message ListPayrollsResponse {
+  repeated Payroll payrolls = 1;
+  string next_page_token = 2;
+}
+
+// Payroll Business Operations
+message ProcessPayrollRequest {
+  string payroll_id = 1;
+  string processed_by = 2;
+  string processing_notes = 3;
+}
+
+message ApprovePayrollRequest {
+  string payroll_id = 1;
+  string approved_by = 2;
+  string approval_notes = 3;
+}
+
+message GeneratePayrollReportRequest {
+  google.protobuf.Timestamp report_period_start = 1;
+  google.protobuf.Timestamp report_period_end = 2;
+  string report_type = 3;
+  string title = 4;
+  string description = 5;
+  string format = 6;
+  string generated_by = 7;
+  repeated string employee_ids = 8;
+  string department = 9;
+  string team = 10;
+}
+
+message GetEmployeePayrollsRequest {
+  string employee_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message GetEmployeePayrollsResponse {
+  repeated Payroll payrolls = 1;
+  string next_page_token = 2;
+  PayrollSummary summary = 3;
+}
+
+message GetPayrollSummaryRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message PayrollSummary {
+  string employee_id = 1;
+  google.protobuf.Money total_gross_pay = 2;
+  google.protobuf.Money total_net_pay = 3;
+  google.protobuf.Money total_deductions = 4;
+  google.protobuf.Money total_taxes = 5;
+  google.protobuf.Money total_benefits = 6;
+  double total_hours = 7;
+  double total_regular_hours = 8;
+  double total_overtime_hours = 9;
+  google.protobuf.Money average_gross_pay = 10;
+  google.protobuf.Money average_net_pay = 11;
+  int32 total_payrolls = 12;
+  google.protobuf.Timestamp calculated_at = 13;
+}
+
+// Analytics and Reporting
+message GetEmployeeAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string department = 3;
+  string team = 4;
+  string employment_status = 5;
+}
+
+message EmployeeAnalyticsResponse {
+  int32 total_employees = 1;
+  int32 active_employees = 2;
+  int32 new_employees = 3;
+  int32 terminated_employees = 4;
+  double turnover_rate = 5;
+  double retention_rate = 6;
+  map<string, int32> employees_by_department = 7;
+  map<string, int32> employees_by_role = 8;
+  map<string, int32> employees_by_position = 9;
+  map<string, int32> employees_by_status = 10;
+  google.protobuf.Money average_salary = 11;
+  google.protobuf.Money total_payroll_cost = 12;
+  google.protobuf.Timestamp calculated_at = 13;
+}
+
+message GetAttendanceAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string department = 3;
+  string team = 4;
+  string employee_id = 5;
+}
+
+message AttendanceAnalyticsResponse {
+  double overall_attendance_rate = 1;
+  double average_daily_hours = 2;
+  double average_weekly_hours = 3;
+  int32 total_late_arrivals = 4;
+  int32 total_early_departures = 5;
+  int32 total_absent_days = 6;
+  map<string, double> attendance_by_department = 7;
+  map<string, double> attendance_by_team = 8;
+  map<string, int32> attendance_by_day_of_week = 9;
+  google.protobuf.Timestamp calculated_at = 10;
+}
+
+message GetPayrollAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string department = 3;
+  string team = 4;
+  string employee_id = 5;
+}
+
+message PayrollAnalyticsResponse {
+  google.protobuf.Money total_payroll_cost = 1;
+  google.protobuf.Money average_salary = 2;
+  google.protobuf.Money total_deductions = 3;
+  google.protobuf.Money total_taxes = 4;
+  google.protobuf.Money total_benefits = 5;
+  map<string, google.protobuf.Money> payroll_by_department = 6;
+  map<string, google.protobuf.Money> payroll_by_team = 7;
+  map<string, int32> payroll_frequency_distribution = 8;
+  google.protobuf.Timestamp calculated_at = 9;
+}
+
+message GetEmployeeProductivityReportRequest {
+  string employee_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string report_type = 4; // timesheet, attendance, performance, etc.
+}
+
+message EmployeeProductivityReportResponse {
+  string employee_id = 1;
+  google.protobuf.Duration total_work_hours = 2;
+  google.protobuf.Duration average_daily_hours = 3;
+  google.protobuf.Duration average_weekly_hours = 4;
+  double attendance_rate = 5;
+  double timesheet_completion_rate = 6;
+  int32 total_projects = 7;
+  int32 completed_projects = 8;
+  double project_completion_rate = 9;
+  google.protobuf.Duration average_project_duration = 10;
+  map<string, double> productivity_by_week = 11;
+  map<string, double> productivity_by_month = 12;
+  repeated string top_skills = 13;
+  repeated string improvement_areas = 14;
+  google.protobuf.Timestamp calculated_at = 15;
+}

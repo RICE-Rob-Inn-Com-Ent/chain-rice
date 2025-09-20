@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package blockchain.tokens.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/enums";
+
+// TokenStatus defines the status of blockchain tokens
+enum TokenStatus {
+  // TOKEN_STATUS_UNSPECIFIED indicates an unspecified token status
+  TOKEN_STATUS_UNSPECIFIED = 0;
+  
+  // TOKEN_STATUS_ACTIVE indicates the token is active and operational
+  TOKEN_STATUS_ACTIVE = 1;
+  
+  // TOKEN_STATUS_INACTIVE indicates the token is inactive
+  TOKEN_STATUS_INACTIVE = 2;
+  
+  // TOKEN_STATUS_PENDING indicates the token is pending activation
+  TOKEN_STATUS_PENDING = 3;
+  
+  // TOKEN_STATUS_SUSPENDED indicates the token is suspended
+  TOKEN_STATUS_SUSPENDED = 4;
+  
+  // TOKEN_STATUS_DEPRECATED indicates the token is deprecated
+  TOKEN_STATUS_DEPRECATED = 5;
+  
+  // TOKEN_STATUS_MAINTENANCE indicates the token is under maintenance
+  TOKEN_STATUS_MAINTENANCE = 6;
+  
+  // TOKEN_STATUS_ERROR indicates the token is in error state
+  TOKEN_STATUS_ERROR = 7;
+  
+  // TOKEN_STATUS_UPDATING indicates the token is being updated
+  TOKEN_STATUS_UPDATING = 8;
+  
+  // TOKEN_STATUS_SYNCING indicates the token is syncing data
+  TOKEN_STATUS_SYNCING = 9;
+  
+  // TOKEN_STATUS_OFFLINE indicates the token is offline
+  TOKEN_STATUS_OFFLINE = 10;
+  
+  // TOKEN_STATUS_MINTING indicates the token is being minted
+  TOKEN_STATUS_MINTING = 11;
+  
+  // TOKEN_STATUS_BURNING indicates the token is being burned
+  TOKEN_STATUS_BURNING = 12;
+  
+  // TOKEN_STATUS_FROZEN indicates the token is frozen
+  TOKEN_STATUS_FROZEN = 13;
+  
+  // TOKEN_STATUS_LOCKED indicates the token is locked
+  TOKEN_STATUS_LOCKED = 14;
+  
+  // TOKEN_STATUS_VERIFIED indicates the token is verified
+  TOKEN_STATUS_VERIFIED = 15;
+  
+  // TOKEN_STATUS_UNVERIFIED indicates the token is unverified
+  TOKEN_STATUS_UNVERIFIED = 16;
+  
+  // TOKEN_STATUS_TRUSTED indicates the token is trusted
+  TOKEN_STATUS_TRUSTED = 17;
+  
+  // TOKEN_STATUS_UNTRUSTED indicates the token is untrusted
+  TOKEN_STATUS_UNTRUSTED = 18;
+  
+  // TOKEN_STATUS_WHITELISTED indicates the token is whitelisted
+  TOKEN_STATUS_WHITELISTED = 19;
+  
+  // TOKEN_STATUS_BLACKLISTED indicates the token is blacklisted
+  TOKEN_STATUS_BLACKLISTED = 20;
+}

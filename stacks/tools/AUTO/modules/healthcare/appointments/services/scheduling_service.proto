@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package healthcare.appointments.services;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "../messages/appointment_models.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/services";
+
+// Scheduling service for appointment scheduling logic and availability checks
+service SchedulingService {
+  // Check doctor availability
+  rpc CheckDoctorAvailability(CheckAvailabilityRequest) returns (AvailabilityResponse);
+  
+  // Find available time slots
+  rpc FindAvailableSlots(FindSlotsRequest) returns (AvailableSlotsResponse);
+  
+  // Schedule appointment with conflict resolution
+  rpc ScheduleAppointment(ScheduleAppointmentRequest) returns (AppointmentResponse);
+  
+  // Reschedule appointment
+  rpc RescheduleAppointment(RescheduleAppointmentRequest) returns (AppointmentResponse);
+  
+  // Get doctor schedule
+  rpc GetDoctorSchedule(GetDoctorScheduleRequest) returns (DoctorScheduleResponse);
+  
+  // Block time slots
+  rpc BlockTimeSlots(BlockTimeSlotsRequest) returns (BlockTimeSlotsResponse);
+  
+  // Unblock time slots
+  rpc UnblockTimeSlots(UnblockTimeSlotsRequest) returns (UnblockTimeSlotsResponse);
+}
+
+// Check availability request
+message CheckAvailabilityRequest {
+  string doctor_id = 1;
+  string clinic_id = 2;
+  google.protobuf.Timestamp start_time = 3;
+  google.protobuf.Timestamp end_time = 4;
+  google.protobuf.Duration duration = 5;
+}
+
+// Availability response
+message AvailabilityResponse {
+  bool available = 1;
+  repeated TimeSlot conflicting_slots = 2;
+  string reason = 3;
+}
+
+// Time slot
+message TimeSlot {
+  google.protobuf.Timestamp start_time = 1;
+  google.protobuf.Timestamp end_time = 2;
+  string appointment_id = 3;
+  string status = 4;
+}
+
+// Find slots request
+message FindSlotsRequest {
+  string doctor_id = 1;
+  string clinic_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  google.protobuf.Duration duration = 5;
+  int32 max_slots = 6;
+}
+
+// Available slots response
+message AvailableSlotsResponse {
+  repeated TimeSlot available_slots = 1;
+  int32 total_slots = 2;
+}
+
+// Schedule appointment request
+message ScheduleAppointmentRequest {
+  AppointmentRequest appointment = 1;
+  bool allow_conflicts = 2;
+  string conflict_resolution_strategy = 3;
+}
+
+// Reschedule appointment request
+message RescheduleAppointmentRequest {
+  string appointment_id = 1;
+  google.protobuf.Timestamp new_time = 2;
+  string reason = 3;
+}
+
+// Get doctor schedule request
+message GetDoctorScheduleRequest {
+  string doctor_id = 1;
+  string clinic_id = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+}
+
+// Doctor schedule response
+message DoctorScheduleResponse {
+  string doctor_id = 1;
+  string clinic_id = 2;
+  repeated TimeSlot scheduled_slots = 3;
+  repeated TimeSlot blocked_slots = 4;
+  repeated TimeSlot available_slots = 5;
+}
+
+// Block time slots request
+message BlockTimeSlotsRequest {
+  string doctor_id = 1;
+  string clinic_id = 2;
+  repeated TimeSlot slots_to_block = 3;
+  string reason = 4;
+}
+
+// Block time slots response
+message BlockTimeSlotsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated TimeSlot blocked_slots = 3;
+}
+
+// Unblock time slots request
+message UnblockTimeSlotsRequest {
+  string doctor_id = 1;
+  string clinic_id = 2;
+  repeated string slot_ids = 3;
+  string reason = 4;
+}
+
+// Unblock time slots response
+message UnblockTimeSlotsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string unblocked_slot_ids = 3;
+}

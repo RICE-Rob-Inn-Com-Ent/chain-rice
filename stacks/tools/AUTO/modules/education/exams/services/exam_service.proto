@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+// Service definitions for managing exams.
+package education.exams.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "AUTO/modules/education/exams/messages/exam.proto";
+import "AUTO/modules/education/exams/messages/question.proto";
+import "AUTO/modules/education/exams/messages/answer.proto";
+
+option go_package = "github.com/rice-dev/education/exams/services;examsservices";
+option java_multiple_files = true;
+option java_package = "com.rice.education.exams.services";
+
+// CRUD and business requests.
+message CreateExamRequest { education.exams.messages.Exam exam = 1; }
+message GetExamRequest { string id = 1; }
+message UpdateExamRequest { education.exams.messages.Exam exam = 1; }
+message DeleteExamRequest { string id = 1; }
+
+message ListExamsRequest {
+  string course_id = 1; // Optional filter by course
+  int32 page_size = 2;  // Page size
+  string page_token = 3;// Page token
+}
+
+message ListExamsResponse {
+  repeated education.exams.messages.Exam exams = 1; // Exams list
+  string next_page_token = 2;                      // Next page token
+}
+
+message ScheduleExamRequest {
+  string exam_id = 1;                         // Exam to schedule
+  google.protobuf.Timestamp start_at = 2;     // Start time
+  google.protobuf.Timestamp end_at = 3;       // End time
+}
+
+message AddQuestionRequest { education.exams.messages.Question question = 1; }
+message RemoveQuestionRequest { string exam_id = 1; string question_id = 2; }
+
+message SubmitAnswerRequest { education.exams.messages.Answer answer = 1; }
+
+message GradeExamRequest {
+  string exam_id = 1;          // Exam to grade
+  string student_id = 2;       // Student whose exam to grade
+}
+
+message GradeExamResponse {
+  double total_awarded_points = 1; // Total points awarded
+  double percentage = 2;           // Score percentage [0.0 - 1.0]
+}
+
+message GetAverageScoreRequest { string exam_id = 1; }
+message GetAverageScoreResponse { double average_percentage = 1; }
+
+// Service for exam management, delivery, and analytics.
+service ExamService {
+  // Create a new exam.
+  rpc CreateExam(CreateExamRequest) returns (education.exams.messages.Exam);
+  // Retrieve an exam by ID.
+  rpc GetExam(GetExamRequest) returns (education.exams.messages.Exam);
+  // Update an existing exam.
+  rpc UpdateExam(UpdateExamRequest) returns (education.exams.messages.Exam);
+  // Delete an exam by ID.
+  rpc DeleteExam(DeleteExamRequest) returns (google.protobuf.Empty);
+  // List exams with optional filter and pagination.
+  rpc ListExams(ListExamsRequest) returns (ListExamsResponse);
+  // Schedule exam time window.
+  rpc ScheduleExam(ScheduleExamRequest) returns (education.exams.messages.Exam);
+  // Add a question to an exam.
+  rpc AddQuestion(AddQuestionRequest) returns (education.exams.messages.Question);
+  // Remove a question from an exam.
+  rpc RemoveQuestion(RemoveQuestionRequest) returns (google.protobuf.Empty);
+  // Submit a student's answer.
+  rpc SubmitAnswer(SubmitAnswerRequest) returns (education.exams.messages.Answer);
+  // Grade an exam for a specific student.
+  rpc GradeExam(GradeExamRequest) returns (GradeExamResponse);
+  // Analytics: Get average score for an exam.
+  rpc GetAverageScore(GetAverageScoreRequest) returns (GetAverageScoreResponse);
+}
+
+

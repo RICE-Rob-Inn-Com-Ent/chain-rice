@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.social.enums;
+
+option go_package = "github.com/rice-dev/gaming/social/enums";
+
+// Типи повідомлень
+enum MessageType {
+  MESSAGE_TYPE_UNSPECIFIED = 0;
+  
+  // Текстове повідомлення
+  MESSAGE_TYPE_TEXT = 1;
+  
+  // Зображення
+  MESSAGE_TYPE_IMAGE = 2;
+  
+  // Відео
+  MESSAGE_TYPE_VIDEO = 3;
+  
+  // Аудіо
+  MESSAGE_TYPE_AUDIO = 4;
+  
+  // Файл
+  MESSAGE_TYPE_FILE = 5;
+  
+  // Посилання
+  MESSAGE_TYPE_LINK = 6;
+  
+  // Емодзі
+  MESSAGE_TYPE_EMOJI = 7;
+  
+  // Стикер
+  MESSAGE_TYPE_STICKER = 8;
+  
+  // GIF
+  MESSAGE_TYPE_GIF = 9;
+  
+  // Анімація
+  MESSAGE_TYPE_ANIMATION = 10;
+  
+  // 3D модель
+  MESSAGE_TYPE_3D_MODEL = 11;
+  
+  // AR об'єкт
+  MESSAGE_TYPE_AR_OBJECT = 12;
+  
+  // VR сцена
+  MESSAGE_TYPE_VR_SCENE = 13;
+  
+  // Голосове повідомлення
+  MESSAGE_TYPE_VOICE = 14;
+  
+  // Відеодзвінок
+  MESSAGE_TYPE_VIDEO_CALL = 15;
+  
+  // Аудіодзвінок
+  MESSAGE_TYPE_AUDIO_CALL = 16;
+  
+  // Екран
+  MESSAGE_TYPE_SCREEN_SHARE = 17;
+  
+  // Потік
+  MESSAGE_TYPE_STREAM = 18;
+  
+  // Трансляція
+  MESSAGE_TYPE_BROADCAST = 19;
+  
+  // Прямий ефір
+  MESSAGE_TYPE_LIVE = 20;
+  
+  // Подкаст
+  MESSAGE_TYPE_PODCAST = 21;
+  
+  // Радіо
+  MESSAGE_TYPE_RADIO = 22;
+  
+  // Телебачення
+  MESSAGE_TYPE_TV = 23;
+  
+  // Кіно
+  MESSAGE_TYPE_MOVIE = 24;
+  
+  // Серіал
+  MESSAGE_TYPE_SERIES = 25;
+  
+  // Документальний фільм
+  MESSAGE_TYPE_DOCUMENTARY = 26;
+  
+  // Новости
+  MESSAGE_TYPE_NEWS = 27;
+  
+  // Спорт
+  MESSAGE_TYPE_SPORTS = 28;
+  
+  // Музика
+  MESSAGE_TYPE_MUSIC = 29;
+  
+  // Пісня
+  MESSAGE_TYPE_SONG = 30;
+  
+  // Альбом
+  MESSAGE_TYPE_ALBUM = 31;
+  
+  // Плейлист
+  MESSAGE_TYPE_PLAYLIST = 32;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 33;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 34;
+  
+  // Виставка
+  MESSAGE_TYPE_EXHIBITION = 35;
+  
+  // Музей
+  MESSAGE_TYPE_MUSEUM = 36;
+  
+  // Галерея
+  MESSAGE_TYPE_GALLERY = 37;
+  
+  // Театр
+  MESSAGE_TYPE_THEATER = 38;
+  
+  // Опера
+  MESSAGE_TYPE_OPERA = 39;
+  
+  // Балет
+  MESSAGE_TYPE_BALLET = 40;
+  
+  // Цирк
+  MESSAGE_TYPE_CIRCUS = 41;
+  
+  // Шоу
+  MESSAGE_TYPE_SHOW = 42;
+  
+  // Вистава
+  MESSAGE_TYPE_PERFORMANCE = 43;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 44;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 45;
+  
+  // Виставка
+  MESSAGE_TYPE_EXHIBITION = 46;
+  
+  // Музей
+  MESSAGE_TYPE_MUSEUM = 47;
+  
+  // Галерея
+  MESSAGE_TYPE_GALLERY = 48;
+  
+  // Театр
+  MESSAGE_TYPE_THEATER = 49;
+  
+  // Опера
+  MESSAGE_TYPE_OPERA = 50;
+  
+  // Балет
+  MESSAGE_TYPE_BALLET = 51;
+  
+  // Цирк
+  MESSAGE_TYPE_CIRCUS = 52;
+  
+  // Шоу
+  MESSAGE_TYPE_SHOW = 53;
+  
+  // Вистава
+  MESSAGE_TYPE_PERFORMANCE = 54;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 55;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 56;
+  
+  // Виставка
+  MESSAGE_TYPE_EXHIBITION = 57;
+  
+  // Музей
+  MESSAGE_TYPE_MUSEUM = 58;
+  
+  // Галерея
+  MESSAGE_TYPE_GALLERY = 59;
+  
+  // Театр
+  MESSAGE_TYPE_THEATER = 60;
+  
+  // Опера
+  MESSAGE_TYPE_OPERA = 61;
+  
+  // Балет
+  MESSAGE_TYPE_BALLET = 62;
+  
+  // Цирк
+  MESSAGE_TYPE_CIRCUS = 63;
+  
+  // Шоу
+  MESSAGE_TYPE_SHOW = 64;
+  
+  // Вистава
+  MESSAGE_TYPE_PERFORMANCE = 65;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 66;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 67;
+  
+  // Виставка
+  MESSAGE_TYPE_EXHIBITION = 68;
+  
+  // Музей
+  MESSAGE_TYPE_MUSEUM = 69;
+  
+  // Галерея
+  MESSAGE_TYPE_GALLERY = 70;
+  
+  // Театр
+  MESSAGE_TYPE_THEATER = 71;
+  
+  // Опера
+  MESSAGE_TYPE_OPERA = 72;
+  
+  // Балет
+  MESSAGE_TYPE_BALLET = 73;
+  
+  // Цирк
+  MESSAGE_TYPE_CIRCUS = 74;
+  
+  // Шоу
+  MESSAGE_TYPE_SHOW = 75;
+  
+  // Вистава
+  MESSAGE_TYPE_PERFORMANCE = 76;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 77;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 78;
+  
+  // Виставка
+  MESSAGE_TYPE_EXHIBITION = 79;
+  
+  // Музей
+  MESSAGE_TYPE_MUSEUM = 80;
+  
+  // Галерея
+  MESSAGE_TYPE_GALLERY = 81;
+  
+  // Театр
+  MESSAGE_TYPE_THEATER = 82;
+  
+  // Опера
+  MESSAGE_TYPE_OPERA = 83;
+  
+  // Балет
+  MESSAGE_TYPE_BALLET = 84;
+  
+  // Цирк
+  MESSAGE_TYPE_CIRCUS = 85;
+  
+  // Шоу
+  MESSAGE_TYPE_SHOW = 86;
+  
+  // Вистава
+  MESSAGE_TYPE_PERFORMANCE = 87;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 88;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 89;
+  
+  // Виставка
+  MESSAGE_TYPE_EXHIBITION = 90;
+  
+  // Музей
+  MESSAGE_TYPE_MUSEUM = 91;
+  
+  // Галерея
+  MESSAGE_TYPE_GALLERY = 92;
+  
+  // Театр
+  MESSAGE_TYPE_THEATER = 93;
+  
+  // Опера
+  MESSAGE_TYPE_OPERA = 94;
+  
+  // Балет
+  MESSAGE_TYPE_BALLET = 95;
+  
+  // Цирк
+  MESSAGE_TYPE_CIRCUS = 96;
+  
+  // Шоу
+  MESSAGE_TYPE_SHOW = 97;
+  
+  // Вистава
+  MESSAGE_TYPE_PERFORMANCE = 98;
+  
+  // Концерт
+  MESSAGE_TYPE_CONCERT = 99;
+  
+  // Фестиваль
+  MESSAGE_TYPE_FESTIVAL = 100;
+}

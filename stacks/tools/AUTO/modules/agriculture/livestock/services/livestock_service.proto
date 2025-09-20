@@ -1,0 +1,450 @@
+syntax = "proto3";
+
+package agriculture.livestock.services;
+
+import "agriculture/livestock/messages/animal.proto";
+import "agriculture/livestock/messages/herd.proto";
+import "google/protobuf/empty.proto";
+
+// LivestockService provides CRUD operations and business logic for livestock management
+service LivestockService {
+  // Animal management
+  rpc CreateAnimal(CreateAnimalRequest) returns (CreateAnimalResponse);
+  rpc GetAnimal(GetAnimalRequest) returns (GetAnimalResponse);
+  rpc ListAnimals(ListAnimalsRequest) returns (ListAnimalsResponse);
+  rpc UpdateAnimal(UpdateAnimalRequest) returns (UpdateAnimalResponse);
+  rpc DeleteAnimal(DeleteAnimalRequest) returns (google.protobuf.Empty);
+  
+  // Herd management
+  rpc CreateHerd(CreateHerdRequest) returns (CreateHerdResponse);
+  rpc GetHerd(GetHerdRequest) returns (GetHerdResponse);
+  rpc ListHerds(ListHerdsRequest) returns (ListHerdsResponse);
+  rpc UpdateHerd(UpdateHerdRequest) returns (UpdateHerdResponse);
+  rpc DeleteHerd(DeleteHerdRequest) returns (google.protobuf.Empty);
+  
+  // Animal operations
+  rpc AddAnimalToHerd(AddAnimalToHerdRequest) returns (AddAnimalToHerdResponse);
+  rpc RemoveAnimalFromHerd(RemoveAnimalFromHerdRequest) returns (RemoveAnimalFromHerdResponse);
+  rpc GetAnimalsInHerd(GetAnimalsInHerdRequest) returns (GetAnimalsInHerdResponse);
+  
+  // Health management
+  rpc UpdateAnimalHealth(UpdateAnimalHealthRequest) returns (UpdateAnimalHealthResponse);
+  rpc GetAnimalHealthHistory(GetAnimalHealthHistoryRequest) returns (GetAnimalHealthHistoryResponse);
+  rpc ScheduleHealthCheck(ScheduleHealthCheckRequest) returns (ScheduleHealthCheckResponse);
+  
+  // Breeding management
+  rpc RecordBreeding(RecordBreedingRequest) returns (RecordBreedingResponse);
+  rpc GetBreedingHistory(GetBreedingHistoryRequest) returns (GetBreedingHistoryResponse);
+  rpc GetPregnantAnimals(GetPregnantAnimalsRequest) returns (GetPregnantAnimalsResponse);
+  
+  // Production tracking
+  rpc RecordProduction(RecordProductionRequest) returns (RecordProductionResponse);
+  rpc GetProductionHistory(GetProductionHistoryRequest) returns (GetProductionHistoryResponse);
+  rpc GetProductionSummary(GetProductionSummaryRequest) returns (GetProductionSummaryResponse);
+  
+  // Financial tracking
+  rpc RecordExpense(RecordExpenseRequest) returns (RecordExpenseResponse);
+  rpc RecordRevenue(RecordRevenueRequest) returns (RecordRevenueResponse);
+  rpc GetFinancialSummary(GetFinancialSummaryRequest) returns (GetFinancialSummaryResponse);
+  
+  // Analytics and reporting
+  rpc GetHerdAnalytics(GetHerdAnalyticsRequest) returns (GetHerdAnalyticsResponse);
+  rpc GetAnimalPerformance(GetAnimalPerformanceRequest) returns (GetAnimalPerformanceResponse);
+  rpc GetHealthTrends(GetHealthTrendsRequest) returns (GetHealthTrendsResponse);
+}
+
+// Animal management messages
+message CreateAnimalRequest {
+  agriculture.livestock.messages.Animal animal = 1;
+}
+
+message CreateAnimalResponse {
+  agriculture.livestock.messages.Animal animal = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetAnimalRequest {
+  string animal_id = 1;
+}
+
+message GetAnimalResponse {
+  agriculture.livestock.messages.Animal animal = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListAnimalsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string herd_id = 3;            // Filter by herd
+  string animal_type = 4;        // Filter by animal type
+  string health_status = 5;      // Filter by health status
+  string sex = 6;                // Filter by sex
+  bool is_breeding_stock = 7;    // Filter by breeding status
+  bool is_pregnant = 8;          // Filter by pregnancy status
+  string search_query = 9;       // Search in names and tags
+}
+
+message ListAnimalsResponse {
+  repeated agriculture.livestock.messages.Animal animals = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateAnimalRequest {
+  agriculture.livestock.messages.Animal animal = 1;
+  repeated string update_mask = 2; // Fields to update
+}
+
+message UpdateAnimalResponse {
+  agriculture.livestock.messages.Animal animal = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteAnimalRequest {
+  string animal_id = 1;
+}
+
+// Herd management messages
+message CreateHerdRequest {
+  agriculture.livestock.messages.Herd herd = 1;
+}
+
+message CreateHerdResponse {
+  agriculture.livestock.messages.Herd herd = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetHerdRequest {
+  string herd_id = 1;
+}
+
+message GetHerdResponse {
+  agriculture.livestock.messages.Herd herd = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListHerdsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string facility_id = 3;        // Filter by facility
+  string herd_type = 4;          // Filter by herd type
+  bool is_active = 5;            // Filter by active status
+  string search_query = 6;       // Search in names and descriptions
+}
+
+message ListHerdsResponse {
+  repeated agriculture.livestock.messages.Herd herds = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateHerdRequest {
+  agriculture.livestock.messages.Herd herd = 1;
+  repeated string update_mask = 2; // Fields to update
+}
+
+message UpdateHerdResponse {
+  agriculture.livestock.messages.Herd herd = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteHerdRequest {
+  string herd_id = 1;
+}
+
+// Animal-Herd relationship messages
+message AddAnimalToHerdRequest {
+  string animal_id = 1;
+  string herd_id = 2;
+}
+
+message AddAnimalToHerdResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message RemoveAnimalFromHerdRequest {
+  string animal_id = 1;
+  string herd_id = 2;
+}
+
+message RemoveAnimalFromHerdResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetAnimalsInHerdRequest {
+  string herd_id = 1;
+  bool include_inactive = 2;     // Include inactive animals
+}
+
+message GetAnimalsInHerdResponse {
+  string herd_id = 1;
+  repeated agriculture.livestock.messages.Animal animals = 2;
+  int32 total_count = 3;
+}
+
+// Health management messages
+message UpdateAnimalHealthRequest {
+  string animal_id = 1;
+  string health_status = 2;
+  double health_score = 3;
+  repeated string diseases = 4;
+  repeated string medications = 5;
+  string notes = 6;
+}
+
+message UpdateAnimalHealthResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetAnimalHealthHistoryRequest {
+  string animal_id = 1;
+  int32 days_back = 2;           // Number of days to look back
+}
+
+message GetAnimalHealthHistoryResponse {
+  string animal_id = 1;
+  repeated HealthRecord health_records = 2;
+}
+
+message HealthRecord {
+  string date = 1;
+  string health_status = 2;
+  double health_score = 3;
+  repeated string diseases = 4;
+  repeated string medications = 5;
+  string veterinarian = 6;
+  string notes = 7;
+}
+
+message ScheduleHealthCheckRequest {
+  string animal_id = 1;
+  string check_type = 2;         // Routine, vaccination, treatment, etc.
+  string scheduled_date = 3;
+  string veterinarian = 4;
+  string notes = 5;
+}
+
+message ScheduleHealthCheckResponse {
+  bool success = 1;
+  string message = 2;
+  string check_id = 3;
+}
+
+// Breeding management messages
+message RecordBreedingRequest {
+  string male_animal_id = 1;
+  string female_animal_id = 2;
+  string breeding_date = 3;
+  string breeding_method = 4;    // Natural, artificial insemination, etc.
+  string notes = 5;
+}
+
+message RecordBreedingResponse {
+  bool success = 1;
+  string message = 2;
+  string breeding_id = 3;
+}
+
+message GetBreedingHistoryRequest {
+  string animal_id = 1;
+  int32 years_back = 2;          // Number of years to look back
+}
+
+message GetBreedingHistoryResponse {
+  string animal_id = 1;
+  repeated BreedingRecord breeding_records = 2;
+}
+
+message BreedingRecord {
+  string breeding_id = 1;
+  string male_animal_id = 2;
+  string female_animal_id = 3;
+  string breeding_date = 4;
+  string breeding_method = 5;
+  bool successful = 6;
+  string offspring_id = 7;
+  string notes = 8;
+}
+
+message GetPregnantAnimalsRequest {
+  string herd_id = 1;            // Optional herd filter
+  string expected_delivery_start = 2; // Filter by expected delivery date range
+  string expected_delivery_end = 3;
+}
+
+message GetPregnantAnimalsResponse {
+  repeated agriculture.livestock.messages.Animal pregnant_animals = 1;
+  int32 total_count = 2;
+}
+
+// Production tracking messages
+message RecordProductionRequest {
+  string animal_id = 1;
+  string production_type = 2;    // milk, eggs, wool, etc.
+  double quantity = 3;
+  string unit = 4;
+  string date = 5;
+  string quality_grade = 6;
+  string notes = 7;
+}
+
+message RecordProductionResponse {
+  bool success = 1;
+  string message = 2;
+  string production_id = 3;
+}
+
+message GetProductionHistoryRequest {
+  string animal_id = 1;
+  string production_type = 2;    // Optional filter by type
+  int32 days_back = 3;           // Number of days to look back
+}
+
+message GetProductionHistoryResponse {
+  string animal_id = 1;
+  repeated ProductionRecord production_records = 2;
+}
+
+message ProductionRecord {
+  string production_id = 1;
+  string production_type = 2;
+  double quantity = 3;
+  string unit = 4;
+  string date = 5;
+  string quality_grade = 6;
+  string notes = 7;
+}
+
+message GetProductionSummaryRequest {
+  string animal_id = 1;
+  string period = 2;             // daily, weekly, monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetProductionSummaryResponse {
+  string animal_id = 1;
+  string period = 2;
+  map<string, double> production_totals = 3; // Type -> total quantity
+  double average_daily_production = 4;
+  double peak_production = 5;
+  string peak_date = 6;
+}
+
+// Financial tracking messages
+message RecordExpenseRequest {
+  string animal_id = 1;
+  string expense_type = 2;       // feed, veterinary, medication, etc.
+  double amount = 3;
+  string currency = 4;
+  string date = 5;
+  string description = 6;
+  string receipt_number = 7;
+}
+
+message RecordExpenseResponse {
+  bool success = 1;
+  string message = 2;
+  string expense_id = 3;
+}
+
+message RecordRevenueRequest {
+  string animal_id = 1;
+  string revenue_type = 2;       // sale, milk, eggs, etc.
+  double amount = 3;
+  string currency = 4;
+  string date = 5;
+  string description = 6;
+  string customer = 7;
+}
+
+message RecordRevenueResponse {
+  bool success = 1;
+  string message = 2;
+  string revenue_id = 3;
+}
+
+message GetFinancialSummaryRequest {
+  string animal_id = 1;
+  string period = 2;             // monthly, yearly, lifetime
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetFinancialSummaryResponse {
+  string animal_id = 1;
+  string period = 2;
+  double total_expenses = 3;
+  double total_revenue = 4;
+  double net_profit = 5;
+  map<string, double> expenses_by_type = 6;
+  map<string, double> revenue_by_type = 7;
+}
+
+// Analytics and reporting messages
+message GetHerdAnalyticsRequest {
+  string herd_id = 1;
+  string period = 2;             // monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetHerdAnalyticsResponse {
+  string herd_id = 1;
+  string period = 2;
+  double average_health_score = 3;
+  double mortality_rate = 4;
+  double birth_rate = 5;
+  double growth_rate = 6;
+  double feed_efficiency = 7;
+  double total_production = 8;
+  double total_revenue = 9;
+  double total_costs = 10;
+  double net_profit = 11;
+}
+
+message GetAnimalPerformanceRequest {
+  string animal_id = 1;
+  string metric = 2;             // growth, production, health, etc.
+  string period = 3;             // monthly, yearly, lifetime
+}
+
+message GetAnimalPerformanceResponse {
+  string animal_id = 1;
+  string metric = 2;
+  string period = 3;
+  double current_value = 4;
+  double average_value = 5;
+  double trend = 6;              // Positive/negative trend
+  string performance_grade = 7;  // Excellent, Good, Fair, Poor
+  repeated string recommendations = 8;
+}
+
+message GetHealthTrendsRequest {
+  string herd_id = 1;
+  int32 days_back = 2;
+}
+
+message GetHealthTrendsResponse {
+  string herd_id = 1;
+  repeated HealthTrendPoint trend_points = 2;
+  string overall_trend = 3;      // improving, stable, declining
+  repeated string health_alerts = 4;
+}
+
+message HealthTrendPoint {
+  string date = 1;
+  double average_health_score = 2;
+  int32 sick_count = 3;
+  int32 healthy_count = 4;
+  repeated string common_issues = 5;
+}

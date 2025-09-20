@@ -1,0 +1,322 @@
+syntax = "proto3";
+
+package energy.generation.messages;
+
+import "energy/generation/enums/plant_type.proto";
+import "energy/generation/enums/generation_status.proto";
+import "energy/generation/enums/fuel_type.proto";
+
+// Power generation plant
+message Plant {
+  // Unique identifier for the plant
+  string id = 1;
+  
+  // Plant name
+  string name = 2;
+  
+  // Plant type
+  energy.generation.enums.PlantType type = 3;
+  
+  // Plant status
+  energy.generation.enums.GenerationStatus status = 4;
+  
+  // Plant owner
+  string owner = 5;
+  
+  // Plant operator
+  string operator = 6;
+  
+  // Plant location
+  PlantLocation location = 7;
+  
+  // Plant specifications
+  PlantSpecifications specifications = 8;
+  
+  // Plant performance
+  PlantPerformance performance = 9;
+  
+  // Plant economics
+  PlantEconomics economics = 10;
+  
+  // Plant environmental data
+  PlantEnvironmental environmental = 11;
+  
+  // Plant regulatory information
+  PlantRegulatory regulatory = 12;
+  
+  // Plant maintenance
+  PlantMaintenance maintenance = 13;
+  
+  // Plant units
+  repeated string unit_ids = 14;
+  
+  // Additional metadata
+  map<string, string> metadata = 15;
+  
+  // Timestamp when this plant was created (unix milliseconds)
+  int64 created_at = 16;
+  
+  // Timestamp when this plant was last updated (unix milliseconds)
+  int64 updated_at = 17;
+}
+
+// Plant location information
+message PlantLocation {
+  // Street address
+  string street_address = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state_province = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // GPS coordinates (latitude)
+  double latitude = 6;
+  
+  // GPS coordinates (longitude)
+  double longitude = 7;
+  
+  // Elevation in meters
+  double elevation = 8;
+  
+  // Time zone
+  string time_zone = 9;
+  
+  // Additional location details
+  string additional_details = 10;
+}
+
+// Plant technical specifications
+message PlantSpecifications {
+  // Installed capacity in MW
+  double installed_capacity = 1;
+  
+  // Net capacity in MW
+  double net_capacity = 2;
+  
+  // Gross capacity in MW
+  double gross_capacity = 3;
+  
+  // Rated voltage in kV
+  double rated_voltage = 4;
+  
+  // Rated frequency in Hz
+  double rated_frequency = 5;
+  
+  // Power factor
+  double power_factor = 6;
+  
+  // Efficiency percentage
+  double efficiency = 7;
+  
+  // Heat rate in BTU/kWh
+  double heat_rate = 8;
+  
+  // Fuel types
+  repeated energy.generation.enums.FuelType fuel_types = 9;
+  
+  // Cooling system type
+  string cooling_system_type = 10;
+  
+  // Water consumption in gallons per hour
+  double water_consumption = 11;
+  
+  // Emissions control systems
+  repeated string emissions_control_systems = 12;
+  
+  // Environmental permits
+  repeated string environmental_permits = 13;
+  
+  // Certifications
+  repeated string certifications = 14;
+}
+
+// Plant performance metrics
+message PlantPerformance {
+  // Availability percentage
+  double availability = 1;
+  
+  // Capacity factor
+  double capacity_factor = 2;
+  
+  // Load factor
+  double load_factor = 3;
+  
+  // Forced outage rate
+  double forced_outage_rate = 4;
+  
+  // Planned outage rate
+  double planned_outage_rate = 5;
+  
+  // Mean time between failures in hours
+  double mtbf = 6;
+  
+  // Mean time to repair in hours
+  double mttr = 7;
+  
+  // Energy production in MWh
+  double energy_production = 8;
+  
+  // Peak demand in MW
+  double peak_demand = 9;
+  
+  // Average demand in MW
+  double average_demand = 10;
+  
+  // Performance rating
+  string performance_rating = 11;
+}
+
+// Plant economic information
+message PlantEconomics {
+  // Capital cost in USD
+  double capital_cost = 1;
+  
+  // Operating cost per MWh in USD
+  double operating_cost_per_mwh = 2;
+  
+  // Fuel cost per MWh in USD
+  double fuel_cost_per_mwh = 3;
+  
+  // Maintenance cost per MWh in USD
+  double maintenance_cost_per_mwh = 4;
+  
+  // Revenue per MWh in USD
+  double revenue_per_mwh = 5;
+  
+  // Net profit per MWh in USD
+  double net_profit_per_mwh = 6;
+  
+  // Levelized cost of electricity in USD/MWh
+  double lcoe = 7;
+  
+  // Payback period in years
+  double payback_period = 8;
+  
+  // Internal rate of return percentage
+  double irr = 9;
+  
+  // Net present value in USD
+  double npv = 10;
+}
+
+// Plant environmental information
+message PlantEnvironmental {
+  // CO2 emissions in tons per MWh
+  double co2_emissions = 1;
+  
+  // NOx emissions in lbs per MWh
+  double nox_emissions = 2;
+  
+  // SO2 emissions in lbs per MWh
+  double so2_emissions = 3;
+  
+  // Particulate matter emissions in lbs per MWh
+  double pm_emissions = 4;
+  
+  // Mercury emissions in lbs per MWh
+  double mercury_emissions = 5;
+  
+  // Water discharge in gallons per hour
+  double water_discharge = 6;
+  
+  // Thermal discharge in BTU per hour
+  double thermal_discharge = 7;
+  
+  // Environmental impact score
+  double environmental_impact_score = 8;
+  
+  // Carbon footprint in tons CO2 equivalent
+  double carbon_footprint = 9;
+}
+
+// Plant regulatory information
+message PlantRegulatory {
+  // Operating license
+  string operating_license = 1;
+  
+  // Environmental permits
+  repeated string environmental_permits = 2;
+  
+  // Safety certifications
+  repeated string safety_certifications = 3;
+  
+  // Quality certifications
+  repeated string quality_certifications = 4;
+  
+  // Regulatory compliance status
+  string compliance_status = 5;
+  
+  // Regulatory body
+  string regulatory_body = 6;
+  
+  // License expiration date (unix milliseconds)
+  int64 license_expiration_date = 7;
+  
+  // Permit expiration dates
+  map<string, int64> permit_expiration_dates = 8;
+  
+  // Regulatory fees per year in USD
+  double regulatory_fees_per_year = 9;
+}
+
+// Plant maintenance information
+message PlantMaintenance {
+  // Last major maintenance date (unix milliseconds)
+  int64 last_major_maintenance = 1;
+  
+  // Next major maintenance date (unix milliseconds)
+  int64 next_major_maintenance = 2;
+  
+  // Maintenance interval in days
+  int32 maintenance_interval_days = 3;
+  
+  // Maintenance type
+  string maintenance_type = 4;
+  
+  // Maintenance status
+  string maintenance_status = 5;
+  
+  // Maintenance team
+  string maintenance_team = 6;
+  
+  // Maintenance cost per year in USD
+  double maintenance_cost_per_year = 7;
+  
+  // Maintenance history
+  repeated MaintenanceRecord maintenance_history = 8;
+}
+
+// Maintenance record
+message MaintenanceRecord {
+  // Maintenance date (unix milliseconds)
+  int64 maintenance_date = 1;
+  
+  // Maintenance type
+  string maintenance_type = 2;
+  
+  // Maintenance description
+  string description = 3;
+  
+  // Maintenance performed by
+  string performed_by = 4;
+  
+  // Maintenance duration in hours
+  double duration_hours = 5;
+  
+  // Maintenance cost
+  double cost = 6;
+  
+  // Maintenance results
+  string results = 7;
+  
+  // Maintenance recommendations
+  repeated string recommendations = 8;
+}

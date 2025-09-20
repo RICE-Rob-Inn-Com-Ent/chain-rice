@@ -1,0 +1,344 @@
+syntax = "proto3";
+
+package finance.payments.services;
+
+import "finance/payments/messages/payment.proto";
+import "finance/payments/messages/refund.proto";
+import "finance/payments/messages/payout.proto";
+
+// Payments service for payment processing
+service PaymentsService {
+  // Payment management
+  rpc ProcessPayment(finance.payments.messages.CreatePaymentRequest) returns (finance.payments.messages.CreatePaymentResponse);
+  rpc GetPayment(finance.payments.messages.GetPaymentRequest) returns (finance.payments.messages.GetPaymentResponse);
+  rpc UpdatePayment(finance.payments.messages.UpdatePaymentRequest) returns (finance.payments.messages.UpdatePaymentResponse);
+  rpc ListPayments(finance.payments.messages.ListPaymentsRequest) returns (finance.payments.messages.ListPaymentsResponse);
+  rpc CancelPayment(finance.payments.messages.CancelPaymentRequest) returns (finance.payments.messages.CancelPaymentResponse);
+  
+  // Payment processing
+  rpc AuthorizePayment(finance.payments.messages.AuthorizePaymentRequest) returns (finance.payments.messages.AuthorizePaymentResponse);
+  rpc CapturePayment(finance.payments.messages.CapturePaymentRequest) returns (finance.payments.messages.CapturePaymentResponse);
+  rpc VoidPayment(finance.payments.messages.VoidPaymentRequest) returns (finance.payments.messages.VoidPaymentResponse);
+  rpc RefundPayment(finance.payments.messages.CreateRefundRequest) returns (finance.payments.messages.CreateRefundResponse);
+  
+  // Refund management
+  rpc GetRefund(finance.payments.messages.GetRefundRequest) returns (finance.payments.messages.GetRefundResponse);
+  rpc UpdateRefund(finance.payments.messages.UpdateRefundRequest) returns (finance.payments.messages.UpdateRefundResponse);
+  rpc ListRefunds(finance.payments.messages.ListRefundsRequest) returns (finance.payments.messages.ListRefundsResponse);
+  rpc CancelRefund(finance.payments.messages.CancelRefundRequest) returns (finance.payments.messages.CancelRefundResponse);
+  
+  // Payout management
+  rpc CreatePayout(finance.payments.messages.CreatePayoutRequest) returns (finance.payments.messages.CreatePayoutResponse);
+  rpc GetPayout(finance.payments.messages.GetPayoutRequest) returns (finance.payments.messages.GetPayoutResponse);
+  rpc UpdatePayout(finance.payments.messages.UpdatePayoutRequest) returns (finance.payments.messages.UpdatePayoutResponse);
+  rpc ListPayouts(finance.payments.messages.ListPayoutsRequest) returns (finance.payments.messages.ListPayoutsResponse);
+  rpc CancelPayout(finance.payments.messages.CancelPayoutRequest) returns (finance.payments.messages.CancelPayoutResponse);
+  
+  // Payment reporting
+  rpc GetPaymentSummary(finance.payments.messages.GetPaymentSummaryRequest) returns (finance.payments.messages.GetPaymentSummaryResponse);
+  rpc GetPaymentAnalytics(finance.payments.messages.GetPaymentAnalyticsRequest) returns (finance.payments.messages.GetPaymentAnalyticsResponse);
+  rpc GeneratePaymentReport(finance.payments.messages.GeneratePaymentReportRequest) returns (finance.payments.messages.GeneratePaymentReportResponse);
+  
+  // Payment reconciliation
+  rpc ReconcilePayments(finance.payments.messages.ReconcilePaymentsRequest) returns (finance.payments.messages.ReconcilePaymentsResponse);
+  rpc GetReconciliationReport(finance.payments.messages.GetReconciliationReportRequest) returns (finance.payments.messages.GetReconciliationReportResponse);
+}
+
+// Additional request/response messages for payments service
+
+// Get payment request
+message GetPaymentRequest {
+  string payment_id = 1;
+}
+
+// Get payment response
+message GetPaymentResponse {
+  finance.payments.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Cancel payment request
+message CancelPaymentRequest {
+  string payment_id = 1;
+  string cancellation_reason = 2;
+  string notes = 3;
+}
+
+// Cancel payment response
+message CancelPaymentResponse {
+  finance.payments.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Authorize payment request
+message AuthorizePaymentRequest {
+  string payment_id = 1;
+  double amount = 2;
+  string currency = 3;
+  string payment_method = 4;
+  map<string, string> payment_details = 5;
+}
+
+// Authorize payment response
+message AuthorizePaymentResponse {
+  finance.payments.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+  string authorization_code = 4;
+}
+
+// Capture payment request
+message CapturePaymentRequest {
+  string payment_id = 1;
+  double amount = 2;
+  string currency = 3;
+  string notes = 4;
+}
+
+// Capture payment response
+message CapturePaymentResponse {
+  finance.payments.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+  string capture_id = 4;
+}
+
+// Void payment request
+message VoidPaymentRequest {
+  string payment_id = 1;
+  string void_reason = 2;
+  string notes = 3;
+}
+
+// Void payment response
+message VoidPaymentResponse {
+  finance.payments.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+  string void_id = 4;
+}
+
+// Get refund request
+message GetRefundRequest {
+  string refund_id = 1;
+}
+
+// Get refund response
+message GetRefundResponse {
+  finance.payments.messages.Refund refund = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Cancel refund request
+message CancelRefundRequest {
+  string refund_id = 1;
+  string cancellation_reason = 2;
+  string notes = 3;
+}
+
+// Cancel refund response
+message CancelRefundResponse {
+  finance.payments.messages.Refund refund = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Get payout request
+message GetPayoutRequest {
+  string payout_id = 1;
+}
+
+// Get payout response
+message GetPayoutResponse {
+  finance.payments.messages.Payout payout = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Cancel payout request
+message CancelPayoutRequest {
+  string payout_id = 1;
+  string cancellation_reason = 2;
+  string notes = 3;
+}
+
+// Cancel payout response
+message CancelPayoutResponse {
+  finance.payments.messages.Payout payout = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Payment summary
+message PaymentSummary {
+  string summary_id = 1;
+  int64 summary_date = 2;
+  int32 total_payments = 3;
+  double total_amount = 4;
+  string currency = 5;
+  int32 successful_payments = 6;
+  double successful_amount = 7;
+  int32 failed_payments = 8;
+  double failed_amount = 9;
+  int32 pending_payments = 10;
+  double pending_amount = 11;
+  int32 refunded_payments = 12;
+  double refunded_amount = 13;
+  map<string, int32> payments_by_method = 14;
+  map<string, double> amounts_by_method = 15;
+  map<string, int32> payments_by_status = 16;
+  map<string, double> amounts_by_status = 17;
+}
+
+// Get payment summary request
+message GetPaymentSummaryRequest {
+  int64 start_date = 1;
+  int64 end_date = 2;
+  string currency = 3;
+  string customer_id = 4;
+  string payment_method = 5;
+}
+
+// Get payment summary response
+message GetPaymentSummaryResponse {
+  PaymentSummary summary = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Payment analytics
+message PaymentAnalytics {
+  string analytics_id = 1;
+  int64 analytics_date = 2;
+  double average_payment_amount = 3;
+  double median_payment_amount = 4;
+  double success_rate = 5;
+  double failure_rate = 6;
+  double refund_rate = 7;
+  map<string, double> trends = 8;
+  repeated PaymentAnalyticsItem top_payment_methods = 9;
+  repeated PaymentAnalyticsItem top_customers = 10;
+}
+
+// Payment analytics item
+message PaymentAnalyticsItem {
+  string item_id = 1;
+  string item_name = 2;
+  double amount = 3;
+  int32 count = 4;
+  double percentage = 5;
+}
+
+// Get payment analytics request
+message GetPaymentAnalyticsRequest {
+  int64 start_date = 1;
+  int64 end_date = 2;
+  string currency = 3;
+  string analytics_type = 4;
+}
+
+// Get payment analytics response
+message GetPaymentAnalyticsResponse {
+  PaymentAnalytics analytics = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Payment report
+message PaymentReport {
+  string report_id = 1;
+  string report_type = 2;
+  int64 report_date = 3;
+  string report_format = 4;
+  string report_url = 5;
+  map<string, string> report_parameters = 6;
+  string report_status = 7;
+  int64 created_at = 8;
+  string created_by = 9;
+}
+
+// Generate payment report request
+message GeneratePaymentReportRequest {
+  string report_type = 1;
+  int64 start_date = 2;
+  int64 end_date = 3;
+  string report_format = 4;
+  string customer_id = 5;
+  string currency = 6;
+  string payment_method = 7;
+  map<string, string> parameters = 8;
+}
+
+// Generate payment report response
+message GeneratePaymentReportResponse {
+  PaymentReport report = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Reconcile payments request
+message ReconcilePaymentsRequest {
+  int64 reconciliation_date = 1;
+  string payment_gateway = 2;
+  string currency = 3;
+  map<string, string> reconciliation_data = 4;
+}
+
+// Reconcile payments response
+message ReconcilePaymentsResponse {
+  string reconciliation_id = 1;
+  bool success = 2;
+  string error_message = 3;
+  int32 reconciled_count = 4;
+  int32 discrepancy_count = 5;
+}
+
+// Reconciliation report
+message ReconciliationReport {
+  string report_id = 1;
+  int64 report_date = 2;
+  string payment_gateway = 3;
+  string currency = 4;
+  int32 total_transactions = 5;
+  int32 reconciled_transactions = 6;
+  int32 unreconciled_transactions = 7;
+  int32 discrepancy_transactions = 8;
+  double total_amount = 9;
+  double reconciled_amount = 10;
+  double unreconciled_amount = 11;
+  double discrepancy_amount = 12;
+  repeated ReconciliationDiscrepancy discrepancies = 13;
+  int64 created_at = 14;
+  string created_by = 15;
+}
+
+// Reconciliation discrepancy
+message ReconciliationDiscrepancy {
+  string discrepancy_id = 1;
+  string transaction_id = 2;
+  string discrepancy_type = 3;
+  double expected_amount = 4;
+  double actual_amount = 5;
+  double difference = 6;
+  string description = 7;
+  string status = 8;
+}
+
+// Get reconciliation report request
+message GetReconciliationReportRequest {
+  string reconciliation_id = 1;
+  int64 start_date = 2;
+  int64 end_date = 3;
+  string payment_gateway = 4;
+  string currency = 5;
+}
+
+// Get reconciliation report response
+message GetReconciliationReportResponse {
+  ReconciliationReport report = 1;
+  bool success = 2;
+  string error_message = 3;
+}

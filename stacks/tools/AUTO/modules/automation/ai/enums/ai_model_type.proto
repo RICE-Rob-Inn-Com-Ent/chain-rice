@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package automation.ai.enums;
+
+// AI Model Type enumeration
+// Defines the different types of AI models supported in the automation system
+enum AIModelType {
+  // Unspecified model type
+  AI_MODEL_TYPE_UNSPECIFIED = 0;
+  
+  // Machine Learning Models
+  AI_MODEL_TYPE_CLASSIFICATION = 1;      // Classification models for categorizing data
+  AI_MODEL_TYPE_REGRESSION = 2;          // Regression models for predicting continuous values
+  AI_MODEL_TYPE_CLUSTERING = 3;          // Clustering models for grouping similar data
+  AI_MODEL_TYPE_ANOMALY_DETECTION = 4;   // Anomaly detection models for identifying outliers
+  
+  // Deep Learning Models
+  AI_MODEL_TYPE_NEURAL_NETWORK = 5;      // Basic neural network models
+  AI_MODEL_TYPE_CONVOLUTIONAL_NN = 6;    // CNN models for image processing
+  AI_MODEL_TYPE_RECURRENT_NN = 7;        // RNN models for sequential data
+  AI_MODEL_TYPE_TRANSFORMER = 8;         // Transformer models for NLP and other tasks
+  AI_MODEL_TYPE_GAN = 9;                 // Generative Adversarial Networks
+  
+  // Natural Language Processing Models
+  AI_MODEL_TYPE_TEXT_CLASSIFICATION = 10; // Text classification models
+  AI_MODEL_TYPE_NAMED_ENTITY_RECOGNITION = 11; // NER models
+  AI_MODEL_TYPE_SENTIMENT_ANALYSIS = 12;  // Sentiment analysis models
+  AI_MODEL_TYPE_LANGUAGE_MODEL = 13;     // Large language models (LLMs)
+  AI_MODEL_TYPE_TRANSLATION = 14;        // Translation models
+  
+  // Computer Vision Models
+  AI_MODEL_TYPE_OBJECT_DETECTION = 15;   // Object detection models
+  AI_MODEL_TYPE_IMAGE_SEGMENTATION = 16; // Image segmentation models
+  AI_MODEL_TYPE_FACE_RECOGNITION = 17;   // Face recognition models
+  AI_MODEL_TYPE_OPTICAL_CHARACTER_RECOGNITION = 18; // OCR models
+  
+  // Time Series Models
+  AI_MODEL_TYPE_TIME_SERIES_FORECASTING = 19; // Time series forecasting models
+  AI_MODEL_TYPE_SEASONAL_DECOMPOSITION = 20;  // Seasonal decomposition models
+  
+  // Reinforcement Learning Models
+  AI_MODEL_TYPE_Q_LEARNING = 21;         // Q-learning models
+  AI_MODEL_TYPE_POLICY_GRADIENT = 22;    // Policy gradient models
+  AI_MODEL_TYPE_ACTOR_CRITIC = 23;       // Actor-critic models
+  
+  // Ensemble Models
+  AI_MODEL_TYPE_RANDOM_FOREST = 24;      // Random forest ensemble
+  AI_MODEL_TYPE_GRADIENT_BOOSTING = 25;  // Gradient boosting ensemble
+  AI_MODEL_TYPE_VOTING_CLASSIFIER = 26;  // Voting classifier ensemble
+  
+  // Custom Models
+  AI_MODEL_TYPE_CUSTOM = 27;             // Custom user-defined models
+  AI_MODEL_TYPE_HYBRID = 28;             // Hybrid models combining multiple approaches
+}

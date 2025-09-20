@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package commerce.products.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/products/enums";
+
+// Product status enumeration
+enum ProductStatus {
+  // Unknown or unspecified product status
+  PRODUCT_STATUS_UNSPECIFIED = 0;
+  
+  // Product is being drafted
+  PRODUCT_STATUS_DRAFT = 1;
+  
+  // Product is pending approval
+  PRODUCT_STATUS_PENDING = 2;
+  
+  // Product is active and available for sale
+  PRODUCT_STATUS_ACTIVE = 3;
+  
+  // Product is inactive (temporarily unavailable)
+  PRODUCT_STATUS_INACTIVE = 4;
+  
+  // Product is discontinued
+  PRODUCT_STATUS_DISCONTINUED = 5;
+  
+  // Product is out of stock
+  PRODUCT_STATUS_OUT_OF_STOCK = 6;
+  
+  // Product is being discontinued
+  PRODUCT_STATUS_DISCONTINUING = 7;
+  
+  // Product is under review
+  PRODUCT_STATUS_UNDER_REVIEW = 8;
+  
+  // Product has been rejected
+  PRODUCT_STATUS_REJECTED = 9;
+  
+  // Product is archived
+  PRODUCT_STATUS_ARCHIVED = 10;
+  
+  // Product is scheduled for future release
+  PRODUCT_STATUS_SCHEDULED = 11;
+  
+  // Product is being updated
+  PRODUCT_STATUS_UPDATING = 12;
+  
+  // Product is being tested
+  PRODUCT_STATUS_TESTING = 13;
+  
+  // Product is in pre-order phase
+  PRODUCT_STATUS_PRE_ORDER = 14;
+  
+  // Product is on backorder
+  PRODUCT_STATUS_BACKORDER = 15;
+  
+  // Product is being recalled
+  PRODUCT_STATUS_RECALLED = 16;
+  
+  // Product is being phased out
+  PRODUCT_STATUS_PHASING_OUT = 17;
+  
+  // Product is being restocked
+  PRODUCT_STATUS_RESTOCKING = 18;
+  
+  // Product is being quality checked
+  PRODUCT_STATUS_QUALITY_CHECK = 19;
+  
+  // Product is being manufactured
+  PRODUCT_STATUS_MANUFACTURING = 20;
+}

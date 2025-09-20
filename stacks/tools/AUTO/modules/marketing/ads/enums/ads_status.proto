@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package marketing.ads.enums;
+
+// Enumeration for advertisement status
+enum AdsStatus {
+  // Default status - not specified
+  ADS_STATUS_UNSPECIFIED = 0;
+  
+  // Advertisement is being drafted
+  ADS_STATUS_DRAFT = 1;
+  
+  // Advertisement is pending approval
+  ADS_STATUS_PENDING = 2;
+  
+  // Advertisement is approved and active
+  ADS_STATUS_ACTIVE = 3;
+  
+  // Advertisement is paused
+  ADS_STATUS_PAUSED = 4;
+  
+  // Advertisement is rejected
+  ADS_STATUS_REJECTED = 5;
+  
+  // Advertisement is completed
+  ADS_STATUS_COMPLETED = 6;
+  
+  // Advertisement is archived
+  ADS_STATUS_ARCHIVED = 7;
+}

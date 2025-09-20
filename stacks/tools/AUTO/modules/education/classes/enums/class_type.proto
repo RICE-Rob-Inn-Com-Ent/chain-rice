@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+// Class Type definitions for the Education domain.
+// Represents the pedagogical format or delivery mode of a class.
+package education.classes.enums;
+
+option go_package = "github.com/rice-dev/education/classes/enums;classesenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.classes.enums";
+
+// Enum of class types covering common instructional formats.
+enum ClassType {
+  // Unspecified or unknown class type.
+  CLASS_TYPE_UNSPECIFIED = 0;
+
+  // Traditional lecture-based instruction.
+  CLASS_TYPE_LECTURE = 1;
+
+  // Discussion-focused seminar.
+  CLASS_TYPE_SEMINAR = 2;
+
+  // Hands-on laboratory session.
+  CLASS_TYPE_LAB = 3;
+
+  // Interactive workshop format.
+  CLASS_TYPE_WORKSHOP = 4;
+
+  // Guided tutorial or recitation session.
+  CLASS_TYPE_TUTORIAL = 5;
+
+  // Practical/Studio/Practicum session.
+  CLASS_TYPE_PRACTICAL = 6;
+
+  // Fully online/virtual class.
+  CLASS_TYPE_ONLINE = 7;
+
+  // Hybrid (mix of in-person and online) class.
+  CLASS_TYPE_HYBRID = 8;
+
+  // Off-campus field activity or trip.
+  CLASS_TYPE_FIELD_TRIP = 9;
+
+  // Independent study or directed reading.
+  CLASS_TYPE_INDEPENDENT_STUDY = 10;
+}
+
+

@@ -11,17 +11,49 @@ rice-dev/
 ├── Makefile                    # Root orchestration
 ├── README.md                   # Main documentation
 ├── ARCHITECTURE.md             # This file
-├── LICENSE                     # MIT License
-├── rice-dev.code-workspace     # VS Code workspace configuration
-├── .gitignore                  # Git ignore rules
-├── pkg/                        # Go module cache
-│   └── mod/                    # Go dependencies cache
+├── LICENSE.md                  # Mozilla Public License 2.0
+├── CODE_OF_CONDUCT.md          # Community guidelines
+├── CONTRIBUTING.md             # Contribution guidelines
+├── rice-dev.code-workspace     # Cursor workspace configuration
 ├── stacks/                     # 🧱 Technology Stacks
-│   ├── frameworks/             # Frontend frameworks
-│   ├── langs/                  # Programming languages
-│   ├── tools/                  # Development tools
-│   ├── unity/                  # Game development
-│   └── pkg/                    # Stack-level packages
+│   ├── backend/                # Backend language stacks
+│   │   ├── golang/             # Go development stack
+│   │   ├── python/             # Python development stack
+│   │   ├── rust/               # Rust development stack
+│   │   ├── java/               # Java development stack
+│   │   ├── csharp/             # C# .NET stack
+│   │   ├── clojure/            # Clojure functional programming
+│   │   ├── elixir/             # Elixir/Phoenix stack
+│   │   ├── erlang/             # Erlang/OTP stack
+│   │   ├── fsharp/             # F# functional programming
+│   │   ├── groovy/             # Groovy/Gradle stack
+│   │   ├── php/                # PHP web development
+│   │   └── scala/              # Scala JVM language
+│   ├── frontend/               # Frontend framework stacks
+│   │   ├── typescript/         # TypeScript frameworks
+│   │   │   ├── next/           # Next.js React framework
+│   │   │   ├── nuxt/           # Nuxt.js Vue framework
+│   │   │   └── angular/        # Angular framework
+│   │   ├── dart/               # Flutter/Dart mobile stack
+│   │   ├── swift/              # Swift/iOS development
+│   │   ├── kotlin/             # Kotlin/Android development
+│   │   └── unity/              # Unity game development
+│   └── tools/                  # Development tools
+│       ├── docker/             # Containerization
+│       ├── terraform/           # Infrastructure as Code
+│       ├── ansible/            # Configuration management
+│       ├── bash/                # Shell scripting
+│       ├── makefile/            # Build automation
+│       ├── nix/                 # Package management
+│       ├── rust/                # Rust tools
+│       ├── cplusplus/           # C++ tools
+│       ├── haskell/             # Haskell tools
+│       ├── julia/               # Julia tools
+│       ├── ocaml/               # OCaml tools
+│       ├── octave/              # Octave tools
+│       ├── proto/               # Protocol Buffers
+│       ├── solidity/            # Solidity smart contracts
+│       └── sql/                 # SQL database tools
 └── apps/                       # 🚀 Complete Applications
     ├── chain-rice/             # Blockchain accounting system
     └── meowtopia/              # Cat cafe management system
@@ -41,114 +73,156 @@ rice-dev/
 
 ### Stack Categories
 
-#### 🏗️ Frameworks (`stacks/frameworks/`)
+#### 🗣️ Backend Languages (`stacks/backend/`)
 
-Frontend framework implementations and templates:
-
-```text
-frameworks/
-├── angular/                    # Angular framework stack
-├── flutter/                    # Flutter mobile framework
-├── next/                       # Next.js React framework
-│   ├── apis/                   # API layer examples
-│   ├── react/                  # React components
-│   ├── services/               # Service layer
-│   ├── ui/                     # UI components
-│   ├── utils/                  # Utility functions
-│   ├── web/                    # Web-specific implementations
-│   ├── package.json            # Dependencies
-│   ├── vite.config.ts          # Build configuration
-│   └── tsconfig.json           # TypeScript configuration
-├── vue/                        # Vue.js framework stack
-├── eslint.config.js            # Shared linting configuration
-├── tailwind.config.js          # Shared styling configuration
-└── tsconfig.json               # Shared TypeScript configuration
-```
-
-**Purpose**: Provides ready-to-use frontend framework setups with modern tooling, best practices, and example implementations.
-
-#### 🗣️ Languages (`stacks/langs/`)
-
-Programming language stacks with examples and tools:
+Backend programming language stacks with examples and tools:
 
 ```text
-langs/
-├── c#/                         # C# .NET stack
-├── c++/                        # C++ development stack
-├── clojure/                    # Clojure functional programming
-├── dart/                       # Dart language stack
-├── elixir/                     # Elixir/Phoenix stack
-├── erlang/                     # Erlang/OTP stack
-├── f#/                         # F# functional programming
-├── go/                         # Go language stack
+backend/
+├── golang/                     # Go language stack
 │   ├── modules/                # Go modules examples
 │   ├── shared/                 # Shared Go packages
+│   ├── tax-api/                # Tax calculation API
 │   ├── tests/                  # Testing examples
 │   ├── go.mod                  # Module definition
 │   └── Makefile                # Go-specific commands
-├── groovy/                     # Groovy/Gradle stack
-├── haskell/                    # Haskell functional programming
-├── java/                       # Java development stack
-├── julia/                      # Julia scientific computing
-├── kotlin/                     # Kotlin development stack
-├── ocaml/                      # OCaml functional programming
-├── octave/                     # Octave/MATLAB alternative
-├── php/                        # PHP web development
-├── proto/                      # Protocol Buffers
-│   ├── enums/                  # Enum definitions
-│   ├── messages/               # Message definitions
-│   ├── services/               # Service definitions
-│   └── packages/               # Package configurations
 ├── python/                     # Python development stack
+│   ├── api/                    # API examples
+│   ├── auth/                   # Authentication modules
+│   ├── models/                 # Data models
+│   ├── services/               # Business logic
+│   ├── tests/                  # Test suites
+│   ├── pyproject.toml          # Python dependencies
+│   └── Dockerfile              # Container configuration
 ├── rust/                       # Rust systems programming
-├── scala/                      # Scala JVM language
-├── solidity/                   # Solidity smart contracts
-├── sql/                        # SQL database stack
-└── swift/                      # Swift iOS/macOS development
+├── java/                       # Java development stack
+├── csharp/                     # C# .NET stack
+├── clojure/                    # Clojure functional programming
+├── elixir/                     # Elixir/Phoenix stack
+├── erlang/                     # Erlang/OTP stack
+├── fsharp/                     # F# functional programming
+├── groovy/                     # Groovy/Gradle stack
+├── php/                        # PHP web development
+└── scala/                      # Scala JVM language
 ```
 
 **Purpose**: Provides language-specific templates, examples, and development environments for rapid prototyping and learning.
 
-#### 🛠️ Tools (`stacks/tools/`)
+#### 🏗️ Frontend Frameworks (`stacks/frontend/`)
+
+Frontend framework implementations and templates:
+
+```text
+frontend/
+├── typescript/                 # TypeScript frameworks
+│   ├── next/                   # Next.js React framework
+│   │   ├── src/                # Source code
+│   │   ├── public/             # Static assets
+│   │   ├── package.json        # Dependencies
+│   │   ├── next.config.js      # Next.js configuration
+│   │   └── tsconfig.json       # TypeScript configuration
+│   ├── nuxt/                   # Nuxt.js Vue framework
+│   │   ├── components/         # Vue components
+│   │   ├── pages/              # Page components
+│   │   ├── nuxt.config.ts      # Nuxt configuration
+│   │   └── package.json        # Dependencies
+│   └── angular/                # Angular framework
+│       ├── src/                # Source code
+│       ├── angular.json        # Angular configuration
+│       └── package.json        # Dependencies
+├── dart/                       # Flutter/Dart mobile stack
+│   ├── lib/                    # Dart source code
+│   ├── pubspec.yaml            # Dart dependencies
+│   └── analysis_options.yaml   # Dart analysis options
+├── swift/                      # Swift/iOS development
+│   ├── Sources/                # Swift source code
+│   ├── Tests/                  # Test files
+│   ├── Package.swift           # Swift package configuration
+│   └── MyApp.xcodeproj         # Xcode project
+├── kotlin/                     # Kotlin/Android development
+│   ├── src/                    # Kotlin source code
+│   ├── build.gradle.kts        # Gradle configuration
+│   └── settings.gradle.kts     # Gradle settings
+└── unity/                      # Unity game development
+    ├── Assets/                 # Game assets
+    ├── ProjectSettings/        # Unity project settings
+    └── Packages/               # Unity packages
+```
+
+**Purpose**: Provides ready-to-use frontend framework setups with modern tooling, best practices, and example implementations.
+
+#### 🛠️ Development Tools (`stacks/tools/`)
 
 Development and deployment tools:
 
 ```text
 tools/
+├── docker/                     # Container orchestration
+│   ├── containers/            # Container definitions
+│   ├── docker-compose.yml     # Multi-container setup
+│   ├── k8s-deployment.yaml    # Kubernetes deployment
+│   └── docker-bake.hcl        # Docker build configuration
+├── terraform/                  # Infrastructure as code
+│   ├── *.tf                   # Terraform configurations
+│   ├── .gitignore             # Terraform-specific ignores
+│   └── Makefile               # Terraform commands
 ├── ansible/                    # Infrastructure automation
+│   ├── playbooks/             # Ansible playbooks
+│   ├── inventory/             # Server inventory
+│   └── roles/                 # Reusable roles
 ├── bash/                       # Shell scripting utilities
 │   ├── build.csh              # C shell build scripts
 │   ├── setup.bash             # Bash setup scripts
 │   ├── start.sh               # Startup scripts
 │   └── env.example            # Environment template
-├── docker/                     # Container orchestration
-│   ├── containers/            # Container definitions
-│   ├── docker-compose.yml     # Multi-container setup
-│   └── k8s-deployment.yaml    # Kubernetes deployment
 ├── makefile/                   # Build automation
 │   ├── common.mk              # Common make targets
 │   ├── config.mk              # Configuration variables
 │   └── Makefile               # Main makefile
 ├── nix/                        # Nix package management
-├── terraform/                  # Infrastructure as code
-│   ├── *.tf                   # Terraform configurations
-│   ├── .gitignore             # Terraform-specific ignores
-│   └── Makefile               # Terraform commands
+│   ├── libs/                  # Nix library functions
+│   ├── overlays/              # Package overlays
+│   └── shells/                # Development shells
+├── rust/                       # Rust development tools
+│   ├── src/                   # Rust source code
+│   ├── Cargo.toml             # Rust dependencies
+│   └── Cargo.lock             # Dependency lock file
+├── cplusplus/                  # C++ development tools
+│   ├── src/                   # C++ source code
+│   ├── include/               # Header files
+│   └── CMakeLists.txt         # CMake configuration
+├── haskell/                    # Haskell development tools
+│   ├── src/                   # Haskell source code
+│   ├── myproject.cabal        # Cabal configuration
+│   └── cabal.project          # Project configuration
+├── julia/                      # Julia development tools
+│   ├── src/                   # Julia source code
+│   ├── Project.toml           # Julia dependencies
+│   └── Manifest.toml          # Dependency manifest
+├── ocaml/                      # OCaml development tools
+│   ├── src/                   # OCaml source code
+│   ├── dune-project           # Dune configuration
+│   └── Makefile               # Build automation
+├── octave/                     # Octave/MATLAB tools
+│   ├── src/                   # Octave source code
+│   └── scripts/               # Octave scripts
+├── proto/                      # Protocol Buffers
+│   ├── enums/                 # Enum definitions
+│   ├── messages/              # Message definitions
+│   ├── services/              # Service definitions
+│   └── packages/              # Package configurations
+├── solidity/                   # Solidity smart contracts
+│   ├── contracts/             # Smart contract source
+│   ├── migrations/            # Contract migrations
+│   └── test/                  # Contract tests
+└── sql/                        # SQL database tools
+    ├── schemas/               # Database schemas
+    ├── migrations/            # Database migrations
+    ├── queries/               # SQL queries
+    └── data/                  # Sample data
 ```
 
 **Purpose**: Provides development tools, automation scripts, and infrastructure-as-code templates.
-
-#### 🎮 Unity (`stacks/unity/`)
-
-Game development with Unity:
-
-```text
-unity/
-├── ARCHITECTURE.md             # Unity architecture guide
-└── README.md                   # Unity development guide
-```
-
-**Purpose**: Unity game development templates and best practices.
 
 ## 🚀 Apps Architecture
 

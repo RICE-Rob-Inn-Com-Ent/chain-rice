@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package horeca.pos.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "../enums/pos_payment_method.proto";
+import "../enums/pos_transaction_status.proto";
+
+// POS transaction information
+message PosTransaction {
+  string transaction_id = 1;
+  string order_id = 2;
+  string customer_id = 3;
+  string customer_name = 4;
+  
+  TransactionType type = 5;
+  PosTransactionStatus status = 6;
+  
+  google.protobuf.Money total_amount = 7;
+  google.protobuf.Money subtotal = 8;
+  google.protobuf.Money tax_amount = 9;
+  google.protobuf.Money tip_amount = 10;
+  google.protobuf.Money discount_amount = 11;
+  
+  repeated PosPaymentMethod payment_methods = 12;
+  repeated PosTransactionItem items = 13;
+  
+  string cashier_id = 14;
+  string cashier_name = 15;
+  string terminal_id = 16;
+  
+  google.protobuf.Timestamp transaction_time = 17;
+  google.protobuf.Timestamp completed_time = 18;
+  
+  string receipt_number = 19;
+  string reference_number = 20;
+  
+  string notes = 21;
+  map<string, string> metadata = 22;
+}
+
+// Transaction type
+enum TransactionType {
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  TRANSACTION_TYPE_SALE = 1;
+  TRANSACTION_TYPE_REFUND = 2;
+  TRANSACTION_TYPE_VOID = 3;
+  TRANSACTION_TYPE_RETURN = 4;
+  TRANSACTION_TYPE_EXCHANGE = 5;
+}
+
+// POS transaction item
+message PosTransactionItem {
+  string item_id = 1;
+  string item_name = 2;
+  string description = 3;
+  
+  int32 quantity = 4;
+  google.protobuf.Money unit_price = 5;
+  google.protobuf.Money total_price = 6;
+  
+  double tax_rate = 7;
+  google.protobuf.Money tax_amount = 8;
+  
+  repeated string modifiers = 9;
+  string special_instructions = 10;
+}
+
+// POS payment
+message PosPayment {
+  string payment_id = 1;
+  string transaction_id = 2;
+  
+  PosPaymentMethod method = 3;
+  google.protobuf.Money amount = 4;
+  
+  PaymentStatus status = 5;
+  google.protobuf.Timestamp payment_time = 6;
+  
+  string card_last_four = 7;
+  string card_type = 8;
+  string authorization_code = 9;
+  
+  string reference_number = 10;
+  string notes = 11;
+}
+
+// Payment status
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_COMPLETED = 2;
+  PAYMENT_STATUS_FAILED = 3;
+  PAYMENT_STATUS_REFUNDED = 4;
+  PAYMENT_STATUS_PARTIAL_REFUND = 5;
+}

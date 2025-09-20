@@ -1,0 +1,313 @@
+syntax = "proto3";
+
+package gaming.leaderboards.enums;
+
+option go_package = "github.com/rice-dev/gaming/leaderboards/enums";
+
+// Типи ранжування
+enum RankingType {
+  RANKING_TYPE_UNSPECIFIED = 0;
+  
+  // За очками
+  RANKING_TYPE_SCORE = 1;
+  
+  // За часом
+  RANKING_TYPE_TIME = 2;
+  
+  // За швидкістю
+  RANKING_TYPE_SPEED = 3;
+  
+  // За точністю
+  RANKING_TYPE_ACCURACY = 4;
+  
+  // За ефективністю
+  RANKING_TYPE_EFFICIENCY = 5;
+  
+  // За продуктивністю
+  RANKING_TYPE_PRODUCTIVITY = 6;
+  
+  // За результативністю
+  RANKING_TYPE_EFFECTIVENESS = 7;
+  
+  // За успішністю
+  RANKING_TYPE_SUCCESS = 8;
+  
+  // За досягненнями
+  RANKING_TYPE_ACHIEVEMENTS = 9;
+  
+  // За навичками
+  RANKING_TYPE_SKILLS = 10;
+  
+  // За досвідом
+  RANKING_TYPE_EXPERIENCE = 11;
+  
+  // За рівнем
+  RANKING_TYPE_LEVEL = 12;
+  
+  // За рейтингом
+  RANKING_TYPE_RATING = 13;
+  
+  // За репутацією
+  RANKING_TYPE_REPUTATION = 14;
+  
+  // За популярністю
+  RANKING_TYPE_POPULARITY = 15;
+  
+  // За активністю
+  RANKING_TYPE_ACTIVITY = 16;
+  
+  // За участю
+  RANKING_TYPE_PARTICIPATION = 17;
+  
+  // За внеском
+  RANKING_TYPE_CONTRIBUTION = 18;
+  
+  // За інноваціями
+  RANKING_TYPE_INNOVATION = 19;
+  
+  // За креативністю
+  RANKING_TYPE_CREATIVITY = 20;
+  
+  // За оригінальністю
+  RANKING_TYPE_ORIGINALITY = 21;
+  
+  // За унікальністю
+  RANKING_TYPE_UNIQUENESS = 22;
+  
+  // За рідкістю
+  RANKING_TYPE_RARITY = 23;
+  
+  // За цінністю
+  RANKING_TYPE_VALUE = 24;
+  
+  // За якістю
+  RANKING_TYPE_QUALITY = 25;
+  
+  // За кількістю
+  RANKING_TYPE_QUANTITY = 26;
+  
+  // За обсягом
+  RANKING_TYPE_VOLUME = 27;
+  
+  // За розміром
+  RANKING_TYPE_SIZE = 28;
+  
+  // За вагою
+  RANKING_TYPE_WEIGHT = 29;
+  
+  // За масою
+  RANKING_TYPE_MASS = 30;
+  
+  // За довжиною
+  RANKING_TYPE_LENGTH = 31;
+  
+  // За шириною
+  RANKING_TYPE_WIDTH = 32;
+  
+  // За висотою
+  RANKING_TYPE_HEIGHT = 33;
+  
+  // За глибиною
+  RANKING_TYPE_DEPTH = 34;
+  
+  // За площею
+  RANKING_TYPE_AREA = 35;
+  
+  // За периметром
+  RANKING_TYPE_PERIMETER = 36;
+  
+  // За діаметром
+  RANKING_TYPE_DIAMETER = 37;
+  
+  // За радіусом
+  RANKING_TYPE_RADIUS = 38;
+  
+  // За окружністю
+  RANKING_TYPE_CIRCUMFERENCE = 39;
+  
+  // За об'ємом
+  RANKING_TYPE_VOLUME_3D = 40;
+  
+  // За поверхнею
+  RANKING_TYPE_SURFACE = 41;
+  
+  // За густиною
+  RANKING_TYPE_DENSITY = 42;
+  
+  // За в'язкістю
+  RANKING_TYPE_VISCOSITY = 43;
+  
+  // За пружністю
+  RANKING_TYPE_ELASTICITY = 44;
+  
+  // За пластичністю
+  RANKING_TYPE_PLASTICITY = 45;
+  
+  // За твердістю
+  RANKING_TYPE_HARDNESS = 46;
+  
+  // За м'якістю
+  RANKING_TYPE_SOFTNESS = 47;
+  
+  // За жорсткістю
+  RANKING_TYPE_RIGIDITY = 48;
+  
+  // За гнучкістю
+  RANKING_TYPE_FLEXIBILITY = 49;
+  
+  // За стійкістю
+  RANKING_TYPE_STABILITY = 50;
+  
+  // За нестійкістю
+  RANKING_TYPE_INSTABILITY = 51;
+  
+  // За балансом
+  RANKING_TYPE_BALANCE = 52;
+  
+  // За дисбалансом
+  RANKING_TYPE_IMBALANCE = 53;
+  
+  // За симетрією
+  RANKING_TYPE_SYMMETRY = 54;
+  
+  // За асиметрією
+  RANKING_TYPE_ASYMMETRY = 55;
+  
+  // За пропорціями
+  RANKING_TYPE_PROPORTIONS = 56;
+  
+  // За співвідношенням
+  RANKING_TYPE_RATIO = 57;
+  
+  // За відсотком
+  RANKING_TYPE_PERCENTAGE = 58;
+  
+  // За часткою
+  RANKING_TYPE_SHARE = 59;
+  
+  // За частиною
+  RANKING_TYPE_PART = 60;
+  
+  // За цілим
+  RANKING_TYPE_WHOLE = 61;
+  
+  // За сумою
+  RANKING_TYPE_SUM = 62;
+  
+  // За різницею
+  RANKING_TYPE_DIFFERENCE = 63;
+  
+  // За добутком
+  RANKING_TYPE_PRODUCT = 64;
+  
+  // За часткою
+  RANKING_TYPE_QUOTIENT = 65;
+  
+  // За залишком
+  RANKING_TYPE_REMAINDER = 66;
+  
+  // За модулем
+  RANKING_TYPE_MODULUS = 67;
+  
+  // За степенем
+  RANKING_TYPE_POWER = 68;
+  
+  // За коренем
+  RANKING_TYPE_ROOT = 69;
+  
+  // За логарифмом
+  RANKING_TYPE_LOGARITHM = 70;
+  
+  // За експонентою
+  RANKING_TYPE_EXPONENTIAL = 71;
+  
+  // За тригонометрією
+  RANKING_TYPE_TRIGONOMETRY = 72;
+  
+  // За геометрією
+  RANKING_TYPE_GEOMETRY = 73;
+  
+  // За алгеброю
+  RANKING_TYPE_ALGEBRA = 74;
+  
+  // За арифметикою
+  RANKING_TYPE_ARITHMETIC = 75;
+  
+  // За статистикою
+  RANKING_TYPE_STATISTICS = 76;
+  
+  // За ймовірністю
+  RANKING_TYPE_PROBABILITY = 77;
+  
+  // За комбінаторикою
+  RANKING_TYPE_COMBINATORICS = 78;
+  
+  // За перестановками
+  RANKING_TYPE_PERMUTATIONS = 79;
+  
+  // За поєднаннями
+  RANKING_TYPE_COMBINATIONS = 80;
+  
+  // За варіаціями
+  RANKING_TYPE_VARIATIONS = 81;
+  
+  // За факторіалами
+  RANKING_TYPE_FACTORIALS = 82;
+  
+  // За біноміальними коефіцієнтами
+  RANKING_TYPE_BINOMIAL_COEFFICIENTS = 83;
+  
+  // За числами Фібоначчі
+  RANKING_TYPE_FIBONACCI_NUMBERS = 84;
+  
+  // За числами Люка
+  RANKING_TYPE_LUCAS_NUMBERS = 85;
+  
+  // За числами Трібоначчі
+  RANKING_TYPE_TRIBONACCI_NUMBERS = 86;
+  
+  // За числами Тетраначчі
+  RANKING_TYPE_TETRANACCI_NUMBERS = 87;
+  
+  // За числами Пентаначчі
+  RANKING_TYPE_PENTANACCI_NUMBERS = 88;
+  
+  // За числами Гексаначчі
+  RANKING_TYPE_HEXANACCI_NUMBERS = 89;
+  
+  // За числами Гептаначчі
+  RANKING_TYPE_HEPTANACCI_NUMBERS = 90;
+  
+  // За числами Октаначчі
+  RANKING_TYPE_OCTANACCI_NUMBERS = 91;
+  
+  // За числами Нонаначчі
+  RANKING_TYPE_NONANACCI_NUMBERS = 92;
+  
+  // За числами Деканаччі
+  RANKING_TYPE_DECANACCI_NUMBERS = 93;
+  
+  // За числами Ундеканаччі
+  RANKING_TYPE_UNDECANACCI_NUMBERS = 94;
+  
+  // За числами Додеканаччі
+  RANKING_TYPE_DODECANACCI_NUMBERS = 95;
+  
+  // За числами Тридеканаччі
+  RANKING_TYPE_TRIDECANACCI_NUMBERS = 96;
+  
+  // За числами Квадродеканаччі
+  RANKING_TYPE_QUATTUORDECANACCI_NUMBERS = 97;
+  
+  // За числами Квіндеканаччі
+  RANKING_TYPE_QUINDECANACCI_NUMBERS = 98;
+  
+  // За числами Седіканаччі
+  RANKING_TYPE_SEDECANACCI_NUMBERS = 99;
+  
+  // За числами Септендеканаччі
+  RANKING_TYPE_SEPTENDECANACCI_NUMBERS = 100;
+  
+  // Кастомний тип ранжування
+  RANKING_TYPE_CUSTOM = 101;
+}

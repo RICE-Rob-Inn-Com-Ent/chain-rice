@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+// Service definitions for student management.
+package education.students.services;
+
+import "google/protobuf/empty.proto";
+import "AUTO/modules/education/students/messages/student.proto";
+import "AUTO/modules/education/students/messages/enrollment.proto";
+import "AUTO/modules/education/students/messages/student_activity.proto";
+import "AUTO/modules/education/grading/messages/transcript.proto";
+
+option go_package = "github.com/rice-dev/education/students/services;studentsservices";
+option java_multiple_files = true;
+option java_package = "com.rice.education.students.services";
+
+// CRUD requests
+message CreateStudentRequest { education.students.messages.Student student = 1; }
+message GetStudentRequest { string id = 1; }
+message UpdateStudentRequest { education.students.messages.Student student = 1; }
+message DeleteStudentRequest { string id = 1; }
+
+message ListStudentsRequest {
+  int32 page_size = 1;  // Page size
+  string page_token = 2;// Page token
+}
+message ListStudentsResponse {
+  repeated education.students.messages.Student students = 1; // Students
+  string next_page_token = 2;                               // Next token
+}
+
+// Enrollment business actions
+message EnrollStudentRequest {
+  string student_id = 1; // Student to enroll
+  string course_id = 2;  // Course to enroll into
+  string term = 3;       // Term identifier
+}
+message UnenrollStudentRequest { string enrollment_id = 1; }
+
+// Activity logging
+message LogStudentActivityRequest { education.students.messages.StudentActivity activity = 1; }
+
+// Analytics
+message GetStudentGPARequest { string student_id = 1; }
+message GetStudentGPAResponse { double gpa = 1; }
+
+// Service for student lifecycle, enrollment, and analytics.
+service StudentService {
+  // Create a new student.
+  rpc CreateStudent(CreateStudentRequest) returns (education.students.messages.Student);
+  // Retrieve a student by ID.
+  rpc GetStudent(GetStudentRequest) returns (education.students.messages.Student);
+  // Update an existing student.
+  rpc UpdateStudent(UpdateStudentRequest) returns (education.students.messages.Student);
+  // Delete a student by ID.
+  rpc DeleteStudent(DeleteStudentRequest) returns (google.protobuf.Empty);
+  // List students with pagination.
+  rpc ListStudents(ListStudentsRequest) returns (ListStudentsResponse);
+
+  // Enroll a student into a course.
+  rpc EnrollStudent(EnrollStudentRequest) returns (education.students.messages.Enrollment);
+  // Unenroll a student using enrollment ID.
+  rpc UnenrollStudent(UnenrollStudentRequest) returns (google.protobuf.Empty);
+
+  // Log a student activity.
+  rpc LogStudentActivity(LogStudentActivityRequest) returns (education.students.messages.StudentActivity);
+
+  // Analytics: Get a student's current GPA.
+  rpc GetStudentGPA(GetStudentGPARequest) returns (GetStudentGPAResponse);
+  // Generate a student's transcript.
+  rpc GenerateTranscript(GetStudentGPARequest) returns (education.grading.messages.Transcript);
+}
+
+

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package retail.products.enums;
+
+// ProductStatus represents the current status of a product
+enum ProductStatus {
+  // Default value - should not be used
+  PRODUCT_STATUS_UNSPECIFIED = 0;
+  
+  // Product is active and available for sale
+  PRODUCT_STATUS_ACTIVE = 1;
+  
+  // Product is inactive and not available for sale
+  PRODUCT_STATUS_INACTIVE = 2;
+  
+  // Product is discontinued
+  PRODUCT_STATUS_DISCONTINUED = 3;
+  
+  // Product is out of stock
+  PRODUCT_STATUS_OUT_OF_STOCK = 4;
+  
+  // Product is pending approval
+  PRODUCT_STATUS_PENDING_APPROVAL = 5;
+  
+  // Product is rejected
+  PRODUCT_STATUS_REJECTED = 6;
+  
+  // Product is in draft status
+  PRODUCT_STATUS_DRAFT = 7;
+  
+  // Product is archived
+  PRODUCT_STATUS_ARCHIVED = 8;
+  
+  // Product is seasonal and temporarily unavailable
+  PRODUCT_STATUS_SEASONAL = 9;
+}

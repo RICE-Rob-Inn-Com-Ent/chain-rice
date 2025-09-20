@@ -1,0 +1,210 @@
+syntax = "proto3";
+
+package horeca.events.services;
+
+import "google/protobuf/timestamp.proto";
+
+// Event Reporting Service - Attendance and revenue reports
+service EventReportingService {
+  // Get event attendance report
+  rpc GetAttendanceReport(GetAttendanceReportRequest) returns (GetAttendanceReportResponse);
+  
+  // Get revenue report
+  rpc GetRevenueReport(GetRevenueReportRequest) returns (GetRevenueReportResponse);
+  
+  // Get event performance metrics
+  rpc GetEventPerformanceMetrics(GetEventPerformanceMetricsRequest) returns (GetEventPerformanceMetricsResponse);
+  
+  // Get venue utilization report
+  rpc GetVenueUtilizationReport(GetVenueUtilizationReportRequest) returns (GetVenueUtilizationReportResponse);
+  
+  // Get customer satisfaction report
+  rpc GetCustomerSatisfactionReport(GetCustomerSatisfactionReportRequest) returns (GetCustomerSatisfactionReportResponse);
+  
+  // Get event type analysis
+  rpc GetEventTypeAnalysis(GetEventTypeAnalysisRequest) returns (GetEventTypeAnalysisResponse);
+  
+  // Get seasonal trends
+  rpc GetSeasonalTrends(GetSeasonalTrendsRequest) returns (GetSeasonalTrendsResponse);
+  
+  // Get profitability analysis
+  rpc GetProfitabilityAnalysis(GetProfitabilityAnalysisRequest) returns (GetProfitabilityAnalysisResponse);
+}
+
+// Request/Response messages
+message GetAttendanceReportRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string event_type = 3;
+  string venue_id = 4;
+}
+
+message GetAttendanceReportResponse {
+  repeated AttendanceData attendance_data = 1;
+  int32 total_events = 2;
+  int32 total_attendees = 3;
+  double average_attendance = 4;
+  double attendance_rate = 5;
+}
+
+message GetRevenueReportRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string event_type = 3;
+  string venue_id = 4;
+  string group_by = 5; // day, week, month, event_type, venue
+}
+
+message GetRevenueReportResponse {
+  repeated RevenueData revenue_data = 1;
+  double total_revenue = 2;
+  double average_revenue_per_event = 3;
+  double revenue_growth = 4;
+}
+
+message GetEventPerformanceMetricsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetEventPerformanceMetricsResponse {
+  repeated EventPerformanceMetrics metrics = 1;
+  double overall_satisfaction = 2;
+  double average_attendance_rate = 3;
+  double revenue_per_attendee = 4;
+}
+
+message GetVenueUtilizationReportRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string venue_id = 3;
+}
+
+message GetVenueUtilizationReportResponse {
+  repeated VenueUtilizationData utilization_data = 1;
+  double average_utilization = 2;
+  double peak_utilization = 3;
+  double off_peak_utilization = 4;
+}
+
+message GetCustomerSatisfactionReportRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string event_type = 3;
+}
+
+message GetCustomerSatisfactionReportResponse {
+  repeated SatisfactionData satisfaction_data = 1;
+  double average_rating = 2;
+  int32 total_reviews = 3;
+  double recommendation_rate = 4;
+}
+
+message GetEventTypeAnalysisRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetEventTypeAnalysisResponse {
+  repeated EventTypeData event_type_data = 1;
+  string most_popular_type = 2;
+  string most_profitable_type = 3;
+  double average_duration = 4;
+}
+
+message GetSeasonalTrendsRequest {
+  int32 year = 1;
+  string metric = 2; // revenue, attendance, bookings
+}
+
+message GetSeasonalTrendsResponse {
+  repeated SeasonalData seasonal_data = 1;
+  string peak_season = 2;
+  string low_season = 3;
+  double seasonal_variation = 4;
+}
+
+message GetProfitabilityAnalysisRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetProfitabilityAnalysisResponse {
+  repeated ProfitabilityData profitability_data = 1;
+  double total_revenue = 2;
+  double total_costs = 3;
+  double gross_profit = 4;
+  double net_profit = 5;
+  double profit_margin = 6;
+}
+
+// Data structures
+message AttendanceData {
+  google.protobuf.Timestamp date = 1;
+  string event_id = 2;
+  string event_name = 3;
+  int32 expected_attendees = 4;
+  int32 actual_attendees = 5;
+  double attendance_rate = 6;
+}
+
+message RevenueData {
+  google.protobuf.Timestamp date = 1;
+  string event_id = 2;
+  string event_name = 3;
+  double revenue = 4;
+  int32 attendees = 5;
+  double revenue_per_attendee = 6;
+}
+
+message EventPerformanceMetrics {
+  string event_id = 1;
+  string event_name = 2;
+  double satisfaction_score = 3;
+  double attendance_rate = 4;
+  double revenue_per_attendee = 5;
+  double cost_efficiency = 6;
+}
+
+message VenueUtilizationData {
+  string venue_id = 1;
+  string venue_name = 2;
+  google.protobuf.Timestamp date = 3;
+  double utilization_percentage = 4;
+  int32 events_count = 5;
+  double revenue = 6;
+}
+
+message SatisfactionData {
+  string event_id = 1;
+  string event_name = 2;
+  double average_rating = 3;
+  int32 review_count = 4;
+  double recommendation_rate = 5;
+  repeated string common_complaints = 6;
+}
+
+message EventTypeData {
+  string event_type = 1;
+  int32 event_count = 2;
+  double total_revenue = 3;
+  double average_revenue = 4;
+  double average_attendance = 5;
+  double satisfaction_score = 6;
+}
+
+message SeasonalData {
+  string season = 1;
+  double value = 2;
+  int32 event_count = 3;
+  double average_value = 4;
+}
+
+message ProfitabilityData {
+  string event_id = 1;
+  string event_name = 2;
+  double revenue = 3;
+  double costs = 4;
+  double profit = 5;
+  double profit_margin = 6;
+}

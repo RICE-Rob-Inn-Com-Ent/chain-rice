@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package healthcare.pharmacy.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/pharmacy/enums";
+
+// Drug type enumeration
+enum DrugType {
+  DRUG_TYPE_UNSPECIFIED = 0;
+  DRUG_TYPE_PRESCRIPTION = 1;
+  DRUG_TYPE_OTC = 2; // Over-the-counter
+  DRUG_TYPE_CONTROLLED = 3;
+  DRUG_TYPE_NARCOTIC = 4;
+  DRUG_TYPE_ANTIBIOTIC = 5;
+  DRUG_TYPE_VACCINE = 6;
+  DRUG_TYPE_SUPPLEMENT = 7;
+  DRUG_TYPE_HERBAL = 8;
+  DRUG_TYPE_HOMEOPATHIC = 9;
+  DRUG_TYPE_SPECIALTY = 10;
+}
+
+// Drug classification enumeration
+enum DrugClassification {
+  DRUG_CLASSIFICATION_UNSPECIFIED = 0;
+  DRUG_CLASSIFICATION_ANALGESIC = 1;
+  DRUG_CLASSIFICATION_ANTIBIOTIC = 2;
+  DRUG_CLASSIFICATION_ANTIHISTAMINE = 3;
+  DRUG_CLASSIFICATION_ANTIHYPERTENSIVE = 4;
+  DRUG_CLASSIFICATION_ANTIDEPRESSANT = 5;
+  DRUG_CLASSIFICATION_ANTICOAGULANT = 6;
+  DRUG_CLASSIFICATION_DIABETIC = 7;
+  DRUG_CLASSIFICATION_CARDIOVASCULAR = 8;
+  DRUG_CLASSIFICATION_RESPIRATORY = 9;
+  DRUG_CLASSIFICATION_GASTROINTESTINAL = 10;
+  DRUG_CLASSIFICATION_NEUROLOGICAL = 11;
+  DRUG_CLASSIFICATION_PSYCHIATRIC = 12;
+  DRUG_CLASSIFICATION_ONCOLOGY = 13;
+  DRUG_CLASSIFICATION_IMMUNOSUPPRESSANT = 14;
+  DRUG_CLASSIFICATION_OTHER = 15;
+}
+
+// Drug schedule (for controlled substances)
+enum DrugSchedule {
+  DRUG_SCHEDULE_UNSPECIFIED = 0;
+  DRUG_SCHEDULE_I = 1; // High potential for abuse, no medical use
+  DRUG_SCHEDULE_II = 2; // High potential for abuse, severe dependence
+  DRUG_SCHEDULE_III = 3; // Moderate potential for abuse
+  DRUG_SCHEDULE_IV = 4; // Low potential for abuse
+  DRUG_SCHEDULE_V = 5; // Very low potential for abuse
+}

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package telecom.billing.enums;
+
+// InvoiceStatus represents the current state of a billing invoice
+enum InvoiceStatus {
+  // Unspecified status - should not be used in production
+  INVOICE_STATUS_UNSPECIFIED = 0;
+  
+  // Invoice has been generated but not yet paid
+  PENDING = 1;
+  
+  // Invoice has been successfully paid
+  PAID = 2;
+  
+  // Payment for the invoice has failed
+  FAILED = 3;
+  
+  // Invoice has been cancelled
+  CANCELLED = 4;
+  
+  // Invoice is overdue and requires immediate attention
+  OVERDUE = 5;
+  
+  // Invoice has been disputed by the customer
+  DISPUTED = 6;
+  
+  // Invoice is in the process of being refunded
+  REFUNDING = 7;
+  
+  // Invoice has been fully refunded
+  REFUNDED = 8;
+}

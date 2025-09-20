@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package entertainment.content.enums;
+
+// Типи контенту для розважальної платформи
+enum ContentType {
+  CONTENT_TYPE_UNSPECIFIED = 0;
+  
+  // Відео контент
+  MOVIE = 1;
+  TV_SERIES = 2;
+  DOCUMENTARY = 3;
+  SHORT_FILM = 4;
+  ANIMATION = 5;
+  MUSIC_VIDEO = 6;
+  LIVE_STREAM = 7;
+  WEB_SERIES = 8;
+  
+  // Аудіо контент
+  PODCAST = 9;
+  AUDIO_BOOK = 10;
+  MUSIC_ALBUM = 11;
+  RADIO_SHOW = 12;
+  
+  // Інтерактивний контент
+  GAME = 13;
+  INTERACTIVE_STORY = 14;
+  VIRTUAL_REALITY = 15;
+  AUGMENTED_REALITY = 16;
+  
+  // Текстовий контент
+  EBOOK = 17;
+  ARTICLE = 18;
+  BLOG_POST = 19;
+  NEWS_ARTICLE = 20;
+  
+  // Освітній контент
+  COURSE = 21;
+  TUTORIAL = 22;
+  WORKSHOP = 23;
+  WEBINAR = 24;
+  
+  // Спортивний контент
+  SPORTS_EVENT = 25;
+  SPORTS_HIGHLIGHT = 26;
+  SPORTS_ANALYSIS = 27;
+  
+  // Розважальний контент
+  COMEDY_SHOW = 28;
+  TALK_SHOW = 29;
+  REALITY_SHOW = 30;
+  GAME_SHOW = 31;
+  
+  // Спеціальний контент
+  USER_GENERATED = 32;
+  PROMOTIONAL = 33;
+  TRAILER = 34;
+  BEHIND_THE_SCENES = 35;
+}

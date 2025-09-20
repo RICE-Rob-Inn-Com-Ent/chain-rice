@@ -1,0 +1,722 @@
+syntax = "proto3";
+
+package agriculture.logistics.services;
+
+import "agriculture/logistics/messages/shipment.proto";
+import "google/protobuf/empty.proto";
+
+// LogisticsService provides CRUD operations and business logic for logistics management
+service LogisticsService {
+  // Shipment management
+  rpc CreateShipment(CreateShipmentRequest) returns (CreateShipmentResponse);
+  rpc GetShipment(GetShipmentRequest) returns (GetShipmentResponse);
+  rpc ListShipments(ListShipmentsRequest) returns (ListShipmentsResponse);
+  rpc UpdateShipment(UpdateShipmentRequest) returns (UpdateShipmentResponse);
+  rpc DeleteShipment(DeleteShipmentRequest) returns (google.protobuf.Empty);
+  
+  // Shipment operations
+  rpc StartShipment(StartShipmentRequest) returns (StartShipmentResponse);
+  rpc CompleteShipment(CompleteShipmentRequest) returns (CompleteShipmentResponse);
+  rpc CancelShipment(CancelShipmentRequest) returns (CancelShipmentResponse);
+  rpc TrackShipment(TrackShipmentRequest) returns (TrackShipmentResponse);
+  
+  // Route planning and optimization
+  rpc PlanRoute(PlanRouteRequest) returns (PlanRouteResponse);
+  rpc OptimizeRoute(OptimizeRouteRequest) returns (OptimizeRouteResponse);
+  rpc GetRouteAlternatives(GetRouteAlternativesRequest) returns (GetRouteAlternativesResponse);
+  rpc UpdateRoute(UpdateRouteRequest) returns (UpdateRouteResponse);
+  
+  // Carrier management
+  rpc AssignCarrier(AssignCarrierRequest) returns (AssignCarrierResponse);
+  rpc GetAvailableCarriers(GetAvailableCarriersRequest) returns (GetAvailableCarriersResponse);
+  rpc RateCarrier(RateCarrierRequest) returns (RateCarrierResponse);
+  rpc GetCarrierPerformance(GetCarrierPerformanceRequest) returns (GetCarrierPerformanceResponse);
+  
+  // Scheduling and dispatch
+  rpc SchedulePickup(SchedulePickupRequest) returns (SchedulePickupResponse);
+  rpc ScheduleDelivery(ScheduleDeliveryRequest) returns (ScheduleDeliveryResponse);
+  rpc DispatchShipment(DispatchShipmentRequest) returns (DispatchShipmentResponse);
+  rpc GetSchedule(GetScheduleRequest) returns (GetScheduleResponse);
+  
+  // Documentation and compliance
+  rpc GenerateDocuments(GenerateDocumentsRequest) returns (GenerateDocumentsResponse);
+  rpc ValidateCompliance(ValidateComplianceRequest) returns (ValidateComplianceResponse);
+  rpc GetRequiredDocuments(GetRequiredDocumentsRequest) returns (GetRequiredDocumentsResponse);
+  rpc UploadDocument(UploadDocumentRequest) returns (UploadDocumentResponse);
+  
+  // Quality control
+  rpc InspectShipment(InspectShipmentRequest) returns (InspectShipmentResponse);
+  rpc GetQualityReport(GetQualityReportRequest) returns (GetQualityReportResponse);
+  rpc ReportDamage(ReportDamageRequest) returns (ReportDamageResponse);
+  rpc GetDamageReport(GetDamageReportRequest) returns (GetDamageReportResponse);
+  
+  // Financial management
+  rpc CalculateCosts(CalculateCostsRequest) returns (CalculateCostsResponse);
+  rpc GenerateInvoice(GenerateInvoiceRequest) returns (GenerateInvoiceResponse);
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc GetFinancialSummary(GetFinancialSummaryRequest) returns (GetFinancialSummaryResponse);
+  
+  // Analytics and reporting
+  rpc GetShipmentAnalytics(GetShipmentAnalyticsRequest) returns (GetShipmentAnalyticsResponse);
+  rpc GetPerformanceReport(GetPerformanceReportRequest) returns (GetPerformanceReportResponse);
+  rpc GetCostAnalysis(GetCostAnalysisRequest) returns (GetCostAnalysisResponse);
+  rpc GetUtilizationReport(GetUtilizationReportRequest) returns (GetUtilizationReportResponse);
+}
+
+// Shipment management messages
+message CreateShipmentRequest {
+  agriculture.logistics.messages.Shipment shipment = 1;
+}
+
+message CreateShipmentResponse {
+  agriculture.logistics.messages.Shipment shipment = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetShipmentRequest {
+  string shipment_id = 1;
+}
+
+message GetShipmentResponse {
+  agriculture.logistics.messages.Shipment shipment = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListShipmentsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string logistics_type = 3;     // Filter by logistics type
+  string transport_type = 4;     // Filter by transport type
+  string status = 5;             // Filter by status
+  string origin_location = 6;    // Filter by origin
+  string destination_location = 7; // Filter by destination
+  string carrier_name = 8;       // Filter by carrier
+  string cargo_type = 9;         // Filter by cargo type
+  string start_date = 10;        // Filter by start date
+  string end_date = 11;          // Filter by end date
+  string search_query = 12;      // Search in descriptions and numbers
+}
+
+message ListShipmentsResponse {
+  repeated agriculture.logistics.messages.Shipment shipments = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateShipmentRequest {
+  agriculture.logistics.messages.Shipment shipment = 1;
+  repeated string update_mask = 2; // Fields to update
+}
+
+message UpdateShipmentResponse {
+  agriculture.logistics.messages.Shipment shipment = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteShipmentRequest {
+  string shipment_id = 1;
+}
+
+// Shipment operation messages
+message StartShipmentRequest {
+  string shipment_id = 1;
+  string driver_name = 2;
+  string vehicle_id = 3;
+  string notes = 4;
+}
+
+message StartShipmentResponse {
+  bool success = 1;
+  string message = 2;
+  string operation_id = 3;
+}
+
+message CompleteShipmentRequest {
+  string shipment_id = 1;
+  string completion_notes = 2;
+  string delivery_confirmation = 3;
+  string customer_signature = 4;
+}
+
+message CompleteShipmentResponse {
+  bool success = 1;
+  string message = 2;
+  string completion_id = 3;
+}
+
+message CancelShipmentRequest {
+  string shipment_id = 1;
+  string cancellation_reason = 2;
+  string notes = 3;
+}
+
+message CancelShipmentResponse {
+  bool success = 1;
+  string message = 2;
+  string cancellation_id = 3;
+}
+
+message TrackShipmentRequest {
+  string shipment_id = 1;
+  string tracking_number = 2;
+}
+
+message TrackShipmentResponse {
+  string shipment_id = 1;
+  string current_status = 2;
+  string current_location = 3;
+  double current_latitude = 4;
+  double current_longitude = 5;
+  string estimated_delivery = 6;
+  repeated TrackingEvent tracking_events = 7;
+}
+
+message TrackingEvent {
+  string event_type = 1;
+  string description = 2;
+  string location = 3;
+  string timestamp = 4;
+  string notes = 5;
+}
+
+// Route planning messages
+message PlanRouteRequest {
+  string origin_location = 1;
+  string destination_location = 2;
+  double origin_latitude = 3;
+  double origin_longitude = 4;
+  double destination_latitude = 5;
+  double destination_longitude = 6;
+  string cargo_type = 7;
+  double cargo_weight = 8;
+  string transport_type = 9;
+  repeated string waypoints = 10;
+  bool avoid_tolls = 11;
+  bool avoid_highways = 12;
+}
+
+message PlanRouteResponse {
+  string route_id = 1;
+  double total_distance = 2;
+  int32 estimated_duration = 3;
+  double estimated_cost = 4;
+  repeated RouteSegment route_segments = 5;
+  string route_summary = 6;
+}
+
+message RouteSegment {
+  int32 segment_number = 1;
+  string start_location = 2;
+  string end_location = 3;
+  double distance = 4;
+  int32 duration = 5;
+  string road_type = 6;
+  double toll_cost = 7;
+  string instructions = 8;
+}
+
+message OptimizeRouteRequest {
+  string route_id = 1;
+  string optimization_criteria = 2; // time, cost, distance, fuel
+  repeated string constraints = 3;
+}
+
+message OptimizeRouteResponse {
+  string route_id = 1;
+  bool optimized = 2;
+  double improvement_percentage = 3;
+  double new_distance = 4;
+  int32 new_duration = 5;
+  double new_cost = 6;
+  repeated RouteSegment optimized_segments = 7;
+}
+
+message GetRouteAlternativesRequest {
+  string origin_location = 1;
+  string destination_location = 2;
+  int32 max_alternatives = 3;
+}
+
+message GetRouteAlternativesResponse {
+  repeated RouteAlternative alternatives = 1;
+}
+
+message RouteAlternative {
+  string route_id = 1;
+  string route_name = 2;
+  double distance = 3;
+  int32 duration = 4;
+  double cost = 5;
+  string description = 6;
+  repeated RouteSegment segments = 7;
+}
+
+message UpdateRouteRequest {
+  string shipment_id = 1;
+  string new_route_id = 2;
+  string reason = 3;
+}
+
+message UpdateRouteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Carrier management messages
+message AssignCarrierRequest {
+  string shipment_id = 1;
+  string carrier_id = 2;
+  string driver_id = 3;
+  string vehicle_id = 4;
+  string notes = 5;
+}
+
+message AssignCarrierResponse {
+  bool success = 1;
+  string message = 2;
+  string assignment_id = 3;
+}
+
+message GetAvailableCarriersRequest {
+  string transport_type = 1;
+  string origin_location = 2;
+  string destination_location = 3;
+  string cargo_type = 4;
+  double cargo_weight = 5;
+  string pickup_date = 6;
+}
+
+message GetAvailableCarriersResponse {
+  repeated CarrierInfo available_carriers = 1;
+  int32 total_count = 2;
+}
+
+message CarrierInfo {
+  string carrier_id = 1;
+  string carrier_name = 2;
+  string contact_info = 3;
+  string transport_types = 4;
+  double rating = 5;
+  double estimated_cost = 6;
+  int32 estimated_duration = 7;
+  bool is_available = 8;
+}
+
+message RateCarrierRequest {
+  string shipment_id = 1;
+  string carrier_id = 2;
+  double rating = 3;
+  string comments = 4;
+}
+
+message RateCarrierResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetCarrierPerformanceRequest {
+  string carrier_id = 1;
+  string period = 2;             // monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetCarrierPerformanceResponse {
+  string carrier_id = 1;
+  double overall_rating = 2;
+  double on_time_performance = 3;
+  double damage_rate = 4;
+  double customer_satisfaction = 5;
+  int32 total_shipments = 6;
+  double average_cost = 7;
+  repeated PerformanceMetric metrics = 8;
+}
+
+message PerformanceMetric {
+  string metric_name = 1;
+  double current_value = 2;
+  double target_value = 3;
+  string unit = 4;
+  string trend = 5;
+}
+
+// Scheduling messages
+message SchedulePickupRequest {
+  string shipment_id = 1;
+  string pickup_date = 2;
+  string pickup_time = 3;
+  string pickup_window = 4;
+  string notes = 5;
+}
+
+message SchedulePickupResponse {
+  bool success = 1;
+  string message = 2;
+  string pickup_id = 3;
+}
+
+message ScheduleDeliveryRequest {
+  string shipment_id = 1;
+  string delivery_date = 2;
+  string delivery_time = 3;
+  string delivery_window = 4;
+  string notes = 5;
+}
+
+message ScheduleDeliveryResponse {
+  bool success = 1;
+  string message = 2;
+  string delivery_id = 3;
+}
+
+message DispatchShipmentRequest {
+  string shipment_id = 1;
+  string dispatch_time = 2;
+  string dispatcher = 3;
+  string notes = 4;
+}
+
+message DispatchShipmentResponse {
+  bool success = 1;
+  string message = 2;
+  string dispatch_id = 3;
+}
+
+message GetScheduleRequest {
+  string date = 1;
+  string carrier_id = 2;
+  string driver_id = 3;
+  string vehicle_id = 4;
+}
+
+message GetScheduleResponse {
+  string date = 1;
+  repeated ScheduleItem schedule_items = 2;
+}
+
+message ScheduleItem {
+  string shipment_id = 1;
+  string pickup_time = 2;
+  string delivery_time = 3;
+  string origin = 4;
+  string destination = 5;
+  string cargo_type = 6;
+  string status = 7;
+}
+
+// Documentation messages
+message GenerateDocumentsRequest {
+  string shipment_id = 1;
+  repeated string document_types = 2;
+  string format = 3;             // PDF, XML, JSON, etc.
+}
+
+message GenerateDocumentsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated GeneratedDocument documents = 3;
+}
+
+message GeneratedDocument {
+  string document_type = 1;
+  string document_id = 2;
+  string file_path = 3;
+  string format = 4;
+  int32 file_size = 5;
+}
+
+message ValidateComplianceRequest {
+  string shipment_id = 1;
+  string compliance_type = 2;
+}
+
+message ValidateComplianceResponse {
+  bool compliant = 1;
+  string message = 2;
+  repeated ComplianceIssue issues = 3;
+}
+
+message ComplianceIssue {
+  string issue_type = 1;
+  string description = 2;
+  string severity = 3;
+  string recommendation = 4;
+}
+
+message GetRequiredDocumentsRequest {
+  string shipment_id = 1;
+  string destination_country = 2;
+}
+
+message GetRequiredDocumentsResponse {
+  repeated RequiredDocument required_documents = 1;
+}
+
+message RequiredDocument {
+  string document_type = 1;
+  string description = 2;
+  bool is_required = 3;
+  string deadline = 4;
+  string status = 5;
+}
+
+message UploadDocumentRequest {
+  string shipment_id = 1;
+  string document_type = 2;
+  string file_name = 3;
+  bytes file_content = 4;
+  string file_type = 5;
+}
+
+message UploadDocumentResponse {
+  bool success = 1;
+  string message = 2;
+  string document_id = 3;
+}
+
+// Quality control messages
+message InspectShipmentRequest {
+  string shipment_id = 1;
+  string inspector = 2;
+  string inspection_type = 3;
+  string location = 4;
+  string notes = 5;
+}
+
+message InspectShipmentResponse {
+  bool success = 1;
+  string message = 2;
+  string inspection_id = 3;
+  string quality_rating = 4;
+  repeated QualityIssue issues_found = 5;
+}
+
+message QualityIssue {
+  string issue_type = 1;
+  string description = 2;
+  string severity = 3;
+  string recommendation = 4;
+}
+
+message GetQualityReportRequest {
+  string shipment_id = 1;
+  string period = 2;
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetQualityReportResponse {
+  string shipment_id = 1;
+  double overall_quality_rating = 2;
+  int32 total_inspections = 3;
+  int32 issues_found = 4;
+  int32 issues_resolved = 5;
+  repeated QualityMetric quality_metrics = 6;
+}
+
+message ReportDamageRequest {
+  string shipment_id = 1;
+  string damage_type = 2;
+  string damage_description = 3;
+  string damage_location = 4;
+  double damage_value = 5;
+  string reported_by = 6;
+  string notes = 7;
+}
+
+message ReportDamageResponse {
+  bool success = 1;
+  string message = 2;
+  string damage_report_id = 3;
+}
+
+message GetDamageReportRequest {
+  string shipment_id = 1;
+  string period = 2;
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetDamageReportResponse {
+  string shipment_id = 1;
+  repeated DamageReport damage_reports = 2;
+  double total_damage_value = 3;
+  double damage_rate = 4;
+}
+
+message DamageReport {
+  string damage_report_id = 1;
+  string damage_type = 2;
+  string damage_description = 3;
+  double damage_value = 4;
+  string reported_date = 5;
+  string reported_by = 6;
+  string status = 7;
+}
+
+// Financial management messages
+message CalculateCostsRequest {
+  string shipment_id = 1;
+  string calculation_type = 2;   // estimate, actual, invoice
+}
+
+message CalculateCostsResponse {
+  string shipment_id = 1;
+  double base_cost = 2;
+  double fuel_cost = 3;
+  double toll_cost = 4;
+  double driver_cost = 5;
+  double vehicle_cost = 6;
+  double insurance_cost = 7;
+  double total_cost = 8;
+  string currency = 9;
+  repeated CostBreakdown cost_breakdown = 10;
+}
+
+message CostBreakdown {
+  string cost_type = 1;
+  double amount = 2;
+  string currency = 3;
+  string description = 4;
+}
+
+message GenerateInvoiceRequest {
+  string shipment_id = 1;
+  string invoice_type = 2;
+  string customer_id = 3;
+  string due_date = 4;
+}
+
+message GenerateInvoiceResponse {
+  bool success = 1;
+  string message = 2;
+  string invoice_id = 3;
+  string invoice_number = 4;
+  double total_amount = 5;
+  string currency = 6;
+}
+
+message ProcessPaymentRequest {
+  string invoice_id = 1;
+  double payment_amount = 2;
+  string payment_method = 3;
+  string payment_reference = 4;
+  string notes = 5;
+}
+
+message ProcessPaymentResponse {
+  bool success = 1;
+  string message = 2;
+  string payment_id = 3;
+}
+
+message GetFinancialSummaryRequest {
+  string period = 1;             // monthly, yearly
+  string start_date = 2;
+  string end_date = 3;
+  string carrier_id = 4;
+}
+
+message GetFinancialSummaryResponse {
+  string period = 1;
+  double total_revenue = 2;
+  double total_costs = 3;
+  double net_profit = 4;
+  int32 total_shipments = 5;
+  double average_cost_per_shipment = 6;
+  double average_revenue_per_shipment = 7;
+  map<string, double> revenue_by_type = 8;
+  map<string, double> costs_by_type = 9;
+}
+
+// Analytics and reporting messages
+message GetShipmentAnalyticsRequest {
+  string period = 1;             // daily, weekly, monthly, yearly
+  string start_date = 2;
+  string end_date = 3;
+  string carrier_id = 4;
+  string transport_type = 5;
+}
+
+message GetShipmentAnalyticsResponse {
+  string period = 1;
+  int32 total_shipments = 2;
+  double on_time_performance = 3;
+  double average_delivery_time = 4;
+  double customer_satisfaction = 5;
+  double damage_rate = 6;
+  double cost_efficiency = 7;
+  repeated AnalyticsMetric metrics = 8;
+}
+
+message GetPerformanceReportRequest {
+  string period = 1;             // daily, weekly, monthly, yearly
+  string start_date = 2;
+  string end_date = 3;
+  string carrier_id = 4;
+}
+
+message GetPerformanceReportResponse {
+  string period = 1;
+  double overall_performance = 2;
+  double on_time_performance = 3;
+  double quality_performance = 4;
+  double cost_performance = 5;
+  double customer_satisfaction = 6;
+  repeated PerformanceMetric performance_metrics = 7;
+  string overall_rating = 8;
+}
+
+message GetCostAnalysisRequest {
+  string period = 1;             // monthly, yearly
+  string start_date = 2;
+  string end_date = 3;
+  string carrier_id = 4;
+}
+
+message GetCostAnalysisResponse {
+  string period = 1;
+  double total_costs = 2;
+  double fuel_costs = 3;
+  double labor_costs = 4;
+  double vehicle_costs = 5;
+  double insurance_costs = 6;
+  double average_cost_per_shipment = 7;
+  map<string, double> costs_by_type = 8;
+  repeated CostTrend cost_trends = 9;
+}
+
+message CostTrend {
+  string period = 1;
+  double total_cost = 2;
+  double fuel_cost = 3;
+  double labor_cost = 4;
+  double vehicle_cost = 5;
+}
+
+message GetUtilizationReportRequest {
+  string period = 1;             // daily, weekly, monthly, yearly
+  string start_date = 2;
+  string end_date = 3;
+  string carrier_id = 4;
+}
+
+message GetUtilizationReportResponse {
+  string period = 1;
+  double vehicle_utilization = 2;
+  double driver_utilization = 3;
+  double capacity_utilization = 4;
+  double fuel_efficiency = 5;
+  repeated UtilizationMetric utilization_metrics = 6;
+}
+
+message UtilizationMetric {
+  string metric_name = 1;
+  double current_value = 2;
+  double target_value = 3;
+  string unit = 4;
+  string trend = 5;
+}

@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package core.auth.messages;
+
+import "core/auth/enums/session_type.proto";
+import "core/common/messages/timestamp.proto";
+
+// AuthRequest represents various authentication flows.
+message AuthRequest {
+  // Client session type.
+  core.auth.enums.SessionType session_type = 1;
+
+  // Union of request types by presence.
+  oneof payload {
+    PasswordLogin password = 10;    // Username/password login.
+    ApiKeyLogin api_key = 11;       // Static API key login.
+    TokenRefresh refresh = 12;      // Refresh token flow.
+    MfaVerify mfa_verify = 13;      // Verify a second factor.
+  }
+
+  // Common
+  ClientInfo client = 2; // Client information.
+
+  // Nested types
+  message PasswordLogin {
+    string email = 1;      // Email address.
+    string password = 2;   // Plain text password.
+  }
+
+  message ApiKeyLogin {
+    string key_id = 1;     // API key id/reference.
+    string secret = 2;     // API key secret.
+  }
+
+  message TokenRefresh {
+    string refresh_token = 1; // Refresh token string.
+  }
+
+  message MfaVerify {
+    string mfa_token = 1;  // Temporary MFA token from server.
+    string code = 2;       // OTP code.
+    string method = 3;     // e.g., "TOTP", "SMS".
+  }
+
+  message ClientInfo {
+    string ip = 1;                         // Client IP address.
+    string user_agent = 2;                 // Raw user agent.
+    string device_id = 3;                  // Device identifier.
+    string app_version = 4;                // App version.
+    core.common.messages.Timestamp now = 5; // Client-sent timestamp.
+  }
+}
+
+

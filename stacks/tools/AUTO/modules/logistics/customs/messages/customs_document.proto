@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package logistics.customs.messages;
+
+import "google/protobuf/timestamp.proto";
+import "logistics/customs/enums/customs_document_type.proto";
+
+// Customs document information
+message CustomsDocument {
+  string document_id = 1;                      // Unique document identifier
+  string declaration_id = 2;                   // Associated declaration ID
+  string shipment_id = 3;                      // Associated shipment ID
+  
+  // Document details
+  logistics.customs.enums.CustomsDocumentType document_type = 4;
+  string document_number = 5;                  // Document reference number
+  string issuer = 6;                           // Document issuer
+  string issuer_country = 7;                   // Issuer country code
+  
+  // File information
+  string file_name = 8;                        // Original file name
+  string file_path = 9;                        // Storage path
+  string mime_type = 10;                       // MIME type
+  int64 file_size_bytes = 11;                  // File size in bytes
+  string checksum = 12;                        // File checksum for integrity
+  
+  // Status and validation
+  bool is_validated = 13;                      // Document validation status
+  string validation_notes = 14;                // Validation comments
+  string validation_officer_id = 15;           // Officer who validated
+  
+  // Timestamps
+  google.protobuf.Timestamp issue_date = 16;   // Document issue date
+  google.protobuf.Timestamp expiry_date = 17;  // Document expiry date
+  google.protobuf.Timestamp upload_time = 18;   // When uploaded to system
+  google.protobuf.Timestamp validation_time = 19; // When validated
+  
+  // Additional information
+  string language = 20;                        // Document language
+  bool is_translation_required = 21;           // Translation needed
+  string translated_document_id = 22;          // ID of translated version
+  map<string, string> metadata = 23;           // Additional metadata
+}

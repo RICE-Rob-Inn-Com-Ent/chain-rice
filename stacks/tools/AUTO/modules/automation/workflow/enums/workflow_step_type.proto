@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package automation.workflow.enums;
+
+// Workflow Step Type enumeration
+// Defines the different types of steps that can be executed in a workflow
+enum WorkflowStepType {
+  // Unspecified step type
+  WORKFLOW_STEP_TYPE_UNSPECIFIED = 0;
+  
+  // Basic Step Types
+  WORKFLOW_STEP_TYPE_START = 1;              // Start step - beginning of workflow
+  WORKFLOW_STEP_TYPE_END = 2;                // End step - end of workflow
+  WORKFLOW_STEP_TYPE_TASK = 3;               // Task step - execute a task
+  WORKFLOW_STEP_TYPE_WAIT = 4;               // Wait step - wait for a condition or time
+  WORKFLOW_STEP_TYPE_DELAY = 5;              // Delay step - wait for a specified duration
+  WORKFLOW_STEP_TYPE_PARALLEL = 6;           // Parallel step - execute multiple steps in parallel
+  WORKFLOW_STEP_TYPE_SEQUENTIAL = 7;         // Sequential step - execute steps one after another
+  WORKFLOW_STEP_TYPE_LOOP = 8;               // Loop step - repeat steps multiple times
+  WORKFLOW_STEP_TYPE_CONDITION = 9;          // Condition step - conditional execution
+  WORKFLOW_STEP_TYPE_SWITCH = 10;            // Switch step - switch between different paths
+  
+  // Data Processing Steps
+  WORKFLOW_STEP_TYPE_DATA_TRANSFORM = 11;    // Data transformation step
+  WORKFLOW_STEP_TYPE_DATA_VALIDATE = 12;     // Data validation step
+  WORKFLOW_STEP_TYPE_DATA_FILTER = 13;       // Data filtering step
+  WORKFLOW_STEP_TYPE_DATA_AGGREGATE = 14;    // Data aggregation step
+  WORKFLOW_STEP_TYPE_DATA_SORT = 15;         // Data sorting step
+  WORKFLOW_STEP_TYPE_DATA_GROUP = 16;        // Data grouping step
+  WORKFLOW_STEP_TYPE_DATA_JOIN = 17;         // Data joining step
+  WORKFLOW_STEP_TYPE_DATA_SPLIT = 18;        // Data splitting step
+  WORKFLOW_STEP_TYPE_DATA_MERGE = 19;        // Data merging step
+  WORKFLOW_STEP_TYPE_DATA_ENRICH = 20;       // Data enrichment step
+  
+  // API and Integration Steps
+  WORKFLOW_STEP_TYPE_API_CALL = 21;          // API call step
+  WORKFLOW_STEP_TYPE_HTTP_REQUEST = 22;      // HTTP request step
+  WORKFLOW_STEP_TYPE_REST_CALL = 23;         // REST API call step
+  WORKFLOW_STEP_TYPE_GRAPHQL_CALL = 24;      // GraphQL API call step
+  WORKFLOW_STEP_TYPE_SOAP_CALL = 25;         // SOAP API call step
+  WORKFLOW_STEP_TYPE_WEBHOOK = 26;           // Webhook step
+  WORKFLOW_STEP_TYPE_WEBHOOK_RECEIVE = 27;   // Webhook receive step
+  WORKFLOW_STEP_TYPE_WEBHOOK_SEND = 28;      // Webhook send step
+  WORKFLOW_STEP_TYPE_INTEGRATION = 29;       // Integration step
+  WORKFLOW_STEP_TYPE_CONNECTOR = 30;         // Connector step
+  
+  // Database Steps
+  WORKFLOW_STEP_TYPE_DATABASE_QUERY = 31;    // Database query step
+  WORKFLOW_STEP_TYPE_DATABASE_INSERT = 32;   // Database insert step
+  WORKFLOW_STEP_TYPE_DATABASE_UPDATE = 33;   // Database update step
+  WORKFLOW_STEP_TYPE_DATABASE_DELETE = 34;   // Database delete step
+  WORKFLOW_STEP_TYPE_DATABASE_UPSERT = 35;   // Database upsert step
+  WORKFLOW_STEP_TYPE_DATABASE_TRANSACTION = 36; // Database transaction step
+  WORKFLOW_STEP_TYPE_DATABASE_MIGRATION = 37; // Database migration step
+  WORKFLOW_STEP_TYPE_DATABASE_BACKUP = 38;   // Database backup step
+  WORKFLOW_STEP_TYPE_DATABASE_RESTORE = 39;  // Database restore step
+  
+  // File Processing Steps
+  WORKFLOW_STEP_TYPE_FILE_READ = 40;         // File read step
+  WORKFLOW_STEP_TYPE_FILE_WRITE = 41;        // File write step
+  WORKFLOW_STEP_TYPE_FILE_COPY = 42;         // File copy step
+  WORKFLOW_STEP_TYPE_FILE_MOVE = 43;         // File move step
+  WORKFLOW_STEP_TYPE_FILE_DELETE = 44;       // File delete step
+  WORKFLOW_STEP_TYPE_FILE_UPLOAD = 45;       // File upload step
+  WORKFLOW_STEP_TYPE_FILE_DOWNLOAD = 46;     // File download step
+  WORKFLOW_STEP_TYPE_FILE_COMPRESS = 47;     // File compression step
+  WORKFLOW_STEP_TYPE_FILE_DECOMPRESS = 48;   // File decompression step
+  WORKFLOW_STEP_TYPE_FILE_CONVERT = 49;      // File format conversion step
+  
+  // Communication Steps
+  WORKFLOW_STEP_TYPE_EMAIL_SEND = 50;        // Email send step
+  WORKFLOW_STEP_TYPE_EMAIL_RECEIVE = 51;     // Email receive step
+  WORKFLOW_STEP_TYPE_SMS_SEND = 52;          // SMS send step
+  WORKFLOW_STEP_TYPE_SMS_RECEIVE = 53;       // SMS receive step
+  WORKFLOW_STEP_TYPE_NOTIFICATION = 54;      // Notification step
+  WORKFLOW_STEP_TYPE_ALERT = 55;             // Alert step
+  WORKFLOW_STEP_TYPE_CHAT_MESSAGE = 56;      // Chat message step
+  WORKFLOW_STEP_TYPE_SLACK_MESSAGE = 57;     // Slack message step
+  WORKFLOW_STEP_TYPE_TEAMS_MESSAGE = 58;     // Teams message step
+  WORKFLOW_STEP_TYPE_DISCORD_MESSAGE = 59;   // Discord message step
+  
+  // AI/ML Steps
+  WORKFLOW_STEP_TYPE_AI_PREDICT = 60;        // AI prediction step
+  WORKFLOW_STEP_TYPE_AI_TRAIN = 61;          // AI training step
+  WORKFLOW_STEP_TYPE_AI_EVALUATE = 62;       // AI evaluation step
+  WORKFLOW_STEP_TYPE_AI_OPTIMIZE = 63;       // AI optimization step
+  WORKFLOW_STEP_TYPE_ML_PIPELINE = 64;       // ML pipeline step
+  WORKFLOW_STEP_TYPE_DATA_PREPROCESSING = 65; // Data preprocessing step
+  WORKFLOW_STEP_TYPE_FEATURE_ENGINEERING = 66; // Feature engineering step
+  WORKFLOW_STEP_TYPE_MODEL_DEPLOY = 67;      // Model deployment step
+  WORKFLOW_STEP_TYPE_MODEL_SERVE = 68;       // Model serving step
+  
+  // Business Logic Steps
+  WORKFLOW_STEP_TYPE_APPROVAL = 69;          // Approval step
+  WORKFLOW_STEP_TYPE_REJECTION = 70;         // Rejection step
+  WORKFLOW_STEP_TYPE_ESCALATION = 71;        // Escalation step
+  WORKFLOW_STEP_TYPE_ROUTING = 72;           // Routing step
+  WORKFLOW_STEP_TYPE_ASSIGNMENT = 73;        // Assignment step
+  WORKFLOW_STEP_TYPE_DELEGATION = 74;        // Delegation step
+  WORKFLOW_STEP_TYPE_REVIEW = 75;            // Review step
+  WORKFLOW_STEP_TYPE_APPROVAL_WORKFLOW = 76; // Approval workflow step
+  WORKFLOW_STEP_TYPE_BUSINESS_RULE = 77;     // Business rule step
+  
+  // Monitoring and Logging Steps
+  WORKFLOW_STEP_TYPE_LOG = 78;               // Logging step
+  WORKFLOW_STEP_TYPE_METRICS = 79;           // Metrics collection step
+  WORKFLOW_STEP_TYPE_MONITOR = 80;           // Monitoring step
+  WORKFLOW_STEP_TYPE_ALERT_CHECK = 81;       // Alert check step
+  WORKFLOW_STEP_TYPE_HEALTH_CHECK = 82;      // Health check step
+  WORKFLOW_STEP_TYPE_PERFORMANCE_CHECK = 83; // Performance check step
+  WORKFLOW_STEP_TYPE_AUDIT = 84;             // Audit step
+  WORKFLOW_STEP_TYPE_COMPLIANCE_CHECK = 85;  // Compliance check step
+  
+  // Security Steps
+  WORKFLOW_STEP_TYPE_AUTHENTICATION = 86;    // Authentication step
+  WORKFLOW_STEP_TYPE_AUTHORIZATION = 87;     // Authorization step
+  WORKFLOW_STEP_TYPE_ENCRYPTION = 88;        // Encryption step
+  WORKFLOW_STEP_TYPE_DECRYPTION = 89;        // Decryption step
+  WORKFLOW_STEP_TYPE_SECURITY_SCAN = 90;     // Security scan step
+  WORKFLOW_STEP_TYPE_VULNERABILITY_CHECK = 91; // Vulnerability check step
+  WORKFLOW_STEP_TYPE_ACCESS_CONTROL = 92;    // Access control step
+  WORKFLOW_STEP_TYPE_AUDIT_LOG = 93;         // Audit log step
+  
+  // Error Handling Steps
+  WORKFLOW_STEP_TYPE_ERROR_HANDLER = 94;     // Error handler step
+  WORKFLOW_STEP_TYPE_RETRY = 95;             // Retry step
+  WORKFLOW_STEP_TYPE_FALLBACK = 96;          // Fallback step
+  WORKFLOW_STEP_TYPE_COMPENSATION = 97;      // Compensation step
+  WORKFLOW_STEP_TYPE_ROLLBACK = 98;          // Rollback step
+  WORKFLOW_STEP_TYPE_CLEANUP = 99;           // Cleanup step
+  WORKFLOW_STEP_TYPE_RECOVERY = 100;         // Recovery step
+  
+  // Custom Steps
+  WORKFLOW_STEP_TYPE_CUSTOM = 101;           // Custom user-defined step
+  WORKFLOW_STEP_TYPE_SCRIPT = 102;           // Script execution step
+  WORKFLOW_STEP_TYPE_PLUGIN = 103;           // Plugin execution step
+  WORKFLOW_STEP_TYPE_MICROSERVICE = 104;     // Microservice call step
+  WORKFLOW_STEP_TYPE_LAMBDA = 105;           // Lambda function step
+  WORKFLOW_STEP_TYPE_FUNCTION = 106;         // Function call step
+  WORKFLOW_STEP_TYPE_PROCEDURE = 107;        // Procedure call step
+  WORKFLOW_STEP_TYPE_SUBWORKFLOW = 108;      // Sub-workflow step
+}

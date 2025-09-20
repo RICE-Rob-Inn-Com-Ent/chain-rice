@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// Course lifecycle statuses.
+package education.courses.enums;
+
+option go_package = "github.com/rice-dev/education/courses/enums;coursesenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.courses.enums";
+
+// Lifecycle status for a course.
+enum CourseStatus {
+  COURSE_STATUS_UNSPECIFIED = 0; // Unknown
+  COURSE_STATUS_DRAFT = 1;       // In authoring phase
+  COURSE_STATUS_PUBLISHED = 2;   // Available for enrollment
+  COURSE_STATUS_ARCHIVED = 3;    // No longer active
+  COURSE_STATUS_RETIRED = 4;     // Permanently retired
+  COURSE_STATUS_SUSPENDED = 5;   // Temporarily disabled
+}
+
+

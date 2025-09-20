@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package healthcare.appointments.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/enums";
+
+// Appointment type enumeration
+enum AppointmentType {
+  APPOINTMENT_TYPE_UNSPECIFIED = 0;
+  APPOINTMENT_TYPE_CONSULTATION = 1;
+  APPOINTMENT_TYPE_SURGERY = 2;
+  APPOINTMENT_TYPE_FOLLOW_UP = 3;
+  APPOINTMENT_TYPE_THERAPY = 4;
+  APPOINTMENT_TYPE_CHECKUP = 5;
+  APPOINTMENT_TYPE_EMERGENCY = 6;
+  APPOINTMENT_TYPE_VACCINATION = 7;
+  APPOINTMENT_TYPE_DIAGNOSTIC = 8;
+}

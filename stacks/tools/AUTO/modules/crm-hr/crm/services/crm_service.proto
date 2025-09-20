@@ -1,0 +1,301 @@
+syntax = "proto3";
+
+package crm_hr.crm.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "crm_hr/crm/messages/deal.proto";
+import "crm_hr/crm/messages/pipeline.proto";
+import "crm_hr/crm/messages/crm_note.proto";
+import "crm_hr/crm/enums/deal_stage.proto";
+import "crm_hr/crm/enums/pipeline_status.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/crm/services";
+
+// CrmService provides comprehensive CRM functionality including deals, pipelines, and notes
+service CrmService {
+  // Deal Management
+  rpc CreateDeal(CreateDealRequest) returns (Deal);
+  rpc GetDeal(GetDealRequest) returns (Deal);
+  rpc UpdateDeal(UpdateDealRequest) returns (Deal);
+  rpc DeleteDeal(DeleteDealRequest) returns (google.protobuf.Empty);
+  rpc ListDeals(ListDealsRequest) returns (ListDealsResponse);
+  
+  // Deal Business Operations
+  rpc MoveDealToStage(MoveDealToStageRequest) returns (Deal);
+  rpc AssignDeal(AssignDealRequest) returns (Deal);
+  rpc CloseDeal(CloseDealRequest) returns (Deal);
+  rpc ReopenDeal(ReopenDealRequest) returns (Deal);
+  rpc GetDealActivities(GetDealActivitiesRequest) returns (GetDealActivitiesResponse);
+  rpc AddDealActivity(AddDealActivityRequest) returns (DealActivity);
+  
+  // Pipeline Management
+  rpc CreatePipeline(CreatePipelineRequest) returns (Pipeline);
+  rpc GetPipeline(GetPipelineRequest) returns (Pipeline);
+  rpc UpdatePipeline(UpdatePipelineRequest) returns (Pipeline);
+  rpc DeletePipeline(DeletePipelineRequest) returns (google.protobuf.Empty);
+  rpc ListPipelines(ListPipelinesRequest) returns (ListPipelinesResponse);
+  
+  // Pipeline Business Operations
+  rpc SetDefaultPipeline(SetDefaultPipelineRequest) returns (Pipeline);
+  rpc GetPipelineMetrics(GetPipelineMetricsRequest) returns (PipelineMetrics);
+  rpc GetPipelinePerformance(GetPipelinePerformanceRequest) returns (PipelinePerformanceResponse);
+  
+  // Note Management
+  rpc CreateNote(CreateNoteRequest) returns (CrmNote);
+  rpc GetNote(GetNoteRequest) returns (CrmNote);
+  rpc UpdateNote(UpdateNoteRequest) returns (CrmNote);
+  rpc DeleteNote(DeleteNoteRequest) returns (google.protobuf.Empty);
+  rpc ListNotes(ListNotesRequest) returns (ListNotesResponse);
+  
+  // Analytics and Reporting
+  rpc GetDealAnalytics(GetDealAnalyticsRequest) returns (DealAnalyticsResponse);
+  rpc GetSalesForecast(GetSalesForecastRequest) returns (SalesForecastResponse);
+  rpc GetDealConversionRates(GetDealConversionRatesRequest) returns (DealConversionRatesResponse);
+}
+
+// Deal Management Requests/Responses
+message CreateDealRequest {
+  string name = 1;
+  string description = 2;
+  crm_hr.crm.enums.DealStage stage = 3;
+  string customer_id = 4;
+  string assigned_to = 5;
+  string pipeline_id = 6;
+  string source = 7;
+  repeated string tags = 8;
+  map<string, string> custom_fields = 9;
+}
+
+message GetDealRequest {
+  string id = 1;
+}
+
+message UpdateDealRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  crm_hr.crm.enums.DealStage stage = 4;
+  string assigned_to = 5;
+  repeated string tags = 6;
+  map<string, string> custom_fields = 7;
+}
+
+message DeleteDealRequest {
+  string id = 1;
+}
+
+message ListDealsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  string order_by = 4;
+  string assigned_to = 5;
+  crm_hr.crm.enums.DealStage stage = 6;
+  string pipeline_id = 7;
+}
+
+message ListDealsResponse {
+  repeated Deal deals = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Deal Business Operations
+message MoveDealToStageRequest {
+  string deal_id = 1;
+  crm_hr.crm.enums.DealStage new_stage = 2;
+  string reason = 3;
+}
+
+message AssignDealRequest {
+  string deal_id = 1;
+  string assigned_to = 2;
+  string reason = 3;
+}
+
+message CloseDealRequest {
+  string deal_id = 1;
+  bool won = 2;
+  string reason = 3;
+  double final_value = 4;
+}
+
+message ReopenDealRequest {
+  string deal_id = 1;
+  string reason = 2;
+  crm_hr.crm.enums.DealStage new_stage = 3;
+}
+
+message GetDealActivitiesRequest {
+  string deal_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message GetDealActivitiesResponse {
+  repeated DealActivity activities = 1;
+  string next_page_token = 2;
+}
+
+message AddDealActivityRequest {
+  string deal_id = 1;
+  string activity_type = 2;
+  string description = 3;
+  string performed_by = 4;
+  map<string, string> metadata = 5;
+}
+
+// Pipeline Management
+message CreatePipelineRequest {
+  string name = 1;
+  string description = 2;
+  repeated PipelineStage stages = 3;
+  double target_revenue = 4;
+  int32 target_deals = 5;
+  string team_id = 6;
+}
+
+message GetPipelineRequest {
+  string id = 1;
+}
+
+message UpdatePipelineRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  crm_hr.crm.enums.PipelineStatus status = 4;
+  repeated PipelineStage stages = 5;
+  double target_revenue = 6;
+  int32 target_deals = 7;
+}
+
+message DeletePipelineRequest {
+  string id = 1;
+}
+
+message ListPipelinesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  crm_hr.crm.enums.PipelineStatus status = 4;
+  string team_id = 5;
+}
+
+message ListPipelinesResponse {
+  repeated Pipeline pipelines = 1;
+  string next_page_token = 2;
+}
+
+// Pipeline Business Operations
+message SetDefaultPipelineRequest {
+  string pipeline_id = 1;
+}
+
+message GetPipelineMetricsRequest {
+  string pipeline_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message GetPipelinePerformanceRequest {
+  string pipeline_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message PipelinePerformanceResponse {
+  double total_revenue = 1;
+  double expected_revenue = 2;
+  int32 total_deals = 3;
+  int32 closed_deals = 4;
+  double conversion_rate = 5;
+  double average_deal_size = 6;
+  double pipeline_velocity = 7;
+}
+
+// Note Management
+message CreateNoteRequest {
+  string content = 1;
+  string note_type = 2;
+  string entity_id = 3;
+  string entity_type = 4;
+  bool is_private = 5;
+  repeated string tags = 6;
+}
+
+message GetNoteRequest {
+  string id = 1;
+}
+
+message UpdateNoteRequest {
+  string id = 1;
+  string content = 2;
+  bool is_pinned = 3;
+  repeated string tags = 4;
+}
+
+message DeleteNoteRequest {
+  string id = 1;
+}
+
+message ListNotesRequest {
+  string entity_id = 1;
+  string entity_type = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+  string filter = 5;
+}
+
+message ListNotesResponse {
+  repeated CrmNote notes = 1;
+  string next_page_token = 2;
+}
+
+// Analytics and Reporting
+message GetDealAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string pipeline_id = 3;
+  string assigned_to = 4;
+  string team_id = 5;
+}
+
+message DealAnalyticsResponse {
+  double total_revenue = 1;
+  double expected_revenue = 2;
+  int32 total_deals = 3;
+  int32 closed_won = 4;
+  int32 closed_lost = 5;
+  double win_rate = 6;
+  double average_deal_size = 7;
+  double average_sales_cycle = 8;
+  map<string, double> revenue_by_stage = 9;
+  map<string, int32> deals_by_stage = 10;
+}
+
+message GetSalesForecastRequest {
+  google.protobuf.Timestamp forecast_date = 1;
+  string pipeline_id = 2;
+  string team_id = 3;
+}
+
+message SalesForecastResponse {
+  double forecasted_revenue = 1;
+  double confidence_level = 2;
+  repeated Deal forecasted_deals = 3;
+  map<string, double> revenue_by_month = 4;
+}
+
+message GetDealConversionRatesRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string pipeline_id = 3;
+}
+
+message DealConversionRatesResponse {
+  map<string, double> stage_conversion_rates = 1;
+  double overall_conversion_rate = 2;
+  map<string, int32> deals_by_stage = 3;
+  double average_time_in_stage = 4;
+}

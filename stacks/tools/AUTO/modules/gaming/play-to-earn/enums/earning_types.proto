@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.play_to_earn.enums;
+
+option go_package = "github.com/rice-dev/gaming/play-to-earn/enums";
+
+// Типи заробітку
+enum EarningType {
+  EARNING_TYPE_UNSPECIFIED = 0;
+  
+  // Ігровий заробіток
+  EARNING_TYPE_GAMING = 1;
+  
+  // Завдання
+  EARNING_TYPE_QUEST = 2;
+  
+  // Місії
+  EARNING_TYPE_MISSION = 3;
+  
+  // Досягнення
+  EARNING_TYPE_ACHIEVEMENT = 4;
+  
+  // Нагороди
+  EARNING_TYPE_REWARD = 5;
+  
+  // Бонуси
+  EARNING_TYPE_BONUS = 6;
+  
+  // Премії
+  EARNING_TYPE_PREMIUM = 7;
+  
+  // Комісії
+  EARNING_TYPE_COMMISSION = 8;
+  
+  // Дивіденди
+  EARNING_TYPE_DIVIDEND = 9;
+  
+  // Відсотки
+  EARNING_TYPE_INTEREST = 10;
+  
+  // Рента
+  EARNING_TYPE_RENT = 11;
+  
+  // Лізинг
+  EARNING_TYPE_LEASE = 12;
+  
+  // Франшиза
+  EARNING_TYPE_FRANCHISE = 13;
+  
+  // Ліцензія
+  EARNING_TYPE_LICENSE = 14;
+  
+  // Патент
+  EARNING_TYPE_PATENT = 15;
+  
+  // Авторські права
+  EARNING_TYPE_COPYRIGHT = 16;
+  
+  // Торгова марка
+  EARNING_TYPE_TRADEMARK = 17;
+  
+  // Промисловий зразок
+  EARNING_TYPE_DESIGN = 18;
+  
+  // Корисна модель
+  EARNING_TYPE_UTILITY_MODEL = 19;
+  
+  // Сорт рослин
+  EARNING_TYPE_PLANT_VARIETY = 20;
+  
+  // Топографія інтегральних мікросхем
+  EARNING_TYPE_TOPOLOGY = 21;
+  
+  // Комерційна таємниця
+  EARNING_TYPE_TRADE_SECRET = 22;
+  
+  // Ноу-хау
+  EARNING_TYPE_KNOW_HOW = 23;
+  
+  // Технологія
+  EARNING_TYPE_TECHNOLOGY = 24;
+  
+  // Інновація
+  EARNING_TYPE_INNOVATION = 25;
+  
+  // Винахід
+  EARNING_TYPE_INVENTION = 26;
+  
+  // Відкриття
+  EARNING_TYPE_DISCOVERY = 27;
+  
+  // Дослідження
+  EARNING_TYPE_RESEARCH = 28;
+  
+  // Розробка
+  EARNING_TYPE_DEVELOPMENT = 29;
+  
+  // Тестування
+  EARNING_TYPE_TESTING = 30;
+  
+  // Валідація
+  EARNING_TYPE_VALIDATION = 31;
+  
+  // Верифікація
+  EARNING_TYPE_VERIFICATION = 32;
+  
+  // Сертифікація
+  EARNING_TYPE_CERTIFICATION = 33;
+  
+  // Акредитація
+  EARNING_TYPE_ACCREDITATION = 34;
+  
+  // Стандартизація
+  EARNING_TYPE_STANDARDIZATION = 35;
+  
+  // Нормалізація
+  EARNING_TYPE_NORMALIZATION = 36;
+  
+  // Уніфікація
+  EARNING_TYPE_UNIFICATION = 37;
+  
+  // Гармонізація
+  EARNING_TYPE_HARMONIZATION = 38;
+  
+  // Синхронізація
+  EARNING_TYPE_SYNCHRONIZATION = 39;
+  
+  // Координація
+  EARNING_TYPE_COORDINATION = 40;
+  
+  // Інтеграція
+  EARNING_TYPE_INTEGRATION = 41;
+  
+  // Консолідація
+  EARNING_TYPE_CONSOLIDATION = 42;
+  
+  // Оптимізація
+  EARNING_TYPE_OPTIMIZATION = 43;
+  
+  // Максимізація
+  EARNING_TYPE_MAXIMIZATION = 44;
+  
+  // Мінімізація
+  EARNING_TYPE_MINIMIZATION = 45;
+  
+  // Стабілізація
+  EARNING_TYPE_STABILIZATION = 46;
+  
+  // Балансування
+  EARNING_TYPE_BALANCING = 47;
+  
+  // Регулювання
+  EARNING_TYPE_REGULATION = 48;
+  
+  // Контроль
+  EARNING_TYPE_CONTROL = 49;
+  
+  // Управління
+  EARNING_TYPE_MANAGEMENT = 50;
+  
+  // Керування
+  EARNING_TYPE_GOVERNANCE = 51;
+  
+  // Лідерство
+  EARNING_TYPE_LEADERSHIP = 52;
+  
+  // Керівництво
+  EARNING_TYPE_GUIDANCE = 53;
+  
+  // Наставництво
+  EARNING_TYPE_MENTORING = 54;
+  
+  // Тренування
+  EARNING_TYPE_TRAINING = 55;
+  
+  // Навчання
+  EARNING_TYPE_EDUCATION = 56;
+  
+  // Освіта
+  EARNING_TYPE_EDUCATION = 57;
+  
+  // Викладання
+  EARNING_TYPE_TEACHING = 58;
+  
+  // Інструктування
+  EARNING_TYPE_INSTRUCTION = 59;
+  
+  // Консультування
+  EARNING_TYPE_CONSULTING = 60;
+  
+  // Порадування
+  EARNING_TYPE_ADVISING = 61;
+  
+  // Рекомендації
+  EARNING_TYPE_RECOMMENDATION = 62;
+  
+  // Пропозиції
+  EARNING_TYPE_PROPOSAL = 63;
+  
+  // Планування
+  EARNING_TYPE_PLANNING = 64;
+  
+  // Стратегія
+  EARNING_TYPE_STRATEGY = 65;
+  
+  // Тактика
+  EARNING_TYPE_TACTICS = 66;
+  
+  // Методологія
+  EARNING_TYPE_METHODOLOGY = 67;
+  
+  // Процедури
+  EARNING_TYPE_PROCEDURES = 68;
+  
+  // Протоколи
+  EARNING_TYPE_PROTOCOLS = 69;
+  
+  // Стандарти
+  EARNING_TYPE_STANDARDS = 70;
+  
+  // Правила
+  EARNING_TYPE_RULES = 71;
+  
+  // Регламенти
+  EARNING_TYPE_REGULATIONS = 72;
+  
+  // Закони
+  EARNING_TYPE_LAWS = 73;
+  
+  // Акти
+  EARNING_TYPE_ACTS = 74;
+  
+  // Статути
+  EARNING_TYPE_STATUTES = 75;
+  
+  // Ординанси
+  EARNING_TYPE_ORDINANCES = 76;
+  
+  // Декрети
+  EARNING_TYPE_DECREES = 77;
+  
+  // Едикти
+  EARNING_TYPE_EDICTS = 78;
+  
+  // Мандати
+  EARNING_TYPE_MANDATES = 79;
+  
+  // Накази
+  EARNING_TYPE_ORDERS = 80;
+  
+  // Команди
+  EARNING_TYPE_COMMANDS = 81;
+  
+  // Інструкції
+  EARNING_TYPE_INSTRUCTIONS = 82;
+  
+  // Напрямки
+  EARNING_TYPE_DIRECTIONS = 83;
+  
+  // Керівництво
+  EARNING_TYPE_GUIDANCE = 84;
+  
+  // Поради
+  EARNING_TYPE_ADVICE = 85;
+  
+  // Пропозиції
+  EARNING_TYPE_SUGGESTIONS = 86;
+  
+  // Рекомендації
+  EARNING_TYPE_RECOMMENDATIONS = 87;
+  
+  // Пропозиції
+  EARNING_TYPE_PROPOSALS = 88;
+  
+  // Пропозиції
+  EARNING_TYPE_OFFERS = 89;
+  
+  // Ставки
+  EARNING_TYPE_BIDS = 90;
+  
+  // Аукціони
+  EARNING_TYPE_AUCTIONS = 91;
+  
+  // Продажі
+  EARNING_TYPE_SALES = 92;
+  
+  // Покупки
+  EARNING_TYPE_PURCHASES = 93;
+  
+  // Торгівля
+  EARNING_TYPE_TRADING = 94;
+  
+  // Обмін
+  EARNING_TYPE_EXCHANGE = 95;
+  
+  // Обмін
+  EARNING_TYPE_SWAP = 96;
+  
+  // Бартер
+  EARNING_TYPE_BARTER = 97;
+  
+  // Переговори
+  EARNING_TYPE_NEGOTIATION = 98;
+  
+  // Угоди
+  EARNING_TYPE_AGREEMENT = 99;
+  
+  // Контракти
+  EARNING_TYPE_CONTRACT = 100;
+}

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package tourism.hotels.enums;
+
+// HotelRating represents the star rating classification of a hotel
+enum HotelRating {
+  // Unspecified rating - should not be used in production
+  HOTEL_RATING_UNSPECIFIED = 0;
+  
+  // One star - budget accommodation
+  ONE_STAR = 1;
+  
+  // Two stars - basic accommodation
+  TWO_STAR = 2;
+  
+  // Three stars - standard accommodation
+  THREE_STAR = 3;
+  
+  // Four stars - superior accommodation
+  FOUR_STAR = 4;
+  
+  // Five stars - luxury accommodation
+  FIVE_STAR = 5;
+  
+  // Boutique - small, unique hotels
+  BOUTIQUE = 6;
+  
+  // Resort - leisure-focused accommodation
+  RESORT = 7;
+  
+  // Budget - economy accommodation
+  BUDGET = 8;
+  
+  // Luxury - high-end accommodation
+  LUXURY = 9;
+  
+  // Business - corporate-focused accommodation
+  BUSINESS = 10;
+  
+  // Extended stay - long-term accommodation
+  EXTENDED_STAY = 11;
+  
+  // All-inclusive - package accommodation
+  ALL_INCLUSIVE = 12;
+}

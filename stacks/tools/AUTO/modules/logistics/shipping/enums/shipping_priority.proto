@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package logistics.shipping.enums;
+
+// Shipping priority levels
+enum ShippingPriority {
+  SHIPPING_PRIORITY_UNSPECIFIED = 0;
+  SHIPPING_PRIORITY_ECONOMY = 1;               // Economy shipping
+  SHIPPING_PRIORITY_STANDARD = 2;              // Standard shipping
+  SHIPPING_PRIORITY_EXPRESS = 3;               // Express shipping
+  SHIPPING_PRIORITY_PRIORITY = 4;              // Priority shipping
+  SHIPPING_PRIORITY_OVERNIGHT = 5;              // Overnight shipping
+  SHIPPING_PRIORITY_SAME_DAY = 6;              // Same day shipping
+  SHIPPING_PRIORITY_EMERGENCY = 7;             // Emergency shipping
+  SHIPPING_PRIORITY_WHITE_GLOVE = 8;           // White glove service
+  SHIPPING_PRIORITY_SPECIAL_HANDLING = 9;      // Special handling required
+}

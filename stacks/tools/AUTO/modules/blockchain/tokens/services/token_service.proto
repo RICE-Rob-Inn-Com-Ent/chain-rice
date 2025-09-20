@@ -1,0 +1,282 @@
+syntax = "proto3";
+
+package blockchain.tokens.services;
+
+import "blockchain/tokens/messages/token.proto";
+import "blockchain/tokens/messages/token_transfer.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/services";
+
+// TokenMsgService handles state-changing token operations
+service TokenMsgService {
+  // CreateToken creates a new token
+  rpc CreateToken(blockchain.tokens.messages.MsgCreateToken) returns (blockchain.tokens.messages.MsgCreateTokenResponse);
+  
+  // UpdateToken updates an existing token
+  rpc UpdateToken(blockchain.tokens.messages.MsgUpdateToken) returns (blockchain.tokens.messages.MsgUpdateTokenResponse);
+  
+  // MintToken mints new tokens
+  rpc MintToken(blockchain.tokens.messages.MsgMintToken) returns (blockchain.tokens.messages.MsgMintTokenResponse);
+  
+  // BurnToken burns tokens
+  rpc BurnToken(blockchain.tokens.messages.MsgBurnToken) returns (blockchain.tokens.messages.MsgBurnTokenResponse);
+  
+  // PauseToken pauses a token
+  rpc PauseToken(blockchain.tokens.messages.MsgPauseToken) returns (blockchain.tokens.messages.MsgPauseTokenResponse);
+  
+  // ResumeToken resumes a paused token
+  rpc ResumeToken(blockchain.tokens.messages.MsgResumeToken) returns (blockchain.tokens.messages.MsgResumeTokenResponse);
+  
+  // TransferToken transfers tokens
+  rpc TransferToken(blockchain.tokens.messages.MsgTransferToken) returns (blockchain.tokens.messages.MsgTransferTokenResponse);
+  
+  // ApproveToken approves token spending
+  rpc ApproveToken(blockchain.tokens.messages.MsgApproveToken) returns (blockchain.tokens.messages.MsgApproveTokenResponse);
+  
+  // RevokeTokenApproval revokes token approval
+  rpc RevokeTokenApproval(blockchain.tokens.messages.MsgRevokeTokenApproval) returns (blockchain.tokens.messages.MsgRevokeTokenApprovalResponse);
+  
+  // BatchTransferToken performs batch token transfers
+  rpc BatchTransferToken(blockchain.tokens.messages.MsgBatchTransferToken) returns (blockchain.tokens.messages.MsgBatchTransferTokenResponse);
+  
+  // LockToken locks tokens
+  rpc LockToken(blockchain.tokens.messages.MsgLockToken) returns (blockchain.tokens.messages.MsgLockTokenResponse);
+  
+  // UnlockToken unlocks tokens
+  rpc UnlockToken(blockchain.tokens.messages.MsgUnlockToken) returns (blockchain.tokens.messages.MsgUnlockTokenResponse);
+}
+
+// TokenQueryService handles token state queries
+service TokenQueryService {
+  // GetToken retrieves a specific token
+  rpc GetToken(GetTokenRequest) returns (GetTokenResponse);
+  
+  // ListTokens lists tokens with pagination and filters
+  rpc ListTokens(ListTokensRequest) returns (ListTokensResponse);
+  
+  // GetTokenTransfer retrieves a specific token transfer
+  rpc GetTokenTransfer(GetTokenTransferRequest) returns (GetTokenTransferResponse);
+  
+  // ListTokenTransfers lists token transfers with pagination and filters
+  rpc ListTokenTransfers(ListTokenTransfersRequest) returns (ListTokenTransfersResponse);
+  
+  // GetTokenParams retrieves token module parameters
+  rpc GetTokenParams(GetTokenParamsRequest) returns (GetTokenParamsResponse);
+  
+  // GetTokenStats retrieves token statistics
+  rpc GetTokenStats(GetTokenStatsRequest) returns (GetTokenStatsResponse);
+  
+  // GetTokenByAddress retrieves token by address
+  rpc GetTokenByAddress(GetTokenByAddressRequest) returns (GetTokenByAddressResponse);
+  
+  // GetTokenTransfersByToken retrieves transfers for a token
+  rpc GetTokenTransfersByToken(GetTokenTransfersByTokenRequest) returns (GetTokenTransfersByTokenResponse);
+  
+  // GetTokenBalance retrieves token balance for an address
+  rpc GetTokenBalance(GetTokenBalanceRequest) returns (GetTokenBalanceResponse);
+  
+  // GetTokenHolders retrieves token holders
+  rpc GetTokenHolders(GetTokenHoldersRequest) returns (GetTokenHoldersResponse);
+  
+  // GetTokenApprovals retrieves token approvals
+  rpc GetTokenApprovals(GetTokenApprovalsRequest) returns (GetTokenApprovalsResponse);
+  
+  // GetTokenLocks retrieves token locks
+  rpc GetTokenLocks(GetTokenLocksRequest) returns (GetTokenLocksResponse);
+  
+  // SearchTokens searches for tokens
+  rpc SearchTokens(SearchTokensRequest) returns (SearchTokensResponse);
+  
+  // GetTokenPrice retrieves token price
+  rpc GetTokenPrice(GetTokenPriceRequest) returns (GetTokenPriceResponse);
+  
+  // GetTokenMarketData retrieves token market data
+  rpc GetTokenMarketData(GetTokenMarketDataRequest) returns (GetTokenMarketDataResponse);
+}
+
+// Query request and response messages
+
+message GetTokenRequest {
+  string token_id = 1; // Token ID
+}
+
+message GetTokenResponse {
+  blockchain.tokens.messages.Token token = 1;
+}
+
+message ListTokensRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string token_type = 3;     // Filter by token type
+  string status = 4;         // Filter by status
+  string creator = 5;        // Filter by creator address
+  bool is_verified = 6;      // Filter by verification status
+  bool is_audited = 7;       // Filter by audit status
+}
+
+message ListTokensResponse {
+  repeated blockchain.tokens.messages.Token tokens = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetTokenTransferRequest {
+  string transfer_id = 1; // Token transfer ID
+}
+
+message GetTokenTransferResponse {
+  blockchain.tokens.messages.TokenTransfer transfer = 1;
+}
+
+message ListTokenTransfersRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string token_id = 3;       // Filter by token ID
+  string from_address = 4;   // Filter by sender address
+  string to_address = 5;     // Filter by recipient address
+  string status = 6;         // Filter by transfer status
+  int64 start_time = 7;      // Filter by start time
+  int64 end_time = 8;        // Filter by end time
+}
+
+message ListTokenTransfersResponse {
+  repeated blockchain.tokens.messages.TokenTransfer transfers = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetTokenParamsRequest {
+  // No parameters needed
+}
+
+message GetTokenParamsResponse {
+  blockchain.tokens.messages.TokenParams params = 1;
+}
+
+message GetTokenStatsRequest {
+  string time_period = 1; // Optional time period filter
+}
+
+message GetTokenStatsResponse {
+  int64 total_tokens = 1;           // Total number of tokens
+  int64 active_tokens = 2;          // Number of active tokens
+  int64 verified_tokens = 3;        // Number of verified tokens
+  int64 audited_tokens = 4;         // Number of audited tokens
+  int64 total_transfers = 5;        // Total number of transfers
+  int64 successful_transfers = 6;   // Number of successful transfers
+  int64 failed_transfers = 7;       // Number of failed transfers
+  string total_volume = 8;          // Total transfer volume
+  string total_fees_collected = 9;  // Total fees collected
+  string most_traded_token = 10;    // Most traded token
+  string average_transfer_amount = 11; // Average transfer amount
+}
+
+message GetTokenByAddressRequest {
+  string address = 1; // Token address
+}
+
+message GetTokenByAddressResponse {
+  blockchain.tokens.messages.Token token = 1;
+}
+
+message GetTokenTransfersByTokenRequest {
+  string token_id = 1;              // Token ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetTokenTransfersByTokenResponse {
+  repeated blockchain.tokens.messages.TokenTransfer transfers = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetTokenBalanceRequest {
+  string address = 1; // Address to query
+  string token_id = 2; // Optional token ID
+}
+
+message GetTokenBalanceResponse {
+  string address = 1;               // Address
+  string token_id = 2;              // Token ID
+  string balance = 3;               // Token balance
+  string locked_balance = 4;        // Locked balance
+  string available_balance = 5;     // Available balance
+  string total_balance = 6;         // Total balance
+}
+
+message GetTokenHoldersRequest {
+  string token_id = 1;              // Token ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetTokenHoldersResponse {
+  repeated string holders = 1;      // List of holder addresses
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetTokenApprovalsRequest {
+  string token_id = 1;              // Token ID
+  string owner = 2;                 // Owner address
+  string pagination_key = 3;        // Pagination key for next page
+  int32 limit = 4;                  // Number of results per page
+}
+
+message GetTokenApprovalsResponse {
+  repeated string approvals = 1;    // List of approval IDs
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetTokenLocksRequest {
+  string token_id = 1;              // Token ID
+  string owner = 2;                 // Owner address
+  string pagination_key = 3;        // Pagination key for next page
+  int32 limit = 4;                  // Number of results per page
+}
+
+message GetTokenLocksResponse {
+  repeated string locks = 1;        // List of lock IDs
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message SearchTokensRequest {
+  string query = 1;                 // Search query
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+  string token_type = 4;           // Filter by token type
+  string status = 5;                // Filter by status
+}
+
+message SearchTokensResponse {
+  repeated blockchain.tokens.messages.Token tokens = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetTokenPriceRequest {
+  string token_id = 1; // Token ID
+}
+
+message GetTokenPriceResponse {
+  string token_id = 1;              // Token ID
+  string price = 2;                 // Current price
+  string price_change_24h = 3;      // 24h price change
+  string market_cap = 4;            // Market capitalization
+  string volume_24h = 5;            // 24h trading volume
+  int64 last_updated = 6;           // Last price update timestamp
+}
+
+message GetTokenMarketDataRequest {
+  string token_id = 1; // Token ID
+}
+
+message GetTokenMarketDataResponse {
+  string token_id = 1;              // Token ID
+  string price = 2;                 // Current price
+  string price_change_24h = 3;      // 24h price change
+  string price_change_7d = 4;       // 7d price change
+  string price_change_30d = 5;      // 30d price change
+  string market_cap = 6;            // Market capitalization
+  string volume_24h = 7;            // 24h trading volume
+  string total_supply = 8;          // Total supply
+  string circulating_supply = 9;    // Circulating supply
+  string max_supply = 10;           // Maximum supply
+  int64 last_updated = 11;          // Last update timestamp
+}

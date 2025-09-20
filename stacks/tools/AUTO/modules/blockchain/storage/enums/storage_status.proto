@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package blockchain.storage.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/storage/enums";
+
+// StorageStatus defines the status of blockchain storage
+enum StorageStatus {
+  // STORAGE_STATUS_UNSPECIFIED indicates an unspecified storage status
+  STORAGE_STATUS_UNSPECIFIED = 0;
+  
+  // STORAGE_STATUS_ACTIVE indicates the storage is active and operational
+  STORAGE_STATUS_ACTIVE = 1;
+  
+  // STORAGE_STATUS_INACTIVE indicates the storage is inactive
+  STORAGE_STATUS_INACTIVE = 2;
+  
+  // STORAGE_STATUS_PENDING indicates the storage is pending activation
+  STORAGE_STATUS_PENDING = 3;
+  
+  // STORAGE_STATUS_SUSPENDED indicates the storage is suspended
+  STORAGE_STATUS_SUSPENDED = 4;
+  
+  // STORAGE_STATUS_DEPRECATED indicates the storage is deprecated
+  STORAGE_STATUS_DEPRECATED = 5;
+  
+  // STORAGE_STATUS_MAINTENANCE indicates the storage is under maintenance
+  STORAGE_STATUS_MAINTENANCE = 6;
+  
+  // STORAGE_STATUS_ERROR indicates the storage is in error state
+  STORAGE_STATUS_ERROR = 7;
+  
+  // STORAGE_STATUS_UPDATING indicates the storage is being updated
+  STORAGE_STATUS_UPDATING = 8;
+  
+  // STORAGE_STATUS_SYNCING indicates the storage is syncing data
+  STORAGE_STATUS_SYNCING = 9;
+  
+  // STORAGE_STATUS_OFFLINE indicates the storage is offline
+  STORAGE_STATUS_OFFLINE = 10;
+  
+  // STORAGE_STATUS_FULL indicates the storage is full
+  STORAGE_STATUS_FULL = 11;
+  
+  // STORAGE_STATUS_QUOTA_EXCEEDED indicates the storage quota is exceeded
+  STORAGE_STATUS_QUOTA_EXCEEDED = 12;
+  
+  // STORAGE_STATUS_VERIFIED indicates the storage is verified
+  STORAGE_STATUS_VERIFIED = 13;
+  
+  // STORAGE_STATUS_UNVERIFIED indicates the storage is unverified
+  STORAGE_STATUS_UNVERIFIED = 14;
+  
+  // STORAGE_STATUS_TRUSTED indicates the storage is trusted
+  STORAGE_STATUS_TRUSTED = 15;
+  
+  // STORAGE_STATUS_UNTRUSTED indicates the storage is untrusted
+  STORAGE_STATUS_UNTRUSTED = 16;
+  
+  // STORAGE_STATUS_ENCRYPTED indicates the storage is encrypted
+  STORAGE_STATUS_ENCRYPTED = 17;
+  
+  // STORAGE_STATUS_UNENCRYPTED indicates the storage is unencrypted
+  STORAGE_STATUS_UNENCRYPTED = 18;
+}

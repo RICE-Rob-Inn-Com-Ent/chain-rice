@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package transport.passengers.v1;
+
+option go_package = "github.com/rice-dev/transport/passengers/v1";
+
+// PassengerType enum defines the different categories of passengers
+enum PassengerType {
+  // Default value - should not be used
+  PASSENGER_TYPE_UNSPECIFIED = 0;
+  
+  // Regular adult passenger with standard fare
+  REGULAR = 1;
+  
+  // VIP passenger with premium services and priority
+  VIP = 2;
+  
+  // Student passenger with discounted fare
+  STUDENT = 3;
+  
+  // Senior citizen with special pricing
+  SENIOR = 4;
+  
+  // Child passenger (under 12 years)
+  CHILD = 5;
+  
+  // Disabled passenger with accessibility needs
+  DISABLED = 6;
+  
+  // Employee with free or discounted travel
+  EMPLOYEE = 7;
+  
+  // Group booking for multiple passengers
+  GROUP = 8;
+}

@@ -1,0 +1,431 @@
+syntax = "proto3";
+
+package gaming.achievements.services;
+
+import "gaming/achievements/messages/achievement_models.proto";
+import "gaming/achievements/messages/achievement_events.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/achievements/services";
+
+// Сервіс управління досягненнями
+service AchievementService {
+  // Створити нове досягнення
+  rpc CreateAchievement(CreateAchievementRequest) returns (CreateAchievementResponse);
+  
+  // Отримати досягнення за ID
+  rpc GetAchievement(GetAchievementRequest) returns (GetAchievementResponse);
+  
+  // Оновити досягнення
+  rpc UpdateAchievement(UpdateAchievementRequest) returns (UpdateAchievementResponse);
+  
+  // Видалити досягнення
+  rpc DeleteAchievement(DeleteAchievementRequest) returns (google.protobuf.Empty);
+  
+  // Отримати список досягнень
+  rpc ListAchievements(ListAchievementsRequest) returns (ListAchievementsResponse);
+  
+  // Отримати досягнення гравця
+  rpc GetPlayerAchievements(GetPlayerAchievementsRequest) returns (GetPlayerAchievementsResponse);
+  
+  // Оновити прогрес досягнення
+  rpc UpdateProgress(UpdateProgressRequest) returns (UpdateProgressResponse);
+  
+  // Завершити досягнення
+  rpc CompleteAchievement(CompleteAchievementRequest) returns (CompleteAchievementResponse);
+  
+  // Скинути досягнення
+  rpc ResetAchievement(ResetAchievementRequest) returns (ResetAchievementResponse);
+  
+  // Отримати статистику досягнень
+  rpc GetAchievementStats(GetAchievementStatsRequest) returns (GetAchievementStatsResponse);
+  
+  // Отримати доступні досягнення для гравця
+  rpc GetAvailableAchievements(GetAvailableAchievementsRequest) returns (GetAvailableAchievementsResponse);
+  
+  // Розблокувати досягнення
+  rpc UnlockAchievement(UnlockAchievementRequest) returns (UnlockAchievementResponse);
+}
+
+// Запит створення досягнення
+message CreateAchievementRequest {
+  // Дані досягнення
+  gaming.achievements.messages.Achievement achievement = 1;
+  
+  // Автор досягнення
+  string author_id = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь створення досягнення
+message CreateAchievementResponse {
+  // Створене досягнення
+  gaming.achievements.messages.Achievement achievement = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання досягнення
+message GetAchievementRequest {
+  // Ідентифікатор досягнення
+  string achievement_id = 1;
+  
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 2;
+}
+
+// Відповідь отримання досягнення
+message GetAchievementResponse {
+  // Досягнення
+  gaming.achievements.messages.Achievement achievement = 1;
+  
+  // Дані гравця (якщо вказано player_id)
+  gaming.achievements.messages.PlayerAchievement player_achievement = 2;
+}
+
+// Запит оновлення досягнення
+message UpdateAchievementRequest {
+  // Ідентифікатор досягнення
+  string achievement_id = 1;
+  
+  // Дані для оновлення
+  gaming.achievements.messages.Achievement achievement = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення досягнення
+message UpdateAchievementResponse {
+  // Оновлене досягнення
+  gaming.achievements.messages.Achievement achievement = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення досягнення
+message DeleteAchievementRequest {
+  // Ідентифікатор досягнення
+  string achievement_id = 1;
+  
+  // Причина видалення
+  string reason = 2;
+}
+
+// Запит списку досягнень
+message ListAchievementsRequest {
+  // Фільтри
+  AchievementFilters filters = 1;
+  
+  // Пагінація
+  Pagination pagination = 2;
+  
+  // Сортування
+  Sorting sorting = 3;
+}
+
+// Відповідь списку досягнень
+message ListAchievementsResponse {
+  // Список досягнень
+  repeated gaming.achievements.messages.Achievement achievements = 1;
+  
+  // Загальна кількість
+  int64 total_count = 2;
+  
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит досягнень гравця
+message GetPlayerAchievementsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Фільтри
+  PlayerAchievementFilters filters = 2;
+  
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь досягнень гравця
+message GetPlayerAchievementsResponse {
+  // Список досягнень гравця
+  repeated gaming.achievements.messages.PlayerAchievement player_achievements = 1;
+  
+  // Статистика гравця
+  gaming.achievements.messages.AchievementStats stats = 2;
+  
+  // Загальна кількість
+  int64 total_count = 3;
+}
+
+// Запит оновлення прогресу
+message UpdateProgressRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор досягнення
+  string achievement_id = 2;
+  
+  // Новий прогрес
+  int64 progress_value = 3;
+  
+  // Додаткові дані
+  map<string, string> progress_data = 4;
+  
+  // Причина оновлення
+  string reason = 5;
+}
+
+// Відповідь оновлення прогресу
+message UpdateProgressResponse {
+  // Оновлений прогрес
+  gaming.achievements.messages.AchievementProgress progress = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Чи завершено досягнення
+  bool is_completed = 4;
+}
+
+// Запит завершення досягнення
+message CompleteAchievementRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор досягнення
+  string achievement_id = 2;
+  
+  // Додаткові дані завершення
+  map<string, string> completion_data = 3;
+}
+
+// Відповідь завершення досягнення
+message CompleteAchievementResponse {
+  // Завершене досягнення
+  gaming.achievements.messages.PlayerAchievement player_achievement = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Доступні нагороди
+  repeated gaming.achievements.messages.Reward available_rewards = 4;
+}
+
+// Запит скидання досягнення
+message ResetAchievementRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор досягнення
+  string achievement_id = 2;
+  
+  // Причина скидання
+  string reason = 3;
+}
+
+// Відповідь скидання досягнення
+message ResetAchievementResponse {
+  // Скинуте досягнення
+  gaming.achievements.messages.PlayerAchievement player_achievement = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит статистики досягнень
+message GetAchievementStatsRequest {
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 1;
+  
+  // Фільтри
+  StatsFilters filters = 2;
+}
+
+// Відповідь статистики досягнень
+message GetAchievementStatsResponse {
+  // Статистика
+  gaming.achievements.messages.AchievementStats stats = 1;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Запит доступних досягнень
+message GetAvailableAchievementsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Фільтри
+  AchievementFilters filters = 2;
+  
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь доступних досягнень
+message GetAvailableAchievementsResponse {
+  // Список доступних досягнень
+  repeated gaming.achievements.messages.Achievement achievements = 1;
+  
+  // Загальна кількість
+  int64 total_count = 2;
+}
+
+// Запит розблоковування досягнення
+message UnlockAchievementRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор досягнення
+  string achievement_id = 2;
+  
+  // Причина розблоковування
+  string reason = 3;
+}
+
+// Відповідь розблоковування досягнення
+message UnlockAchievementResponse {
+  // Розблоковане досягнення
+  gaming.achievements.messages.PlayerAchievement player_achievement = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Фільтри досягнень
+message AchievementFilters {
+  // Тип досягнення
+  repeated string types = 1;
+  
+  // Категорія досягнення
+  repeated string categories = 2;
+  
+  // Рівень складності
+  repeated string difficulties = 3;
+  
+  // Статус досягнення
+  repeated string statuses = 4;
+  
+  // Автор
+  string author = 5;
+  
+  // Теги
+  repeated string tags = 6;
+  
+  // Мова
+  string language = 7;
+  
+  // Версія
+  string version = 8;
+}
+
+// Фільтри досягнень гравця
+message PlayerAchievementFilters {
+  // Статус досягнення
+  repeated string statuses = 1;
+  
+  // Тип досягнення
+  repeated string types = 2;
+  
+  // Категорія досягнення
+  repeated string categories = 3;
+  
+  // Час початку (від)
+  google.protobuf.Timestamp started_from = 4;
+  
+  // Час початку (до)
+  google.protobuf.Timestamp started_to = 5;
+  
+  // Час завершення (від)
+  google.protobuf.Timestamp completed_from = 6;
+  
+  // Час завершення (до)
+  google.protobuf.Timestamp completed_to = 7;
+}
+
+// Фільтри статистики
+message StatsFilters {
+  // Період часу (від)
+  google.protobuf.Timestamp period_from = 1;
+  
+  // Період часу (до)
+  google.protobuf.Timestamp period_to = 2;
+  
+  // Тип досягнення
+  repeated string types = 3;
+  
+  // Категорія досягнення
+  repeated string categories = 4;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+  
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+  
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+  
+  // Чи є наступна сторінка
+  bool has_next = 5;
+  
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}
+
+// Сортування
+message Sorting {
+  // Поле для сортування
+  string field = 1;
+  
+  // Напрямок сортування
+  SortDirection direction = 2;
+}
+
+// Напрямок сортування
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package projects.tasks.services;
+
+import "tasks/messages/task_request.proto";
+import "tasks/messages/task_response.proto";
+import "google/api/annotations.proto";
+
+// TaskService provides CRUD operations for task management
+service TaskService {
+  // CreateTask creates a new task
+  rpc CreateTask(projects.tasks.messages.CreateTaskRequest) returns (projects.tasks.messages.CreateTaskResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/tasks"
+      body: "*"
+    };
+  }
+  
+  // GetTask retrieves a specific task by ID
+  rpc GetTask(projects.tasks.messages.GetTaskRequest) returns (projects.tasks.messages.GetTaskResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/tasks/{task_id}"
+    };
+  }
+  
+  // ListTasks retrieves a paginated list of tasks with optional filtering
+  rpc ListTasks(projects.tasks.messages.ListTasksRequest) returns (projects.tasks.messages.ListTasksResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/tasks"
+    };
+  }
+  
+  // UpdateTask updates an existing task
+  rpc UpdateTask(projects.tasks.messages.UpdateTaskRequest) returns (projects.tasks.messages.UpdateTaskResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/tasks/{task_id}"
+      body: "*"
+    };
+  }
+  
+  // DeleteTask deletes a specific task
+  rpc DeleteTask(projects.tasks.messages.DeleteTaskRequest) returns (projects.tasks.messages.DeleteTaskResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/tasks/{task_id}"
+    };
+  }
+}

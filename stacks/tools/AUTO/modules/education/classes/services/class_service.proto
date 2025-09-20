@@ -1,0 +1,163 @@
+syntax = "proto3";
+
+// Service definitions for managing classes.
+package education.classes.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "AUTO/modules/education/classes/messages/class.proto";
+import "AUTO/modules/education/classes/messages/class_session.proto";
+import "AUTO/modules/education/classes/messages/class_attendance.proto";
+
+option go_package = "github.com/rice-dev/education/classes/services;classesservices";
+option java_multiple_files = true;
+option java_package = "com.rice.education.classes.services";
+
+// Request and response messages for CRUD and business operations.
+message CreateClassRequest {
+  // Class to create.
+  education.classes.messages.Class class = 1;
+}
+
+message GetClassRequest {
+  // ID of the class to retrieve.
+  string id = 1;
+}
+
+message UpdateClassRequest {
+  // Updated class payload (must include ID).
+  education.classes.messages.Class class = 1;
+}
+
+message DeleteClassRequest {
+  // ID of the class to delete.
+  string id = 1;
+}
+
+message ListClassesRequest {
+  // Optional filter by course ID.
+  string course_id = 1;
+
+  // Optional filter by teacher ID.
+  string teacher_id = 2;
+
+  // Pagination size.
+  int32 page_size = 3;
+
+  // Pagination token.
+  string page_token = 4;
+}
+
+message ListClassesResponse {
+  // Resulting classes.
+  repeated education.classes.messages.Class classes = 1;
+
+  // Next page token if more results are available.
+  string next_page_token = 2;
+}
+
+message AssignTeacherRequest {
+  // Class to assign the teacher to.
+  string class_id = 1;
+
+  // Teacher ID being assigned.
+  string teacher_id = 2;
+}
+
+message ScheduleClassRequest {
+  // Class ID to schedule.
+  string class_id = 1;
+
+  // New schedule to apply.
+  education.classes.messages.Class.Schedule schedule = 2;
+}
+
+message CreateSessionRequest {
+  // Session to create.
+  education.classes.messages.ClassSession session = 1;
+}
+
+message ListSessionsRequest {
+  // Parent class ID to filter sessions.
+  string class_id = 1;
+
+  // Time range start (optional).
+  google.protobuf.Timestamp start_from = 2;
+
+  // Time range end (optional).
+  google.protobuf.Timestamp end_to = 3;
+}
+
+message ListSessionsResponse {
+  // Sessions found for the criteria.
+  repeated education.classes.messages.ClassSession sessions = 1;
+}
+
+message RecordAttendanceRequest {
+  // Attendance record to create or update.
+  education.classes.messages.ClassAttendance attendance = 1;
+}
+
+message ListAttendanceRequest {
+  // Filter by class ID.
+  string class_id = 1;
+
+  // Filter by session ID.
+  string session_id = 2;
+}
+
+message ListAttendanceResponse {
+  // Attendance records.
+  repeated education.classes.messages.ClassAttendance records = 1;
+}
+
+message GetClassAttendanceRateRequest {
+  // Class ID for analytics.
+  string class_id = 1;
+}
+
+message GetClassAttendanceRateResponse {
+  // Percentage of attendance across sessions [0.0 - 1.0].
+  double attendance_rate = 1;
+}
+
+// Service for class management and operations.
+service ClassService {
+  // Create a new class.
+  rpc CreateClass(CreateClassRequest) returns (education.classes.messages.Class);
+
+  // Retrieve a class by ID.
+  rpc GetClass(GetClassRequest) returns (education.classes.messages.Class);
+
+  // Update an existing class.
+  rpc UpdateClass(UpdateClassRequest) returns (education.classes.messages.Class);
+
+  // Delete a class by ID.
+  rpc DeleteClass(DeleteClassRequest) returns (google.protobuf.Empty);
+
+  // List classes with optional filters and pagination.
+  rpc ListClasses(ListClassesRequest) returns (ListClassesResponse);
+
+  // Assign a teacher to a class.
+  rpc AssignTeacher(AssignTeacherRequest) returns (education.classes.messages.Class);
+
+  // Update the schedule for a class.
+  rpc ScheduleClass(ScheduleClassRequest) returns (education.classes.messages.Class);
+
+  // Create a specific class session occurrence.
+  rpc CreateSession(CreateSessionRequest) returns (education.classes.messages.ClassSession);
+
+  // List sessions for a class within an optional time range.
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+
+  // Record or update attendance for a session.
+  rpc RecordAttendance(RecordAttendanceRequest) returns (education.classes.messages.ClassAttendance);
+
+  // List attendance records for a class or session.
+  rpc ListAttendance(ListAttendanceRequest) returns (ListAttendanceResponse);
+
+  // Analytics: Get overall class attendance rate across sessions.
+  rpc GetClassAttendanceRate(GetClassAttendanceRateRequest) returns (GetClassAttendanceRateResponse);
+}
+
+

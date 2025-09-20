@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package horeca.catering.enums;
+
+// Types of catering services offered
+enum CateringServiceType {
+  CATERING_SERVICE_TYPE_UNSPECIFIED = 0;
+  CATERING_SERVICE_TYPE_BUFFET = 1;       // Self-service buffet style
+  CATERING_SERVICE_TYPE_PLATED = 2;       // Plated service with waitstaff
+  CATERING_SERVICE_TYPE_COCKTAIL = 3;     // Cocktail reception with passed appetizers
+  CATERING_SERVICE_TYPE_COFFEE_BREAK = 4; // Coffee, tea, light snacks
+  CATERING_SERVICE_TYPE_BREAKFAST = 5;    // Morning meal service
+  CATERING_SERVICE_TYPE_LUNCH = 6;        // Midday meal service
+  CATERING_SERVICE_TYPE_DINNER = 7;        // Evening meal service
+  CATERING_SERVICE_TYPE_BRUNCH = 8;       // Late morning meal
+  CATERING_SERVICE_TYPE_CANAPE = 9;       // Small appetizers and finger foods
+  CATERING_SERVICE_TYPE_FAMILY_STYLE = 10; // Large platters for sharing
+}

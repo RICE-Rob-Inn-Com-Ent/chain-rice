@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package agriculture.crops.messages;
+
+import "google/protobuf/timestamp.proto";
+
+// Harvest message represents a harvest operation for crops
+message Harvest {
+  // Unique identifier for the harvest
+  string id = 1;
+  
+  // Reference to the crop that was harvested
+  string crop_id = 2;
+  
+  // Name or description of the harvest
+  string name = 3;
+  
+  // Harvest date and time
+  google.protobuf.Timestamp harvest_date = 4;
+  
+  // Harvest method used
+  string method = 5;             // Manual, mechanical, combine harvester, etc.
+  
+  // Yield information
+  double quantity_harvested = 6; // Amount harvested
+  string quantity_unit = 7;      // Unit of measurement (kg, tons, bushels, etc.)
+  double yield_per_area = 8;     // Yield per unit area
+  string area_unit = 9;          // Area unit (hectares, acres, etc.)
+  
+  // Quality metrics
+  double quality_score = 10;     // Overall quality score (0-100)
+  double moisture_content = 11;  // Moisture content percentage
+  double protein_content = 12;   // Protein content percentage (for grains)
+  double oil_content = 13;       // Oil content percentage (for oil crops)
+  double starch_content = 14;    // Starch content percentage
+  
+  // Physical characteristics
+  double average_weight = 15;    // Average weight per unit
+  double size_grade = 16;        // Size grade classification
+  string color_grade = 17;       // Color grade classification
+  string appearance_notes = 18;  // Notes about visual appearance
+  
+  // Storage information
+  string storage_location = 19;  // Where the harvest is stored
+  string storage_conditions = 20; // Storage temperature, humidity, etc.
+  google.protobuf.Timestamp storage_date = 21;
+  
+  // Processing information
+  bool is_processed = 22;        // Whether the harvest has been processed
+  string processing_method = 23; // How it was processed
+  google.protobuf.Timestamp processing_date = 24;
+  
+  // Market information
+  double market_price = 25;      // Price per unit at time of harvest
+  string market_grade = 26;      // Market grade classification
+  bool is_sold = 27;             // Whether the harvest has been sold
+  google.protobuf.Timestamp sale_date = 28;
+  double sale_price = 29;        // Final sale price per unit
+  
+  // Labor and equipment
+  repeated string workers = 30;  // List of workers involved in harvest
+  repeated string equipment_used = 31; // List of equipment used
+  double labor_hours = 32;       // Total labor hours spent
+  
+  // Weather conditions during harvest
+  double temperature = 33;       // Temperature during harvest
+  double humidity = 34;          // Humidity during harvest
+  string weather_conditions = 35; // General weather description
+  
+  // Notes and observations
+  string notes = 36;             // Additional notes about the harvest
+  repeated string issues = 37;   // Any issues encountered during harvest
+  
+  // Financial information
+  double total_cost = 38;        // Total cost of harvest operation
+  double revenue = 39;           // Revenue generated from this harvest
+  double profit = 40;            // Profit from this harvest
+  
+  // Metadata
+  google.protobuf.Timestamp created_at = 41;
+  google.protobuf.Timestamp updated_at = 42;
+  string created_by = 43;        // User who created this harvest record
+  string updated_by = 44;        // User who last updated this harvest record
+  
+  // Status
+  bool is_complete = 45;         // Whether the harvest is complete
+  bool requires_processing = 46; // Whether further processing is needed
+}

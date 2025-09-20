@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package horeca.kitchen.enums;
+
+// Priority levels for kitchen orders
+enum KitchenPriority {
+  KITCHEN_PRIORITY_UNSPECIFIED = 0;
+  KITCHEN_PRIORITY_NORMAL = 1;            // Standard priority
+  KITCHEN_PRIORITY_RUSH = 2;              // Rush order - expedited
+  KITCHEN_PRIORITY_VIP = 3;               // VIP customer priority
+  KITCHEN_PRIORITY_DINE_IN = 4;           // Dine-in customer priority
+  KITCHEN_PRIORITY_TAKEAWAY = 5;          // Takeaway order priority
+  KITCHEN_PRIORITY_DELIVERY = 6;          // Delivery order priority
+}

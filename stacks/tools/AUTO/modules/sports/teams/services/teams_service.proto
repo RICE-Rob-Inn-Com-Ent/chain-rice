@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sports.teams.v1;
+
+import "sports/teams/messages/teams_messages.proto";
+
+option go_package = "github.com/rice-dev/sports/teams/v1";
+
+// TeamService provides operations for managing sports teams
+service TeamService {
+  // CreateTeam creates a new sports team
+  rpc CreateTeam(CreateTeamRequest) returns (CreateTeamResponse);
+
+  // GetTeam retrieves a team by its ID
+  rpc GetTeam(GetTeamRequest) returns (GetTeamResponse);
+
+  // ListTeams retrieves a list of teams with optional filtering
+  rpc ListTeams(ListTeamsRequest) returns (ListTeamsResponse);
+
+  // UpdateTeam updates an existing team
+  rpc UpdateTeam(UpdateTeamRequest) returns (UpdateTeamResponse);
+
+  // DeleteTeam deletes a team by its ID
+  rpc DeleteTeam(DeleteTeamRequest) returns (DeleteTeamResponse);
+}

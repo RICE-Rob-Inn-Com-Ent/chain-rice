@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package energy.billing.enums;
+
+// Payment methods accepted for energy billing
+enum PaymentMethod {
+  // Credit card payment
+  PAYMENT_METHOD_CREDIT_CARD = 0;
+  
+  // Debit card payment
+  PAYMENT_METHOD_DEBIT_CARD = 1;
+  
+  // Bank transfer (ACH)
+  PAYMENT_METHOD_BANK_TRANSFER = 2;
+  
+  // Direct debit from bank account
+  PAYMENT_METHOD_DIRECT_DEBIT = 3;
+  
+  // Wire transfer
+  PAYMENT_METHOD_WIRE_TRANSFER = 4;
+  
+  // Check payment (mailed)
+  PAYMENT_METHOD_CHECK = 5;
+  
+  // Cash payment (in person)
+  PAYMENT_METHOD_CASH = 6;
+  
+  // Money order
+  PAYMENT_METHOD_MONEY_ORDER = 7;
+  
+  // Cryptocurrency payment (Bitcoin, Ethereum, etc.)
+  PAYMENT_METHOD_CRYPTOCURRENCY = 8;
+  
+  // Digital wallet payment (PayPal, Apple Pay, Google Pay)
+  PAYMENT_METHOD_DIGITAL_WALLET = 9;
+  
+  // Mobile payment (SMS, mobile app)
+  PAYMENT_METHOD_MOBILE_PAYMENT = 10;
+  
+  // Automatic payment plan
+  PAYMENT_METHOD_AUTOMATIC_PAYMENT = 11;
+  
+  // Prepaid account balance
+  PAYMENT_METHOD_PREPAID_BALANCE = 12;
+  
+  // Energy credit or rebate
+  PAYMENT_METHOD_ENERGY_CREDIT = 13;
+  
+  // Third-party payment processor
+  PAYMENT_METHOD_THIRD_PARTY = 14;
+  
+  // Corporate account payment
+  PAYMENT_METHOD_CORPORATE_ACCOUNT = 15;
+  
+  // Government assistance payment
+  PAYMENT_METHOD_GOVERNMENT_ASSISTANCE = 16;
+  
+  // Payment plan installment
+  PAYMENT_METHOD_PAYMENT_PLAN = 17;
+  
+  // Promotional credit or discount
+  PAYMENT_METHOD_PROMOTIONAL_CREDIT = 18;
+  
+  // Unspecified or other payment method
+  PAYMENT_METHOD_OTHER = 19;
+}

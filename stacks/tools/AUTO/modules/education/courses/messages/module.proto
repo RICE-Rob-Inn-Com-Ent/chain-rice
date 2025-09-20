@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+// Message definitions for Course modules.
+package education.courses.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/education/courses/messages;coursesmessages";
+option java_multiple_files = true;
+option java_package = "com.rice.education.courses.messages";
+
+// A module represents a thematic unit within a course.
+message Module {
+  // Unique identifier for the module.
+  string id = 1;
+
+  // Parent course ID.
+  string course_id = 2;
+
+  // Title of the module.
+  string title = 3;
+
+  // Detailed description of the module content.
+  string description = 4;
+
+  // Suggested sequence order.
+  int32 order = 5;
+
+  // Resource links (readings, videos, assets).
+  repeated string resource_urls = 6;
+
+  // Arbitrary metadata for integrations.
+  map<string, string> metadata = 7;
+
+  // Creation timestamp.
+  google.protobuf.Timestamp created_at = 8;
+
+  // Last update timestamp.
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+

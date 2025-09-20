@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package logistics.warehousing.enums;
+
+// Warehouse order priority levels
+enum WarehouseOrderPriority {
+  WAREHOUSE_ORDER_PRIORITY_UNSPECIFIED = 0;
+  WAREHOUSE_ORDER_PRIORITY_LOW = 1;           // Low priority - standard processing
+  WAREHOUSE_ORDER_PRIORITY_NORMAL = 2;        // Normal priority - regular processing
+  WAREHOUSE_ORDER_PRIORITY_HIGH = 3;          // High priority - expedited processing
+  WAREHOUSE_ORDER_PRIORITY_URGENT = 4;        // Urgent priority - immediate processing
+  WAREHOUSE_ORDER_PRIORITY_CRITICAL = 5;      // Critical priority - emergency processing
+  WAREHOUSE_ORDER_PRIORITY_SAME_DAY = 6;      // Same day processing
+  WAREHOUSE_ORDER_PRIORITY_EXPRESS = 7;       // Express processing
+  WAREHOUSE_ORDER_PRIORITY_PREMIUM = 8;       // Premium service processing
+}

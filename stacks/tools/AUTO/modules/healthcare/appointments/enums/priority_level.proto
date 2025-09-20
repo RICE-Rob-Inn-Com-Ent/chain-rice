@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package healthcare.appointments.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/enums";
+
+// Priority level enumeration
+enum PriorityLevel {
+  PRIORITY_LEVEL_UNSPECIFIED = 0;
+  PRIORITY_LEVEL_LOW = 1;
+  PRIORITY_LEVEL_MEDIUM = 2;
+  PRIORITY_LEVEL_HIGH = 3;
+  PRIORITY_LEVEL_URGENT = 4;
+  PRIORITY_LEVEL_CRITICAL = 5;
+}

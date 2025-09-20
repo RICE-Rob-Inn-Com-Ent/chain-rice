@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package agriculture.machinery.enums;
+
+// MachineType enum defines different categories of agricultural machinery
+enum MachineType {
+  // Tractors and power units
+  MACHINE_TYPE_UNSPECIFIED = 0;
+  MACHINE_TYPE_TRACTOR = 1;          // General purpose tractors
+  MACHINE_TYPE_COMPACT_TRACTOR = 2;  // Small tractors for small farms
+  MACHINE_TYPE_UTILITY_TRACTOR = 3;  // Mid-size utility tractors
+  MACHINE_TYPE_ROW_CROP_TRACTOR = 4; // Tractors for row crop farming
+  MACHINE_TYPE_ORCHARD_TRACTOR = 5;  // Low-profile tractors for orchards
+  MACHINE_TYPE_TRACK_TRACTOR = 6;    // Tracked tractors for heavy work
+  
+  // Tillage equipment
+  MACHINE_TYPE_PLOW = 7;             // Moldboard plows
+  MACHINE_TYPE_DISK_HARROW = 8;      // Disk harrows for soil preparation
+  MACHINE_TYPE_CHISEL_PLOW = 9;      // Chisel plows for deep tillage
+  MACHINE_TYPE_ROTOTILLER = 10;      // Rotary tillers
+  MACHINE_TYPE_CULTIVATOR = 11;      // Field cultivators
+  MACHINE_TYPE_SUBSOILER = 12;       // Subsoilers for deep tillage
+  MACHINE_TYPE_RILLER = 13;          // Land rollers and packers
+  
+  // Planting and seeding equipment
+  MACHINE_TYPE_PLANTER = 14;         // Row crop planters
+  MACHINE_TYPE_DRILL = 15;           // Grain drills
+  MACHINE_TYPE_GRASS_DRILL = 16;     // Grass seed drills
+  MACHINE_TYPE_TRANSPLANTER = 17;    // Vegetable transplanters
+  MACHINE_TYPE_SEEDER = 18;          // Broadcast seeders
+  MACHINE_TYPE_FERTILIZER_SPREADER = 19; // Fertilizer spreaders
+  
+  // Harvesting equipment
+  MACHINE_TYPE_COMBINE_HARVESTER = 20; // Combine harvesters for grains
+  MACHINE_TYPE_FORAGE_HARVESTER = 21;  // Forage harvesters for silage
+  MACHINE_TYPE_COTTON_PICKER = 22;     // Cotton picking machines
+  MACHINE_TYPE_POTATO_HARVESTER = 23;  // Potato harvesting machines
+  MACHINE_TYPE_SUGAR_BEET_HARVESTER = 24; // Sugar beet harvesters
+  MACHINE_TYPE_VEGETABLE_HARVESTER = 25;  // Vegetable harvesting machines
+  MACHINE_TYPE_HAY_BALER = 26;       // Hay balers
+  MACHINE_TYPE_MOWER = 27;           // Hay mowers
+  MACHINE_TYPE_RAKE = 28;            // Hay rakes
+  MACHINE_TYPE_TEDDER = 29;          // Hay tedders
+  
+  // Spraying and application equipment
+  MACHINE_TYPE_SPRAYER = 30;         // Crop sprayers
+  MACHINE_TYPE_FERTILIZER_APPLICATOR = 31; // Fertilizer applicators
+  MACHINE_TYPE_LIME_SPREADER = 32;   // Lime spreaders
+  MACHINE_TYPE_MANURE_SPREADER = 33; // Manure spreaders
+  MACHINE_TYPE_IRRIGATION_SYSTEM = 34; // Irrigation systems
+  
+  // Material handling equipment
+  MACHINE_TYPE_LOADER = 35;          // Front-end loaders
+  MACHINE_TYPE_FORKLIFT = 36;        // Agricultural forklifts
+  MACHINE_TYPE_CONVEYOR = 37;        // Conveyor systems
+  MACHINE_TYPE_ELEVATOR = 38;        // Grain elevators
+  MACHINE_TYPE_AUGER = 39;           // Grain augers
+  
+  // Storage and processing equipment
+  MACHINE_TYPE_GRAIN_DRYER = 40;     // Grain drying systems
+  MACHINE_TYPE_CLEANER = 41;         // Grain cleaners
+  MACHINE_TYPE_SORTER = 42;          // Grain sorters
+  MACHINE_TYPE_GRINDER = 43;         // Feed grinders
+  MACHINE_TYPE_MIXER = 44;           // Feed mixers
+  
+  // Specialized equipment
+  MACHINE_TYPE_BEETLE = 45;          // Beetle for sugar beet processing
+  MACHINE_TYPE_CANE_HARVESTER = 46;  // Sugar cane harvesters
+  MACHINE_TYPE_OLIVE_HARVESTER = 47; // Olive harvesting machines
+  MACHINE_TYPE_WINE_PRESS = 48;      // Wine presses
+  MACHINE_TYPE_MILKING_MACHINE = 49; // Milking machines
+  MACHINE_TYPE_EGG_COLLECTOR = 50;   // Automated egg collection systems
+  
+  // Utility vehicles
+  MACHINE_TYPE_UTV = 51;             // Utility terrain vehicles
+  MACHINE_TYPE_ATV = 52;             // All-terrain vehicles
+  MACHINE_TYPE_GOLF_CART = 53;       // Golf carts for farm use
+  MACHINE_TYPE_UTILITY_TRUCK = 54;   // Farm utility trucks
+  
+  // Implements and attachments
+  MACHINE_TYPE_BUCKET = 55;          // Loader buckets
+  MACHINE_TYPE_GRAPPLE = 56;         // Grapple attachments
+  MACHINE_TYPE_BACKHOE = 57;         // Backhoe attachments
+  MACHINE_TYPE_MOWER_DECK = 58;      // Mower deck attachments
+  MACHINE_TYPE_SNOW_BLOWER = 59;     // Snow blower attachments
+  
+  // Monitoring and precision equipment
+  MACHINE_TYPE_GPS_SYSTEM = 60;      // GPS guidance systems
+  MACHINE_TYPE_YIELD_MONITOR = 61;   // Yield monitoring systems
+  MACHINE_TYPE_VARIABLE_RATE_CONTROLLER = 62; // Variable rate application controllers
+  MACHINE_TYPE_DRONE = 63;           // Agricultural drones
+  MACHINE_TYPE_SENSOR = 64;          // Soil and crop sensors
+}

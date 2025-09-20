@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package construction.machinery.enums;
+
+// Enumeration of different types of machinery in construction
+enum MachineType {
+  // Default value for unset machine type
+  MACHINE_TYPE_UNSPECIFIED = 0;
+  
+  // Earthmoving equipment
+  EXCAVATOR = 1;
+  BULLDOZER = 2;
+  LOADER = 3;
+  BACKHOE = 4;
+  SKID_STEER = 5;
+  TRENCHER = 6;
+  GRADER = 7;
+  SCRAPER = 8;
+  COMPACTOR = 9;
+  
+  // Lifting equipment
+  CRANE = 10;
+  FORKLIFT = 11;
+  AERIAL_LIFT = 12;
+  MAN_LIFT = 13;
+  TOWER_CRANE = 14;
+  MOBILE_CRANE = 15;
+  OVERHEAD_CRANE = 16;
+  GANTRY_CRANE = 17;
+  JIB_CRANE = 18;
+  
+  // Concrete equipment
+  CONCRETE_MIXER = 19;
+  CONCRETE_PUMP = 20;
+  CONCRETE_PLACER = 21;
+  CONCRETE_FINISHER = 22;
+  CONCRETE_SAW = 23;
+  CONCRETE_GRINDER = 24;
+  CONCRETE_CUTTER = 25;
+  CONCRETE_VIBRATOR = 26;
+  
+  // Paving equipment
+  ASPHALT_PAVER = 27;
+  ASPHALT_ROLLER = 28;
+  ASPHALT_MILL = 29;
+  ASPHALT_CUTTER = 30;
+  ASPHALT_HEATER = 31;
+  ASPHALT_DISTRIBUTOR = 32;
+  
+  // Drilling equipment
+  DRILL_RIG = 33;
+  DRILL_HAMMER = 34;
+  DRILL_BIT = 35;
+  DRILL_STAND = 36;
+  CORE_DRILL = 37;
+  ROCK_DRILL = 38;
+  PILING_RIG = 39;
+  
+  // Demolition equipment
+  DEMOLITION_HAMMER = 40;
+  DEMOLITION_CRANE = 41;
+  DEMOLITION_GRAPPLE = 42;
+  DEMOLITION_SHEAR = 43;
+  DEMOLITION_PULVERIZER = 44;
+  DEMOLITION_CRUSHER = 45;
+  
+  // Material handling equipment
+  CONVEYOR = 46;
+  ELEVATOR = 47;
+  HOIST = 48;
+  WINCH = 49;
+  PULLEY = 50;
+  BLOCK_AND_TACKLE = 51;
+  MATERIAL_HANDLER = 52;
+  
+  // Welding equipment
+  WELDING_MACHINE = 53;
+  WELDING_GUN = 54;
+  WELDING_TORCH = 55;
+  WELDING_TABLE = 56;
+  WELDING_POSITIONER = 57;
+  WELDING_ROTATOR = 58;
+  
+  // Cutting equipment
+  CUTTING_TORCH = 59;
+  CUTTING_SAW = 60;
+  CUTTING_GRINDER = 61;
+  CUTTING_SHEAR = 62;
+  CUTTING_PLASMA = 63;
+  CUTTING_LASER = 64;
+  
+  // Power tools
+  DRILL = 65;
+  IMPACT_DRIVER = 66;
+  CIRCULAR_SAW = 67;
+  RECIPROCATING_SAW = 68;
+  ANGLE_GRINDER = 69;
+  SANDER = 70;
+  ROUTER = 71;
+  PLANER = 72;
+  
+  // Measuring equipment
+  LASER_LEVEL = 73;
+  TOTAL_STATION = 74;
+  GPS_SYSTEM = 75;
+  MEASURING_TAPE = 76;
+  LEVEL = 77;
+  PLUMB_BOB = 78;
+  TRANSIT = 79;
+  
+  // Safety equipment
+  SAFETY_HARNESS = 80;
+  SAFETY_NET = 81;
+  SAFETY_RAIL = 82;
+  SAFETY_CONE = 83;
+  SAFETY_BARRIER = 84;
+  SAFETY_SIGN = 85;
+  FIRE_EXTINGUISHER = 86;
+  
+  // Environmental equipment
+  DUST_COLLECTOR = 87;
+  AIR_FILTER = 88;
+  WATER_TREATMENT = 89;
+  NOISE_REDUCER = 90;
+  VIBRATION_DAMPER = 91;
+  EMISSION_CONTROL = 92;
+  
+  // Specialized equipment
+  TUNNEL_BORING_MACHINE = 93;
+  PILE_DRIVER = 94;
+  DRILLING_RIG = 95;
+  BLASTING_EQUIPMENT = 96;
+  SURVEYING_EQUIPMENT = 97;
+  TESTING_EQUIPMENT = 98;
+  
+  // Transportation equipment
+  DUMP_TRUCK = 99;
+  FLATBED_TRUCK = 100;
+  TRAILER = 101;
+  LOWBOY = 102;
+  TANKER = 103;
+  PICKUP_TRUCK = 104;
+  
+  // Utility equipment
+  GENERATOR = 105;
+  COMPRESSOR = 106;
+  PUMP = 107;
+  HEATER = 108;
+  COOLER = 109;
+  LIGHTING = 110;
+  
+  // Cleaning equipment
+  PRESSURE_WASHER = 111;
+  VACUUM_CLEANER = 112;
+  SWEEPER = 113;
+  SCRUBBER = 114;
+  POLISHER = 115;
+  
+  // Other equipment
+  OTHER = 116;
+  CUSTOM = 117;
+  RENTAL = 118;
+  LEASED = 119;
+}

@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package horeca.kitchen.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/kitchen_inventory_models.proto";
+
+// Kitchen Inventory Service - Stock control and management
+service KitchenInventoryService {
+  // Create inventory item
+  rpc CreateInventoryItem(CreateInventoryItemRequest) returns (CreateInventoryItemResponse);
+  
+  // Get inventory item by ID
+  rpc GetInventoryItem(GetInventoryItemRequest) returns (GetInventoryItemResponse);
+  
+  // Update inventory item
+  rpc UpdateInventoryItem(UpdateInventoryItemRequest) returns (UpdateInventoryItemResponse);
+  
+  // Delete inventory item
+  rpc DeleteInventoryItem(DeleteInventoryItemRequest) returns (google.protobuf.Empty);
+  
+  // List inventory items
+  rpc ListInventoryItems(ListInventoryItemsRequest) returns (ListInventoryItemsResponse);
+  
+  // Record inventory transaction
+  rpc RecordTransaction(RecordTransactionRequest) returns (RecordTransactionResponse);
+  
+  // Get inventory transactions
+  rpc GetInventoryTransactions(GetInventoryTransactionsRequest) returns (GetInventoryTransactionsResponse);
+  
+  // Get low stock alerts
+  rpc GetLowStockAlerts(GetLowStockAlertsRequest) returns (GetLowStockAlertsResponse);
+  
+  // Get expired items
+  rpc GetExpiredItems(GetExpiredItemsRequest) returns (GetExpiredItemsResponse);
+  
+  // Update stock levels
+  rpc UpdateStockLevels(UpdateStockLevelsRequest) returns (UpdateStockLevelsResponse);
+  
+  // Get inventory report
+  rpc GetInventoryReport(GetInventoryReportRequest) returns (GetInventoryReportResponse);
+  
+  // Create inventory alert
+  rpc CreateInventoryAlert(CreateInventoryAlertRequest) returns (CreateInventoryAlertResponse);
+  
+  // Acknowledge alert
+  rpc AcknowledgeAlert(AcknowledgeAlertRequest) returns (AcknowledgeAlertResponse);
+}
+
+// Request/Response messages
+message CreateInventoryItemRequest {
+  KitchenInventoryItem item = 1;
+}
+
+message CreateInventoryItemResponse {
+  KitchenInventoryItem item = 1;
+  string message = 2;
+}
+
+message GetInventoryItemRequest {
+  string item_id = 1;
+}
+
+message GetInventoryItemResponse {
+  KitchenInventoryItem item = 1;
+}
+
+message UpdateInventoryItemRequest {
+  KitchenInventoryItem item = 1;
+}
+
+message UpdateInventoryItemResponse {
+  KitchenInventoryItem item = 1;
+  string message = 2;
+}
+
+message DeleteInventoryItemRequest {
+  string item_id = 1;
+}
+
+message ListInventoryItemsRequest {
+  string category = 1;
+  string status = 2;
+  bool low_stock_only = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+message ListInventoryItemsResponse {
+  repeated KitchenInventoryItem items = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message RecordTransactionRequest {
+  InventoryTransaction transaction = 1;
+}
+
+message RecordTransactionResponse {
+  InventoryTransaction transaction = 1;
+  string message = 2;
+}
+
+message GetInventoryTransactionsRequest {
+  string item_id = 1;
+  string transaction_type = 2;
+  string date_from = 3;
+  string date_to = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message GetInventoryTransactionsResponse {
+  repeated InventoryTransaction transactions = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetLowStockAlertsRequest {
+  string status = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message GetLowStockAlertsResponse {
+  repeated InventoryAlert alerts = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetExpiredItemsRequest {
+  string date_from = 1;
+  string date_to = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message GetExpiredItemsResponse {
+  repeated KitchenInventoryItem items = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateStockLevelsRequest {
+  string item_id = 1;
+  double new_stock = 2;
+  string reason = 3;
+}
+
+message UpdateStockLevelsResponse {
+  KitchenInventoryItem item = 1;
+  string message = 2;
+}
+
+message GetInventoryReportRequest {
+  string date_from = 1;
+  string date_to = 2;
+  string category = 3;
+}
+
+message GetInventoryReportResponse {
+  repeated InventoryReportData report_data = 1;
+  double total_value = 2;
+  double total_cost = 3;
+  int32 total_items = 4;
+}
+
+message CreateInventoryAlertRequest {
+  InventoryAlert alert = 1;
+}
+
+message CreateInventoryAlertResponse {
+  InventoryAlert alert = 1;
+  string message = 2;
+}
+
+message AcknowledgeAlertRequest {
+  string alert_id = 1;
+  string acknowledged_by = 2;
+}
+
+message AcknowledgeAlertResponse {
+  InventoryAlert alert = 1;
+  string message = 2;
+}
+
+// Data structures
+message InventoryReportData {
+  string item_id = 1;
+  string item_name = 2;
+  string category = 3;
+  double current_stock = 4;
+  double unit_cost = 5;
+  double total_value = 6;
+  string status = 7;
+  string last_transaction = 8;
+}

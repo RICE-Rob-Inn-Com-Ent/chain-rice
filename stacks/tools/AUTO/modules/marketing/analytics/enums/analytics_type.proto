@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package marketing.analytics.enums;
+
+// Enumeration for analytics data types
+enum AnalyticsType {
+  // Default type - not specified
+  ANALYTICS_TYPE_UNSPECIFIED = 0;
+  
+  // Website traffic analytics
+  ANALYTICS_TYPE_WEBSITE_TRAFFIC = 1;
+  
+  // Social media analytics
+  ANALYTICS_TYPE_SOCIAL_MEDIA = 2;
+  
+  // Email marketing analytics
+  ANALYTICS_TYPE_EMAIL_MARKETING = 3;
+  
+  // Advertisement performance analytics
+  ANALYTICS_TYPE_AD_PERFORMANCE = 4;
+  
+  // Campaign analytics
+  ANALYTICS_TYPE_CAMPAIGN = 5;
+  
+  // Lead generation analytics
+  ANALYTICS_TYPE_LEAD_GENERATION = 6;
+  
+  // Conversion analytics
+  ANALYTICS_TYPE_CONVERSION = 7;
+  
+  // Revenue analytics
+  ANALYTICS_TYPE_REVENUE = 8;
+  
+  // Customer behavior analytics
+  ANALYTICS_TYPE_CUSTOMER_BEHAVIOR = 9;
+  
+  // Content performance analytics
+  ANALYTICS_TYPE_CONTENT_PERFORMANCE = 10;
+}

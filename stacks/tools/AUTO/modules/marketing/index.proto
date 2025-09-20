@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package marketing;
+
+// Marketing module index file - imports all marketing submodules for unified access
+
+// Ads module imports
+import "marketing/ads/enums/ads_status.proto";
+import "marketing/ads/messages/ads_request.proto";
+import "marketing/ads/messages/ads_response.proto";
+import "marketing/ads/services/ads_service.proto";
+
+// Analytics module imports
+import "marketing/analytics/enums/analytics_type.proto";
+import "marketing/analytics/messages/analytics_request.proto";
+import "marketing/analytics/messages/analytics_response.proto";
+import "marketing/analytics/services/analytics_service.proto";
+
+// Campaigns module imports
+import "marketing/campaings/enums/campaign_status.proto";
+import "marketing/campaings/messages/campaign_request.proto";
+import "marketing/campaings/messages/campaign_response.proto";
+import "marketing/campaings/services/campaign_service.proto";
+
+// Content module imports
+import "marketing/content/enums/content_type.proto";
+import "marketing/content/messages/content_request.proto";
+import "marketing/content/messages/content_response.proto";
+import "marketing/content/services/content_service.proto";
+
+// Email module imports
+import "marketing/email/enums/email_status.proto";
+import "marketing/email/messages/email_request.proto";
+import "marketing/email/messages/email_response.proto";
+import "marketing/email/services/email_service.proto";
+
+// Influencer module imports
+import "marketing/influencer/enums/influencer_type.proto";
+import "marketing/influencer/messages/influencer_request.proto";
+import "marketing/influencer/messages/influencer_response.proto";
+import "marketing/influencer/services/influencer_service.proto";
+
+// Leads module imports
+import "marketing/leads/enums/lead_status.proto";
+import "marketing/leads/messages/lead_request.proto";
+import "marketing/leads/messages/lead_response.proto";
+import "marketing/leads/services/lead_service.proto";
+
+// Loyalty module imports
+import "marketing/loyalty/enums/loyalty_level.proto";
+import "marketing/loyalty/messages/loyalty_request.proto";
+import "marketing/loyalty/messages/loyalty_response.proto";
+import "marketing/loyalty/services/loyalty_service.proto";
+
+// SEO module imports
+import "marketing/seo/enums/seo_metric.proto";
+import "marketing/seo/messages/seo_request.proto";
+import "marketing/seo/messages/seo_response.proto";
+import "marketing/seo/services/seo_service.proto";
+
+// SMS module imports
+import "marketing/sms/enums/sms_status.proto";
+import "marketing/sms/messages/sms_request.proto";
+import "marketing/sms/messages/sms_response.proto";
+import "marketing/sms/services/sms_service.proto";
+
+// Social module imports
+import "marketing/social/enums/social_platform.proto";
+import "marketing/social/messages/social_request.proto";
+import "marketing/social/messages/social_response.proto";
+import "marketing/social/services/social_service.proto";
+
+// Marketing module provides comprehensive marketing functionality including:
+// - Advertisement management (ads)
+// - Analytics and reporting (analytics)
+// - Campaign management (campaings)
+// - Content management (content)
+// - Email marketing (email)
+// - Influencer marketing (influencer)
+// - Lead management (leads)
+// - Loyalty programs (loyalty)
+// - SEO optimization (seo)
+// - SMS marketing (sms)
+// - Social media marketing (social)
+//
+// Each submodule follows a consistent structure:
+// - enums/ - Contains enumeration definitions
+// - messages/ - Contains request and response message definitions
+// - services/ - Contains gRPC service definitions
+//
+// All services implement standard CRUD operations:
+// - Create: Create new resources
+// - Get: Retrieve resources by ID
+// - List: List resources with pagination and filtering
+// - Update: Update existing resources
+// - Delete: Delete resources
+//
+// This module is designed for enterprise-grade marketing automation
+// and provides comprehensive tools for managing all aspects of
+// digital marketing campaigns and customer engagement.

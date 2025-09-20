@@ -1,0 +1,356 @@
+syntax = "proto3";
+
+package logistics.warehousing.services;
+
+import "google/protobuf/empty.proto";
+import "logistics/warehousing/messages/warehouse.proto";
+import "logistics/warehousing/messages/warehouse_inventory.proto";
+import "logistics/warehousing/messages/warehouse_order.proto";
+import "logistics/warehousing/messages/warehouse_task.proto";
+
+// Warehousing service for managing warehouses, inventory, orders, and tasks
+service WarehousingService {
+  // Warehouse management
+  rpc CreateWarehouse(Warehouse) returns (Warehouse);
+  rpc GetWarehouse(GetWarehouseRequest) returns (Warehouse);
+  rpc UpdateWarehouse(UpdateWarehouseRequest) returns (Warehouse);
+  rpc ListWarehouses(ListWarehousesRequest) returns (ListWarehousesResponse);
+  rpc DeactivateWarehouse(DeactivateWarehouseRequest) returns (google.protobuf.Empty);
+  
+  // Inventory management
+  rpc ReceiveInventory(ReceiveInventoryRequest) returns (ReceiveInventoryResponse);
+  rpc GetInventory(GetInventoryRequest) returns (WarehouseInventory);
+  rpc UpdateInventory(UpdateInventoryRequest) returns (WarehouseInventory);
+  rpc ListInventory(ListInventoryRequest) returns (ListInventoryResponse);
+  rpc AllocateInventory(AllocateInventoryRequest) returns (AllocateInventoryResponse);
+  rpc ReserveInventory(ReserveInventoryRequest) returns (ReserveInventoryResponse);
+  rpc ReleaseInventory(ReleaseInventoryRequest) returns (google.protobuf.Empty);
+  rpc AdjustInventory(AdjustInventoryRequest) returns (AdjustInventoryResponse);
+  
+  // Order management
+  rpc CreateOrder(CreateOrderRequest) returns (WarehouseOrder);
+  rpc GetOrder(GetOrderRequest) returns (WarehouseOrder);
+  rpc UpdateOrder(UpdateOrderRequest) returns (WarehouseOrder);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+  rpc AllocateOrder(AllocateOrderRequest) returns (WarehouseOrder);
+  rpc PickOrder(PickOrderRequest) returns (WarehouseOrder);
+  rpc PackOrder(PackOrderRequest) returns (WarehouseOrder);
+  rpc ShipOrder(ShipOrderRequest) returns (WarehouseOrder);
+  rpc CancelOrder(CancelOrderRequest) returns (google.protobuf.Empty);
+  
+  // Task management
+  rpc CreateTask(CreateTaskRequest) returns (WarehouseTask);
+  rpc GetTask(GetTaskRequest) returns (WarehouseTask);
+  rpc UpdateTask(UpdateTaskRequest) returns (WarehouseTask);
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);
+  rpc AssignTask(AssignTaskRequest) returns (WarehouseTask);
+  rpc StartTask(StartTaskRequest) returns (WarehouseTask);
+  rpc CompleteTask(CompleteTaskRequest) returns (WarehouseTask);
+  rpc CancelTask(CancelTaskRequest) returns (google.protobuf.Empty);
+  
+  // Reporting and analytics
+  rpc GetInventoryReport(GetInventoryReportRequest) returns (GetInventoryReportResponse);
+  rpc GetOrderReport(GetOrderReportRequest) returns (GetOrderReportResponse);
+  rpc GetTaskReport(GetTaskReportRequest) returns (GetTaskReportResponse);
+  rpc GetWarehouseMetrics(GetWarehouseMetricsRequest) returns (GetWarehouseMetricsResponse);
+}
+
+// Request/Response messages for Warehouse operations
+message GetWarehouseRequest {
+  string warehouse_id = 1;
+}
+
+message UpdateWarehouseRequest {
+  string warehouse_id = 1;
+  Warehouse warehouse = 2;
+}
+
+message ListWarehousesRequest {
+  string owner_id = 1;
+  string warehouse_type = 2;
+  bool active_only = 3;
+}
+
+message ListWarehousesResponse {
+  repeated Warehouse warehouses = 1;
+}
+
+message DeactivateWarehouseRequest {
+  string warehouse_id = 1;
+  string reason = 2;
+}
+
+// Request/Response messages for Inventory operations
+message ReceiveInventoryRequest {
+  string warehouse_id = 1;
+  string sku = 2;
+  int32 quantity = 3;
+  string batch_number = 4;
+  string lot_number = 5;
+  string supplier_id = 6;
+  string purchase_order_id = 7;
+  string location_code = 8;
+}
+
+message ReceiveInventoryResponse {
+  string inventory_id = 1;
+  string status = 2;
+  string notes = 3;
+}
+
+message GetInventoryRequest {
+  string inventory_id = 1;
+}
+
+message UpdateInventoryRequest {
+  string inventory_id = 1;
+  WarehouseInventory inventory = 2;
+}
+
+message ListInventoryRequest {
+  string warehouse_id = 1;
+  string sku = 2;
+  string status = 3;
+  string location_code = 4;
+}
+
+message ListInventoryResponse {
+  repeated WarehouseInventory inventory = 1;
+}
+
+message AllocateInventoryRequest {
+  string order_id = 1;
+  string sku = 2;
+  int32 quantity = 3;
+}
+
+message AllocateInventoryResponse {
+  bool success = 1;
+  string allocation_id = 2;
+  string notes = 3;
+}
+
+message ReserveInventoryRequest {
+  string order_id = 1;
+  string sku = 2;
+  int32 quantity = 3;
+}
+
+message ReserveInventoryResponse {
+  bool success = 1;
+  string reservation_id = 2;
+  string notes = 3;
+}
+
+message ReleaseInventoryRequest {
+  string reservation_id = 1;
+}
+
+message AdjustInventoryRequest {
+  string inventory_id = 1;
+  int32 adjustment_quantity = 2;
+  string reason = 3;
+  string notes = 4;
+}
+
+message AdjustInventoryResponse {
+  string adjustment_id = 1;
+  string status = 2;
+  string notes = 3;
+}
+
+// Request/Response messages for Order operations
+message CreateOrderRequest {
+  string warehouse_id = 1;
+  string customer_id = 2;
+  string priority = 3;
+  string order_type = 4;
+  repeated OrderItem items = 5;
+  Address shipping_address = 6;
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message UpdateOrderRequest {
+  string order_id = 1;
+  WarehouseOrder order = 2;
+}
+
+message ListOrdersRequest {
+  string warehouse_id = 1;
+  string customer_id = 2;
+  string status = 3;
+  string priority = 4;
+  string date_from = 5;
+  string date_to = 6;
+}
+
+message ListOrdersResponse {
+  repeated WarehouseOrder orders = 1;
+}
+
+message AllocateOrderRequest {
+  string order_id = 1;
+}
+
+message PickOrderRequest {
+  string order_id = 1;
+  string picker_id = 2;
+}
+
+message PackOrderRequest {
+  string order_id = 1;
+  string packer_id = 2;
+}
+
+message ShipOrderRequest {
+  string order_id = 1;
+  string shipper_id = 2;
+  string tracking_number = 3;
+}
+
+message CancelOrderRequest {
+  string order_id = 1;
+  string reason = 2;
+}
+
+// Request/Response messages for Task operations
+message CreateTaskRequest {
+  string warehouse_id = 1;
+  string order_id = 2;
+  string task_type = 3;
+  string priority = 4;
+  repeated TaskItem items = 5;
+  string source_location = 6;
+  string destination_location = 7;
+}
+
+message GetTaskRequest {
+  string task_id = 1;
+}
+
+message UpdateTaskRequest {
+  string task_id = 1;
+  WarehouseTask task = 2;
+}
+
+message ListTasksRequest {
+  string warehouse_id = 1;
+  string assigned_to = 2;
+  string status = 3;
+  string task_type = 4;
+  string priority = 5;
+}
+
+message ListTasksResponse {
+  repeated WarehouseTask tasks = 1;
+}
+
+message AssignTaskRequest {
+  string task_id = 1;
+  string assigned_to = 2;
+}
+
+message StartTaskRequest {
+  string task_id = 1;
+}
+
+message CompleteTaskRequest {
+  string task_id = 1;
+  string completion_notes = 2;
+  repeated string issues_encountered = 3;
+}
+
+message CancelTaskRequest {
+  string task_id = 1;
+  string reason = 2;
+}
+
+// Request/Response messages for Reporting operations
+message GetInventoryReportRequest {
+  string warehouse_id = 1;
+  string sku = 2;
+  string status = 3;
+}
+
+message GetInventoryReportResponse {
+  repeated InventoryReportItem items = 1;
+  int32 total_items = 2;
+  double total_value = 3;
+}
+
+message InventoryReportItem {
+  string sku = 1;
+  string product_name = 2;
+  int32 quantity_on_hand = 3;
+  int32 quantity_available = 4;
+  double unit_cost = 5;
+  double total_value = 6;
+  string location_code = 7;
+}
+
+message GetOrderReportRequest {
+  string warehouse_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+  string status = 4;
+}
+
+message GetOrderReportResponse {
+  repeated OrderReportItem orders = 1;
+  int32 total_orders = 2;
+  double total_value = 3;
+}
+
+message OrderReportItem {
+  string order_id = 1;
+  string customer_name = 2;
+  string status = 3;
+  double order_value = 4;
+  string order_date = 5;
+  string ship_date = 6;
+}
+
+message GetTaskReportRequest {
+  string warehouse_id = 1;
+  string assigned_to = 2;
+  string date_from = 3;
+  string date_to = 4;
+}
+
+message GetTaskReportResponse {
+  repeated TaskReportItem tasks = 1;
+  int32 total_tasks = 2;
+  int32 completed_tasks = 3;
+  double completion_rate = 4;
+}
+
+message TaskReportItem {
+  string task_id = 1;
+  string task_type = 2;
+  string status = 3;
+  string assigned_to = 4;
+  string created_date = 5;
+  string completed_date = 6;
+  int32 duration_minutes = 7;
+}
+
+message GetWarehouseMetricsRequest {
+  string warehouse_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetWarehouseMetricsResponse {
+  int32 total_orders = 1;
+  int32 completed_orders = 2;
+  double order_completion_rate = 3;
+  int32 total_tasks = 4;
+  int32 completed_tasks = 5;
+  double task_completion_rate = 6;
+  double average_order_processing_time_hours = 7;
+  double inventory_turnover_rate = 8;
+  double space_utilization_percent = 9;
+}

@@ -1,0 +1,225 @@
+syntax = "proto3";
+
+package blockchain.storage.services;
+
+import "blockchain/storage/messages/storage_record.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/storage/services";
+
+// StorageMsgService handles state-changing storage operations
+service StorageMsgService {
+  // CreateStorageRecord creates a new storage record
+  rpc CreateStorageRecord(blockchain.storage.messages.MsgCreateStorageRecord) returns (blockchain.storage.messages.MsgCreateStorageRecordResponse);
+  
+  // UpdateStorageRecord updates an existing storage record
+  rpc UpdateStorageRecord(blockchain.storage.messages.MsgUpdateStorageRecord) returns (blockchain.storage.messages.MsgUpdateStorageRecordResponse);
+  
+  // DeleteStorageRecord deletes a storage record
+  rpc DeleteStorageRecord(blockchain.storage.messages.MsgDeleteStorageRecord) returns (blockchain.storage.messages.MsgDeleteStorageRecordResponse);
+  
+  // ReplicateStorageRecord replicates a storage record
+  rpc ReplicateStorageRecord(blockchain.storage.messages.MsgReplicateStorageRecord) returns (blockchain.storage.messages.MsgReplicateStorageRecordResponse);
+  
+  // MigrateStorageRecord migrates a storage record
+  rpc MigrateStorageRecord(blockchain.storage.messages.MsgMigrateStorageRecord) returns (blockchain.storage.messages.MsgMigrateStorageRecordResponse);
+  
+  // BackupStorageRecord backs up a storage record
+  rpc BackupStorageRecord(blockchain.storage.messages.MsgBackupStorageRecord) returns (blockchain.storage.messages.MsgBackupStorageRecordResponse);
+}
+
+// StorageQueryService handles storage state queries
+service StorageQueryService {
+  // GetStorageRecord retrieves a specific storage record
+  rpc GetStorageRecord(GetStorageRecordRequest) returns (GetStorageRecordResponse);
+  
+  // ListStorageRecords lists storage records with pagination and filters
+  rpc ListStorageRecords(ListStorageRecordsRequest) returns (ListStorageRecordsResponse);
+  
+  // GetStorageParams retrieves storage module parameters
+  rpc GetStorageParams(GetStorageParamsRequest) returns (GetStorageParamsResponse);
+  
+  // GetStorageStats retrieves storage statistics
+  rpc GetStorageStats(GetStorageStatsRequest) returns (GetStorageStatsResponse);
+  
+  // GetStorageRecordByKey retrieves storage record by key
+  rpc GetStorageRecordByKey(GetStorageRecordByKeyRequest) returns (GetStorageRecordByKeyResponse);
+  
+  // GetStorageRecordHistory retrieves storage record history
+  rpc GetStorageRecordHistory(GetStorageRecordHistoryRequest) returns (GetStorageRecordHistoryResponse);
+  
+  // GetStorageRecordVersions retrieves storage record versions
+  rpc GetStorageRecordVersions(GetStorageRecordVersionsRequest) returns (GetStorageRecordVersionsResponse);
+  
+  // GetStorageRecordReplicas retrieves storage record replicas
+  rpc GetStorageRecordReplicas(GetStorageRecordReplicasRequest) returns (GetStorageRecordReplicasResponse);
+  
+  // GetStorageRecordBackups retrieves storage record backups
+  rpc GetStorageRecordBackups(GetStorageRecordBackupsRequest) returns (GetStorageRecordBackupsResponse);
+  
+  // SearchStorageRecords searches for storage records
+  rpc SearchStorageRecords(SearchStorageRecordsRequest) returns (SearchStorageRecordsResponse);
+  
+  // GetStorageUsage retrieves storage usage information
+  rpc GetStorageUsage(GetStorageUsageRequest) returns (GetStorageUsageResponse);
+  
+  // GetStorageProviders retrieves available storage providers
+  rpc GetStorageProviders(GetStorageProvidersRequest) returns (GetStorageProvidersResponse);
+  
+  // GetStorageCosts retrieves storage costs
+  rpc GetStorageCosts(GetStorageCostsRequest) returns (GetStorageCostsResponse);
+}
+
+// Query request and response messages
+
+message GetStorageRecordRequest {
+  string record_id = 1; // Storage record ID
+}
+
+message GetStorageRecordResponse {
+  blockchain.storage.messages.StorageRecord record = 1;
+}
+
+message ListStorageRecordsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string storage_type = 3;   // Filter by storage type
+  string status = 4;         // Filter by status
+  string owner = 5;          // Filter by owner address
+  bool is_public = 6;        // Filter by public/private
+  string category = 7;       // Filter by category
+  int64 start_time = 8;      // Filter by start time
+  int64 end_time = 9;        // Filter by end time
+}
+
+message ListStorageRecordsResponse {
+  repeated blockchain.storage.messages.StorageRecord records = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetStorageParamsRequest {
+  // No parameters needed
+}
+
+message GetStorageParamsResponse {
+  blockchain.storage.messages.StorageParams params = 1;
+}
+
+message GetStorageStatsRequest {
+  string time_period = 1; // Optional time period filter
+}
+
+message GetStorageStatsResponse {
+  int64 total_records = 1;          // Total number of records
+  int64 active_records = 2;         // Number of active records
+  int64 total_storage_used = 3;     // Total storage used in bytes
+  int64 total_storage_available = 4; // Total storage available in bytes
+  string storage_utilization = 5;   // Storage utilization percentage
+  int64 total_accesses = 6;         // Total number of accesses
+  string average_access_time = 7;   // Average access time
+  string most_used_storage_type = 8; // Most used storage type
+  string storage_cost = 9;          // Total storage cost
+}
+
+message GetStorageRecordByKeyRequest {
+  string key = 1; // Storage key
+}
+
+message GetStorageRecordByKeyResponse {
+  blockchain.storage.messages.StorageRecord record = 1;
+}
+
+message GetStorageRecordHistoryRequest {
+  string record_id = 1;             // Storage record ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetStorageRecordHistoryResponse {
+  repeated blockchain.storage.messages.StorageRecord records = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetStorageRecordVersionsRequest {
+  string record_id = 1;             // Storage record ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetStorageRecordVersionsResponse {
+  repeated blockchain.storage.messages.StorageRecord versions = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetStorageRecordReplicasRequest {
+  string record_id = 1;             // Storage record ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetStorageRecordReplicasResponse {
+  repeated blockchain.storage.messages.StorageRecord replicas = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetStorageRecordBackupsRequest {
+  string record_id = 1;             // Storage record ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetStorageRecordBackupsResponse {
+  repeated blockchain.storage.messages.StorageRecord backups = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message SearchStorageRecordsRequest {
+  string query = 1;                 // Search query
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+  string storage_type = 4;          // Filter by storage type
+  string status = 5;                // Filter by status
+  string category = 6;              // Filter by category
+}
+
+message SearchStorageRecordsResponse {
+  repeated blockchain.storage.messages.StorageRecord records = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetStorageUsageRequest {
+  string address = 1;               // Optional address to query usage for
+  string storage_type = 2;          // Optional storage type filter
+}
+
+message GetStorageUsageResponse {
+  string address = 1;               // Address
+  string total_storage_used = 2;    // Total storage used
+  string total_storage_available = 3; // Total storage available
+  string storage_utilization = 4;   // Storage utilization percentage
+  int64 total_records = 5;          // Total number of records
+  string storage_cost = 6;          // Storage cost
+  map<string, string> usage_by_type = 7; // Usage by storage type
+}
+
+message GetStorageProvidersRequest {
+  string storage_type = 1;          // Optional storage type filter
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetStorageProvidersResponse {
+  repeated string providers = 1;    // List of storage providers
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetStorageCostsRequest {
+  string storage_type = 1;          // Optional storage type filter
+  string data_size = 2;             // Optional data size for cost calculation
+}
+
+message GetStorageCostsResponse {
+  string cost_per_gb = 1;           // Cost per GB
+  string cost_per_access = 2;       // Cost per access
+  string total_estimated_cost = 3;  // Total estimated cost
+  map<string, string> costs_by_type = 4; // Costs by storage type
+}

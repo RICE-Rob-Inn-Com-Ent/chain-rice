@@ -1,0 +1,304 @@
+syntax = "proto3";
+
+package telecom.subscriptions.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "telecom/subscriptions/messages/subscription_request.proto";
+import "telecom/subscriptions/messages/subscription_response.proto";
+import "telecom/subscriptions/enums/subscription_plan.proto";
+import "telecom/subscriptions/enums/subscription_status.proto";
+
+// SubscriptionService provides comprehensive subscription management functionality
+service SubscriptionService {
+  // Create a new subscription for a customer
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
+  
+  // Retrieve a specific subscription by ID
+  rpc GetSubscription(GetSubscriptionRequest) returns (GetSubscriptionResponse);
+  
+  // List subscriptions with optional filtering and pagination
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+  
+  // Update an existing subscription
+  rpc UpdateSubscription(UpdateSubscriptionRequest) returns (UpdateSubscriptionResponse);
+  
+  // Delete a subscription (soft delete - marks as cancelled)
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (DeleteSubscriptionResponse);
+  
+  // Cancel a subscription
+  rpc CancelSubscription(CancelSubscriptionRequest) returns (CancelSubscriptionResponse);
+  
+  // Renew a subscription
+  rpc RenewSubscription(RenewSubscriptionRequest) returns (RenewSubscriptionResponse);
+  
+  // Suspend a subscription
+  rpc SuspendSubscription(SuspendSubscriptionRequest) returns (SuspendSubscriptionResponse);
+  
+  // Resume a suspended subscription
+  rpc ResumeSubscription(ResumeSubscriptionRequest) returns (ResumeSubscriptionResponse);
+  
+  // Get subscription summary for a customer
+  rpc GetSubscriptionSummary(GetSubscriptionSummaryRequest) returns (GetSubscriptionSummaryResponse);
+  
+  // Check subscription eligibility
+  rpc CheckEligibility(CheckEligibilityRequest) returns (CheckEligibilityResponse);
+  
+  // Upgrade or downgrade subscription plan
+  rpc ChangePlan(ChangePlanRequest) returns (ChangePlanResponse);
+  
+  // Get subscription usage statistics
+  rpc GetUsageStats(GetUsageStatsRequest) returns (GetUsageStatsResponse);
+  
+  // Process subscription billing
+  rpc ProcessBilling(ProcessBillingRequest) returns (ProcessBillingResponse);
+  
+  // Get subscription history
+  rpc GetSubscriptionHistory(GetSubscriptionHistoryRequest) returns (GetSubscriptionHistoryResponse);
+}
+
+// GetSubscriptionSummaryRequest represents a request to get subscription summary
+message GetSubscriptionSummaryRequest {
+  // Customer ID to get summary for
+  string customer_id = 1;
+}
+
+// GetSubscriptionSummaryResponse represents the subscription summary response
+message GetSubscriptionSummaryResponse {
+  // Customer ID
+  string customer_id = 1;
+  
+  // List of active subscriptions
+  repeated SubscriptionSummary active_subscriptions = 2;
+  
+  // Total monthly cost
+  int64 total_monthly_cost = 3;
+  
+  // Currency
+  string currency = 4;
+  
+  // Number of active subscriptions
+  int32 active_count = 5;
+  
+  // Number of cancelled subscriptions
+  int32 cancelled_count = 6;
+  
+  // Next billing date
+  google.protobuf.Timestamp next_billing_date = 7;
+  
+  // Total data usage across all subscriptions
+  google.protobuf.DoubleValue total_data_usage_gb = 8;
+}
+
+// CheckEligibilityRequest represents a request to check subscription eligibility
+message CheckEligibilityRequest {
+  // Customer ID to check eligibility for
+  string customer_id = 1;
+  
+  // Plan to check eligibility for
+  telecom.subscriptions.enums.SubscriptionPlan plan = 2;
+  
+  // Promotional code to validate (optional)
+  google.protobuf.StringValue promotional_code = 3;
+}
+
+// CheckEligibilityResponse represents the eligibility check response
+message CheckEligibilityResponse {
+  // Whether the customer is eligible
+  bool is_eligible = 1;
+  
+  // Eligibility message
+  string message = 2;
+  
+  // Valid promotional code (if applicable)
+  google.protobuf.StringValue valid_promotional_code = 3;
+  
+  // Discount amount (if promotional code is valid)
+  google.protobuf.DoubleValue discount_amount = 4;
+  
+  // Eligibility reasons (if not eligible)
+  repeated string eligibility_reasons = 5;
+}
+
+// ChangePlanRequest represents a request to change subscription plan
+message ChangePlanRequest {
+  // Subscription ID to change
+  string subscription_id = 1;
+  
+  // New plan to change to
+  telecom.subscriptions.enums.SubscriptionPlan new_plan = 2;
+  
+  // Effective date for the change
+  google.protobuf.Timestamp effective_date = 3;
+  
+  // Whether to prorate the billing
+  bool prorate_billing = 4;
+  
+  // Reason for the change
+  google.protobuf.StringValue reason = 5;
+}
+
+// ChangePlanResponse represents the plan change response
+message ChangePlanResponse {
+  // Updated subscription
+  Subscription subscription = 1;
+  
+  // Success message
+  string message = 2;
+  
+  // Prorated amount (if applicable)
+  google.protobuf.DoubleValue prorated_amount = 3;
+  
+  // Effective date of the change
+  google.protobuf.Timestamp effective_date = 4;
+}
+
+// GetUsageStatsRequest represents a request to get usage statistics
+message GetUsageStatsRequest {
+  // Subscription ID to get stats for
+  string subscription_id = 1;
+  
+  // Date range for statistics
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  
+  // Usage types to include (data, voice, sms)
+  repeated string usage_types = 4;
+}
+
+// GetUsageStatsResponse represents the usage statistics response
+message GetUsageStatsResponse {
+  // Subscription ID
+  string subscription_id = 1;
+  
+  // Data usage in GB
+  google.protobuf.DoubleValue data_usage_gb = 2;
+  
+  // Data allowance in GB
+  google.protobuf.DoubleValue data_allowance_gb = 3;
+  
+  // Data usage percentage
+  google.protobuf.DoubleValue data_usage_percentage = 4;
+  
+  // Voice usage in minutes
+  google.protobuf.DoubleValue voice_usage_minutes = 5;
+  
+  // Voice allowance in minutes
+  google.protobuf.DoubleValue voice_allowance_minutes = 6;
+  
+  // Voice usage percentage
+  google.protobuf.DoubleValue voice_usage_percentage = 7;
+  
+  // SMS usage count
+  google.protobuf.DoubleValue sms_usage_count = 8;
+  
+  // SMS allowance count
+  google.protobuf.DoubleValue sms_allowance_count = 9;
+  
+  // SMS usage percentage
+  google.protobuf.DoubleValue sms_usage_percentage = 10;
+  
+  // Period start date
+  google.protobuf.Timestamp period_start = 11;
+  
+  // Period end date
+  google.protobuf.Timestamp period_end = 12;
+}
+
+// ProcessBillingRequest represents a request to process subscription billing
+message ProcessBillingRequest {
+  // Subscription ID to process billing for
+  string subscription_id = 1;
+  
+  // Billing period start date
+  google.protobuf.Timestamp billing_period_start = 2;
+  
+  // Billing period end date
+  google.protobuf.Timestamp billing_period_end = 3;
+  
+  // Whether to generate invoice
+  bool generate_invoice = 4;
+}
+
+// ProcessBillingResponse represents the billing processing response
+message ProcessBillingResponse {
+  // Billing ID
+  string billing_id = 1;
+  
+  // Invoice ID (if generated)
+  google.protobuf.StringValue invoice_id = 2;
+  
+  // Billing amount
+  int64 billing_amount = 3;
+  
+  // Currency
+  string currency = 4;
+  
+  // Success message
+  string message = 5;
+  
+  // Billing processing date
+  google.protobuf.Timestamp processed_at = 6;
+}
+
+// GetSubscriptionHistoryRequest represents a request to get subscription history
+message GetSubscriptionHistoryRequest {
+  // Subscription ID to get history for
+  string subscription_id = 1;
+  
+  // Date range for history (optional)
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  
+  // Page number for pagination
+  int32 page = 4;
+  
+  // Page size for pagination
+  int32 page_size = 5;
+}
+
+// GetSubscriptionHistoryResponse represents the subscription history response
+message GetSubscriptionHistoryResponse {
+  // List of subscription history records
+  repeated SubscriptionHistoryRecord history_records = 1;
+  
+  // Total count
+  int32 total_count = 2;
+  
+  // Pagination info
+  int32 page = 3;
+  int32 page_size = 4;
+  int32 total_pages = 5;
+}
+
+// SubscriptionHistoryRecord represents a subscription history entry
+message SubscriptionHistoryRecord {
+  // History record ID
+  string history_id = 1;
+  
+  // Subscription ID
+  string subscription_id = 2;
+  
+  // Action performed
+  string action = 3;
+  
+  // Description of the action
+  string description = 4;
+  
+  // Timestamp of the action
+  google.protobuf.Timestamp timestamp = 5;
+  
+  // User or system that performed the action
+  string performed_by = 6;
+  
+  // Additional metadata
+  google.protobuf.StringValue metadata = 7;
+  
+  // Previous values (for updates)
+  google.protobuf.StringValue previous_values = 8;
+  
+  // New values (for updates)
+  google.protobuf.StringValue new_values = 9;
+}

@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+package horeca.delivery.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/delivery_driver_models.proto";
+import "../messages/delivery_events.proto";
+
+// Delivery Logistics Service - Route optimization and analytics
+service DeliveryLogisticsService {
+  // Optimize delivery routes
+  rpc OptimizeRoutes(OptimizeRoutesRequest) returns (OptimizeRoutesResponse);
+  
+  // Get available drivers
+  rpc GetAvailableDrivers(GetAvailableDriversRequest) returns (GetAvailableDriversResponse);
+  
+  // Assign driver to route
+  rpc AssignDriverToRoute(AssignDriverToRouteRequest) returns (AssignDriverToRouteResponse);
+  
+  // Get driver performance
+  rpc GetDriverPerformance(GetDriverPerformanceRequest) returns (GetDriverPerformanceResponse);
+  
+  // Get delivery analytics
+  rpc GetDeliveryAnalytics(GetDeliveryAnalyticsRequest) returns (GetDeliveryAnalyticsResponse);
+  
+  // Get route efficiency
+  rpc GetRouteEfficiency(GetRouteEfficiencyRequest) returns (GetRouteEfficiencyResponse);
+  
+  // Update driver status
+  rpc UpdateDriverStatus(UpdateDriverStatusRequest) returns (UpdateDriverStatusResponse);
+  
+  // Get delivery zones
+  rpc GetDeliveryZones(GetDeliveryZonesRequest) returns (GetDeliveryZonesResponse);
+}
+
+// Request/Response messages
+message OptimizeRoutesRequest {
+  repeated string order_ids = 1;
+  string optimization_type = 2; // time, distance, cost
+}
+
+message OptimizeRoutesResponse {
+  repeated DeliveryRoute optimized_routes = 1;
+  double total_distance = 2;
+  int32 total_time_minutes = 3;
+  string message = 4;
+}
+
+message GetAvailableDriversRequest {
+  string location = 1;
+  int32 radius_km = 2;
+}
+
+message GetAvailableDriversResponse {
+  repeated DeliveryDriver drivers = 1;
+}
+
+message AssignDriverToRouteRequest {
+  string route_id = 1;
+  string driver_id = 2;
+}
+
+message AssignDriverToRouteResponse {
+  DeliveryRoute route = 1;
+  string message = 2;
+}
+
+message GetDriverPerformanceRequest {
+  string driver_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetDriverPerformanceResponse {
+  DriverPerformance performance = 1;
+}
+
+message GetDeliveryAnalyticsRequest {
+  string date_from = 1;
+  string date_to = 2;
+  string group_by = 3; // day, week, month, driver, zone
+}
+
+message GetDeliveryAnalyticsResponse {
+  repeated DeliveryAnalyticsData analytics_data = 1;
+  double total_deliveries = 2;
+  double average_delivery_time = 3;
+  double on_time_delivery_rate = 4;
+}
+
+message GetRouteEfficiencyRequest {
+  string route_id = 1;
+}
+
+message GetRouteEfficiencyResponse {
+  RouteEfficiency efficiency = 1;
+}
+
+message UpdateDriverStatusRequest {
+  string driver_id = 1;
+  string status = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+
+message UpdateDriverStatusResponse {
+  string message = 1;
+}
+
+message GetDeliveryZonesRequest {
+  string location = 1;
+}
+
+message GetDeliveryZonesResponse {
+  repeated DeliveryZone zones = 1;
+}
+
+// Data structures
+message DriverPerformance {
+  string driver_id = 1;
+  string driver_name = 2;
+  int32 total_deliveries = 3;
+  double average_delivery_time = 4;
+  double on_time_rate = 5;
+  double customer_rating = 6;
+  double total_distance_km = 7;
+  double fuel_efficiency = 8;
+}
+
+message DeliveryAnalyticsData {
+  string period = 1;
+  int32 deliveries = 2;
+  double average_time = 3;
+  double on_time_rate = 4;
+  double total_distance = 5;
+  double fuel_cost = 6;
+}
+
+message RouteEfficiency {
+  string route_id = 1;
+  double total_distance_km = 2;
+  int32 total_time_minutes = 3;
+  double fuel_efficiency = 4;
+  double cost_per_delivery = 5;
+  int32 deliveries_count = 6;
+}
+
+message DeliveryZone {
+  string zone_id = 1;
+  string zone_name = 2;
+  double latitude = 3;
+  double longitude = 4;
+  int32 radius_km = 5;
+  double delivery_fee = 6;
+  int32 estimated_time_minutes = 7;
+}

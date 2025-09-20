@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package healthcare.billing.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/payment_method.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/billing/messages";
+
+// Payment transaction
+message Payment {
+  string payment_id = 1;
+  string invoice_id = 2;
+  string patient_id = 3;
+  double amount = 4;
+  healthcare.billing.enums.PaymentMethod payment_method = 5;
+  string transaction_reference = 6;
+  string payment_gateway = 7;
+  google.protobuf.Timestamp payment_date = 8;
+  google.protobuf.Timestamp processed_at = 9;
+  string status = 10;
+  string notes = 11;
+  string processed_by = 12;
+  string receipt_number = 13;
+  string authorization_code = 14;
+  string error_message = 15;
+}
+
+// Payment request
+message PaymentRequest {
+  string invoice_id = 1;
+  string patient_id = 2;
+  double amount = 3;
+  healthcare.billing.enums.PaymentMethod payment_method = 4;
+  string transaction_reference = 5;
+  string payment_gateway = 6;
+  string notes = 7;
+  string processed_by = 8;
+}
+
+// Payment response
+message PaymentResponse {
+  bool success = 1;
+  string message = 2;
+  Payment payment = 3;
+}
+
+// Process payment request
+message ProcessPaymentRequest {
+  string invoice_id = 1;
+  double amount = 2;
+  healthcare.billing.enums.PaymentMethod payment_method = 3;
+  string payment_details = 4; // JSON string with payment-specific details
+  string processed_by = 5;
+}
+
+// Refund request
+message RefundRequest {
+  string payment_id = 1;
+  double refund_amount = 2;
+  string reason = 3;
+  string processed_by = 4;
+}
+
+// Refund response
+message RefundResponse {
+  bool success = 1;
+  string message = 2;
+  string refund_id = 3;
+  double refund_amount = 4;
+  google.protobuf.Timestamp refund_date = 5;
+}
+
+// List payments request
+message ListPaymentsRequest {
+  string invoice_id = 1;
+  string patient_id = 2;
+  healthcare.billing.enums.PaymentMethod payment_method = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+// List payments response
+message ListPaymentsResponse {
+  repeated Payment payments = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+  double total_amount = 4;
+}
+
+// Payment summary
+message PaymentSummary {
+  string patient_id = 1;
+  double total_invoiced = 2;
+  double total_paid = 3;
+  double total_outstanding = 4;
+  double total_refunded = 5;
+  int32 payment_count = 6;
+  google.protobuf.Timestamp last_payment_date = 7;
+}

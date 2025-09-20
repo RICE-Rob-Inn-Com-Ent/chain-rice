@@ -1,0 +1,233 @@
+syntax = "proto3";
+
+// Comprehensive Protocol Buffers definition for the complete business system
+// This file serves as the main entry point for all business modules and services
+
+package main;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+// Core modules imports
+import "modules/core/core.proto";
+import "modules/core/index.proto";
+import "modules/core/common/common.proto";
+import "modules/core/auth/auth.proto";
+import "modules/core/notifications/notifications.proto";
+import "modules/core/files/files.proto";
+import "modules/core/analytics/analytics.proto";
+
+// Business modules imports
+import "modules/finance/finance.proto";
+import "modules/finance/index.proto";
+import "modules/commerce/commerce.proto";
+import "modules/commerce/index.proto";
+import "modules/logistics/logistics.proto";
+import "modules/logistics/index.proto";
+import "modules/crm-hr/crm_hr.proto";
+import "modules/crm-hr/index.proto";
+import "modules/manufacturing/manufacturing.proto";
+import "modules/manufacturing/index.proto";
+import "modules/projects/projects.proto";
+import "modules/projects/index.proto";
+import "modules/automation/automation.proto";
+import "modules/automation/index.proto";
+import "modules/integrations/integrations.proto";
+import "modules/integrations/index.proto";
+import "modules/settings/settings.proto";
+import "modules/settings/index.proto";
+import "modules/blockchain/blockchain.proto";
+import "modules/blockchain/index.proto";
+import "modules/gaming/gaming.proto";
+import "modules/gaming/index.proto";
+
+// Industry-specific modules imports
+import "modules/horeca/horeca.proto";
+import "modules/horeca/index.proto";
+import "modules/healthcare/healthcare.proto";
+import "modules/healthcare/index.proto";
+import "modules/education/education.proto";
+import "modules/education/index.proto";
+import "modules/transport/transport.proto";
+import "modules/transport/index.proto";
+import "modules/construction/construction.proto";
+import "modules/construction/index.proto";
+import "modules/agriculture/agriculture.proto";
+import "modules/agriculture/index.proto";
+import "modules/retail/retail.proto";
+import "modules/retail/index.proto";
+import "modules/energy/energy.proto";
+import "modules/energy/index.proto";
+import "modules/telecom/telecom.proto";
+import "modules/telecom/index.proto";
+import "modules/government/government.proto";
+import "modules/government/index.proto";
+import "modules/entertainment/entertainment.proto";
+import "modules/entertainment/index.proto";
+import "modules/tourism/tourism.proto";
+import "modules/tourism/index.proto";
+import "modules/sports/sports.proto";
+import "modules/sports/index.proto";
+
+// Main system service that aggregates all module services
+service SystemService {
+  // Core services
+  rpc GetSystemHealth(GetSystemHealthRequest) returns (GetSystemHealthResponse);
+  rpc GetSystemInfo(GetSystemInfoRequest) returns (GetSystemInfoResponse);
+  rpc InitializeSystem(InitializeSystemRequest) returns (InitializeSystemResponse);
+  
+  // Module discovery and management
+  rpc GetAvailableModules(GetAvailableModulesRequest) returns (GetAvailableModulesResponse);
+  rpc GetModuleInfo(GetModuleInfoRequest) returns (GetModuleInfoResponse);
+  rpc EnableModule(EnableModuleRequest) returns (EnableModuleResponse);
+  rpc DisableModule(DisableModuleRequest) returns (DisableModuleResponse);
+  
+  // Cross-module operations
+  rpc SearchAcrossModules(SearchAcrossModulesRequest) returns (SearchAcrossModulesResponse);
+  rpc GetCrossModuleReports(GetCrossModuleReportsRequest) returns (GetCrossModuleReportsResponse);
+  rpc ExportSystemData(ExportSystemDataRequest) returns (ExportSystemDataResponse);
+}
+
+// System-level messages
+message SystemInfo {
+  string version = 1;
+  string build_date = 2;
+  string environment = 3;
+  repeated string enabled_modules = 4;
+  google.protobuf.Timestamp started_at = 5;
+  map<string, string> configuration = 6;
+}
+
+message ModuleInfo {
+  string name = 1;
+  string description = 2;
+  string version = 3;
+  bool is_enabled = 4;
+  repeated string dependencies = 5;
+  repeated string services = 6;
+  google.protobuf.Timestamp last_updated = 7;
+}
+
+message SystemHealth {
+  string status = 1; // healthy, degraded, unhealthy
+  map<string, string> module_health = 2;
+  google.protobuf.Timestamp last_check = 3;
+  repeated string issues = 4;
+}
+
+message CrossModuleSearchResult {
+  string module = 1;
+  string entity_type = 2;
+  string entity_id = 3;
+  string title = 4;
+  string description = 5;
+  float relevance_score = 6;
+  map<string, string> metadata = 7;
+}
+
+// Service request/response messages
+message GetSystemHealthRequest {}
+
+message GetSystemHealthResponse {
+  core.BaseResponse base = 1;
+  SystemHealth health = 2;
+}
+
+message GetSystemInfoRequest {}
+
+message GetSystemInfoResponse {
+  core.BaseResponse base = 1;
+  SystemInfo info = 2;
+}
+
+message InitializeSystemRequest {
+  string organization_id = 1;
+  map<string, string> configuration = 2;
+  repeated string enabled_modules = 3;
+}
+
+message InitializeSystemResponse {
+  core.BaseResponse base = 1;
+  SystemInfo system_info = 2;
+  repeated ModuleInfo initialized_modules = 3;
+}
+
+message GetAvailableModulesRequest {}
+
+message GetAvailableModulesResponse {
+  core.BaseResponse base = 1;
+  repeated ModuleInfo modules = 2;
+}
+
+message GetModuleInfoRequest {
+  string module_name = 1;
+}
+
+message GetModuleInfoResponse {
+  core.BaseResponse base = 1;
+  ModuleInfo module = 2;
+}
+
+message EnableModuleRequest {
+  string module_name = 1;
+  string organization_id = 2;
+  map<string, string> configuration = 3;
+}
+
+message EnableModuleResponse {
+  core.BaseResponse base = 1;
+  ModuleInfo module = 2;
+}
+
+message DisableModuleRequest {
+  string module_name = 1;
+  string organization_id = 2;
+}
+
+message DisableModuleResponse {
+  core.BaseResponse base = 1;
+}
+
+message SearchAcrossModulesRequest {
+  string query = 1;
+  repeated string modules = 2;
+  repeated string entity_types = 3;
+  string organization_id = 4;
+  core.PaginationRequest pagination = 5;
+}
+
+message SearchAcrossModulesResponse {
+  core.BaseResponse base = 1;
+  repeated CrossModuleSearchResult results = 2;
+  core.PaginationResponse pagination = 3;
+}
+
+message GetCrossModuleReportsRequest {
+  string organization_id = 1;
+  string report_type = 2;
+  repeated string modules = 3;
+  google.protobuf.Timestamp from_date = 4;
+  google.protobuf.Timestamp to_date = 5;
+}
+
+message GetCrossModuleReportsResponse {
+  core.BaseResponse base = 1;
+  string report_url = 2;
+  string report_type = 3;
+  google.protobuf.Timestamp generated_at = 4;
+}
+
+message ExportSystemDataRequest {
+  string organization_id = 1;
+  repeated string modules = 2;
+  string format = 3; // json, csv, xlsx
+  bool include_metadata = 4;
+}
+
+message ExportSystemDataResponse {
+  core.BaseResponse base = 1;
+  string export_url = 2;
+  string file_name = 3;
+  int64 file_size = 4;
+  google.protobuf.Timestamp created_at = 5;
+}

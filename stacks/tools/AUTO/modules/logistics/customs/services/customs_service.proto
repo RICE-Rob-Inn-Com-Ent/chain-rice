@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package logistics.customs.services;
+
+import "google/protobuf/empty.proto";
+import "logistics/customs/messages/customs_declaration.proto";
+import "logistics/customs/messages/customs_document.proto";
+import "logistics/customs/messages/customs_inspection.proto";
+
+// Customs service for managing customs declarations, documents, and inspections
+service CustomsService {
+  // Declaration management
+  rpc SubmitDeclaration(CustomsDeclaration) returns (CustomsDeclaration);
+  rpc GetDeclaration(GetDeclarationRequest) returns (CustomsDeclaration);
+  rpc UpdateDeclaration(UpdateDeclarationRequest) returns (CustomsDeclaration);
+  rpc ListDeclarations(ListDeclarationsRequest) returns (ListDeclarationsResponse);
+  rpc CancelDeclaration(CancelDeclarationRequest) returns (google.protobuf.Empty);
+  
+  // Document management
+  rpc UploadDocument(UploadDocumentRequest) returns (CustomsDocument);
+  rpc GetDocument(GetDocumentRequest) returns (CustomsDocument);
+  rpc UpdateDocument(UpdateDocumentRequest) returns (CustomsDocument);
+  rpc DeleteDocument(DeleteDocumentRequest) returns (google.protobuf.Empty);
+  rpc ListDocuments(ListDocumentsRequest) returns (ListDocumentsResponse);
+  rpc ValidateDocument(ValidateDocumentRequest) returns (ValidateDocumentResponse);
+  
+  // Inspection management
+  rpc ScheduleInspection(ScheduleInspectionRequest) returns (CustomsInspection);
+  rpc GetInspection(GetInspectionRequest) returns (CustomsInspection);
+  rpc UpdateInspection(UpdateInspectionRequest) returns (CustomsInspection);
+  rpc CompleteInspection(CompleteInspectionRequest) returns (CustomsInspection);
+  rpc ListInspections(ListInspectionsRequest) returns (ListInspectionsResponse);
+  
+  // Status and tracking
+  rpc GetDeclarationStatus(GetDeclarationStatusRequest) returns (GetDeclarationStatusResponse);
+  rpc TrackDeclaration(TrackDeclarationRequest) returns (TrackDeclarationResponse);
+}
+
+// Request/Response messages for Declaration operations
+message GetDeclarationRequest {
+  string declaration_id = 1;
+}
+
+message UpdateDeclarationRequest {
+  string declaration_id = 1;
+  CustomsDeclaration declaration = 2;
+}
+
+message ListDeclarationsRequest {
+  string importer_id = 1;
+  string status = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListDeclarationsResponse {
+  repeated CustomsDeclaration declarations = 1;
+  string next_page_token = 2;
+}
+
+message CancelDeclarationRequest {
+  string declaration_id = 1;
+  string reason = 2;
+}
+
+// Request/Response messages for Document operations
+message UploadDocumentRequest {
+  string declaration_id = 1;
+  string document_type = 2;
+  string file_name = 3;
+  bytes file_content = 4;
+  string mime_type = 5;
+}
+
+message GetDocumentRequest {
+  string document_id = 1;
+}
+
+message UpdateDocumentRequest {
+  string document_id = 1;
+  CustomsDocument document = 2;
+}
+
+message DeleteDocumentRequest {
+  string document_id = 1;
+}
+
+message ListDocumentsRequest {
+  string declaration_id = 1;
+  string document_type = 2;
+}
+
+message ListDocumentsResponse {
+  repeated CustomsDocument documents = 1;
+}
+
+message ValidateDocumentRequest {
+  string document_id = 1;
+  string officer_id = 2;
+}
+
+message ValidateDocumentResponse {
+  bool is_valid = 1;
+  string validation_notes = 2;
+  repeated string issues = 3;
+}
+
+// Request/Response messages for Inspection operations
+message ScheduleInspectionRequest {
+  string declaration_id = 1;
+  string inspection_type = 2;
+  string scheduled_time = 3;
+  string officer_id = 4;
+}
+
+message GetInspectionRequest {
+  string inspection_id = 1;
+}
+
+message UpdateInspectionRequest {
+  string inspection_id = 1;
+  CustomsInspection inspection = 2;
+}
+
+message CompleteInspectionRequest {
+  string inspection_id = 1;
+  string result = 2;
+  string findings = 3;
+  repeated string violations = 4;
+}
+
+message ListInspectionsRequest {
+  string declaration_id = 1;
+  string status = 2;
+}
+
+message ListInspectionsResponse {
+  repeated CustomsInspection inspections = 1;
+}
+
+// Request/Response messages for Status and Tracking operations
+message GetDeclarationStatusRequest {
+  string declaration_id = 1;
+}
+
+message GetDeclarationStatusResponse {
+  string status = 1;
+  string risk_level = 2;
+  string clearance_result = 3;
+  string last_updated = 4;
+}
+
+message TrackDeclarationRequest {
+  string declaration_id = 1;
+}
+
+message TrackDeclarationResponse {
+  repeated DeclarationEvent events = 1;
+}
+
+message DeclarationEvent {
+  string event_type = 1;
+  string description = 2;
+  string timestamp = 3;
+  string officer_id = 4;
+  string location = 5;
+}

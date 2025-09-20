@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.marketplace.enums;
+
+option go_package = "github.com/rice-dev/gaming/marketplace/enums";
+
+// Статуси оголошень
+enum ListingStatus {
+  LISTING_STATUS_UNSPECIFIED = 0;
+  
+  // Активне
+  LISTING_STATUS_ACTIVE = 1;
+  
+  // Неактивне
+  LISTING_STATUS_INACTIVE = 2;
+  
+  // Призупинене
+  LISTING_STATUS_PAUSED = 3;
+  
+  // Завершене
+  LISTING_STATUS_COMPLETED = 4;
+  
+  // Скасоване
+  LISTING_STATUS_CANCELLED = 5;
+  
+  // Видалене
+  LISTING_STATUS_DELETED = 6;
+  
+  // Заблоковане
+  LISTING_STATUS_BLOCKED = 7;
+  
+  // На модерації
+  LISTING_STATUS_PENDING = 8;
+  
+  // Відхилене
+  LISTING_STATUS_REJECTED = 9;
+  
+  // Очікує підтвердження
+  LISTING_STATUS_PENDING_APPROVAL = 10;
+  
+  // Очікує оплати
+  LISTING_STATUS_PENDING_PAYMENT = 11;
+  
+  // Очікує доставки
+  LISTING_STATUS_PENDING_DELIVERY = 12;
+  
+  // Очікує отримання
+  LISTING_STATUS_PENDING_RECEIPT = 13;
+  
+  // Очікує підтвердження отримання
+  LISTING_STATUS_PENDING_CONFIRMATION = 14;
+  
+  // Очікує оцінки
+  LISTING_STATUS_PENDING_RATING = 15;
+  
+  // Очікує відгуку
+  LISTING_STATUS_PENDING_REVIEW = 16;
+  
+  // Очікує коментаря
+  LISTING_STATUS_PENDING_COMMENT = 17;
+  
+  // Очікує відповіді
+  LISTING_STATUS_PENDING_RESPONSE = 18;
+  
+  // Очікує реакції
+  LISTING_STATUS_PENDING_REACTION = 19;
+  
+  // Очікує дії
+  LISTING_STATUS_PENDING_ACTION = 20;
+  
+  // Очікує рішення
+  LISTING_STATUS_PENDING_DECISION = 21;
+  
+  // Очікує вибору
+  LISTING_STATUS_PENDING_CHOICE = 22;
+  
+  // Очікує селекції
+  LISTING_STATUS_PENDING_SELECTION = 23;
+  
+  // Очікує вибору
+  LISTING_STATUS_PENDING_OPTION = 24;
+  
+  // Очікує альтернативи
+  LISTING_STATUS_PENDING_ALTERNATIVE = 25;
+  
+  // Очікує варіанту
+  LISTING_STATUS_PENDING_VARIANT = 26;
+  
+  // Очікує версії
+  LISTING_STATUS_PENDING_VERSION = 27;
+  
+  // Очікує редакції
+  LISTING_STATUS_PENDING_EDITION = 28;
+  
+  // Очікує серії
+  LISTING_STATUS_PENDING_SERIES = 29;
+  
+  // Очікує колекції
+  LISTING_STATUS_PENDING_COLLECTION = 30;
+  
+  // Очікує набору
+  LISTING_STATUS_PENDING_SET = 31;
+  
+  // Очікує групи
+  LISTING_STATUS_PENDING_GROUP = 32;
+  
+  // Очікує категорії
+  LISTING_STATUS_PENDING_CATEGORY = 33;
+  
+  // Очікує класу
+  LISTING_STATUS_PENDING_CLASS = 34;
+  
+  // Очікує типу
+  LISTING_STATUS_PENDING_TYPE = 35;
+  
+  // Очікує виду
+  LISTING_STATUS_PENDING_KIND = 36;
+  
+  // Очікує сорту
+  LISTING_STATUS_PENDING_SORT = 37;
+  
+  // Очікує різновиду
+  LISTING_STATUS_PENDING_VARIETY = 38;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_FORM = 39;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_SHAPE = 40;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_FIGURE = 41;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PATTERN = 42;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_STYLE = 43;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_FASHION = 44;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_TREND = 45;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_MODE = 46;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_MANNER = 47;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_WAY = 48;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_METHOD = 49;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_TECHNIQUE = 50;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_APPROACH = 51;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_STRATEGY = 52;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_TACTIC = 53;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PLAN = 54;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_SCHEME = 55;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_SYSTEM = 56;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PROCESS = 57;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PROCEDURE = 58;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PROTOCOL = 59;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_STANDARD = 60;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_RULE = 61;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_REGULATION = 62;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_LAW = 63;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_ACT = 64;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_STATUTE = 65;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_ORDINANCE = 66;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_DECREE = 67;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_EDICT = 68;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_MANDATE = 69;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_ORDER = 70;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_COMMAND = 71;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_INSTRUCTION = 72;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_DIRECTION = 73;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_GUIDANCE = 74;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_ADVICE = 75;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_SUGGESTION = 76;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_RECOMMENDATION = 77;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PROPOSAL = 78;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_OFFER = 79;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_BID = 80;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_AUCTION = 81;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_SALE = 82;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PURCHASE = 83;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_TRADE = 84;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_EXCHANGE = 85;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_SWAP = 86;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_BARTER = 87;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_NEGOTIATION = 88;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_AGREEMENT = 89;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_CONTRACT = 90;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_DEAL = 91;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_TRANSACTION = 92;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_OPERATION = 93;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_PROCESSING = 94;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_EXECUTION = 95;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_IMPLEMENTATION = 96;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_COMPLETION = 97;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_FINALIZATION = 98;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_CONCLUSION = 99;
+  
+  // Очікує форми
+  LISTING_STATUS_PENDING_TERMINATION = 100;
+}

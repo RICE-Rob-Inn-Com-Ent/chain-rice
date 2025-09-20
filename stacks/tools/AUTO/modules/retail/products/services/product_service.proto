@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package retail.products.services;
+
+import "products/messages/product_request.proto";
+import "products/messages/product_response.proto";
+import "google/api/annotations.proto";
+
+// ProductService provides CRUD operations for product management
+service ProductService {
+  // CreateProduct creates a new product
+  rpc CreateProduct(retail.products.messages.CreateProductRequest) returns (retail.products.messages.CreateProductResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/products"
+      body: "*"
+    };
+  }
+  
+  // GetProduct retrieves a specific product by ID
+  rpc GetProduct(retail.products.messages.GetProductRequest) returns (retail.products.messages.GetProductResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/products/{product_id}"
+    };
+  }
+  
+  // ListProducts retrieves a paginated list of products with optional filtering
+  rpc ListProducts(retail.products.messages.ListProductsRequest) returns (retail.products.messages.ListProductsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/products"
+    };
+  }
+  
+  // UpdateProduct updates an existing product
+  rpc UpdateProduct(retail.products.messages.UpdateProductRequest) returns (retail.products.messages.UpdateProductResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/products/{product_id}"
+      body: "*"
+    };
+  }
+  
+  // DeleteProduct deletes a specific product
+  rpc DeleteProduct(retail.products.messages.DeleteProductRequest) returns (retail.products.messages.DeleteProductResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/products/{product_id}"
+    };
+  }
+}

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package tourism.bookings.enums;
+
+// PaymentStatus represents the payment state of a booking
+enum PaymentStatus {
+  // Unspecified payment status - should not be used in production
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  
+  // Payment has not been made
+  UNPAID = 1;
+  
+  // Payment has been completed
+  PAID = 2;
+  
+  // Payment has been refunded
+  REFUNDED = 3;
+  
+  // Payment has failed
+  FAILED = 4;
+  
+  // Payment is pending
+  PENDING = 5;
+  
+  // Payment is being processed
+  PROCESSING = 6;
+  
+  // Payment has been partially refunded
+  PARTIALLY_REFUNDED = 7;
+  
+  // Payment is under review
+  UNDER_REVIEW = 8;
+  
+  // Payment has been disputed
+  DISPUTED = 9;
+  
+  // Payment has been cancelled
+  CANCELLED = 10;
+  
+  // Payment is in grace period
+  GRACE_PERIOD = 11;
+  
+  // Payment is overdue
+  OVERDUE = 12;
+}

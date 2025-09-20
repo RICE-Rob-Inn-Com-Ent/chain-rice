@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sports.matches.v1;
+
+import "sports/matches/messages/matches_messages.proto";
+
+option go_package = "github.com/rice-dev/sports/matches/v1";
+
+// MatchService provides operations for managing sports matches
+service MatchService {
+  // CreateMatch creates a new sports match
+  rpc CreateMatch(CreateMatchRequest) returns (CreateMatchResponse);
+
+  // GetMatch retrieves a match by its ID
+  rpc GetMatch(GetMatchRequest) returns (GetMatchResponse);
+
+  // ListMatches retrieves a list of matches with optional filtering
+  rpc ListMatches(ListMatchesRequest) returns (ListMatchesResponse);
+
+  // UpdateMatch updates an existing match
+  rpc UpdateMatch(UpdateMatchRequest) returns (UpdateMatchResponse);
+
+  // DeleteMatch deletes a match by its ID
+  rpc DeleteMatch(DeleteMatchRequest) returns (DeleteMatchResponse);
+}

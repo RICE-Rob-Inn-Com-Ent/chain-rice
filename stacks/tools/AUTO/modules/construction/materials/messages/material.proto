@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package construction.materials.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "../enums/material_type.proto";
+import "../enums/material_status.proto";
+import "../enums/quality_grade.proto";
+
+message Material {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  construction.materials.enums.MaterialType type = 4;
+  construction.materials.enums.MaterialStatus status = 5;
+  construction.materials.enums.QualityGrade quality_grade = 6;
+  string manufacturer = 7;
+  string model = 8;
+  string part_number = 9;
+  string sku = 10;
+  double quantity = 11;
+  string unit = 12;
+  double unit_price = 13;
+  double total_value = 14;
+  string supplier = 15;
+  string location = 16;
+  google.protobuf.Timestamp received_date = 17;
+  google.protobuf.Timestamp expiry_date = 18;
+  string specifications = 19;
+  repeated string certifications = 20;
+  repeated string properties = 21;
+  map<string, string> metadata = 22;
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+}

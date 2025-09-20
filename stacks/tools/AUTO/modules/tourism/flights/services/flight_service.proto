@@ -1,0 +1,574 @@
+syntax = "proto3";
+
+package tourism.flights.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/flights/messages/flight_request.proto";
+import "tourism/flights/messages/flight_response.proto";
+import "tourism/flights/enums/flight_class.proto";
+import "tourism/flights/enums/flight_status.proto";
+
+// FlightService provides comprehensive flight management functionality
+service FlightService {
+  // Create a new flight
+  rpc CreateFlight(CreateFlightRequest) returns (CreateFlightResponse);
+  
+  // Retrieve a specific flight by ID
+  rpc GetFlight(GetFlightRequest) returns (GetFlightResponse);
+  
+  // List flights with optional filtering and pagination
+  rpc ListFlights(ListFlightsRequest) returns (ListFlightsResponse);
+  
+  // Update an existing flight
+  rpc UpdateFlight(UpdateFlightRequest) returns (UpdateFlightResponse);
+  
+  // Delete a flight
+  rpc DeleteFlight(DeleteFlightRequest) returns (DeleteFlightResponse);
+  
+  // Search for flights based on criteria
+  rpc SearchFlights(SearchFlightsRequest) returns (SearchFlightsResponse);
+  
+  // Get flight analytics
+  rpc GetFlightAnalytics(GetFlightAnalyticsRequest) returns (GetFlightAnalyticsResponse);
+  
+  // Update flight status
+  rpc UpdateFlightStatus(UpdateFlightStatusRequest) returns (UpdateFlightStatusResponse);
+  
+  // Get flight delays and disruptions
+  rpc GetFlightDisruptions(GetFlightDisruptionsRequest) returns (GetFlightDisruptionsResponse);
+  
+  // Compare flight prices
+  rpc CompareFlightPrices(CompareFlightPricesRequest) returns (CompareFlightPricesResponse);
+  
+  // Get flight recommendations
+  rpc GetFlightRecommendations(GetFlightRecommendationsRequest) returns (GetFlightRecommendationsResponse);
+  
+  // Track flight in real-time
+  rpc TrackFlight(TrackFlightRequest) returns (TrackFlightResponse);
+  
+  // Get airport information
+  rpc GetAirportInfo(GetAirportInfoRequest) returns (GetAirportInfoResponse);
+}
+
+// GetFlightAnalyticsRequest represents a request to get flight analytics
+message GetFlightAnalyticsRequest {
+  // Date range for analytics
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  
+  // Analytics type (on_time_performance, delays, cancellations, revenue)
+  string analytics_type = 3;
+  
+  // Airline filter (optional)
+  google.protobuf.StringValue airline_code = 4;
+  
+  // Route filter (optional)
+  google.protobuf.StringValue route = 5;
+}
+
+// GetFlightAnalyticsResponse represents flight analytics response
+message GetFlightAnalyticsResponse {
+  // Analytics period
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  
+  // Analytics type
+  string analytics_type = 3;
+  
+  // Key metrics
+  FlightMetrics metrics = 4;
+  
+  // Time series data
+  repeated FlightAnalyticsDataPoint data_points = 5;
+  
+  // Route performance
+  repeated RoutePerformance route_performance = 6;
+  
+  // Airline performance
+  repeated AirlinePerformance airline_performance = 7;
+}
+
+// FlightMetrics represents key flight metrics
+message FlightMetrics {
+  // Total flights
+  int32 total_flights = 1;
+  
+  // On-time flights
+  int32 on_time_flights = 2;
+  
+  // Delayed flights
+  int32 delayed_flights = 3;
+  
+  // Cancelled flights
+  int32 cancelled_flights = 4;
+  
+  // On-time percentage
+  google.protobuf.DoubleValue on_time_percentage = 5;
+  
+  // Average delay in minutes
+  google.protobuf.DoubleValue average_delay_minutes = 6;
+  
+  // Total passengers
+  int32 total_passengers = 7;
+  
+  // Average load factor
+  google.protobuf.DoubleValue average_load_factor = 8;
+}
+
+// FlightAnalyticsDataPoint represents a single analytics data point
+message FlightAnalyticsDataPoint {
+  // Timestamp for this data point
+  google.protobuf.Timestamp timestamp = 1;
+  
+  // Number of flights
+  int32 flight_count = 2;
+  
+  // On-time percentage
+  google.protobuf.DoubleValue on_time_percentage = 3;
+  
+  // Average delay
+  google.protobuf.DoubleValue average_delay_minutes = 4;
+  
+  // Cancellation rate
+  google.protobuf.DoubleValue cancellation_rate = 5;
+}
+
+// RoutePerformance represents performance metrics for a route
+message RoutePerformance {
+  // Route (departure to arrival)
+  string route = 1;
+  
+  // Number of flights
+  int32 flight_count = 2;
+  
+  // On-time percentage
+  google.protobuf.DoubleValue on_time_percentage = 3;
+  
+  // Average delay
+  google.protobuf.DoubleValue average_delay_minutes = 4;
+  
+  // Cancellation rate
+  google.protobuf.DoubleValue cancellation_rate = 5;
+  
+  // Average price
+  int64 average_price = 6;
+  
+  // Currency
+  string currency = 7;
+}
+
+// AirlinePerformance represents performance metrics for an airline
+message AirlinePerformance {
+  // Airline code
+  string airline_code = 1;
+  
+  // Number of flights
+  int32 flight_count = 2;
+  
+  // On-time percentage
+  google.protobuf.DoubleValue on_time_percentage = 3;
+  
+  // Average delay
+  google.protobuf.DoubleValue average_delay_minutes = 4;
+  
+  // Cancellation rate
+  google.protobuf.DoubleValue cancellation_rate = 5;
+  
+  // Customer satisfaction score
+  google.protobuf.DoubleValue satisfaction_score = 6;
+}
+
+// UpdateFlightStatusRequest represents a request to update flight status
+message UpdateFlightStatusRequest {
+  // Flight ID to update
+  string flight_id = 1;
+  
+  // New status
+  tourism.flights.enums.FlightStatus status = 2;
+  
+  // Status update reason
+  google.protobuf.StringValue reason = 3;
+  
+  // Updated departure time (if applicable)
+  google.protobuf.Timestamp updated_departure_time = 4;
+  
+  // Updated arrival time (if applicable)
+  google.protobuf.Timestamp updated_arrival_time = 5;
+  
+  // Updated gate (if applicable)
+  google.protobuf.StringValue updated_gate = 6;
+  
+  // Updated terminal (if applicable)
+  google.protobuf.StringValue updated_terminal = 7;
+}
+
+// UpdateFlightStatusResponse represents the status update response
+message UpdateFlightStatusResponse {
+  // Updated flight
+  Flight flight = 1;
+  
+  // Success message
+  string message = 2;
+  
+  // Status update timestamp
+  google.protobuf.Timestamp updated_at = 3;
+  
+  // Notifications sent
+  repeated string notifications_sent = 4;
+}
+
+// GetFlightDisruptionsRequest represents a request to get flight disruptions
+message GetFlightDisruptionsRequest {
+  // Date range for disruptions
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  
+  // Airline filter (optional)
+  google.protobuf.StringValue airline_code = 3;
+  
+  // Airport filter (optional)
+  google.protobuf.StringValue airport_code = 4;
+  
+  // Disruption type filter (optional)
+  google.protobuf.StringValue disruption_type = 5;
+}
+
+// GetFlightDisruptionsResponse represents flight disruptions response
+message GetFlightDisruptionsResponse {
+  // List of flight disruptions
+  repeated FlightDisruption disruptions = 1;
+  
+  // Total count of disruptions
+  int32 total_count = 2;
+  
+  // Disruption summary by type
+  repeated DisruptionSummary disruption_summary = 3;
+  
+  // Affected passengers count
+  int32 affected_passengers = 4;
+}
+
+// FlightDisruption represents a flight disruption event
+message FlightDisruption {
+  // Disruption ID
+  string disruption_id = 1;
+  
+  // Flight ID
+  string flight_id = 2;
+  
+  // Flight number
+  string flight_number = 3;
+  
+  // Disruption type (delay, cancellation, diversion)
+  string disruption_type = 4;
+  
+  // Disruption reason
+  string reason = 5;
+  
+  // Disruption start time
+  google.protobuf.Timestamp start_time = 6;
+  
+  // Disruption end time
+  google.protobuf.Timestamp end_time = 7;
+  
+  // Duration in minutes
+  int32 duration_minutes = 8;
+  
+  // Affected passengers
+  int32 affected_passengers = 9;
+  
+  // Compensation offered
+  google.protobuf.StringValue compensation = 10;
+  
+  // Alternative arrangements
+  google.protobuf.StringValue alternative_arrangements = 11;
+}
+
+// DisruptionSummary represents summary of disruptions by type
+message DisruptionSummary {
+  // Disruption type
+  string disruption_type = 1;
+  
+  // Number of disruptions
+  int32 count = 2;
+  
+  // Total duration in minutes
+  int32 total_duration_minutes = 3;
+  
+  // Affected passengers
+  int32 affected_passengers = 4;
+  
+  // Average duration in minutes
+  google.protobuf.DoubleValue average_duration_minutes = 5;
+}
+
+// CompareFlightPricesRequest represents a request to compare flight prices
+message CompareFlightPricesRequest {
+  // Route to compare
+  string route = 1;
+  
+  // Departure date
+  google.protobuf.Timestamp departure_date = 2;
+  
+  // Return date (optional)
+  google.protobuf.Timestamp return_date = 3;
+  
+  // Airlines to compare
+  repeated string airlines = 4;
+  
+  // Flight classes to compare
+  repeated tourism.flights.enums.FlightClass flight_classes = 5;
+}
+
+// CompareFlightPricesResponse represents flight price comparison response
+message CompareFlightPricesResponse {
+  // Route compared
+  string route = 1;
+  
+  // Departure date
+  google.protobuf.Timestamp departure_date = 2;
+  
+  // Price comparisons
+  repeated PriceComparison price_comparisons = 3;
+  
+  // Best deals
+  repeated BestDeal best_deals = 4;
+  
+  // Price trends
+  repeated PriceTrend price_trends = 5;
+}
+
+// PriceComparison represents price comparison for a specific airline/class
+message PriceComparison {
+  // Airline code
+  string airline_code = 1;
+  
+  // Flight class
+  tourism.flights.enums.FlightClass flight_class = 2;
+  
+  // Price (in smallest currency unit)
+  int64 price = 3;
+  
+  // Currency
+  string currency = 4;
+  
+  // Flight details
+  FlightSummary flight_details = 5;
+  
+  // Booking availability
+  bool is_available = 6;
+  
+  // Price change from previous day
+  google.protobuf.DoubleValue price_change_percentage = 7;
+}
+
+// BestDeal represents the best deal found
+message BestDeal {
+  // Deal type (cheapest, fastest, best_value)
+  string deal_type = 1;
+  
+  // Flight summary
+  FlightSummary flight = 2;
+  
+  // Deal score (0-100)
+  google.protobuf.DoubleValue deal_score = 3;
+  
+  // Savings amount (in smallest currency unit)
+  google.protobuf.DoubleValue savings_amount = 4;
+  
+  // Deal description
+  string description = 5;
+}
+
+// PriceTrend represents price trend information
+message PriceTrend {
+  // Date
+  google.protobuf.Timestamp date = 1;
+  
+  // Average price (in smallest currency unit)
+  int64 average_price = 2;
+  
+  // Lowest price (in smallest currency unit)
+  int64 lowest_price = 3;
+  
+  // Highest price (in smallest currency unit)
+  int64 highest_price = 4;
+  
+  // Currency
+  string currency = 5;
+}
+
+// GetFlightRecommendationsRequest represents a request to get flight recommendations
+message GetFlightRecommendationsRequest {
+  // User preferences
+  UserPreferences preferences = 1;
+  
+  // Travel dates
+  google.protobuf.Timestamp departure_date = 2;
+  google.protobuf.Timestamp return_date = 3;
+  
+  // Budget constraints
+  google.protobuf.DoubleValue max_budget = 4;
+  
+  // Number of recommendations to return
+  int32 max_recommendations = 5;
+}
+
+// UserPreferences represents user travel preferences
+message UserPreferences {
+  // Preferred airlines
+  repeated string preferred_airlines = 1;
+  
+  // Preferred flight classes
+  repeated tourism.flights.enums.FlightClass preferred_classes = 2;
+  
+  // Preferred departure times
+  repeated string preferred_departure_times = 3;
+  
+  // Preferred airports
+  repeated string preferred_airports = 4;
+  
+  // Avoid airlines
+  repeated string avoid_airlines = 5;
+  
+  // Travel purpose (business, leisure, family)
+  google.protobuf.StringValue travel_purpose = 6;
+  
+  // Price sensitivity (low, medium, high)
+  google.protobuf.StringValue price_sensitivity = 7;
+}
+
+// GetFlightRecommendationsResponse represents flight recommendations response
+message GetFlightRecommendationsResponse {
+  // List of recommended flights
+  repeated FlightRecommendation recommendations = 1;
+  
+  // Recommendation reasoning
+  repeated string reasoning = 2;
+  
+  // Alternative options
+  repeated FlightRecommendation alternatives = 3;
+  
+  // Recommendation confidence score
+  google.protobuf.DoubleValue confidence_score = 4;
+}
+
+// FlightRecommendation represents a flight recommendation
+message FlightRecommendation {
+  // Flight summary
+  FlightSummary flight = 1;
+  
+  // Recommendation score (0-100)
+  google.protobuf.DoubleValue recommendation_score = 2;
+  
+  // Reasons for recommendation
+  repeated string reasons = 3;
+  
+  // Price prediction
+  google.protobuf.StringValue price_prediction = 4;
+  
+  // Booking urgency
+  google.protobuf.StringValue booking_urgency = 5;
+  
+  // Special offers
+  repeated string special_offers = 6;
+}
+
+// TrackFlightRequest represents a request to track a flight
+message TrackFlightRequest {
+  // Flight ID or flight number to track
+  string flight_identifier = 1;
+  
+  // Tracking duration in minutes
+  google.protobuf.DoubleValue tracking_duration_minutes = 2;
+}
+
+// TrackFlightResponse represents real-time flight tracking response
+message TrackFlightResponse {
+  // Flight information
+  Flight flight = 1;
+  
+  // Current position (if available)
+  google.protobuf.StringValue current_position = 2;
+  
+  // Current altitude
+  google.protobuf.DoubleValue current_altitude = 3;
+  
+  // Current speed
+  google.protobuf.DoubleValue current_speed = 4;
+  
+  // Estimated arrival time
+  google.protobuf.Timestamp estimated_arrival = 5;
+  
+  // Flight path
+  repeated Coordinate flight_path = 6;
+  
+  // Weather conditions
+  google.protobuf.StringValue weather_conditions = 7;
+  
+  // Next update time
+  google.protobuf.Timestamp next_update_time = 8;
+}
+
+// GetAirportInfoRequest represents a request to get airport information
+message GetAirportInfoRequest {
+  // Airport code (IATA format)
+  string airport_code = 1;
+  
+  // Information types to include
+  repeated string info_types = 2;
+}
+
+// GetAirportInfoResponse represents airport information response
+message GetAirportInfoResponse {
+  // Airport code
+  string airport_code = 1;
+  
+  // Airport name
+  string airport_name = 2;
+  
+  // City
+  string city = 3;
+  
+  // Country
+  string country = 4;
+  
+  // Airport facilities
+  repeated string facilities = 5;
+  
+  // Terminals information
+  repeated TerminalInfo terminals = 6;
+  
+  // Ground transportation options
+  repeated string ground_transportation = 7;
+  
+  // Weather information
+  google.protobuf.StringValue weather_info = 8;
+  
+  // Security wait times
+  google.protobuf.StringValue security_wait_times = 9;
+  
+  // Current delays
+  google.protobuf.StringValue current_delays = 10;
+}
+
+// TerminalInfo represents terminal information
+message TerminalInfo {
+  // Terminal code/name
+  string terminal_code = 1;
+  
+  // Terminal description
+  google.protobuf.StringValue description = 2;
+  
+  // Gates in this terminal
+  repeated string gates = 3;
+  
+  // Facilities in this terminal
+  repeated string facilities = 4;
+  
+  // Airlines using this terminal
+  repeated string airlines = 5;
+}

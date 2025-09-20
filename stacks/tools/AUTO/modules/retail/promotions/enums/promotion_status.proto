@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package retail.promotions.enums;
+
+// PromotionStatus represents the current status of a promotion
+enum PromotionStatus {
+  // Default value - should not be used
+  PROMOTION_STATUS_UNSPECIFIED = 0;
+  
+  // Promotion is active and running
+  PROMOTION_STATUS_ACTIVE = 1;
+  
+  // Promotion is inactive and not running
+  PROMOTION_STATUS_INACTIVE = 2;
+  
+  // Promotion is scheduled to start in the future
+  PROMOTION_STATUS_SCHEDULED = 3;
+  
+  // Promotion has ended
+  PROMOTION_STATUS_ENDED = 4;
+  
+  // Promotion is paused temporarily
+  PROMOTION_STATUS_PAUSED = 5;
+  
+  // Promotion is cancelled
+  PROMOTION_STATUS_CANCELLED = 6;
+  
+  // Promotion is pending approval
+  PROMOTION_STATUS_PENDING_APPROVAL = 7;
+  
+  // Promotion is rejected
+  PROMOTION_STATUS_REJECTED = 8;
+  
+  // Promotion is in draft status
+  PROMOTION_STATUS_DRAFT = 9;
+  
+  // Promotion is archived
+  PROMOTION_STATUS_ARCHIVED = 10;
+}

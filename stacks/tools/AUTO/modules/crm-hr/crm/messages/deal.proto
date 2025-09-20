@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package crm_hr.crm.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/crm/enums/deal_stage.proto";
+import "crm_hr/crm/enums/crm_priority.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/crm/messages";
+
+// Deal represents a sales opportunity or deal in the CRM system
+message Deal {
+  // Unique identifier for the deal
+  string id = 1;
+  
+  // Human-readable name or title of the deal
+  string name = 2;
+  
+  // Detailed description of the deal
+  string description = 3;
+  
+  // Current stage of the deal in the sales process
+  crm_hr.crm.enums.DealStage stage = 4;
+  
+  // Priority level of the deal
+  crm_hr.crm.enums.CrmPriority priority = 5;
+  
+  // Expected value of the deal
+  google.protobuf.Money expected_value = 6;
+  
+  // Probability of closing the deal (0-100)
+  int32 probability = 7;
+  
+  // Expected close date
+  google.protobuf.Timestamp expected_close_date = 8;
+  
+  // Actual close date (set when deal is closed)
+  google.protobuf.Timestamp actual_close_date = 9;
+  
+  // Associated customer ID
+  string customer_id = 10;
+  
+  // Assigned sales representative ID
+  string assigned_to = 11;
+  
+  // Associated pipeline ID
+  string pipeline_id = 12;
+  
+  // Deal source (e.g., "website", "referral", "cold_call")
+  string source = 13;
+  
+  // Tags for categorization and filtering
+  repeated string tags = 14;
+  
+  // Custom fields for additional data
+  map<string, string> custom_fields = 15;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+  google.protobuf.Timestamp deleted_at = 18;
+  
+  // Version for optimistic concurrency control
+  int32 version = 19;
+}
+
+// DealActivity represents an activity or interaction related to a deal
+message DealActivity {
+  // Unique identifier for the activity
+  string id = 1;
+  
+  // Associated deal ID
+  string deal_id = 2;
+  
+  // Type of activity (e.g., "call", "email", "meeting", "note")
+  string activity_type = 3;
+  
+  // Description of the activity
+  string description = 4;
+  
+  // User who performed the activity
+  string performed_by = 5;
+  
+  // Timestamp when the activity occurred
+  google.protobuf.Timestamp performed_at = 6;
+  
+  // Additional metadata for the activity
+  map<string, string> metadata = 7;
+}
+
+// DealProduct represents a product or service associated with a deal
+message DealProduct {
+  // Unique identifier for the deal product
+  string id = 1;
+  
+  // Associated deal ID
+  string deal_id = 2;
+  
+  // Product identifier
+  string product_id = 3;
+  
+  // Product name
+  string product_name = 4;
+  
+  // Quantity of the product
+  int32 quantity = 5;
+  
+  // Unit price of the product
+  google.protobuf.Money unit_price = 6;
+  
+  // Total price for this product line
+  google.protobuf.Money total_price = 7;
+  
+  // Discount percentage applied
+  double discount_percentage = 8;
+  
+  // Additional notes about this product in the deal
+  string notes = 9;
+}

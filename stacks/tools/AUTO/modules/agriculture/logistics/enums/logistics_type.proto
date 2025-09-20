@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package agriculture.logistics.enums;
+
+// LogisticsType enum defines different categories of agricultural logistics operations
+enum LogisticsType {
+  // Transportation
+  LOGISTICS_TYPE_UNSPECIFIED = 0;
+  LOGISTICS_TYPE_TRANSPORTATION = 1;    // General transportation services
+  LOGISTICS_TYPE_FREIGHT = 2;           // Freight transportation
+  LOGISTICS_TYPE_HAULAGE = 3;           // Haulage services
+  LOGISTICS_TYPE_DELIVERY = 4;          // Delivery services
+  LOGISTICS_TYPE_PICKUP = 5;            // Pickup services
+  
+  // Storage and warehousing
+  LOGISTICS_TYPE_WAREHOUSING = 6;       // Warehousing services
+  LOGISTICS_TYPE_COLD_STORAGE = 7;      // Cold storage logistics
+  LOGISTICS_TYPE_GRAIN_HANDLING = 8;    // Grain handling logistics
+  LOGISTICS_TYPE_SILO_OPERATIONS = 9;   // Silo operations
+  LOGISTICS_TYPE_INVENTORY_MANAGEMENT = 10; // Inventory management
+  
+  // Processing and packaging
+  LOGISTICS_TYPE_PROCESSING = 11;       // Processing services
+  LOGISTICS_TYPE_PACKAGING = 12;        // Packaging services
+  LOGISTICS_TYPE_SORTING = 13;          // Sorting and grading
+  LOGISTICS_TYPE_CLEANING = 14;         // Cleaning services
+  LOGISTICS_TYPE_GRADING = 15;          // Grading services
+  
+  // Distribution
+  LOGISTICS_TYPE_DISTRIBUTION = 16;     // Distribution services
+  LOGISTICS_TYPE_WHOLESALE = 17;        // Wholesale distribution
+  LOGISTICS_TYPE_RETAIL = 18;           // Retail distribution
+  LOGISTICS_TYPE_EXPORT = 19;           // Export logistics
+  LOGISTICS_TYPE_IMPORT = 20;           // Import logistics
+  
+  // Supply chain management
+  LOGISTICS_TYPE_SUPPLY_CHAIN = 21;     // Supply chain management
+  LOGISTICS_TYPE_PROCUREMENT = 22;      // Procurement logistics
+  LOGISTICS_TYPE_VENDOR_MANAGEMENT = 23; // Vendor management
+  LOGISTICS_TYPE_SUPPLIER_RELATIONS = 24; // Supplier relations
+  
+  // Quality control
+  LOGISTICS_TYPE_QUALITY_CONTROL = 25;  // Quality control logistics
+  LOGISTICS_TYPE_INSPECTION = 26;       // Inspection services
+  LOGISTICS_TYPE_TESTING = 27;          // Testing services
+  LOGISTICS_TYPE_CERTIFICATION = 28;    // Certification services
+  
+  // Documentation and compliance
+  LOGISTICS_TYPE_DOCUMENTATION = 29;    // Documentation services
+  LOGISTICS_TYPE_CUSTOMS = 30;          // Customs clearance
+  LOGISTICS_TYPE_COMPLIANCE = 31;       // Compliance services
+  LOGISTICS_TYPE_PERMITS = 32;          // Permit management
+  
+  // Technology and tracking
+  LOGISTICS_TYPE_TRACKING = 33;         // Tracking services
+  LOGISTICS_TYPE_MONITORING = 34;       // Monitoring services
+  LOGISTICS_TYPE_TELEMATICS = 35;       // Telematics services
+  LOGISTICS_TYPE_GPS_TRACKING = 36;     // GPS tracking
+  
+  // Emergency and special services
+  LOGISTICS_TYPE_EMERGENCY = 37;        // Emergency logistics
+  LOGISTICS_TYPE_URGENT = 38;           // Urgent delivery
+  LOGISTICS_TYPE_SPECIAL_HANDLING = 39; // Special handling
+  LOGISTICS_TYPE_HAZMAT = 40;           // Hazardous materials
+  
+  // Seasonal operations
+  LOGISTICS_TYPE_HARVEST = 41;          // Harvest logistics
+  LOGISTICS_TYPE_PLANTING = 42;         // Planting logistics
+  LOGISTICS_TYPE_SEASONAL = 43;         // Seasonal operations
+  LOGISTICS_TYPE_PEAK_SEASON = 44;      // Peak season logistics
+  
+  // Equipment and machinery
+  LOGISTICS_TYPE_EQUIPMENT = 45;        // Equipment logistics
+  LOGISTICS_TYPE_MACHINERY = 46;        // Machinery logistics
+  LOGISTICS_TYPE_IMPLEMENT = 47;        // Implement logistics
+  LOGISTICS_TYPE_SPARE_PARTS = 48;      // Spare parts logistics
+  
+  // Livestock logistics
+  LOGISTICS_TYPE_LIVESTOCK = 49;        // Livestock logistics
+  LOGISTICS_TYPE_ANIMAL_TRANSPORT = 50; // Animal transportation
+  LOGISTICS_TYPE_FEED_DELIVERY = 51;    // Feed delivery
+  LOGISTICS_TYPE_VETERINARY = 52;       // Veterinary logistics
+  
+  // Financial logistics
+  LOGISTICS_TYPE_PAYMENT = 53;          // Payment processing
+  LOGISTICS_TYPE_INVOICING = 54;        // Invoicing services
+  LOGISTICS_TYPE_BILLING = 55;          // Billing services
+  LOGISTICS_TYPE_ACCOUNTING = 56;       // Accounting services
+}

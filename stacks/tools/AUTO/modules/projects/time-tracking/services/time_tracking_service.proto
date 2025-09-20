@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package projects.time_tracking.services;
+
+import "time-tracking/messages/time_entry_request.proto";
+import "time-tracking/messages/time_entry_response.proto";
+import "google/api/annotations.proto";
+
+// TimeTrackingService provides CRUD operations for time tracking management
+service TimeTrackingService {
+  // CreateTimeEntry creates a new time entry
+  rpc CreateTimeEntry(projects.time_tracking.messages.CreateTimeEntryRequest) returns (projects.time_tracking.messages.CreateTimeEntryResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/time-entries"
+      body: "*"
+    };
+  }
+  
+  // GetTimeEntry retrieves a specific time entry by ID
+  rpc GetTimeEntry(projects.time_tracking.messages.GetTimeEntryRequest) returns (projects.time_tracking.messages.GetTimeEntryResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/time-entries/{time_entry_id}"
+    };
+  }
+  
+  // ListTimeEntries retrieves a paginated list of time entries with optional filtering
+  rpc ListTimeEntries(projects.time_tracking.messages.ListTimeEntriesRequest) returns (projects.time_tracking.messages.ListTimeEntriesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/time-entries"
+    };
+  }
+  
+  // UpdateTimeEntry updates an existing time entry
+  rpc UpdateTimeEntry(projects.time_tracking.messages.UpdateTimeEntryRequest) returns (projects.time_tracking.messages.UpdateTimeEntryResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/time-entries/{time_entry_id}"
+      body: "*"
+    };
+  }
+  
+  // DeleteTimeEntry deletes a specific time entry
+  rpc DeleteTimeEntry(projects.time_tracking.messages.DeleteTimeEntryRequest) returns (projects.time_tracking.messages.DeleteTimeEntryResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/time-entries/{time_entry_id}"
+    };
+  }
+}

@@ -1,0 +1,372 @@
+syntax = "proto3";
+
+package automation.ai.messages;
+
+import "automation/ai/enums/ai_model_type.proto";
+import "automation/ai/enums/ai_priority.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// AI Model message
+// Represents an AI model in the automation system
+message Model {
+  // Unique identifier for the model
+  string id = 1;
+  
+  // Human-readable name of the model
+  string name = 2;
+  
+  // Description of the model's purpose and capabilities
+  string description = 3;
+  
+  // Version of the model
+  string version = 4;
+  
+  // Type of AI model
+  automation.ai.enums.AIModelType model_type = 5;
+  
+  // Priority level for model operations
+  automation.ai.enums.AIPriority priority = 6;
+  
+  // Model configuration parameters
+  google.protobuf.Struct config = 7;
+  
+  // Model metadata and tags
+  map<string, string> metadata = 8;
+  
+  // Model performance metrics
+  ModelMetrics metrics = 9;
+  
+  // Model training information
+  ModelTrainingInfo training_info = 10;
+  
+  // Model deployment information
+  ModelDeploymentInfo deployment_info = 11;
+  
+  // Model file information
+  ModelFileInfo file_info = 12;
+  
+  // Model status and state
+  ModelStatus status = 13;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 14;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 15;
+  
+  // Model owner/creator
+  string owner = 16;
+  
+  // Model tags for categorization
+  repeated string tags = 17;
+  
+  // Model dependencies
+  repeated string dependencies = 18;
+  
+  // Model requirements and constraints
+  ModelRequirements requirements = 19;
+}
+
+// Model performance metrics
+message ModelMetrics {
+  // Accuracy score (0.0 to 1.0)
+  double accuracy = 1;
+  
+  // Precision score (0.0 to 1.0)
+  double precision = 2;
+  
+  // Recall score (0.0 to 1.0)
+  double recall = 3;
+  
+  // F1 score (0.0 to 1.0)
+  double f1_score = 4;
+  
+  // Loss value
+  double loss = 5;
+  
+  // Additional custom metrics
+  map<string, double> custom_metrics = 6;
+  
+  // Model size in bytes
+  int64 model_size_bytes = 7;
+  
+  // Inference time in milliseconds
+  double inference_time_ms = 8;
+  
+  // Training time in seconds
+  double training_time_seconds = 9;
+  
+  // Number of parameters
+  int64 parameter_count = 10;
+  
+  // Model complexity score
+  double complexity_score = 11;
+}
+
+// Model training information
+message ModelTrainingInfo {
+  // Training dataset ID
+  string dataset_id = 1;
+  
+  // Training algorithm used
+  string algorithm = 2;
+  
+  // Training hyperparameters
+  google.protobuf.Struct hyperparameters = 3;
+  
+  // Number of training epochs
+  int32 epochs = 4;
+  
+  // Batch size used during training
+  int32 batch_size = 5;
+  
+  // Learning rate used
+  double learning_rate = 6;
+  
+  // Training loss history
+  repeated double loss_history = 7;
+  
+  // Validation metrics history
+  repeated double validation_metrics = 8;
+  
+  // Training start time
+  google.protobuf.Timestamp training_started_at = 9;
+  
+  // Training end time
+  google.protobuf.Timestamp training_completed_at = 10;
+  
+  // Training status
+  string training_status = 11;
+  
+  // Number of training samples
+  int64 training_samples = 12;
+  
+  // Number of validation samples
+  int64 validation_samples = 13;
+}
+
+// Model deployment information
+message ModelDeploymentInfo {
+  // Deployment environment
+  string environment = 1;
+  
+  // Deployment status
+  string deployment_status = 2;
+  
+  // Model endpoint URL
+  string endpoint_url = 3;
+  
+  // Model version in deployment
+  string deployed_version = 4;
+  
+  // Deployment timestamp
+  google.protobuf.Timestamp deployed_at = 5;
+  
+  // Resource requirements for deployment
+  ResourceRequirements resource_requirements = 6;
+  
+  // Scaling configuration
+  ScalingConfig scaling_config = 7;
+  
+  // Health check configuration
+  HealthCheckConfig health_check = 8;
+  
+  // Monitoring configuration
+  MonitoringConfig monitoring = 9;
+}
+
+// Model file information
+message ModelFileInfo {
+  // Model file path
+  string file_path = 1;
+  
+  // Model file size in bytes
+  int64 file_size_bytes = 2;
+  
+  // Model file format (e.g., "pkl", "h5", "onnx", "pt")
+  string file_format = 3;
+  
+  // Model file checksum
+  string checksum = 4;
+  
+  // Model file URL
+  string file_url = 5;
+  
+  // Model file storage location
+  string storage_location = 6;
+  
+  // Model file compression
+  string compression = 7;
+  
+  // Model file encryption
+  string encryption = 8;
+}
+
+// Model status and state
+message ModelStatus {
+  // Current status
+  string status = 1;
+  
+  // Status message
+  string message = 2;
+  
+  // Last status update
+  google.protobuf.Timestamp last_updated = 3;
+  
+  // Status history
+  repeated StatusHistoryEntry status_history = 4;
+  
+  // Error information if status is error
+  string error_message = 5;
+  
+  // Warning messages
+  repeated string warnings = 6;
+}
+
+// Model requirements and constraints
+message ModelRequirements {
+  // Minimum memory requirement in MB
+  int64 min_memory_mb = 1;
+  
+  // Minimum CPU requirement
+  int32 min_cpu_cores = 2;
+  
+  // GPU requirement
+  bool requires_gpu = 3;
+  
+  // Minimum GPU memory in MB
+  int64 min_gpu_memory_mb = 4;
+  
+  // Operating system requirements
+  repeated string supported_os = 5;
+  
+  // Python version requirements
+  string python_version = 6;
+  
+  // Framework requirements
+  repeated string frameworks = 7;
+  
+  // Library dependencies
+  repeated string dependencies = 8;
+  
+  // Network requirements
+  bool requires_network = 9;
+  
+  // Storage requirements
+  int64 min_storage_mb = 10;
+}
+
+// Resource requirements for deployment
+message ResourceRequirements {
+  // CPU requirements
+  string cpu = 1;
+  
+  // Memory requirements
+  string memory = 2;
+  
+  // GPU requirements
+  string gpu = 3;
+  
+  // Storage requirements
+  string storage = 4;
+  
+  // Network requirements
+  string network = 5;
+}
+
+// Scaling configuration
+message ScalingConfig {
+  // Minimum number of instances
+  int32 min_instances = 1;
+  
+  // Maximum number of instances
+  int32 max_instances = 2;
+  
+  // Target CPU utilization
+  double target_cpu_utilization = 3;
+  
+  // Target memory utilization
+  double target_memory_utilization = 4;
+  
+  // Scaling policies
+  repeated ScalingPolicy scaling_policies = 5;
+}
+
+// Scaling policy
+message ScalingPolicy {
+  // Policy name
+  string name = 1;
+  
+  // Policy type
+  string type = 2;
+  
+  // Policy configuration
+  google.protobuf.Struct config = 3;
+}
+
+// Health check configuration
+message HealthCheckConfig {
+  // Health check endpoint
+  string endpoint = 1;
+  
+  // Health check interval in seconds
+  int32 interval_seconds = 2;
+  
+  // Health check timeout in seconds
+  int32 timeout_seconds = 3;
+  
+  // Number of consecutive failures before marking unhealthy
+  int32 failure_threshold = 4;
+  
+  // Number of consecutive successes before marking healthy
+  int32 success_threshold = 5;
+}
+
+// Monitoring configuration
+message MonitoringConfig {
+  // Enable monitoring
+  bool enabled = 1;
+  
+  // Monitoring metrics
+  repeated string metrics = 2;
+  
+  // Monitoring alerts
+  repeated AlertConfig alerts = 3;
+  
+  // Monitoring dashboard URL
+  string dashboard_url = 4;
+}
+
+// Alert configuration
+message AlertConfig {
+  // Alert name
+  string name = 1;
+  
+  // Alert condition
+  string condition = 2;
+  
+  // Alert threshold
+  double threshold = 3;
+  
+  // Alert severity
+  string severity = 4;
+  
+  // Alert notification channels
+  repeated string notification_channels = 5;
+}
+
+// Status history entry
+message StatusHistoryEntry {
+  // Status value
+  string status = 1;
+  
+  // Status message
+  string message = 2;
+  
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 3;
+  
+  // Additional context
+  google.protobuf.Struct context = 4;
+}

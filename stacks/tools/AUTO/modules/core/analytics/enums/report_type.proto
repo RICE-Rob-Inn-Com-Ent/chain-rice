@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package core.analytics.enums;
+
+// ReportType enumerates supported analytics report categories.
+enum ReportType {
+  // Default unspecified report type.
+  REPORT_TYPE_UNSPECIFIED = 0;
+
+  // Operational health and uptime reports.
+  REPORT_TYPE_SYSTEM_HEALTH = 1;
+
+  // User growth, retention, churn, cohort analyses.
+  REPORT_TYPE_USER_GROWTH = 2;
+
+  // Revenue, ARPU, LTV, conversion reports.
+  REPORT_TYPE_REVENUE = 3;
+
+  // Funnel performance reports.
+  REPORT_TYPE_FUNNEL = 4;
+
+  // Marketing campaign performance reports.
+  REPORT_TYPE_MARKETING = 5;
+
+  // Product usage and feature engagement.
+  REPORT_TYPE_PRODUCT_USAGE = 6;
+
+  // Real-time monitoring report type.
+  REPORT_TYPE_REALTIME = 7;
+
+  // Custom report with user-defined dimensions/metrics.
+  REPORT_TYPE_CUSTOM = 8;
+}
+
+

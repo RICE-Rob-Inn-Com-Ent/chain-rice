@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package horeca.reservations.messages;
+
+import "google/protobuf/timestamp.proto";
+
+// Reservation guest information
+message ReservationGuest {
+  string guest_id = 1;
+  string reservation_id = 2;
+  string customer_id = 3;
+  
+  string name = 4;
+  string email = 5;
+  string phone = 6;
+  string alternate_phone = 7;
+  
+  GuestType type = 8;
+  bool is_primary_guest = 9;
+  
+  string dietary_restrictions = 10;
+  string allergies = 11;
+  string special_requests = 12;
+  string accessibility_needs = 13;
+  
+  GuestPreferences preferences = 14;
+  GuestHistory history = 15;
+  
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+// Guest type
+enum GuestType {
+  GUEST_TYPE_UNSPECIFIED = 0;
+  GUEST_TYPE_REGULAR = 1;
+  GUEST_TYPE_VIP = 2;
+  GUEST_TYPE_CORPORATE = 3;
+  GUEST_TYPE_GROUP_LEADER = 4;
+  GUEST_TYPE_SPECIAL_EVENT = 5;
+}
+
+// Guest preferences
+message GuestPreferences {
+  string preferred_table_location = 1;
+  string preferred_dining_time = 2;
+  repeated string favorite_items = 3;
+  repeated string disliked_items = 4;
+  string seating_preference = 5;
+  string music_preference = 6;
+  string lighting_preference = 7;
+  bool smoking_preference = 8;
+  string language_preference = 9;
+}
+
+// Guest history
+message GuestHistory {
+  int32 total_visits = 1;
+  int32 total_reservations = 2;
+  int32 no_show_count = 3;
+  int32 cancellation_count = 4;
+  double average_party_size = 5;
+  double average_spending = 6;
+  
+  google.protobuf.Timestamp first_visit = 7;
+  google.protobuf.Timestamp last_visit = 8;
+  google.protobuf.Timestamp last_reservation = 9;
+  
+  repeated string frequent_items = 10;
+  repeated string special_occasions = 11;
+  string loyalty_tier = 12;
+  int32 loyalty_points = 13;
+}
+
+// Guest communication
+message GuestCommunication {
+  string communication_id = 1;
+  string guest_id = 2;
+  string reservation_id = 3;
+  
+  CommunicationType type = 4;
+  string subject = 5;
+  string message = 6;
+  
+  CommunicationStatus status = 7;
+  google.protobuf.Timestamp sent_at = 8;
+  google.protobuf.Timestamp delivered_at = 9;
+  google.protobuf.Timestamp read_at = 10;
+  
+  string sender_id = 11;
+  string sender_name = 12;
+  string recipient_email = 13;
+  string recipient_phone = 14;
+}
+
+// Communication type
+enum CommunicationType {
+  COMMUNICATION_TYPE_UNSPECIFIED = 0;
+  COMMUNICATION_TYPE_CONFIRMATION = 1;
+  COMMUNICATION_TYPE_REMINDER = 2;
+  COMMUNICATION_TYPE_MODIFICATION = 3;
+  COMMUNICATION_TYPE_CANCELLATION = 4;
+  COMMUNICATION_TYPE_FOLLOW_UP = 5;
+  COMMUNICATION_TYPE_PROMOTION = 6;
+}
+
+// Communication status
+enum CommunicationStatus {
+  COMMUNICATION_STATUS_UNSPECIFIED = 0;
+  COMMUNICATION_STATUS_PENDING = 1;
+  COMMUNICATION_STATUS_SENT = 2;
+  COMMUNICATION_STATUS_DELIVERED = 3;
+  COMMUNICATION_STATUS_READ = 4;
+  COMMUNICATION_STATUS_FAILED = 5;
+}

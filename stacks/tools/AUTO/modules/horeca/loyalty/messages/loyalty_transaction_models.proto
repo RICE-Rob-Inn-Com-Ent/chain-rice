@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package horeca.loyalty.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "../enums/loyalty_reward_type.proto";
+
+// Loyalty transaction details
+message LoyaltyTransaction {
+  string transaction_id = 1;
+  string member_id = 2;
+  string order_id = 3;
+  
+  TransactionType type = 4;
+  int32 points_amount = 5;
+  string description = 6;
+  
+  google.protobuf.Money order_amount = 7;
+  double points_per_dollar = 8;
+  
+  google.protobuf.Timestamp transaction_date = 9;
+  google.protobuf.Timestamp expires_at = 10;
+  
+  string reference_id = 11;
+  string staff_id = 12;
+  string staff_name = 13;
+  
+  string notes = 14;
+  map<string, string> metadata = 15;
+}
+
+// Transaction type
+enum TransactionType {
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  TRANSACTION_TYPE_EARNED = 1;
+  TRANSACTION_TYPE_REDEEMED = 2;
+  TRANSACTION_TYPE_EXPIRED = 3;
+  TRANSACTION_TYPE_ADJUSTMENT = 4;
+  TRANSACTION_TYPE_BONUS = 5;
+  TRANSACTION_TYPE_PROMOTION = 6;
+  TRANSACTION_TYPE_BIRTHDAY = 7;
+  TRANSACTION_TYPE_ANNIVERSARY = 8;
+}
+
+// Points earning rule
+message PointsEarningRule {
+  string rule_id = 1;
+  string rule_name = 2;
+  string description = 3;
+  
+  RuleType type = 4;
+  double points_per_dollar = 5;
+  double minimum_amount = 6;
+  double maximum_points = 7;
+  
+  repeated string applicable_categories = 8;
+  repeated string applicable_items = 9;
+  
+  google.protobuf.Timestamp valid_from = 10;
+  google.protobuf.Timestamp valid_until = 11;
+  
+  bool is_active = 12;
+  int32 usage_count = 13;
+  
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}
+
+// Rule type
+enum RuleType {
+  RULE_TYPE_UNSPECIFIED = 0;
+  RULE_TYPE_GENERAL = 1;
+  RULE_TYPE_CATEGORY = 2;
+  RULE_TYPE_ITEM = 3;
+  RULE_TYPE_PROMOTION = 4;
+  RULE_TYPE_BIRTHDAY = 5;
+  RULE_TYPE_ANNIVERSARY = 6;
+}
+
+// Points redemption rule
+message PointsRedemptionRule {
+  string rule_id = 1;
+  string rule_name = 2;
+  string description = 3;
+  
+  LoyaltyRewardType reward_type = 4;
+  int32 points_required = 5;
+  google.protobuf.Money discount_amount = 6;
+  double discount_percentage = 7;
+  
+  repeated string applicable_items = 8;
+  repeated string applicable_categories = 9;
+  
+  google.protobuf.Timestamp valid_from = 10;
+  google.protobuf.Timestamp valid_until = 11;
+  
+  bool is_active = 12;
+  int32 redemption_count = 13;
+  
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}

@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package logistics.tracking.services;
+
+import "google/protobuf/empty.proto";
+import "logistics/tracking/messages/tracking_event.proto";
+import "logistics/tracking/messages/tracking_checkpoint.proto";
+import "logistics/tracking/messages/tracking_summary.proto";
+
+// Tracking service for monitoring shipments and providing real-time updates
+service TrackingService {
+  // Event management
+  rpc CreateEvent(CreateEventRequest) returns (TrackingEvent);
+  rpc GetEvent(GetEventRequest) returns (TrackingEvent);
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  rpc UpdateEvent(UpdateEventRequest) returns (TrackingEvent);
+  rpc DeleteEvent(DeleteEventRequest) returns (google.protobuf.Empty);
+  
+  // Checkpoint management
+  rpc CreateCheckpoint(CreateCheckpointRequest) returns (TrackingCheckpoint);
+  rpc GetCheckpoint(GetCheckpointRequest) returns (TrackingCheckpoint);
+  rpc ListCheckpoints(ListCheckpointsRequest) returns (ListCheckpointsResponse);
+  rpc UpdateCheckpoint(UpdateCheckpointRequest) returns (TrackingCheckpoint);
+  rpc CompleteCheckpoint(CompleteCheckpointRequest) returns (TrackingCheckpoint);
+  
+  // Tracking operations
+  rpc TrackShipment(TrackShipmentRequest) returns (TrackShipmentResponse);
+  rpc GetTrackingSummary(GetTrackingSummaryRequest) returns (TrackingSummary);
+  rpc GetTrackingHistory(GetTrackingHistoryRequest) returns (GetTrackingHistoryResponse);
+  rpc GetCurrentLocation(GetCurrentLocationRequest) returns (GetCurrentLocationResponse);
+  
+  // Notification management
+  rpc SubscribeToUpdates(SubscribeToUpdatesRequest) returns (SubscribeToUpdatesResponse);
+  rpc UnsubscribeFromUpdates(UnsubscribeFromUpdatesRequest) returns (google.protobuf.Empty);
+  rpc SendNotification(SendNotificationRequest) returns (google.protobuf.Empty);
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+  
+  // Analytics and reporting
+  rpc GetTrackingAnalytics(GetTrackingAnalyticsRequest) returns (GetTrackingAnalyticsResponse);
+  rpc GetDeliveryMetrics(GetDeliveryMetricsRequest) returns (GetDeliveryMetricsResponse);
+  rpc GetExceptionReport(GetExceptionReportRequest) returns (GetExceptionReportResponse);
+}
+
+// Request/Response messages for Event operations
+message CreateEventRequest {
+  string tracking_number = 1;
+  string shipment_id = 2;
+  string event_type = 3;
+  string status = 4;
+  string description = 5;
+  string location = 6;
+  string timestamp = 7;
+  string carrier_id = 8;
+}
+
+message GetEventRequest {
+  string event_id = 1;
+}
+
+message ListEventsRequest {
+  string tracking_number = 1;
+  string shipment_id = 2;
+  string event_type = 3;
+  string date_from = 4;
+  string date_to = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+message ListEventsResponse {
+  repeated TrackingEvent events = 1;
+  string next_page_token = 2;
+}
+
+message UpdateEventRequest {
+  string event_id = 1;
+  TrackingEvent event = 2;
+}
+
+message DeleteEventRequest {
+  string event_id = 1;
+}
+
+// Request/Response messages for Checkpoint operations
+message CreateCheckpointRequest {
+  string tracking_number = 1;
+  string shipment_id = 2;
+  string checkpoint_name = 3;
+  string checkpoint_type = 4;
+  string facility_code = 5;
+  string location = 6;
+  string scheduled_arrival = 7;
+}
+
+message GetCheckpointRequest {
+  string checkpoint_id = 1;
+}
+
+message ListCheckpointsRequest {
+  string tracking_number = 1;
+  string shipment_id = 2;
+  string status = 3;
+}
+
+message ListCheckpointsResponse {
+  repeated TrackingCheckpoint checkpoints = 1;
+}
+
+message UpdateCheckpointRequest {
+  string checkpoint_id = 1;
+  TrackingCheckpoint checkpoint = 2;
+}
+
+message CompleteCheckpointRequest {
+  string checkpoint_id = 1;
+  string actual_arrival = 2;
+  string actual_departure = 3;
+  string completion_notes = 4;
+}
+
+// Request/Response messages for Tracking operations
+message TrackShipmentRequest {
+  string tracking_number = 1;
+}
+
+message TrackShipmentResponse {
+  TrackingSummary summary = 1;
+  repeated TrackingEvent events = 2;
+  repeated TrackingCheckpoint checkpoints = 3;
+}
+
+message GetTrackingSummaryRequest {
+  string tracking_number = 1;
+}
+
+message GetTrackingHistoryRequest {
+  string tracking_number = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetTrackingHistoryResponse {
+  repeated TrackingEvent events = 1;
+  repeated TrackingCheckpoint checkpoints = 2;
+}
+
+message GetCurrentLocationRequest {
+  string tracking_number = 1;
+}
+
+message GetCurrentLocationResponse {
+  string location = 1;
+  double latitude = 2;
+  double longitude = 3;
+  string timestamp = 4;
+  string status = 5;
+}
+
+// Request/Response messages for Notification operations
+message SubscribeToUpdatesRequest {
+  string tracking_number = 1;
+  string subscriber_id = 2;
+  string notification_type = 3;
+  string contact_info = 4; // email, phone, webhook URL
+  repeated string event_types = 5;
+}
+
+message SubscribeToUpdatesResponse {
+  string subscription_id = 1;
+  string status = 2;
+}
+
+message UnsubscribeFromUpdatesRequest {
+  string subscription_id = 1;
+}
+
+message SendNotificationRequest {
+  string tracking_number = 1;
+  string notification_type = 2;
+  string recipient = 3;
+  string message = 4;
+  string event_type = 5;
+}
+
+message ListSubscriptionsRequest {
+  string tracking_number = 1;
+  string subscriber_id = 2;
+}
+
+message ListSubscriptionsResponse {
+  repeated Subscription subscriptions = 1;
+}
+
+message Subscription {
+  string subscription_id = 1;
+  string tracking_number = 2;
+  string subscriber_id = 3;
+  string notification_type = 4;
+  string contact_info = 5;
+  repeated string event_types = 6;
+  string status = 7;
+  string created_at = 8;
+}
+
+// Request/Response messages for Analytics operations
+message GetTrackingAnalyticsRequest {
+  string carrier_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+  string service_type = 4;
+}
+
+message GetTrackingAnalyticsResponse {
+  int32 total_shipments = 1;
+  int32 delivered_shipments = 2;
+  int32 delayed_shipments = 3;
+  int32 exception_shipments = 4;
+  double average_delivery_time_hours = 5;
+  double on_time_delivery_percentage = 6;
+  repeated string top_exception_reasons = 7;
+}
+
+message GetDeliveryMetricsRequest {
+  string carrier_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetDeliveryMetricsResponse {
+  int32 total_deliveries = 1;
+  int32 successful_deliveries = 2;
+  int32 failed_deliveries = 3;
+  double success_rate = 4;
+  double average_delivery_time_hours = 5;
+  repeated DeliveryMetricsByRegion regional_metrics = 6;
+}
+
+message DeliveryMetricsByRegion {
+  string region = 1;
+  int32 deliveries = 2;
+  double success_rate = 3;
+  double average_time_hours = 4;
+}
+
+message GetExceptionReportRequest {
+  string carrier_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetExceptionReportResponse {
+  repeated ExceptionSummary exceptions = 1;
+  int32 total_exceptions = 2;
+  double exception_rate = 3;
+}
+
+message ExceptionSummary {
+  string exception_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+  repeated string common_reasons = 4;
+}

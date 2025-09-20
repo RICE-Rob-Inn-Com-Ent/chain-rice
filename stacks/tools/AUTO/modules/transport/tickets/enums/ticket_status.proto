@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package transport.tickets.v1;
+
+option go_package = "github.com/rice-dev/transport/tickets/v1";
+
+// TicketStatus enum defines the current status of transport tickets
+enum TicketStatus {
+  // Default value - should not be used
+  TICKET_STATUS_UNSPECIFIED = 0;
+  
+  // Ticket has been booked but not yet used
+  BOOKED = 1;
+  
+  // Ticket has been cancelled
+  CANCELLED = 2;
+  
+  // Ticket has been used for travel
+  USED = 3;
+  
+  // Ticket has expired
+  EXPIRED = 4;
+  
+  // Ticket is pending payment
+  PENDING_PAYMENT = 5;
+  
+  // Ticket payment has failed
+  PAYMENT_FAILED = 6;
+  
+  // Ticket is being processed
+  PROCESSING = 7;
+  
+  // Ticket has been refunded
+  REFUNDED = 8;
+  
+  // Ticket is being transferred
+  TRANSFERRING = 9;
+  
+  // Ticket has been transferred
+  TRANSFERRED = 10;
+  
+  // Ticket is suspended
+  SUSPENDED = 11;
+  
+  // Ticket is under review
+  UNDER_REVIEW = 12;
+  
+  // Ticket is active and valid
+  ACTIVE = 13;
+  
+  // Ticket is inactive
+  INACTIVE = 14;
+}

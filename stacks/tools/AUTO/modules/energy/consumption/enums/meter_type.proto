@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package energy.consumption.enums;
+
+// Types of energy meters used for consumption measurement
+enum MeterType {
+  // Traditional mechanical meter with rotating disk
+  METER_TYPE_MECHANICAL = 0;
+  
+  // Electronic meter with digital display
+  METER_TYPE_ELECTRONIC = 1;
+  
+  // Smart meter with communication capabilities
+  METER_TYPE_SMART = 2;
+  
+  // Advanced metering infrastructure (AMI) meter
+  METER_TYPE_AMI = 3;
+  
+  // Prepaid meter with token-based operation
+  METER_TYPE_PREPAID = 4;
+  
+  // Time-of-use (TOU) meter with multiple registers
+  METER_TYPE_TIME_OF_USE = 5;
+  
+  // Net metering meter for renewable energy
+  METER_TYPE_NET_METERING = 6;
+  
+  // Interval data recorder (IDR) meter
+  METER_TYPE_INTERVAL_DATA_RECORDER = 7;
+  
+  // Demand meter for peak usage measurement
+  METER_TYPE_DEMAND = 8;
+  
+  // Water meter for water consumption
+  METER_TYPE_WATER = 9;
+  
+  // Gas meter for natural gas consumption
+  METER_TYPE_GAS = 10;
+  
+  // Steam meter for industrial steam usage
+  METER_TYPE_STEAM = 11;
+  
+  // Thermal energy meter for heating/cooling
+  METER_TYPE_THERMAL = 12;
+  
+  // Power quality meter for electrical quality monitoring
+  METER_TYPE_POWER_QUALITY = 13;
+  
+  // Revenue grade meter for billing accuracy
+  METER_TYPE_REVENUE_GRADE = 14;
+  
+  // Sub-meter for individual unit measurement
+  METER_TYPE_SUB_METER = 15;
+  
+  // Virtual meter for calculated consumption
+  METER_TYPE_VIRTUAL = 16;
+  
+  // Temporary meter for short-term monitoring
+  METER_TYPE_TEMPORARY = 17;
+  
+  // Backup meter for redundancy
+  METER_TYPE_BACKUP = 18;
+  
+  // Mobile meter for portable applications
+  METER_TYPE_MOBILE = 19;
+  
+  // Industrial grade meter for heavy-duty applications
+  METER_TYPE_INDUSTRIAL = 20;
+}

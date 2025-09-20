@@ -1,0 +1,393 @@
+syntax = "proto3";
+
+package transport.tickets.v1;
+
+import "tickets/messages/ticket_request.proto";
+import "tickets/messages/ticket_response.proto";
+
+option go_package = "github.com/rice-dev/transport/tickets/v1";
+
+// TicketService provides CRUD operations for ticket management
+// This service handles ticket booking, validation, payment processing,
+// and ticket lifecycle management
+service TicketService {
+  // Create books a new ticket for a passenger
+  // Validates availability and processes payment
+  rpc Create(CreateTicketRequest) returns (CreateTicketResponse);
+  
+  // Get retrieves detailed information about a specific ticket
+  // Returns complete ticket details including validation information
+  rpc Get(GetTicketRequest) returns (GetTicketResponse);
+  
+  // List retrieves a paginated list of tickets with optional filtering
+  // Supports filtering by passenger, route, schedule, status, and other criteria
+  rpc List(ListTicketsRequest) returns (ListTicketsResponse);
+  
+  // Update modifies existing ticket information
+  // Allows partial updates using field masks for efficient updates
+  rpc Update(UpdateTicketRequest) returns (UpdateTicketResponse);
+  
+  // Delete cancels a ticket and processes refund if applicable
+  // Validates cancellation policies and processes refunds
+  rpc Delete(DeleteTicketRequest) returns (DeleteTicketResponse);
+  
+  // ValidateTicket checks ticket validity for travel
+  // Verifies ticket status, validity period, and travel conditions
+  rpc ValidateTicket(ValidateTicketRequest) returns (ValidateTicketResponse);
+  
+  // UseTicket marks a ticket as used for travel
+  // Updates ticket status and records usage information
+  rpc UseTicket(UseTicketRequest) returns (UseTicketResponse);
+  
+  // CancelTicket cancels a ticket with refund processing
+  // Handles cancellation policies and refund calculations
+  rpc CancelTicket(CancelTicketRequest) returns (CancelTicketResponse);
+  
+  // TransferTicket transfers ticket to another passenger
+  // Validates transfer policies and updates ticket ownership
+  rpc TransferTicket(TransferTicketRequest) returns (TransferTicketResponse);
+  
+  // GetTicketStats retrieves ticket sales and usage statistics
+  // Returns revenue data, booking patterns, and analytics
+  rpc GetTicketStats(GetTicketStatsRequest) returns (GetTicketStatsResponse);
+  
+  // ProcessRefund processes refund for cancelled tickets
+  // Handles refund calculations and payment processing
+  rpc ProcessRefund(ProcessRefundRequest) returns (ProcessRefundResponse);
+}
+
+// ValidateTicketRequest represents a request to validate a ticket
+message ValidateTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Validation location
+  string validation_location = 2;
+  
+  // Validation timestamp
+  google.protobuf.Timestamp validation_timestamp = 3;
+  
+  // Validator ID
+  string validator_id = 4;
+  
+  // Validation method (qr_code, barcode, manual)
+  string validation_method = 5;
+}
+
+// ValidateTicketResponse represents the response after ticket validation
+message ValidateTicketResponse {
+  // Ticket ID
+  string ticket_id = 1;
+  
+  // Validation result (valid, invalid, expired, already_used)
+  string validation_result = 2;
+  
+  // Validation success status
+  bool success = 3;
+  
+  // Response message
+  string message = 4;
+  
+  // Validation timestamp
+  google.protobuf.Timestamp validated_at = 5;
+  
+  // Ticket details (if valid)
+  Ticket ticket = 6;
+  
+  // Validation errors (if any)
+  repeated string validation_errors = 7;
+}
+
+// UseTicketRequest represents a request to use a ticket
+message UseTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Usage location
+  string usage_location = 2;
+  
+  // Usage timestamp
+  google.protobuf.Timestamp usage_timestamp = 3;
+  
+  // Boarding stop
+  string boarding_stop = 4;
+  
+  // Alighting stop
+  string alighting_stop = 5;
+  
+  // Usage notes
+  string notes = 6;
+}
+
+// UseTicketResponse represents the response after using a ticket
+message UseTicketResponse {
+  // Ticket ID
+  string ticket_id = 1;
+  
+  // Usage success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Usage timestamp
+  google.protobuf.Timestamp used_at = 4;
+  
+  // Updated ticket information
+  Ticket ticket = 5;
+}
+
+// CancelTicketRequest represents a request to cancel a ticket
+message CancelTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Cancellation reason
+  string reason = 2;
+  
+  // Cancellation timestamp
+  google.protobuf.Timestamp cancellation_timestamp = 3;
+  
+  // Process refund
+  bool process_refund = 4;
+  
+  // Refund amount (if different from ticket price)
+  double refund_amount = 5;
+  
+  // Cancellation fee
+  double cancellation_fee = 6;
+}
+
+// CancelTicketResponse represents the response after cancelling a ticket
+message CancelTicketResponse {
+  // Ticket ID
+  string ticket_id = 1;
+  
+  // Cancellation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Cancellation timestamp
+  google.protobuf.Timestamp cancelled_at = 4;
+  
+  // Refund processed
+  bool refund_processed = 5;
+  
+  // Refund amount
+  double refund_amount = 6;
+  
+  // Cancellation fee charged
+  double cancellation_fee = 7;
+  
+  // Updated ticket information
+  Ticket ticket = 8;
+}
+
+// TransferTicketRequest represents a request to transfer a ticket
+message TransferTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // New passenger ID (required)
+  string new_passenger_id = 2;
+  
+  // Transfer reason
+  string reason = 3;
+  
+  // Transfer timestamp
+  google.protobuf.Timestamp transfer_timestamp = 4;
+  
+  // Transfer fee
+  double transfer_fee = 5;
+  
+  // Additional transfer conditions
+  map<string, string> transfer_conditions = 6;
+}
+
+// TransferTicketResponse represents the response after transferring a ticket
+message TransferTicketResponse {
+  // Ticket ID
+  string ticket_id = 1;
+  
+  // Previous passenger ID
+  string previous_passenger_id = 2;
+  
+  // New passenger ID
+  string new_passenger_id = 3;
+  
+  // Transfer success status
+  bool success = 4;
+  
+  // Response message
+  string message = 5;
+  
+  // Transfer timestamp
+  google.protobuf.Timestamp transferred_at = 6;
+  
+  // Transfer fee charged
+  double transfer_fee = 7;
+  
+  // Updated ticket information
+  Ticket ticket = 8;
+}
+
+// GetTicketStatsRequest represents a request for ticket statistics
+message GetTicketStatsRequest {
+  // Statistics period start date
+  google.protobuf.Timestamp start_date = 1;
+  
+  // Statistics period end date
+  google.protobuf.Timestamp end_date = 2;
+  
+  // Filter by route ID
+  string route_id = 3;
+  
+  // Filter by schedule ID
+  string schedule_id = 4;
+  
+  // Filter by ticket type
+  TicketType ticket_type = 5;
+  
+  // Include detailed analytics
+  bool include_detailed_analytics = 6;
+  
+  // Include revenue breakdown
+  bool include_revenue_breakdown = 7;
+}
+
+// GetTicketStatsResponse represents the response with ticket statistics
+message GetTicketStatsResponse {
+  // Total tickets sold
+  int32 total_tickets_sold = 1;
+  
+  // Total revenue generated
+  double total_revenue = 2;
+  
+  // Average ticket price
+  double average_ticket_price = 3;
+  
+  // Ticket type distribution
+  map<string, int32> ticket_type_distribution = 4;
+  
+  // Daily sales trend
+  repeated DailySales daily_sales = 5;
+  
+  // Cancellation rate
+  double cancellation_rate = 6;
+  
+  // Refund amount
+  double total_refunds = 7;
+  
+  // Popular routes
+  repeated RoutePopularity popular_routes = 8;
+  
+  // Revenue breakdown (if requested)
+  RevenueBreakdown revenue_breakdown = 9;
+  
+  // Operation success status
+  bool success = 10;
+  
+  // Response message
+  string message = 11;
+}
+
+// DailySales represents daily sales data
+message DailySales {
+  // Sales date
+  google.protobuf.Timestamp date = 1;
+  
+  // Tickets sold
+  int32 tickets_sold = 2;
+  
+  // Revenue generated
+  double revenue = 3;
+  
+  // Average price
+  double average_price = 4;
+}
+
+// RoutePopularity represents route popularity data
+message RoutePopularity {
+  // Route ID
+  string route_id = 1;
+  
+  // Route name
+  string route_name = 2;
+  
+  // Tickets sold
+  int32 tickets_sold = 3;
+  
+  // Revenue generated
+  double revenue = 4;
+  
+  // Popularity rank
+  int32 rank = 5;
+}
+
+// RevenueBreakdown represents detailed revenue analysis
+message RevenueBreakdown {
+  // Revenue by ticket type
+  map<string, double> revenue_by_type = 1;
+  
+  // Revenue by payment method
+  map<string, double> revenue_by_payment_method = 2;
+  
+  // Revenue by passenger type
+  map<string, double> revenue_by_passenger_type = 3;
+  
+  // Discounts given
+  double total_discounts = 4;
+  
+  // Promotional revenue
+  double promotional_revenue = 5;
+}
+
+// ProcessRefundRequest represents a request to process a refund
+message ProcessRefundRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Refund amount
+  double refund_amount = 2;
+  
+  // Refund reason
+  string refund_reason = 3;
+  
+  // Refund method
+  string refund_method = 4;
+  
+  // Refund processing timestamp
+  google.protobuf.Timestamp refund_timestamp = 5;
+  
+  // Refund reference
+  string refund_reference = 6;
+}
+
+// ProcessRefundResponse represents the response after processing refund
+message ProcessRefundResponse {
+  // Ticket ID
+  string ticket_id = 1;
+  
+  // Refund amount
+  double refund_amount = 2;
+  
+  // Refund success status
+  bool success = 3;
+  
+  // Response message
+  string message = 4;
+  
+  // Refund timestamp
+  google.protobuf.Timestamp refunded_at = 5;
+  
+  // Refund reference
+  string refund_reference = 6;
+  
+  // Refund method used
+  string refund_method = 7;
+  
+  // Processing fee
+  double processing_fee = 8;
+}

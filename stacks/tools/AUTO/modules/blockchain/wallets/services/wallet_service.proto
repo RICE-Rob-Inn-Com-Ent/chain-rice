@@ -1,0 +1,295 @@
+syntax = "proto3";
+
+package blockchain.wallets.services;
+
+import "blockchain/wallets/messages/wallet.proto";
+import "blockchain/wallets/messages/wallet_transaction.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/wallets/services";
+
+// WalletMsgService handles state-changing wallet operations
+service WalletMsgService {
+  // CreateWallet creates a new wallet
+  rpc CreateWallet(blockchain.wallets.messages.MsgCreateWallet) returns (blockchain.wallets.messages.MsgCreateWalletResponse);
+  
+  // UpdateWallet updates an existing wallet
+  rpc UpdateWallet(blockchain.wallets.messages.MsgUpdateWallet) returns (blockchain.wallets.messages.MsgUpdateWalletResponse);
+  
+  // LockWallet locks a wallet
+  rpc LockWallet(blockchain.wallets.messages.MsgLockWallet) returns (blockchain.wallets.messages.MsgLockWalletResponse);
+  
+  // UnlockWallet unlocks a wallet
+  rpc UnlockWallet(blockchain.wallets.messages.MsgUnlockWallet) returns (blockchain.wallets.messages.MsgUnlockWalletResponse);
+  
+  // BackupWallet backs up a wallet
+  rpc BackupWallet(blockchain.wallets.messages.MsgBackupWallet) returns (blockchain.wallets.messages.MsgBackupWalletResponse);
+  
+  // RestoreWallet restores a wallet
+  rpc RestoreWallet(blockchain.wallets.messages.MsgRestoreWallet) returns (blockchain.wallets.messages.MsgRestoreWalletResponse);
+  
+  // SendTransaction sends a transaction from a wallet
+  rpc SendTransaction(blockchain.wallets.messages.MsgSendTransaction) returns (blockchain.wallets.messages.MsgSendTransactionResponse);
+  
+  // ReceiveTransaction receives a transaction to a wallet
+  rpc ReceiveTransaction(blockchain.wallets.messages.MsgReceiveTransaction) returns (blockchain.wallets.messages.MsgReceiveTransactionResponse);
+  
+  // SwapTokens swaps tokens in a wallet
+  rpc SwapTokens(blockchain.wallets.messages.MsgSwapTokens) returns (blockchain.wallets.messages.MsgSwapTokensResponse);
+  
+  // StakeTokens stakes tokens from a wallet
+  rpc StakeTokens(blockchain.wallets.messages.MsgStakeTokens) returns (blockchain.wallets.messages.MsgStakeTokensResponse);
+  
+  // UnstakeTokens unstakes tokens from a wallet
+  rpc UnstakeTokens(blockchain.wallets.messages.MsgUnstakeTokens) returns (blockchain.wallets.messages.MsgUnstakeTokensResponse);
+  
+  // DelegateTokens delegates tokens from a wallet
+  rpc DelegateTokens(blockchain.wallets.messages.MsgDelegateTokens) returns (blockchain.wallets.messages.MsgDelegateTokensResponse);
+}
+
+// WalletQueryService handles wallet state queries
+service WalletQueryService {
+  // GetWallet retrieves a specific wallet
+  rpc GetWallet(GetWalletRequest) returns (GetWalletResponse);
+  
+  // ListWallets lists wallets with pagination and filters
+  rpc ListWallets(ListWalletsRequest) returns (ListWalletsResponse);
+  
+  // GetWalletTransaction retrieves a specific wallet transaction
+  rpc GetWalletTransaction(GetWalletTransactionRequest) returns (GetWalletTransactionResponse);
+  
+  // ListWalletTransactions lists wallet transactions with pagination and filters
+  rpc ListWalletTransactions(ListWalletTransactionsRequest) returns (ListWalletTransactionsResponse);
+  
+  // GetWalletParams retrieves wallet module parameters
+  rpc GetWalletParams(GetWalletParamsRequest) returns (GetWalletParamsResponse);
+  
+  // GetWalletStats retrieves wallet statistics
+  rpc GetWalletStats(GetWalletStatsRequest) returns (GetWalletStatsResponse);
+  
+  // GetWalletByAddress retrieves wallet by address
+  rpc GetWalletByAddress(GetWalletByAddressRequest) returns (GetWalletByAddressResponse);
+  
+  // GetWalletTransactionsByWallet retrieves transactions for a wallet
+  rpc GetWalletTransactionsByWallet(GetWalletTransactionsByWalletRequest) returns (GetWalletTransactionsByWalletResponse);
+  
+  // GetWalletBalance retrieves wallet balance
+  rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
+  
+  // GetWalletHistory retrieves wallet transaction history
+  rpc GetWalletHistory(GetWalletHistoryRequest) returns (GetWalletHistoryResponse);
+  
+  // GetWalletBackups retrieves wallet backups
+  rpc GetWalletBackups(GetWalletBackupsRequest) returns (GetWalletBackupsResponse);
+  
+  // GetWalletStakes retrieves wallet stakes
+  rpc GetWalletStakes(GetWalletStakesRequest) returns (GetWalletStakesResponse);
+  
+  // GetWalletDelegations retrieves wallet delegations
+  rpc GetWalletDelegations(GetWalletDelegationsRequest) returns (GetWalletDelegationsResponse);
+  
+  // SearchWallets searches for wallets
+  rpc SearchWallets(SearchWalletsRequest) returns (SearchWalletsResponse);
+  
+  // GetWalletAnalytics retrieves wallet analytics
+  rpc GetWalletAnalytics(GetWalletAnalyticsRequest) returns (GetWalletAnalyticsResponse);
+  
+  // GetWalletSecurity retrieves wallet security information
+  rpc GetWalletSecurity(GetWalletSecurityRequest) returns (GetWalletSecurityResponse);
+}
+
+// Query request and response messages
+
+message GetWalletRequest {
+  string wallet_id = 1; // Wallet ID
+}
+
+message GetWalletResponse {
+  blockchain.wallets.messages.Wallet wallet = 1;
+}
+
+message ListWalletsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string wallet_type = 3;    // Filter by wallet type
+  string status = 4;         // Filter by status
+  string owner = 5;          // Filter by owner address
+  bool is_public = 6;        // Filter by public/private
+  string network_id = 7;     // Filter by network ID
+}
+
+message ListWalletsResponse {
+  repeated blockchain.wallets.messages.Wallet wallets = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetWalletTransactionRequest {
+  string transaction_id = 1; // Wallet transaction ID
+}
+
+message GetWalletTransactionResponse {
+  blockchain.wallets.messages.WalletTransaction transaction = 1;
+}
+
+message ListWalletTransactionsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string wallet_id = 3;      // Filter by wallet ID
+  string transaction_type = 4; // Filter by transaction type
+  string status = 5;         // Filter by transaction status
+  int64 start_time = 6;      // Filter by start time
+  int64 end_time = 7;        // Filter by end time
+}
+
+message ListWalletTransactionsResponse {
+  repeated blockchain.wallets.messages.WalletTransaction transactions = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetWalletParamsRequest {
+  // No parameters needed
+}
+
+message GetWalletParamsResponse {
+  blockchain.wallets.messages.WalletParams params = 1;
+}
+
+message GetWalletStatsRequest {
+  string time_period = 1; // Optional time period filter
+}
+
+message GetWalletStatsResponse {
+  int64 total_wallets = 1;          // Total number of wallets
+  int64 active_wallets = 2;         // Number of active wallets
+  int64 locked_wallets = 3;         // Number of locked wallets
+  int64 total_transactions = 4;     // Total number of transactions
+  int64 successful_transactions = 5; // Number of successful transactions
+  int64 failed_transactions = 6;    // Number of failed transactions
+  string total_volume = 7;          // Total transaction volume
+  string total_fees_collected = 8;  // Total fees collected
+  string average_transaction_amount = 9; // Average transaction amount
+  string most_used_wallet_type = 10; // Most used wallet type
+}
+
+message GetWalletByAddressRequest {
+  string address = 1; // Wallet address
+}
+
+message GetWalletByAddressResponse {
+  blockchain.wallets.messages.Wallet wallet = 1;
+}
+
+message GetWalletTransactionsByWalletRequest {
+  string wallet_id = 1;             // Wallet ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetWalletTransactionsByWalletResponse {
+  repeated blockchain.wallets.messages.WalletTransaction transactions = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetWalletBalanceRequest {
+  string wallet_id = 1; // Wallet ID
+}
+
+message GetWalletBalanceResponse {
+  string wallet_id = 1;             // Wallet ID
+  repeated blockchain.wallets.messages.Coin balances = 2; // Token balances
+  string total_balance = 3;         // Total balance value
+  string locked_balance = 4;        // Locked balance
+  string available_balance = 5;     // Available balance
+}
+
+message GetWalletHistoryRequest {
+  string wallet_id = 1;             // Wallet ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+  int64 start_time = 4;             // Filter by start time
+  int64 end_time = 5;               // Filter by end time
+}
+
+message GetWalletHistoryResponse {
+  repeated blockchain.wallets.messages.WalletTransaction transactions = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetWalletBackupsRequest {
+  string wallet_id = 1;             // Wallet ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetWalletBackupsResponse {
+  repeated string backups = 1;      // List of backup IDs
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetWalletStakesRequest {
+  string wallet_id = 1;             // Wallet ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetWalletStakesResponse {
+  repeated string stakes = 1;       // List of stake IDs
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetWalletDelegationsRequest {
+  string wallet_id = 1;             // Wallet ID
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+}
+
+message GetWalletDelegationsResponse {
+  repeated string delegations = 1;  // List of delegation IDs
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message SearchWalletsRequest {
+  string query = 1;                 // Search query
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+  string wallet_type = 4;          // Filter by wallet type
+  string status = 5;                // Filter by status
+}
+
+message SearchWalletsResponse {
+  repeated blockchain.wallets.messages.Wallet wallets = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetWalletAnalyticsRequest {
+  string wallet_id = 1;             // Wallet ID
+  string time_period = 2;           // Time period for analytics
+}
+
+message GetWalletAnalyticsResponse {
+  string wallet_id = 1;             // Wallet ID
+  string total_transactions = 2;    // Total transactions
+  string successful_transactions = 3; // Successful transactions
+  string failed_transactions = 4;   // Failed transactions
+  string total_volume = 5;          // Total volume
+  string average_transaction_amount = 6; // Average transaction amount
+  string most_used_token = 7;       // Most used token
+  string transaction_frequency = 8; // Transaction frequency
+  string success_rate = 9;          // Success rate
+  string error_rate = 10;           // Error rate
+}
+
+message GetWalletSecurityRequest {
+  string wallet_id = 1; // Wallet ID
+}
+
+message GetWalletSecurityResponse {
+  string wallet_id = 1;             // Wallet ID
+  bool is_encrypted = 2;            // Whether wallet is encrypted
+  bool is_backed_up = 3;            // Whether wallet is backed up
+  string last_backup = 4;           // Last backup timestamp
+  string security_score = 5;        // Security score
+  repeated string security_features = 6; // Security features
+  string access_level = 7;          // Access level
+  bool kyc_verified = 8;            // Whether KYC is verified
+  bool aml_verified = 9;            // Whether AML is verified
+}

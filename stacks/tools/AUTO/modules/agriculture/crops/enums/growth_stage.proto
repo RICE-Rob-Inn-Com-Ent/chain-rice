@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package agriculture.crops.enums;
+
+// GrowthStage enum defines the different phases of crop development
+enum GrowthStage {
+  // Initial stages
+  GROWTH_STAGE_UNSPECIFIED = 0;
+  GROWTH_STAGE_SEED = 1;         // Seed stage - dormant seed
+  GROWTH_STAGE_GERMINATION = 2;  // Germination - seed absorbing water and beginning to grow
+  GROWTH_STAGE_EMERGENCE = 3;    // Emergence - seedling breaking through soil surface
+  
+  // Vegetative stages
+  GROWTH_STAGE_COTYLEDON = 4;    // Cotyledon - first leaves (seed leaves)
+  GROWTH_STAGE_FIRST_LEAF = 5;   // First true leaf development
+  GROWTH_STAGE_VEGETATIVE = 6;   // Vegetative growth - leaf and stem development
+  GROWTH_STAGE_TILLERING = 7;    // Tillering - development of side shoots (for grasses)
+  GROWTH_STAGE_STEMMING = 8;     // Stem elongation and development
+  
+  // Reproductive stages
+  GROWTH_STAGE_FLOWERING = 9;    // Flowering - bloom and pollination
+  GROWTH_STAGE_POLLINATION = 10; // Pollination - fertilization of flowers
+  GROWTH_STAGE_FRUIT_SET = 11;   // Fruit set - initial fruit development
+  GROWTH_STAGE_FRUIT_DEVELOPMENT = 12; // Fruit development - growth and maturation
+  GROWTH_STAGE_GRAIN_FILLING = 13; // Grain filling - seed development (for grains)
+  
+  // Maturation stages
+  GROWTH_STAGE_MATURATION = 14;  // Maturation - final development before harvest
+  GROWTH_STAGE_RIPENING = 15;    // Ripening - color and texture changes
+  GROWTH_STAGE_SENESCENCE = 16;  // Senescence - natural aging and death of plant parts
+  GROWTH_STAGE_DORMANCY = 17;    // Dormancy - winter rest period (for perennials)
+  
+  // Harvest stages
+  GROWTH_STAGE_HARVEST_READY = 18; // Ready for harvest
+  GROWTH_STAGE_HARVESTED = 19;   // Successfully harvested
+  GROWTH_STAGE_POST_HARVEST = 20; // Post-harvest processing
+  
+  // Problem stages
+  GROWTH_STAGE_DISEASED = 21;    // Plant affected by disease
+  GROWTH_STAGE_PEST_DAMAGED = 22; // Plant damaged by pests
+  GROWTH_STAGE_STRESSED = 23;    // Plant under environmental stress
+  GROWTH_STAGE_DIED = 24;        // Plant has died
+}

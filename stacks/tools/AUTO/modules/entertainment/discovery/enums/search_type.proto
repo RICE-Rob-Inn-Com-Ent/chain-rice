@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package entertainment.discovery.enums;
+
+// Типи пошуку
+enum SearchType {
+  SEARCH_TYPE_UNSPECIFIED = 0;
+  
+  // Основні типи пошуку
+  TEXT_SEARCH = 1;
+  SEMANTIC_SEARCH = 2;
+  FUZZY_SEARCH = 3;
+  EXACT_MATCH = 4;
+  
+  // Спеціалізовані типи
+  VOICE_SEARCH = 5;
+  IMAGE_SEARCH = 6;
+  VIDEO_SEARCH = 7;
+  AUDIO_SEARCH = 8;
+  
+  // Контекстні типи
+  LOCATION_SEARCH = 9;
+  TIME_BASED_SEARCH = 10;
+  TREND_SEARCH = 11;
+  POPULARITY_SEARCH = 12;
+  
+  // Персоналізовані типи
+  PERSONALIZED_SEARCH = 13;
+  RECOMMENDATION_SEARCH = 14;
+  SIMILARITY_SEARCH = 15;
+  COLLABORATIVE_SEARCH = 16;
+  
+  // Фасетні типи
+  FACETED_SEARCH = 17;
+  FILTERED_SEARCH = 18;
+  CATEGORIZED_SEARCH = 19;
+  TAGGED_SEARCH = 20;
+  
+  // Аналітичні типи
+  ANALYTICAL_SEARCH = 21;
+  STATISTICAL_SEARCH = 22;
+  PREDICTIVE_SEARCH = 23;
+  INSIGHT_SEARCH = 24;
+  
+  // Соціальні типи
+  SOCIAL_SEARCH = 25;
+  COMMUNITY_SEARCH = 26;
+  USER_GENERATED_SEARCH = 27;
+  CROWD_SOURCED_SEARCH = 28;
+  
+  // Мультимедійні типи
+  MULTIMEDIA_SEARCH = 29;
+  CROSS_MEDIA_SEARCH = 30;
+  FUSION_SEARCH = 31;
+  HYBRID_SEARCH = 32;
+  
+  // Розумні типи
+  INTELLIGENT_SEARCH = 33;
+  AI_POWERED_SEARCH = 34;
+  MACHINE_LEARNING_SEARCH = 35;
+  NEURAL_SEARCH = 36;
+  
+  // Спеціальні типи
+  REAL_TIME_SEARCH = 37;
+  LIVE_SEARCH = 38;
+  STREAMING_SEARCH = 39;
+  EVENT_SEARCH = 40;
+}

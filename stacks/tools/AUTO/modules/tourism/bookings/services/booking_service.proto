@@ -1,0 +1,453 @@
+syntax = "proto3";
+
+package tourism.bookings.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/bookings/messages/booking_request.proto";
+import "tourism/bookings/messages/booking_response.proto";
+import "tourism/bookings/enums/booking_status.proto";
+import "tourism/bookings/enums/payment_status.proto";
+
+// BookingService provides comprehensive booking management functionality
+service BookingService {
+  // Create a new booking
+  rpc CreateBooking(CreateBookingRequest) returns (CreateBookingResponse);
+  
+  // Retrieve a specific booking by ID
+  rpc GetBooking(GetBookingRequest) returns (GetBookingResponse);
+  
+  // List bookings with optional filtering and pagination
+  rpc ListBookings(ListBookingsRequest) returns (ListBookingsResponse);
+  
+  // Update an existing booking
+  rpc UpdateBooking(UpdateBookingRequest) returns (UpdateBookingResponse);
+  
+  // Delete a booking
+  rpc DeleteBooking(DeleteBookingRequest) returns (DeleteBookingResponse);
+  
+  // Cancel a booking
+  rpc CancelBooking(CancelBookingRequest) returns (CancelBookingResponse);
+  
+  // Confirm a booking
+  rpc ConfirmBooking(ConfirmBookingRequest) returns (ConfirmBookingResponse);
+  
+  // Get booking summary for a customer
+  rpc GetBookingSummary(GetBookingSummaryRequest) returns (GetBookingSummaryResponse);
+  
+  // Search bookings by various criteria
+  rpc SearchBookings(SearchBookingsRequest) returns (SearchBookingsResponse);
+  
+  // Get booking analytics
+  rpc GetBookingAnalytics(GetBookingAnalyticsRequest) returns (GetBookingAnalyticsResponse);
+  
+  // Process booking payment
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  
+  // Generate booking voucher
+  rpc GenerateVoucher(GenerateVoucherRequest) returns (GenerateVoucherResponse);
+  
+  // Send booking confirmation
+  rpc SendConfirmation(SendConfirmationRequest) returns (SendConfirmationResponse);
+  
+  // Get booking history
+  rpc GetBookingHistory(GetBookingHistoryRequest) returns (GetBookingHistoryResponse);
+}
+
+// GetBookingSummaryRequest represents a request to get booking summary
+message GetBookingSummaryRequest {
+  // Customer ID to get summary for
+  string customer_id = 1;
+  
+  // Date range for summary (optional)
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// GetBookingSummaryResponse represents the booking summary response
+message GetBookingSummaryResponse {
+  // Customer ID
+  string customer_id = 1;
+  
+  // Total number of bookings
+  int32 total_bookings = 2;
+  
+  // Number of confirmed bookings
+  int32 confirmed_bookings = 3;
+  
+  // Number of cancelled bookings
+  int32 cancelled_bookings = 4;
+  
+  // Total amount spent
+  int64 total_amount_spent = 5;
+  
+  // Currency
+  string currency = 6;
+  
+  // Recent bookings
+  repeated BookingSummary recent_bookings = 7;
+  
+  // Booking status distribution
+  repeated BookingStatusCount status_distribution = 8;
+  
+  // Most popular service types
+  repeated ServiceTypeCount popular_services = 9;
+}
+
+// BookingStatusCount represents count of bookings by status
+message BookingStatusCount {
+  // Booking status
+  tourism.bookings.enums.BookingStatus status = 1;
+  
+  // Count of bookings with this status
+  int32 count = 2;
+  
+  // Percentage of total bookings
+  google.protobuf.DoubleValue percentage = 3;
+}
+
+// ServiceTypeCount represents count of bookings by service type
+message ServiceTypeCount {
+  // Service type
+  string service_type = 1;
+  
+  // Count of bookings for this service type
+  int32 count = 2;
+  
+  // Percentage of total bookings
+  google.protobuf.DoubleValue percentage = 3;
+}
+
+// SearchBookingsRequest represents a request to search bookings
+message SearchBookingsRequest {
+  // Search query string
+  string query = 1;
+  
+  // Search fields to include
+  repeated string search_fields = 2;
+  
+  // Booking status filter
+  tourism.bookings.enums.BookingStatus status = 3;
+  
+  // Service type filter
+  google.protobuf.StringValue service_type = 4;
+  
+  // Date range filter
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  
+  // Page number for pagination
+  int32 page = 7;
+  
+  // Page size for pagination
+  int32 page_size = 8;
+}
+
+// SearchBookingsResponse represents the search results
+message SearchBookingsResponse {
+  // List of matching bookings
+  repeated BookingSummary bookings = 1;
+  
+  // Total count of matches
+  int32 total_count = 2;
+  
+  // Pagination info
+  int32 page = 3;
+  int32 page_size = 4;
+  int32 total_pages = 5;
+  
+  // Search execution time in milliseconds
+  int32 execution_time_ms = 6;
+}
+
+// GetBookingAnalyticsRequest represents a request to get booking analytics
+message GetBookingAnalyticsRequest {
+  // Date range for analytics
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  
+  // Analytics type (revenue, bookings, customers, services)
+  string analytics_type = 3;
+  
+  // Granularity (daily, weekly, monthly, quarterly, yearly)
+  string granularity = 4;
+  
+  // Service type filter (optional)
+  google.protobuf.StringValue service_type = 5;
+  
+  // Customer segment filter (optional)
+  google.protobuf.StringValue customer_segment = 6;
+}
+
+// GetBookingAnalyticsResponse represents the booking analytics response
+message GetBookingAnalyticsResponse {
+  // Analytics period
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  
+  // Analytics type
+  string analytics_type = 3;
+  
+  // Granularity used
+  string granularity = 4;
+  
+  // Key metrics
+  BookingMetrics metrics = 5;
+  
+  // Time series data
+  repeated BookingDataPoint data_points = 6;
+  
+  // Service type breakdown
+  repeated ServiceAnalytics service_breakdown = 7;
+  
+  // Customer segment breakdown
+  repeated CustomerSegmentAnalytics customer_breakdown = 8;
+  
+  // Generated at timestamp
+  google.protobuf.Timestamp generated_at = 9;
+}
+
+// BookingMetrics represents key booking metrics
+message BookingMetrics {
+  // Total bookings
+  int32 total_bookings = 1;
+  
+  // Total revenue
+  int64 total_revenue = 2;
+  
+  // Average booking value
+  google.protobuf.DoubleValue average_booking_value = 3;
+  
+  // Booking conversion rate
+  google.protobuf.DoubleValue conversion_rate = 4;
+  
+  // Cancellation rate
+  google.protobuf.DoubleValue cancellation_rate = 5;
+  
+  // Customer repeat booking rate
+  google.protobuf.DoubleValue repeat_booking_rate = 6;
+  
+  // Currency
+  string currency = 7;
+}
+
+// BookingDataPoint represents a single analytics data point
+message BookingDataPoint {
+  // Timestamp for this data point
+  google.protobuf.Timestamp timestamp = 1;
+  
+  // Number of bookings
+  int32 booking_count = 2;
+  
+  // Revenue amount
+  int64 revenue = 3;
+  
+  // Average booking value
+  google.protobuf.DoubleValue average_booking_value = 4;
+  
+  // Additional metrics
+  google.protobuf.StringValue additional_metrics = 5;
+}
+
+// ServiceAnalytics represents analytics for a specific service type
+message ServiceAnalytics {
+  // Service type
+  string service_type = 1;
+  
+  // Number of bookings
+  int32 booking_count = 2;
+  
+  // Total revenue
+  int64 revenue = 3;
+  
+  // Average booking value
+  google.protobuf.DoubleValue average_booking_value = 4;
+  
+  // Percentage of total bookings
+  google.protobuf.DoubleValue percentage_of_total = 5;
+}
+
+// CustomerSegmentAnalytics represents analytics for a customer segment
+message CustomerSegmentAnalytics {
+  // Customer segment
+  string customer_segment = 1;
+  
+  // Number of bookings
+  int32 booking_count = 2;
+  
+  // Total revenue
+  int64 revenue = 3;
+  
+  // Average booking value
+  google.protobuf.DoubleValue average_booking_value = 4;
+  
+  // Customer lifetime value
+  google.protobuf.DoubleValue customer_lifetime_value = 5;
+}
+
+// ProcessPaymentRequest represents a request to process payment for a booking
+message ProcessPaymentRequest {
+  // Booking ID to process payment for
+  string booking_id = 1;
+  
+  // Payment method
+  string payment_method = 2;
+  
+  // Payment amount
+  int64 payment_amount = 3;
+  
+  // Currency
+  string currency = 4;
+  
+  // Payment reference
+  google.protobuf.StringValue payment_reference = 5;
+  
+  // Billing information
+  google.protobuf.StringValue billing_info = 6;
+}
+
+// ProcessPaymentResponse represents the payment processing response
+message ProcessPaymentResponse {
+  // Updated booking
+  Booking booking = 1;
+  
+  // Payment confirmation ID
+  string payment_confirmation_id = 2;
+  
+  // Success message
+  string message = 3;
+  
+  // Payment processing timestamp
+  google.protobuf.Timestamp processed_at = 4;
+  
+  // Payment status
+  tourism.bookings.enums.PaymentStatus payment_status = 5;
+}
+
+// GenerateVoucherRequest represents a request to generate a booking voucher
+message GenerateVoucherRequest {
+  // Booking ID to generate voucher for
+  string booking_id = 1;
+  
+  // Voucher template ID (optional)
+  google.protobuf.StringValue template_id = 2;
+  
+  // Voucher format (pdf, html, image)
+  google.protobuf.StringValue format = 3;
+}
+
+// GenerateVoucherResponse represents the voucher generation response
+message GenerateVoucherResponse {
+  // Base64 encoded voucher content
+  string voucher_content = 1;
+  
+  // Voucher file name
+  string file_name = 2;
+  
+  // File size in bytes
+  int64 file_size = 3;
+  
+  // Voucher format
+  string format = 4;
+  
+  // Voucher URL (if stored externally)
+  google.protobuf.StringValue voucher_url = 5;
+}
+
+// SendConfirmationRequest represents a request to send booking confirmation
+message SendConfirmationRequest {
+  // Booking ID to send confirmation for
+  string booking_id = 1;
+  
+  // Confirmation method (email, sms, push)
+  string confirmation_method = 2;
+  
+  // Recipient contact information
+  google.protobuf.StringValue recipient_contact = 3;
+  
+  // Custom message (optional)
+  google.protobuf.StringValue custom_message = 4;
+  
+  // Whether to include voucher
+  bool include_voucher = 5;
+}
+
+// SendConfirmationResponse represents the confirmation sending response
+message SendConfirmationResponse {
+  // Success message
+  string message = 1;
+  
+  // Delivery status
+  string delivery_status = 2;
+  
+  // Sent timestamp
+  google.protobuf.Timestamp sent_at = 3;
+  
+  // Delivery confirmation ID
+  google.protobuf.StringValue delivery_confirmation_id = 4;
+}
+
+// GetBookingHistoryRequest represents a request to get booking history
+message GetBookingHistoryRequest {
+  // Customer ID to get history for
+  string customer_id = 1;
+  
+  // Date range for history (optional)
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  
+  // Service type filter (optional)
+  google.protobuf.StringValue service_type = 4;
+  
+  // Page number for pagination
+  int32 page = 5;
+  
+  // Page size for pagination
+  int32 page_size = 6;
+}
+
+// GetBookingHistoryResponse represents the booking history response
+message GetBookingHistoryResponse {
+  // List of booking history records
+  repeated BookingHistoryRecord history_records = 1;
+  
+  // Total count
+  int32 total_count = 2;
+  
+  // Pagination info
+  int32 page = 3;
+  int32 page_size = 4;
+  int32 total_pages = 5;
+}
+
+// BookingHistoryRecord represents a booking history entry
+message BookingHistoryRecord {
+  // History record ID
+  string history_id = 1;
+  
+  // Booking ID
+  string booking_id = 2;
+  
+  // Action performed
+  string action = 3;
+  
+  // Description of the action
+  string description = 4;
+  
+  // Timestamp of the action
+  google.protobuf.Timestamp timestamp = 5;
+  
+  // User or system that performed the action
+  string performed_by = 6;
+  
+  // Additional metadata
+  google.protobuf.StringValue metadata = 7;
+  
+  // Previous values (for updates)
+  google.protobuf.StringValue previous_values = 8;
+  
+  // New values (for updates)
+  google.protobuf.StringValue new_values = 9;
+}

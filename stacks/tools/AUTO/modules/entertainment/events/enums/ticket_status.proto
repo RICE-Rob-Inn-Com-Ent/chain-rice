@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package entertainment.events.enums;
+
+// Статуси квитків
+enum TicketStatus {
+  TICKET_STATUS_UNSPECIFIED = 0;
+  
+  // Основні статуси
+  AVAILABLE = 1;
+  RESERVED = 2;
+  SOLD = 3;
+  USED = 4;
+  EXPIRED = 5;
+  CANCELLED = 6;
+  REFUNDED = 7;
+  
+  // Статуси процесу продажу
+  PENDING_PAYMENT = 8;
+  PAYMENT_PROCESSING = 9;
+  PAYMENT_FAILED = 10;
+  PAYMENT_COMPLETED = 11;
+  
+  // Статуси доставки
+  DIGITAL_DELIVERED = 12;
+  PHYSICAL_SHIPPED = 13;
+  PHYSICAL_DELIVERED = 14;
+  PICKUP_READY = 15;
+  PICKUP_COMPLETED = 16;
+  
+  // Статуси перевірки
+  VALIDATED = 17;
+  INVALID = 18;
+  DUPLICATE = 19;
+  COUNTERFEIT = 20;
+  
+  // Статуси зміни
+  TRANSFERRED = 21;
+  RESOLD = 22;
+  GIFTED = 23;
+  EXCHANGED = 24;
+  
+  // Спеціальні статуси
+  COMPLIMENTARY = 25;
+  STAFF = 26;
+  PRESS = 27;
+  VIP = 28;
+  EARLY_BIRD = 29;
+  GROUP_DISCOUNT = 30;
+  
+  // Статуси скасування
+  EVENT_CANCELLED = 31;
+  EVENT_POSTPONED = 32;
+  EVENT_RESCHEDULED = 33;
+  VENUE_CHANGED = 34;
+  
+  // Статуси повернення
+  REFUND_REQUESTED = 35;
+  REFUND_APPROVED = 36;
+  REFUND_REJECTED = 37;
+  REFUND_PROCESSING = 38;
+  REFUND_COMPLETED = 39;
+  
+  // Статуси очікування
+  WAITLIST = 40;
+  PRE_SALE = 41;
+  GENERAL_SALE = 42;
+  LAST_MINUTE = 43;
+  
+  // Статуси обмежень
+  AGE_RESTRICTED = 44;
+  MEMBERS_ONLY = 45;
+  INVITATION_ONLY = 46;
+  PASSWORD_PROTECTED = 47;
+  
+  // Статуси технічні
+  SYSTEM_ERROR = 48;
+  PROCESSING_ERROR = 49;
+  VALIDATION_ERROR = 50;
+  DELIVERY_ERROR = 51;
+}

@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package automation.bots.enums;
+
+// Bot Type enumeration
+// Defines the different types of bots supported in the automation system
+enum BotType {
+  // Unspecified bot type
+  BOT_TYPE_UNSPECIFIED = 0;
+  
+  // Web Automation Bots
+  BOT_TYPE_WEB_SCRAPER = 1;              // Web scraping and data extraction bots
+  BOT_TYPE_WEB_TESTER = 2;               // Web application testing bots
+  BOT_TYPE_WEB_MONITOR = 3;              // Website monitoring and alerting bots
+  BOT_TYPE_WEB_CRAWLER = 4;              // Web crawling and indexing bots
+  BOT_TYPE_WEB_FORM_FILLER = 5;          // Automated form filling bots
+  BOT_TYPE_WEB_CLICKER = 6;              // Automated clicking and navigation bots
+  
+  // API Automation Bots
+  BOT_TYPE_API_TESTER = 7;               // API testing and validation bots
+  BOT_TYPE_API_MONITOR = 8;              // API monitoring and health check bots
+  BOT_TYPE_API_INTEGRATOR = 9;           // API integration and data sync bots
+  BOT_TYPE_API_LOAD_TESTER = 10;         // API load testing bots
+  BOT_TYPE_API_SECURITY_TESTER = 11;     // API security testing bots
+  
+  // Data Processing Bots
+  BOT_TYPE_DATA_PROCESSOR = 12;          // Data processing and transformation bots
+  BOT_TYPE_DATA_VALIDATOR = 13;          // Data validation and quality check bots
+  BOT_TYPE_DATA_MIGRATOR = 14;           // Data migration and transfer bots
+  BOT_TYPE_DATA_SYNC = 15;               // Data synchronization bots
+  BOT_TYPE_DATA_CLEANER = 16;            // Data cleaning and normalization bots
+  BOT_TYPE_DATA_AGGREGATOR = 17;         // Data aggregation and summarization bots
+  
+  // File Processing Bots
+  BOT_TYPE_FILE_PROCESSOR = 18;          // File processing and conversion bots
+  BOT_TYPE_FILE_WATCHER = 19;            // File system monitoring bots
+  BOT_TYPE_FILE_UPLOADER = 20;           // Automated file upload bots
+  BOT_TYPE_FILE_DOWNLOADER = 21;         // Automated file download bots
+  BOT_TYPE_FILE_CONVERTER = 22;          // File format conversion bots
+  BOT_TYPE_FILE_ARCHIVER = 23;           // File archiving and compression bots
+  
+  // Communication Bots
+  BOT_TYPE_EMAIL_BOT = 24;               // Email automation and processing bots
+  BOT_TYPE_SMS_BOT = 25;                 // SMS automation and notification bots
+  BOT_TYPE_CHAT_BOT = 26;                // Chat and messaging bots
+  BOT_TYPE_NOTIFICATION_BOT = 27;        // Notification and alerting bots
+  BOT_TYPE_SOCIAL_MEDIA_BOT = 28;        // Social media automation bots
+  BOT_TYPE_SLACK_BOT = 29;               // Slack integration bots
+  BOT_TYPE_TEAMS_BOT = 30;               // Microsoft Teams integration bots
+  BOT_TYPE_DISCORD_BOT = 31;             // Discord integration bots
+  
+  // Database Bots
+  BOT_TYPE_DATABASE_BACKUP = 32;         // Database backup and recovery bots
+  BOT_TYPE_DATABASE_MIGRATOR = 33;       // Database migration bots
+  BOT_TYPE_DATABASE_OPTIMIZER = 34;      // Database optimization bots
+  BOT_TYPE_DATABASE_MONITOR = 35;        // Database monitoring bots
+  BOT_TYPE_DATABASE_CLEANER = 36;        // Database cleanup and maintenance bots
+  
+  // Infrastructure Bots
+  BOT_TYPE_SERVER_MONITOR = 37;          // Server monitoring and health check bots
+  BOT_TYPE_DEPLOYMENT_BOT = 38;          // Automated deployment bots
+  BOT_TYPE_BACKUP_BOT = 39;              // System backup bots
+  BOT_TYPE_LOG_ANALYZER = 40;            // Log analysis and monitoring bots
+  BOT_TYPE_PERFORMANCE_MONITOR = 41;     // Performance monitoring bots
+  BOT_TYPE_SECURITY_SCANNER = 42;        // Security scanning and vulnerability assessment bots
+  
+  // Business Process Bots
+  BOT_TYPE_WORKFLOW_BOT = 43;            // Workflow automation bots
+  BOT_TYPE_APPROVAL_BOT = 44;            // Approval process automation bots
+  BOT_TYPE_REPORTING_BOT = 45;           // Automated reporting bots
+  BOT_TYPE_SCHEDULING_BOT = 46;          // Task scheduling and reminder bots
+  BOT_TYPE_INVOICE_BOT = 47;             // Invoice processing bots
+  BOT_TYPE_HR_BOT = 48;                  // Human resources automation bots
+  
+  // AI/ML Bots
+  BOT_TYPE_AI_TRAINER = 49;              // AI model training bots
+  BOT_TYPE_AI_PREDICTOR = 50;            // AI prediction and inference bots
+  BOT_TYPE_AI_OPTIMIZER = 51;            // AI model optimization bots
+  BOT_TYPE_AI_EVALUATOR = 52;            // AI model evaluation bots
+  BOT_TYPE_ML_PIPELINE = 53;             // Machine learning pipeline bots
+  BOT_TYPE_AI_DATA_PREPARER = 54;        // AI data preparation bots
+  
+  // IoT Bots
+  BOT_TYPE_IOT_SENSOR_READER = 55;       // IoT sensor data reading bots
+  BOT_TYPE_IOT_DEVICE_CONTROLLER = 56;   // IoT device control bots
+  BOT_TYPE_IOT_DATA_AGGREGATOR = 57;     // IoT data aggregation bots
+  BOT_TYPE_IOT_ALERT_HANDLER = 58;       // IoT alert handling bots
+  
+  // Cloud Bots
+  BOT_TYPE_CLOUD_MIGRATOR = 59;          // Cloud migration bots
+  BOT_TYPE_CLOUD_OPTIMIZER = 60;         // Cloud resource optimization bots
+  BOT_TYPE_CLOUD_COST_OPTIMIZER = 61;    // Cloud cost optimization bots
+  BOT_TYPE_CLOUD_SECURITY_SCANNER = 62;  // Cloud security scanning bots
+  
+  // Custom Bots
+  BOT_TYPE_CUSTOM = 63;                  // Custom user-defined bots
+  BOT_TYPE_HYBRID = 64;                  // Hybrid bots combining multiple types
+  BOT_TYPE_PLUGIN = 65;                  // Plugin-based bots
+  BOT_TYPE_SCRIPT = 66;                  // Script-based bots
+  BOT_TYPE_MICROSERVICE = 67;            // Microservice-based bots
+}

@@ -1,0 +1,250 @@
+syntax = "proto3";
+
+package settings.preferences.messages;
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "settings/preferences/enums/preference_type.proto";
+
+// Request message for creating a new preference
+message CreatePreferenceRequest {
+  // The user ID this preference belongs to
+  string user_id = 1;
+  
+  // The preference key identifier
+  string preference_key = 2;
+  
+  // The preference value
+  google.protobuf.Value value = 3;
+  
+  // The data type of the preference value
+  settings.preferences.enums.PreferenceType type = 4;
+  
+  // Optional description of what this preference controls
+  string description = 5;
+  
+  // Optional default value for the preference
+  google.protobuf.Value default_value = 6;
+  
+  // Optional validation rules as JSON schema
+  google.protobuf.Struct validation_rules = 7;
+  
+  // Whether this preference is required
+  bool is_required = 8;
+  
+  // Whether this preference is sensitive/encrypted
+  bool is_sensitive = 9;
+  
+  // Optional category for organizing preferences
+  string category = 10;
+  
+  // Optional tags for categorization and search
+  repeated string tags = 11;
+  
+  // Optional metadata about the preference
+  map<string, string> metadata = 12;
+  
+  // Whether this preference is inherited from a parent scope
+  bool is_inherited = 13;
+  
+  // Source of inheritance (e.g., "organization", "team", "global")
+  string inheritance_source = 14;
+}
+
+// Request message for retrieving a specific preference
+message GetPreferenceRequest {
+  // The unique identifier of the preference
+  string id = 1;
+  
+  // Optional: include metadata in response
+  bool include_metadata = 2;
+  
+  // Optional: include validation rules in response
+  bool include_validation_rules = 3;
+}
+
+// Request message for retrieving a preference by user and key
+message GetPreferenceByUserAndKeyRequest {
+  // The user ID
+  string user_id = 1;
+  
+  // The preference key
+  string preference_key = 2;
+  
+  // Optional: include metadata in response
+  bool include_metadata = 3;
+}
+
+// Request message for listing user preferences
+message ListUserPreferencesRequest {
+  // The user ID to get preferences for
+  string user_id = 1;
+  
+  // Optional filter by preference key pattern
+  string key_filter = 2;
+  
+  // Optional filter by type
+  settings.preferences.enums.PreferenceType type_filter = 3;
+  
+  // Optional filter by category
+  string category_filter = 4;
+  
+  // Optional filter by tags
+  repeated string tag_filters = 5;
+  
+  // Optional filter by whether preference is inherited
+  bool is_inherited_filter = 6;
+  
+  // Optional filter by inheritance source
+  string inheritance_source_filter = 7;
+  
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 8;
+  
+  // Page token for pagination
+  string page_token = 9;
+  
+  // Sort order: "preference_key", "type", "category", "created_at", "updated_at"
+  string order_by = 10;
+  
+  // Sort direction: "asc" or "desc" (default: "asc")
+  string sort_direction = 11;
+  
+  // Whether to include sensitive preferences in results
+  bool include_sensitive = 12;
+}
+
+// Request message for updating an existing preference
+message UpdatePreferenceRequest {
+  // The unique identifier of the preference to update
+  string id = 1;
+  
+  // The updated preference value
+  google.protobuf.Value value = 2;
+  
+  // Optional description update
+  string description = 3;
+  
+  // Optional validation rules update
+  google.protobuf.Struct validation_rules = 4;
+  
+  // Optional category update
+  string category = 5;
+  
+  // Optional tags update
+  repeated string tags = 6;
+  
+  // Optional metadata update
+  map<string, string> metadata = 7;
+  
+  // Field mask to specify which fields to update
+  google.protobuf.FieldMask update_mask = 8;
+}
+
+// Request message for deleting a preference
+message DeletePreferenceRequest {
+  // The unique identifier of the preference to delete
+  string id = 1;
+  
+  // Optional: force deletion even if preference is referenced elsewhere
+  bool force = 2;
+}
+
+// Request message for bulk operations on preferences
+message BulkPreferencesRequest {
+  // The user ID for the preferences
+  string user_id = 1;
+  
+  // List of preferences to create/update
+  repeated CreatePreferenceRequest preferences = 2;
+  
+  // Operation type: "create", "update", or "upsert"
+  string operation = 3;
+}
+
+// Request message for searching preferences by content
+message SearchPreferencesRequest {
+  // The user ID to search preferences for
+  string user_id = 1;
+  
+  // Search query string
+  string query = 2;
+  
+  // Optional type filter for search
+  settings.preferences.enums.PreferenceType type_filter = 3;
+  
+  // Optional category filter for search
+  string category_filter = 4;
+  
+  // Search in: "preference_key", "description", "category", "tags", or "all"
+  string search_in = 5;
+  
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 6;
+  
+  // Page token for pagination
+  string page_token = 7;
+  
+  // Whether to include sensitive preferences in search results
+  bool include_sensitive = 8;
+}
+
+// Request message for validating preference values
+message ValidatePreferenceRequest {
+  // The user ID
+  string user_id = 1;
+  
+  // The preference key to validate
+  string preference_key = 2;
+  
+  // The value to validate
+  google.protobuf.Value value = 3;
+  
+  // The preference type context
+  settings.preferences.enums.PreferenceType type = 4;
+}
+
+// Request message for getting preference schema/definition
+message GetPreferenceSchemaRequest {
+  // The preference key to get schema for
+  string preference_key = 1;
+  
+  // Optional user ID context
+  string user_id = 2;
+}
+
+// Request message for copying preferences between users
+message CopyPreferencesRequest {
+  // Source user ID
+  string source_user_id = 1;
+  
+  // Target user ID
+  string target_user_id = 2;
+  
+  // Optional filter by preference keys
+  repeated string preference_keys = 3;
+  
+  // Optional filter by categories
+  repeated string categories = 4;
+  
+  // Whether to overwrite existing preferences in target user
+  bool overwrite_existing = 5;
+  
+  // Whether to copy sensitive preferences
+  bool copy_sensitive = 6;
+}
+
+// Request message for resetting preferences to defaults
+message ResetPreferencesRequest {
+  // The user ID to reset preferences for
+  string user_id = 1;
+  
+  // Optional filter by preference keys
+  repeated string preference_keys = 2;
+  
+  // Optional filter by categories
+  repeated string categories = 3;
+  
+  // Whether to reset sensitive preferences
+  bool reset_sensitive = 4;
+}

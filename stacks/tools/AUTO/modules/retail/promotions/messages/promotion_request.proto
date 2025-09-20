@@ -1,0 +1,232 @@
+syntax = "proto3";
+
+package retail.promotions.messages;
+
+import "promotions/enums/promotion_type.proto";
+import "promotions/enums/promotion_status.proto";
+import "google/protobuf/timestamp.proto";
+
+// Promotion represents a retail promotion or discount
+message Promotion {
+  // Unique identifier for the promotion
+  string id = 1;
+  
+  // Promotion name
+  string name = 2;
+  
+  // Promotion description
+  string description = 3;
+  
+  // Type of promotion
+  retail.promotions.enums.PromotionType type = 4;
+  
+  // Current status of the promotion
+  retail.promotions.enums.PromotionStatus status = 5;
+  
+  // Discount percentage (for percentage-based promotions)
+  double discount_percent = 6;
+  
+  // Fixed discount amount (for fixed amount promotions)
+  double discount_amount = 7;
+  
+  // Minimum purchase amount required
+  double min_purchase_amount = 8;
+  
+  // Maximum discount amount (cap for percentage discounts)
+  double max_discount_amount = 9;
+  
+  // Promotion start date
+  google.protobuf.Timestamp start_date = 10;
+  
+  // Promotion end date
+  google.protobuf.Timestamp end_date = 11;
+  
+  // Product IDs this promotion applies to (empty means all products)
+  repeated string product_ids = 12;
+  
+  // Category IDs this promotion applies to (empty means all categories)
+  repeated string category_ids = 13;
+  
+  // Store IDs this promotion applies to (empty means all stores)
+  repeated string store_ids = 14;
+  
+  // Customer segment IDs this promotion applies to (empty means all customers)
+  repeated string customer_segment_ids = 15;
+  
+  // Maximum number of uses per customer
+  int32 max_uses_per_customer = 16;
+  
+  // Total maximum number of uses
+  int32 max_total_uses = 17;
+  
+  // Current number of uses
+  int32 current_uses = 18;
+  
+  // Promotion code (optional)
+  string promotion_code = 19;
+  
+  // Timestamp when promotion was created
+  google.protobuf.Timestamp created_at = 20;
+  
+  // Timestamp when promotion was last updated
+  google.protobuf.Timestamp updated_at = 21;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 22;
+}
+
+// CreatePromotionRequest contains the data needed to create a new promotion
+message CreatePromotionRequest {
+  // Promotion name (required)
+  string name = 1;
+  
+  // Promotion description (optional)
+  string description = 2;
+  
+  // Type of promotion (required)
+  retail.promotions.enums.PromotionType type = 3;
+  
+  // Discount percentage (optional, for percentage-based promotions)
+  double discount_percent = 4;
+  
+  // Fixed discount amount (optional, for fixed amount promotions)
+  double discount_amount = 5;
+  
+  // Minimum purchase amount required (optional)
+  double min_purchase_amount = 6;
+  
+  // Maximum discount amount (optional)
+  double max_discount_amount = 7;
+  
+  // Promotion start date (required)
+  google.protobuf.Timestamp start_date = 8;
+  
+  // Promotion end date (required)
+  google.protobuf.Timestamp end_date = 9;
+  
+  // Product IDs this promotion applies to (optional)
+  repeated string product_ids = 10;
+  
+  // Category IDs this promotion applies to (optional)
+  repeated string category_ids = 11;
+  
+  // Store IDs this promotion applies to (optional)
+  repeated string store_ids = 12;
+  
+  // Customer segment IDs this promotion applies to (optional)
+  repeated string customer_segment_ids = 13;
+  
+  // Maximum number of uses per customer (optional)
+  int32 max_uses_per_customer = 14;
+  
+  // Total maximum number of uses (optional)
+  int32 max_total_uses = 15;
+  
+  // Promotion code (optional)
+  string promotion_code = 16;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 17;
+}
+
+// GetPromotionRequest contains the identifier to retrieve a specific promotion
+message GetPromotionRequest {
+  // Unique identifier of the promotion to retrieve
+  string promotion_id = 1;
+}
+
+// ListPromotionsRequest contains parameters for listing promotions
+message ListPromotionsRequest {
+  // Maximum number of promotions to return (default: 50, max: 1000)
+  int32 page_size = 1;
+  
+  // Token to retrieve the next page of results
+  string page_token = 2;
+  
+  // Filter by promotion type
+  retail.promotions.enums.PromotionType type = 3;
+  
+  // Filter by promotion status
+  retail.promotions.enums.PromotionStatus status = 4;
+  
+  // Filter by product ID
+  string product_id = 5;
+  
+  // Filter by category ID
+  string category_id = 6;
+  
+  // Filter by store ID
+  string store_id = 7;
+  
+  // Filter by active promotions only
+  bool active_only = 8;
+  
+  // Search term to filter promotions by name or description
+  string search_term = 9;
+}
+
+// UpdatePromotionRequest contains the data needed to update an existing promotion
+message UpdatePromotionRequest {
+  // Unique identifier of the promotion to update
+  string promotion_id = 1;
+  
+  // Updated promotion name (optional)
+  string name = 2;
+  
+  // Updated promotion description (optional)
+  string description = 3;
+  
+  // Updated promotion type (optional)
+  retail.promotions.enums.PromotionType type = 4;
+  
+  // Updated promotion status (optional)
+  retail.promotions.enums.PromotionStatus status = 5;
+  
+  // Updated discount percentage (optional)
+  double discount_percent = 6;
+  
+  // Updated discount amount (optional)
+  double discount_amount = 7;
+  
+  // Updated minimum purchase amount (optional)
+  double min_purchase_amount = 8;
+  
+  // Updated maximum discount amount (optional)
+  double max_discount_amount = 9;
+  
+  // Updated start date (optional)
+  google.protobuf.Timestamp start_date = 10;
+  
+  // Updated end date (optional)
+  google.protobuf.Timestamp end_date = 11;
+  
+  // Updated product IDs (optional)
+  repeated string product_ids = 12;
+  
+  // Updated category IDs (optional)
+  repeated string category_ids = 13;
+  
+  // Updated store IDs (optional)
+  repeated string store_ids = 14;
+  
+  // Updated customer segment IDs (optional)
+  repeated string customer_segment_ids = 15;
+  
+  // Updated maximum uses per customer (optional)
+  int32 max_uses_per_customer = 16;
+  
+  // Updated maximum total uses (optional)
+  int32 max_total_uses = 17;
+  
+  // Updated promotion code (optional)
+  string promotion_code = 18;
+  
+  // Updated metadata (optional)
+  map<string, string> metadata = 19;
+}
+
+// DeletePromotionRequest contains the identifier to delete a specific promotion
+message DeletePromotionRequest {
+  // Unique identifier of the promotion to delete
+  string promotion_id = 1;
+}

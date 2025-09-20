@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package healthcare.medical_records.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/medical-records/messages";
+
+// Lab test status
+enum LabTestStatus {
+  LAB_TEST_STATUS_UNSPECIFIED = 0;
+  LAB_TEST_STATUS_PENDING = 1;
+  LAB_TEST_STATUS_IN_PROGRESS = 2;
+  LAB_TEST_STATUS_COMPLETED = 3;
+  LAB_TEST_STATUS_CANCELLED = 4;
+  LAB_TEST_STATUS_FAILED = 5;
+}
+
+// Lab test priority
+enum LabTestPriority {
+  LAB_TEST_PRIORITY_UNSPECIFIED = 0;
+  LAB_TEST_PRIORITY_ROUTINE = 1;
+  LAB_TEST_PRIORITY_URGENT = 2;
+  LAB_TEST_PRIORITY_STAT = 3;
+}
+
+// Lab test result status
+enum LabResultStatus {
+  LAB_RESULT_STATUS_UNSPECIFIED = 0;
+  LAB_RESULT_STATUS_NORMAL = 1;
+  LAB_RESULT_STATUS_ABNORMAL = 2;
+  LAB_RESULT_STATUS_CRITICAL = 3;
+  LAB_RESULT_STATUS_PENDING = 4;
+}
+
+// Lab test parameter
+message LabParameter {
+  string parameter_id = 1;
+  string name = 2;
+  string value = 3;
+  string unit = 4;
+  string reference_range = 5;
+  LabResultStatus status = 6;
+  string notes = 7;
+}
+
+// Lab test result
+message LabResult {
+  string result_id = 1;
+  string test_id = 2;
+  string patient_id = 3;
+  string doctor_id = 4;
+  string lab_id = 5;
+  string test_name = 6;
+  string test_code = 7;
+  LabTestStatus status = 8;
+  repeated LabParameter parameters = 9;
+  string overall_result = 10;
+  string interpretation = 11;
+  string recommendations = 12;
+  google.protobuf.Timestamp collected_at = 13;
+  google.protobuf.Timestamp processed_at = 14;
+  google.protobuf.Timestamp reported_at = 15;
+  string collected_by = 16;
+  string processed_by = 17;
+  string reported_by = 18;
+  string notes = 19;
+  repeated string attachments = 20; // File IDs or URLs
+}
+
+// Lab test request
+message LabTestRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  string appointment_id = 4;
+  string test_name = 5;
+  string test_code = 6;
+  LabTestPriority priority = 7;
+  string clinical_notes = 8;
+  string instructions = 9;
+  google.protobuf.Timestamp requested_date = 10;
+  google.protobuf.Timestamp scheduled_date = 11;
+  string lab_id = 12;
+}
+
+// Lab test
+message LabTest {
+  string test_id = 1;
+  string patient_id = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  string appointment_id = 5;
+  string test_name = 6;
+  string test_code = 7;
+  LabTestStatus status = 8;
+  LabTestPriority priority = 9;
+  string clinical_notes = 10;
+  string instructions = 11;
+  google.protobuf.Timestamp requested_date = 12;
+  google.protobuf.Timestamp scheduled_date = 13;
+  google.protobuf.Timestamp completed_date = 14;
+  string lab_id = 15;
+  string requested_by = 16;
+  string completed_by = 17;
+  LabResult result = 18;
+  string notes = 19;
+}
+
+// Lab test response
+message LabTestResponse {
+  bool success = 1;
+  string message = 2;
+  LabTest lab_test = 3;
+}
+
+// List lab tests request
+message ListLabTestsRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  string lab_id = 4;
+  LabTestStatus status = 5;
+  LabTestPriority priority = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  int32 page_size = 9;
+  string page_token = 10;
+}
+
+// List lab tests response
+message ListLabTestsResponse {
+  repeated LabTest lab_tests = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Lab test summary
+message LabTestSummary {
+  string patient_id = 1;
+  int32 total_tests = 2;
+  int32 pending_tests = 3;
+  int32 completed_tests = 4;
+  int32 abnormal_results = 5;
+  int32 critical_results = 6;
+  google.protobuf.Timestamp last_test_date = 7;
+}
+
+// Lab result alert
+message LabResultAlert {
+  string alert_id = 1;
+  string result_id = 2;
+  string patient_id = 3;
+  string doctor_id = 4;
+  string alert_type = 5; // critical, abnormal, overdue
+  string message = 6;
+  bool acknowledged = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp acknowledged_at = 9;
+  string acknowledged_by = 10;
+}

@@ -1,0 +1,856 @@
+syntax = "proto3";
+
+package tourism.tours.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/tours/messages/tour_request.proto";
+import "tourism/tours/messages/tour_response.proto";
+import "tourism/tours/enums/tour_type.proto";
+import "tourism/tours/enums/tour_status.proto";
+
+// TourService provides comprehensive tour management functionality
+service TourService {
+  // Create a new tour
+  rpc CreateTour(CreateTourRequest) returns (CreateTourResponse);
+  
+  // Retrieve a specific tour by ID
+  rpc GetTour(GetTourRequest) returns (GetTourResponse);
+  
+  // List tours with optional filtering and pagination
+  rpc ListTours(ListToursRequest) returns (ListToursResponse);
+  
+  // Update an existing tour
+  rpc UpdateTour(UpdateTourRequest) returns (UpdateTourResponse);
+  
+  // Delete a tour
+  rpc DeleteTour(DeleteTourRequest) returns (DeleteTourResponse);
+  
+  // Search for tours based on criteria
+  rpc SearchTours(SearchToursRequest) returns (SearchToursResponse);
+  
+  // Get tour analytics
+  rpc GetTourAnalytics(GetTourAnalyticsRequest) returns (GetTourAnalyticsResponse);
+  
+  // Get tour recommendations
+  rpc GetTourRecommendations(GetTourRecommendationsRequest) returns (GetTourRecommendationsResponse);
+  
+  // Get tour availability
+  rpc GetTourAvailability(GetTourAvailabilityRequest) returns (GetTourAvailabilityResponse);
+  
+  // Book tour participants
+  rpc BookTourParticipants(BookTourParticipantsRequest) returns (BookTourParticipantsResponse);
+  
+  // Cancel tour participants
+  rpc CancelTourParticipants(CancelTourParticipantsRequest) returns (CancelTourParticipantsResponse);
+  
+  // Get tour reviews
+  rpc GetTourReviews(GetTourReviewsRequest) returns (GetTourReviewsResponse);
+  
+  // Add tour review
+  rpc AddTourReview(AddTourReviewRequest) returns (AddTourReviewResponse);
+  
+  // Get tour guides
+  rpc GetTourGuides(GetTourGuidesRequest) returns (GetTourGuidesResponse);
+  
+  // Get popular tours
+  rpc GetPopularTours(GetPopularToursRequest) returns (GetPopularToursResponse);
+}
+
+// GetTourAnalyticsRequest represents a request to get tour analytics
+message GetTourAnalyticsRequest {
+  // Tour ID to get analytics for (optional)
+  google.protobuf.StringValue tour_id = 1;
+  
+  // Date range for analytics
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  
+  // Analytics type (bookings, revenue, reviews, popularity)
+  string analytics_type = 4;
+  
+  // Location filter (optional)
+  google.protobuf.StringValue location = 5;
+  
+  // Tour type filter (optional)
+  tourism.tours.enums.TourType tour_type = 6;
+}
+
+// GetTourAnalyticsResponse represents tour analytics response
+message GetTourAnalyticsResponse {
+  // Analytics period
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  
+  // Analytics type
+  string analytics_type = 3;
+  
+  // Key metrics
+  TourMetrics metrics = 4;
+  
+  // Time series data
+  repeated TourAnalyticsDataPoint data_points = 5;
+  
+  // Tour type performance
+  repeated TourTypePerformance tour_type_performance = 6;
+  
+  // Popular destinations
+  repeated PopularDestination popular_destinations = 7;
+  
+  // Customer demographics
+  CustomerDemographics customer_demographics = 8;
+}
+
+// TourMetrics represents key tour metrics
+message TourMetrics {
+  // Total tours conducted
+  int32 total_tours = 1;
+  
+  // Total participants
+  int32 total_participants = 2;
+  
+  // Total revenue
+  int64 total_revenue = 3;
+  
+  // Average participants per tour
+  google.protobuf.DoubleValue average_participants_per_tour = 4;
+  
+  // Customer satisfaction score
+  google.protobuf.DoubleValue customer_satisfaction_score = 5;
+  
+  // Booking conversion rate
+  google.protobuf.DoubleValue booking_conversion_rate = 6;
+  
+  // Cancellation rate
+  google.protobuf.DoubleValue cancellation_rate = 7;
+  
+  // Currency
+  string currency = 8;
+}
+
+// TourAnalyticsDataPoint represents a single analytics data point
+message TourAnalyticsDataPoint {
+  // Timestamp for this data point
+  google.protobuf.Timestamp timestamp = 1;
+  
+  // Number of tours
+  int32 tour_count = 2;
+  
+  // Number of participants
+  int32 participants = 3;
+  
+  // Revenue
+  int64 revenue = 4;
+  
+  // Customer satisfaction
+  google.protobuf.DoubleValue customer_satisfaction = 5;
+  
+  // Booking rate
+  google.protobuf.DoubleValue booking_rate = 6;
+}
+
+// TourTypePerformance represents performance metrics for a tour type
+message TourTypePerformance {
+  // Tour type
+  tourism.tours.enums.TourType tour_type = 1;
+  
+  // Number of tours
+  int32 tour_count = 2;
+  
+  // Total participants
+  int32 total_participants = 3;
+  
+  // Total revenue
+  int64 revenue = 4;
+  
+  // Average rating
+  google.protobuf.DoubleValue average_rating = 5;
+  
+  // Popularity ranking
+  int32 popularity_ranking = 6;
+  
+  // Growth rate
+  google.protobuf.DoubleValue growth_rate = 7;
+}
+
+// PopularDestination represents popular destination information
+message PopularDestination {
+  // Destination name
+  string destination = 1;
+  
+  // Number of tours
+  int32 tour_count = 2;
+  
+  // Total participants
+  int32 total_participants = 3;
+  
+  // Average rating
+  google.protobuf.DoubleValue average_rating = 4;
+  
+  // Popularity score
+  google.protobuf.DoubleValue popularity_score = 5;
+  
+  // Seasonal trends
+  google.protobuf.StringValue seasonal_trends = 6;
+}
+
+// CustomerDemographics represents customer demographic information
+message CustomerDemographics {
+  // Age group distribution
+  repeated AgeGroupDistribution age_groups = 1;
+  
+  // Traveler type distribution
+  repeated TravelerTypeDistribution traveler_types = 2;
+  
+  // Geographic distribution
+  repeated GeographicDistribution geographic_distribution = 3;
+  
+  // Repeat customer rate
+  google.protobuf.DoubleValue repeat_customer_rate = 4;
+  
+  // Average group size
+  google.protobuf.DoubleValue average_group_size = 5;
+}
+
+// AgeGroupDistribution represents age group distribution
+message AgeGroupDistribution {
+  // Age group range
+  string age_group = 1;
+  
+  // Percentage of participants
+  google.protobuf.DoubleValue percentage = 2;
+  
+  // Number of participants
+  int32 participant_count = 3;
+}
+
+// TravelerTypeDistribution represents traveler type distribution
+message TravelerTypeDistribution {
+  // Traveler type
+  string traveler_type = 1;
+  
+  // Percentage of participants
+  google.protobuf.DoubleValue percentage = 2;
+  
+  // Number of participants
+  int32 participant_count = 3;
+}
+
+// GeographicDistribution represents geographic distribution
+message GeographicDistribution {
+  // Country or region
+  string location = 1;
+  
+  // Percentage of participants
+  google.protobuf.DoubleValue percentage = 2;
+  
+  // Number of participants
+  int32 participant_count = 3;
+}
+
+// GetTourRecommendationsRequest represents a request to get tour recommendations
+message GetTourRecommendationsRequest {
+  // User preferences
+  UserTourPreferences preferences = 1;
+  
+  // Travel dates
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  
+  // Budget constraints
+  google.protobuf.DoubleValue max_budget_per_person = 4;
+  
+  // Location preferences
+  google.protobuf.StringValue preferred_location = 5;
+  
+  // Number of participants
+  int32 participants = 6;
+  
+  // Number of recommendations to return
+  int32 max_recommendations = 7;
+}
+
+// UserTourPreferences represents user tour preferences
+message UserTourPreferences {
+  // Preferred tour types
+  repeated tourism.tours.enums.TourType preferred_types = 1;
+  
+  // Preferred difficulty levels
+  repeated string preferred_difficulty_levels = 2;
+  
+  // Preferred languages
+  repeated string preferred_languages = 3;
+  
+  // Preferred duration range
+  google.protobuf.DoubleValue min_duration_hours = 4;
+  google.protobuf.DoubleValue max_duration_hours = 5;
+  
+  // Traveler type
+  google.protobuf.StringValue traveler_type = 6;
+  
+  // Price sensitivity (low, medium, high)
+  google.protobuf.StringValue price_sensitivity = 7;
+  
+  // Interest categories
+  repeated string interest_categories = 8;
+  
+  // Physical activity level
+  google.protobuf.StringValue activity_level = 9;
+}
+
+// GetTourRecommendationsResponse represents tour recommendations response
+message GetTourRecommendationsResponse {
+  // List of recommended tours
+  repeated TourRecommendation recommendations = 1;
+  
+  // Recommendation reasoning
+  repeated string reasoning = 2;
+  
+  // Alternative options
+  repeated TourRecommendation alternatives = 3;
+  
+  // Recommendation confidence score
+  google.protobuf.DoubleValue confidence_score = 4;
+  
+  // Seasonal recommendations
+  repeated SeasonalRecommendation seasonal_recommendations = 5;
+}
+
+// TourRecommendation represents a tour recommendation
+message TourRecommendation {
+  // Tour summary
+  TourSummary tour = 1;
+  
+  // Recommendation score (0-100)
+  google.protobuf.DoubleValue recommendation_score = 2;
+  
+  // Reasons for recommendation
+  repeated string reasons = 3;
+  
+  // Best available price
+  int64 best_available_price = 4;
+  
+  // Currency
+  string currency = 5;
+  
+  // Booking urgency
+  google.protobuf.StringValue booking_urgency = 6;
+  
+  // Special offers
+  repeated string special_offers = 7;
+  
+  // Similar tours
+  repeated TourSummary similar_tours = 8;
+}
+
+// SeasonalRecommendation represents seasonal tour recommendations
+message SeasonalRecommendation {
+  // Season
+  string season = 1;
+  
+  // Recommended tours for this season
+  repeated TourSummary recommended_tours = 2;
+  
+  // Seasonal highlights
+  repeated string seasonal_highlights = 3;
+  
+  // Best time to book
+  google.protobuf.StringValue best_booking_time = 4;
+}
+
+// GetTourAvailabilityRequest represents a request to get tour availability
+message GetTourAvailabilityRequest {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Date range for availability check
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  
+  // Number of participants
+  int32 participants = 4;
+}
+
+// GetTourAvailabilityResponse represents tour availability response
+message GetTourAvailabilityResponse {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Availability status
+  string availability_status = 2;
+  
+  // Available dates
+  repeated TourAvailabilityDate available_dates = 3;
+  
+  // Next available date
+  google.protobuf.Timestamp next_available_date = 4;
+  
+  // Availability calendar
+  google.protobuf.StringValue availability_calendar = 5;
+  
+  // Booking restrictions
+  google.protobuf.StringValue booking_restrictions = 6;
+  
+  // Minimum booking notice
+  google.protobuf.DoubleValue minimum_booking_notice_hours = 7;
+}
+
+// TourAvailabilityDate represents availability for a specific date
+message TourAvailabilityDate {
+  // Date
+  google.protobuf.Timestamp date = 1;
+  
+  // Available spots
+  int32 available_spots = 2;
+  
+  // Total capacity
+  int32 total_capacity = 3;
+  
+  // Price for this date
+  int64 price_per_person = 4;
+  
+  // Currency
+  string currency = 5;
+  
+  // Special pricing notes
+  google.protobuf.StringValue pricing_notes = 6;
+  
+  // Booking deadline
+  google.protobuf.Timestamp booking_deadline = 7;
+}
+
+// BookTourParticipantsRequest represents a request to book tour participants
+message BookTourParticipantsRequest {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Tour date
+  google.protobuf.Timestamp tour_date = 2;
+  
+  // Number of participants to book
+  int32 participants = 3;
+  
+  // Customer information
+  repeated CustomerInfo customers = 4;
+  
+  // Special requirements
+  google.protobuf.StringValue special_requirements = 5;
+  
+  // Contact information
+  ContactInfo contact_info = 6;
+  
+  // Payment information
+  google.protobuf.StringValue payment_info = 7;
+}
+
+// CustomerInfo represents customer information for booking
+message CustomerInfo {
+  // Customer name
+  string customer_name = 1;
+  
+  // Customer email
+  string customer_email = 2;
+  
+  // Customer phone
+  google.protobuf.StringValue customer_phone = 3;
+  
+  // Age
+  google.protobuf.DoubleValue age = 4;
+  
+  // Dietary restrictions
+  google.protobuf.StringValue dietary_restrictions = 5;
+  
+  // Medical conditions
+  google.protobuf.StringValue medical_conditions = 6;
+  
+  // Emergency contact
+  google.protobuf.StringValue emergency_contact = 7;
+}
+
+// ContactInfo represents contact information
+message ContactInfo {
+  // Primary contact name
+  string primary_contact_name = 1;
+  
+  // Primary contact email
+  string primary_contact_email = 2;
+  
+  // Primary contact phone
+  string primary_contact_phone = 3;
+  
+  // Emergency contact
+  google.protobuf.StringValue emergency_contact = 4;
+  
+  // Preferred contact method
+  google.protobuf.StringValue preferred_contact_method = 5;
+}
+
+// BookTourParticipantsResponse represents the response after booking tour participants
+message BookTourParticipantsResponse {
+  // Booking ID
+  string booking_id = 1;
+  
+  // Tour ID
+  string tour_id = 2;
+  
+  // Success message
+  string message = 3;
+  
+  // Booking confirmation number
+  string confirmation_number = 4;
+  
+  // Booking timestamp
+  google.protobuf.Timestamp booked_at = 5;
+  
+  // Total amount
+  int64 total_amount = 6;
+  
+  // Currency
+  string currency = 7;
+  
+  // Booking details
+  google.protobuf.StringValue booking_details = 8;
+  
+  // Confirmation instructions
+  google.protobuf.StringValue confirmation_instructions = 9;
+}
+
+// CancelTourParticipantsRequest represents a request to cancel tour participants
+message CancelTourParticipantsRequest {
+  // Booking ID to cancel
+  string booking_id = 1;
+  
+  // Cancellation reason
+  google.protobuf.StringValue reason = 2;
+  
+  // Number of participants to cancel
+  int32 participants_to_cancel = 3;
+  
+  // Refund preference
+  google.protobuf.StringValue refund_preference = 4;
+}
+
+// CancelTourParticipantsResponse represents the response after cancelling tour participants
+message CancelTourParticipantsResponse {
+  // Booking ID
+  string booking_id = 1;
+  
+  // Success message
+  string message = 2;
+  
+  // Cancellation timestamp
+  google.protobuf.Timestamp cancelled_at = 3;
+  
+  // Refund information
+  google.protobuf.StringValue refund_info = 4;
+  
+  // Cancellation fees
+  google.protobuf.StringValue cancellation_fees = 5;
+  
+  // Updated booking status
+  string updated_booking_status = 6;
+}
+
+// GetTourReviewsRequest represents a request to get tour reviews
+message GetTourReviewsRequest {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Review filter options
+  TourReviewFilter filter = 2;
+  
+  // Page number for pagination
+  int32 page = 3;
+  
+  // Page size for pagination
+  int32 page_size = 4;
+}
+
+// TourReviewFilter represents tour review filtering options
+message TourReviewFilter {
+  // Minimum rating
+  google.protobuf.DoubleValue min_rating = 1;
+  
+  // Maximum rating
+  google.protobuf.DoubleValue max_rating = 2;
+  
+  // Review sources
+  repeated string sources = 3;
+  
+  // Traveler types
+  repeated string traveler_types = 4;
+  
+  // Date range
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  
+  // Languages
+  repeated string languages = 7;
+}
+
+// GetTourReviewsResponse represents tour reviews response
+message GetTourReviewsResponse {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Reviews
+  repeated TourReview reviews = 2;
+  
+  // Total count
+  int32 total_count = 3;
+  
+  // Pagination info
+  int32 page = 4;
+  int32 page_size = 5;
+  int32 total_pages = 6;
+  
+  // Review summary
+  TourReviews review_summary = 7;
+  
+  // Review statistics
+  TourReviewStatistics review_statistics = 8;
+}
+
+// TourReviewStatistics represents tour review statistics
+message TourReviewStatistics {
+  // Average rating
+  google.protobuf.DoubleValue average_rating = 1;
+  
+  // Rating distribution
+  repeated TourRatingDistribution rating_distribution = 2;
+  
+  // Review count by source
+  repeated TourReviewSourceCount review_sources = 3;
+  
+  // Most mentioned highlights
+  repeated string top_mentioned_highlights = 4;
+  
+  // Common complaints
+  repeated string common_complaints = 5;
+  
+  // Common praises
+  repeated string common_praises = 6;
+  
+  // Guide performance rating
+  google.protobuf.DoubleValue guide_performance_rating = 7;
+}
+
+// TourRatingDistribution represents tour rating distribution
+message TourRatingDistribution {
+  // Rating value
+  google.protobuf.DoubleValue rating = 1;
+  
+  // Count of reviews with this rating
+  int32 count = 2;
+  
+  // Percentage of total reviews
+  google.protobuf.DoubleValue percentage = 3;
+}
+
+// TourReviewSourceCount represents tour review count by source
+message TourReviewSourceCount {
+  // Review source
+  string source = 1;
+  
+  // Number of reviews
+  int32 count = 2;
+  
+  // Average rating from this source
+  google.protobuf.DoubleValue average_rating = 3;
+}
+
+// AddTourReviewRequest represents a request to add a tour review
+message AddTourReviewRequest {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Customer ID
+  string customer_id = 2;
+  
+  // Booking ID
+  string booking_id = 3;
+  
+  // Overall rating
+  google.protobuf.DoubleValue overall_rating = 4;
+  
+  // Review title
+  google.protobuf.StringValue title = 5;
+  
+  // Review text
+  string review_text = 6;
+  
+  // Traveler type
+  google.protobuf.StringValue traveler_type = 7;
+  
+  // Tour date
+  google.protobuf.Timestamp tour_date = 8;
+  
+  // Category ratings
+  repeated TourCategoryRating category_ratings = 9;
+  
+  // Would recommend
+  google.protobuf.StringValue would_recommend = 10;
+  
+  // Photos (optional)
+  repeated string photos = 11;
+}
+
+// AddTourReviewResponse represents the response after adding a tour review
+message AddTourReviewResponse {
+  // Review ID
+  string review_id = 1;
+  
+  // Success message
+  string message = 2;
+  
+  // Review created timestamp
+  google.protobuf.Timestamp created_at = 3;
+  
+  // Updated tour rating
+  google.protobuf.DoubleValue updated_tour_rating = 4;
+  
+  // Review moderation status
+  string moderation_status = 5;
+}
+
+// GetTourGuidesRequest represents a request to get tour guides
+message GetTourGuidesRequest {
+  // Location filter (optional)
+  google.protobuf.StringValue location = 1;
+  
+  // Language filter (optional)
+  google.protobuf.StringValue language = 2;
+  
+  // Specialization filter (optional)
+  google.protobuf.StringValue specialization = 3;
+  
+  // Availability date filter (optional)
+  google.protobuf.Timestamp availability_date = 4;
+  
+  // Page number for pagination
+  int32 page = 5;
+  
+  // Page size for pagination
+  int32 page_size = 6;
+}
+
+// GetTourGuidesResponse represents tour guides response
+message GetTourGuidesResponse {
+  // List of tour guides
+  repeated TourGuideInfo tour_guides = 1;
+  
+  // Total count
+  int32 total_count = 2;
+  
+  // Pagination info
+  int32 page = 3;
+  int32 page_size = 4;
+  int32 total_pages = 5;
+  
+  // Guide statistics
+  TourGuideStatistics guide_statistics = 6;
+}
+
+// TourGuideStatistics represents tour guide statistics
+message TourGuideStatistics {
+  // Total number of guides
+  int32 total_guides = 1;
+  
+  // Average guide rating
+  google.protobuf.DoubleValue average_guide_rating = 2;
+  
+  // Most popular specializations
+  repeated string popular_specializations = 3;
+  
+  // Languages most in demand
+  repeated string popular_languages = 4;
+  
+  // Guide availability rate
+  google.protobuf.DoubleValue availability_rate = 5;
+}
+
+// GetPopularToursRequest represents a request to get popular tours
+message GetPopularToursRequest {
+  // Location filter (optional)
+  google.protobuf.StringValue location = 1;
+  
+  // Tour type filter (optional)
+  tourism.tours.enums.TourType tour_type = 2;
+  
+  // Time period (week, month, year)
+  string time_period = 3;
+  
+  // Maximum number of tours to return
+  int32 max_tours = 4;
+  
+  // Sort criteria (popularity, rating, bookings)
+  google.protobuf.StringValue sort_by = 5;
+}
+
+// GetPopularToursResponse represents popular tours response
+message GetPopularToursResponse {
+  // List of popular tours
+  repeated PopularTour popular_tours = 1;
+  
+  // Total count
+  int32 total_count = 2;
+  
+  // Time period used
+  string time_period = 3;
+  
+  // Popularity trends
+  repeated PopularityTrend popularity_trends = 4;
+  
+  // Seasonal insights
+  google.protobuf.StringValue seasonal_insights = 5;
+}
+
+// PopularTour represents a popular tour with popularity metrics
+message PopularTour {
+  // Tour summary
+  TourSummary tour = 1;
+  
+  // Popularity score
+  google.protobuf.DoubleValue popularity_score = 2;
+  
+  // Ranking position
+  int32 ranking = 3;
+  
+  // Number of bookings in period
+  int32 bookings_in_period = 4;
+  
+  // Average rating
+  google.protobuf.DoubleValue average_rating = 5;
+  
+  // Revenue generated
+  int64 revenue_generated = 6;
+  
+  // Currency
+  string currency = 7;
+  
+  // Popularity trend
+  google.protobuf.StringValue popularity_trend = 8;
+  
+  // Why it's popular
+  repeated string popularity_reasons = 9;
+}
+
+// PopularityTrend represents popularity trend information
+message PopularityTrend {
+  // Tour ID
+  string tour_id = 1;
+  
+  // Trend direction (increasing, decreasing, stable)
+  string trend_direction = 2;
+  
+  // Trend percentage
+  google.protobuf.DoubleValue trend_percentage = 3;
+  
+  // Trend period
+  string trend_period = 4;
+  
+  // Factors contributing to trend
+  repeated string trend_factors = 5;
+}

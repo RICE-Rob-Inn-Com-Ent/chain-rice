@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package healthcare.billing.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/billing/enums";
+
+// Billing status enumeration
+enum BillingStatus {
+  BILLING_STATUS_UNSPECIFIED = 0;
+  BILLING_STATUS_UNPAID = 1;
+  BILLING_STATUS_PAID = 2;
+  BILLING_STATUS_OVERDUE = 3;
+  BILLING_STATUS_REFUNDED = 4;
+  BILLING_STATUS_PARTIALLY_PAID = 5;
+  BILLING_STATUS_PENDING_APPROVAL = 6;
+  BILLING_STATUS_DISPUTED = 7;
+  BILLING_STATUS_WRITTEN_OFF = 8;
+}

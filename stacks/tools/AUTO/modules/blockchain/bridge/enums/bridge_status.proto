@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package blockchain.bridge.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/bridge/enums";
+
+// BridgeStatus defines the operational status of a blockchain bridge
+enum BridgeStatus {
+  // BRIDGE_STATUS_UNSPECIFIED indicates an unspecified bridge status
+  BRIDGE_STATUS_UNSPECIFIED = 0;
+  
+  // BRIDGE_STATUS_ACTIVE indicates the bridge is active and operational
+  BRIDGE_STATUS_ACTIVE = 1;
+  
+  // BRIDGE_STATUS_INACTIVE indicates the bridge is inactive and not operational
+  BRIDGE_STATUS_INACTIVE = 2;
+  
+  // BRIDGE_STATUS_MAINTENANCE indicates the bridge is under maintenance
+  BRIDGE_STATUS_MAINTENANCE = 3;
+  
+  // BRIDGE_STATUS_SUSPENDED indicates the bridge is suspended due to issues
+  BRIDGE_STATUS_SUSPENDED = 4;
+  
+  // BRIDGE_STATUS_DEPRECATED indicates the bridge is deprecated and will be removed
+  BRIDGE_STATUS_DEPRECATED = 5;
+  
+  // BRIDGE_STATUS_PENDING indicates the bridge is pending approval or activation
+  BRIDGE_STATUS_PENDING = 6;
+  
+  // BRIDGE_STATUS_FAILED indicates the bridge has failed and needs attention
+  BRIDGE_STATUS_FAILED = 7;
+  
+  // BRIDGE_STATUS_UPGRADING indicates the bridge is being upgraded
+  BRIDGE_STATUS_UPGRADING = 8;
+  
+  // BRIDGE_STATUS_TESTING indicates the bridge is in testing mode
+  BRIDGE_STATUS_TESTING = 9;
+}

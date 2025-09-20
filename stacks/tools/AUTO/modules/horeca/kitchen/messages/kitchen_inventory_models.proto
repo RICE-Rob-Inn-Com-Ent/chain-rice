@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package horeca.kitchen.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+
+// Kitchen inventory item
+message KitchenInventoryItem {
+  string item_id = 1;
+  string item_name = 2;
+  string description = 3;
+  string category = 4;
+  string unit_of_measure = 5;
+  
+  double current_stock = 6;
+  double minimum_stock = 7;
+  double maximum_stock = 8;
+  double reorder_point = 9;
+  
+  InventoryStatus status = 10;
+  google.protobuf.Money unit_cost = 11;
+  google.protobuf.Money total_value = 12;
+  
+  google.protobuf.Timestamp last_restocked = 13;
+  google.protobuf.Timestamp expiration_date = 14;
+  string supplier = 15;
+  
+  repeated InventoryTransaction transactions = 16;
+  
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+// Inventory status
+enum InventoryStatus {
+  INVENTORY_STATUS_UNSPECIFIED = 0;
+  INVENTORY_STATUS_IN_STOCK = 1;
+  INVENTORY_STATUS_LOW_STOCK = 2;
+  INVENTORY_STATUS_OUT_OF_STOCK = 3;
+  INVENTORY_STATUS_EXPIRED = 4;
+  INVENTORY_STATUS_DAMAGED = 5;
+}
+
+// Inventory transaction
+message InventoryTransaction {
+  string transaction_id = 1;
+  string item_id = 2;
+  TransactionType type = 3;
+  double quantity = 4;
+  string unit_of_measure = 5;
+  
+  google.protobuf.Money unit_cost = 6;
+  google.protobuf.Money total_cost = 7;
+  
+  string reason = 8;
+  string reference_id = 9; // Order ID, waste ID, etc.
+  
+  string user_id = 10;
+  string user_name = 11;
+  
+  google.protobuf.Timestamp transaction_date = 12;
+  google.protobuf.Timestamp created_at = 13;
+}
+
+// Transaction type
+enum TransactionType {
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  TRANSACTION_TYPE_RECEIVED = 1;
+  TRANSACTION_TYPE_USED = 2;
+  TRANSACTION_TYPE_WASTE = 3;
+  TRANSACTION_TYPE_ADJUSTMENT = 4;
+  TRANSACTION_TYPE_TRANSFER = 5;
+}
+
+// Inventory alert
+message InventoryAlert {
+  string alert_id = 1;
+  string item_id = 2;
+  string item_name = 3;
+  AlertType type = 4;
+  string message = 5;
+  
+  double current_stock = 6;
+  double threshold = 7;
+  
+  AlertStatus status = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp acknowledged_at = 10;
+  string acknowledged_by = 11;
+}
+
+// Alert type
+enum AlertType {
+  ALERT_TYPE_UNSPECIFIED = 0;
+  ALERT_TYPE_LOW_STOCK = 1;
+  ALERT_TYPE_OUT_OF_STOCK = 2;
+  ALERT_TYPE_EXPIRING_SOON = 3;
+  ALERT_TYPE_EXPIRED = 4;
+  ALERT_TYPE_OVERSTOCK = 5;
+}
+
+// Alert status
+enum AlertStatus {
+  ALERT_STATUS_UNSPECIFIED = 0;
+  ALERT_STATUS_ACTIVE = 1;
+  ALERT_STATUS_ACKNOWLEDGED = 2;
+  ALERT_STATUS_RESOLVED = 3;
+  ALERT_STATUS_DISMISSED = 4;
+}

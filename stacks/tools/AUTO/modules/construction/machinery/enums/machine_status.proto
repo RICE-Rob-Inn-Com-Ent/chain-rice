@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package construction.machinery.enums;
+
+enum MachineStatus {
+  MACHINE_STATUS_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+  MAINTENANCE = 3;
+  REPAIR = 4;
+  OUT_OF_SERVICE = 5;
+  RENTED = 6;
+  LEASED = 7;
+  SOLD = 8;
+  RETIRED = 9;
+  PENDING_DELIVERY = 10;
+  PENDING_PICKUP = 11;
+  RESERVED = 12;
+  AVAILABLE = 13;
+  UNAVAILABLE = 14;
+  BROKEN = 15;
+  DAMAGED = 16;
+  LOST = 17;
+  STOLEN = 18;
+  SCRAPPED = 19;
+}

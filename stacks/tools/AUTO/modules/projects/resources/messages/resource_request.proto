@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package projects.resources.messages;
+
+import "resources/enums/resource_type.proto";
+import "resources/enums/allocation_status.proto";
+import "google/protobuf/timestamp.proto";
+
+// Resource represents a resource entity that can be allocated to projects
+message Resource {
+  // Unique identifier for the resource
+  string id = 1;
+  
+  // Human-readable name of the resource
+  string name = 2;
+  
+  // Type of the resource
+  projects.resources.enums.ResourceType type = 3;
+  
+  // Current allocation status
+  projects.resources.enums.AllocationStatus allocation_status = 4;
+  
+  // ID of the user this resource is assigned to (for human resources)
+  string assigned_to = 5;
+  
+  // ID of the project this resource is allocated to
+  string project_id = 6;
+  
+  // Resource capacity or quantity available
+  double capacity = 7;
+  
+  // Resource cost per unit
+  double cost_per_unit = 8;
+  
+  // Resource description
+  string description = 9;
+  
+  // Timestamp when the resource was created
+  google.protobuf.Timestamp created_at = 10;
+  
+  // Timestamp when the resource was last updated
+  google.protobuf.Timestamp updated_at = 11;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 12;
+}
+
+// CreateResourceRequest contains the data needed to create a new resource
+message CreateResourceRequest {
+  // Resource name (required)
+  string name = 1;
+  
+  // Resource type (required)
+  projects.resources.enums.ResourceType type = 2;
+  
+  // Resource capacity or quantity (required)
+  double capacity = 3;
+  
+  // Resource cost per unit (optional)
+  double cost_per_unit = 4;
+  
+  // Resource description (optional)
+  string description = 5;
+  
+  // ID of the user this resource is assigned to (optional, for human resources)
+  string assigned_to = 6;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 7;
+}
+
+// GetResourceRequest contains the identifier to retrieve a specific resource
+message GetResourceRequest {
+  // Unique identifier of the resource to retrieve
+  string resource_id = 1;
+}
+
+// ListResourcesRequest contains parameters for listing resources
+message ListResourcesRequest {
+  // Maximum number of resources to return (default: 50, max: 1000)
+  int32 page_size = 1;
+  
+  // Token to retrieve the next page of results
+  string page_token = 2;
+  
+  // Filter by resource type
+  projects.resources.enums.ResourceType type = 3;
+  
+  // Filter by allocation status
+  projects.resources.enums.AllocationStatus allocation_status = 4;
+  
+  // Filter by assigned user
+  string assigned_to = 5;
+  
+  // Filter by project ID
+  string project_id = 6;
+  
+  // Search term to filter resources by name or description
+  string search_term = 7;
+}
+
+// UpdateResourceRequest contains the data needed to update an existing resource
+message UpdateResourceRequest {
+  // Unique identifier of the resource to update
+  string resource_id = 1;
+  
+  // Updated resource name (optional)
+  string name = 2;
+  
+  // Updated resource type (optional)
+  projects.resources.enums.ResourceType type = 3;
+  
+  // Updated allocation status (optional)
+  projects.resources.enums.AllocationStatus allocation_status = 4;
+  
+  // Updated assigned user (optional)
+  string assigned_to = 5;
+  
+  // Updated project ID (optional)
+  string project_id = 6;
+  
+  // Updated resource capacity (optional)
+  double capacity = 7;
+  
+  // Updated resource cost per unit (optional)
+  double cost_per_unit = 8;
+  
+  // Updated resource description (optional)
+  string description = 9;
+  
+  // Updated metadata (optional)
+  map<string, string> metadata = 10;
+}
+
+// DeleteResourceRequest contains the identifier to delete a specific resource
+message DeleteResourceRequest {
+  // Unique identifier of the resource to delete
+  string resource_id = 1;
+}

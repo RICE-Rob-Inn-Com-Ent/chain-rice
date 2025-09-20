@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package horeca.reservations.enums;
+
+// Status of reservations
+enum ReservationStatus {
+  RESERVATION_STATUS_UNSPECIFIED = 0;
+  RESERVATION_STATUS_CONFIRMED = 1;       // Reservation confirmed
+  RESERVATION_STATUS_PENDING = 2;         // Reservation pending confirmation
+  RESERVATION_STATUS_CANCELED = 3;        // Reservation canceled
+  RESERVATION_STATUS_NO_SHOW = 4;         // Customer did not show up
+  RESERVATION_STATUS_COMPLETED = 5;       // Reservation completed
+  RESERVATION_STATUS_MODIFIED = 6;        // Reservation modified
+  RESERVATION_STATUS_WAITLIST = 7;        // Added to waitlist
+  RESERVATION_STATUS_EXPIRED = 8;         // Reservation expired
+}

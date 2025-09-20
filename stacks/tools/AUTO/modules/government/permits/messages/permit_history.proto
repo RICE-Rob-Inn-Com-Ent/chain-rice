@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package government.permits.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/permit_status.proto";
+
+// Історія дозволу
+message PermitHistory {
+  string history_id = 1;                    // Унікальний ідентифікатор запису історії
+  string permit_id = 2;                     // ID дозволу
+  string action = 3;                        // Дія (створено, оновлено, затверджено, відхилено, etc.)
+  PermitStatus old_status = 4;              // Попередній статус
+  PermitStatus new_status = 5;              // Новий статус
+  string description = 6;                   // Опис зміни
+  string changed_by = 7;                    // Хто змінив
+  google.protobuf.Timestamp timestamp = 8;  // Час зміни
+  string comments = 9;                      // Коментарі
+  repeated string attachments = 10;         // Додатки до запису історії
+  string reason = 11;                       // Причина зміни
+  string system_source = 12;                // Джерело системи
+}
+
+// Запит на створення запису історії
+message CreateHistoryRequest {
+  string permit_id = 1;
+  string action = 2;
+  PermitStatus old_status = 3;
+  PermitStatus new_status = 4;
+  string description = 5;
+  string changed_by = 6;
+  string comments = 7;
+  string reason = 8;
+  string system_source = 9;
+}
+
+// Запит на отримання історії дозволу
+message GetPermitHistoryRequest {
+  string permit_id = 1;
+  int32 page_number = 2;
+  int32 page_size = 3;
+  string action = 4;
+  google.protobuf.Timestamp from_date = 5;
+  google.protobuf.Timestamp to_date = 6;
+}
+
+// Результат отримання історії
+message PermitHistoryResponse {
+  bool success = 1;
+  string message = 2;
+  repeated PermitHistory history = 3;
+  int32 total_count = 4;
+  int32 page_number = 5;
+  int32 page_size = 6;
+}
+
+// Запит на отримання статистики історії
+message GetHistoryStatisticsRequest {
+  string permit_id = 1;
+  google.protobuf.Timestamp from_date = 2;
+  google.protobuf.Timestamp to_date = 3;
+}
+
+// Статистика історії
+message HistoryStatistics {
+  int32 total_changes = 1;
+  repeated ActionStatistics actions = 2;
+  repeated UserStatistics users = 3;
+  repeated StatusChangeStatistics status_changes = 4;
+  google.protobuf.Timestamp first_change = 5;
+  google.protobuf.Timestamp last_change = 6;
+}
+
+message ActionStatistics {
+  string action = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message UserStatistics {
+  string user = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message StatusChangeStatistics {
+  string status_change = 1;                 // old_status -> new_status
+  int32 count = 2;
+  double percentage = 3;
+}

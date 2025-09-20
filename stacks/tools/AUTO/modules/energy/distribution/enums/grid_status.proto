@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package energy.distribution.enums;
+
+// Grid status for power distribution network
+enum GridStatus {
+  // Grid is operating normally
+  GRID_STATUS_NORMAL = 0;
+  
+  // Grid is experiencing minor issues
+  GRID_STATUS_MINOR_ISSUES = 1;
+  
+  // Grid is experiencing moderate issues
+  GRID_STATUS_MODERATE_ISSUES = 2;
+  
+  // Grid is experiencing major issues
+  GRID_STATUS_MAJOR_ISSUES = 3;
+  
+  // Grid is in emergency state
+  GRID_STATUS_EMERGENCY = 4;
+  
+  // Grid is under maintenance
+  GRID_STATUS_MAINTENANCE = 5;
+  
+  // Grid is being upgraded
+  GRID_STATUS_UPGRADE = 6;
+  
+  // Grid is offline
+  GRID_STATUS_OFFLINE = 7;
+  
+  // Grid is in test mode
+  GRID_STATUS_TEST_MODE = 8;
+  
+  // Grid is in standby mode
+  GRID_STATUS_STANDBY = 9;
+  
+  // Grid is experiencing voltage issues
+  GRID_STATUS_VOLTAGE_ISSUES = 10;
+  
+  // Grid is experiencing frequency issues
+  GRID_STATUS_FREQUENCY_ISSUES = 11;
+  
+  // Grid is experiencing load issues
+  GRID_STATUS_LOAD_ISSUES = 12;
+  
+  // Grid is experiencing communication issues
+  GRID_STATUS_COMMUNICATION_ISSUES = 13;
+  
+  // Grid is experiencing weather-related issues
+  GRID_STATUS_WEATHER_ISSUES = 14;
+  
+  // Grid is experiencing equipment failure
+  GRID_STATUS_EQUIPMENT_FAILURE = 15;
+  
+  // Grid is experiencing cyber security issues
+  GRID_STATUS_CYBER_SECURITY_ISSUES = 16;
+  
+  // Grid is experiencing regulatory compliance issues
+  GRID_STATUS_COMPLIANCE_ISSUES = 17;
+  
+  // Grid is experiencing fuel supply issues
+  GRID_STATUS_FUEL_SUPPLY_ISSUES = 18;
+  
+  // Grid is experiencing transmission issues
+  GRID_STATUS_TRANSMISSION_ISSUES = 19;
+  
+  // Grid is experiencing distribution issues
+  GRID_STATUS_DISTRIBUTION_ISSUES = 20;
+  
+  // Grid is experiencing generation issues
+  GRID_STATUS_GENERATION_ISSUES = 21;
+  
+  // Grid is experiencing demand response issues
+  GRID_STATUS_DEMAND_RESPONSE_ISSUES = 22;
+  
+  // Grid is experiencing renewable energy integration issues
+  GRID_STATUS_RENEWABLE_INTEGRATION_ISSUES = 23;
+  
+  // Grid is experiencing storage issues
+  GRID_STATUS_STORAGE_ISSUES = 24;
+  
+  // Grid is experiencing microgrid issues
+  GRID_STATUS_MICROGRID_ISSUES = 25;
+  
+  // Grid is experiencing islanding
+  GRID_STATUS_ISLANDING = 26;
+  
+  // Grid is experiencing black start
+  GRID_STATUS_BLACK_START = 27;
+  
+  // Grid is experiencing restoration
+  GRID_STATUS_RESTORATION = 28;
+  
+  // Grid is experiencing load shedding
+  GRID_STATUS_LOAD_SHEDDING = 29;
+  
+  // Grid is experiencing brownout
+  GRID_STATUS_BROWNOUT = 30;
+  
+  // Grid is experiencing blackout
+  GRID_STATUS_BLACKOUT = 31;
+}

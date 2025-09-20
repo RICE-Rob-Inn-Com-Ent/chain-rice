@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package transport.tickets.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "tickets/enums/ticket_type.proto";
+import "tickets/enums/ticket_status.proto";
+
+option go_package = "github.com/rice-dev/transport/tickets/v1";
+
+// CreateTicketRequest represents a request to create a new ticket
+message CreateTicketRequest {
+  // Passenger ID (required)
+  string passenger_id = 1;
+  
+  // Route ID (required)
+  string route_id = 2;
+  
+  // Schedule ID (required)
+  string schedule_id = 3;
+  
+  // Ticket type (required)
+  TicketType type = 4;
+  
+  // Ticket price (required)
+  double price = 5;
+  
+  // Number of passengers (defaults to 1)
+  int32 passenger_count = 6;
+  
+  // Seat preferences
+  repeated string seat_preferences = 7;
+  
+  // Special requirements
+  repeated string special_requirements = 8;
+  
+  // Payment method
+  string payment_method = 9;
+  
+  // Promotional code
+  string promotional_code = 10;
+  
+  // Discount amount
+  double discount_amount = 11;
+  
+  // Ticket validity start date
+  google.protobuf.Timestamp valid_from = 12;
+  
+  // Ticket validity end date
+  google.protobuf.Timestamp valid_until = 13;
+  
+  // Booking reference
+  string booking_reference = 14;
+  
+  // Additional ticket metadata
+  map<string, string> metadata = 15;
+}
+
+// GetTicketRequest represents a request to retrieve ticket information
+message GetTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Fields to include in response (optional)
+  google.protobuf.FieldMask field_mask = 2;
+  
+  // Include passenger details
+  bool include_passenger_details = 3;
+  
+  // Include route details
+  bool include_route_details = 4;
+  
+  // Include schedule details
+  bool include_schedule_details = 5;
+}
+
+// ListTicketsRequest represents a request to list tickets with filtering
+message ListTicketsRequest {
+  // Page size for pagination
+  int32 page_size = 1;
+  
+  // Page token for pagination
+  string page_token = 2;
+  
+  // Filter by passenger ID
+  string passenger_id = 3;
+  
+  // Filter by route ID
+  string route_id = 4;
+  
+  // Filter by schedule ID
+  string schedule_id = 5;
+  
+  // Filter by ticket type
+  TicketType type = 6;
+  
+  // Filter by status
+  TicketStatus status = 7;
+  
+  // Filter by booking date range - start
+  google.protobuf.Timestamp booked_after = 8;
+  
+  // Filter by booking date range - end
+  google.protobuf.Timestamp booked_before = 9;
+  
+  // Filter by validity date range - start
+  google.protobuf.Timestamp valid_after = 10;
+  
+  // Filter by validity date range - end
+  google.protobuf.Timestamp valid_before = 11;
+  
+  // Search by booking reference
+  string booking_reference = 12;
+  
+  // Sort field (created_at, price, valid_from, status)
+  string sort_by = 13;
+  
+  // Sort order (asc, desc)
+  string sort_order = 14;
+}
+
+// UpdateTicketRequest represents a request to update ticket information
+message UpdateTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Updated ticket information
+  TicketUpdateData ticket = 2;
+  
+  // Fields to update (required)
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+// TicketUpdateData contains updatable ticket fields
+message TicketUpdateData {
+  // Ticket type
+  TicketType type = 1;
+  
+  // Ticket price
+  double price = 2;
+  
+  // Number of passengers
+  int32 passenger_count = 3;
+  
+  // Seat preferences
+  repeated string seat_preferences = 4;
+  
+  // Special requirements
+  repeated string special_requirements = 5;
+  
+  // Payment method
+  string payment_method = 6;
+  
+  // Promotional code
+  string promotional_code = 7;
+  
+  // Discount amount
+  double discount_amount = 8;
+  
+  // Validity start date
+  google.protobuf.Timestamp valid_from = 9;
+  
+  // Validity end date
+  google.protobuf.Timestamp valid_until = 10;
+  
+  // Ticket status
+  TicketStatus status = 11;
+  
+  // Additional metadata
+  map<string, string> metadata = 12;
+}
+
+// DeleteTicketRequest represents a request to delete a ticket
+message DeleteTicketRequest {
+  // Ticket ID (required)
+  string ticket_id = 1;
+  
+  // Reason for deletion
+  string reason = 2;
+  
+  // Process refund
+  bool process_refund = 3;
+  
+  // Refund amount (if different from ticket price)
+  double refund_amount = 4;
+  
+  // Effective deletion date
+  google.protobuf.Timestamp effective_date = 5;
+}

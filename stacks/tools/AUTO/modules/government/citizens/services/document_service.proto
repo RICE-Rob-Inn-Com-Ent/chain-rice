@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package government.citizens.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/citizen_documents.proto";
+
+// Сервіс управління документами громадян
+service DocumentService {
+  // Створити новий документ
+  rpc CreateDocument(CreateDocumentRequest) returns (DocumentResponse);
+  
+  // Отримати документ за ID
+  rpc GetDocument(GetDocumentRequest) returns (DocumentResponse);
+  
+  // Оновити документ
+  rpc UpdateDocument(UpdateDocumentRequest) returns (DocumentResponse);
+  
+  // Видалити документ
+  rpc DeleteDocument(DeleteDocumentRequest) returns (DocumentResponse);
+  
+  // Отримати всі документи громадянина
+  rpc GetCitizenDocuments(GetCitizenDocumentsRequest) returns (DocumentsListResponse);
+  
+  // Отримати документи за типом
+  rpc GetDocumentsByType(GetDocumentsByTypeRequest) returns (DocumentsListResponse);
+  
+  // Перевірити валідність документа
+  rpc ValidateDocument(ValidateDocumentRequest) returns (ValidateDocumentResponse);
+  
+  // Оновити статус документа
+  rpc UpdateDocumentStatus(UpdateDocumentStatusRequest) returns (DocumentResponse);
+  
+  // Отримати документи, що закінчуються
+  rpc GetExpiringDocuments(GetExpiringDocumentsRequest) returns (DocumentsListResponse);
+  
+  // Оновити дату закінчення документа
+  rpc ExtendDocument(ExtendDocumentRequest) returns (DocumentResponse);
+  
+  // Створити паспорт
+  rpc CreatePassport(CreatePassportRequest) returns (PassportResponse);
+  
+  // Створити ID картку
+  rpc CreateIdCard(CreateIdCardRequest) returns (IdCardResponse);
+  
+  // Створити візу
+  rpc CreateVisa(CreateVisaRequest) returns (VisaResponse);
+  
+  // Отримати статистику документів
+  rpc GetDocumentStatistics(google.protobuf.Empty) returns (DocumentStatistics);
+}
+
+// Запити та відповіді
+message GetDocumentRequest {
+  string document_id = 1;
+}
+
+message DeleteDocumentRequest {
+  string document_id = 1;
+  string reason = 2;
+  string deleted_by = 3;
+}
+
+message GetCitizenDocumentsRequest {
+  string citizen_id = 1;
+  bool include_expired = 2;
+}
+
+message GetDocumentsByTypeRequest {
+  string document_type = 1;
+  bool include_expired = 2;
+  int32 page_number = 3;
+  int32 page_size = 4;
+}
+
+message ValidateDocumentRequest {
+  string document_id = 1;
+  string document_number = 2;
+  string citizen_id = 3;
+}
+
+message ValidateDocumentResponse {
+  bool is_valid = 1;
+  string message = 2;
+  Document document = 3;
+  repeated string validation_errors = 4;
+}
+
+message UpdateDocumentStatusRequest {
+  string document_id = 1;
+  string new_status = 2;
+  string reason = 3;
+  string updated_by = 4;
+}
+
+message GetExpiringDocumentsRequest {
+  int32 days_ahead = 1;
+  string document_type = 2;
+}
+
+message ExtendDocumentRequest {
+  string document_id = 1;
+  string new_expiry_date = 2;
+  string reason = 3;
+  string extended_by = 4;
+}
+
+message CreatePassportRequest {
+  string citizen_id = 1;
+  string passport_number = 2;
+  string issuing_country = 3;
+  string issue_date = 4;
+  string expiry_date = 5;
+  string place_of_birth = 6;
+  string created_by = 7;
+}
+
+message CreateIdCardRequest {
+  string citizen_id = 1;
+  string card_number = 2;
+  string issuing_authority = 3;
+  string issue_date = 4;
+  string expiry_date = 5;
+  string photo_url = 6;
+  string created_by = 7;
+}
+
+message CreateVisaRequest {
+  string citizen_id = 1;
+  string visa_number = 2;
+  string issuing_consulate = 3;
+  string issue_date = 4;
+  string expiry_date = 5;
+  string purpose = 6;
+  string entry_type = 7;
+  string created_by = 8;
+}
+
+message DocumentsListResponse {
+  bool success = 1;
+  string message = 2;
+  repeated Document documents = 3;
+  int32 total_count = 4;
+}
+
+message PassportResponse {
+  bool success = 1;
+  string message = 2;
+  Passport passport = 3;
+}
+
+message IdCardResponse {
+  bool success = 1;
+  string message = 2;
+  IdCard id_card = 3;
+}
+
+message VisaResponse {
+  bool success = 1;
+  string message = 2;
+  Visa visa = 3;
+}
+
+message DocumentStatistics {
+  int32 total_documents = 1;
+  int32 active_documents = 2;
+  int32 expired_documents = 3;
+  int32 passports = 4;
+  int32 id_cards = 5;
+  int32 visas = 6;
+  int32 expiring_soon = 7;
+  repeated DocumentTypeStatistics by_type = 8;
+}
+
+message DocumentTypeStatistics {
+  string document_type = 1;
+  int32 count = 2;
+  int32 active = 3;
+  int32 expired = 4;
+}

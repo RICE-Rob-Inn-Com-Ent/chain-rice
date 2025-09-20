@@ -1,0 +1,489 @@
+syntax = "proto3";
+
+package manufacturing.suppliers.messages;
+
+import "google/protobuf/timestamp.proto";
+import "manufacturing/suppliers/enums/supplier_type.proto";
+
+// Response message for creating a supplier
+message CreateSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if creation failed
+  string error_message = 2;
+  
+  // Created supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for retrieving a supplier
+message GetSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if retrieval failed
+  string error_message = 2;
+  
+  // Supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for listing suppliers
+message ListSuppliersResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if listing failed
+  string error_message = 2;
+  
+  // List of suppliers
+  repeated Supplier suppliers = 3;
+  
+  // Total count of suppliers matching the filter
+  int32 total_count = 4;
+  
+  // Current page number
+  int32 current_page = 5;
+  
+  // Total number of pages
+  int32 total_pages = 6;
+}
+
+// Response message for updating a supplier
+message UpdateSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if update failed
+  string error_message = 2;
+  
+  // Updated supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for deleting a supplier
+message DeleteSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if deletion failed
+  string error_message = 2;
+}
+
+// Response message for approving a supplier
+message ApproveSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if approval failed
+  string error_message = 2;
+  
+  // Approved supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for rejecting a supplier
+message RejectSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if rejection failed
+  string error_message = 2;
+  
+  // Rejected supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for suspending a supplier
+message SuspendSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if suspension failed
+  string error_message = 2;
+  
+  // Suspended supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for reactivating a supplier
+message ReactivateSupplierResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if reactivation failed
+  string error_message = 2;
+  
+  // Reactivated supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for updating supplier performance
+message UpdateSupplierPerformanceResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if update failed
+  string error_message = 2;
+  
+  // Updated supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for adding supplier certification
+message AddSupplierCertificationResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if addition failed
+  string error_message = 2;
+  
+  // Updated supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for updating supplier certification
+message UpdateSupplierCertificationResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if update failed
+  string error_message = 2;
+  
+  // Updated supplier details
+  Supplier supplier = 3;
+}
+
+// Response message for removing supplier certification
+message RemoveSupplierCertificationResponse {
+  // Success status
+  bool success = 1;
+  
+  // Error message if removal failed
+  string error_message = 2;
+  
+  // Updated supplier details
+  Supplier supplier = 3;
+}
+
+// Supplier data structure
+message Supplier {
+  // Unique identifier
+  string supplier_id = 1;
+  
+  // Supplier name
+  string name = 2;
+  
+  // Supplier code
+  string supplier_code = 3;
+  
+  // Supplier type
+  manufacturing.suppliers.enums.SupplierType supplier_type = 4;
+  
+  // Current status
+  manufacturing.suppliers.enums.SupplierStatus status = 5;
+  
+  // Company information
+  CompanyInfo company_info = 6;
+  
+  // Contact information
+  ContactInfo contact_info = 7;
+  
+  // Address information
+  AddressInfo address_info = 8;
+  
+  // Business information
+  BusinessInfo business_info = 9;
+  
+  // Quality certifications
+  repeated QualityCertification certifications = 10;
+  
+  // Payment terms
+  manufacturing.suppliers.enums.PaymentTerms payment_terms = 11;
+  
+  // Credit limit
+  double credit_limit = 12;
+  
+  // Currency code
+  string currency = 13;
+  
+  // Supplier relationship type
+  manufacturing.suppliers.enums.SupplierRelationshipType relationship_type = 14;
+  
+  // Risk level
+  manufacturing.suppliers.enums.SupplierRiskLevel risk_level = 15;
+  
+  // Performance rating
+  manufacturing.suppliers.enums.SupplierPerformanceRating performance_rating = 16;
+  
+  // Performance score (0-100)
+  double performance_score = 17;
+  
+  // Performance metrics
+  map<string, double> performance_metrics = 18;
+  
+  // Additional notes
+  string notes = 19;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 20;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 21;
+  
+  // Created by
+  string created_by = 22;
+  
+  // Created by name
+  string created_by_name = 23;
+  
+  // Last updated by
+  string last_updated_by = 24;
+  
+  // Last updated by name
+  string last_updated_by_name = 25;
+  
+  // Approval timestamp
+  google.protobuf.Timestamp approved_at = 26;
+  
+  // Approved by
+  string approved_by = 27;
+  
+  // Approved by name
+  string approved_by_name = 28;
+  
+  // Suspension timestamp
+  google.protobuf.Timestamp suspended_at = 29;
+  
+  // Suspended by
+  string suspended_by = 30;
+  
+  // Suspended by name
+  string suspended_by_name = 31;
+  
+  // Suspension reason
+  string suspension_reason = 32;
+  
+  // Suspension duration in days
+  int32 suspension_duration_days = 33;
+  
+  // Reactivation timestamp
+  google.protobuf.Timestamp reactivated_at = 34;
+  
+  // Reactivated by
+  string reactivated_by = 35;
+  
+  // Reactivated by name
+  string reactivated_by_name = 36;
+  
+  // Last performance evaluation date
+  google.protobuf.Timestamp last_performance_evaluation = 37;
+  
+  // Last performance evaluation by
+  string last_performance_evaluation_by = 38;
+  
+  // Last performance evaluation by name
+  string last_performance_evaluation_by_name = 39;
+  
+  // Total orders placed
+  int32 total_orders = 40;
+  
+  // Total order value
+  double total_order_value = 41;
+  
+  // Average order value
+  double average_order_value = 42;
+  
+  // On-time delivery rate
+  double on_time_delivery_rate = 43;
+  
+  // Quality acceptance rate
+  double quality_acceptance_rate = 44;
+  
+  // Payment performance score
+  double payment_performance_score = 45;
+  
+  // Communication score
+  double communication_score = 46;
+  
+  // Overall satisfaction score
+  double overall_satisfaction_score = 47;
+}
+
+// Company information
+message CompanyInfo {
+  // Legal company name
+  string legal_name = 1;
+  
+  // Trading name
+  string trading_name = 2;
+  
+  // Company registration number
+  string registration_number = 3;
+  
+  // Tax identification number
+  string tax_id = 4;
+  
+  // Industry sector
+  string industry_sector = 5;
+  
+  // Company size
+  string company_size = 6;
+  
+  // Year established
+  int32 year_established = 7;
+  
+  // Website URL
+  string website = 8;
+  
+  // Parent company
+  string parent_company = 9;
+  
+  // Subsidiaries
+  repeated string subsidiaries = 10;
+}
+
+// Contact information
+message ContactInfo {
+  // Primary contact person
+  string primary_contact = 1;
+  
+  // Primary contact title
+  string primary_contact_title = 2;
+  
+  // Primary contact email
+  string primary_contact_email = 3;
+  
+  // Primary contact phone
+  string primary_contact_phone = 4;
+  
+  // Secondary contact person
+  string secondary_contact = 5;
+  
+  // Secondary contact title
+  string secondary_contact_title = 6;
+  
+  // Secondary contact email
+  string secondary_contact_email = 7;
+  
+  // Secondary contact phone
+  string secondary_contact_phone = 8;
+  
+  // General email
+  string general_email = 9;
+  
+  // General phone
+  string general_phone = 10;
+  
+  // Fax number
+  string fax = 11;
+}
+
+// Address information
+message AddressInfo {
+  // Billing address
+  Address billing_address = 1;
+  
+  // Shipping address
+  Address shipping_address = 2;
+  
+  // Manufacturing address
+  Address manufacturing_address = 3;
+  
+  // Office address
+  Address office_address = 4;
+  
+  // Warehouse address
+  Address warehouse_address = 5;
+}
+
+// Address details
+message Address {
+  // Street address
+  string street = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // Address type
+  string address_type = 6;
+}
+
+// Business information
+message BusinessInfo {
+  // Annual revenue
+  double annual_revenue = 1;
+  
+  // Currency code
+  string currency = 2;
+  
+  // Number of employees
+  int32 employee_count = 3;
+  
+  // Business model
+  string business_model = 4;
+  
+  // Key products or services
+  repeated string key_products_services = 5;
+  
+  // Target markets
+  repeated string target_markets = 6;
+  
+  // Competitive advantages
+  repeated string competitive_advantages = 7;
+  
+  // Financial stability rating
+  string financial_stability_rating = 8;
+  
+  // Credit rating
+  string credit_rating = 9;
+}
+
+// Quality certification
+message QualityCertification {
+  // Certification identifier
+  string certification_id = 1;
+  
+  // Certification name
+  string certification_name = 2;
+  
+  // Certification body
+  string certification_body = 3;
+  
+  // Certification number
+  string certification_number = 4;
+  
+  // Issue date
+  google.protobuf.Timestamp issue_date = 5;
+  
+  // Expiry date
+  google.protobuf.Timestamp expiry_date = 6;
+  
+  // Certification status
+  manufacturing.suppliers.enums.SupplierCertificationStatus status = 7;
+  
+  // Scope of certification
+  string scope = 8;
+  
+  // Certification standard
+  string standard = 9;
+  
+  // Additional notes
+  string notes = 10;
+  
+  // Created timestamp
+  google.protobuf.Timestamp created_at = 11;
+  
+  // Last updated timestamp
+  google.protobuf.Timestamp updated_at = 12;
+}

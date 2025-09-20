@@ -1,0 +1,245 @@
+syntax = "proto3";
+
+package gaming.game_core.enums;
+
+option go_package = "github.com/rice-dev/gaming/game_core/enums";
+
+// Ролі гравців
+enum PlayerRole {
+  PLAYER_ROLE_UNSPECIFIED = 0;
+  
+  // Танк
+  PLAYER_ROLE_TANK = 1;
+  
+  // Хілер
+  PLAYER_ROLE_HEALER = 2;
+  
+  // DPS (Damage Per Second)
+  PLAYER_ROLE_DPS = 3;
+  
+  // Підтримка
+  PLAYER_ROLE_SUPPORT = 4;
+  
+  // Лідер
+  PLAYER_ROLE_LEADER = 5;
+  
+  // Капітан
+  PLAYER_ROLE_CAPTAIN = 6;
+  
+  // Командир
+  PLAYER_ROLE_COMMANDER = 7;
+  
+  // Генерал
+  PLAYER_ROLE_GENERAL = 8;
+  
+  // Адмірал
+  PLAYER_ROLE_ADMIRAL = 9;
+  
+  // Майстер
+  PLAYER_ROLE_MASTER = 10;
+  
+  // Гуру
+  PLAYER_ROLE_GURU = 11;
+  
+  // Ментор
+  PLAYER_ROLE_MENTOR = 12;
+  
+  // Учень
+  PLAYER_ROLE_STUDENT = 13;
+  
+  // Новачок
+  PLAYER_ROLE_NOVICE = 14;
+  
+  // Досвідчений
+  PLAYER_ROLE_EXPERIENCED = 15;
+  
+  // Експерт
+  PLAYER_ROLE_EXPERT = 16;
+  
+  // Професіонал
+  PLAYER_ROLE_PROFESSIONAL = 17;
+  
+  // Чемпіон
+  PLAYER_ROLE_CHAMPION = 18;
+  
+  // Легенда
+  PLAYER_ROLE_LEGEND = 19;
+  
+  // Міф
+  PLAYER_ROLE_MYTH = 20;
+  
+  // Бог
+  PLAYER_ROLE_GOD = 21;
+  
+  // Демон
+  PLAYER_ROLE_DEMON = 22;
+  
+  // Ангел
+  PLAYER_ROLE_ANGEL = 23;
+  
+  // Герой
+  PLAYER_ROLE_HERO = 24;
+  
+  // Злодій
+  PLAYER_ROLE_VILLAIN = 25;
+  
+  // Нейтральний
+  PLAYER_ROLE_NEUTRAL = 26;
+  
+  // Спектатор
+  PLAYER_ROLE_SPECTATOR = 27;
+  
+  // Модератор
+  PLAYER_ROLE_MODERATOR = 28;
+  
+  // Адміністратор
+  PLAYER_ROLE_ADMINISTRATOR = 29;
+  
+  // Розробник
+  PLAYER_ROLE_DEVELOPER = 30;
+  
+  // Тестер
+  PLAYER_ROLE_TESTER = 31;
+  
+  // Бета-тестер
+  PLAYER_ROLE_BETA_TESTER = 32;
+  
+  // Альфа-тестер
+  PLAYER_ROLE_ALPHA_TESTER = 33;
+  
+  // Кастомна роль
+  PLAYER_ROLE_CUSTOM = 34;
+}
+
+// Типи команд
+enum TeamType {
+  TEAM_TYPE_UNSPECIFIED = 0;
+  
+  // Червона команда
+  TEAM_TYPE_RED = 1;
+  
+  // Синя команда
+  TEAM_TYPE_BLUE = 2;
+  
+  // Зелена команда
+  TEAM_TYPE_GREEN = 3;
+  
+  // Жовта команда
+  TEAM_TYPE_YELLOW = 4;
+  
+  // Фіолетова команда
+  TEAM_TYPE_PURPLE = 5;
+  
+  // Оранжева команда
+  TEAM_TYPE_ORANGE = 6;
+  
+  // Рожева команда
+  TEAM_TYPE_PINK = 7;
+  
+  // Біла команда
+  TEAM_TYPE_WHITE = 8;
+  
+  // Чорна команда
+  TEAM_TYPE_BLACK = 9;
+  
+  // Сіра команда
+  TEAM_TYPE_GRAY = 10;
+  
+  // Команда А
+  TEAM_TYPE_TEAM_A = 11;
+  
+  // Команда Б
+  TEAM_TYPE_TEAM_B = 12;
+  
+  // Команда В
+  TEAM_TYPE_TEAM_C = 13;
+  
+  // Команда Г
+  TEAM_TYPE_TEAM_D = 14;
+  
+  // Команда 1
+  TEAM_TYPE_TEAM_1 = 15;
+  
+  // Команда 2
+  TEAM_TYPE_TEAM_2 = 16;
+  
+  // Команда 3
+  TEAM_TYPE_TEAM_3 = 17;
+  
+  // Команда 4
+  TEAM_TYPE_TEAM_4 = 18;
+  
+  // Команда 5
+  TEAM_TYPE_TEAM_5 = 19;
+  
+  // Команда 6
+  TEAM_TYPE_TEAM_6 = 20;
+  
+  // Команда 7
+  TEAM_TYPE_TEAM_7 = 21;
+  
+  // Команда 8
+  TEAM_TYPE_TEAM_8 = 22;
+  
+  // Команда 9
+  TEAM_TYPE_TEAM_9 = 23;
+  
+  // Команда 10
+  TEAM_TYPE_TEAM_10 = 24;
+  
+  // Кастомна команда
+  TEAM_TYPE_CUSTOM = 25;
+}
+
+// Рівні доступу
+enum AccessLevel {
+  ACCESS_LEVEL_UNSPECIFIED = 0;
+  
+  // Гість
+  ACCESS_LEVEL_GUEST = 1;
+  
+  // Користувач
+  ACCESS_LEVEL_USER = 2;
+  
+  // VIP
+  ACCESS_LEVEL_VIP = 3;
+  
+  // Premium
+  ACCESS_LEVEL_PREMIUM = 4;
+  
+  // Gold
+  ACCESS_LEVEL_GOLD = 5;
+  
+  // Platinum
+  ACCESS_LEVEL_PLATINUM = 6;
+  
+  // Diamond
+  ACCESS_LEVEL_DIAMOND = 7;
+  
+  // Master
+  ACCESS_LEVEL_MASTER = 8;
+  
+  // Grandmaster
+  ACCESS_LEVEL_GRANDMASTER = 9;
+  
+  // Legend
+  ACCESS_LEVEL_LEGEND = 10;
+  
+  // Myth
+  ACCESS_LEVEL_MYTH = 11;
+  
+  // God
+  ACCESS_LEVEL_GOD = 12;
+  
+  // Модератор
+  ACCESS_LEVEL_MODERATOR = 13;
+  
+  // Адміністратор
+  ACCESS_LEVEL_ADMINISTRATOR = 14;
+  
+  // Розробник
+  ACCESS_LEVEL_DEVELOPER = 15;
+  
+  // Власник
+  ACCESS_LEVEL_OWNER = 16;
+}

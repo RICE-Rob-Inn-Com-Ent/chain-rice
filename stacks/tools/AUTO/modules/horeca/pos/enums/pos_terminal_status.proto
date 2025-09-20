@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package horeca.pos.enums;
+
+// Status of POS terminals
+enum PosTerminalStatus {
+  POS_TERMINAL_STATUS_UNSPECIFIED = 0;
+  POS_TERMINAL_STATUS_ONLINE = 1;         // Terminal online and operational
+  POS_TERMINAL_STATUS_OFFLINE = 2;        // Terminal offline
+  POS_TERMINAL_STATUS_MAINTENANCE = 3;    // Terminal under maintenance
+  POS_TERMINAL_STATUS_ERROR = 4;          // Terminal error
+  POS_TERMINAL_STATUS_UPDATING = 5;       // Terminal updating
+  POS_TERMINAL_STATUS_LOCKED = 6;         // Terminal locked
+  POS_TERMINAL_STATUS_IDLE = 7;           // Terminal idle
+}

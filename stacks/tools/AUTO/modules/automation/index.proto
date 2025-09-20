@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package automation;
+
+// Automation Module Index
+// This file provides a centralized import point for all automation module components
+// including AI, Bots, and Workflow functionality
+
+// AI Module Imports
+import "automation/ai/enums/ai_model_type.proto";
+import "automation/ai/enums/ai_task_status.proto";
+import "automation/ai/enums/ai_priority.proto";
+import "automation/ai/messages/model.proto";
+import "automation/ai/messages/dataset.proto";
+import "automation/ai/messages/training_job.proto";
+import "automation/ai/messages/prediction_request.proto";
+import "automation/ai/messages/prediction_response.proto";
+import "automation/ai/services/ai_service.proto";
+
+// Bots Module Imports
+import "automation/bots/enums/bot_type.proto";
+import "automation/bots/enums/bot_status.proto";
+import "automation/bots/enums/bot_priority.proto";
+import "automation/bots/messages/bot.proto";
+import "automation/bots/messages/bot_task.proto";
+import "automation/bots/messages/bot_log.proto";
+import "automation/bots/services/bot_service.proto";
+
+// Workflow Module Imports
+import "automation/workflow/enums/workflow_type.proto";
+import "automation/workflow/enums/workflow_status.proto";
+import "automation/workflow/enums/workflow_step_type.proto";
+import "automation/workflow/messages/workflow.proto";
+import "automation/workflow/messages/workflow_step.proto";
+import "automation/workflow/messages/workflow_execution.proto";
+import "automation/workflow/messages/workflow_event.proto";
+import "automation/workflow/services/workflow_service.proto";
+
+option go_package = "github.com/rice-dev/automation";
+
+// Automation module summary
+message AutomationModuleSummary {
+  // Module version
+  string version = 1;
+  
+  // Module description
+  string description = 2;
+  
+  // Available services
+  repeated string available_services = 3;
+  
+  // Available enums
+  repeated string available_enums = 4;
+  
+  // Available messages
+  repeated string available_messages = 5;
+  
+  // Module capabilities
+  repeated string capabilities = 6;
+  
+  // Last updated timestamp
+  int64 last_updated = 7;
+}
+
+// Main service aggregator - provides access to all automation services
+service AutomationService {
+  // AI operations
+  rpc CreateModel(automation.ai.services.CreateModelRequest) returns (automation.ai.services.CreateModelResponse);
+  rpc GetModel(automation.ai.services.GetModelRequest) returns (automation.ai.services.GetModelResponse);
+  rpc TrainModel(automation.ai.services.TrainModelRequest) returns (automation.ai.services.TrainModelResponse);
+  rpc Predict(automation.ai.services.PredictRequest) returns (automation.ai.services.PredictResponse);
+  
+  // Bot operations
+  rpc CreateBot(automation.bots.services.CreateBotRequest) returns (automation.bots.services.CreateBotResponse);
+  rpc GetBot(automation.bots.services.GetBotRequest) returns (automation.bots.services.GetBotResponse);
+  rpc StartBot(automation.bots.services.StartBotRequest) returns (automation.bots.services.StartBotResponse);
+  rpc StopBot(automation.bots.services.StopBotRequest) returns (automation.bots.services.StopBotResponse);
+  
+  // Workflow operations
+  rpc CreateWorkflow(automation.workflow.services.CreateWorkflowRequest) returns (automation.workflow.services.CreateWorkflowResponse);
+  rpc GetWorkflow(automation.workflow.services.GetWorkflowRequest) returns (automation.workflow.services.GetWorkflowResponse);
+  rpc ExecuteWorkflow(automation.workflow.services.ExecuteWorkflowRequest) returns (automation.workflow.services.ExecuteWorkflowResponse);
+  rpc GetWorkflowExecution(automation.workflow.services.GetWorkflowExecutionRequest) returns (automation.workflow.services.GetWorkflowExecutionResponse);
+}
+
+// Module Documentation
+// This automation module provides comprehensive functionality for:
+// 
+// 1. AI Module:
+//    - AI model management (creation, training, deployment)
+//    - Dataset management and processing
+//    - Prediction services with request/response handling
+//    - Training job management and monitoring
+//    - Model evaluation and comparison
+//    - AI service orchestration
+//
+// 2. Bots Module:
+//    - Bot lifecycle management (creation, configuration, control)
+//    - Task execution and monitoring
+//    - Bot logging and analytics
+//    - Resource management and allocation
+//    - Bot service orchestration
+//
+// 3. Workflow Module:
+//    - Workflow definition and management
+//    - Workflow execution and monitoring
+//    - Step management and orchestration
+//    - Event handling and logging
+//    - Workflow scheduling and versioning
+//    - Workflow service orchestration
+//
+// All modules are designed to work together to provide a complete
+// automation platform with AI capabilities, bot management, and
+// workflow orchestration.

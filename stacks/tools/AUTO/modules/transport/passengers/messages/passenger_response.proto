@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package transport.passengers.v1;
+
+import "google/protobuf/timestamp.proto";
+import "passengers/enums/passenger_type.proto";
+import "passengers/enums/passenger_status.proto";
+import "passengers/messages/passenger_request.proto";
+
+option go_package = "github.com/rice-dev/transport/passengers/v1";
+
+// Passenger represents a registered passenger in the transport system
+message Passenger {
+  // Unique passenger identifier
+  string passenger_id = 1;
+  
+  // Passenger's full name
+  string name = 2;
+  
+  // Passenger type
+  PassengerType type = 3;
+  
+  // Contact information
+  ContactInfo contact_info = 4;
+  
+  // Date of birth
+  google.protobuf.Timestamp date_of_birth = 5;
+  
+  // Gender
+  string gender = 6;
+  
+  // National ID or passport number
+  string national_id = 7;
+  
+  // Preferred payment method
+  string payment_method = 8;
+  
+  // Accessibility requirements
+  repeated string accessibility_needs = 9;
+  
+  // Special dietary requirements
+  repeated string dietary_requirements = 10;
+  
+  // Current account status
+  PassengerStatus status = 11;
+  
+  // Additional preferences
+  map<string, string> preferences = 12;
+  
+  // Account creation timestamp
+  google.protobuf.Timestamp created_at = 13;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 14;
+  
+  // Last login timestamp
+  google.protobuf.Timestamp last_login = 15;
+  
+  // Account verification status
+  bool verified = 16;
+  
+  // Total trips taken
+  int32 total_trips = 17;
+  
+  // Total distance traveled (in kilometers)
+  double total_distance = 18;
+  
+  // Loyalty points balance
+  int32 loyalty_points = 19;
+  
+  // Membership level
+  string membership_level = 20;
+}
+
+// CreatePassengerResponse represents the response after creating a new passenger
+message CreatePassengerResponse {
+  // Created passenger information
+  Passenger passenger = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Verification token (if email verification required)
+  string verification_token = 4;
+}
+
+// GetPassengerResponse represents the response for retrieving a passenger
+message GetPassengerResponse {
+  // Requested passenger information
+  Passenger passenger = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// ListPassengersResponse represents the response for listing passengers
+message ListPassengersResponse {
+  // List of passengers
+  repeated Passenger passengers = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of passengers matching the filter
+  int32 total_count = 3;
+  
+  // Operation success status
+  bool success = 4;
+  
+  // Response message
+  string message = 5;
+}
+
+// UpdatePassengerResponse represents the response after updating a passenger
+message UpdatePassengerResponse {
+  // Updated passenger information
+  Passenger passenger = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// DeletePassengerResponse represents the response after deleting a passenger
+message DeletePassengerResponse {
+  // Deleted passenger ID
+  string passenger_id = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 4;
+  
+  // Data retention period
+  int32 retention_days = 5;
+}

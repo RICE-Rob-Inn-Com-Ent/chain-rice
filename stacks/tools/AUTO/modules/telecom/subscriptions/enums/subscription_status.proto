@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package telecom.subscriptions.enums;
+
+// SubscriptionStatus represents the current state of a subscription
+enum SubscriptionStatus {
+  // Unspecified status - should not be used in production
+  SUBSCRIPTION_STATUS_UNSPECIFIED = 0;
+  
+  // Subscription is active and operational
+  ACTIVE = 1;
+  
+  // Subscription is temporarily suspended
+  SUSPENDED = 2;
+  
+  // Subscription has been cancelled
+  CANCELLED = 3;
+  
+  // Subscription is pending activation
+  PENDING = 4;
+  
+  // Subscription has expired
+  EXPIRED = 5;
+  
+  // Subscription is in grace period
+  GRACE_PERIOD = 6;
+  
+  // Subscription is paused (temporary hold)
+  PAUSED = 7;
+  
+  // Subscription is under review
+  UNDER_REVIEW = 8;
+  
+  // Subscription is blocked due to non-payment or policy violation
+  BLOCKED = 9;
+  
+  // Subscription has been terminated
+  TERMINATED = 10;
+  
+  // Subscription is in trial period
+  TRIAL = 11;
+  
+  // Subscription is being provisioned
+  PROVISIONING = 12;
+  
+  // Subscription has been archived
+  ARCHIVED = 13;
+}

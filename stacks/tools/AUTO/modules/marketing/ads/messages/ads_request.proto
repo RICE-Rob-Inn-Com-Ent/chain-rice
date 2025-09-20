@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package marketing.ads.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/ads/enums/ads_status.proto";
+
+// Request message for creating a new advertisement
+message CreateAdsRequest {
+  // Advertisement name
+  string name = 1;
+  
+  // Advertisement description
+  string description = 2;
+  
+  // Target audience
+  string target_audience = 3;
+  
+  // Budget allocated for the advertisement
+  double budget = 4;
+  
+  // Campaign ID this advertisement belongs to
+  string campaign_id = 5;
+  
+  // Advertisement content
+  string content = 6;
+  
+  // Start date for the advertisement
+  google.protobuf.Timestamp start_date = 7;
+  
+  // End date for the advertisement
+  google.protobuf.Timestamp end_date = 8;
+}
+
+// Request message for getting an advertisement by ID
+message GetAdsRequest {
+  // Advertisement ID
+  string id = 1;
+}
+
+// Request message for listing advertisements
+message ListAdsRequest {
+  // Page number for pagination
+  int32 page = 1;
+  
+  // Number of items per page
+  int32 page_size = 2;
+  
+  // Filter by status
+  marketing.ads.enums.AdsStatus status = 3;
+  
+  // Filter by campaign ID
+  string campaign_id = 4;
+}
+
+// Request message for updating an advertisement
+message UpdateAdsRequest {
+  // Advertisement ID
+  string id = 1;
+  
+  // Advertisement name
+  string name = 2;
+  
+  // Advertisement description
+  string description = 3;
+  
+  // Target audience
+  string target_audience = 4;
+  
+  // Budget allocated for the advertisement
+  double budget = 5;
+  
+  // Advertisement content
+  string content = 6;
+  
+  // Start date for the advertisement
+  google.protobuf.Timestamp start_date = 7;
+  
+  // End date for the advertisement
+  google.protobuf.Timestamp end_date = 8;
+  
+  // Advertisement status
+  marketing.ads.enums.AdsStatus status = 9;
+}
+
+// Request message for deleting an advertisement
+message DeleteAdsRequest {
+  // Advertisement ID
+  string id = 1;
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Student lifecycle/status states.
+package education.students.enums;
+
+option go_package = "github.com/rice-dev/education/students/enums;studentsenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.students.enums";
+
+// Status of a student in the institution.
+enum StudentStatus {
+  STUDENT_STATUS_UNSPECIFIED = 0; // Unknown
+  STUDENT_STATUS_ACTIVE = 1;      // Currently enrolled
+  STUDENT_STATUS_INACTIVE = 2;    // Temporarily inactive/leave
+  STUDENT_STATUS_GRADUATED = 3;   // Completed program
+  STUDENT_STATUS_SUSPENDED = 4;   // Disciplinary or administrative suspension
+  STUDENT_STATUS_WITHDRAWN = 5;   // Withdrawn from program
+  STUDENT_STATUS_ALUMNI = 6;      // Alumni status
+}
+
+

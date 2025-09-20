@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package horeca.delivery.enums;
+
+// Status of delivery orders
+enum DeliveryStatus {
+  DELIVERY_STATUS_UNSPECIFIED = 0;
+  DELIVERY_STATUS_NEW = 1;                // New order received
+  DELIVERY_STATUS_CONFIRMED = 2;          // Order confirmed by restaurant
+  DELIVERY_STATUS_PREPARING = 3;          // Food being prepared
+  DELIVERY_STATUS_READY = 4;              // Order ready for pickup
+  DELIVERY_STATUS_ASSIGNED = 5;           // Driver assigned to order
+  DELIVERY_STATUS_PICKED_UP = 6;         // Driver picked up order
+  DELIVERY_STATUS_IN_TRANSIT = 7;         // Order en route to customer
+  DELIVERY_STATUS_DELIVERED = 8;          // Order delivered successfully
+  DELIVERY_STATUS_FAILED = 9;             // Delivery failed
+  DELIVERY_STATUS_CANCELED = 10;          // Order canceled
+  DELIVERY_STATUS_REFUNDED = 11;          // Order refunded
+}

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package logistics.shipping.messages;
+
+import "google/protobuf/timestamp.proto";
+
+// Shipping label information
+message ShippingLabel {
+  string label_id = 1;                        // Unique label identifier
+  string shipment_id = 2;                     // Associated shipment ID
+  string tracking_number = 3;                 // Tracking number
+  
+  // Label details
+  LabelType label_type = 4;                   // Type of label
+  string carrier_code = 5;                    // Carrier code
+  string service_code = 6;                    // Service code
+  string format = 7;                          // Label format (PDF, PNG, etc.)
+  
+  // Label content
+  bytes label_data = 8;                       // Label image/data
+  string label_url = 9;                       // URL to download label
+  string barcode_data = 10;                   // Barcode data
+  string qr_code_data = 11;                   // QR code data
+  
+  // Dimensions
+  double width_cm = 12;                       // Label width in cm
+  double height_cm = 13;                      // Label height in cm
+  
+  // Printing information
+  string printer_type = 14;                   // Required printer type
+  string paper_size = 15;                     // Paper size (A4, 4x6, etc.)
+  bool thermal_printer = 16;                   // Thermal printer compatible
+  
+  // Status and validation
+  bool is_validated = 17;                     // Label validation status
+  string validation_notes = 18;               // Validation comments
+  google.protobuf.Timestamp validation_time = 19; // Validation timestamp
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 20;   // Label creation time
+  google.protobuf.Timestamp expires_at = 21;  // Label expiry time
+  
+  // Additional information
+  string created_by = 22;                     // User/system that created label
+  string notes = 23;                          // Additional notes
+  map<string, string> metadata = 24;          // Additional metadata
+}
+
+// Types of shipping labels
+enum LabelType {
+  LABEL_TYPE_UNSPECIFIED = 0;
+  LABEL_TYPE_SHIPPING = 1;                    // Standard shipping label
+  LABEL_TYPE_RETURN = 2;                      // Return shipping label
+  LABEL_TYPE_INTERNATIONAL = 3;               // International shipping label
+  LABEL_TYPE_EXPRESS = 4;                     // Express shipping label
+  LABEL_TYPE_FREIGHT = 5;                     // Freight shipping label
+  LABEL_TYPE_CUSTOMS = 6;                     // Customs declaration label
+  LABEL_TYPE_HANDLING = 7;                    // Special handling label
+  LABEL_TYPE_HAZARDOUS = 8;                   // Hazardous materials label
+}

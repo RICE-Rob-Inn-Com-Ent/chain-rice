@@ -1,0 +1,367 @@
+syntax = "proto3";
+
+package settings.preferences.messages;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "settings/preferences/enums/preference_type.proto";
+
+// Preference data structure
+message Preference {
+  // Unique identifier for the preference
+  string id = 1;
+  
+  // The user ID this preference belongs to
+  string user_id = 2;
+  
+  // The preference key identifier
+  string preference_key = 3;
+  
+  // The preference value
+  google.protobuf.Value value = 4;
+  
+  // The data type of the preference value
+  settings.preferences.enums.PreferenceType type = 5;
+  
+  // Optional description of what this preference controls
+  string description = 6;
+  
+  // Optional default value for the preference
+  google.protobuf.Value default_value = 7;
+  
+  // Optional validation rules as JSON schema
+  google.protobuf.Struct validation_rules = 8;
+  
+  // Whether this preference is required
+  bool is_required = 9;
+  
+  // Whether this preference is sensitive/encrypted
+  bool is_sensitive = 10;
+  
+  // Optional category for organizing preferences
+  string category = 11;
+  
+  // Optional tags for categorization and search
+  repeated string tags = 12;
+  
+  // Optional metadata about the preference
+  map<string, string> metadata = 13;
+  
+  // Whether this preference is inherited from a parent scope
+  bool is_inherited = 14;
+  
+  // Source of inheritance
+  string inheritance_source = 15;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 16;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 17;
+  
+  // Version number for optimistic concurrency control
+  int32 version = 18;
+  
+  // Whether this preference is active
+  bool is_active = 19;
+  
+  // User who created the preference
+  string created_by = 20;
+  
+  // User who last updated the preference
+  string updated_by = 21;
+}
+
+// Response message for creating a preference
+message CreatePreferenceResponse {
+  // The created preference
+  Preference preference = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for retrieving a preference
+message GetPreferenceResponse {
+  // The requested preference
+  Preference preference = 1;
+}
+
+// Response message for retrieving a preference by user and key
+message GetPreferenceByUserAndKeyResponse {
+  // The requested preference
+  Preference preference = 1;
+}
+
+// Response message for listing user preferences
+message ListUserPreferencesResponse {
+  // List of preferences
+  repeated Preference preferences = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of preferences matching the filter
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Response message for updating a preference
+message UpdatePreferenceResponse {
+  // The updated preference
+  Preference preference = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for deleting a preference
+message DeletePreferenceResponse {
+  // Whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status message
+  string message = 2;
+  
+  // ID of the deleted preference
+  string deleted_id = 3;
+}
+
+// Response message for bulk operations on preferences
+message BulkPreferencesResponse {
+  // List of created/updated preferences
+  repeated Preference preferences = 1;
+  
+  // Number of preferences processed successfully
+  int32 success_count = 2;
+  
+  // Number of preferences that failed processing
+  int32 failure_count = 3;
+  
+  // List of error messages for failed preferences
+  repeated string errors = 4;
+  
+  // Overall operation status message
+  string message = 5;
+}
+
+// Response message for searching preferences
+message SearchPreferencesResponse {
+  // List of matching preferences
+  repeated Preference preferences = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of matching preferences
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+  
+  // Search query that was executed
+  string query = 5;
+  
+  // Search execution time in milliseconds
+  int64 execution_time_ms = 6;
+}
+
+// Response message for validating a preference value
+message ValidatePreferenceResponse {
+  // Whether the value is valid
+  bool is_valid = 1;
+  
+  // List of validation error messages
+  repeated string errors = 2;
+  
+  // List of validation warning messages
+  repeated string warnings = 3;
+  
+  // Normalized/processed value after validation
+  google.protobuf.Value normalized_value = 4;
+  
+  // Validation timestamp
+  string validated_at = 5;
+}
+
+// Response message for getting preference schema
+message GetPreferenceSchemaResponse {
+  // Preference key
+  string preference_key = 1;
+  
+  // Preference type
+  settings.preferences.enums.PreferenceType type = 2;
+  
+  // JSON schema for validation
+  google.protobuf.Struct schema = 3;
+  
+  // Description of the preference
+  string description = 4;
+  
+  // Default value
+  google.protobuf.Value default_value = 5;
+  
+  // Whether the preference is required
+  bool is_required = 6;
+  
+  // Whether the preference is sensitive
+  bool is_sensitive = 7;
+  
+  // Available options for select/enum types
+  repeated string options = 8;
+  
+  // Minimum value for numeric types
+  google.protobuf.Value min_value = 9;
+  
+  // Maximum value for numeric types
+  google.protobuf.Value max_value = 10;
+  
+  // Pattern for string validation
+  string pattern = 11;
+  
+  // Minimum length for string types
+  int32 min_length = 12;
+  
+  // Maximum length for string types
+  int32 max_length = 13;
+}
+
+// Response message for copying preferences
+message CopyPreferencesResponse {
+  // Number of preferences copied successfully
+  int32 copied_count = 1;
+  
+  // Number of preferences skipped (already exist and not overwriting)
+  int32 skipped_count = 2;
+  
+  // Number of preferences that failed to copy
+  int32 failed_count = 3;
+  
+  // List of error messages for failed copies
+  repeated string errors = 4;
+  
+  // List of copied preferences
+  repeated Preference copied_preferences = 5;
+  
+  // Operation completion timestamp
+  string completed_at = 6;
+  
+  // Summary of copy operation
+  string summary = 7;
+}
+
+// Response message for resetting preferences
+message ResetPreferencesResponse {
+  // Number of preferences reset successfully
+  int32 reset_count = 1;
+  
+  // Number of preferences that failed to reset
+  int32 failed_count = 2;
+  
+  // List of error messages for failed resets
+  repeated string errors = 3;
+  
+  // List of reset preferences
+  repeated Preference reset_preferences = 4;
+  
+  // Operation completion timestamp
+  string completed_at = 5;
+  
+  // Summary of reset operation
+  string summary = 6;
+}
+
+// Preferences statistics for analytics
+message PreferencesStats {
+  // Total number of preferences
+  int32 total_preferences = 1;
+  
+  // Number of preferences by type
+  map<string, int32> preferences_by_type = 2;
+  
+  // Number of preferences by category
+  map<string, int32> preferences_by_category = 3;
+  
+  // Number of required preferences
+  int32 required_preferences = 4;
+  
+  // Number of sensitive preferences
+  int32 sensitive_preferences = 5;
+  
+  // Number of inherited preferences
+  int32 inherited_preferences = 6;
+  
+  // Most popular preference keys
+  repeated PopularPreferenceKey popular_keys = 7;
+  
+  // Last updated timestamp
+  google.protobuf.Timestamp last_updated = 8;
+}
+
+// Popular preference key information
+message PopularPreferenceKey {
+  // Preference key
+  string preference_key = 1;
+  
+  // Usage count across all users
+  int32 usage_count = 2;
+  
+  // Number of unique users using this preference
+  int32 unique_users = 3;
+  
+  // Most common value for this preference
+  google.protobuf.Value most_common_value = 4;
+}
+
+// User preference summary
+message UserPreferenceSummary {
+  // User ID
+  string user_id = 1;
+  
+  // Total number of preferences for this user
+  int32 total_preferences = 2;
+  
+  // Number of custom preferences (non-inherited)
+  int32 custom_preferences = 3;
+  
+  // Number of inherited preferences
+  int32 inherited_preferences = 4;
+  
+  // Number of sensitive preferences
+  int32 sensitive_preferences = 5;
+  
+  // Last updated timestamp
+  google.protobuf.Timestamp last_updated = 6;
+}
+
+// Preference inheritance chain
+message PreferenceInheritance {
+  // Preference key
+  string preference_key = 1;
+  
+  // User ID
+  string user_id = 2;
+  
+  // Current value
+  google.protobuf.Value current_value = 3;
+  
+  // Inheritance chain from highest to lowest priority
+  repeated InheritanceLevel inheritance_chain = 4;
+}
+
+// Inheritance level information
+message InheritanceLevel {
+  // Level name (e.g., "global", "organization", "team", "user")
+  string level_name = 1;
+  
+  // Level identifier
+  string level_id = 2;
+  
+  // Value at this level
+  google.protobuf.Value value = 3;
+  
+  // Whether this value is overridden at a lower level
+  bool is_overridden = 4;
+}

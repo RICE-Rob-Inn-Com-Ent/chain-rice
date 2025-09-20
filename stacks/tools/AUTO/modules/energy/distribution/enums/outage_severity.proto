@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package energy.distribution.enums;
+
+// Outage severity levels for power distribution
+enum OutageSeverity {
+  // Minor outage affecting few customers
+  OUTAGE_SEVERITY_MINOR = 0;
+  
+  // Small outage affecting local area
+  OUTAGE_SEVERITY_SMALL = 1;
+  
+  // Medium outage affecting neighborhood
+  OUTAGE_SEVERITY_MEDIUM = 2;
+  
+  // Large outage affecting district
+  OUTAGE_SEVERITY_LARGE = 3;
+  
+  // Major outage affecting city/region
+  OUTAGE_SEVERITY_MAJOR = 4;
+  
+  // Critical outage affecting large area
+  OUTAGE_SEVERITY_CRITICAL = 5;
+  
+  // Catastrophic outage affecting entire system
+  OUTAGE_SEVERITY_CATASTROPHIC = 6;
+  
+  // Emergency outage requiring immediate response
+  OUTAGE_SEVERITY_EMERGENCY = 7;
+  
+  // Planned outage for maintenance
+  OUTAGE_SEVERITY_PLANNED = 8;
+  
+  // Unplanned outage due to equipment failure
+  OUTAGE_SEVERITY_UNPLANNED = 9;
+  
+  // Weather-related outage
+  OUTAGE_SEVERITY_WEATHER = 10;
+  
+  // Equipment failure outage
+  OUTAGE_SEVERITY_EQUIPMENT_FAILURE = 11;
+  
+  // Human error outage
+  OUTAGE_SEVERITY_HUMAN_ERROR = 12;
+  
+  // Cyber attack outage
+  OUTAGE_SEVERITY_CYBER_ATTACK = 13;
+  
+  // Natural disaster outage
+  OUTAGE_SEVERITY_NATURAL_DISASTER = 14;
+  
+  // Transmission outage
+  OUTAGE_SEVERITY_TRANSMISSION = 15;
+  
+  // Distribution outage
+  OUTAGE_SEVERITY_DISTRIBUTION = 16;
+  
+  // Generation outage
+  OUTAGE_SEVERITY_GENERATION = 17;
+  
+  // Fuel supply outage
+  OUTAGE_SEVERITY_FUEL_SUPPLY = 18;
+  
+  // Regulatory compliance outage
+  OUTAGE_SEVERITY_REGULATORY = 19;
+  
+  // Third-party outage
+  OUTAGE_SEVERITY_THIRD_PARTY = 20;
+  
+  // Unknown cause outage
+  OUTAGE_SEVERITY_UNKNOWN = 21;
+}

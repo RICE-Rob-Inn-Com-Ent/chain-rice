@@ -1,0 +1,205 @@
+syntax = "proto3";
+
+package transport.passengers.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "passengers/enums/passenger_type.proto";
+import "passengers/enums/passenger_status.proto";
+
+option go_package = "github.com/rice-dev/transport/passengers/v1";
+
+// ContactInfo represents passenger contact information
+message ContactInfo {
+  // Primary email address
+  string email = 1;
+  
+  // Primary phone number
+  string phone = 2;
+  
+  // Secondary phone number
+  string secondary_phone = 3;
+  
+  // Home address
+  Address home_address = 4;
+  
+  // Work address
+  Address work_address = 5;
+  
+  // Emergency contact name
+  string emergency_contact_name = 6;
+  
+  // Emergency contact phone
+  string emergency_contact_phone = 7;
+  
+  // Preferred language for communications
+  string preferred_language = 8;
+  
+  // Communication preferences
+  map<string, bool> communication_preferences = 9;
+}
+
+// Address represents a physical address
+message Address {
+  // Street address
+  string street = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state = 3;
+  
+  // Postal/ZIP code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // Additional address details
+  string additional_info = 6;
+}
+
+// CreatePassengerRequest represents a request to register a new passenger
+message CreatePassengerRequest {
+  // Passenger's full name (required)
+  string name = 1;
+  
+  // Passenger type (required)
+  PassengerType type = 2;
+  
+  // Contact information (required)
+  ContactInfo contact_info = 3;
+  
+  // Date of birth
+  google.protobuf.Timestamp date_of_birth = 4;
+  
+  // Gender (male, female, other, prefer_not_to_say)
+  string gender = 5;
+  
+  // National ID or passport number
+  string national_id = 6;
+  
+  // Preferred payment method
+  string payment_method = 7;
+  
+  // Accessibility requirements
+  repeated string accessibility_needs = 8;
+  
+  // Special dietary requirements
+  repeated string dietary_requirements = 9;
+  
+  // Initial status (defaults to ACTIVE)
+  PassengerStatus status = 10;
+  
+  // Additional passenger preferences
+  map<string, string> preferences = 11;
+}
+
+// GetPassengerRequest represents a request to retrieve passenger information
+message GetPassengerRequest {
+  // Passenger ID (required)
+  string passenger_id = 1;
+  
+  // Fields to include in response (optional)
+  google.protobuf.FieldMask field_mask = 2;
+  
+  // Include sensitive information (requires special permissions)
+  bool include_sensitive_data = 3;
+}
+
+// ListPassengersRequest represents a request to list passengers with filtering
+message ListPassengersRequest {
+  // Page size for pagination
+  int32 page_size = 1;
+  
+  // Page token for pagination
+  string page_token = 2;
+  
+  // Filter by passenger type
+  PassengerType type = 3;
+  
+  // Filter by status
+  PassengerStatus status = 4;
+  
+  // Search by name
+  string name = 5;
+  
+  // Search by email
+  string email = 6;
+  
+  // Filter by registration date range - start
+  google.protobuf.Timestamp created_after = 7;
+  
+  // Filter by registration date range - end
+  google.protobuf.Timestamp created_before = 8;
+  
+  // Sort field (name, created_at, last_login, type)
+  string sort_by = 9;
+  
+  // Sort order (asc, desc)
+  string sort_order = 10;
+}
+
+// UpdatePassengerRequest represents a request to update passenger information
+message UpdatePassengerRequest {
+  // Passenger ID (required)
+  string passenger_id = 1;
+  
+  // Updated passenger information
+  PassengerUpdateData passenger = 2;
+  
+  // Fields to update (required)
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+// PassengerUpdateData contains updatable passenger fields
+message PassengerUpdateData {
+  // Passenger's full name
+  string name = 1;
+  
+  // Passenger type
+  PassengerType type = 2;
+  
+  // Contact information
+  ContactInfo contact_info = 3;
+  
+  // Date of birth
+  google.protobuf.Timestamp date_of_birth = 4;
+  
+  // Gender
+  string gender = 5;
+  
+  // National ID or passport number
+  string national_id = 6;
+  
+  // Preferred payment method
+  string payment_method = 7;
+  
+  // Accessibility requirements
+  repeated string accessibility_needs = 8;
+  
+  // Special dietary requirements
+  repeated string dietary_requirements = 9;
+  
+  // Status
+  PassengerStatus status = 10;
+  
+  // Additional preferences
+  map<string, string> preferences = 11;
+}
+
+// DeletePassengerRequest represents a request to remove a passenger account
+message DeletePassengerRequest {
+  // Passenger ID (required)
+  string passenger_id = 1;
+  
+  // Reason for deletion
+  string reason = 2;
+  
+  // Force deletion even if passenger has active bookings
+  bool force = 3;
+  
+  // Data retention period (in days)
+  int32 retention_days = 4;
+}

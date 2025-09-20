@@ -1,0 +1,247 @@
+syntax = "proto3";
+
+package crm_hr.support.messages;
+
+import "google/protobuf/timestamp.proto";
+import "crm_hr/support/enums/ticket_status.proto";
+import "crm_hr/support/enums/ticket_priority.proto";
+import "crm_hr/support/enums/support_channel.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/support/messages";
+
+// SupportTicket represents a support ticket in the system
+message SupportTicket {
+  // Unique identifier for the ticket
+  string id = 1;
+  
+  // Ticket information
+  string ticket_number = 2;
+  string subject = 3;
+  string description = 4;
+  string summary = 5;
+  
+  // Ticket classification
+  crm_hr.support.enums.TicketStatus status = 6;
+  crm_hr.support.enums.TicketPriority priority = 7;
+  crm_hr.support.enums.SupportChannel channel = 8;
+  string category = 9;
+  string subcategory = 10;
+  string type = 11; // incident, request, problem, change, etc.
+  
+  // Customer information
+  string customer_id = 12;
+  string customer_name = 13;
+  string customer_email = 14;
+  string customer_phone = 15;
+  string customer_company = 16;
+  
+  // Assignment information
+  string assigned_to = 17;
+  string assigned_team = 18;
+  string assigned_group = 19;
+  string assigned_department = 20;
+  
+  // Ticket lifecycle
+  google.protobuf.Timestamp created_at = 21;
+  google.protobuf.Timestamp updated_at = 22;
+  google.protobuf.Timestamp resolved_at = 23;
+  google.protobuf.Timestamp closed_at = 24;
+  google.protobuf.Timestamp due_date = 25;
+  google.protobuf.Timestamp sla_deadline = 26;
+  
+  // Ticket metadata
+  string source = 27; // web, email, phone, chat, api, etc.
+  string origin = 28; // customer, internal, system, partner, etc.
+  string impact = 29; // low, medium, high, critical
+  string urgency = 30; // low, medium, high, critical
+  string resolution = 31;
+  string resolution_notes = 32;
+  
+  // Related entities
+  string parent_ticket_id = 33;
+  repeated string child_ticket_ids = 34;
+  repeated string related_ticket_ids = 35;
+  string product_id = 36;
+  string product_name = 37;
+  string version = 38;
+  string environment = 39; // production, staging, development, etc.
+  
+  // SLA information
+  string sla_category = 40;
+  int32 sla_response_time_minutes = 41;
+  int32 sla_resolution_time_hours = 42;
+  bool sla_breached = 43;
+  google.protobuf.Timestamp sla_breach_time = 44;
+  
+  // Additional information
+  repeated string tags = 45;
+  repeated string attachments = 46;
+  map<string, string> custom_fields = 47;
+  string notes = 48;
+  string internal_notes = 49;
+  
+  // Timestamps
+  google.protobuf.Timestamp last_activity_at = 50;
+  google.protobuf.Timestamp last_customer_response_at = 51;
+  google.protobuf.Timestamp last_agent_response_at = 52;
+  
+  // Version for optimistic concurrency control
+  int32 version = 53;
+}
+
+// SupportTicketUpdate represents an update to a support ticket
+message SupportTicketUpdate {
+  // Unique identifier for the update
+  string id = 1;
+  
+  // Associated ticket ID
+  string ticket_id = 2;
+  
+  // Update information
+  string update_type = 3; // status_change, assignment, priority_change, etc.
+  string field_name = 4;
+  string old_value = 5;
+  string new_value = 6;
+  string description = 7;
+  
+  // Update metadata
+  string updated_by = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  string update_source = 10; // manual, automatic, system, api, etc.
+  string reason = 11;
+  
+  // Additional information
+  string notes = 12;
+  map<string, string> custom_fields = 13;
+}
+
+// SupportTicketTemplate represents a reusable template for creating tickets
+message SupportTicketTemplate {
+  // Unique identifier for the template
+  string id = 1;
+  
+  // Template information
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  string subcategory = 5;
+  string type = 6;
+  
+  // Template content
+  string subject_template = 7;
+  string description_template = 8;
+  string resolution_template = 9;
+  
+  // Template settings
+  crm_hr.support.enums.TicketPriority default_priority = 10;
+  crm_hr.support.enums.SupportChannel default_channel = 11;
+  string default_assigned_team = 12;
+  string default_assigned_group = 13;
+  string default_sla_category = 14;
+  
+  // Template metadata
+  bool is_active = 15;
+  bool is_public = 16;
+  string created_by = 17;
+  string team_id = 18;
+  repeated string tags = 19;
+  map<string, string> custom_fields = 20;
+  
+  // Usage statistics
+  int32 usage_count = 21;
+  google.protobuf.Timestamp last_used_at = 22;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+}
+
+// SupportTicketMetrics represents metrics for a support ticket
+message SupportTicketMetrics {
+  // Associated ticket ID
+  string ticket_id = 1;
+  
+  // Time metrics
+  int32 first_response_time_minutes = 2;
+  int32 resolution_time_hours = 3;
+  int32 total_time_hours = 4;
+  int32 time_in_status_hours = 5;
+  int32 time_in_priority_hours = 6;
+  
+  // Response metrics
+  int32 total_responses = 7;
+  int32 customer_responses = 8;
+  int32 agent_responses = 9;
+  int32 internal_responses = 10;
+  double average_response_time_hours = 11;
+  
+  // Escalation metrics
+  int32 escalation_count = 12;
+  int32 reassignment_count = 13;
+  int32 priority_change_count = 14;
+  int32 status_change_count = 15;
+  
+  // SLA metrics
+  bool sla_breached = 16;
+  int32 sla_breach_minutes = 17;
+  double sla_compliance_rate = 18;
+  
+  // Quality metrics
+  double customer_satisfaction_score = 19;
+  double agent_satisfaction_score = 20;
+  double resolution_quality_score = 21;
+  
+  // Calculated at timestamp
+  google.protobuf.Timestamp calculated_at = 22;
+}
+
+// SupportTicketSearch represents search criteria for tickets
+message SupportTicketSearch {
+  // Basic search criteria
+  string query = 1;
+  string ticket_number = 2;
+  string subject = 3;
+  string description = 4;
+  
+  // Filter criteria
+  crm_hr.support.enums.TicketStatus status = 5;
+  crm_hr.support.enums.TicketPriority priority = 6;
+  crm_hr.support.enums.SupportChannel channel = 7;
+  string category = 8;
+  string subcategory = 9;
+  string type = 10;
+  
+  // Customer criteria
+  string customer_id = 11;
+  string customer_name = 12;
+  string customer_email = 13;
+  string customer_company = 14;
+  
+  // Assignment criteria
+  string assigned_to = 15;
+  string assigned_team = 16;
+  string assigned_group = 17;
+  string assigned_department = 18;
+  
+  // Date criteria
+  google.protobuf.Timestamp created_after = 19;
+  google.protobuf.Timestamp created_before = 20;
+  google.protobuf.Timestamp updated_after = 21;
+  google.protobuf.Timestamp updated_before = 22;
+  google.protobuf.Timestamp due_after = 23;
+  google.protobuf.Timestamp due_before = 24;
+  
+  // Additional criteria
+  repeated string tags = 25;
+  string product_id = 26;
+  string product_name = 27;
+  string version = 28;
+  string environment = 29;
+  bool sla_breached = 30;
+  
+  // Search options
+  int32 page_size = 31;
+  string page_token = 32;
+  string order_by = 33;
+  string sort_direction = 34; // asc, desc
+}

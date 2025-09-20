@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package finance.subscriptions.enums;
+
+// Status of subscriptions
+enum SubscriptionStatus {
+  // Default value
+  SUBSCRIPTION_STATUS_UNSPECIFIED = 0;
+  
+  // Active - subscription is active
+  SUBSCRIPTION_STATUS_ACTIVE = 1;
+  
+  // Inactive - subscription is inactive
+  SUBSCRIPTION_STATUS_INACTIVE = 2;
+  
+  // Pending - subscription is pending activation
+  SUBSCRIPTION_STATUS_PENDING = 3;
+  
+  // Trial - subscription is in trial period
+  SUBSCRIPTION_STATUS_TRIAL = 4;
+  
+  // Expired - subscription has expired
+  SUBSCRIPTION_STATUS_EXPIRED = 5;
+  
+  // Cancelled - subscription has been cancelled
+  SUBSCRIPTION_STATUS_CANCELLED = 6;
+  
+  // Suspended - subscription has been suspended
+  SUBSCRIPTION_STATUS_SUSPENDED = 7;
+  
+  // Past due - subscription payment is past due
+  SUBSCRIPTION_STATUS_PAST_DUE = 8;
+  
+  // Unpaid - subscription payment is unpaid
+  SUBSCRIPTION_STATUS_UNPAID = 9;
+  
+  // Paused - subscription has been paused
+  SUBSCRIPTION_STATUS_PAUSED = 10;
+  
+  // Upgraded - subscription has been upgraded
+  SUBSCRIPTION_STATUS_UPGRADED = 11;
+  
+  // Downgraded - subscription has been downgraded
+  SUBSCRIPTION_STATUS_DOWNGRADED = 12;
+  
+  // Renewed - subscription has been renewed
+  SUBSCRIPTION_STATUS_RENEWED = 13;
+  
+  // Failed - subscription activation failed
+  SUBSCRIPTION_STATUS_FAILED = 14;
+  
+  // Completed - subscription has completed its term
+  SUBSCRIPTION_STATUS_COMPLETED = 15;
+  
+  // Terminated - subscription has been terminated
+  SUBSCRIPTION_STATUS_TERMINATED = 16;
+  
+  // On hold - subscription is on hold
+  SUBSCRIPTION_STATUS_ON_HOLD = 17;
+  
+  // Processing - subscription is being processed
+  SUBSCRIPTION_STATUS_PROCESSING = 18;
+}

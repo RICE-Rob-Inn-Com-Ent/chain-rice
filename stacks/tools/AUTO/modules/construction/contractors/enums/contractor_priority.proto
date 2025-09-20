@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package construction.contractors.enums;
+
+// Enumeration of priority levels for contractors
+enum ContractorPriority {
+  // Default value for unset contractor priority
+  CONTRACTOR_PRIORITY_UNSPECIFIED = 0;
+  
+  // Highest priority - critical projects only
+  CRITICAL = 1;
+  
+  // High priority - important projects
+  HIGH = 2;
+  
+  // Normal priority - standard projects
+  NORMAL = 3;
+  
+  // Low priority - non-urgent projects
+  LOW = 4;
+  
+  // Emergency priority - immediate response required
+  EMERGENCY = 5;
+  
+  // Preferred contractor - first choice for projects
+  PREFERRED = 6;
+  
+  // Backup contractor - used when preferred is unavailable
+  BACKUP = 7;
+  
+  // Standby contractor - on-call for specific situations
+  STANDBY = 8;
+  
+  // Exclusive contractor - only contractor for specific work
+  EXCLUSIVE = 9;
+  
+  // Approved contractor - meets minimum requirements
+  APPROVED = 10;
+  
+  // Premium contractor - highest quality and service
+  PREMIUM = 11;
+  
+  // Budget contractor - cost-effective option
+  BUDGET = 12;
+  
+  // Specialized contractor - for specific technical requirements
+  SPECIALIZED = 13;
+}

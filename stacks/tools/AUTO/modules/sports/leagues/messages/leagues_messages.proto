@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package sports.leagues.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "sports/leagues/enums/leagues_enums.proto";
+
+option go_package = "github.com/rice-dev/sports/leagues/v1";
+
+// League represents a sports league with all its properties
+message League {
+  string id = 1;                          // Unique identifier for the league
+  string name = 2;                        // Name of the league
+  string description = 3;                 // Description of the league
+  string country = 4;                     // Country where the league is based
+  string region = 5;                      // Region/state within the country
+  SportType sport_type = 6;               // Type of sport
+  LeagueStatus status = 7;                // Current status of the league
+  LeagueTier tier = 8;                    // Tier/level of the league
+  SeasonType season_type = 9;             // Type of season
+  LeagueFormat format = 10;               // Format of the league
+  int32 season_year = 11;                 // Year of the season
+  string season_name = 12;                // Name of the season (e.g., "2023-24")
+  int32 max_teams = 13;                   // Maximum number of teams allowed
+  int32 current_teams = 14;               // Current number of teams
+  google.protobuf.Timestamp start_date = 15; // When the league starts
+  google.protobuf.Timestamp end_date = 16;   // When the league ends
+  google.protobuf.Timestamp created_at = 17; // When the league was created
+  google.protobuf.Timestamp updated_at = 18; // When the league was last updated
+  string website_url = 19;                // Official website URL
+  string logo_url = 20;                   // Logo image URL
+  map<string, string> metadata = 21;      // Additional metadata
+}
+
+// CreateLeagueRequest represents the request to create a new league
+message CreateLeagueRequest {
+  string name = 1;                        // Name of the league (required)
+  google.protobuf.StringValue description = 2; // Optional description
+  string country = 3;                     // Country (required)
+  google.protobuf.StringValue region = 4; // Optional region
+  SportType sport_type = 5;               // Sport type (required)
+  LeagueTier tier = 6;                    // League tier (required)
+  SeasonType season_type = 7;             // Season type (required)
+  LeagueFormat format = 8;                // League format (required)
+  int32 season_year = 9;                  // Season year (required)
+  google.protobuf.StringValue season_name = 10; // Optional season name
+  google.protobuf.Int32Value max_teams = 11; // Optional max teams
+  google.protobuf.Timestamp start_date = 12; // Optional start date
+  google.protobuf.Timestamp end_date = 13;   // Optional end date
+  google.protobuf.StringValue website_url = 14; // Optional website
+  google.protobuf.StringValue logo_url = 15;    // Optional logo URL
+  map<string, string> metadata = 16;      // Optional metadata
+}
+
+// CreateLeagueResponse represents the response after creating a league
+message CreateLeagueResponse {
+  League league = 1;                      // The created league
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// GetLeagueRequest represents the request to get a league by ID
+message GetLeagueRequest {
+  string league_id = 1;                   // ID of the league to retrieve
+}
+
+// GetLeagueResponse represents the response containing league data
+message GetLeagueResponse {
+  League league = 1;                      // The requested league
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// ListLeaguesRequest represents the request to list leagues with filters
+message ListLeaguesRequest {
+  google.protobuf.Int32Value page_size = 1;    // Number of leagues per page
+  google.protobuf.StringValue page_token = 2;  // Token for pagination
+  google.protobuf.StringValue country = 3;     // Filter by country
+  SportType sport_type = 4;                    // Filter by sport type
+  LeagueStatus status = 5;                     // Filter by status
+  LeagueTier tier = 6;                         // Filter by tier
+  int32 season_year = 7;                       // Filter by season year
+  google.protobuf.StringValue search_query = 8; // Search query for name/description
+}
+
+// ListLeaguesResponse represents the response containing a list of leagues
+message ListLeaguesResponse {
+  repeated League leagues = 1;            // List of leagues
+  string next_page_token = 2;             // Token for next page
+  int32 total_count = 3;                  // Total number of leagues matching filters
+  bool success = 4;                       // Whether the operation was successful
+  string message = 5;                     // Response message
+  google.protobuf.Timestamp timestamp = 6; // Response timestamp
+}
+
+// UpdateLeagueRequest represents the request to update a league
+message UpdateLeagueRequest {
+  string league_id = 1;                   // ID of the league to update
+  google.protobuf.StringValue name = 2;   // Optional new name
+  google.protobuf.StringValue description = 3; // Optional new description
+  google.protobuf.StringValue country = 4; // Optional new country
+  google.protobuf.StringValue region = 5; // Optional new region
+  SportType sport_type = 6;               // Optional new sport type
+  LeagueStatus status = 7;                // Optional new status
+  LeagueTier tier = 8;                    // Optional new tier
+  SeasonType season_type = 9;             // Optional new season type
+  LeagueFormat format = 10;               // Optional new format
+  google.protobuf.Int32Value season_year = 11; // Optional new season year
+  google.protobuf.StringValue season_name = 12; // Optional new season name
+  google.protobuf.Int32Value max_teams = 13; // Optional new max teams
+  google.protobuf.Timestamp start_date = 14; // Optional new start date
+  google.protobuf.Timestamp end_date = 15;   // Optional new end date
+  google.protobuf.StringValue website_url = 16; // Optional new website
+  google.protobuf.StringValue logo_url = 17;    // Optional new logo URL
+  map<string, string> metadata = 18;      // Optional new metadata
+}
+
+// UpdateLeagueResponse represents the response after updating a league
+message UpdateLeagueResponse {
+  League league = 1;                      // The updated league
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// DeleteLeagueRequest represents the request to delete a league
+message DeleteLeagueRequest {
+  string league_id = 1;                   // ID of the league to delete
+}
+
+// DeleteLeagueResponse represents the response after deleting a league
+message DeleteLeagueResponse {
+  bool success = 1;                       // Whether the operation was successful
+  string message = 2;                     // Response message
+  google.protobuf.Timestamp timestamp = 3; // Response timestamp
+}

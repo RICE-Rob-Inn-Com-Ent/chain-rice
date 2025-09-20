@@ -1,0 +1,347 @@
+syntax = "proto3";
+
+package tourism.tours.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/tours/enums/tour_type.proto";
+import "tourism/tours/enums/tour_status.proto";
+
+// CreateTourRequest represents a request to create a new tour
+message CreateTourRequest {
+  // Tour name
+  string name = 1;
+  
+  // Tour description
+  string description = 2;
+  
+  // Tour type
+  tourism.tours.enums.TourType type = 3;
+  
+  // Tour status
+  tourism.tours.enums.TourStatus status = 4;
+  
+  // Tour duration in hours
+  int32 duration_hours = 5;
+  
+  // Maximum number of participants
+  int32 max_participants = 6;
+  
+  // Minimum number of participants required
+  int32 min_participants = 7;
+  
+  // Tour price per person (in smallest currency unit)
+  int64 price_per_person = 8;
+  
+  // Currency code (ISO 4217 format)
+  string currency = 9;
+  
+  // Tour start date and time
+  google.protobuf.Timestamp start_date = 10;
+  
+  // Tour end date and time
+  google.protobuf.Timestamp end_date = 11;
+  
+  // Meeting point location
+  LocationInfo meeting_point = 12;
+  
+  // Tour itinerary
+  repeated TourItineraryItem itinerary = 13;
+  
+  // Included services and amenities
+  repeated string included_services = 14;
+  
+  // Excluded services
+  repeated string excluded_services = 15;
+  
+  // Tour requirements and restrictions
+  repeated string requirements = 16;
+  
+  // Tour highlights
+  repeated string highlights = 17;
+  
+  // Tour guide information
+  TourGuideInfo tour_guide = 18;
+  
+  // Cancellation policy
+  CancellationPolicy cancellation_policy = 19;
+  
+  // Age restrictions
+  google.protobuf.StringValue age_restrictions = 20;
+  
+  // Physical fitness requirements
+  google.protobuf.StringValue fitness_requirements = 21;
+  
+  // What to bring
+  repeated string what_to_bring = 22;
+  
+  // Tour images
+  repeated string images = 23;
+  
+  // Tour languages available
+  repeated string languages = 24;
+  
+  // Tour difficulty level
+  google.protobuf.StringValue difficulty_level = 25;
+}
+
+// UpdateTourRequest represents a request to update an existing tour
+message UpdateTourRequest {
+  // Tour ID to update
+  string tour_id = 1;
+  
+  // Optional new name
+  google.protobuf.StringValue name = 2;
+  
+  // Optional new description
+  google.protobuf.StringValue description = 3;
+  
+  // Optional new type
+  tourism.tours.enums.TourType type = 4;
+  
+  // Optional new status
+  tourism.tours.enums.TourStatus status = 5;
+  
+  // Optional new duration
+  google.protobuf.DoubleValue duration_hours = 6;
+  
+  // Optional new max participants
+  google.protobuf.DoubleValue max_participants = 7;
+  
+  // Optional new price
+  google.protobuf.DoubleValue price_per_person = 8;
+  
+  // Optional new start date
+  google.protobuf.Timestamp start_date = 9;
+  
+  // Optional new end date
+  google.protobuf.Timestamp end_date = 10;
+  
+  // Optional new meeting point
+  LocationInfo meeting_point = 11;
+  
+  // Optional new itinerary
+  repeated TourItineraryItem itinerary = 12;
+  
+  // Optional new services
+  repeated string included_services = 13;
+  repeated string excluded_services = 14;
+}
+
+// GetTourRequest represents a request to retrieve a specific tour
+message GetTourRequest {
+  // Tour ID to retrieve
+  string tour_id = 1;
+}
+
+// ListToursRequest represents a request to list tours with filtering
+message ListToursRequest {
+  // Tour type filter (optional)
+  tourism.tours.enums.TourType type = 1;
+  
+  // Tour status filter (optional)
+  tourism.tours.enums.TourStatus status = 2;
+  
+  // Location filter (optional)
+  google.protobuf.StringValue location = 3;
+  
+  // Price range filter (optional)
+  google.protobuf.DoubleValue min_price = 4;
+  google.protobuf.DoubleValue max_price = 5;
+  
+  // Date range filter (optional)
+  google.protobuf.Timestamp start_date_after = 6;
+  google.protobuf.Timestamp start_date_before = 7;
+  
+  // Duration filter (optional)
+  google.protobuf.DoubleValue min_duration_hours = 8;
+  google.protobuf.DoubleValue max_duration_hours = 9;
+  
+  // Difficulty level filter (optional)
+  google.protobuf.StringValue difficulty_level = 10;
+  
+  // Language filter (optional)
+  google.protobuf.StringValue language = 11;
+  
+  // Page number for pagination (starts from 1)
+  int32 page = 12;
+  
+  // Page size for pagination (max 100)
+  int32 page_size = 13;
+}
+
+// DeleteTourRequest represents a request to delete a tour
+message DeleteTourRequest {
+  // Tour ID to delete
+  string tour_id = 1;
+  
+  // Reason for deletion
+  google.protobuf.StringValue reason = 2;
+}
+
+// SearchToursRequest represents a request to search for tours
+message SearchToursRequest {
+  // Search query string
+  string query = 1;
+  
+  // Tour type preference
+  tourism.tours.enums.TourType preferred_type = 2;
+  
+  // Location preference
+  google.protobuf.StringValue preferred_location = 3;
+  
+  // Date preference
+  google.protobuf.Timestamp preferred_date = 4;
+  
+  // Number of participants
+  int32 participants = 5;
+  
+  // Maximum price per person
+  google.protobuf.DoubleValue max_price_per_person = 6;
+  
+  // Preferred duration range
+  google.protobuf.DoubleValue min_duration_hours = 7;
+  google.protobuf.DoubleValue max_duration_hours = 8;
+  
+  // Difficulty level preference
+  google.protobuf.StringValue preferred_difficulty = 9;
+  
+  // Language preference
+  google.protobuf.StringValue preferred_language = 10;
+  
+  // Sort preference (price, duration, rating, popularity)
+  google.protobuf.StringValue sort_by = 11;
+  
+  // Page number for pagination
+  int32 page = 12;
+  
+  // Page size for pagination
+  int32 page_size = 13;
+}
+
+// LocationInfo represents location information for tours
+message LocationInfo {
+  // Location name or address
+  string location_name = 1;
+  
+  // Street address
+  google.protobuf.StringValue street_address = 2;
+  
+  // City
+  google.protobuf.StringValue city = 3;
+  
+  // State or province
+  google.protobuf.StringValue state_province = 4;
+  
+  // Country
+  google.protobuf.StringValue country = 5;
+  
+  // Postal code
+  google.protobuf.StringValue postal_code = 6;
+  
+  // Latitude coordinate
+  google.protobuf.DoubleValue latitude = 7;
+  
+  // Longitude coordinate
+  google.protobuf.DoubleValue longitude = 8;
+  
+  // Meeting instructions
+  google.protobuf.StringValue meeting_instructions = 9;
+  
+  // Landmarks nearby
+  repeated string nearby_landmarks = 10;
+  
+  // Transportation options
+  repeated string transportation_options = 11;
+}
+
+// TourItineraryItem represents an item in the tour itinerary
+message TourItineraryItem {
+  // Item sequence number
+  int32 sequence = 1;
+  
+  // Item title
+  string title = 2;
+  
+  // Item description
+  string description = 3;
+  
+  // Duration in minutes
+  int32 duration_minutes = 4;
+  
+  // Location for this item
+  LocationInfo location = 5;
+  
+  // Activities included
+  repeated string activities = 6;
+  
+  // Items to bring
+  repeated string items_to_bring = 7;
+  
+  // Special notes
+  google.protobuf.StringValue special_notes = 8;
+  
+  // Meal information
+  google.protobuf.StringValue meal_included = 9;
+  
+  // Photo opportunities
+  google.protobuf.StringValue photo_opportunities = 10;
+}
+
+// TourGuideInfo represents tour guide information
+message TourGuideInfo {
+  // Guide name
+  string guide_name = 1;
+  
+  // Guide bio
+  google.protobuf.StringValue guide_bio = 2;
+  
+  // Guide experience (years)
+  google.protobuf.DoubleValue experience_years = 3;
+  
+  // Languages spoken by guide
+  repeated string languages_spoken = 4;
+  
+  // Guide specializations
+  repeated string specializations = 5;
+  
+  // Guide certifications
+  repeated string certifications = 6;
+  
+  // Guide contact information
+  google.protobuf.StringValue contact_info = 7;
+  
+  // Guide rating
+  google.protobuf.DoubleValue guide_rating = 8;
+  
+  // Number of tours conducted
+  google.protobuf.DoubleValue tours_conducted = 9;
+  
+  // Guide photo
+  google.protobuf.StringValue guide_photo = 10;
+}
+
+// CancellationPolicy represents tour cancellation policy
+message CancellationPolicy {
+  // Cancellation deadline
+  google.protobuf.StringValue cancellation_deadline = 1;
+  
+  // Cancellation fees
+  google.protobuf.StringValue cancellation_fees = 2;
+  
+  // Refund policy
+  google.protobuf.StringValue refund_policy = 3;
+  
+  // No-show policy
+  google.protobuf.StringValue no_show_policy = 4;
+  
+  // Weather cancellation policy
+  google.protobuf.StringValue weather_cancellation_policy = 5;
+  
+  // Force majeure policy
+  google.protobuf.StringValue force_majeure_policy = 6;
+  
+  // Rescheduling policy
+  google.protobuf.StringValue rescheduling_policy = 7;
+}

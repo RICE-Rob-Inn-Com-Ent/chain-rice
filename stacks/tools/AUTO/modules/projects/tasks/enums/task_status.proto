@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package projects.tasks.enums;
+
+// TaskStatus represents the current state of a task
+enum TaskStatus {
+  // Default value - should not be used
+  TASK_STATUS_UNSPECIFIED = 0;
+  
+  // Task is newly created and not yet started
+  TASK_STATUS_TODO = 1;
+  
+  // Task is currently in progress
+  TASK_STATUS_IN_PROGRESS = 2;
+  
+  // Task is completed
+  TASK_STATUS_COMPLETED = 3;
+  
+  // Task is blocked by dependencies
+  TASK_STATUS_BLOCKED = 4;
+  
+  // Task is cancelled
+  TASK_STATUS_CANCELLED = 5;
+  
+  // Task is on hold
+  TASK_STATUS_ON_HOLD = 6;
+  
+  // Task is in review
+  TASK_STATUS_IN_REVIEW = 7;
+  
+  // Task is pending approval
+  TASK_STATUS_PENDING_APPROVAL = 8;
+}

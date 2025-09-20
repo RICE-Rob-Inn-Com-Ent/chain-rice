@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package transport.fleet_management.v1;
+
+option go_package = "github.com/rice-dev/transport/fleet_management/v1";
+
+// FleetStatus enum defines the operational status of fleet vehicles
+enum FleetStatus {
+  // Default value - should not be used
+  FLEET_STATUS_UNSPECIFIED = 0;
+  
+  // Vehicle is active and available for service
+  ACTIVE = 1;
+  
+  // Vehicle is undergoing maintenance or repairs
+  MAINTENANCE = 2;
+  
+  // Vehicle has been permanently removed from service
+  DECOMMISSIONED = 3;
+  
+  // Vehicle is temporarily out of service
+  OUT_OF_SERVICE = 4;
+  
+  // Vehicle is reserved for specific routes or events
+  RESERVED = 5;
+  
+  // Vehicle is in transit between locations
+  IN_TRANSIT = 6;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package horeca.housekeeping.enums;
+
+// Status of hotel rooms
+enum RoomStatus {
+  ROOM_STATUS_UNSPECIFIED = 0;
+  ROOM_STATUS_CLEAN = 1;                  // Room is clean and ready for guests
+  ROOM_STATUS_DIRTY = 2;                  // Room needs cleaning
+  ROOM_STATUS_OCCUPIED = 3;               // Room is currently occupied
+  ROOM_STATUS_OUT_OF_SERVICE = 4;         // Room is out of service for maintenance
+  ROOM_STATUS_MAINTENANCE = 5;            // Room under maintenance
+  ROOM_STATUS_DEEP_CLEAN = 6;             // Room needs deep cleaning
+  ROOM_STATUS_INSPECTED = 7;              // Room inspected and approved
+  ROOM_STATUS_VACANT = 8;                 // Room is vacant and available
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package construction.projects.enums;
+
+enum ProjectStatus {
+  PROJECT_STATUS_UNSPECIFIED = 0;
+  PLANNING = 1;
+  DESIGN = 2;
+  PERMITTING = 3;
+  PRE_CONSTRUCTION = 4;
+  CONSTRUCTION = 5;
+  POST_CONSTRUCTION = 6;
+  COMPLETED = 7;
+  ON_HOLD = 8;
+  CANCELLED = 9;
+  SUSPENDED = 10;
+  DELAYED = 11;
+  OVERDUE = 12;
+  PENDING_APPROVAL = 13;
+  APPROVED = 14;
+  REJECTED = 15;
+  ACTIVE = 16;
+  INACTIVE = 17;
+  ARCHIVED = 18;
+  CLOSED = 19;
+  TERMINATED = 20;
+}

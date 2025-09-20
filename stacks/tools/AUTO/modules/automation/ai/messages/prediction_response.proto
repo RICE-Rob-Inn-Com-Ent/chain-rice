@@ -1,0 +1,568 @@
+syntax = "proto3";
+
+package automation.ai.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// Prediction Response message
+// Represents the response from an AI model prediction
+message PredictionResponse {
+  // Unique identifier for the prediction response
+  string id = 1;
+  
+  // Original request ID
+  string request_id = 2;
+  
+  // Model ID used for prediction
+  string model_id = 3;
+  
+  // Model version used for prediction
+  string model_version = 4;
+  
+  // Prediction results
+  PredictionResults results = 5;
+  
+  // Prediction metadata
+  PredictionMetadata metadata = 6;
+  
+  // Prediction performance metrics
+  PredictionPerformance performance = 7;
+  
+  // Prediction errors
+  repeated PredictionError errors = 8;
+  
+  // Prediction warnings
+  repeated PredictionWarning warnings = 9;
+  
+  // Response timestamp
+  google.protobuf.Timestamp timestamp = 10;
+  
+  // Response status
+  string status = 11;
+  
+  // Response message
+  string message = 12;
+  
+  // Response correlation ID
+  string correlation_id = 13;
+  
+  // Response trace ID
+  string trace_id = 14;
+}
+
+// Prediction results
+message PredictionResults {
+  // Prediction type
+  string prediction_type = 1;
+  
+  // Prediction values
+  repeated PredictionValue values = 2;
+  
+  // Prediction confidence scores
+  repeated ConfidenceScore confidence_scores = 3;
+  
+  // Prediction probabilities
+  repeated ProbabilityDistribution probabilities = 4;
+  
+  // Prediction feature importance
+  repeated FeatureImportance feature_importance = 5;
+  
+  // Prediction explanations
+  repeated PredictionExplanation explanations = 6;
+  
+  // Prediction uncertainty
+  PredictionUncertainty uncertainty = 7;
+  
+  // Prediction quality
+  PredictionQuality quality = 8;
+}
+
+// Prediction value
+message PredictionValue {
+  // Value type
+  string type = 1;
+  
+  // Value content
+  oneof content {
+    // String value
+    string string_value = 2;
+    
+    // Numeric value
+    double numeric_value = 3;
+    
+    // Boolean value
+    bool boolean_value = 4;
+    
+    // Array value
+    ArrayValue array_value = 5;
+    
+    // Object value
+    google.protobuf.Struct object_value = 6;
+    
+    // Classification value
+    ClassificationValue classification_value = 7;
+    
+    // Regression value
+    RegressionValue regression_value = 8;
+    
+    // Time series value
+    TimeSeriesValue time_series_value = 9;
+  }
+  
+  // Value index
+  int32 index = 10;
+  
+  // Value label
+  string label = 11;
+  
+  // Value description
+  string description = 12;
+}
+
+// Array value
+message ArrayValue {
+  // Array values
+  repeated double values = 1;
+  
+  // Array shape
+  repeated int32 shape = 2;
+  
+  // Array data type
+  string data_type = 3;
+}
+
+// Classification value
+message ClassificationValue {
+  // Predicted class
+  string predicted_class = 1;
+  
+  // Class index
+  int32 class_index = 2;
+  
+  // Class probability
+  double class_probability = 3;
+  
+  // All class probabilities
+  map<string, double> all_class_probabilities = 4;
+}
+
+// Regression value
+message RegressionValue {
+  // Predicted value
+  double predicted_value = 1;
+  
+  // Prediction interval
+  PredictionInterval prediction_interval = 2;
+  
+  // Prediction bounds
+  PredictionBounds prediction_bounds = 3;
+}
+
+// Time series value
+message TimeSeriesValue {
+  // Time series predictions
+  repeated TimeSeriesPrediction predictions = 1;
+  
+  // Time series frequency
+  string frequency = 2;
+  
+  // Time series horizon
+  int32 horizon = 3;
+}
+
+// Time series prediction
+message TimeSeriesPrediction {
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 1;
+  
+  // Predicted value
+  double predicted_value = 2;
+  
+  // Prediction confidence
+  double confidence = 3;
+  
+  // Prediction interval
+  PredictionInterval prediction_interval = 4;
+}
+
+// Prediction interval
+message PredictionInterval {
+  // Lower bound
+  double lower_bound = 1;
+  
+  // Upper bound
+  double upper_bound = 2;
+  
+  // Confidence level
+  double confidence_level = 3;
+}
+
+// Prediction bounds
+message PredictionBounds {
+  // Minimum value
+  double min_value = 1;
+  
+  // Maximum value
+  double max_value = 2;
+  
+  // Mean value
+  double mean_value = 3;
+  
+  // Standard deviation
+  double std_deviation = 4;
+}
+
+// Confidence score
+message ConfidenceScore {
+  // Score value (0.0 to 1.0)
+  double score = 1;
+  
+  // Score type
+  string type = 2;
+  
+  // Score description
+  string description = 3;
+  
+  // Score index
+  int32 index = 4;
+}
+
+// Probability distribution
+message ProbabilityDistribution {
+  // Distribution type
+  string distribution_type = 1;
+  
+  // Distribution parameters
+  google.protobuf.Struct parameters = 2;
+  
+  // Probability values
+  repeated double probabilities = 3;
+  
+  // Probability labels
+  repeated string labels = 4;
+  
+  // Distribution index
+  int32 index = 5;
+}
+
+// Feature importance
+message FeatureImportance {
+  // Feature name
+  string feature_name = 1;
+  
+  // Importance score
+  double importance_score = 2;
+  
+  // Importance rank
+  int32 importance_rank = 3;
+  
+  // Importance type
+  string importance_type = 4;
+  
+  // Feature index
+  int32 feature_index = 5;
+}
+
+// Prediction explanation
+message PredictionExplanation {
+  // Explanation type
+  string explanation_type = 1;
+  
+  // Explanation content
+  string explanation_content = 2;
+  
+  // Explanation score
+  double explanation_score = 3;
+  
+  // Explanation features
+  repeated ExplanationFeature features = 4;
+  
+  // Explanation index
+  int32 index = 5;
+}
+
+// Explanation feature
+message ExplanationFeature {
+  // Feature name
+  string feature_name = 1;
+  
+  // Feature value
+  double feature_value = 2;
+  
+  // Feature contribution
+  double feature_contribution = 3;
+  
+  // Feature importance
+  double feature_importance = 4;
+}
+
+// Prediction uncertainty
+message PredictionUncertainty {
+  // Uncertainty type
+  string uncertainty_type = 1;
+  
+  // Uncertainty value
+  double uncertainty_value = 2;
+  
+  // Uncertainty bounds
+  PredictionBounds uncertainty_bounds = 3;
+  
+  // Uncertainty confidence
+  double uncertainty_confidence = 4;
+  
+  // Uncertainty sources
+  repeated string uncertainty_sources = 5;
+}
+
+// Prediction quality
+message PredictionQuality {
+  // Quality score (0.0 to 1.0)
+  double quality_score = 1;
+  
+  // Quality metrics
+  map<string, double> quality_metrics = 2;
+  
+  // Quality indicators
+  repeated QualityIndicator quality_indicators = 3;
+  
+  // Quality warnings
+  repeated string quality_warnings = 4;
+}
+
+// Quality indicator
+message QualityIndicator {
+  // Indicator name
+  string name = 1;
+  
+  // Indicator value
+  double value = 2;
+  
+  // Indicator threshold
+  double threshold = 3;
+  
+  // Indicator status
+  string status = 4;
+}
+
+// Prediction metadata
+message PredictionMetadata {
+  // Model metadata
+  ModelMetadata model_metadata = 1;
+  
+  // Request metadata
+  RequestMetadata request_metadata = 2;
+  
+  // Processing metadata
+  ProcessingMetadata processing_metadata = 3;
+  
+  // Output metadata
+  OutputMetadata output_metadata = 4;
+  
+  // Custom metadata
+  map<string, string> custom_metadata = 5;
+}
+
+// Model metadata
+message ModelMetadata {
+  // Model name
+  string model_name = 1;
+  
+  // Model version
+  string model_version = 2;
+  
+  // Model type
+  string model_type = 3;
+  
+  // Model accuracy
+  double model_accuracy = 4;
+  
+  // Model training date
+  google.protobuf.Timestamp training_date = 5;
+  
+  // Model parameters
+  google.protobuf.Struct model_parameters = 6;
+}
+
+// Request metadata
+message RequestMetadata {
+  // Request timestamp
+  google.protobuf.Timestamp request_timestamp = 1;
+  
+  // Request source
+  string request_source = 2;
+  
+  // Request user
+  string request_user = 3;
+  
+  // Request session
+  string request_session = 4;
+  
+  // Request priority
+  string request_priority = 5;
+}
+
+// Processing metadata
+message ProcessingMetadata {
+  // Processing start time
+  google.protobuf.Timestamp processing_start_time = 1;
+  
+  // Processing end time
+  google.protobuf.Timestamp processing_end_time = 2;
+  
+  // Processing duration
+  int64 processing_duration_ms = 3;
+  
+  // Processing steps
+  repeated ProcessingStep processing_steps = 4;
+  
+  // Processing resources
+  ProcessingResources processing_resources = 5;
+}
+
+// Processing step
+message ProcessingStep {
+  // Step name
+  string step_name = 1;
+  
+  // Step start time
+  google.protobuf.Timestamp step_start_time = 2;
+  
+  // Step end time
+  google.protobuf.Timestamp step_end_time = 3;
+  
+  // Step duration
+  int64 step_duration_ms = 4;
+  
+  // Step status
+  string step_status = 5;
+}
+
+// Processing resources
+message ProcessingResources {
+  // CPU usage
+  double cpu_usage = 1;
+  
+  // Memory usage
+  double memory_usage = 2;
+  
+  // GPU usage
+  double gpu_usage = 3;
+  
+  // Disk usage
+  double disk_usage = 4;
+  
+  // Network usage
+  double network_usage = 5;
+}
+
+// Output metadata
+message OutputMetadata {
+  // Output format
+  string output_format = 1;
+  
+  // Output size
+  int64 output_size = 2;
+  
+  // Output encoding
+  string output_encoding = 3;
+  
+  // Output compression
+  string output_compression = 4;
+}
+
+// Prediction performance
+message PredictionPerformance {
+  // Response time in milliseconds
+  int64 response_time_ms = 1;
+  
+  // Throughput (predictions per second)
+  double throughput = 2;
+  
+  // Latency percentiles
+  LatencyPercentiles latency_percentiles = 3;
+  
+  // Resource utilization
+  ResourceUtilization resource_utilization = 4;
+  
+  // Performance metrics
+  map<string, double> performance_metrics = 5;
+}
+
+// Latency percentiles
+message LatencyPercentiles {
+  // P50 latency
+  double p50_latency_ms = 1;
+  
+  // P90 latency
+  double p90_latency_ms = 2;
+  
+  // P95 latency
+  double p95_latency_ms = 3;
+  
+  // P99 latency
+  double p99_latency_ms = 4;
+  
+  // P99.9 latency
+  double p99_9_latency_ms = 5;
+}
+
+// Resource utilization
+message ResourceUtilization {
+  // CPU utilization percentage
+  double cpu_utilization = 1;
+  
+  // Memory utilization percentage
+  double memory_utilization = 2;
+  
+  // GPU utilization percentage
+  double gpu_utilization = 3;
+  
+  // Disk utilization percentage
+  double disk_utilization = 4;
+  
+  // Network utilization percentage
+  double network_utilization = 5;
+}
+
+// Prediction error
+message PredictionError {
+  // Error code
+  string error_code = 1;
+  
+  // Error message
+  string error_message = 2;
+  
+  // Error type
+  string error_type = 3;
+  
+  // Error severity
+  string error_severity = 4;
+  
+  // Error context
+  google.protobuf.Struct error_context = 5;
+  
+  // Error timestamp
+  google.protobuf.Timestamp error_timestamp = 6;
+}
+
+// Prediction warning
+message PredictionWarning {
+  // Warning code
+  string warning_code = 1;
+  
+  // Warning message
+  string warning_message = 2;
+  
+  // Warning type
+  string warning_type = 3;
+  
+  // Warning severity
+  string warning_severity = 4;
+  
+  // Warning context
+  google.protobuf.Struct warning_context = 5;
+  
+  // Warning timestamp
+  google.protobuf.Timestamp warning_timestamp = 6;
+}

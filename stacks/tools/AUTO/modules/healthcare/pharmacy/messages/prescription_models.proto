@@ -1,0 +1,213 @@
+syntax = "proto3";
+
+package healthcare.pharmacy.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/prescription_status.proto";
+import "../enums/drug_type.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/pharmacy/messages";
+
+// Prescription medication
+message PrescriptionMedication {
+  string medication_id = 1;
+  string drug_id = 2;
+  string generic_name = 3;
+  string brand_name = 4;
+  string strength = 5;
+  string dosage_form = 6;
+  string dosage_instructions = 7;
+  double quantity_prescribed = 8;
+  double quantity_dispensed = 9;
+  string quantity_unit = 10;
+  int32 refills_authorized = 11;
+  int32 refills_remaining = 12;
+  google.protobuf.Timestamp expiration_date = 13;
+  double unit_price = 14;
+  double total_price = 15;
+  string notes = 16;
+}
+
+// Prescription model
+message Prescription {
+  string prescription_id = 1;
+  string patient_id = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  string pharmacy_id = 5;
+  string appointment_id = 6;
+  healthcare.pharmacy.enums.PrescriptionStatus status = 7;
+  healthcare.pharmacy.enums.PrescriptionPriority priority = 8;
+  healthcare.pharmacy.enums.PrescriptionType prescription_type = 9;
+  repeated PrescriptionMedication medications = 10;
+  string diagnosis_code = 11;
+  string diagnosis_description = 12;
+  string instructions = 13;
+  string special_instructions = 14;
+  google.protobuf.Timestamp prescribed_date = 15;
+  google.protobuf.Timestamp dispensed_date = 16;
+  google.protobuf.Timestamp expiration_date = 17;
+  string prescribed_by = 18;
+  string dispensed_by = 19;
+  string pharmacist_id = 20;
+  double total_cost = 21;
+  double insurance_coverage = 22;
+  double patient_copay = 23;
+  string prescription_number = 24;
+  string rx_number = 25;
+  bool is_controlled_substance = 26;
+  bool requires_prior_authorization = 27;
+  bool is_compounded = 28;
+  string notes = 29;
+  google.protobuf.Timestamp created_at = 30;
+  google.protobuf.Timestamp updated_at = 31;
+  string created_by = 32;
+  string updated_by = 33;
+}
+
+// Prescription request for creating/updating
+message PrescriptionRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  string pharmacy_id = 4;
+  string appointment_id = 5;
+  healthcare.pharmacy.enums.PrescriptionPriority priority = 6;
+  healthcare.pharmacy.enums.PrescriptionType prescription_type = 7;
+  repeated PrescriptionMedication medications = 8;
+  string diagnosis_code = 9;
+  string diagnosis_description = 10;
+  string instructions = 11;
+  string special_instructions = 12;
+  google.protobuf.Timestamp prescribed_date = 13;
+  string prescribed_by = 14;
+  bool requires_prior_authorization = 15;
+  bool is_compounded = 16;
+  string notes = 17;
+}
+
+// Prescription response
+message PrescriptionResponse {
+  bool success = 1;
+  string message = 2;
+  Prescription prescription = 3;
+}
+
+// List prescriptions request
+message ListPrescriptionsRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  string pharmacy_id = 4;
+  healthcare.pharmacy.enums.PrescriptionStatus status = 5;
+  healthcare.pharmacy.enums.PrescriptionPriority priority = 6;
+  healthcare.pharmacy.enums.PrescriptionType prescription_type = 7;
+  google.protobuf.Timestamp start_date = 8;
+  google.protobuf.Timestamp end_date = 9;
+  bool controlled_substances_only = 10;
+  bool needs_refill = 11;
+  int32 page_size = 12;
+  string page_token = 13;
+}
+
+// List prescriptions response
+message ListPrescriptionsResponse {
+  repeated Prescription prescriptions = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Prescription refill request
+message PrescriptionRefillRequest {
+  string prescription_id = 1;
+  string patient_id = 2;
+  string pharmacy_id = 3;
+  string requested_by = 4;
+  google.protobuf.Timestamp requested_date = 5;
+  string reason = 6;
+  bool is_urgent = 7;
+}
+
+// Prescription refill response
+message PrescriptionRefillResponse {
+  bool success = 1;
+  string message = 2;
+  Prescription prescription = 3;
+  bool requires_doctor_approval = 4;
+  string approval_required_reason = 5;
+}
+
+// Prescription approval request
+message PrescriptionApprovalRequest {
+  string prescription_id = 1;
+  string approved_by = 2;
+  google.protobuf.Timestamp approved_date = 3;
+  string approval_notes = 4;
+  bool is_approved = 5;
+  string rejection_reason = 6;
+}
+
+// Prescription dispensing request
+message PrescriptionDispensingRequest {
+  string prescription_id = 1;
+  string pharmacist_id = 2;
+  google.protobuf.Timestamp dispensed_date = 3;
+  repeated PrescriptionMedication dispensed_medications = 4;
+  string dispensing_notes = 5;
+  string lot_number = 6;
+  google.protobuf.Timestamp expiration_date = 7;
+}
+
+// Prescription search request
+message PrescriptionSearchRequest {
+  string query = 1;
+  string patient_name = 2;
+  string doctor_name = 3;
+  string medication_name = 4;
+  string prescription_number = 5;
+  string rx_number = 6;
+  healthcare.pharmacy.enums.PrescriptionStatus status = 7;
+  int32 page_size = 8;
+  string page_token = 9;
+}
+
+// Prescription summary
+message PrescriptionSummary {
+  string prescription_id = 1;
+  string patient_name = 2;
+  string doctor_name = 3;
+  string medication_summary = 4;
+  healthcare.pharmacy.enums.PrescriptionStatus status = 5;
+  google.protobuf.Timestamp prescribed_date = 6;
+  google.protobuf.Timestamp dispensed_date = 7;
+  double total_cost = 8;
+  int32 refills_remaining = 9;
+  bool is_controlled_substance = 10;
+  bool needs_refill = 11;
+}
+
+// Prescription interaction check
+message PrescriptionInteractionCheck {
+  string prescription_id = 1;
+  string patient_id = 2;
+  repeated string medication_names = 3;
+  repeated DrugInteraction interactions = 4;
+  bool has_interactions = 5;
+  string interaction_severity = 6;
+  string recommendations = 7;
+  google.protobuf.Timestamp checked_at = 8;
+  string checked_by = 9;
+}
+
+// Drug interaction
+message DrugInteraction {
+  string interaction_id = 1;
+  string drug_a = 2;
+  string drug_b = 3;
+  string interaction_type = 4;
+  string severity = 5;
+  string description = 6;
+  string clinical_effects = 7;
+  string management = 8;
+  string references = 9;
+}

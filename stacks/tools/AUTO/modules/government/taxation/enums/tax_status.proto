@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package government.taxation.enums;
+
+// Статуси податків
+enum TaxStatus {
+  TAX_STATUS_UNSPECIFIED = 0;
+  TAX_STATUS_UNPAID = 1;          // Не сплачено
+  TAX_STATUS_PAID = 2;            // Сплачено
+  TAX_STATUS_OVERDUE = 3;         // Прострочено
+  TAX_STATUS_REFUNDED = 4;        // Повернуто
+  TAX_STATUS_PARTIAL = 5;         // Частково сплачено
+  TAX_STATUS_WAIVED = 6;          // Спрощено
+  TAX_STATUS_DISPUTED = 7;        // Оскаржено
+  TAX_STATUS_PENDING = 8;         // Очікує обробки
+  TAX_STATUS_CANCELLED = 9;       // Скасовано
+  TAX_STATUS_ADJUSTED = 10;       // Скориговано
+}

@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package marketing.loyalty.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/loyalty/enums/loyalty_level.proto";
+
+// Loyalty program data transfer object
+message Loyalty {
+  // Loyalty program ID
+  string id = 1;
+  
+  // Loyalty program name
+  string name = 2;
+  
+  // Loyalty program description
+  string description = 3;
+  
+  // Loyalty program type
+  string type = 4;
+  
+  // Points per dollar spent
+  double points_per_dollar = 5;
+  
+  // Minimum points to redeem
+  int32 min_points_to_redeem = 6;
+  
+  // Points expiration period (in days)
+  int32 points_expiration_days = 7;
+  
+  // Loyalty level requirements
+  repeated LoyaltyLevelRequirement level_requirements = 8;
+  
+  // Program start date
+  google.protobuf.Timestamp start_date = 9;
+  
+  // Program end date
+  google.protobuf.Timestamp end_date = 10;
+  
+  // Program tags
+  repeated string tags = 11;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 12;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 13;
+  
+  // Loyalty program metrics
+  LoyaltyMetrics metrics = 14;
+}
+
+// Loyalty level requirement
+message LoyaltyLevelRequirement {
+  // Loyalty level
+  marketing.loyalty.enums.LoyaltyLevel level = 1;
+  
+  // Minimum points required
+  int32 min_points = 2;
+  
+  // Minimum spend required
+  double min_spend = 3;
+  
+  // Benefits for this level
+  repeated string benefits = 4;
+}
+
+// Loyalty program metrics
+message LoyaltyMetrics {
+  // Total members enrolled
+  int32 total_members = 1;
+  
+  // Active members
+  int32 active_members = 2;
+  
+  // Total points issued
+  int64 total_points_issued = 3;
+  
+  // Total points redeemed
+  int64 total_points_redeemed = 4;
+  
+  // Total spend by members
+  double total_member_spend = 5;
+  
+  // Average points per member
+  double avg_points_per_member = 6;
+  
+  // Redemption rate
+  double redemption_rate = 7;
+  
+  // Member retention rate
+  double retention_rate = 8;
+  
+  // Program ROI
+  double roi = 9;
+}
+
+// Response message for creating a loyalty program
+message CreateLoyaltyResponse {
+  // Created loyalty program
+  Loyalty loyalty = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for getting a loyalty program
+message GetLoyaltyResponse {
+  // Loyalty program data
+  Loyalty loyalty = 1;
+}
+
+// Response message for listing loyalty programs
+message ListLoyaltyResponse {
+  // List of loyalty programs
+  repeated Loyalty loyalty_programs = 1;
+  
+  // Total count of loyalty programs
+  int32 total_count = 2;
+  
+  // Current page number
+  int32 page = 3;
+  
+  // Number of items per page
+  int32 page_size = 4;
+}
+
+// Response message for updating a loyalty program
+message UpdateLoyaltyResponse {
+  // Updated loyalty program
+  Loyalty loyalty = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for deleting a loyalty program
+message DeleteLoyaltyResponse {
+  // Success message
+  string message = 1;
+}

@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+// Service definitions for managing courses.
+package education.courses.services;
+
+import "google/protobuf/empty.proto";
+import "AUTO/modules/education/courses/messages/course.proto";
+
+option go_package = "github.com/rice-dev/education/courses/services;coursesservices";
+option java_multiple_files = true;
+option java_package = "com.rice.education.courses.services";
+
+// Requests and responses for course operations.
+message CreateCourseRequest {
+  // Course to create.
+  education.courses.messages.Course course = 1;
+}
+
+message GetCourseRequest {
+  // Course ID to fetch.
+  string id = 1;
+}
+
+message UpdateCourseRequest {
+  // Course payload with updates (must include ID).
+  education.courses.messages.Course course = 1;
+}
+
+message DeleteCourseRequest {
+  // Course ID to delete.
+  string id = 1;
+}
+
+message ListCoursesRequest {
+  // Optional filter by category.
+  string category = 1;
+
+  // Optional filter by level.
+  string level = 2;
+
+  // Pagination size.
+  int32 page_size = 3;
+
+  // Pagination token.
+  string page_token = 4;
+}
+
+message ListCoursesResponse {
+  // Resulting courses.
+  repeated education.courses.messages.Course courses = 1;
+
+  // Next page token if more results exist.
+  string next_page_token = 2;
+}
+
+message PublishCourseRequest {
+  // Course ID to publish.
+  string id = 1;
+}
+
+message ArchiveCourseRequest {
+  // Course ID to archive.
+  string id = 1;
+}
+
+message AddModuleToCourseRequest {
+  // Course ID.
+  string course_id = 1;
+
+  // Module to add.
+  education.courses.messages.Module module = 2;
+}
+
+message RemoveModuleFromCourseRequest {
+  // Course ID.
+  string course_id = 1;
+
+  // Module ID to remove.
+  string module_id = 2;
+}
+
+message GetCourseCompletionRateRequest {
+  // Course ID for analytics.
+  string course_id = 1;
+}
+
+message GetCourseCompletionRateResponse {
+  // Completion rate in [0.0 - 1.0].
+  double completion_rate = 1;
+}
+
+// Service for course management and analytics.
+service CourseService {
+  // Create a new course.
+  rpc CreateCourse(CreateCourseRequest) returns (education.courses.messages.Course);
+
+  // Retrieve a course by ID.
+  rpc GetCourse(GetCourseRequest) returns (education.courses.messages.Course);
+
+  // Update an existing course.
+  rpc UpdateCourse(UpdateCourseRequest) returns (education.courses.messages.Course);
+
+  // Delete a course by ID.
+  rpc DeleteCourse(DeleteCourseRequest) returns (google.protobuf.Empty);
+
+  // List courses with optional filters and pagination.
+  rpc ListCourses(ListCoursesRequest) returns (ListCoursesResponse);
+
+  // Publish a course making it available for enrollment.
+  rpc PublishCourse(PublishCourseRequest) returns (education.courses.messages.Course);
+
+  // Archive a course to deactivate it.
+  rpc ArchiveCourse(ArchiveCourseRequest) returns (education.courses.messages.Course);
+
+  // Add a module to a course.
+  rpc AddModuleToCourse(AddModuleToCourseRequest) returns (education.courses.messages.Course);
+
+  // Remove a module from a course.
+  rpc RemoveModuleFromCourse(RemoveModuleFromCourseRequest) returns (education.courses.messages.Course);
+
+  // Analytics: Get course completion rate.
+  rpc GetCourseCompletionRate(GetCourseCompletionRateRequest) returns (GetCourseCompletionRateResponse);
+}
+
+

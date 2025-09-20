@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.metaverse.enums;
+
+option go_package = "github.com/rice-dev/gaming/metaverse/enums";
+
+// Типи світів
+enum WorldType {
+  WORLD_TYPE_UNSPECIFIED = 0;
+  
+  // Віртуальний світ
+  WORLD_TYPE_VIRTUAL = 1;
+  
+  // Фантастичний світ
+  WORLD_TYPE_FANTASY = 2;
+  
+  // Науково-фантастичний світ
+  WORLD_TYPE_SCIENCE_FICTION = 3;
+  
+  // Постапокаліптичний світ
+  WORLD_TYPE_POST_APOCALYPTIC = 4;
+  
+  // Середньовічний світ
+  WORLD_TYPE_MEDIEVAL = 5;
+  
+  // Сучасний світ
+  WORLD_TYPE_MODERN = 6;
+  
+  // Майбутній світ
+  WORLD_TYPE_FUTURISTIC = 7;
+  
+  // Кіберпанк світ
+  WORLD_TYPE_CYBERPUNK = 8;
+  
+  // Стимпанк світ
+  WORLD_TYPE_STEAMPUNK = 9;
+  
+  // Дизельпанк світ
+  WORLD_TYPE_DIESELPUNK = 10;
+  
+  // Атомпанк світ
+  WORLD_TYPE_ATOMPUNK = 11;
+  
+  // Біопанк світ
+  WORLD_TYPE_BIOPUNK = 12;
+  
+  // Нанопанк світ
+  WORLD_TYPE_NANOPUNK = 13;
+  
+  // Космопанк світ
+  WORLD_TYPE_COSMOPUNK = 14;
+  
+  // Соларпанк світ
+  WORLD_TYPE_SOLARPUNK = 15;
+  
+  // Лунопанк світ
+  WORLD_TYPE_LUNARPUNK = 16;
+  
+  // Марсіанпанк світ
+  WORLD_TYPE_MARSPUNK = 17;
+  
+  // Венеріанпанк світ
+  WORLD_TYPE_VENUSPUNK = 18;
+  
+  // Юпітеріанпанк світ
+  WORLD_TYPE_JUPITERPUNK = 19;
+  
+  // Сатурніанпанк світ
+  WORLD_TYPE_SATURNPUNK = 20;
+  
+  // Ураніанпанк світ
+  WORLD_TYPE_URANUSPUNK = 21;
+  
+  // Нептуніанпанк світ
+  WORLD_TYPE_NEPTUNEPUNK = 22;
+  
+  // Плутоніанпанк світ
+  WORLD_TYPE_PLUTOPUNK = 23;
+  
+  // Астероїдпанк світ
+  WORLD_TYPE_ASTEROIDPUNK = 24;
+  
+  // Кометапанк світ
+  WORLD_TYPE_COMETPUNK = 25;
+  
+  // Метеоритпанк світ
+  WORLD_TYPE_METEORITEPUNK = 26;
+  
+  // Зорянийпанк світ
+  WORLD_TYPE_STARPUNK = 27;
+  
+  // Галактичнийпанк світ
+  WORLD_TYPE_GALAXYPUNK = 28;
+  
+  // Всесвітнийпанк світ
+  WORLD_TYPE_UNIVERSEPUNK = 29;
+  
+  // Мультивсесвітнийпанк світ
+  WORLD_TYPE_MULTIVERSEPUNK = 30;
+  
+  // Паралельнийпанк світ
+  WORLD_TYPE_PARALLELPUNK = 31;
+  
+  // Альтернативнийпанк світ
+  WORLD_TYPE_ALTERNATIVEPUNK = 32;
+  
+  // Зеркальнийпанк світ
+  WORLD_TYPE_MIRRORPUNK = 33;
+  
+  // Оберненийпанк світ
+  WORLD_TYPE_REVERSEPUNK = 34;
+  
+  // Протилежнийпанк світ
+  WORLD_TYPE_OPPOSITEPUNK = 35;
+  
+  // Контрастнийпанк світ
+  WORLD_TYPE_CONTRASTPUNK = 36;
+  
+  // Конфліктнийпанк світ
+  WORLD_TYPE_CONFLICTPUNK = 37;
+  
+  // Ворожийпанк світ
+  WORLD_TYPE_HOSTILEPUNK = 38;
+  
+  // Дружнійпанк світ
+  WORLD_TYPE_FRIENDLYPUNK = 39;
+  
+  // Нейтральнийпанк світ
+  WORLD_TYPE_NEUTRALPUNK = 40;
+  
+  // Мирнийпанк світ
+  WORLD_TYPE_PEACEFULPUNK = 41;
+  
+  // Агресивнийпанк світ
+  WORLD_TYPE_AGGRESSIVEPUNK = 42;
+  
+  // Пасивнийпанк світ
+  WORLD_TYPE_PASSIVEPUNK = 43;
+  
+  // Активнийпанк світ
+  WORLD_TYPE_ACTIVEPUNK = 44;
+  
+  // Інтерактивнийпанк світ
+  WORLD_TYPE_INTERACTIVEPUNK = 45;
+  
+  // Реактивнийпанк світ
+  WORLD_TYPE_REACTIVEPUNK = 46;
+  
+  // Проактивнийпанк світ
+  WORLD_TYPE_PROACTIVEPUNK = 47;
+  
+  // Ініціативнийпанк світ
+  WORLD_TYPE_INITIATIVEPUNK = 48;
+  
+  // Креативнийпанк світ
+  WORLD_TYPE_CREATIVEPUNK = 49;
+  
+  // Інноваційнийпанк світ
+  WORLD_TYPE_INNOVATIVEPUNK = 50;
+  
+  // Оригінальнийпанк світ
+  WORLD_TYPE_ORIGINALPUNK = 51;
+  
+  // Унікальнийпанк світ
+  WORLD_TYPE_UNIQUEPUNK = 52;
+  
+  // Рідкіснийпанк світ
+  WORLD_TYPE_RAREPUNK = 53;
+  
+  // Епічнийпанк світ
+  WORLD_TYPE_EPICPUNK = 54;
+  
+  // Легендарнийпанк світ
+  WORLD_TYPE_LEGENDARYPUNK = 55;
+  
+  // Міфічнийпанк світ
+  WORLD_TYPE_MYTHICPUNK = 56;
+  
+  // Божественнийпанк світ
+  WORLD_TYPE_DIVINEPUNK = 57;
+  
+  // Небеснийпанк світ
+  WORLD_TYPE_CELESTIALPUNK = 58;
+  
+  // Космічнийпанк світ
+  WORLD_TYPE_COSMICPUNK = 59;
+  
+  // Всесвітнийпанк світ
+  WORLD_TYPE_UNIVERSALPUNK = 60;
+  
+  // Мультивсесвітнийпанк світ
+  WORLD_TYPE_MULTIVERSEPUNK = 61;
+  
+  // Паралельнийпанк світ
+  WORLD_TYPE_PARALLELPUNK = 62;
+  
+  // Альтернативнийпанк світ
+  WORLD_TYPE_ALTERNATIVEPUNK = 63;
+  
+  // Зеркальнийпанк світ
+  WORLD_TYPE_MIRRORPUNK = 64;
+  
+  // Оберненийпанк світ
+  WORLD_TYPE_REVERSEPUNK = 65;
+  
+  // Протилежнийпанк світ
+  WORLD_TYPE_OPPOSITEPUNK = 66;
+  
+  // Контрастнийпанк світ
+  WORLD_TYPE_CONTRASTPUNK = 67;
+  
+  // Конфліктнийпанк світ
+  WORLD_TYPE_CONFLICTPUNK = 68;
+  
+  // Ворожийпанк світ
+  WORLD_TYPE_HOSTILEPUNK = 69;
+  
+  // Дружнійпанк світ
+  WORLD_TYPE_FRIENDLYPUNK = 70;
+  
+  // Нейтральнийпанк світ
+  WORLD_TYPE_NEUTRALPUNK = 71;
+  
+  // Мирнийпанк світ
+  WORLD_TYPE_PEACEFULPUNK = 72;
+  
+  // Агресивнийпанк світ
+  WORLD_TYPE_AGGRESSIVEPUNK = 73;
+  
+  // Пасивнийпанк світ
+  WORLD_TYPE_PASSIVEPUNK = 74;
+  
+  // Активнийпанк світ
+  WORLD_TYPE_ACTIVEPUNK = 75;
+  
+  // Інтерактивнийпанк світ
+  WORLD_TYPE_INTERACTIVEPUNK = 76;
+  
+  // Реактивнийпанк світ
+  WORLD_TYPE_REACTIVEPUNK = 77;
+  
+  // Проактивнийпанк світ
+  WORLD_TYPE_PROACTIVEPUNK = 78;
+  
+  // Ініціативнийпанк світ
+  WORLD_TYPE_INITIATIVEPUNK = 79;
+  
+  // Креативнийпанк світ
+  WORLD_TYPE_CREATIVEPUNK = 80;
+  
+  // Інноваційнийпанк світ
+  WORLD_TYPE_INNOVATIVEPUNK = 81;
+  
+  // Оригінальнийпанк світ
+  WORLD_TYPE_ORIGINALPUNK = 82;
+  
+  // Унікальнийпанк світ
+  WORLD_TYPE_UNIQUEPUNK = 83;
+  
+  // Рідкіснийпанк світ
+  WORLD_TYPE_RAREPUNK = 84;
+  
+  // Епічнийпанк світ
+  WORLD_TYPE_EPICPUNK = 85;
+  
+  // Легендарнийпанк світ
+  WORLD_TYPE_LEGENDARYPUNK = 86;
+  
+  // Міфічнийпанк світ
+  WORLD_TYPE_MYTHICPUNK = 87;
+  
+  // Божественнийпанк світ
+  WORLD_TYPE_DIVINEPUNK = 88;
+  
+  // Небеснийпанк світ
+  WORLD_TYPE_CELESTIALPUNK = 89;
+  
+  // Космічнийпанк світ
+  WORLD_TYPE_COSMICPUNK = 90;
+  
+  // Всесвітнийпанк світ
+  WORLD_TYPE_UNIVERSALPUNK = 91;
+  
+  // Мультивсесвітнийпанк світ
+  WORLD_TYPE_MULTIVERSEPUNK = 92;
+  
+  // Паралельнийпанк світ
+  WORLD_TYPE_PARALLELPUNK = 93;
+  
+  // Альтернативнийпанк світ
+  WORLD_TYPE_ALTERNATIVEPUNK = 94;
+  
+  // Зеркальнийпанк світ
+  WORLD_TYPE_MIRRORPUNK = 95;
+  
+  // Оберненийпанк світ
+  WORLD_TYPE_REVERSEPUNK = 96;
+  
+  // Протилежнийпанк світ
+  WORLD_TYPE_OPPOSITEPUNK = 97;
+  
+  // Контрастнийпанк світ
+  WORLD_TYPE_CONTRASTPUNK = 98;
+  
+  // Конфліктнийпанк світ
+  WORLD_TYPE_CONFLICTPUNK = 99;
+  
+  // Ворожийпанк світ
+  WORLD_TYPE_HOSTILEPUNK = 100;
+}

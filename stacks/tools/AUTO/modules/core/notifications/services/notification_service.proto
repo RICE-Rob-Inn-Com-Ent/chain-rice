@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package core.notifications.services;
+
+import "core/notifications/messages/notification.proto";
+import "core/notifications/messages/notification_channel.proto";
+
+// NotificationService manages channels and messages.
+service NotificationService {
+  // Create a notification and enqueue for delivery.
+  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);
+
+  // Get a notification by id.
+  rpc GetNotification(GetNotificationRequest) returns (GetNotificationResponse);
+
+  // List notifications.
+  rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse);
+
+  // Cancel a queued notification.
+  rpc CancelNotification(CancelNotificationRequest) returns (CancelNotificationResponse);
+
+  // CRUD for channels.
+  rpc CreateChannel(CreateChannelRequest) returns (CreateChannelResponse);
+  rpc GetChannel(GetChannelRequest) returns (GetChannelResponse);
+  rpc UpdateChannel(UpdateChannelRequest) returns (UpdateChannelResponse);
+  rpc DeleteChannel(DeleteChannelRequest) returns (DeleteChannelResponse);
+  rpc ListChannels(ListChannelsRequest) returns (ListChannelsResponse);
+}
+
+// Requests and responses
+
+message SendNotificationRequest {
+  core.notifications.messages.Notification notification = 1; // Notification payload.
+}
+
+message SendNotificationResponse {
+  core.notifications.messages.Notification notification = 1; // Created notification with id.
+}
+
+message GetNotificationRequest {
+  string id = 1; // Notification id.
+}
+
+message GetNotificationResponse {
+  core.notifications.messages.Notification notification = 1; // Notification.
+}
+
+message ListNotificationsRequest {
+  int32 page_size = 1; // Page size.
+  string page_token = 2; // Page token.
+  string recipient = 3; // Filter by recipient.
+}
+
+message ListNotificationsResponse {
+  repeated core.notifications.messages.Notification notifications = 1; // Page of notifications.
+  string next_page_token = 2; // Next page token.
+}
+
+message CancelNotificationRequest {
+  string id = 1; // Notification id to cancel.
+}
+
+message CancelNotificationResponse {
+  bool success = 1; // Whether cancellation succeeded.
+}
+
+message CreateChannelRequest {
+  core.notifications.messages.NotificationChannel channel = 1; // Channel configuration.
+}
+
+message CreateChannelResponse {
+  core.notifications.messages.NotificationChannel channel = 1; // Created channel with id.
+}
+
+message GetChannelRequest {
+  string id = 1; // Channel id.
+}
+
+message GetChannelResponse {
+  core.notifications.messages.NotificationChannel channel = 1; // Channel.
+}
+
+message UpdateChannelRequest {
+  core.notifications.messages.NotificationChannel channel = 1; // Updated channel.
+}
+
+message UpdateChannelResponse {
+  core.notifications.messages.NotificationChannel channel = 1; // Channel after update.
+}
+
+message DeleteChannelRequest {
+  string id = 1; // Channel id to delete.
+}
+
+message DeleteChannelResponse {
+  bool success = 1; // Whether deletion succeeded.
+}
+
+message ListChannelsRequest {
+  int32 page_size = 1; // Page size.
+  string page_token = 2; // Page token.
+}
+
+message ListChannelsResponse {
+  repeated core.notifications.messages.NotificationChannel channels = 1; // Page of channels.
+  string next_page_token = 2; // Next page token.
+}
+
+

@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package healthcare.billing.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/billing_status.proto";
+import "../enums/billing_type.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/billing/messages";
+
+// Invoice item
+message InvoiceItem {
+  string item_id = 1;
+  string description = 2;
+  healthcare.billing.enums.BillingType billing_type = 3;
+  double quantity = 4;
+  double unit_price = 5;
+  double total_price = 6;
+  string service_code = 7;
+  string procedure_code = 8;
+  google.protobuf.Timestamp service_date = 9;
+}
+
+// Invoice model
+message Invoice {
+  string invoice_id = 1;
+  string patient_id = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  string appointment_id = 5;
+  healthcare.billing.enums.BillingStatus status = 6;
+  double subtotal = 7;
+  double tax_amount = 8;
+  double discount_amount = 9;
+  double total_amount = 10;
+  double paid_amount = 11;
+  double balance_due = 12;
+  repeated InvoiceItem items = 13;
+  google.protobuf.Timestamp invoice_date = 14;
+  google.protobuf.Timestamp due_date = 15;
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+  string notes = 18;
+  string billing_address = 19;
+  string insurance_info = 20;
+}
+
+// Invoice request for creating/updating
+message InvoiceRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  string appointment_id = 4;
+  repeated InvoiceItem items = 5;
+  double tax_rate = 6;
+  double discount_amount = 7;
+  google.protobuf.Timestamp due_date = 8;
+  string notes = 9;
+  string billing_address = 10;
+  string insurance_info = 11;
+}
+
+// Invoice response
+message InvoiceResponse {
+  bool success = 1;
+  string message = 2;
+  Invoice invoice = 3;
+}
+
+// List invoices request
+message ListInvoicesRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  healthcare.billing.enums.BillingStatus status = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  int32 page_size = 7;
+  string page_token = 8;
+}
+
+// List invoices response
+message ListInvoicesResponse {
+  repeated Invoice invoices = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+  double total_amount = 4;
+  double total_paid = 5;
+  double total_outstanding = 6;
+}

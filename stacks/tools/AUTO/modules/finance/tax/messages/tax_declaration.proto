@@ -1,0 +1,323 @@
+syntax = "proto3";
+
+package finance.tax.messages;
+
+import "finance/tax/enums/tax_type.proto";
+import "finance/tax/enums/tax_region.proto";
+
+// Tax declaration representation
+message TaxDeclaration {
+  // Unique tax declaration identifier
+  string tax_declaration_id = 1;
+  
+  // Declaration type
+  string declaration_type = 2;
+  
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 3;
+  
+  // Tax region
+  finance.tax.enums.TaxRegion tax_region = 4;
+  
+  // Tax jurisdiction
+  string tax_jurisdiction = 5;
+  
+  // Tax authority
+  string tax_authority = 6;
+  
+  // Declaration period start
+  int64 declaration_period_start = 7;
+  
+  // Declaration period end
+  int64 declaration_period_end = 8;
+  
+  // Due date
+  int64 due_date = 9;
+  
+  // Filing date
+  int64 filing_date = 10;
+  
+  // Declaration status
+  string declaration_status = 11;
+  
+  // Total taxable amount
+  double total_taxable_amount = 12;
+  
+  // Total tax amount
+  double total_tax_amount = 13;
+  
+  // Total tax paid
+  double total_tax_paid = 14;
+  
+  // Total tax due
+  double total_tax_due = 15;
+  
+  // Currency code
+  string currency = 16;
+  
+  // Declaration number
+  string declaration_number = 17;
+  
+  // Reference number
+  string reference_number = 18;
+  
+  // Tax records
+  repeated TaxRecordSummary tax_records = 19;
+  
+  // Declaration details
+  string declaration_details = 20;
+  
+  // Declaration notes
+  string declaration_notes = 21;
+  
+  // Declaration tags
+  repeated string tags = 22;
+  
+  // Custom fields
+  map<string, string> custom_fields = 23;
+  
+  // Creation timestamp
+  int64 created_at = 24;
+  
+  // Last update timestamp
+  int64 updated_at = 25;
+  
+  // Created by user ID
+  string created_by = 26;
+  
+  // Updated by user ID
+  string updated_by = 27;
+  
+  // Filed by user ID
+  string filed_by = 28;
+  
+  // Approved by user ID
+  string approved_by = 29;
+  
+  // Approval timestamp
+  int64 approved_at = 30;
+}
+
+// Tax record summary
+message TaxRecordSummary {
+  // Tax record ID
+  string tax_record_id = 1;
+  
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 2;
+  
+  // Taxable amount
+  double taxable_amount = 3;
+  
+  // Tax amount
+  double tax_amount = 4;
+  
+  // Tax rate
+  double tax_rate = 5;
+  
+  // Transaction count
+  int32 transaction_count = 6;
+  
+  // Tax date
+  int64 tax_date = 7;
+}
+
+// Tax declaration creation request
+message CreateTaxDeclarationRequest {
+  // Declaration type
+  string declaration_type = 1;
+  
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 2;
+  
+  // Tax region
+  finance.tax.enums.TaxRegion tax_region = 3;
+  
+  // Tax jurisdiction
+  string tax_jurisdiction = 4;
+  
+  // Tax authority
+  string tax_authority = 5;
+  
+  // Declaration period start
+  int64 declaration_period_start = 6;
+  
+  // Declaration period end
+  int64 declaration_period_end = 7;
+  
+  // Due date
+  int64 due_date = 8;
+  
+  // Currency code
+  string currency = 9;
+  
+  // Declaration details
+  string declaration_details = 10;
+  
+  // Declaration notes
+  string declaration_notes = 11;
+  
+  // Declaration tags
+  repeated string tags = 12;
+  
+  // Custom fields
+  map<string, string> custom_fields = 13;
+}
+
+// Tax declaration creation response
+message CreateTaxDeclarationResponse {
+  // Created tax declaration
+  TaxDeclaration tax_declaration = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Tax declaration update request
+message UpdateTaxDeclarationRequest {
+  // Tax declaration ID
+  string tax_declaration_id = 1;
+  
+  // Updated declaration status
+  string declaration_status = 2;
+  
+  // Updated total tax amount
+  double total_tax_amount = 3;
+  
+  // Updated total tax paid
+  double total_tax_paid = 4;
+  
+  // Updated total tax due
+  double total_tax_due = 5;
+  
+  // Updated declaration details
+  string declaration_details = 6;
+  
+  // Updated declaration notes
+  string declaration_notes = 7;
+  
+  // Updated declaration tags
+  repeated string tags = 8;
+  
+  // Updated custom fields
+  map<string, string> custom_fields = 9;
+}
+
+// Tax declaration update response
+message UpdateTaxDeclarationResponse {
+  // Updated tax declaration
+  TaxDeclaration tax_declaration = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Tax declaration list request
+message ListTaxDeclarationsRequest {
+  // Filter by declaration type
+  string declaration_type = 1;
+  
+  // Filter by tax type
+  finance.tax.enums.TaxType tax_type = 2;
+  
+  // Filter by tax region
+  finance.tax.enums.TaxRegion tax_region = 3;
+  
+  // Filter by declaration status
+  string declaration_status = 4;
+  
+  // Filter by date range
+  int64 start_date = 5;
+  int64 end_date = 6;
+  
+  // Filter by declaration period
+  int64 declaration_period_start = 7;
+  int64 declaration_period_end = 8;
+  
+  // Search term
+  string search_term = 9;
+  
+  // Page number
+  int32 page = 10;
+  
+  // Page size
+  int32 page_size = 11;
+}
+
+// Tax declaration list response
+message ListTaxDeclarationsResponse {
+  // List of tax declarations
+  repeated TaxDeclaration tax_declarations = 1;
+  
+  // Total count
+  int64 total_count = 2;
+  
+  // Page number
+  int32 page = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Success status
+  bool success = 5;
+  
+  // Error message if any
+  string error_message = 6;
+}
+
+// Tax declaration filing request
+message FileTaxDeclarationRequest {
+  // Tax declaration ID
+  string tax_declaration_id = 1;
+  
+  // Filing date
+  int64 filing_date = 2;
+  
+  // Filing method
+  string filing_method = 3;
+  
+  // Filing reference
+  string filing_reference = 4;
+  
+  // Filing notes
+  string filing_notes = 5;
+}
+
+// Tax declaration filing response
+message FileTaxDeclarationResponse {
+  // Updated tax declaration
+  TaxDeclaration tax_declaration = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Tax declaration approval request
+message ApproveTaxDeclarationRequest {
+  // Tax declaration ID
+  string tax_declaration_id = 1;
+  
+  // Approval notes
+  string approval_notes = 2;
+}
+
+// Tax declaration approval response
+message ApproveTaxDeclarationResponse {
+  // Updated tax declaration
+  TaxDeclaration tax_declaration = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}

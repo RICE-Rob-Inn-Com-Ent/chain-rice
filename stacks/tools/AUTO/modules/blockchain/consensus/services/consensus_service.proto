@@ -1,0 +1,241 @@
+syntax = "proto3";
+
+package blockchain.consensus.services;
+
+import "blockchain/consensus/messages/node.proto";
+import "blockchain/consensus/messages/block.proto";
+import "blockchain/consensus/messages/vote.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/consensus/services";
+
+// ConsensusMsgService handles state-changing consensus operations
+service ConsensusMsgService {
+  // CreateNode creates a new consensus node
+  rpc CreateNode(blockchain.consensus.messages.MsgCreateNode) returns (blockchain.consensus.messages.MsgCreateNodeResponse);
+  
+  // UpdateNode updates an existing node
+  rpc UpdateNode(blockchain.consensus.messages.MsgUpdateNode) returns (blockchain.consensus.messages.MsgUpdateNodeResponse);
+  
+  // DeleteNode deletes a node
+  rpc DeleteNode(blockchain.consensus.messages.MsgDeleteNode) returns (blockchain.consensus.messages.MsgDeleteNodeResponse);
+  
+  // StakeTokens stakes tokens for a node
+  rpc StakeTokens(blockchain.consensus.messages.MsgStakeTokens) returns (blockchain.consensus.messages.MsgStakeTokensResponse);
+  
+  // UnstakeTokens unstakes tokens from a node
+  rpc UnstakeTokens(blockchain.consensus.messages.MsgUnstakeTokens) returns (blockchain.consensus.messages.MsgUnstakeTokensResponse);
+  
+  // CreateBlock creates a new block
+  rpc CreateBlock(blockchain.consensus.messages.MsgCreateBlock) returns (blockchain.consensus.messages.MsgCreateBlockResponse);
+  
+  // ValidateBlock validates a block
+  rpc ValidateBlock(blockchain.consensus.messages.MsgValidateBlock) returns (blockchain.consensus.messages.MsgValidateBlockResponse);
+  
+  // FinalizeBlock finalizes a block
+  rpc FinalizeBlock(blockchain.consensus.messages.MsgFinalizeBlock) returns (blockchain.consensus.messages.MsgFinalizeBlockResponse);
+  
+  // ProposeBlock proposes a new block
+  rpc ProposeBlock(blockchain.consensus.messages.MsgProposeBlock) returns (blockchain.consensus.messages.MsgProposeBlockResponse);
+  
+  // CastVote casts a consensus vote
+  rpc CastVote(blockchain.consensus.messages.MsgCastVote) returns (blockchain.consensus.messages.MsgCastVoteResponse);
+  
+  // UpdateVote updates an existing vote
+  rpc UpdateVote(blockchain.consensus.messages.MsgUpdateVote) returns (blockchain.consensus.messages.MsgUpdateVoteResponse);
+  
+  // RetractVote retracts a vote
+  rpc RetractVote(blockchain.consensus.messages.MsgRetractVote) returns (blockchain.consensus.messages.MsgRetractVoteResponse);
+  
+  // CreateVoteSet creates a new vote set
+  rpc CreateVoteSet(blockchain.consensus.messages.MsgCreateVoteSet) returns (blockchain.consensus.messages.MsgCreateVoteSetResponse);
+}
+
+// ConsensusQueryService handles consensus state queries
+service ConsensusQueryService {
+  // GetNode retrieves a specific node
+  rpc GetNode(GetNodeRequest) returns (GetNodeResponse);
+  
+  // ListNodes lists all nodes with pagination
+  rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
+  
+  // GetBlock retrieves a specific block
+  rpc GetBlock(GetBlockRequest) returns (GetBlockResponse);
+  
+  // ListBlocks lists blocks with pagination and filters
+  rpc ListBlocks(ListBlocksRequest) returns (ListBlocksResponse);
+  
+  // GetVote retrieves a specific vote
+  rpc GetVote(GetVoteRequest) returns (GetVoteResponse);
+  
+  // ListVotes lists votes with pagination and filters
+  rpc ListVotes(ListVotesRequest) returns (ListVotesResponse);
+  
+  // GetVoteSet retrieves a specific vote set
+  rpc GetVoteSet(GetVoteSetRequest) returns (GetVoteSetResponse);
+  
+  // ListVoteSets lists vote sets with pagination
+  rpc ListVoteSets(ListVoteSetsRequest) returns (ListVoteSetsResponse);
+  
+  // GetConsensusParams retrieves consensus module parameters
+  rpc GetConsensusParams(GetConsensusParamsRequest) returns (GetConsensusParamsResponse);
+  
+  // GetConsensusStats retrieves consensus statistics
+  rpc GetConsensusStats(GetConsensusStatsRequest) returns (GetConsensusStatsResponse);
+  
+  // GetValidatorSet retrieves the current validator set
+  rpc GetValidatorSet(GetValidatorSetRequest) returns (GetValidatorSetResponse);
+  
+  // GetNetworkStatus retrieves network consensus status
+  rpc GetNetworkStatus(GetNetworkStatusRequest) returns (GetNetworkStatusResponse);
+  
+  // GetBlockProof retrieves proof for a block
+  rpc GetBlockProof(GetBlockProofRequest) returns (GetBlockProofResponse);
+}
+
+// Query request and response messages
+
+message GetNodeRequest {
+  string node_id = 1; // Node ID
+}
+
+message GetNodeResponse {
+  blockchain.consensus.messages.Node node = 1;
+}
+
+message ListNodesRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string status = 3;         // Filter by node status
+  bool is_validator = 4;     // Filter by validator status
+  string consensus_algorithm = 5; // Filter by consensus algorithm
+}
+
+message ListNodesResponse {
+  repeated blockchain.consensus.messages.Node nodes = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetBlockRequest {
+  string block_id = 1; // Block ID or hash
+}
+
+message GetBlockResponse {
+  blockchain.consensus.messages.Block block = 1;
+}
+
+message ListBlocksRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  int64 start_height = 3;    // Filter by start height
+  int64 end_height = 4;      // Filter by end height
+  string proposer = 5;       // Filter by proposer address
+  string status = 6;         // Filter by block status
+  bool is_finalized = 7;     // Filter by finalization status
+}
+
+message ListBlocksResponse {
+  repeated blockchain.consensus.messages.Block blocks = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetVoteRequest {
+  string vote_id = 1; // Vote ID
+}
+
+message GetVoteResponse {
+  blockchain.consensus.messages.Vote vote = 1;
+}
+
+message ListVotesRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string voter = 3;          // Filter by voter address
+  string target_id = 4;      // Filter by target ID
+  string vote_type = 5;      // Filter by vote type
+  string vote_value = 6;     // Filter by vote value
+  int64 height = 7;          // Filter by height
+}
+
+message ListVotesResponse {
+  repeated blockchain.consensus.messages.Vote votes = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetVoteSetRequest {
+  string vote_set_id = 1; // Vote set ID
+}
+
+message GetVoteSetResponse {
+  blockchain.consensus.messages.VoteSet vote_set = 1;
+}
+
+message ListVoteSetsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string target_id = 3;      // Filter by target ID
+  string vote_type = 4;      // Filter by vote type
+  int64 height = 5;          // Filter by height
+  bool is_completed = 6;     // Filter by completion status
+}
+
+message ListVoteSetsResponse {
+  repeated blockchain.consensus.messages.VoteSet vote_sets = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetConsensusParamsRequest {
+  // No parameters needed
+}
+
+message GetConsensusParamsResponse {
+  blockchain.consensus.messages.ConsensusParams params = 1;
+}
+
+message GetConsensusStatsRequest {
+  string network_id = 1; // Optional network ID for specific stats
+}
+
+message GetConsensusStatsResponse {
+  int64 total_nodes = 1;           // Total number of nodes
+  int64 active_validators = 2;     // Number of active validators
+  int64 total_blocks = 3;          // Total number of blocks
+  int64 finalized_blocks = 4;      // Number of finalized blocks
+  string total_staked = 5;         // Total staked amount
+  string average_block_time = 6;   // Average block time
+  int64 current_height = 7;        // Current blockchain height
+  string network_uptime = 8;       // Network uptime percentage
+}
+
+message GetValidatorSetRequest {
+  int64 height = 1; // Optional height for historical validator set
+}
+
+message GetValidatorSetResponse {
+  repeated blockchain.consensus.messages.Node validators = 1;
+  int64 total_power = 2;           // Total validator power
+  int64 active_power = 3;          // Active validator power
+  int64 height = 4;                // Validator set height
+}
+
+message GetNetworkStatusRequest {
+  // No parameters needed
+}
+
+message GetNetworkStatusResponse {
+  string status = 1;               // Network status
+  bool is_synced = 2;              // Whether network is synced
+  int64 current_height = 3;        // Current height
+  int64 latest_height = 4;         // Latest height
+  string consensus_algorithm = 5;  // Current consensus algorithm
+  int64 active_validators = 6;     // Number of active validators
+  string block_time = 7;           // Average block time
+  string network_id = 8;           // Network identifier
+}
+
+message GetBlockProofRequest {
+  string block_id = 1; // Block ID or hash
+}
+
+message GetBlockProofResponse {
+  blockchain.consensus.messages.BlockProof proof = 1;
+}

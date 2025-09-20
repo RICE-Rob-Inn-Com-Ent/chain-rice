@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package core.common.messages;
+
+import "core/common/enums/country_code.proto";
+import "core/common/enums/language_code.proto";
+
+// Location describes a physical or inferred geographic position.
+message Location {
+  core.common.enums.CountryCode country = 1; // ISO-3166-1 alpha-2 code.
+  string region = 2;   // Region or state (free-form).
+  string city = 3;     // City name.
+  string postal_code = 4; // Postal/ZIP code.
+  double latitude = 5;   // Latitude in degrees.
+  double longitude = 6;  // Longitude in degrees.
+  core.common.enums.LanguageCode language = 7; // Preferred language for locale.
+}
+
+

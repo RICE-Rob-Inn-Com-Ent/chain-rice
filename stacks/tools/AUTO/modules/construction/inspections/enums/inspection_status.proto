@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package construction.inspections.enums;
+
+// Enumeration of different statuses for inspections
+enum InspectionStatus {
+  // Default value for unset inspection status
+  INSPECTION_STATUS_UNSPECIFIED = 0;
+  
+  // Inspection is scheduled but not yet started
+  SCHEDULED = 1;
+  
+  // Inspection is currently in progress
+  IN_PROGRESS = 2;
+  
+  // Inspection has been completed
+  COMPLETED = 3;
+  
+  // Inspection has been cancelled
+  CANCELLED = 4;
+  
+  // Inspection is pending approval
+  PENDING_APPROVAL = 5;
+  
+  // Inspection has been approved
+  APPROVED = 6;
+  
+  // Inspection has been rejected
+  REJECTED = 7;
+  
+  // Inspection requires rework
+  REQUIRES_REWORK = 8;
+  
+  // Inspection is on hold
+  ON_HOLD = 9;
+  
+  // Inspection is overdue
+  OVERDUE = 10;
+  
+  // Inspection has been rescheduled
+  RESCHEDULED = 11;
+  
+  // Inspection is pending materials
+  PENDING_MATERIALS = 12;
+  
+  // Inspection is pending access
+  PENDING_ACCESS = 13;
+  
+  // Inspection is pending weather
+  PENDING_WEATHER = 14;
+  
+  // Inspection is pending permits
+  PENDING_PERMITS = 15;
+  
+  // Inspection is pending documentation
+  PENDING_DOCUMENTATION = 16;
+  
+  // Inspection is pending corrections
+  PENDING_CORRECTIONS = 17;
+  
+  // Inspection is pending review
+  PENDING_REVIEW = 18;
+  
+  // Inspection is under review
+  UNDER_REVIEW = 19;
+  
+  // Inspection has been failed
+  FAILED = 20;
+  
+  // Inspection has been passed
+  PASSED = 21;
+  
+  // Inspection is conditional (passed with conditions)
+  CONDITIONAL = 22;
+  
+  // Inspection is exempt
+  EXEMPT = 23;
+  
+  // Inspection is not applicable
+  NOT_APPLICABLE = 24;
+  
+  // Inspection is deferred
+  DEFERRED = 25;
+  
+  // Inspection is waived
+  WAIVED = 26;
+  
+  // Inspection is in dispute
+  IN_DISPUTE = 27;
+  
+  // Inspection is under appeal
+  UNDER_APPEAL = 28;
+  
+  // Inspection is archived
+  ARCHIVED = 29;
+  
+  // Inspection is deleted
+  DELETED = 30;
+}

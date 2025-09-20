@@ -1,0 +1,261 @@
+syntax = "proto3";
+
+package horeca.pos.services;
+
+import "google/protobuf/timestamp.proto";
+
+// POS Reporting Service - Sales analytics and taxes
+service PosReportingService {
+  // Get sales report
+  rpc GetSalesReport(GetSalesReportRequest) returns (GetSalesReportResponse);
+  
+  // Get revenue analytics
+  rpc GetRevenueAnalytics(GetRevenueAnalyticsRequest) returns (GetRevenueAnalyticsResponse);
+  
+  // Get transaction analytics
+  rpc GetTransactionAnalytics(GetTransactionAnalyticsRequest) returns (GetTransactionAnalyticsResponse);
+  
+  // Get payment method analytics
+  rpc GetPaymentMethodAnalytics(GetPaymentMethodAnalyticsRequest) returns (GetPaymentMethodAnalyticsResponse);
+  
+  // Get tax report
+  rpc GetTaxReport(GetTaxReportRequest) returns (GetTaxReportResponse);
+  
+  // Get cashier performance
+  rpc GetCashierPerformance(GetCashierPerformanceRequest) returns (GetCashierPerformanceResponse);
+  
+  // Get terminal performance
+  rpc GetTerminalPerformance(GetTerminalPerformanceRequest) returns (GetTerminalPerformanceResponse);
+  
+  // Get daily summary
+  rpc GetDailySummary(GetDailySummaryRequest) returns (GetDailySummaryResponse);
+  
+  // Get hourly analytics
+  rpc GetHourlyAnalytics(GetHourlyAnalyticsRequest) returns (GetHourlyAnalyticsResponse);
+  
+  // Get refund analytics
+  rpc GetRefundAnalytics(GetRefundAnalyticsRequest) returns (GetRefundAnalyticsResponse);
+}
+
+// Request/Response messages
+message GetSalesReportRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string terminal_id = 3;
+  string cashier_id = 4;
+  string group_by = 5; // day, week, month, terminal, cashier
+}
+
+message GetSalesReportResponse {
+  repeated SalesReportData sales_data = 1;
+  double total_revenue = 2;
+  double total_tax = 3;
+  double total_tips = 4;
+  int32 total_transactions = 5;
+  double average_transaction_value = 6;
+}
+
+message GetRevenueAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string group_by = 3; // day, week, month, hour
+}
+
+message GetRevenueAnalyticsResponse {
+  repeated RevenueAnalyticsData revenue_data = 1;
+  double total_revenue = 2;
+  double revenue_growth = 3;
+  double peak_revenue = 4;
+  string peak_period = 5;
+}
+
+message GetTransactionAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string terminal_id = 3;
+}
+
+message GetTransactionAnalyticsResponse {
+  repeated TransactionAnalyticsData transaction_data = 1;
+  int32 total_transactions = 2;
+  double success_rate = 3;
+  double average_transaction_value = 4;
+  double average_transaction_time = 5;
+}
+
+message GetPaymentMethodAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetPaymentMethodAnalyticsResponse {
+  repeated PaymentMethodAnalyticsData payment_data = 1;
+  string most_popular_method = 2;
+  string most_valuable_method = 3;
+  double total_processing_fees = 4;
+}
+
+message GetTaxReportRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string tax_type = 3;
+}
+
+message GetTaxReportResponse {
+  repeated TaxReportData tax_data = 1;
+  double total_tax_collected = 2;
+  double total_taxable_sales = 3;
+  double average_tax_rate = 4;
+}
+
+message GetCashierPerformanceRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string cashier_id = 3;
+}
+
+message GetCashierPerformanceResponse {
+  repeated CashierPerformanceData performance_data = 1;
+  double average_transaction_value = 2;
+  double average_transaction_time = 3;
+  double error_rate = 4;
+  double customer_satisfaction = 5;
+}
+
+message GetTerminalPerformanceRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string terminal_id = 3;
+}
+
+message GetTerminalPerformanceResponse {
+  repeated TerminalPerformanceData performance_data = 1;
+  double uptime_percentage = 2;
+  double average_transaction_time = 3;
+  int32 total_transactions = 4;
+  double total_revenue = 5;
+}
+
+message GetDailySummaryRequest {
+  google.protobuf.Timestamp date = 1;
+  string terminal_id = 2;
+}
+
+message GetDailySummaryResponse {
+  DailySummaryData summary = 1;
+}
+
+message GetHourlyAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetHourlyAnalyticsResponse {
+  repeated HourlyAnalyticsData hourly_data = 1;
+  string peak_hour = 2;
+  string low_hour = 3;
+  double peak_revenue = 4;
+}
+
+message GetRefundAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetRefundAnalyticsResponse {
+  repeated RefundAnalyticsData refund_data = 1;
+  double total_refunds = 2;
+  double refund_rate = 3;
+  string most_refunded_item = 4;
+  double average_refund_amount = 5;
+}
+
+// Data structures
+message SalesReportData {
+  google.protobuf.Timestamp date = 1;
+  string terminal_id = 2;
+  string cashier_id = 3;
+  double revenue = 4;
+  double tax = 5;
+  double tips = 6;
+  int32 transactions = 7;
+}
+
+message RevenueAnalyticsData {
+  google.protobuf.Timestamp date = 1;
+  double revenue = 2;
+  int32 transactions = 3;
+  double average_transaction_value = 4;
+}
+
+message TransactionAnalyticsData {
+  google.protobuf.Timestamp date = 1;
+  int32 total_transactions = 2;
+  int32 successful_transactions = 3;
+  int32 failed_transactions = 4;
+  double success_rate = 5;
+  double average_transaction_value = 6;
+}
+
+message PaymentMethodAnalyticsData {
+  string payment_method = 1;
+  int32 transaction_count = 2;
+  double total_amount = 3;
+  double average_amount = 4;
+  double processing_fees = 5;
+  double percentage = 6;
+}
+
+message TaxReportData {
+  google.protobuf.Timestamp date = 1;
+  string tax_type = 2;
+  double tax_rate = 3;
+  double taxable_sales = 4;
+  double tax_collected = 5;
+}
+
+message CashierPerformanceData {
+  string cashier_id = 1;
+  string cashier_name = 2;
+  int32 total_transactions = 3;
+  double total_revenue = 4;
+  double average_transaction_value = 5;
+  double average_transaction_time = 6;
+  int32 errors = 7;
+  double error_rate = 8;
+}
+
+message TerminalPerformanceData {
+  string terminal_id = 1;
+  double uptime_percentage = 2;
+  int32 total_transactions = 3;
+  double total_revenue = 4;
+  double average_transaction_time = 5;
+  int32 errors = 6;
+  double error_rate = 7;
+}
+
+message DailySummaryData {
+  google.protobuf.Timestamp date = 1;
+  double total_revenue = 2;
+  double total_tax = 3;
+  double total_tips = 4;
+  int32 total_transactions = 5;
+  double average_transaction_value = 6;
+  repeated PosPaymentMethodSummary payment_summary = 7;
+}
+
+message HourlyAnalyticsData {
+  int32 hour = 1;
+  double revenue = 2;
+  int32 transactions = 3;
+  double average_transaction_value = 4;
+}
+
+message RefundAnalyticsData {
+  google.protobuf.Timestamp date = 1;
+  int32 refund_count = 2;
+  double refund_amount = 3;
+  double refund_rate = 4;
+  string most_refunded_item = 5;
+}

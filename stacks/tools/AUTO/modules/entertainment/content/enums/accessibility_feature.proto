@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package entertainment.content.enums;
+
+// Функції доступності для контенту
+enum AccessibilityFeature {
+  ACCESSIBILITY_FEATURE_UNSPECIFIED = 0;
+  
+  // Субтитри та капшени
+  SUBTITLES = 1;
+  CLOSED_CAPTIONS = 2;
+  OPEN_CAPTIONS = 3;
+  BURNED_IN_CAPTIONS = 4;
+  
+  // Аудіо описи
+  AUDIO_DESCRIPTION = 5;
+  DESCRIBED_VIDEO = 6;
+  NARRATION = 7;
+  
+  // Мовна підтримка
+  MULTIPLE_LANGUAGES = 8;
+  SIGN_LANGUAGE = 9;
+  TRANSLATION = 10;
+  
+  // Візуальні функції
+  HIGH_CONTRAST = 11;
+  LARGE_TEXT = 12;
+  ZOOM_CAPABILITY = 13;
+  COLOR_BLIND_FRIENDLY = 14;
+  
+  // Аудіо функції
+  VOLUME_CONTROL = 15;
+  AUDIO_BOOST = 16;
+  BACKGROUND_NOISE_REDUCTION = 17;
+  
+  // Інтерактивні функції
+  KEYBOARD_NAVIGATION = 18;
+  VOICE_CONTROL = 19;
+  GESTURE_CONTROL = 20;
+  EYE_TRACKING = 21;
+  
+  // Читабельність
+  SIMPLIFIED_TEXT = 22;
+  READ_ALOUD = 23;
+  TEXT_TO_SPEECH = 24;
+  
+  // Налаштування відтворення
+  SLOW_PLAYBACK = 25;
+  PAUSE_CONTROL = 26;
+  SKIP_CONTROL = 27;
+  REPEAT_SECTION = 28;
+  
+  // Спеціальні потреб
+  MOTOR_DISABILITY_SUPPORT = 29;
+  COGNITIVE_DISABILITY_SUPPORT = 30;
+  LEARNING_DISABILITY_SUPPORT = 31;
+  
+  // Технічні функції
+  SCREEN_READER_COMPATIBLE = 32;
+  ASSISTIVE_TECHNOLOGY_SUPPORT = 33;
+  ALTERNATIVE_INPUT_METHODS = 34;
+  
+  // Мобільна доступність
+  MOBILE_ACCESSIBILITY = 35;
+  TOUCH_FRIENDLY = 36;
+  VOICE_OVER_SUPPORT = 37;
+  
+  // Веб доступність
+  WCAG_COMPLIANT = 38;
+  SECTION_508_COMPLIANT = 39;
+  ADA_COMPLIANT = 40;
+}

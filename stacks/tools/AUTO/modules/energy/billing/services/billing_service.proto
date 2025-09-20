@@ -1,0 +1,411 @@
+syntax = "proto3";
+
+package energy.billing.services;
+
+import "energy/billing/messages/invoice.proto";
+import "energy/billing/messages/bill_item.proto";
+import "energy/billing/messages/payment.proto";
+import "energy/billing/enums/invoice_status.proto";
+
+// Billing service for managing energy invoices and payments
+service BillingMsgService {
+  // Create a new invoice for a customer
+  rpc CreateInvoice(CreateInvoiceRequest) returns (CreateInvoiceResponse);
+  
+  // Update an existing invoice
+  rpc UpdateInvoice(UpdateInvoiceRequest) returns (UpdateInvoiceResponse);
+  
+  // Cancel an invoice
+  rpc CancelInvoice(CancelInvoiceRequest) returns (CancelInvoiceResponse);
+  
+  // Void an invoice
+  rpc VoidInvoice(VoidInvoiceRequest) returns (VoidInvoiceResponse);
+  
+  // Add bill item to an invoice
+  rpc AddBillItem(AddBillItemRequest) returns (AddBillItemResponse);
+  
+  // Remove bill item from an invoice
+  rpc RemoveBillItem(RemoveBillItemRequest) returns (RemoveBillItemResponse);
+  
+  // Process a payment for an invoice
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  
+  // Record a payment
+  rpc RecordPayment(RecordPaymentRequest) returns (RecordPaymentResponse);
+  
+  // Refund a payment
+  rpc RefundPayment(RefundPaymentRequest) returns (RefundPaymentResponse);
+  
+  // Dispute an invoice
+  rpc DisputeInvoice(DisputeInvoiceRequest) returns (DisputeInvoiceResponse);
+  
+  // Resolve an invoice dispute
+  rpc ResolveDispute(ResolveDisputeRequest) returns (ResolveDisputeResponse);
+  
+  // Apply billing adjustment
+  rpc ApplyBillingAdjustment(ApplyBillingAdjustmentRequest) returns (ApplyBillingAdjustmentResponse);
+  
+  // Send invoice to customer
+  rpc SendInvoice(SendInvoiceRequest) returns (SendInvoiceResponse);
+  
+  // Generate invoice PDF
+  rpc GenerateInvoicePDF(GenerateInvoicePDFRequest) returns (GenerateInvoicePDFResponse);
+}
+
+// Query service for reading billing data
+service BillingQueryService {
+  // Get a specific invoice by ID
+  rpc GetInvoice(GetInvoiceRequest) returns (GetInvoiceResponse);
+  
+  // Get invoice by invoice number
+  rpc GetInvoiceByNumber(GetInvoiceByNumberRequest) returns (GetInvoiceByNumberResponse);
+  
+  // List invoices for a customer
+  rpc ListCustomerInvoices(ListCustomerInvoicesRequest) returns (ListCustomerInvoicesResponse);
+  
+  // List all invoices with filters
+  rpc ListInvoices(ListInvoicesRequest) returns (ListInvoicesResponse);
+  
+  // Get invoice statistics
+  rpc GetInvoiceStatistics(GetInvoiceStatisticsRequest) returns (GetInvoiceStatisticsResponse);
+  
+  // Get a specific payment by ID
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+  
+  // List payments for an invoice
+  rpc ListInvoicePayments(ListInvoicePaymentsRequest) returns (ListInvoicePaymentsResponse);
+  
+  // List payments for a customer
+  rpc ListCustomerPayments(ListCustomerPaymentsRequest) returns (ListCustomerPaymentsResponse);
+  
+  // Get payment statistics
+  rpc GetPaymentStatistics(GetPaymentStatisticsRequest) returns (GetPaymentStatisticsResponse);
+  
+  // Get overdue invoices
+  rpc GetOverdueInvoices(GetOverdueInvoicesRequest) returns (GetOverdueInvoicesResponse);
+  
+  // Get outstanding balances
+  rpc GetOutstandingBalances(GetOutstandingBalancesRequest) returns (GetOutstandingBalancesResponse);
+}
+
+// Request/Response messages for CreateInvoice
+message CreateInvoiceRequest {
+  string customer_id = 1;
+  int64 billing_period_start = 2;
+  int64 billing_period_end = 3;
+  repeated BillItem bill_items = 4;
+  string currency = 5;
+  map<string, string> metadata = 6;
+}
+
+message CreateInvoiceResponse {
+  Invoice invoice = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdateInvoice
+message UpdateInvoiceRequest {
+  string invoice_id = 1;
+  Invoice invoice = 2;
+}
+
+message UpdateInvoiceResponse {
+  Invoice invoice = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for CancelInvoice
+message CancelInvoiceRequest {
+  string invoice_id = 1;
+  string reason = 2;
+}
+
+message CancelInvoiceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for VoidInvoice
+message VoidInvoiceRequest {
+  string invoice_id = 1;
+  string reason = 2;
+}
+
+message VoidInvoiceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for AddBillItem
+message AddBillItemRequest {
+  string invoice_id = 1;
+  BillItem bill_item = 2;
+}
+
+message AddBillItemResponse {
+  Invoice invoice = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RemoveBillItem
+message RemoveBillItemRequest {
+  string invoice_id = 1;
+  string bill_item_id = 2;
+}
+
+message RemoveBillItemResponse {
+  Invoice invoice = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for ProcessPayment
+message ProcessPaymentRequest {
+  string invoice_id = 1;
+  double amount = 2;
+  string payment_method = 3;
+  map<string, string> payment_details = 4;
+}
+
+message ProcessPaymentResponse {
+  Payment payment = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RecordPayment
+message RecordPaymentRequest {
+  Payment payment = 1;
+}
+
+message RecordPaymentResponse {
+  Payment payment = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RefundPayment
+message RefundPaymentRequest {
+  string payment_id = 1;
+  double refund_amount = 2;
+  string reason = 3;
+}
+
+message RefundPaymentResponse {
+  Payment refund_payment = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for DisputeInvoice
+message DisputeInvoiceRequest {
+  string invoice_id = 1;
+  string dispute_reason = 2;
+  string description = 3;
+}
+
+message DisputeInvoiceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for ResolveDispute
+message ResolveDisputeRequest {
+  string invoice_id = 1;
+  string resolution = 2;
+  string notes = 3;
+}
+
+message ResolveDisputeResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for ApplyBillingAdjustment
+message ApplyBillingAdjustmentRequest {
+  string invoice_id = 1;
+  double adjustment_amount = 2;
+  string adjustment_reason = 3;
+  string description = 4;
+}
+
+message ApplyBillingAdjustmentResponse {
+  Invoice invoice = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for SendInvoice
+message SendInvoiceRequest {
+  string invoice_id = 1;
+  string delivery_method = 2; // email, postal, sms
+  map<string, string> delivery_options = 3;
+}
+
+message SendInvoiceResponse {
+  bool success = 1;
+  string message = 2;
+  string delivery_reference = 3;
+}
+
+// Request/Response messages for GenerateInvoicePDF
+message GenerateInvoicePDFRequest {
+  string invoice_id = 1;
+  string template_id = 2;
+}
+
+message GenerateInvoicePDFResponse {
+  bytes pdf_data = 1;
+  string filename = 2;
+  bool success = 3;
+  string message = 4;
+}
+
+// Request/Response messages for GetInvoice
+message GetInvoiceRequest {
+  string invoice_id = 1;
+}
+
+message GetInvoiceResponse {
+  Invoice invoice = 1;
+}
+
+// Request/Response messages for GetInvoiceByNumber
+message GetInvoiceByNumberRequest {
+  string invoice_number = 1;
+}
+
+message GetInvoiceByNumberResponse {
+  Invoice invoice = 1;
+}
+
+// Request/Response messages for ListCustomerInvoices
+message ListCustomerInvoicesRequest {
+  string customer_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string status_filter = 4;
+  int64 date_from = 5;
+  int64 date_to = 6;
+}
+
+message ListCustomerInvoicesResponse {
+  repeated Invoice invoices = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for ListInvoices
+message ListInvoicesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string status_filter = 3;
+  string customer_id_filter = 4;
+  int64 date_from = 5;
+  int64 date_to = 6;
+  string sort_by = 7;
+  bool sort_descending = 8;
+}
+
+message ListInvoicesResponse {
+  repeated Invoice invoices = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetInvoiceStatistics
+message GetInvoiceStatisticsRequest {
+  string customer_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetInvoiceStatisticsResponse {
+  double total_invoiced = 1;
+  double total_paid = 2;
+  double total_outstanding = 3;
+  double total_overdue = 4;
+  int32 invoice_count = 5;
+  int32 overdue_count = 6;
+}
+
+// Request/Response messages for GetPayment
+message GetPaymentRequest {
+  string payment_id = 1;
+}
+
+message GetPaymentResponse {
+  Payment payment = 1;
+}
+
+// Request/Response messages for ListInvoicePayments
+message ListInvoicePaymentsRequest {
+  string invoice_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListInvoicePaymentsResponse {
+  repeated Payment payments = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for ListCustomerPayments
+message ListCustomerPaymentsRequest {
+  string customer_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  int64 date_from = 4;
+  int64 date_to = 5;
+}
+
+message ListCustomerPaymentsResponse {
+  repeated Payment payments = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetPaymentStatistics
+message GetPaymentStatisticsRequest {
+  string customer_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetPaymentStatisticsResponse {
+  double total_payments = 1;
+  double successful_payments = 2;
+  double failed_payments = 3;
+  int32 payment_count = 4;
+  double average_payment_amount = 5;
+}
+
+// Request/Response messages for GetOverdueInvoices
+message GetOverdueInvoicesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  int32 days_overdue = 3;
+}
+
+message GetOverdueInvoicesResponse {
+  repeated Invoice invoices = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+  double total_overdue_amount = 4;
+}
+
+// Request/Response messages for GetOutstandingBalances
+message GetOutstandingBalancesRequest {
+  string customer_id = 1;
+}
+
+message GetOutstandingBalancesResponse {
+  double total_outstanding = 1;
+  double current_outstanding = 2;
+  double overdue_outstanding = 3;
+  repeated Invoice outstanding_invoices = 4;
+}

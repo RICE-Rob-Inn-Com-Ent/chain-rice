@@ -1,0 +1,695 @@
+syntax = "proto3";
+
+package energy.generation.services;
+
+import "energy/generation/messages/plant.proto";
+import "energy/generation/messages/unit.proto";
+import "energy/generation/messages/generation_record.proto";
+import "energy/generation/enums/generation_status.proto";
+
+// Generation service for managing power plants, units, and generation records
+service GenerationMsgService {
+  // Create a new power plant
+  rpc CreatePlant(CreatePlantRequest) returns (CreatePlantResponse);
+  
+  // Update plant information
+  rpc UpdatePlant(UpdatePlantRequest) returns (UpdatePlantResponse);
+  
+  // Remove plant
+  rpc RemovePlant(RemovePlantRequest) returns (RemovePlantResponse);
+  
+  // Update plant status
+  rpc UpdatePlantStatus(UpdatePlantStatusRequest) returns (UpdatePlantStatusResponse);
+  
+  // Create a new generation unit
+  rpc CreateUnit(CreateUnitRequest) returns (CreateUnitResponse);
+  
+  // Update unit information
+  rpc UpdateUnit(UpdateUnitRequest) returns (UpdateUnitResponse);
+  
+  // Remove unit
+  rpc RemoveUnit(RemoveUnitRequest) returns (RemoveUnitResponse);
+  
+  // Update unit status
+  rpc UpdateUnitStatus(UpdateUnitStatusRequest) returns (UpdateUnitStatusResponse);
+  
+  // Start generation unit
+  rpc StartUnit(StartUnitRequest) returns (StartUnitResponse);
+  
+  // Stop generation unit
+  rpc StopUnit(StopUnitRequest) returns (StopUnitResponse);
+  
+  // Record generation data
+  rpc RecordGeneration(RecordGenerationRequest) returns (RecordGenerationResponse);
+  
+  // Update generation record
+  rpc UpdateGenerationRecord(UpdateGenerationRecordRequest) returns (UpdateGenerationRecordResponse);
+  
+  // Schedule maintenance
+  rpc ScheduleMaintenance(ScheduleMaintenanceRequest) returns (ScheduleMaintenanceResponse);
+  
+  // Perform load balancing
+  rpc PerformLoadBalancing(PerformLoadBalancingRequest) returns (PerformLoadBalancingResponse);
+  
+  // Update fuel inventory
+  rpc UpdateFuelInventory(UpdateFuelInventoryRequest) returns (UpdateFuelInventoryResponse);
+  
+  // Report emissions
+  rpc ReportEmissions(ReportEmissionsRequest) returns (ReportEmissionsResponse);
+}
+
+// Query service for reading generation data
+service GenerationQueryService {
+  // Get a specific plant by ID
+  rpc GetPlant(GetPlantRequest) returns (GetPlantResponse);
+  
+  // List plants with filters
+  rpc ListPlants(ListPlantsRequest) returns (ListPlantsResponse);
+  
+  // Get plant statistics
+  rpc GetPlantStatistics(GetPlantStatisticsRequest) returns (GetPlantStatisticsResponse);
+  
+  // Get a specific unit by ID
+  rpc GetUnit(GetUnitRequest) returns (GetUnitResponse);
+  
+  // List units with filters
+  rpc ListUnits(ListUnitsRequest) returns (ListUnitsResponse);
+  
+  // Get unit statistics
+  rpc GetUnitStatistics(GetUnitStatisticsRequest) returns (GetUnitStatisticsResponse);
+  
+  // Get a specific generation record by ID
+  rpc GetGenerationRecord(GetGenerationRecordRequest) returns (GetGenerationRecordResponse);
+  
+  // List generation records with filters
+  rpc ListGenerationRecords(ListGenerationRecordsRequest) returns (ListGenerationRecordsResponse);
+  
+  // Get generation statistics
+  rpc GetGenerationStatistics(GetGenerationStatisticsRequest) returns (GetGenerationStatisticsResponse);
+  
+  // Get generation trends
+  rpc GetGenerationTrends(GetGenerationTrendsRequest) returns (GetGenerationTrendsResponse);
+  
+  // Get performance metrics
+  rpc GetPerformanceMetrics(GetPerformanceMetricsRequest) returns (GetPerformanceMetricsResponse);
+  
+  // Get emissions data
+  rpc GetEmissionsData(GetEmissionsDataRequest) returns (GetEmissionsDataResponse);
+  
+  // Get fuel consumption data
+  rpc GetFuelConsumptionData(GetFuelConsumptionDataRequest) returns (GetFuelConsumptionDataResponse);
+  
+  // Get maintenance schedule
+  rpc GetMaintenanceSchedule(GetMaintenanceScheduleRequest) returns (GetMaintenanceScheduleResponse);
+  
+  // Get generation forecasts
+  rpc GetGenerationForecasts(GetGenerationForecastsRequest) returns (GetGenerationForecastsResponse);
+  
+  // Get capacity analysis
+  rpc GetCapacityAnalysis(GetCapacityAnalysisRequest) returns (GetCapacityAnalysisResponse);
+  
+  // Get economic analysis
+  rpc GetEconomicAnalysis(GetEconomicAnalysisRequest) returns (GetEconomicAnalysisResponse);
+}
+
+// Request/Response messages for CreatePlant
+message CreatePlantRequest {
+  Plant plant = 1;
+}
+
+message CreatePlantResponse {
+  Plant plant = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdatePlant
+message UpdatePlantRequest {
+  string plant_id = 1;
+  Plant plant = 2;
+}
+
+message UpdatePlantResponse {
+  Plant plant = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RemovePlant
+message RemovePlantRequest {
+  string plant_id = 1;
+  string reason = 2;
+}
+
+message RemovePlantResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for UpdatePlantStatus
+message UpdatePlantStatusRequest {
+  string plant_id = 1;
+  energy.generation.enums.GenerationStatus status = 2;
+  string reason = 3;
+}
+
+message UpdatePlantStatusResponse {
+  Plant plant = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for CreateUnit
+message CreateUnitRequest {
+  Unit unit = 1;
+}
+
+message CreateUnitResponse {
+  Unit unit = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdateUnit
+message UpdateUnitRequest {
+  string unit_id = 1;
+  Unit unit = 2;
+}
+
+message UpdateUnitResponse {
+  Unit unit = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RemoveUnit
+message RemoveUnitRequest {
+  string unit_id = 1;
+  string reason = 2;
+}
+
+message RemoveUnitResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for UpdateUnitStatus
+message UpdateUnitStatusRequest {
+  string unit_id = 1;
+  energy.generation.enums.GenerationStatus status = 2;
+  string reason = 3;
+}
+
+message UpdateUnitStatusResponse {
+  Unit unit = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for StartUnit
+message StartUnitRequest {
+  string unit_id = 1;
+  string start_reason = 2;
+  string operator = 3;
+  map<string, string> start_parameters = 4;
+}
+
+message StartUnitResponse {
+  bool success = 1;
+  string message = 2;
+  string start_sequence_id = 3;
+}
+
+// Request/Response messages for StopUnit
+message StopUnitRequest {
+  string unit_id = 1;
+  string stop_reason = 2;
+  string operator = 3;
+  map<string, string> stop_parameters = 4;
+}
+
+message StopUnitResponse {
+  bool success = 1;
+  string message = 2;
+  string stop_sequence_id = 3;
+}
+
+// Request/Response messages for RecordGeneration
+message RecordGenerationRequest {
+  GenerationRecord generation_record = 1;
+}
+
+message RecordGenerationResponse {
+  GenerationRecord generation_record = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdateGenerationRecord
+message UpdateGenerationRecordRequest {
+  string generation_record_id = 1;
+  GenerationRecord generation_record = 2;
+}
+
+message UpdateGenerationRecordResponse {
+  GenerationRecord generation_record = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for ScheduleMaintenance
+message ScheduleMaintenanceRequest {
+  string unit_id = 1;
+  int64 maintenance_date = 2;
+  string maintenance_type = 3;
+  string maintenance_team = 4;
+  map<string, string> maintenance_details = 5;
+}
+
+message ScheduleMaintenanceResponse {
+  bool success = 1;
+  string message = 2;
+  string maintenance_schedule_id = 3;
+}
+
+// Request/Response messages for PerformLoadBalancing
+message PerformLoadBalancingRequest {
+  string plant_id = 1;
+  map<string, double> load_parameters = 2;
+  string balancing_method = 3;
+}
+
+message PerformLoadBalancingResponse {
+  bool success = 1;
+  string message = 2;
+  LoadBalancingResult result = 3;
+}
+
+// Request/Response messages for UpdateFuelInventory
+message UpdateFuelInventoryRequest {
+  string unit_id = 1;
+  double fuel_quantity = 2;
+  string fuel_type = 3;
+  double fuel_cost = 4;
+  string supplier = 5;
+}
+
+message UpdateFuelInventoryResponse {
+  bool success = 1;
+  string message = 2;
+  FuelInventoryUpdate result = 3;
+}
+
+// Request/Response messages for ReportEmissions
+message ReportEmissionsRequest {
+  string unit_id = 1;
+  EmissionsData emissions_data = 2;
+  int64 reporting_period_start = 3;
+  int64 reporting_period_end = 4;
+}
+
+message ReportEmissionsResponse {
+  bool success = 1;
+  string message = 2;
+  string emissions_report_id = 3;
+}
+
+// Request/Response messages for GetPlant
+message GetPlantRequest {
+  string plant_id = 1;
+}
+
+message GetPlantResponse {
+  Plant plant = 1;
+}
+
+// Request/Response messages for ListPlants
+message ListPlantsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string status_filter = 3;
+  string type_filter = 4;
+  string owner_filter = 5;
+  string location_filter = 6;
+  string sort_by = 7;
+  bool sort_descending = 8;
+}
+
+message ListPlantsResponse {
+  repeated Plant plants = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetPlantStatistics
+message GetPlantStatisticsRequest {
+  string plant_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetPlantStatisticsResponse {
+  PlantStatistics statistics = 1;
+}
+
+// Request/Response messages for GetUnit
+message GetUnitRequest {
+  string unit_id = 1;
+}
+
+message GetUnitResponse {
+  Unit unit = 1;
+}
+
+// Request/Response messages for ListUnits
+message ListUnitsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string plant_id_filter = 3;
+  string status_filter = 4;
+  string type_filter = 5;
+  string sort_by = 6;
+  bool sort_descending = 7;
+}
+
+message ListUnitsResponse {
+  repeated Unit units = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetUnitStatistics
+message GetUnitStatisticsRequest {
+  string unit_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetUnitStatisticsResponse {
+  UnitStatistics statistics = 1;
+}
+
+// Request/Response messages for GetGenerationRecord
+message GetGenerationRecordRequest {
+  string generation_record_id = 1;
+}
+
+message GetGenerationRecordResponse {
+  GenerationRecord generation_record = 1;
+}
+
+// Request/Response messages for ListGenerationRecords
+message ListGenerationRecordsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string plant_id_filter = 3;
+  string unit_id_filter = 4;
+  int64 date_from = 5;
+  int64 date_to = 6;
+  string status_filter = 7;
+  string sort_by = 8;
+  bool sort_descending = 9;
+}
+
+message ListGenerationRecordsResponse {
+  repeated GenerationRecord generation_records = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetGenerationStatistics
+message GetGenerationStatisticsRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetGenerationStatisticsResponse {
+  GenerationStatistics statistics = 1;
+}
+
+// Request/Response messages for GetGenerationTrends
+message GetGenerationTrendsRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+  string trend_type = 5;
+}
+
+message GetGenerationTrendsResponse {
+  repeated TrendDataPoint trend_data = 1;
+  TrendAnalysis trend_analysis = 2;
+}
+
+// Request/Response messages for GetPerformanceMetrics
+message GetPerformanceMetricsRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetPerformanceMetricsResponse {
+  PerformanceMetrics performance_metrics = 1;
+}
+
+// Request/Response messages for GetEmissionsData
+message GetEmissionsDataRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetEmissionsDataResponse {
+  EmissionsSummary emissions_summary = 1;
+}
+
+// Request/Response messages for GetFuelConsumptionData
+message GetFuelConsumptionDataRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetFuelConsumptionDataResponse {
+  FuelConsumptionSummary fuel_consumption_summary = 1;
+}
+
+// Request/Response messages for GetMaintenanceSchedule
+message GetMaintenanceScheduleRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetMaintenanceScheduleResponse {
+  repeated MaintenanceScheduleItem maintenance_schedule = 1;
+}
+
+// Request/Response messages for GetGenerationForecasts
+message GetGenerationForecastsRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 forecast_start = 3;
+  int64 forecast_end = 4;
+  string forecast_method = 5;
+}
+
+message GetGenerationForecastsResponse {
+  repeated ForecastDataPoint forecast_data = 1;
+  ForecastAccuracy forecast_accuracy = 2;
+}
+
+// Request/Response messages for GetCapacityAnalysis
+message GetCapacityAnalysisRequest {
+  string plant_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetCapacityAnalysisResponse {
+  CapacityAnalysis capacity_analysis = 1;
+}
+
+// Request/Response messages for GetEconomicAnalysis
+message GetEconomicAnalysisRequest {
+  string plant_id = 1;
+  string unit_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetEconomicAnalysisResponse {
+  EconomicAnalysis economic_analysis = 1;
+}
+
+// Supporting message types
+message LoadBalancingResult {
+  bool success = 1;
+  double load_reduction = 2;
+  double efficiency_improvement = 3;
+  repeated string actions_taken = 4;
+}
+
+message FuelInventoryUpdate {
+  double previous_quantity = 1;
+  double new_quantity = 2;
+  double quantity_added = 3;
+  double total_cost = 4;
+  double average_cost = 5;
+}
+
+message PlantStatistics {
+  int32 total_units = 1;
+  int32 active_units = 2;
+  int32 inactive_units = 3;
+  double total_capacity = 4;
+  double available_capacity = 5;
+  double total_generation = 6;
+  double average_efficiency = 7;
+  double capacity_factor = 8;
+}
+
+message UnitStatistics {
+  double total_generation = 1;
+  double average_power = 2;
+  double peak_power = 3;
+  double efficiency = 4;
+  double availability = 5;
+  double capacity_factor = 6;
+  double operating_hours = 7;
+}
+
+message GenerationStatistics {
+  double total_generation = 1;
+  double average_generation = 2;
+  double peak_generation = 3;
+  double minimum_generation = 4;
+  double capacity_factor = 5;
+  double availability = 6;
+  double efficiency = 7;
+  int32 generation_hours = 8;
+}
+
+message TrendDataPoint {
+  int64 timestamp = 1;
+  double value = 2;
+  string metric = 3;
+}
+
+message TrendAnalysis {
+  string direction = 1;
+  double slope = 2;
+  double r_squared = 3;
+  repeated string trend_factors = 4;
+}
+
+message PerformanceMetrics {
+  double availability = 1;
+  double reliability = 2;
+  double efficiency = 3;
+  double capacity_factor = 4;
+  double load_factor = 5;
+  double mtbf = 6;
+  double mttr = 7;
+  repeated PerformanceMetric metrics = 8;
+}
+
+message PerformanceMetric {
+  string metric_name = 1;
+  double value = 2;
+  string unit = 3;
+  int64 timestamp = 4;
+}
+
+message EmissionsSummary {
+  double total_co2_emissions = 1;
+  double total_nox_emissions = 2;
+  double total_so2_emissions = 3;
+  double total_pm_emissions = 4;
+  double average_emissions_intensity = 5;
+  repeated EmissionsDataPoint emissions_data = 6;
+}
+
+message EmissionsDataPoint {
+  int64 timestamp = 1;
+  double co2_emissions = 2;
+  double nox_emissions = 3;
+  double so2_emissions = 4;
+  double pm_emissions = 5;
+}
+
+message FuelConsumptionSummary {
+  double total_fuel_consumed = 1;
+  double average_fuel_consumption_rate = 2;
+  double total_fuel_cost = 3;
+  double average_fuel_cost = 4;
+  double fuel_efficiency = 5;
+  repeated FuelConsumptionDataPoint fuel_data = 6;
+}
+
+message FuelConsumptionDataPoint {
+  int64 timestamp = 1;
+  double fuel_consumption = 2;
+  double fuel_cost = 3;
+  string fuel_type = 4;
+}
+
+message MaintenanceScheduleItem {
+  string unit_id = 1;
+  int64 scheduled_date = 2;
+  string maintenance_type = 3;
+  string maintenance_team = 4;
+  string status = 5;
+}
+
+message ForecastDataPoint {
+  int64 timestamp = 1;
+  double forecast_value = 2;
+  double confidence_interval_lower = 3;
+  double confidence_interval_upper = 4;
+}
+
+message ForecastAccuracy {
+  double mean_absolute_error = 1;
+  double mean_squared_error = 2;
+  double root_mean_squared_error = 3;
+  double mean_absolute_percentage_error = 4;
+}
+
+message CapacityAnalysis {
+  double installed_capacity = 1;
+  double available_capacity = 2;
+  double utilized_capacity = 3;
+  double capacity_factor = 4;
+  double reserve_margin = 5;
+  repeated CapacityDataPoint capacity_data = 6;
+}
+
+message CapacityDataPoint {
+  int64 timestamp = 1;
+  double capacity = 2;
+  double utilization = 3;
+}
+
+message EconomicAnalysis {
+  double total_revenue = 1;
+  double total_costs = 2;
+  double net_profit = 3;
+  double profit_margin = 4;
+  double return_on_investment = 5;
+  double levelized_cost_of_electricity = 6;
+  repeated EconomicDataPoint economic_data = 7;
+}
+
+message EconomicDataPoint {
+  int64 timestamp = 1;
+  double revenue = 2;
+  double costs = 3;
+  double profit = 4;
+}

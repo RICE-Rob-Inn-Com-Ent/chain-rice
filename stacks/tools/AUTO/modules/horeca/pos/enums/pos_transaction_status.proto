@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package horeca.pos.enums;
+
+// Status of POS transactions
+enum PosTransactionStatus {
+  POS_TRANSACTION_STATUS_UNSPECIFIED = 0;
+  POS_TRANSACTION_STATUS_SUCCESS = 1;     // Transaction successful
+  POS_TRANSACTION_STATUS_FAILED = 2;      // Transaction failed
+  POS_TRANSACTION_STATUS_PENDING = 3;     // Transaction pending
+  POS_TRANSACTION_STATUS_REFUNDED = 4;    // Transaction refunded
+  POS_TRANSACTION_STATUS_PARTIAL_REFUND = 5; // Partial refund
+  POS_TRANSACTION_STATUS_CANCELED = 6;    // Transaction canceled
+  POS_TRANSACTION_STATUS_DECLINED = 7;    // Transaction declined
+  POS_TRANSACTION_STATUS_TIMEOUT = 8;     // Transaction timeout
+}

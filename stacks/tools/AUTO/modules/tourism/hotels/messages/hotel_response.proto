@@ -1,0 +1,498 @@
+syntax = "proto3";
+
+package tourism.hotels.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/hotels/enums/room_type.proto";
+import "tourism/hotels/enums/hotel_rating.proto";
+
+// Hotel represents a hotel entity
+message Hotel {
+  // Unique identifier for the hotel
+  string hotel_id = 1;
+  
+  // Hotel name
+  string name = 2;
+  
+  // Hotel description
+  string description = 3;
+  
+  // Hotel location information
+  LocationInfo location = 4;
+  
+  // Hotel rating/classification
+  tourism.hotels.enums.HotelRating rating = 5;
+  
+  // Contact information
+  ContactInfo contact_info = 6;
+  
+  // Hotel amenities
+  repeated string amenities = 7;
+  
+  // Room types available
+  repeated RoomTypeInfo room_types = 8;
+  
+  // Check-in and check-out policies
+  CheckInOutPolicy check_in_out_policy = 9;
+  
+  // Cancellation policy
+  CancellationPolicy cancellation_policy = 10;
+  
+  // Pet policy
+  google.protobuf.StringValue pet_policy = 11;
+  
+  // Age restrictions
+  google.protobuf.StringValue age_restrictions = 12;
+  
+  // Hotel chain/brand
+  google.protobuf.StringValue hotel_chain = 13;
+  
+  // Languages spoken by staff
+  repeated string languages_spoken = 14;
+  
+  // Currency accepted
+  repeated string currencies_accepted = 15;
+  
+  // Payment methods accepted
+  repeated string payment_methods = 16;
+  
+  // Hotel images
+  repeated string images = 17;
+  
+  // Customer reviews and ratings
+  HotelReviews reviews = 18;
+  
+  // Date when the hotel was created
+  google.protobuf.Timestamp created_at = 19;
+  
+  // Date when the hotel was last updated
+  google.protobuf.Timestamp updated_at = 20;
+  
+  // Hotel status (active, inactive, under_renovation)
+  string status = 21;
+}
+
+// CreateHotelResponse represents the response after creating a hotel
+message CreateHotelResponse {
+  // The created hotel
+  Hotel hotel = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// UpdateHotelResponse represents the response after updating a hotel
+message UpdateHotelResponse {
+  // The updated hotel
+  Hotel hotel = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// GetHotelResponse represents the response after retrieving a hotel
+message GetHotelResponse {
+  // The retrieved hotel
+  Hotel hotel = 1;
+}
+
+// ListHotelsResponse represents the response after listing hotels
+message ListHotelsResponse {
+  // List of hotels matching the criteria
+  repeated Hotel hotels = 1;
+  
+  // Total count of hotels matching the criteria
+  int32 total_count = 2;
+  
+  // Current page number
+  int32 page = 3;
+  
+  // Page size used
+  int32 page_size = 4;
+  
+  // Total number of pages available
+  int32 total_pages = 5;
+}
+
+// DeleteHotelResponse represents the response after deleting a hotel
+message DeleteHotelResponse {
+  // Success message
+  string message = 1;
+  
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}
+
+// SearchHotelsResponse represents the response after searching hotels
+message SearchHotelsResponse {
+  // List of matching hotels
+  repeated HotelSearchResult hotels = 1;
+  
+  // Total count of matching hotels
+  int32 total_count = 2;
+  
+  // Search parameters used
+  SearchHotelsRequest search_parameters = 3;
+  
+  // Search execution time in milliseconds
+  int32 execution_time_ms = 4;
+  
+  // Alternative hotel suggestions
+  repeated HotelSearchResult alternative_hotels = 5;
+  
+  // Price alerts (if applicable)
+  repeated HotelPriceAlert price_alerts = 6;
+  
+  // Map view data
+  google.protobuf.StringValue map_view_data = 7;
+}
+
+// HotelSearchResult represents a hotel search result
+message HotelSearchResult {
+  // Hotel information
+  Hotel hotel = 1;
+  
+  // Best available rate
+  int64 best_available_rate = 2;
+  
+  // Currency code
+  string currency = 3;
+  
+  // Available room types with prices
+  repeated AvailableRoomType available_room_types = 4;
+  
+  // Hotel rating/score
+  google.protobuf.DoubleValue hotel_score = 5;
+  
+  // Popular hotel indicator
+  bool is_popular = 6;
+  
+  // Recommended hotel indicator
+  bool is_recommended = 7;
+  
+  // Booking urgency (low, medium, high)
+  google.protobuf.StringValue booking_urgency = 8;
+  
+  // Special offers
+  repeated string special_offers = 9;
+  
+  // Distance from search center
+  google.protobuf.DoubleValue distance_from_center_km = 10;
+}
+
+// HotelPriceAlert represents a price alert for hotels
+message HotelPriceAlert {
+  // Alert ID
+  string alert_id = 1;
+  
+  // Hotel ID
+  string hotel_id = 2;
+  
+  // Target price per night
+  int64 target_price_per_night = 3;
+  
+  // Current lowest price
+  int64 current_lowest_price = 4;
+  
+  // Alert type (price_drop, price_increase)
+  string alert_type = 5;
+  
+  // Alert status (active, triggered, expired)
+  string alert_status = 6;
+  
+  // Currency
+  string currency = 7;
+}
+
+// AvailableRoomType represents available room type with pricing
+message AvailableRoomType {
+  // Room type
+  tourism.hotels.enums.RoomType room_type = 1;
+  
+  // Number of rooms available
+  int32 rooms_available = 2;
+  
+  // Price per night (in smallest currency unit)
+  int64 price_per_night = 3;
+  
+  // Total price for stay (in smallest currency unit)
+  int64 total_price = 4;
+  
+  // Currency code
+  string currency = 5;
+  
+  // Room amenities
+  repeated string room_amenities = 6;
+  
+  // Cancellation policy for this rate
+  google.protobuf.StringValue cancellation_policy = 7;
+  
+  // Meal plan included
+  google.protobuf.StringValue meal_plan = 8;
+  
+  // Rate type (refundable, non_refundable, flexible)
+  google.protobuf.StringValue rate_type = 9;
+  
+  // Booking conditions
+  google.protobuf.StringValue booking_conditions = 10;
+}
+
+// HotelReviews represents hotel reviews and ratings
+message HotelReviews {
+  // Overall rating (0-10 scale)
+  google.protobuf.DoubleValue overall_rating = 1;
+  
+  // Number of reviews
+  int32 total_reviews = 2;
+  
+  // Rating breakdown by category
+  repeated RatingBreakdown rating_breakdown = 3;
+  
+  // Recent reviews
+  repeated HotelReview recent_reviews = 4;
+  
+  // Review sources
+  repeated string review_sources = 5;
+}
+
+// RatingBreakdown represents rating breakdown by category
+message RatingBreakdown {
+  // Category name (e.g., "Cleanliness", "Service", "Location")
+  string category = 1;
+  
+  // Rating for this category (0-10 scale)
+  google.protobuf.DoubleValue rating = 2;
+  
+  // Number of reviews for this category
+  int32 review_count = 3;
+}
+
+// HotelReview represents a single hotel review
+message HotelReview {
+  // Review ID
+  string review_id = 1;
+  
+  // Reviewer name
+  google.protobuf.StringValue reviewer_name = 2;
+  
+  // Review date
+  google.protobuf.Timestamp review_date = 3;
+  
+  // Overall rating
+  google.protobuf.DoubleValue rating = 4;
+  
+  // Review title
+  google.protobuf.StringValue title = 5;
+  
+  // Review text
+  string review_text = 6;
+  
+  // Review source (booking.com, expedia, etc.)
+  google.protobuf.StringValue source = 7;
+  
+  // Traveler type (business, leisure, family)
+  google.protobuf.StringValue traveler_type = 8;
+  
+  // Verified booking
+  bool verified_booking = 9;
+  
+  // Review helpfulness votes
+  int32 helpful_votes = 10;
+}
+
+// LocationInfo represents hotel location information
+message LocationInfo {
+  // Street address
+  string street_address = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  google.protobuf.StringValue state_province = 3;
+  
+  // Country
+  string country = 4;
+  
+  // Postal code
+  google.protobuf.StringValue postal_code = 5;
+  
+  // Latitude coordinate
+  google.protobuf.DoubleValue latitude = 6;
+  
+  // Longitude coordinate
+  google.protobuf.DoubleValue longitude = 7;
+  
+  // Nearby landmarks
+  repeated string nearby_landmarks = 8;
+  
+  // Distance to airport (in km)
+  google.protobuf.DoubleValue distance_to_airport_km = 9;
+  
+  // Distance to city center (in km)
+  google.protobuf.DoubleValue distance_to_city_center_km = 10;
+  
+  // Transportation options
+  repeated string transportation_options = 11;
+  
+  // Neighborhood information
+  google.protobuf.StringValue neighborhood = 12;
+}
+
+// ContactInfo represents hotel contact information
+message ContactInfo {
+  // Phone number
+  string phone = 1;
+  
+  // Email address
+  string email = 2;
+  
+  // Website URL
+  google.protobuf.StringValue website = 3;
+  
+  // Fax number
+  google.protobuf.StringValue fax = 4;
+  
+  // Social media links
+  repeated string social_media_links = 5;
+  
+  // Emergency contact
+  google.protobuf.StringValue emergency_contact = 6;
+  
+  // Concierge contact
+  google.protobuf.StringValue concierge_contact = 7;
+}
+
+// RoomTypeInfo represents information about a room type
+message RoomTypeInfo {
+  // Room type
+  tourism.hotels.enums.RoomType room_type = 1;
+  
+  // Number of rooms of this type
+  int32 room_count = 2;
+  
+  // Maximum occupancy
+  int32 max_occupancy = 3;
+  
+  // Room size in square meters
+  google.protobuf.DoubleValue room_size_sqm = 4;
+  
+  // Base price per night (in smallest currency unit)
+  int64 base_price_per_night = 5;
+  
+  // Currency code
+  string currency = 6;
+  
+  // Room amenities
+  repeated string room_amenities = 7;
+  
+  // Bed configuration
+  google.protobuf.StringValue bed_configuration = 8;
+  
+  // Room features
+  repeated string room_features = 9;
+  
+  // Smoking policy
+  google.protobuf.StringValue smoking_policy = 10;
+  
+  // View type
+  google.protobuf.StringValue view_type = 11;
+  
+  // Room images
+  repeated string room_images = 12;
+}
+
+// CheckInOutPolicy represents check-in and check-out policies
+message CheckInOutPolicy {
+  // Check-in time
+  string check_in_time = 1;
+  
+  // Check-out time
+  string check_out_time = 2;
+  
+  // Early check-in availability
+  google.protobuf.StringValue early_check_in = 3;
+  
+  // Late check-out availability
+  google.protobuf.StringValue late_check_out = 4;
+  
+  // Minimum age for check-in
+  google.protobuf.DoubleValue minimum_check_in_age = 5;
+  
+  // Required identification
+  google.protobuf.StringValue required_identification = 6;
+  
+  // Security deposit policy
+  google.protobuf.StringValue security_deposit_policy = 7;
+  
+  // Express check-in/out availability
+  google.protobuf.StringValue express_check_in_out = 8;
+}
+
+// CancellationPolicy represents hotel cancellation policy
+message CancellationPolicy {
+  // Cancellation deadline
+  google.protobuf.StringValue cancellation_deadline = 1;
+  
+  // Cancellation fees
+  google.protobuf.StringValue cancellation_fees = 2;
+  
+  // Refund policy
+  google.protobuf.StringValue refund_policy = 3;
+  
+  // No-show policy
+  google.protobuf.StringValue no_show_policy = 4;
+  
+  // Modification policy
+  google.protobuf.StringValue modification_policy = 5;
+  
+  // Force majeure policy
+  google.protobuf.StringValue force_majeure_policy = 6;
+  
+  // Free cancellation period
+  google.protobuf.StringValue free_cancellation_period = 7;
+}
+
+// HotelSummary represents a summary view of hotel information
+message HotelSummary {
+  // Hotel ID
+  string hotel_id = 1;
+  
+  // Hotel name
+  string name = 2;
+  
+  // Hotel rating
+  tourism.hotels.enums.HotelRating rating = 3;
+  
+  // City
+  string city = 4;
+  
+  // Country
+  string country = 5;
+  
+  // Overall rating
+  google.protobuf.DoubleValue overall_rating = 6;
+  
+  // Number of reviews
+  int32 total_reviews = 7;
+  
+  // Starting price per night
+  int64 starting_price_per_night = 8;
+  
+  // Currency
+  string currency = 9;
+  
+  // Hotel amenities (top 5)
+  repeated string top_amenities = 10;
+  
+  // Distance from city center
+  google.protobuf.DoubleValue distance_from_center_km = 11;
+  
+  // Hotel chain
+  google.protobuf.StringValue hotel_chain = 12;
+  
+  // Popular hotel indicator
+  bool is_popular = 13;
+}

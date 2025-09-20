@@ -1,6 +1,6 @@
 # 🌍 Rice-Dev Ecosystem - Main Management
 
-.PHONY: help up down open install build start stop clean proto frontend go-api python-ai meowtopia docker all-services chainrice meowtopia blockchain dev
+.PHONY: help up down open install build start stop clean proto frontend go-api python-ai meowtopia docker all-services chainrice meowtopia blockchain dev bridges nix docker-all
 
 # Default target
 help:
@@ -11,11 +11,13 @@ help:
 	@echo "  make install     - Install all dependencies for all applications"
 	@echo "  make build       - Build all services"
 	@echo "  make proto       - Generate protobuf files for all applications"
+	@echo "  make nix         - Build with Nix packages"
 	@echo ""
 	@echo "🚀 Service Management:"
 	@echo "  make start       - Start entire ecosystem"
 	@echo "  make down        - Stop all containers and services"
 	@echo "  make docker      - Start via Docker Compose"
+	@echo "  make docker-all  - Start all services via Docker"
 	@echo "  make chainrice   - Start only ChainRice"
 	@echo "  make meowtopia   - Start only Meowtopia"
 	@echo ""
@@ -27,6 +29,14 @@ help:
 	@echo "  make meowtopia-api - Start Meowtopia Go API"
 	@echo "  make python-ai   - Start Python AI service"
 	@echo ""
+	@echo "🌉 Bridge Services:"
+	@echo "  make bridges     - Start all bridge services"
+	@echo "  make dotnet-bridge - Start .NET bridge"
+	@echo "  make beam-bridge - Start BEAM (Erlang/Elixir) bridge"
+	@echo "  make python-bridge - Start Python bridge"
+	@echo "  make jvm-bridge  - Start JVM bridge"
+	@echo "  make php-bridge  - Start PHP bridge"
+	@echo ""
 	@echo "🛑 Management:"
 	@echo "  make stop        - Stop all services"
 	@echo "  make clean       - Clean all builds"
@@ -37,6 +47,7 @@ help:
 	@echo "  make open        - Open all interfaces in browser"
 	@echo "  make open-chainrice - Open ChainRice interfaces"
 	@echo "  make open-meowtopia - Open Meowtopia interfaces"
+	@echo "  make open-bridges - Open bridge interfaces"
 	@echo ""
 	@echo "🚀 Quick Commands:"
 	@echo "  make dev         - Development mode with hot reload and auto-open"
@@ -128,6 +139,44 @@ meowtopia-frontend:
 	@echo "🐱 Запуск Meowtopia фронтенду..."
 	@cd apps/meowtopia && npm run dev -- --port 5174
 
+# Bridge services
+bridges:
+	@echo "🌉 Starting all bridge services..."
+	@make -j5 dotnet-bridge beam-bridge python-bridge jvm-bridge php-bridge
+	@echo "✅ All bridge services started"
+
+dotnet-bridge:
+	@echo "🔧 Starting .NET bridge..."
+	@cd stacks/backend/.NET && dotnet run --project ChainRice.Bridge.csproj
+
+beam-bridge:
+	@echo "🔧 Starting BEAM bridge..."
+	@cd stacks/backend/BEAM && mix run --no-halt
+
+python-bridge:
+	@echo "🔧 Starting Python bridge..."
+	@cd stacks/backend/CPython && python -m chainrice_bridge
+
+jvm-bridge:
+	@echo "🔧 Starting JVM bridge..."
+	@cd stacks/backend/JVM && ./gradlew run
+
+php-bridge:
+	@echo "🔧 Starting PHP bridge..."
+	@cd stacks/backend/PHP && php -S localhost:8086
+
+# Nix commands
+nix:
+	@echo "📦 Building with Nix packages..."
+	@nix develop -f stacks/tools/DEV/packages/flake.nix
+	@echo "✅ Nix development environment ready"
+
+# Docker all services
+docker-all:
+	@echo "🐳 Starting all services via Docker..."
+	@cd stacks/tools/DEV/docker && docker-compose up --build -d
+	@echo "✅ All services started via Docker"
+
 # Aliases for convenience
 frontend: chainrice-frontend
 go-api: chainrice-go-api
@@ -182,6 +231,14 @@ open-meowtopia:
 	@echo "🐱 Відкриття Meowtopia інтерфейсів..."
 	@xdg-open http://localhost:5174 2>/dev/null || open http://localhost:5174 2>/dev/null || echo "Відкрийте http://localhost:5174 в браузері"
 	@xdg-open http://localhost:8006 2>/dev/null || open http://localhost:8006 2>/dev/null || echo "Відкрийте http://localhost:8006 в браузері"
+
+open-bridges:
+	@echo "🌉 Opening bridge interfaces..."
+	@xdg-open http://localhost:8082 2>/dev/null || open http://localhost:8082 2>/dev/null || echo "Open .NET bridge: http://localhost:8082"
+	@xdg-open http://localhost:8083 2>/dev/null || open http://localhost:8083 2>/dev/null || echo "Open BEAM bridge: http://localhost:8083"
+	@xdg-open http://localhost:8084 2>/dev/null || open http://localhost:8084 2>/dev/null || echo "Open Python bridge: http://localhost:8084"
+	@xdg-open http://localhost:8085 2>/dev/null || open http://localhost:8085 2>/dev/null || echo "Open JVM bridge: http://localhost:8085"
+	@xdg-open http://localhost:8086 2>/dev/null || open http://localhost:8086 2>/dev/null || echo "Open PHP bridge: http://localhost:8086"
 
 # Status check
 status:

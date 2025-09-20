@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package logistics.warehousing.messages;
+
+import "google/protobuf/timestamp.proto";
+import "logistics/warehousing/enums/warehouse_order_priority.proto";
+
+// Warehouse order information
+message WarehouseOrder {
+  string order_id = 1;                        // Unique order identifier
+  string warehouse_id = 2;                    // Warehouse identifier
+  string order_number = 3;                    // Order reference number
+  string customer_id = 4;                      // Customer identifier
+  string customer_name = 5;                    // Customer name
+  
+  // Order details
+  logistics.warehousing.enums.WarehouseOrderPriority priority = 6;
+  OrderType order_type = 7;                   // Type of order
+  OrderStatus status = 8;                      // Order status
+  
+  // Order items
+  repeated OrderItem items = 9;               // Order items
+  int32 total_items = 10;                     // Total number of items
+  double total_weight_kg = 11;                // Total weight in kg
+  double total_volume_cubic_m = 12;           // Total volume in cubic meters
+  
+  // Shipping information
+  string shipping_method = 13;                // Shipping method
+  string carrier_id = 14;                     // Carrier identifier
+  string service_type = 15;                   // Service type
+  bool signature_required = 16;                // Signature required
+  bool insurance_required = 17;                // Insurance required
+  double declared_value = 18;                 // Declared value
+  
+  // Address information
+  Address shipping_address = 19;              // Shipping address
+  Address billing_address = 20;               // Billing address
+  
+  // Timing information
+  google.protobuf.Timestamp order_date = 21;  // Order date
+  google.protobuf.Timestamp requested_ship_date = 22; // Requested ship date
+  google.protobuf.Timestamp scheduled_ship_date = 23; // Scheduled ship date
+  google.protobuf.Timestamp actual_ship_date = 24;   // Actual ship date
+  google.protobuf.Timestamp delivery_date = 25;     // Delivery date
+  
+  // Processing information
+  string assigned_picker = 26;                // Assigned picker ID
+  string assigned_packer = 27;                // Assigned packer ID
+  string assigned_shipper = 28;                // Assigned shipper ID
+  google.protobuf.Timestamp picking_started = 29;    // Picking start time
+  google.protobuf.Timestamp picking_completed = 30;  // Picking completion time
+  google.protobuf.Timestamp packing_started = 31;     // Packing start time
+  google.protobuf.Timestamp packing_completed = 32;   // Packing completion time
+  
+  // Special requirements
+  bool requires_special_handling = 33;        // Special handling required
+  bool requires_temperature_control = 34;      // Temperature control required
+  string temperature_range = 35;               // Temperature range
+  bool is_hazardous = 36;                     // Hazardous materials
+  string special_instructions = 37;          // Special instructions
+  
+  // Cost information
+  double order_value = 38;                    // Order value
+  double shipping_cost = 39;                   // Shipping cost
+  double handling_cost = 40;                  // Handling cost
+  double total_cost = 41;                     // Total cost
+  string currency_code = 42;                  // Currency code
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 43;  // Creation timestamp
+  google.protobuf.Timestamp last_updated = 44; // Last update timestamp
+  
+  // Additional information
+  string notes = 45;                          // Additional notes
+  map<string, string> metadata = 46;          // Additional metadata
+}
+
+// Order item information
+message OrderItem {
+  string item_id = 1;                         // Item identifier
+  string sku = 2;                             // Stock Keeping Unit
+  string product_name = 3;                    // Product name
+  string description = 4;                      // Product description
+  int32 quantity_ordered = 5;                 // Quantity ordered
+  int32 quantity_allocated = 6;               // Quantity allocated
+  int32 quantity_picked = 7;                  // Quantity picked
+  int32 quantity_shipped = 8;                 // Quantity shipped
+  double unit_price = 9;                      // Unit price
+  double total_price = 10;                    // Total price
+  string unit_of_measure = 11;                // Unit of measure
+  string location_code = 12;                  // Storage location
+  bool requires_special_handling = 13;        // Special handling required
+  string special_instructions = 14;           // Item-specific instructions
+}
+
+// Address information
+message Address {
+  string name = 1;                            // Contact name
+  string company = 2;                          // Company name
+  string address_line_1 = 3;                  // Address line 1
+  string address_line_2 = 4;                  // Address line 2
+  string city = 5;                            // City
+  string state_province = 6;                  // State/Province
+  string postal_code = 7;                     // Postal code
+  string country_code = 8;                    // Country code
+  string phone = 9;                           // Phone number
+  string email = 10;                          // Email address
+}
+
+// Order type enumeration
+enum OrderType {
+  ORDER_TYPE_UNSPECIFIED = 0;
+  ORDER_TYPE_SALES = 1;                       // Sales order
+  ORDER_TYPE_TRANSFER = 2;                    // Transfer order
+  ORDER_TYPE_RETURN = 3;                      // Return order
+  ORDER_TYPE_REPLENISHMENT = 4;               // Replenishment order
+  ORDER_TYPE_CONSIGNMENT = 5;                 // Consignment order
+  ORDER_TYPE_DROP_SHIP = 6;                   // Drop ship order
+  ORDER_TYPE_BACKORDER = 7;                   // Backorder
+  ORDER_TYPE_PREORDER = 8;                    // Preorder
+}
+
+// Order status enumeration
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_PENDING = 1;                   // Pending processing
+  ORDER_STATUS_CONFIRMED = 2;                 // Confirmed
+  ORDER_STATUS_ALLOCATED = 3;                 // Inventory allocated
+  ORDER_STATUS_PICKING = 4;                   // Currently picking
+  ORDER_STATUS_PICKED = 5;                    // Picking completed
+  ORDER_STATUS_PACKING = 6;                   // Currently packing
+  ORDER_STATUS_PACKED = 7;                    // Packing completed
+  ORDER_STATUS_SHIPPED = 8;                   // Shipped
+  ORDER_STATUS_DELIVERED = 9;                 // Delivered
+  ORDER_STATUS_CANCELLED = 10;                // Cancelled
+  ORDER_STATUS_ON_HOLD = 11;                  // On hold
+  ORDER_STATUS_EXCEPTION = 12;                // Exception occurred
+}

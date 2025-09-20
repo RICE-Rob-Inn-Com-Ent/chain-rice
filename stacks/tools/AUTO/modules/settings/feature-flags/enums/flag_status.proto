@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package settings.feature_flags.enums;
+
+// Flag status enumeration defines the current state of a feature flag
+enum FlagStatus {
+  // Default/unspecified status
+  FLAG_STATUS_UNSPECIFIED = 0;
+  
+  // Feature flag is disabled for all users
+  FLAG_STATUS_DISABLED = 1;
+  
+  // Feature flag is enabled for all users
+  FLAG_STATUS_ENABLED = 2;
+  
+  // Feature flag is in gradual rollout phase
+  FLAG_STATUS_ROLLOUT = 3;
+  
+  // Feature flag is in testing phase with limited users
+  FLAG_STATUS_TESTING = 4;
+  
+  // Feature flag is in beta phase
+  FLAG_STATUS_BETA = 5;
+  
+  // Feature flag is in alpha phase
+  FLAG_STATUS_ALPHA = 6;
+  
+  // Feature flag is deprecated and will be removed
+  FLAG_STATUS_DEPRECATED = 7;
+  
+  // Feature flag is archived and no longer active
+  FLAG_STATUS_ARCHIVED = 8;
+  
+  // Feature flag is paused (temporarily disabled)
+  FLAG_STATUS_PAUSED = 9;
+  
+  // Feature flag is in maintenance mode
+  FLAG_STATUS_MAINTENANCE = 10;
+  
+  // Feature flag is in emergency disable mode
+  FLAG_STATUS_EMERGENCY_DISABLE = 11;
+  
+  // Feature flag is in experimental mode
+  FLAG_STATUS_EXPERIMENTAL = 12;
+  
+  // Feature flag is in staging/testing environment only
+  FLAG_STATUS_STAGING_ONLY = 13;
+  
+  // Feature flag is in development/testing only
+  FLAG_STATUS_DEV_ONLY = 14;
+  
+  // Feature flag is in production but with monitoring
+  FLAG_STATUS_PRODUCTION_MONITORED = 15;
+  
+  // Feature flag is in canary release
+  FLAG_STATUS_CANARY = 16;
+  
+  // Feature flag is in blue-green deployment
+  FLAG_STATUS_BLUE_GREEN = 17;
+  
+  // Feature flag is in A/B testing mode
+  FLAG_STATUS_AB_TESTING = 18;
+  
+  // Feature flag is in feature toggle mode
+  FLAG_STATUS_FEATURE_TOGGLE = 19;
+  
+  // Feature flag is in kill switch mode
+  FLAG_STATUS_KILL_SWITCH = 20;
+}

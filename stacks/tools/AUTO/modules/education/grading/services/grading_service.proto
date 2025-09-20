@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+// Service definitions for grading operations.
+package education.grading.services;
+
+import "google/protobuf/empty.proto";
+import "AUTO/modules/education/grading/messages/grade.proto";
+import "AUTO/modules/education/grading/messages/transcript.proto";
+import "AUTO/modules/education/grading/messages/grade_report.proto";
+
+option go_package = "github.com/rice-dev/education/grading/services;gradingservices";
+option java_multiple_files = true;
+option java_package = "com.rice.education.grading.services";
+
+// CRUD for Grade entries.
+message CreateGradeRequest { education.grading.messages.Grade grade = 1; }
+message GetGradeRequest { string id = 1; }
+message UpdateGradeRequest { education.grading.messages.Grade grade = 1; }
+message DeleteGradeRequest { string id = 1; }
+
+message ListGradesRequest {
+  string student_id = 1; // Optional filter by student
+  string course_id = 2;  // Optional filter by course
+}
+
+message ListGradesResponse { repeated education.grading.messages.Grade grades = 1; }
+
+// Business: generate transcript for a student.
+message GenerateTranscriptRequest { string student_id = 1; }
+
+// Business: compute GPA for student.
+message GetStudentGPARequest { string student_id = 1; }
+message GetStudentGPAResponse { double gpa = 1; }
+
+// Business: produce a grade report for a student over courses.
+message GenerateGradeReportRequest {
+  string student_id = 1;           // Student ID
+  repeated string course_ids = 2;  // Courses to include
+}
+
+// Service for grading lifecycle and analytics.
+service GradingService {
+  // Create a new grade.
+  rpc CreateGrade(CreateGradeRequest) returns (education.grading.messages.Grade);
+  // Retrieve a grade by ID.
+  rpc GetGrade(GetGradeRequest) returns (education.grading.messages.Grade);
+  // Update an existing grade.
+  rpc UpdateGrade(UpdateGradeRequest) returns (education.grading.messages.Grade);
+  // Delete a grade by ID.
+  rpc DeleteGrade(DeleteGradeRequest) returns (google.protobuf.Empty);
+  // List grades filtered by student or course.
+  rpc ListGrades(ListGradesRequest) returns (ListGradesResponse);
+
+  // Generate an official transcript for a student.
+  rpc GenerateTranscript(GenerateTranscriptRequest) returns (education.grading.messages.Transcript);
+
+  // Compute a student's current GPA.
+  rpc GetStudentGPA(GetStudentGPARequest) returns (GetStudentGPAResponse);
+
+  // Produce a grade report for a student across courses.
+  rpc GenerateGradeReport(GenerateGradeReportRequest) returns (education.grading.messages.GradeReport);
+}
+
+

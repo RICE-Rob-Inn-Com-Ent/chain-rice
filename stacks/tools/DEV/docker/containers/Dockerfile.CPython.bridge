@@ -1,0 +1,45 @@
+# ChainRice Python Bridge
+FROM nixos/nix:2.18-alpine AS nix-builder
+
+# Install Nix packages
+COPY stacks/tools/DEV/packages/flake.nix /tmp/flake.nix
+COPY stacks/tools/DEV/packages/libs /tmp/libs
+
+# Build Python bridge using Nix
+RUN nix-env -i -f /tmp/flake.nix -A packages.chainrice-python-bridge
+
+# Final stage
+FROM python:3.11-alpine
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates tzdata
+
+# Create app user
+RUN addgroup -g 1001 -S chainrice && \
+    adduser -u 1001 -S chainrice -G chainrice
+
+# Set working directory
+WORKDIR /app
+
+# Copy Python bridge from Nix build
+COPY --from=nix-builder /nix/store/*chainrice-python-bridge*/bin/chainrice-python-bridge /app/
+COPY stacks/backend/CPython/ ./
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r pyproject.toml
+
+# Change ownership
+RUN chown -R chainrice:chainrice /app
+
+# Switch to non-root user
+USER chainrice
+
+# Expose port
+EXPOSE 8084
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8084/health || exit 1
+
+# Run the Python bridge
+CMD ["./chainrice-python-bridge"]

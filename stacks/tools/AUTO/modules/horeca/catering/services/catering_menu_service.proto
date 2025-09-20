@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package horeca.catering.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/catering_menu_models.proto";
+
+// Catering Menu Service - Manage catering menus and menu items
+service CateringMenuService {
+  // Create a new catering menu
+  rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse);
+  
+  // Get menu by ID
+  rpc GetMenu(GetMenuRequest) returns (GetMenuResponse);
+  
+  // Update existing menu
+  rpc UpdateMenu(UpdateMenuRequest) returns (UpdateMenuResponse);
+  
+  // Delete menu
+  rpc DeleteMenu(DeleteMenuRequest) returns (google.protobuf.Empty);
+  
+  // List all menus
+  rpc ListMenus(ListMenusRequest) returns (ListMenusResponse);
+  
+  // Add item to menu
+  rpc AddMenuItem(AddMenuItemRequest) returns (AddMenuItemResponse);
+  
+  // Update menu item
+  rpc UpdateMenuItem(UpdateMenuItemRequest) returns (UpdateMenuItemResponse);
+  
+  // Remove item from menu
+  rpc RemoveMenuItem(RemoveMenuItemRequest) returns (google.protobuf.Empty);
+  
+  // Get menu items by category
+  rpc GetMenuItemsByCategory(GetMenuItemsByCategoryRequest) returns (GetMenuItemsByCategoryResponse);
+  
+  // Search menu items
+  rpc SearchMenuItems(SearchMenuItemsRequest) returns (SearchMenuItemsResponse);
+}
+
+// Request/Response messages
+message CreateMenuRequest {
+  CateringMenu menu = 1;
+}
+
+message CreateMenuResponse {
+  CateringMenu menu = 1;
+  string message = 2;
+}
+
+message GetMenuRequest {
+  string menu_id = 1;
+}
+
+message GetMenuResponse {
+  CateringMenu menu = 1;
+}
+
+message UpdateMenuRequest {
+  CateringMenu menu = 1;
+}
+
+message UpdateMenuResponse {
+  CateringMenu menu = 1;
+  string message = 2;
+}
+
+message DeleteMenuRequest {
+  string menu_id = 1;
+}
+
+message ListMenusRequest {
+  string service_type = 1;
+  bool active_only = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListMenusResponse {
+  repeated CateringMenu menus = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message AddMenuItemRequest {
+  string menu_id = 1;
+  CateringMenuItem item = 2;
+}
+
+message AddMenuItemResponse {
+  CateringMenuItem item = 1;
+  string message = 2;
+}
+
+message UpdateMenuItemRequest {
+  string menu_id = 1;
+  CateringMenuItem item = 2;
+}
+
+message UpdateMenuItemResponse {
+  CateringMenuItem item = 1;
+  string message = 2;
+}
+
+message RemoveMenuItemRequest {
+  string menu_id = 1;
+  string item_id = 2;
+}
+
+message GetMenuItemsByCategoryRequest {
+  string menu_id = 1;
+  string category_id = 2;
+}
+
+message GetMenuItemsByCategoryResponse {
+  repeated CateringMenuItem items = 1;
+}
+
+message SearchMenuItemsRequest {
+  string query = 1;
+  string menu_id = 2;
+  string category = 3;
+  repeated string dietary_tags = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message SearchMenuItemsResponse {
+  repeated CateringMenuItem items = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}

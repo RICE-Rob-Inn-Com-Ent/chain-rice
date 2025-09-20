@@ -1,0 +1,233 @@
+syntax = "proto3";
+
+package blockchain.oracles.services;
+
+import "blockchain/oracles/messages/oracle.proto";
+import "blockchain/oracles/messages/oracle_data.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/oracles/services";
+
+// OracleMsgService handles state-changing oracle operations
+service OracleMsgService {
+  // CreateOracle creates a new oracle
+  rpc CreateOracle(blockchain.oracles.messages.MsgCreateOracle) returns (blockchain.oracles.messages.MsgCreateOracleResponse);
+  
+  // UpdateOracle updates an existing oracle
+  rpc UpdateOracle(blockchain.oracles.messages.MsgUpdateOracle) returns (blockchain.oracles.messages.MsgUpdateOracleResponse);
+  
+  // ActivateOracle activates an oracle
+  rpc ActivateOracle(blockchain.oracles.messages.MsgActivateOracle) returns (blockchain.oracles.messages.MsgActivateOracleResponse);
+  
+  // DeactivateOracle deactivates an oracle
+  rpc DeactivateOracle(blockchain.oracles.messages.MsgDeactivateOracle) returns (blockchain.oracles.messages.MsgDeactivateOracleResponse);
+  
+  // SubmitOracleData submits data to an oracle
+  rpc SubmitOracleData(blockchain.oracles.messages.MsgSubmitOracleData) returns (blockchain.oracles.messages.MsgSubmitOracleDataResponse);
+  
+  // CreateOracleRequest creates a new oracle request
+  rpc CreateOracleRequest(blockchain.oracles.messages.MsgCreateOracleRequest) returns (blockchain.oracles.messages.MsgCreateOracleRequestResponse);
+  
+  // VerifyOracleData verifies oracle data
+  rpc VerifyOracleData(blockchain.oracles.messages.MsgVerifyOracleData) returns (blockchain.oracles.messages.MsgVerifyOracleDataResponse);
+  
+  // UpdateOracleData updates oracle data
+  rpc UpdateOracleData(blockchain.oracles.messages.MsgUpdateOracleData) returns (blockchain.oracles.messages.MsgUpdateOracleDataResponse);
+}
+
+// OracleQueryService handles oracle state queries
+service OracleQueryService {
+  // GetOracle retrieves a specific oracle
+  rpc GetOracle(GetOracleRequest) returns (GetOracleResponse);
+  
+  // ListOracles lists oracles with pagination and filters
+  rpc ListOracles(ListOraclesRequest) returns (ListOraclesResponse);
+  
+  // GetOracleData retrieves specific oracle data
+  rpc GetOracleData(GetOracleDataRequest) returns (GetOracleDataResponse);
+  
+  // ListOracleData lists oracle data with pagination and filters
+  rpc ListOracleData(ListOracleDataRequest) returns (ListOracleDataResponse);
+  
+  // GetOracleRequest retrieves a specific oracle request
+  rpc GetOracleRequest(GetOracleRequest) returns (GetOracleRequestResponse);
+  
+  // ListOracleRequests lists oracle requests with pagination
+  rpc ListOracleRequests(ListOracleRequestsRequest) returns (ListOracleRequestsResponse);
+  
+  // GetOracleParams retrieves oracle module parameters
+  rpc GetOracleParams(GetOracleParamsRequest) returns (GetOracleParamsResponse);
+  
+  // GetOracleStats retrieves oracle statistics
+  rpc GetOracleStats(GetOracleStatsRequest) returns (GetOracleStatsResponse);
+  
+  // GetLatestOracleData retrieves latest data for a symbol
+  rpc GetLatestOracleData(GetLatestOracleDataRequest) returns (GetLatestOracleDataResponse);
+  
+  // GetOracleDataHistory retrieves historical oracle data
+  rpc GetOracleDataHistory(GetOracleDataHistoryRequest) returns (GetOracleDataHistoryResponse);
+  
+  // GetOraclePrice retrieves current price from oracle
+  rpc GetOraclePrice(GetOraclePriceRequest) returns (GetOraclePriceResponse);
+  
+  // GetOracleConsensus retrieves consensus data for a request
+  rpc GetOracleConsensus(GetOracleConsensusRequest) returns (GetOracleConsensusResponse);
+  
+  // SearchOracles searches for oracles
+  rpc SearchOracles(SearchOraclesRequest) returns (SearchOraclesResponse);
+}
+
+// Query request and response messages
+
+message GetOracleRequest {
+  string oracle_id = 1; // Oracle ID
+}
+
+message GetOracleResponse {
+  blockchain.oracles.messages.Oracle oracle = 1;
+}
+
+message ListOraclesRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string oracle_type = 3;    // Filter by oracle type
+  string status = 4;         // Filter by status
+  string creator = 5;        // Filter by creator address
+  bool is_public = 6;        // Filter by public/private
+}
+
+message ListOraclesResponse {
+  repeated blockchain.oracles.messages.Oracle oracles = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetOracleDataRequest {
+  string data_id = 1; // Oracle data ID
+}
+
+message GetOracleDataResponse {
+  blockchain.oracles.messages.OracleData data = 1;
+}
+
+message ListOracleDataRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string oracle_id = 3;      // Filter by oracle ID
+  string symbol = 4;         // Filter by symbol
+  string data_type = 5;      // Filter by data type
+  bool is_verified = 6;      // Filter by verification status
+  int64 start_time = 7;      // Filter by start time
+  int64 end_time = 8;        // Filter by end time
+}
+
+message ListOracleDataResponse {
+  repeated blockchain.oracles.messages.OracleData data = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetOracleRequestRequest {
+  string request_id = 1; // Oracle request ID
+}
+
+message GetOracleRequestResponse {
+  blockchain.oracles.messages.OracleRequest request = 1;
+}
+
+message ListOracleRequestsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string requester = 3;      // Filter by requester address
+  string oracle_id = 4;      // Filter by oracle ID
+  string status = 5;         // Filter by request status
+  string symbol = 6;         // Filter by symbol
+}
+
+message ListOracleRequestsResponse {
+  repeated blockchain.oracles.messages.OracleRequest requests = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetOracleParamsRequest {
+  // No parameters needed
+}
+
+message GetOracleParamsResponse {
+  blockchain.oracles.messages.OracleParams params = 1;
+}
+
+message GetOracleStatsRequest {
+  string time_period = 1; // Optional time period filter
+}
+
+message GetOracleStatsResponse {
+  int64 total_oracles = 1;          // Total number of oracles
+  int64 active_oracles = 2;         // Number of active oracles
+  int64 total_requests = 3;         // Total number of requests
+  int64 successful_requests = 4;    // Number of successful requests
+  int64 failed_requests = 5;        // Number of failed requests
+  string average_response_time = 6; // Average response time
+  string total_fees_collected = 7;  // Total fees collected
+  string most_requested_symbol = 8; // Most requested symbol
+  string oracle_uptime = 9;         // Average oracle uptime
+}
+
+message GetLatestOracleDataRequest {
+  string symbol = 1; // Asset symbol
+  string oracle_id = 2; // Optional specific oracle ID
+}
+
+message GetLatestOracleDataResponse {
+  blockchain.oracles.messages.OracleData data = 1;
+}
+
+message GetOracleDataHistoryRequest {
+  string symbol = 1;                // Asset symbol
+  string oracle_id = 2;             // Optional specific oracle ID
+  string pagination_key = 3;        // Pagination key for next page
+  int32 limit = 4;                  // Number of results per page
+  int64 start_time = 5;             // Filter by start time
+  int64 end_time = 6;               // Filter by end time
+}
+
+message GetOracleDataHistoryResponse {
+  repeated blockchain.oracles.messages.OracleData data = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetOraclePriceRequest {
+  string symbol = 1; // Asset symbol
+  string oracle_id = 2; // Optional specific oracle ID
+}
+
+message GetOraclePriceResponse {
+  string price = 1;                 // Current price
+  string symbol = 2;                // Asset symbol
+  string oracle_id = 3;             // Oracle ID
+  int64 timestamp = 4;              // Price timestamp
+  string confidence_score = 5;      // Confidence score
+  bool is_verified = 6;             // Whether price is verified
+}
+
+message GetOracleConsensusRequest {
+  string request_id = 1; // Oracle request ID
+}
+
+message GetOracleConsensusResponse {
+  string consensus_value = 1;       // Consensus value
+  bool consensus_reached = 2;       // Whether consensus is reached
+  repeated string participants = 3; // Consensus participants
+  string threshold = 4;             // Consensus threshold
+  repeated string individual_values = 5; // Individual oracle values
+}
+
+message SearchOraclesRequest {
+  string query = 1;                 // Search query
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+  string oracle_type = 4;           // Filter by oracle type
+  string status = 5;                // Filter by status
+}
+
+message SearchOraclesResponse {
+  repeated blockchain.oracles.messages.Oracle oracles = 1;
+  string next_pagination_key = 2;   // Key for next page
+}

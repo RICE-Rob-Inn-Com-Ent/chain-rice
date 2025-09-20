@@ -1,0 +1,208 @@
+syntax = "proto3";
+
+package sports.venues.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "sports/venues/enums/venues_enums.proto";
+
+option go_package = "github.com/rice-dev/sports/venues/v1";
+
+// VenueAddress represents the address of a venue
+message VenueAddress {
+  string street = 1;                     // Street address
+  string city = 2;                       // City
+  string state = 3;                      // State/province
+  string postal_code = 4;                // Postal/ZIP code
+  string country = 5;                    // Country
+  google.protobuf.StringValue district = 6; // District/borough
+  google.protobuf.DoubleValue latitude = 7; // Latitude coordinate
+  google.protobuf.DoubleValue longitude = 8; // Longitude coordinate
+}
+
+// VenueContact represents contact information for a venue
+message VenueContact {
+  google.protobuf.StringValue phone = 1; // Phone number
+  google.protobuf.StringValue email = 2; // Email address
+  google.protobuf.StringValue website = 3; // Website URL
+  google.protobuf.StringValue fax = 4;   // Fax number
+  google.protobuf.StringValue manager_name = 5; // Venue manager name
+  google.protobuf.StringValue manager_phone = 6; // Venue manager phone
+  google.protobuf.StringValue manager_email = 7; // Venue manager email
+}
+
+// VenueDimensions represents the dimensions of a venue
+message VenueDimensions {
+  google.protobuf.Int32Value length_meters = 1; // Length in meters
+  google.protobuf.Int32Value width_meters = 2;  // Width in meters
+  google.protobuf.Int32Value height_meters = 3; // Height in meters (for indoor venues)
+  google.protobuf.StringValue field_type = 4;   // Type of field (e.g., "FIFA Standard")
+  google.protobuf.StringValue dimensions_notes = 5; // Additional dimension notes
+}
+
+// Venue represents a sports venue with all its properties
+message Venue {
+  string id = 1;                          // Unique identifier for the venue
+  string name = 2;                        // Venue name
+  google.protobuf.StringValue nickname = 3; // Venue nickname
+  VenueType type = 4;                     // Type of venue
+  VenueStatus status = 5;                 // Current status of venue
+  SurfaceType surface_type = 6;           // Type of playing surface
+  VenueCapacity capacity_category = 7;    // Capacity category
+  int32 total_capacity = 8;               // Total seating capacity
+  google.protobuf.Int32Value field_capacity = 9; // Field/standing capacity
+  google.protobuf.Int32Value seated_capacity = 10; // Seated capacity
+  VenueOwnership ownership = 11;          // Venue ownership type
+  string owner_name = 12;                 // Name of venue owner
+  VenueAddress address = 13;              // Venue address
+  VenueContact contact = 14;              // Contact information
+  VenueDimensions dimensions = 15;        // Venue dimensions
+  google.protobuf.Timestamp opened_date = 16; // When venue was opened
+  google.protobuf.Timestamp last_renovated = 17; // Last renovation date
+  google.protobuf.Int32Value renovation_cost = 18; // Cost of last renovation
+  repeated VenueFeatures features = 19;   // Available features
+  repeated VenueAccessibility accessibility = 20; // Accessibility features
+  repeated string supported_sports = 21;  // Sports that can be played here
+  google.protobuf.StringValue website_url = 22; // Official website
+  google.protobuf.StringValue image_url = 23; // Venue image URL
+  google.protobuf.StringValue description = 24; // Venue description
+  google.protobuf.StringValue history = 25; // Venue history
+  google.protobuf.StringValue notable_events = 26; // Notable events held here
+  google.protobuf.Int32Value parking_spaces = 27; // Number of parking spaces
+  google.protobuf.StringValue public_transport = 28; // Public transport access
+  google.protobuf.Timestamp created_at = 29; // When the venue was created
+  google.protobuf.Timestamp updated_at = 30; // When the venue was last updated
+  map<string, string> metadata = 31;      // Additional metadata
+}
+
+// CreateVenueRequest represents the request to create a new venue
+message CreateVenueRequest {
+  string name = 1;                        // Venue name (required)
+  google.protobuf.StringValue nickname = 2; // Optional nickname
+  VenueType type = 3;                     // Venue type (required)
+  SurfaceType surface_type = 4;           // Surface type (required)
+  VenueCapacity capacity_category = 5;    // Capacity category (required)
+  int32 total_capacity = 6;               // Total capacity (required)
+  google.protobuf.Int32Value field_capacity = 7; // Optional field capacity
+  google.protobuf.Int32Value seated_capacity = 8; // Optional seated capacity
+  VenueOwnership ownership = 9;           // Ownership type (required)
+  string owner_name = 10;                 // Owner name (required)
+  VenueAddress address = 11;              // Address (required)
+  VenueContact contact = 12;              // Contact information (required)
+  VenueDimensions dimensions = 13;        // Dimensions (required)
+  google.protobuf.Timestamp opened_date = 14; // Optional opened date
+  google.protobuf.Timestamp last_renovated = 15; // Optional last renovated date
+  google.protobuf.Int32Value renovation_cost = 16; // Optional renovation cost
+  repeated VenueFeatures features = 17;   // Optional features
+  repeated VenueAccessibility accessibility = 18; // Optional accessibility
+  repeated string supported_sports = 19;  // Optional supported sports
+  google.protobuf.StringValue website_url = 20; // Optional website
+  google.protobuf.StringValue image_url = 21; // Optional image URL
+  google.protobuf.StringValue description = 22; // Optional description
+  google.protobuf.StringValue history = 23; // Optional history
+  google.protobuf.StringValue notable_events = 24; // Optional notable events
+  google.protobuf.Int32Value parking_spaces = 25; // Optional parking spaces
+  google.protobuf.StringValue public_transport = 26; // Optional public transport
+  map<string, string> metadata = 27;      // Optional metadata
+}
+
+// CreateVenueResponse represents the response after creating a venue
+message CreateVenueResponse {
+  Venue venue = 1;                        // The created venue
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// GetVenueRequest represents the request to get a venue by ID
+message GetVenueRequest {
+  string venue_id = 1;                    // ID of the venue to retrieve
+}
+
+// GetVenueResponse represents the response containing venue data
+message GetVenueResponse {
+  Venue venue = 1;                        // The requested venue
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// ListVenuesRequest represents the request to list venues with filters
+message ListVenuesRequest {
+  google.protobuf.Int32Value page_size = 1;    // Number of venues per page
+  google.protobuf.StringValue page_token = 2;  // Token for pagination
+  VenueType type = 3;                         // Filter by venue type
+  VenueStatus status = 4;                     // Filter by venue status
+  SurfaceType surface_type = 5;               // Filter by surface type
+  VenueCapacity capacity_category = 6;        // Filter by capacity category
+  google.protobuf.StringValue city = 7;       // Filter by city
+  google.protobuf.StringValue state = 8;      // Filter by state
+  google.protobuf.StringValue country = 9;    // Filter by country
+  google.protobuf.Int32Value min_capacity = 10; // Minimum capacity
+  google.protobuf.Int32Value max_capacity = 11; // Maximum capacity
+  repeated VenueFeatures features = 12;       // Filter by features
+  google.protobuf.StringValue search_query = 13; // Search query for name
+}
+
+// ListVenuesResponse represents the response containing a list of venues
+message ListVenuesResponse {
+  repeated Venue venues = 1;             // List of venues
+  string next_page_token = 2;            // Token for next page
+  int32 total_count = 3;                 // Total number of venues matching filters
+  bool success = 4;                      // Whether the operation was successful
+  string message = 5;                    // Response message
+  google.protobuf.Timestamp timestamp = 6; // Response timestamp
+}
+
+// UpdateVenueRequest represents the request to update a venue
+message UpdateVenueRequest {
+  string venue_id = 1;                    // ID of the venue to update
+  google.protobuf.StringValue name = 2;   // Optional new name
+  google.protobuf.StringValue nickname = 3; // Optional new nickname
+  VenueType type = 4;                     // Optional new type
+  VenueStatus status = 5;                 // Optional new status
+  SurfaceType surface_type = 6;           // Optional new surface type
+  VenueCapacity capacity_category = 7;    // Optional new capacity category
+  google.protobuf.Int32Value total_capacity = 8; // Optional new total capacity
+  google.protobuf.Int32Value field_capacity = 9; // Optional new field capacity
+  google.protobuf.Int32Value seated_capacity = 10; // Optional new seated capacity
+  VenueOwnership ownership = 11;          // Optional new ownership
+  google.protobuf.StringValue owner_name = 12; // Optional new owner name
+  VenueAddress address = 13;              // Optional new address
+  VenueContact contact = 14;              // Optional new contact
+  VenueDimensions dimensions = 15;        // Optional new dimensions
+  google.protobuf.Timestamp opened_date = 16; // Optional new opened date
+  google.protobuf.Timestamp last_renovated = 17; // Optional new last renovated
+  google.protobuf.Int32Value renovation_cost = 18; // Optional new renovation cost
+  repeated VenueFeatures features = 19;   // Optional new features
+  repeated VenueAccessibility accessibility = 20; // Optional new accessibility
+  repeated string supported_sports = 21;  // Optional new supported sports
+  google.protobuf.StringValue website_url = 22; // Optional new website
+  google.protobuf.StringValue image_url = 23; // Optional new image URL
+  google.protobuf.StringValue description = 24; // Optional new description
+  google.protobuf.StringValue history = 25; // Optional new history
+  google.protobuf.StringValue notable_events = 26; // Optional new notable events
+  google.protobuf.Int32Value parking_spaces = 27; // Optional new parking spaces
+  google.protobuf.StringValue public_transport = 28; // Optional new public transport
+  map<string, string> metadata = 29;      // Optional new metadata
+}
+
+// UpdateVenueResponse represents the response after updating a venue
+message UpdateVenueResponse {
+  Venue venue = 1;                        // The updated venue
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// DeleteVenueRequest represents the request to delete a venue
+message DeleteVenueRequest {
+  string venue_id = 1;                    // ID of the venue to delete
+}
+
+// DeleteVenueResponse represents the response after deleting a venue
+message DeleteVenueResponse {
+  bool success = 1;                       // Whether the operation was successful
+  string message = 2;                     // Response message
+  google.protobuf.Timestamp timestamp = 3; // Response timestamp
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package transport.routes.v1;
+
+option go_package = "github.com/rice-dev/transport/routes/v1";
+
+// RouteStatus enum defines the operational status of transport routes
+enum RouteStatus {
+  // Default value - should not be used
+  ROUTE_STATUS_UNSPECIFIED = 0;
+  
+  // Route is active and operational
+  ACTIVE = 1;
+  
+  // Route is temporarily inactive
+  INACTIVE = 2;
+  
+  // Route is under construction or maintenance
+  UNDER_CONSTRUCTION = 3;
+  
+  // Route is suspended due to external factors
+  SUSPENDED = 4;
+  
+  // Route is planned but not yet operational
+  PLANNED = 5;
+  
+  // Route is being tested or in trial phase
+  TESTING = 6;
+  
+  // Route has been permanently discontinued
+  DISCONTINUED = 7;
+  
+  // Route is experiencing delays or disruptions
+  DISRUPTED = 8;
+}

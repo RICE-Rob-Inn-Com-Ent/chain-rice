@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package agriculture.crops.messages;
+
+import "agriculture/crops/enums/crop_type.proto";
+import "agriculture/crops/enums/growth_stage.proto";
+import "google/protobuf/timestamp.proto";
+
+// Crop message represents a single agricultural crop instance
+message Crop {
+  // Unique identifier for the crop
+  string id = 1;
+  
+  // Human-readable name for the crop
+  string name = 2;
+  
+  // Type of crop from the CropType enum
+  agriculture.crops.enums.CropType type = 3;
+  
+  // Current growth stage of the crop
+  agriculture.crops.enums.GrowthStage current_stage = 4;
+  
+  // Variety or cultivar name
+  string variety = 5;
+  
+  // Planting information
+  google.protobuf.Timestamp planted_date = 6;
+  google.protobuf.Timestamp expected_harvest_date = 7;
+  google.protobuf.Timestamp actual_harvest_date = 8;
+  
+  // Location information
+  string field_id = 9;           // Reference to the field where crop is planted
+  double latitude = 10;          // GPS latitude coordinate
+  double longitude = 11;         // GPS longitude coordinate
+  
+  // Planting details
+  double planting_density = 12;  // Plants per unit area
+  string planting_method = 13;   // Direct seeding, transplanting, etc.
+  double seed_rate = 14;         // Amount of seed used per unit area
+  
+  // Growth metrics
+  double height = 15;            // Current height in centimeters
+  double canopy_cover = 16;      // Percentage of ground covered by plant canopy
+  int32 leaf_count = 17;         // Number of leaves
+  double stem_diameter = 18;     // Stem diameter in centimeters
+  
+  // Health and condition
+  double health_score = 19;      // Overall health score (0-100)
+  repeated string diseases = 20;  // List of diseases affecting the crop
+  repeated string pests = 21;    // List of pests affecting the crop
+  string notes = 22;             // Additional notes about the crop
+  
+  // Environmental conditions
+  double soil_ph = 23;           // Soil pH level
+  double soil_moisture = 24;     // Soil moisture percentage
+  double temperature = 25;       // Average temperature in Celsius
+  double humidity = 26;          // Average humidity percentage
+  
+  // Yield predictions and actuals
+  double predicted_yield = 27;   // Predicted yield per unit area
+  double actual_yield = 28;      // Actual yield per unit area
+  string yield_unit = 29;        // Unit for yield measurement (kg/ha, tons/acre, etc.)
+  
+  // Financial information
+  double cost_per_unit = 30;     // Cost per unit area
+  double expected_revenue = 31;  // Expected revenue from this crop
+  double actual_revenue = 32;    // Actual revenue from this crop
+  
+  // Metadata
+  google.protobuf.Timestamp created_at = 33;
+  google.protobuf.Timestamp updated_at = 34;
+  string created_by = 35;        // User who created this crop record
+  string updated_by = 36;        // User who last updated this crop record
+  
+  // Status flags
+  bool is_active = 37;           // Whether this crop is currently active
+  bool is_harvested = 38;        // Whether this crop has been harvested
+  bool requires_attention = 39;  // Whether this crop needs immediate attention
+}

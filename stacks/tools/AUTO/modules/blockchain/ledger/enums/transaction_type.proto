@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package blockchain.ledger.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/ledger/enums";
+
+// TransactionType defines the different types of blockchain transactions
+enum TransactionType {
+  // TRANSACTION_TYPE_UNSPECIFIED indicates an unspecified transaction type
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  
+  // TRANSACTION_TYPE_TRANSFER represents a token transfer transaction
+  TRANSACTION_TYPE_TRANSFER = 1;
+  
+  // TRANSACTION_TYPE_STAKE represents a staking transaction
+  TRANSACTION_TYPE_STAKE = 2;
+  
+  // TRANSACTION_TYPE_UNSTAKE represents an unstaking transaction
+  TRANSACTION_TYPE_UNSTAKE = 3;
+  
+  // TRANSACTION_TYPE_DELEGATE represents a delegation transaction
+  TRANSACTION_TYPE_DELEGATE = 4;
+  
+  // TRANSACTION_TYPE_UNDELEGATE represents an undelegation transaction
+  TRANSACTION_TYPE_UNDELEGATE = 5;
+  
+  // TRANSACTION_TYPE_REDELEGATE represents a redelegation transaction
+  TRANSACTION_TYPE_REDELEGATE = 6;
+  
+  // TRANSACTION_TYPE_VOTE represents a voting transaction
+  TRANSACTION_TYPE_VOTE = 7;
+  
+  // TRANSACTION_TYPE_PROPOSAL represents a proposal transaction
+  TRANSACTION_TYPE_PROPOSAL = 8;
+  
+  // TRANSACTION_TYPE_DEPOSIT represents a deposit transaction
+  TRANSACTION_TYPE_DEPOSIT = 9;
+  
+  // TRANSACTION_TYPE_WITHDRAWAL represents a withdrawal transaction
+  TRANSACTION_TYPE_WITHDRAWAL = 10;
+  
+  // TRANSACTION_TYPE_SWAP represents a token swap transaction
+  TRANSACTION_TYPE_SWAP = 11;
+  
+  // TRANSACTION_TYPE_MINT represents a token minting transaction
+  TRANSACTION_TYPE_MINT = 12;
+  
+  // TRANSACTION_TYPE_BURN represents a token burning transaction
+  TRANSACTION_TYPE_BURN = 13;
+  
+  // TRANSACTION_TYPE_CONTRACT_CALL represents a smart contract call
+  TRANSACTION_TYPE_CONTRACT_CALL = 14;
+  
+  // TRANSACTION_TYPE_CONTRACT_CREATE represents a smart contract creation
+  TRANSACTION_TYPE_CONTRACT_CREATE = 15;
+  
+  // TRANSACTION_TYPE_CONTRACT_UPDATE represents a smart contract update
+  TRANSACTION_TYPE_CONTRACT_UPDATE = 16;
+  
+  // TRANSACTION_TYPE_ORACLE_UPDATE represents an oracle update
+  TRANSACTION_TYPE_ORACLE_UPDATE = 17;
+  
+  // TRANSACTION_TYPE_BRIDGE_TRANSFER represents a bridge transfer
+  TRANSACTION_TYPE_BRIDGE_TRANSFER = 18;
+  
+  // TRANSACTION_TYPE_GOVERNANCE represents a governance transaction
+  TRANSACTION_TYPE_GOVERNANCE = 19;
+  
+  // TRANSACTION_TYPE_SLASH represents a slashing transaction
+  TRANSACTION_TYPE_SLASH = 20;
+  
+  // TRANSACTION_TYPE_REWARD represents a reward transaction
+  TRANSACTION_TYPE_REWARD = 21;
+  
+  // TRANSACTION_TYPE_FEE represents a fee transaction
+  TRANSACTION_TYPE_FEE = 22;
+  
+  // TRANSACTION_TYPE_REFUND represents a refund transaction
+  TRANSACTION_TYPE_REFUND = 23;
+  
+  // TRANSACTION_TYPE_LOCK represents a token locking transaction
+  TRANSACTION_TYPE_LOCK = 24;
+  
+  // TRANSACTION_TYPE_UNLOCK represents a token unlocking transaction
+  TRANSACTION_TYPE_UNLOCK = 25;
+}

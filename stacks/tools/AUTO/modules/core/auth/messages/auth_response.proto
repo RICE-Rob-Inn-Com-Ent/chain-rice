@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package core.auth.messages;
+
+import "core/auth/enums/auth_status.proto";
+import "core/auth/enums/user_role.proto";
+import "core/auth/enums/session_type.proto";
+import "core/common/messages/timestamp.proto";
+
+// AuthResponse returns the outcome of an authentication flow.
+message AuthResponse {
+  // Resulting status of the authentication attempt.
+  core.auth.enums.AuthStatus status = 1;
+
+  // When authenticated, contains issued credentials.
+  Credentials credentials = 2;
+
+  // User basic profile when authenticated.
+  UserSummary user = 3;
+
+  // Additional data in case of MFA challenge.
+  MfaChallenge mfa = 4;
+
+  // Optional error message for failed attempts (not for end-user display).
+  string error_message = 5;
+
+  message Credentials {
+    string access_token = 1;                 // Access token (e.g., JWT).
+    string refresh_token = 2;                // Refresh token.
+    core.common.messages.Timestamp expires_at = 3; // Access token expiry.
+    core.auth.enums.SessionType session_type = 4;  // Session type issued.
+  }
+
+  message UserSummary {
+    string id = 1;                    // User id.
+    string email = 2;                 // Email.
+    string display_name = 3;          // Display name.
+    repeated core.auth.enums.UserRole roles = 4; // Roles.
+  }
+
+  message MfaChallenge {
+    string mfa_token = 1; // Token to present when verifying MFA.
+    repeated string methods = 2; // Supported methods, e.g., "TOTP", "SMS".
+  }
+}
+
+

@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package commerce.orders.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/orders/messages";
+
+// Order item message representing a single item in an order
+message OrderItem {
+  // Unique identifier for the order item
+  string id = 1;
+  
+  // Order identifier
+  string order_id = 2;
+  
+  // Product identifier
+  string product_id = 3;
+  
+  // Product variant identifier (if applicable)
+  string product_variant_id = 4;
+  
+  // Product name
+  string product_name = 5;
+  
+  // Product description
+  string product_description = 6;
+  
+  // Product SKU
+  string sku = 7;
+  
+  // Product barcode
+  string barcode = 8;
+  
+  // Quantity ordered
+  int32 quantity = 9;
+  
+  // Unit price
+  double unit_price = 10;
+  
+  // Total price for this item
+  double total_price = 11;
+  
+  // Currency code (ISO 4217)
+  string currency = 12;
+  
+  // Product weight
+  double weight = 13;
+  
+  // Product dimensions
+  Dimensions dimensions = 14;
+  
+  // Product images
+  repeated string image_urls = 15;
+  
+  // Product attributes
+  repeated ProductAttribute attributes = 16;
+  
+  // Item status
+  string status = 17;
+  
+  // Item notes
+  string notes = 18;
+  
+  // Date when item was created
+  google.protobuf.Timestamp created_at = 19;
+  
+  // Date when item was last updated
+  google.protobuf.Timestamp updated_at = 20;
+  
+  // Additional metadata
+  map<string, string> metadata = 21;
+}
+
+// Product dimensions
+message Dimensions {
+  // Length
+  double length = 1;
+  
+  // Width
+  double width = 2;
+  
+  // Height
+  double height = 3;
+  
+  // Unit of measurement
+  string unit = 4;
+}
+
+// Product attribute
+message ProductAttribute {
+  // Attribute name
+  string name = 1;
+  
+  // Attribute value
+  string value = 2;
+  
+  // Attribute type
+  string type = 3;
+  
+  // Display name
+  string display_name = 4;
+}

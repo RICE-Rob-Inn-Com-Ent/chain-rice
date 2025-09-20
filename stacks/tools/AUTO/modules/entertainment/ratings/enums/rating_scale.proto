@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package entertainment.ratings.enums;
+
+// Шкали оцінювання
+enum RatingScale {
+  RATING_SCALE_UNSPECIFIED = 0;
+  
+  // Стандартні шкали
+  FIVE_STAR = 1;
+  TEN_POINT = 2;
+  PERCENTAGE = 3;
+  THUMBS_UP_DOWN = 4;
+  LIKE_DISLIKE = 5;
+  
+  // Спеціалізовані шкали
+  MOVIE_RATING = 6;
+  TV_RATING = 7;
+  MUSIC_RATING = 8;
+  GAME_RATING = 9;
+  BOOK_RATING = 10;
+  
+  // Академічні шкали
+  LETTER_GRADE = 11;
+  NUMERIC_GRADE = 12;
+  GPA_SCALE = 13;
+  PERCENTILE = 14;
+  STANDARD_SCORE = 15;
+  
+  // Психологічні шкали
+  LIKERT_SCALE = 16;
+  SEMANTIC_DIFFERENTIAL = 17;
+  VISUAL_ANALOG_SCALE = 18;
+  RATING_SCALE_1_7 = 19;
+  RATING_SCALE_1_9 = 20;
+  
+  // Спеціальні шкали
+  BINARY_RATING = 21;
+  MULTI_CHOICE = 22;
+  RANKING_SCALE = 23;
+  COMPARATIVE_RATING = 24;
+  RELATIVE_RATING = 25;
+  
+  // Індустрійні шкали
+  RESTAURANT_RATING = 26;
+  HOTEL_RATING = 27;
+  SERVICE_RATING = 28;
+  PRODUCT_RATING = 29;
+  EXPERIENCE_RATING = 30;
+  
+  // Медіа шкали
+  CONTENT_RATING = 31;
+  QUALITY_RATING = 32;
+  TECHNICAL_RATING = 33;
+  CREATIVE_RATING = 34;
+  PERFORMANCE_RATING = 35;
+  
+  // Соціальні шкали
+  SOCIAL_RATING = 36;
+  COMMUNITY_RATING = 37;
+  PEER_RATING = 38;
+  EXPERT_RATING = 39;
+  CROWD_RATING = 40;
+  
+  // Часові шкали
+  TREND_RATING = 41;
+  MOMENTUM_RATING = 42;
+  VOLATILITY_RATING = 43;
+  STABILITY_RATING = 44;
+  CONSISTENCY_RATING = 45;
+  
+  // Складні шкали
+  MULTI_DIMENSIONAL = 46;
+  COMPOSITE_RATING = 47;
+  WEIGHTED_RATING = 48;
+  NORMALIZED_RATING = 49;
+  STANDARDIZED_RATING = 50;
+}

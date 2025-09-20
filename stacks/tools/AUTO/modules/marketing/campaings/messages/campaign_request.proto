@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package marketing.campaings.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/campaings/enums/campaign_status.proto";
+
+// Request message for creating a new campaign
+message CreateCampaignRequest {
+  // Campaign name
+  string name = 1;
+  
+  // Campaign description
+  string description = 2;
+  
+  // Campaign objective
+  string objective = 3;
+  
+  // Target audience
+  string target_audience = 4;
+  
+  // Budget allocated for the campaign
+  double budget = 5;
+  
+  // Start date for the campaign
+  google.protobuf.Timestamp start_date = 6;
+  
+  // End date for the campaign
+  google.protobuf.Timestamp end_date = 7;
+  
+  // Campaign tags
+  repeated string tags = 8;
+}
+
+// Request message for getting a campaign by ID
+message GetCampaignRequest {
+  // Campaign ID
+  string id = 1;
+}
+
+// Request message for listing campaigns
+message ListCampaignRequest {
+  // Page number for pagination
+  int32 page = 1;
+  
+  // Number of items per page
+  int32 page_size = 2;
+  
+  // Filter by status
+  marketing.campaings.enums.CampaignStatus status = 3;
+  
+  // Filter by objective
+  string objective = 4;
+  
+  // Filter by tags
+  repeated string tags = 5;
+}
+
+// Request message for updating a campaign
+message UpdateCampaignRequest {
+  // Campaign ID
+  string id = 1;
+  
+  // Campaign name
+  string name = 2;
+  
+  // Campaign description
+  string description = 3;
+  
+  // Campaign objective
+  string objective = 4;
+  
+  // Target audience
+  string target_audience = 5;
+  
+  // Budget allocated for the campaign
+  double budget = 6;
+  
+  // Start date for the campaign
+  google.protobuf.Timestamp start_date = 7;
+  
+  // End date for the campaign
+  google.protobuf.Timestamp end_date = 8;
+  
+  // Campaign status
+  marketing.campaings.enums.CampaignStatus status = 9;
+  
+  // Campaign tags
+  repeated string tags = 10;
+}
+
+// Request message for deleting a campaign
+message DeleteCampaignRequest {
+  // Campaign ID
+  string id = 1;
+}

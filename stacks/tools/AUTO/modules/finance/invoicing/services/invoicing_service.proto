@@ -1,0 +1,279 @@
+syntax = "proto3";
+
+package finance.invoicing.services;
+
+import "finance/invoicing/messages/invoice.proto";
+import "finance/invoicing/messages/invoice_item.proto";
+import "finance/invoicing/messages/invoice_adjustment.proto";
+
+// Invoicing service for invoice management
+service InvoicingService {
+  // Invoice management
+  rpc CreateInvoice(finance.invoicing.messages.CreateInvoiceRequest) returns (finance.invoicing.messages.CreateInvoiceResponse);
+  rpc GetInvoice(finance.invoicing.messages.GetInvoiceRequest) returns (finance.invoicing.messages.GetInvoiceResponse);
+  rpc UpdateInvoice(finance.invoicing.messages.UpdateInvoiceRequest) returns (finance.invoicing.messages.UpdateInvoiceResponse);
+  rpc ListInvoices(finance.invoicing.messages.ListInvoicesRequest) returns (finance.invoicing.messages.ListInvoicesResponse);
+  rpc DeleteInvoice(finance.invoicing.messages.DeleteInvoiceRequest) returns (finance.invoicing.messages.DeleteInvoiceResponse);
+  
+  // Invoice status management
+  rpc UpdateInvoiceStatus(finance.invoicing.messages.UpdateInvoiceStatusRequest) returns (finance.invoicing.messages.UpdateInvoiceStatusResponse);
+  rpc SendInvoice(finance.invoicing.messages.SendInvoiceRequest) returns (finance.invoicing.messages.SendInvoiceResponse);
+  rpc MarkInvoiceAsPaid(finance.invoicing.messages.MarkInvoiceAsPaidRequest) returns (finance.invoicing.messages.MarkInvoiceAsPaidResponse);
+  rpc CancelInvoice(finance.invoicing.messages.CancelInvoiceRequest) returns (finance.invoicing.messages.CancelInvoiceResponse);
+  
+  // Invoice item management
+  rpc CreateInvoiceItem(finance.invoicing.messages.CreateInvoiceItemRequest) returns (finance.invoicing.messages.CreateInvoiceItemResponse);
+  rpc GetInvoiceItem(finance.invoicing.messages.GetInvoiceItemRequest) returns (finance.invoicing.messages.GetInvoiceItemResponse);
+  rpc UpdateInvoiceItem(finance.invoicing.messages.UpdateInvoiceItemRequest) returns (finance.invoicing.messages.UpdateInvoiceItemResponse);
+  rpc ListInvoiceItems(finance.invoicing.messages.ListInvoiceItemsRequest) returns (finance.invoicing.messages.ListInvoiceItemsResponse);
+  rpc DeleteInvoiceItem(finance.invoicing.messages.DeleteInvoiceItemRequest) returns (finance.invoicing.messages.DeleteInvoiceItemResponse);
+  
+  // Invoice adjustment management
+  rpc CreateInvoiceAdjustment(finance.invoicing.messages.CreateInvoiceAdjustmentRequest) returns (finance.invoicing.messages.CreateInvoiceAdjustmentResponse);
+  rpc GetInvoiceAdjustment(finance.invoicing.messages.GetInvoiceAdjustmentRequest) returns (finance.invoicing.messages.GetInvoiceAdjustmentResponse);
+  rpc UpdateInvoiceAdjustment(finance.invoicing.messages.UpdateInvoiceAdjustmentRequest) returns (finance.invoicing.messages.UpdateInvoiceAdjustmentResponse);
+  rpc ListInvoiceAdjustments(finance.invoicing.messages.ListInvoiceAdjustmentsRequest) returns (finance.invoicing.messages.ListInvoiceAdjustmentsResponse);
+  rpc ApproveInvoiceAdjustment(finance.invoicing.messages.ApproveInvoiceAdjustmentRequest) returns (finance.invoicing.messages.ApproveInvoiceAdjustmentResponse);
+  
+  // Invoice reporting
+  rpc GetInvoiceSummary(finance.invoicing.messages.GetInvoiceSummaryRequest) returns (finance.invoicing.messages.GetInvoiceSummaryResponse);
+  rpc GetInvoiceAnalytics(finance.invoicing.messages.GetInvoiceAnalyticsRequest) returns (finance.invoicing.messages.GetInvoiceAnalyticsResponse);
+  rpc GenerateInvoiceReport(finance.invoicing.messages.GenerateInvoiceReportRequest) returns (finance.invoicing.messages.GenerateInvoiceReportResponse);
+}
+
+// Additional request/response messages for invoicing service
+
+// Get invoice request
+message GetInvoiceRequest {
+  string invoice_id = 1;
+}
+
+// Get invoice response
+message GetInvoiceResponse {
+  finance.invoicing.messages.Invoice invoice = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Delete invoice request
+message DeleteInvoiceRequest {
+  string invoice_id = 1;
+}
+
+// Delete invoice response
+message DeleteInvoiceResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+// Update invoice status request
+message UpdateInvoiceStatusRequest {
+  string invoice_id = 1;
+  finance.invoicing.enums.InvoiceStatus status = 2;
+  string notes = 3;
+}
+
+// Update invoice status response
+message UpdateInvoiceStatusResponse {
+  finance.invoicing.messages.Invoice invoice = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Send invoice request
+message SendInvoiceRequest {
+  string invoice_id = 1;
+  string recipient_email = 2;
+  string message = 3;
+  string delivery_method = 4;
+}
+
+// Send invoice response
+message SendInvoiceResponse {
+  finance.invoicing.messages.Invoice invoice = 1;
+  bool success = 2;
+  string error_message = 3;
+  string delivery_status = 4;
+}
+
+// Mark invoice as paid request
+message MarkInvoiceAsPaidRequest {
+  string invoice_id = 1;
+  double paid_amount = 2;
+  string payment_method = 3;
+  string payment_reference = 4;
+  int64 payment_date = 5;
+  string notes = 6;
+}
+
+// Mark invoice as paid response
+message MarkInvoiceAsPaidResponse {
+  finance.invoicing.messages.Invoice invoice = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Cancel invoice request
+message CancelInvoiceRequest {
+  string invoice_id = 1;
+  string cancellation_reason = 2;
+  string notes = 3;
+}
+
+// Cancel invoice response
+message CancelInvoiceResponse {
+  finance.invoicing.messages.Invoice invoice = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Get invoice item request
+message GetInvoiceItemRequest {
+  string item_id = 1;
+}
+
+// Get invoice item response
+message GetInvoiceItemResponse {
+  finance.invoicing.messages.InvoiceItem item = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Delete invoice item request
+message DeleteInvoiceItemRequest {
+  string item_id = 1;
+}
+
+// Delete invoice item response
+message DeleteInvoiceItemResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+// Get invoice adjustment request
+message GetInvoiceAdjustmentRequest {
+  string adjustment_id = 1;
+}
+
+// Get invoice adjustment response
+message GetInvoiceAdjustmentResponse {
+  finance.invoicing.messages.InvoiceAdjustment adjustment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Approve invoice adjustment request
+message ApproveInvoiceAdjustmentRequest {
+  string adjustment_id = 1;
+  string approval_notes = 2;
+}
+
+// Approve invoice adjustment response
+message ApproveInvoiceAdjustmentResponse {
+  finance.invoicing.messages.InvoiceAdjustment adjustment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Invoice summary
+message InvoiceSummary {
+  string summary_id = 1;
+  int64 summary_date = 2;
+  int32 total_invoices = 3;
+  double total_amount = 4;
+  string currency = 5;
+  int32 paid_invoices = 6;
+  double paid_amount = 7;
+  int32 pending_invoices = 8;
+  double pending_amount = 9;
+  int32 overdue_invoices = 10;
+  double overdue_amount = 11;
+  int32 cancelled_invoices = 12;
+  double cancelled_amount = 13;
+  map<string, int32> invoices_by_status = 14;
+  map<string, double> amounts_by_status = 15;
+}
+
+// Get invoice summary request
+message GetInvoiceSummaryRequest {
+  int64 start_date = 1;
+  int64 end_date = 2;
+  string currency = 3;
+  string customer_id = 4;
+}
+
+// Get invoice summary response
+message GetInvoiceSummaryResponse {
+  InvoiceSummary summary = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Invoice analytics
+message InvoiceAnalytics {
+  string analytics_id = 1;
+  int64 analytics_date = 2;
+  double average_invoice_amount = 3;
+  double median_invoice_amount = 4;
+  int32 average_days_to_payment = 5;
+  double payment_rate = 6;
+  double collection_rate = 7;
+  map<string, double> trends = 8;
+  repeated InvoiceAnalyticsItem top_customers = 9;
+  repeated InvoiceAnalyticsItem top_products = 10;
+}
+
+// Invoice analytics item
+message InvoiceAnalyticsItem {
+  string item_id = 1;
+  string item_name = 2;
+  double amount = 3;
+  int32 count = 4;
+  double percentage = 5;
+}
+
+// Get invoice analytics request
+message GetInvoiceAnalyticsRequest {
+  int64 start_date = 1;
+  int64 end_date = 2;
+  string currency = 3;
+  string analytics_type = 4;
+}
+
+// Get invoice analytics response
+message GetInvoiceAnalyticsResponse {
+  InvoiceAnalytics analytics = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Invoice report
+message InvoiceReport {
+  string report_id = 1;
+  string report_type = 2;
+  int64 report_date = 3;
+  string report_format = 4;
+  string report_url = 5;
+  map<string, string> report_parameters = 6;
+  string report_status = 7;
+  int64 created_at = 8;
+  string created_by = 9;
+}
+
+// Generate invoice report request
+message GenerateInvoiceReportRequest {
+  string report_type = 1;
+  int64 start_date = 2;
+  int64 end_date = 3;
+  string report_format = 4;
+  string customer_id = 5;
+  string currency = 6;
+  map<string, string> parameters = 7;
+}
+
+// Generate invoice report response
+message GenerateInvoiceReportResponse {
+  InvoiceReport report = 1;
+  bool success = 2;
+  string error_message = 3;
+}

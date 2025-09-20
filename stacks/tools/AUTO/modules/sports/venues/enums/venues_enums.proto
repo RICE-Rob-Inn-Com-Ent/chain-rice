@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package sports.venues.v1;
+
+option go_package = "github.com/rice-dev/sports/venues/v1";
+
+// VenueType represents the type of sports venue
+enum VenueType {
+  VENUE_TYPE_UNSPECIFIED = 0;
+  VENUE_TYPE_STADIUM = 1;             // Large outdoor stadium
+  VENUE_TYPE_ARENA = 2;               // Indoor arena
+  VENUE_TYPE_FIELD = 3;               // Sports field
+  VENUE_TYPE_COURT = 4;               // Sports court
+  VENUE_TYPE_PITCH = 5;               // Football/soccer pitch
+  VENUE_TYPE_DIAMOND = 6;             // Baseball diamond
+  VENUE_TYPE_RINK = 7;                // Ice rink
+  VENUE_TYPE_POOL = 8;                // Swimming pool
+  VENUE_TYPE_TRACK = 9;               // Running track
+  VENUE_TYPE_GYM = 10;                // Gymnasium
+  VENUE_TYPE_FACILITY = 11;           // Multi-purpose facility
+  VENUE_TYPE_ACADEMY = 12;            // Training academy
+  VENUE_TYPE_COMPLEX = 13;            // Sports complex
+  VENUE_TYPE_CENTER = 14;             // Sports center
+  VENUE_TYPE_PARK = 15;               // Sports park
+}
+
+// VenueStatus represents the current status of a venue
+enum VenueStatus {
+  VENUE_STATUS_UNSPECIFIED = 0;
+  VENUE_STATUS_ACTIVE = 1;            // Venue is active and operational
+  VENUE_STATUS_INACTIVE = 2;          // Venue is inactive
+  VENUE_STATUS_MAINTENANCE = 3;       // Venue is under maintenance
+  VENUE_STATUS_RENOVATION = 4;        // Venue is being renovated
+  VENUE_STATUS_CLOSED = 5;            // Venue is closed
+  VENUE_STATUS_DEMOLISHED = 6;        // Venue has been demolished
+  VENUE_STATUS_PLANNED = 7;           // Venue is planned/built
+  VENUE_STATUS_CONSTRUCTION = 8;      // Venue is under construction
+  VENUE_STATUS_TEMPORARY = 9;         // Temporary venue
+}
+
+// SurfaceType represents the type of playing surface
+enum SurfaceType {
+  SURFACE_TYPE_UNSPECIFIED = 0;
+  SURFACE_TYPE_GRASS = 1;             // Natural grass
+  SURFACE_TYPE_ARTIFICIAL_GRASS = 2;  // Artificial turf
+  SURFACE_TYPE_HARD_COURT = 3;        // Hard court (tennis, basketball)
+  SURFACE_TYPE_CLAY = 4;              // Clay court (tennis)
+  SURFACE_TYPE_GRASS_COURT = 5;       // Grass court (tennis)
+  SURFACE_TYPE_CARPET = 6;            // Carpet surface
+  SURFACE_TYPE_ICE = 7;               // Ice surface
+  SURFACE_TYPE_SYNTHETIC = 8;         // Synthetic surface
+  SURFACE_TYPE_DIRT = 9;              // Dirt surface
+  SURFACE_TYPE_SAND = 10;             // Sand surface
+  SURFACE_TYPE_WOOD = 11;             // Wood surface
+  SURFACE_TYPE_RUBBER = 12;           // Rubber surface
+  SURFACE_TYPE_COMPOSITE = 13;        // Composite surface
+  SURFACE_TYPE_WATER = 14;            // Water surface
+}
+
+// VenueCapacity represents different types of seating capacity
+enum VenueCapacity {
+  VENUE_CAPACITY_UNSPECIFIED = 0;
+  VENUE_CAPACITY_SMALL = 1;           // Small venue (< 5,000)
+  VENUE_CAPACITY_MEDIUM = 2;          // Medium venue (5,000 - 25,000)
+  VENUE_CAPACITY_LARGE = 3;           // Large venue (25,000 - 50,000)
+  VENUE_CAPACITY_MAJOR = 4;           // Major venue (50,000 - 100,000)
+  VENUE_CAPACITY_MEGA = 5;            // Mega venue (> 100,000)
+}
+
+// VenueOwnership represents the ownership of the venue
+enum VenueOwnership {
+  VENUE_OWNERSHIP_UNSPECIFIED = 0;
+  VENUE_OWNERSHIP_PRIVATE = 1;        // Privately owned
+  VENUE_OWNERSHIP_PUBLIC = 2;         // Publicly owned
+  VENUE_OWNERSHIP_MUNICIPAL = 3;      // Municipality owned
+  VENUE_OWNERSHIP_STATE = 4;          // State owned
+  VENUE_OWNERSHIP_FEDERAL = 5;        // Federal government owned
+  VENUE_OWNERSHIP_UNIVERSITY = 6;     // University owned
+  VENUE_OWNERSHIP_CORPORATE = 7;      // Corporate owned
+  VENUE_OWNERSHIP_SHARED = 8;         // Shared ownership
+  VENUE_OWNERSHIP_LEASE = 9;          // Leased venue
+}
+
+// VenueFeatures represents available features and amenities
+enum VenueFeatures {
+  VENUE_FEATURES_UNSPECIFIED = 0;
+  VENUE_FEATURES_PARKING = 1;         // Parking facilities
+  VENUE_FEATURES_CONCESSIONS = 2;     // Food and beverage concessions
+  VENUE_FEATURES_RESTROOMS = 3;       // Restroom facilities
+  VENUE_FEATURES_FIRST_AID = 4;       // First aid station
+  VENUE_FEATURES_PRESS_BOX = 5;       // Press box/media area
+  VENUE_FEATURES_VIP_LOUNGE = 6;      // VIP lounge
+  VENUE_FEATURES_SUITE_LEVEL = 7;     // Suite level
+  VENUE_FEATURES_CLUB_SEATS = 8;      // Club seating
+  VENUE_FEATURES_LOCKER_ROOMS = 9;    // Locker rooms
+  VENUE_FEATURES_TRAINING_FACILITY = 10; // Training facility
+  VENUE_FEATURES_MEDIA_CENTER = 11;   // Media center
+  VENUE_FEATURES_BROADCAST_BOOTH = 12; // Broadcast booth
+  VENUE_FEATURES_SCOREBOARD = 13;     // Scoreboard/display
+  VENUE_FEATURES_LIGHTING = 14;       // Professional lighting
+  VENUE_FEATURES_SOUND_SYSTEM = 15;   // Sound system
+  VENUE_FEATURES_WIFI = 16;           // WiFi connectivity
+  VENUE_FEATURES_ACCESSIBILITY = 17;  // Accessibility features
+  VENUE_FEATURES_SECURITY = 18;       // Security systems
+  VENUE_FEATURES_UNDERGROUND = 19;    // Underground facilities
+  VENUE_FEATURES_RETRACTABLE_ROOF = 20; // Retractable roof
+  VENUE_FEATURES_HEATED = 21;         // Heated facility
+  VENUE_FEATURES_AIR_CONDITIONED = 22; // Air conditioning
+}
+
+// VenueAccessibility represents accessibility features
+enum VenueAccessibility {
+  VENUE_ACCESSIBILITY_UNSPECIFIED = 0;
+  VENUE_ACCESSIBILITY_WHEELCHAIR_ACCESS = 1; // Wheelchair accessible
+  VENUE_ACCESSIBILITY_ELEVATOR = 2;    // Elevator access
+  VENUE_ACCESSIBILITY_RAMP = 3;        // Ramp access
+  VENUE_ACCESSIBILITY_ACCESSIBLE_SEATING = 4; // Accessible seating
+  VENUE_ACCESSIBILITY_ACCESSIBLE_RESTROOMS = 5; // Accessible restrooms
+  VENUE_ACCESSIBILITY_ACCESSIBLE_PARKING = 6; // Accessible parking
+  VENUE_ACCESSIBILITY_ASSISTIVE_LISTENING = 7; // Assistive listening devices
+  VENUE_ACCESSIBILITY_SIGN_LANGUAGE = 8; // Sign language interpretation
+  VENUE_ACCESSIBILITY_LARGE_PRINT = 9; // Large print materials
+  VENUE_ACCESSIBILITY_AUDIO_DESCRIPTION = 10; // Audio description
+}

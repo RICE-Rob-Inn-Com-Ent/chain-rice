@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package agriculture.livestock.messages;
+
+import "agriculture/livestock/enums/animal_type.proto";
+import "agriculture/livestock/enums/health_status.proto";
+import "google/protobuf/timestamp.proto";
+
+// Animal message represents a single livestock animal
+message Animal {
+  // Unique identifier for the animal
+  string id = 1;
+  
+  // Animal identification
+  string name = 2;
+  string tag_number = 3;         // Official identification tag
+  string ear_tag = 4;            // Ear tag number
+  string microchip_id = 5;       // Microchip identification
+  string tattoo = 6;             // Tattoo identification
+  
+  // Basic information
+  agriculture.livestock.enums.AnimalType type = 7;
+  string breed = 8;              // Specific breed or variety
+  string sex = 9;                // Male, Female, Unknown
+  string color = 10;             // Primary color/markings
+  string markings = 11;          // Special markings or patterns
+  
+  // Birth information
+  google.protobuf.Timestamp birth_date = 12;
+  string birth_location = 13;    // Where the animal was born
+  string dam_id = 14;            // Mother's ID
+  string sire_id = 15;           // Father's ID
+  
+  // Physical characteristics
+  double weight = 16;            // Current weight in kilograms
+  double height = 17;            // Height at withers in centimeters
+  double length = 18;            // Body length in centimeters
+  double chest_girth = 19;       // Chest circumference in centimeters
+  
+  // Health information
+  agriculture.livestock.enums.HealthStatus health_status = 20;
+  double health_score = 21;      // Overall health score (0-100)
+  repeated string vaccinations = 22; // List of vaccinations received
+  repeated string medications = 23;  // Current medications
+  repeated string diseases = 24;     // Past or current diseases
+  repeated string injuries = 25;     // Past or current injuries
+  string veterinarian = 26;      // Assigned veterinarian
+  google.protobuf.Timestamp last_health_check = 27;
+  
+  // Reproductive information
+  bool is_breeding_stock = 28;   // Whether used for breeding
+  bool is_pregnant = 29;         // Currently pregnant
+  google.protobuf.Timestamp breeding_date = 30;
+  google.protobuf.Timestamp expected_delivery = 31;
+  int32 pregnancies = 32;        // Number of pregnancies
+  int32 offspring_count = 33;    // Number of offspring produced
+  
+  // Production information (varies by animal type)
+  double milk_production = 34;   // Daily milk production in liters
+  double egg_production = 35;    // Daily egg production
+  double wool_production = 36;   // Annual wool production in kg
+  double meat_yield = 37;        // Expected meat yield in kg
+  
+  // Location and housing
+  string pen_id = 38;            // Current pen or stall
+  string pasture_id = 39;        // Current pasture
+  string facility_id = 40;       // Current facility
+  double latitude = 41;          // GPS latitude
+  double longitude = 42;         // GPS longitude
+  
+  // Feeding information
+  string feed_type = 43;         // Type of feed being given
+  double daily_feed_amount = 44; // Daily feed amount in kg
+  string feeding_schedule = 45;  // Feeding times and frequency
+  double water_consumption = 46; // Daily water consumption in liters
+  
+  // Financial information
+  double purchase_price = 47;    // Original purchase price
+  double current_value = 48;     // Current estimated value
+  double total_costs = 49;       // Total costs incurred
+  double total_revenue = 50;     // Total revenue generated
+  
+  // Performance metrics
+  double growth_rate = 51;       // Daily weight gain in kg
+  double feed_efficiency = 52;   // Feed conversion ratio
+  double productivity_score = 53; // Overall productivity score
+  
+  // Behavioral information
+  string temperament = 54;       // Calm, aggressive, docile, etc.
+  repeated string behavioral_notes = 55; // Notes about behavior
+  bool is_handled = 56;          // Whether animal is used to human handling
+  
+  // Status and flags
+  bool is_active = 57;           // Whether animal is currently active
+  bool is_for_sale = 58;         // Whether animal is available for sale
+  bool is_quarantined = 59;      // Whether animal is in quarantine
+  bool requires_attention = 60;  // Whether animal needs immediate attention
+  
+  // Notes and observations
+  string notes = 61;             // General notes about the animal
+  repeated string observations = 62; // Regular observations
+  
+  // Metadata
+  google.protobuf.Timestamp created_at = 63;
+  google.protobuf.Timestamp updated_at = 64;
+  string created_by = 65;        // User who created this record
+  string updated_by = 66;        // User who last updated this record
+}

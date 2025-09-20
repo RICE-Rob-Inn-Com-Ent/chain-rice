@@ -1,0 +1,226 @@
+syntax = "proto3";
+
+package healthcare.pharmacy.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/stock_status.proto";
+import "../enums/prescription_status.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/pharmacy/messages";
+
+// Pharmacy event types
+enum PharmacyEventType {
+  PHARMACY_EVENT_TYPE_UNSPECIFIED = 0;
+  PHARMACY_EVENT_TYPE_DRUG_RECEIVED = 1;
+  PHARMACY_EVENT_TYPE_DRUG_DISPENSED = 2;
+  PHARMACY_EVENT_TYPE_DRUG_RETURNED = 3;
+  PHARMACY_EVENT_TYPE_STOCK_ADJUSTED = 4;
+  PHARMACY_EVENT_TYPE_DRUG_EXPIRED = 5;
+  PHARMACY_EVENT_TYPE_DRUG_DAMAGED = 6;
+  PHARMACY_EVENT_TYPE_DRUG_TRANSFERRED = 7;
+  PHARMACY_EVENT_TYPE_DRUG_DESTROYED = 8;
+  PHARMACY_EVENT_TYPE_DRUG_STOLEN = 9;
+  PHARMACY_EVENT_TYPE_PRESCRIPTION_CREATED = 10;
+  PHARMACY_EVENT_TYPE_PRESCRIPTION_APPROVED = 11;
+  PHARMACY_EVENT_TYPE_PRESCRIPTION_DISPENSED = 12;
+  PHARMACY_EVENT_TYPE_PRESCRIPTION_CANCELLED = 13;
+  PHARMACY_EVENT_TYPE_PRESCRIPTION_EXPIRED = 14;
+  PHARMACY_EVENT_TYPE_REFILL_REQUESTED = 15;
+  PHARMACY_EVENT_TYPE_REFILL_APPROVED = 16;
+  PHARMACY_EVENT_TYPE_REFILL_DENIED = 17;
+  PHARMACY_EVENT_TYPE_LOW_STOCK_ALERT = 18;
+  PHARMACY_EVENT_TYPE_OUT_OF_STOCK_ALERT = 19;
+  PHARMACY_EVENT_TYPE_RESTOCK_ALERT = 20;
+  PHARMACY_EVENT_TYPE_EXPIRATION_ALERT = 21;
+  PHARMACY_EVENT_TYPE_RECALL_ALERT = 22;
+}
+
+// Pharmacy event
+message PharmacyEvent {
+  string event_id = 1;
+  string drug_id = 2;
+  string prescription_id = 3;
+  string patient_id = 4;
+  string pharmacy_id = 5;
+  PharmacyEventType event_type = 6;
+  google.protobuf.Timestamp event_time = 7;
+  string event_description = 8;
+  string event_data = 9; // JSON string for additional event-specific data
+  string triggered_by = 10;
+  string clinic_id = 11;
+  string doctor_id = 12;
+  string pharmacist_id = 13;
+  int32 quantity = 14;
+  string quantity_unit = 15;
+  healthcare.pharmacy.enums.StockStatus previous_stock_status = 16;
+  healthcare.pharmacy.enums.StockStatus new_stock_status = 17;
+  healthcare.pharmacy.enums.PrescriptionStatus previous_prescription_status = 18;
+  healthcare.pharmacy.enums.PrescriptionStatus new_prescription_status = 19;
+  double cost = 20;
+  string notes = 21;
+  string ip_address = 22;
+  string user_agent = 23;
+}
+
+// Pharmacy event request
+message PharmacyEventRequest {
+  string drug_id = 1;
+  string prescription_id = 2;
+  string patient_id = 3;
+  string pharmacy_id = 4;
+  PharmacyEventType event_type = 5;
+  string event_description = 6;
+  string event_data = 7;
+  string triggered_by = 8;
+  string clinic_id = 9;
+  string doctor_id = 10;
+  string pharmacist_id = 11;
+  int32 quantity = 12;
+  string quantity_unit = 13;
+  healthcare.pharmacy.enums.StockStatus previous_stock_status = 14;
+  healthcare.pharmacy.enums.StockStatus new_stock_status = 15;
+  healthcare.pharmacy.enums.PrescriptionStatus previous_prescription_status = 16;
+  healthcare.pharmacy.enums.PrescriptionStatus new_prescription_status = 17;
+  double cost = 18;
+  string notes = 19;
+  string ip_address = 20;
+  string user_agent = 21;
+}
+
+// Pharmacy event response
+message PharmacyEventResponse {
+  bool success = 1;
+  string message = 2;
+  PharmacyEvent event = 3;
+}
+
+// List pharmacy events request
+message ListPharmacyEventsRequest {
+  string drug_id = 1;
+  string prescription_id = 2;
+  string patient_id = 3;
+  string pharmacy_id = 4;
+  PharmacyEventType event_type = 5;
+  string clinic_id = 6;
+  string doctor_id = 7;
+  string pharmacist_id = 8;
+  google.protobuf.Timestamp start_date = 9;
+  google.protobuf.Timestamp end_date = 10;
+  int32 page_size = 11;
+  string page_token = 12;
+}
+
+// List pharmacy events response
+message ListPharmacyEventsResponse {
+  repeated PharmacyEvent events = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Pharmacy event summary
+message PharmacyEventSummary {
+  PharmacyEventType event_type = 1;
+  int32 count = 2;
+  google.protobuf.Timestamp last_occurrence = 3;
+  repeated string recent_users = 4;
+  double total_cost = 5;
+  int32 total_quantity = 6;
+}
+
+// Stock movement event
+message StockMovementEvent {
+  string movement_id = 1;
+  string drug_id = 2;
+  string pharmacy_id = 3;
+  StockMovementType movement_type = 4;
+  int32 quantity = 5;
+  string quantity_unit = 6;
+  double unit_cost = 7;
+  double total_cost = 8;
+  string reference_number = 9; // PO number, prescription ID, etc.
+  string reason = 10;
+  string notes = 11;
+  google.protobuf.Timestamp movement_date = 12;
+  string moved_by = 13;
+  string supplier_id = 14;
+  string lot_number = 15;
+  google.protobuf.Timestamp expiration_date = 16;
+}
+
+// Stock movement type (redefined from enums for use in messages)
+enum StockMovementType {
+  STOCK_MOVEMENT_TYPE_UNSPECIFIED = 0;
+  STOCK_MOVEMENT_TYPE_RECEIVED = 1;
+  STOCK_MOVEMENT_TYPE_DISPENSED = 2;
+  STOCK_MOVEMENT_TYPE_RETURNED = 3;
+  STOCK_MOVEMENT_TYPE_ADJUSTED = 4;
+  STOCK_MOVEMENT_TYPE_EXPIRED = 5;
+  STOCK_MOVEMENT_TYPE_DAMAGED = 6;
+  STOCK_MOVEMENT_TYPE_TRANSFERRED = 7;
+  STOCK_MOVEMENT_TYPE_DESTROYED = 8;
+  STOCK_MOVEMENT_TYPE_STOLEN = 9;
+}
+
+// Prescription event
+message PrescriptionEvent {
+  string event_id = 1;
+  string prescription_id = 2;
+  string patient_id = 3;
+  string doctor_id = 4;
+  string pharmacy_id = 5;
+  string pharmacist_id = 6;
+  PrescriptionEventType event_type = 7;
+  google.protobuf.Timestamp event_time = 8;
+  string event_description = 9;
+  string event_data = 10;
+  string triggered_by = 11;
+  healthcare.pharmacy.enums.PrescriptionStatus previous_status = 12;
+  healthcare.pharmacy.enums.PrescriptionStatus new_status = 13;
+  string notes = 14;
+}
+
+// Prescription event type (redefined from enums for use in messages)
+enum PrescriptionEventType {
+  PRESCRIPTION_EVENT_TYPE_UNSPECIFIED = 0;
+  PRESCRIPTION_EVENT_TYPE_CREATED = 1;
+  PRESCRIPTION_EVENT_TYPE_APPROVED = 2;
+  PRESCRIPTION_EVENT_TYPE_DISPENSED = 3;
+  PRESCRIPTION_EVENT_TYPE_CANCELLED = 4;
+  PRESCRIPTION_EVENT_TYPE_EXPIRED = 5;
+  PRESCRIPTION_EVENT_TYPE_REFILL_REQUESTED = 6;
+  PRESCRIPTION_EVENT_TYPE_REFILL_APPROVED = 7;
+  PRESCRIPTION_EVENT_TYPE_REFILL_DENIED = 8;
+  PRESCRIPTION_EVENT_TYPE_PARTIALLY_FILLED = 9;
+  PRESCRIPTION_EVENT_TYPE_RETURNED = 10;
+}
+
+// Pharmacy alert
+message PharmacyAlert {
+  string alert_id = 1;
+  string drug_id = 2;
+  string prescription_id = 3;
+  string patient_id = 4;
+  string pharmacy_id = 5;
+  PharmacyEventType alert_type = 6;
+  string alert_level = 7; // info, warning, critical, emergency
+  string message = 8;
+  bool acknowledged = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp acknowledged_at = 11;
+  string acknowledged_by = 12;
+  string action_required = 13;
+  string resolution_notes = 14;
+}
+
+// Pharmacy audit trail
+message PharmacyAuditTrail {
+  string drug_id = 1;
+  string prescription_id = 2;
+  repeated PharmacyEvent events = 3;
+  repeated StockMovementEvent stock_movements = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp last_updated = 6;
+  string last_updated_by = 7;
+  int32 total_events = 8;
+  int32 total_stock_movements = 9;
+}

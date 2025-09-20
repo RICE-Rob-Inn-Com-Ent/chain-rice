@@ -1,0 +1,287 @@
+syntax = "proto3";
+
+package settings.settings.messages;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "settings/settings/enums/setting_scope.proto";
+import "settings/settings/enums/setting_type.proto";
+
+// Setting data structure
+message Setting {
+  // Unique identifier for the setting
+  string id = 1;
+  
+  // The setting key identifier
+  string key = 2;
+  
+  // The setting value
+  google.protobuf.Value value = 3;
+  
+  // The scope at which this setting applies
+  settings.settings.enums.SettingScope scope = 4;
+  
+  // The data type of the setting value
+  settings.settings.enums.SettingType type = 5;
+  
+  // Optional description of what this setting controls
+  string description = 6;
+  
+  // Optional default value for the setting
+  google.protobuf.Value default_value = 7;
+  
+  // Optional validation rules as JSON schema
+  google.protobuf.Struct validation_rules = 8;
+  
+  // Whether this setting is required
+  bool is_required = 9;
+  
+  // Whether this setting is sensitive/encrypted
+  bool is_sensitive = 10;
+  
+  // Optional category for organizing settings
+  string category = 11;
+  
+  // Optional tags for categorization and search
+  repeated string tags = 12;
+  
+  // Optional metadata about the setting
+  map<string, string> metadata = 13;
+  
+  // Scope-specific identifier
+  string scope_id = 14;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 15;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 16;
+  
+  // Version number for optimistic concurrency control
+  int32 version = 17;
+  
+  // Whether this setting is active
+  bool is_active = 18;
+  
+  // User who created the setting
+  string created_by = 19;
+  
+  // User who last updated the setting
+  string updated_by = 20;
+}
+
+// Response message for creating a setting
+message CreateSettingResponse {
+  // The created setting
+  Setting setting = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for retrieving a setting
+message GetSettingResponse {
+  // The requested setting
+  Setting setting = 1;
+}
+
+// Response message for retrieving a setting by key
+message GetSettingByKeyResponse {
+  // The requested setting
+  Setting setting = 1;
+}
+
+// Response message for listing settings
+message ListSettingsResponse {
+  // List of settings
+  repeated Setting settings = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of settings matching the filter
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Response message for updating a setting
+message UpdateSettingResponse {
+  // The updated setting
+  Setting setting = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for deleting a setting
+message DeleteSettingResponse {
+  // Whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status message
+  string message = 2;
+  
+  // ID of the deleted setting
+  string deleted_id = 3;
+}
+
+// Response message for bulk operations on settings
+message BulkSettingsResponse {
+  // List of created/updated settings
+  repeated Setting settings = 1;
+  
+  // Number of settings processed successfully
+  int32 success_count = 2;
+  
+  // Number of settings that failed processing
+  int32 failure_count = 3;
+  
+  // List of error messages for failed settings
+  repeated string errors = 4;
+  
+  // Overall operation status message
+  string message = 5;
+}
+
+// Response message for searching settings
+message SearchSettingsResponse {
+  // List of matching settings
+  repeated Setting settings = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of matching settings
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+  
+  // Search query that was executed
+  string query = 5;
+  
+  // Search execution time in milliseconds
+  int64 execution_time_ms = 6;
+}
+
+// Response message for validating a setting value
+message ValidateSettingResponse {
+  // Whether the value is valid
+  bool is_valid = 1;
+  
+  // List of validation error messages
+  repeated string errors = 2;
+  
+  // List of validation warning messages
+  repeated string warnings = 3;
+  
+  // Normalized/processed value after validation
+  google.protobuf.Value normalized_value = 4;
+  
+  // Validation timestamp
+  string validated_at = 5;
+}
+
+// Response message for getting setting schema
+message GetSettingSchemaResponse {
+  // Setting key
+  string key = 1;
+  
+  // Setting type
+  settings.settings.enums.SettingType type = 2;
+  
+  // JSON schema for validation
+  google.protobuf.Struct schema = 3;
+  
+  // Description of the setting
+  string description = 4;
+  
+  // Default value
+  google.protobuf.Value default_value = 5;
+  
+  // Whether the setting is required
+  bool is_required = 6;
+  
+  // Whether the setting is sensitive
+  bool is_sensitive = 7;
+  
+  // Available options for enum types
+  repeated string enum_options = 8;
+  
+  // Minimum value for numeric types
+  google.protobuf.Value min_value = 9;
+  
+  // Maximum value for numeric types
+  google.protobuf.Value max_value = 10;
+  
+  // Pattern for string validation
+  string pattern = 11;
+  
+  // Minimum length for string types
+  int32 min_length = 12;
+  
+  // Maximum length for string types
+  int32 max_length = 13;
+}
+
+// Settings statistics for analytics
+message SettingsStats {
+  // Total number of settings
+  int32 total_settings = 1;
+  
+  // Number of settings by scope
+  map<string, int32> settings_by_scope = 2;
+  
+  // Number of settings by type
+  map<string, int32> settings_by_type = 3;
+  
+  // Number of settings by category
+  map<string, int32> settings_by_category = 4;
+  
+  // Number of required settings
+  int32 required_settings = 5;
+  
+  // Number of sensitive settings
+  int32 sensitive_settings = 6;
+  
+  // Last updated timestamp
+  google.protobuf.Timestamp last_updated = 7;
+}
+
+// Setting audit log entry
+message SettingAuditLog {
+  // Unique identifier for the audit log entry
+  string id = 1;
+  
+  // Setting ID that was modified
+  string setting_id = 2;
+  
+  // Setting key
+  string setting_key = 3;
+  
+  // Action performed: "create", "update", "delete"
+  string action = 4;
+  
+  // Previous value (for updates and deletes)
+  google.protobuf.Value old_value = 5;
+  
+  // New value (for creates and updates)
+  google.protobuf.Value new_value = 6;
+  
+  // User who performed the action
+  string user_id = 7;
+  
+  // User's IP address
+  string user_ip = 8;
+  
+  // User agent string
+  string user_agent = 9;
+  
+  // Action timestamp
+  google.protobuf.Timestamp timestamp = 10;
+  
+  // Additional metadata about the action
+  map<string, string> metadata = 11;
+}

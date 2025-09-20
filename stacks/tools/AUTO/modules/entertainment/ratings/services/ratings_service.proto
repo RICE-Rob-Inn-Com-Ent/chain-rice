@@ -1,0 +1,363 @@
+syntax = "proto3";
+
+package entertainment.ratings.services;
+
+import "entertainment/ratings/enums/rating_scale.proto";
+
+// Сервіс оцінювання та відгуків
+service RatingsService {
+  // Управління оцінками
+  rpc CreateRating(CreateRatingRequest) returns (CreateRatingResponse);
+  rpc GetRating(GetRatingRequest) returns (GetRatingResponse);
+  rpc UpdateRating(UpdateRatingRequest) returns (UpdateRatingResponse);
+  rpc DeleteRating(DeleteRatingRequest) returns (DeleteRatingResponse);
+  rpc ListRatings(ListRatingsRequest) returns (ListRatingsResponse);
+  
+  // Управління відгуками
+  rpc CreateReview(CreateReviewRequest) returns (CreateReviewResponse);
+  rpc GetReview(GetReviewRequest) returns (GetReviewResponse);
+  rpc UpdateReview(UpdateReviewRequest) returns (UpdateReviewResponse);
+  rpc DeleteReview(DeleteReviewRequest) returns (DeleteReviewResponse);
+  rpc ListReviews(ListReviewsRequest) returns (ListReviewsResponse);
+  
+  // Статистика оцінювання
+  rpc GetRatingStats(GetRatingStatsRequest) returns (GetRatingStatsResponse);
+  rpc GetRatingDistribution(GetRatingDistributionRequest) returns (GetRatingDistributionResponse);
+  rpc GetAverageRating(GetAverageRatingRequest) returns (GetAverageRatingResponse);
+  
+  // Модерація оцінювання
+  rpc ModerateRating(ModerateRatingRequest) returns (ModerateRatingResponse);
+  rpc FlagRating(FlagRatingRequest) returns (FlagRatingResponse);
+  rpc ApproveRating(ApproveRatingRequest) returns (ApproveRatingResponse);
+  rpc RejectRating(RejectRatingRequest) returns (RejectRatingResponse);
+  
+  // Корисність оцінювання
+  rpc VoteHelpfulness(VoteHelpfulnessRequest) returns (VoteHelpfulnessResponse);
+  rpc GetHelpfulnessStats(GetHelpfulnessStatsRequest) returns (GetHelpfulnessStatsResponse);
+  
+  // Рекомендації на основі оцінювання
+  rpc GetRecommendations(GetRecommendationsRequest) returns (GetRecommendationsResponse);
+  rpc GetSimilarContent(GetSimilarContentRequest) returns (GetSimilarContentResponse);
+  rpc GetTrendingContent(GetTrendingContentRequest) returns (GetTrendingContentResponse);
+}
+
+// Запити та відповіді для оцінювання
+message CreateRatingRequest {
+  string content_id = 1;
+  string user_id = 2;
+  entertainment.ratings.enums.RatingScale scale = 3;
+  double rating_value = 4;
+  string comment = 5;
+  map<string, string> metadata = 6;
+}
+
+message CreateRatingResponse {
+  string rating_id = 1;
+  Rating rating = 2;
+  string message = 3;
+}
+
+message GetRatingRequest {
+  string rating_id = 1;
+}
+
+message GetRatingResponse {
+  Rating rating = 1;
+}
+
+message UpdateRatingRequest {
+  string rating_id = 1;
+  string user_id = 2;
+  double new_rating_value = 3;
+  string new_comment = 4;
+}
+
+message UpdateRatingResponse {
+  Rating rating = 1;
+  string message = 2;
+}
+
+message DeleteRatingRequest {
+  string rating_id = 1;
+  string user_id = 2;
+}
+
+message DeleteRatingResponse {
+  string message = 1;
+}
+
+message ListRatingsRequest {
+  string content_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+}
+
+message ListRatingsResponse {
+  repeated Rating ratings = 1;
+  int32 total_count = 2;
+}
+
+// Запити та відповіді для відгуків
+message CreateReviewRequest {
+  string content_id = 1;
+  string user_id = 2;
+  string title = 3;
+  string review_text = 4;
+  double rating_value = 5;
+  entertainment.ratings.enums.RatingScale scale = 6;
+  map<string, string> metadata = 7;
+}
+
+message CreateReviewResponse {
+  string review_id = 1;
+  Review review = 2;
+  string message = 3;
+}
+
+message GetReviewRequest {
+  string review_id = 1;
+}
+
+message GetReviewResponse {
+  Review review = 1;
+}
+
+message UpdateReviewRequest {
+  string review_id = 1;
+  string user_id = 2;
+  string new_title = 3;
+  string new_review_text = 4;
+  double new_rating_value = 5;
+}
+
+message UpdateReviewResponse {
+  Review review = 1;
+  string message = 2;
+}
+
+message DeleteReviewRequest {
+  string review_id = 1;
+  string user_id = 2;
+}
+
+message DeleteReviewResponse {
+  string message = 1;
+}
+
+message ListReviewsRequest {
+  string content_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+}
+
+message ListReviewsResponse {
+  repeated Review reviews = 1;
+  int32 total_count = 2;
+}
+
+// Запити для статистики
+message GetRatingStatsRequest {
+  string content_id = 1;
+}
+
+message GetRatingStatsResponse {
+  RatingStats stats = 1;
+}
+
+message GetRatingDistributionRequest {
+  string content_id = 1;
+}
+
+message GetRatingDistributionResponse {
+  RatingDistribution distribution = 1;
+}
+
+message GetAverageRatingRequest {
+  string content_id = 1;
+}
+
+message GetAverageRatingResponse {
+  double average_rating = 1;
+  int32 total_ratings = 2;
+  entertainment.ratings.enums.RatingScale scale = 3;
+}
+
+// Запити для модерації
+message ModerateRatingRequest {
+  string rating_id = 1;
+  string moderator_id = 2;
+  ModerationAction action = 3;
+  string reason = 4;
+}
+
+message ModerateRatingResponse {
+  bool moderated = 1;
+  string message = 2;
+}
+
+message FlagRatingRequest {
+  string rating_id = 1;
+  string user_id = 2;
+  string reason = 3;
+  string description = 4;
+}
+
+message FlagRatingResponse {
+  string flag_id = 1;
+  string message = 2;
+}
+
+message ApproveRatingRequest {
+  string rating_id = 1;
+  string approver_id = 2;
+}
+
+message ApproveRatingResponse {
+  bool approved = 1;
+  string message = 2;
+}
+
+message RejectRatingRequest {
+  string rating_id = 1;
+  string rejector_id = 2;
+  string reason = 3;
+}
+
+message RejectRatingResponse {
+  bool rejected = 1;
+  string message = 2;
+}
+
+// Запити для корисності
+message VoteHelpfulnessRequest {
+  string rating_id = 1;
+  string user_id = 2;
+  bool helpful = 3;
+}
+
+message VoteHelpfulnessResponse {
+  bool voted = 1;
+  string message = 2;
+}
+
+message GetHelpfulnessStatsRequest {
+  string rating_id = 1;
+}
+
+message GetHelpfulnessStatsResponse {
+  HelpfulnessStats stats = 1;
+}
+
+// Запити для рекомендацій
+message GetRecommendationsRequest {
+  string user_id = 1;
+  int32 count = 2;
+  repeated string filters = 3;
+}
+
+message GetRecommendationsResponse {
+  repeated Recommendation recommendations = 1;
+}
+
+message GetSimilarContentRequest {
+  string content_id = 1;
+  int32 count = 2;
+}
+
+message GetSimilarContentResponse {
+  repeated SimilarContent similar_content = 1;
+}
+
+message GetTrendingContentRequest {
+  string time_period = 1;
+  int32 count = 2;
+}
+
+message GetTrendingContentResponse {
+  repeated TrendingContent trending_content = 1;
+}
+
+// Допоміжні повідомлення
+message Rating {
+  string id = 1;
+  string content_id = 2;
+  string user_id = 3;
+  entertainment.ratings.enums.RatingScale scale = 4;
+  double rating_value = 5;
+  string comment = 6;
+  int32 helpful_votes = 7;
+  int32 total_votes = 8;
+  string status = 9;
+  int64 created_at = 10;
+  int64 updated_at = 11;
+  map<string, string> metadata = 12;
+}
+
+message Review {
+  string id = 1;
+  string content_id = 2;
+  string user_id = 3;
+  string title = 4;
+  string review_text = 5;
+  double rating_value = 6;
+  entertainment.ratings.enums.RatingScale scale = 7;
+  int32 helpful_votes = 8;
+  int32 total_votes = 9;
+  string status = 10;
+  int64 created_at = 11;
+  int64 updated_at = 12;
+  map<string, string> metadata = 13;
+}
+
+message RatingStats {
+  double average_rating = 1;
+  int32 total_ratings = 2;
+  int32 total_reviews = 3;
+  map<string, int32> rating_distribution = 4;
+  double helpfulness_score = 5;
+}
+
+message RatingDistribution {
+  map<string, int32> distribution = 1;
+  entertainment.ratings.enums.RatingScale scale = 2;
+}
+
+message HelpfulnessStats {
+  int32 helpful_votes = 1;
+  int32 total_votes = 2;
+  double helpfulness_percentage = 3;
+}
+
+message Recommendation {
+  string content_id = 1;
+  string title = 2;
+  double predicted_rating = 3;
+  double confidence_score = 4;
+  repeated string reasons = 5;
+}
+
+message SimilarContent {
+  string content_id = 1;
+  string title = 2;
+  double similarity_score = 3;
+  repeated string similarity_factors = 4;
+}
+
+message TrendingContent {
+  string content_id = 1;
+  string title = 2;
+  double trending_score = 3;
+  double rating_increase = 4;
+  int32 new_ratings = 5;
+}
+
+enum ModerationAction {
+  MODERATION_ACTION_UNSPECIFIED = 0;
+  APPROVE = 1;
+  REJECT = 2;
+  FLAG = 3;
+  REMOVE = 4;
+  WARN = 5;
+}

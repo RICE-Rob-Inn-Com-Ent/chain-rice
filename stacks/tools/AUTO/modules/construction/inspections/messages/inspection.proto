@@ -1,0 +1,878 @@
+syntax = "proto3";
+
+package construction.inspections.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "../enums/inspection_type.proto";
+import "../enums/inspection_status.proto";
+import "../enums/severity_level.proto";
+
+// Represents an inspection in the construction industry
+message Inspection {
+  // Unique identifier for the inspection
+  string id = 1;
+  
+  // Inspection number (human-readable)
+  string inspection_number = 2;
+  
+  // Type of inspection
+  construction.inspections.enums.InspectionType type = 3;
+  
+  // Current status of the inspection
+  construction.inspections.enums.InspectionStatus status = 4;
+  
+  // Inspection title
+  string title = 5;
+  
+  // Inspection description
+  string description = 6;
+  
+  // Project information
+  ProjectInfo project = 7;
+  
+  // Inspector information
+  InspectorInfo inspector = 8;
+  
+  // Inspection location
+  LocationInfo location = 9;
+  
+  // Scheduled information
+  ScheduleInfo schedule = 10;
+  
+  // Inspection scope
+  InspectionScope scope = 11;
+  
+  // Inspection criteria and standards
+  repeated InspectionCriteria criteria = 12;
+  
+  // Inspection findings
+  repeated InspectionFinding findings = 13;
+  
+  // Inspection results
+  InspectionResults results = 14;
+  
+  // Required actions
+  repeated RequiredAction required_actions = 15;
+  
+  // Follow-up requirements
+  repeated FollowUpRequirement follow_up_requirements = 16;
+  
+  // Documentation and attachments
+  repeated DocumentAttachment attachments = 17;
+  
+  // Weather conditions during inspection
+  WeatherConditions weather = 18;
+  
+  // Safety conditions during inspection
+  SafetyConditions safety = 19;
+  
+  // Equipment used during inspection
+  repeated InspectionEquipment equipment = 20;
+  
+  // Witnesses present during inspection
+  repeated Witness witnesses = 21;
+  
+  // Regulatory compliance information
+  ComplianceInfo compliance = 22;
+  
+  // Quality assurance information
+  QualityAssuranceInfo quality_assurance = 23;
+  
+  // Risk assessment
+  RiskAssessment risk_assessment = 24;
+  
+  // Recommendations
+  repeated Recommendation recommendations = 25;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 26;
+  google.protobuf.Timestamp updated_at = 27;
+  google.protobuf.Timestamp scheduled_date = 28;
+  google.protobuf.Timestamp start_date = 29;
+  google.protobuf.Timestamp end_date = 30;
+  google.protobuf.Timestamp due_date = 31;
+  
+  // Additional metadata
+  map<string, google.protobuf.Any> metadata = 32;
+}
+
+// Project information
+message ProjectInfo {
+  // Project ID
+  string project_id = 1;
+  
+  // Project name
+  string name = 2;
+  
+  // Project description
+  string description = 3;
+  
+  // Project type
+  string type = 4;
+  
+  // Project phase
+  string phase = 5;
+  
+  // Project manager
+  string project_manager = 6;
+  
+  // General contractor
+  string general_contractor = 7;
+  
+  // Client information
+  string client = 8;
+}
+
+// Inspector information
+message InspectorInfo {
+  // Inspector ID
+  string inspector_id = 1;
+  
+  // Inspector name
+  string name = 2;
+  
+  // Inspector title
+  string title = 3;
+  
+  // Inspector organization
+  string organization = 4;
+  
+  // Inspector certifications
+  repeated string certifications = 5;
+  
+  // Inspector license number
+  string license_number = 6;
+  
+  // Inspector contact information
+  ContactInfo contact_info = 7;
+  
+  // Inspector experience
+  int32 years_experience = 8;
+  
+  // Inspector specializations
+  repeated string specializations = 9;
+}
+
+// Location information
+message LocationInfo {
+  // Site address
+  Address address = 1;
+  
+  // Specific location within site
+  string specific_location = 2;
+  
+  // GPS coordinates
+  GPSCoordinates gps_coordinates = 3;
+  
+  // Building information
+  BuildingInfo building = 4;
+  
+  // Floor information
+  FloorInfo floor = 5;
+  
+  // Room information
+  RoomInfo room = 6;
+  
+  // Access information
+  string access_instructions = 7;
+  
+  // Site conditions
+  string site_conditions = 8;
+}
+
+// Schedule information
+message ScheduleInfo {
+  // Scheduled start time
+  google.protobuf.Timestamp scheduled_start = 1;
+  
+  // Scheduled end time
+  google.protobuf.Timestamp scheduled_end = 2;
+  
+  // Actual start time
+  google.protobuf.Timestamp actual_start = 3;
+  
+  // Actual end time
+  google.protobuf.Timestamp actual_end = 4;
+  
+  // Duration in minutes
+  int32 duration_minutes = 5;
+  
+  // Time zone
+  string time_zone = 6;
+  
+  // Scheduling notes
+  string notes = 7;
+  
+  // Reschedule information
+  RescheduleInfo reschedule = 8;
+}
+
+// Inspection scope
+message InspectionScope {
+  // Scope description
+  string description = 1;
+  
+  // Areas to be inspected
+  repeated string areas = 2;
+  
+  // Systems to be inspected
+  repeated string systems = 3;
+  
+  // Components to be inspected
+  repeated string components = 4;
+  
+  // Exclusions
+  repeated string exclusions = 5;
+  
+  // Special requirements
+  repeated string special_requirements = 6;
+  
+  // Inspection depth
+  string depth = 7;
+  
+  // Sampling requirements
+  SamplingRequirements sampling = 8;
+}
+
+// Inspection criteria
+message InspectionCriteria {
+  // Criteria ID
+  string id = 1;
+  
+  // Criteria name
+  string name = 2;
+  
+  // Criteria description
+  string description = 3;
+  
+  // Applicable standard
+  string standard = 4;
+  
+  // Applicable code
+  string code = 5;
+  
+  // Applicable regulation
+  string regulation = 6;
+  
+  // Criteria type
+  string type = 7;
+  
+  // Mandatory or optional
+  bool mandatory = 8;
+  
+  // Weight or importance
+  double weight = 9;
+  
+  // Measurement method
+  string measurement_method = 10;
+  
+  // Acceptance criteria
+  string acceptance_criteria = 11;
+}
+
+// Inspection finding
+message InspectionFinding {
+  // Finding ID
+  string id = 1;
+  
+  // Finding title
+  string title = 2;
+  
+  // Finding description
+  string description = 3;
+  
+  // Severity level
+  construction.inspections.enums.SeverityLevel severity = 4;
+  
+  // Finding category
+  string category = 5;
+  
+  // Finding type
+  string type = 6;
+  
+  // Location of finding
+  string location = 7;
+  
+  // Component affected
+  string component = 8;
+  
+  // System affected
+  string system = 9;
+  
+  // Evidence or observations
+  string evidence = 10;
+  
+  // Photographs
+  repeated string photographs = 11;
+  
+  // Measurements
+  repeated Measurement measurements = 12;
+  
+  // Test results
+  repeated TestResult test_results = 13;
+  
+  // Root cause analysis
+  string root_cause = 14;
+  
+  // Impact assessment
+  string impact = 15;
+  
+  // Risk level
+  string risk_level = 16;
+  
+  // Compliance status
+  string compliance_status = 17;
+  
+  // Recommendations
+  repeated string recommendations = 18;
+  
+  // Corrective actions required
+  repeated string corrective_actions = 19;
+  
+  // Timeline for correction
+  string correction_timeline = 20;
+  
+  // Responsible party
+  string responsible_party = 21;
+  
+  // Cost estimate
+  double cost_estimate = 22;
+  
+  // Finding status
+  string status = 23;
+  
+  // Verification required
+  bool verification_required = 24;
+  
+  // Follow-up required
+  bool follow_up_required = 25;
+}
+
+// Inspection results
+message InspectionResults {
+  // Overall result
+  string overall_result = 1;
+  
+  // Pass/fail status
+  bool passed = 2;
+  
+  // Overall score
+  double overall_score = 3;
+  
+  // Maximum possible score
+  double max_score = 4;
+  
+  // Score percentage
+  double score_percentage = 5;
+  
+  // Number of findings
+  int32 total_findings = 6;
+  
+  // Number of critical findings
+  int32 critical_findings = 7;
+  
+  // Number of major findings
+  int32 major_findings = 8;
+  
+  // Number of minor findings
+  int32 minor_findings = 9;
+  
+  // Number of observations
+  int32 observations = 10;
+  
+  // Compliance percentage
+  double compliance_percentage = 11;
+  
+  // Quality rating
+  string quality_rating = 12;
+  
+  // Safety rating
+  string safety_rating = 13;
+  
+  // Summary
+  string summary = 14;
+  
+  // Conclusions
+  repeated string conclusions = 15;
+  
+  // Next steps
+  repeated string next_steps = 16;
+}
+
+// Required action
+message RequiredAction {
+  // Action ID
+  string id = 1;
+  
+  // Action description
+  string description = 2;
+  
+  // Action type
+  string type = 3;
+  
+  // Priority level
+  string priority = 4;
+  
+  // Due date
+  google.protobuf.Timestamp due_date = 5;
+  
+  // Responsible party
+  string responsible_party = 6;
+  
+  // Action status
+  string status = 7;
+  
+  // Completion date
+  google.protobuf.Timestamp completion_date = 8;
+  
+  // Verification required
+  bool verification_required = 9;
+  
+  // Cost estimate
+  double cost_estimate = 10;
+  
+  // Resources required
+  repeated string resources = 11;
+}
+
+// Follow-up requirement
+message FollowUpRequirement {
+  // Requirement ID
+  string id = 1;
+  
+  // Requirement description
+  string description = 2;
+  
+  // Follow-up type
+  string type = 3;
+  
+  // Due date
+  google.protobuf.Timestamp due_date = 4;
+  
+  // Responsible party
+  string responsible_party = 5;
+  
+  // Status
+  string status = 6;
+  
+  // Completion date
+  google.protobuf.Timestamp completion_date = 7;
+  
+  // Verification method
+  string verification_method = 8;
+}
+
+// Document attachment
+message DocumentAttachment {
+  // Document ID
+  string id = 1;
+  
+  // Document name
+  string name = 2;
+  
+  // Document type
+  string type = 3;
+  
+  // File path or URL
+  string file_path = 4;
+  
+  // File size in bytes
+  int64 file_size = 5;
+  
+  // Upload date
+  google.protobuf.Timestamp upload_date = 6;
+  
+  // Uploaded by
+  string uploaded_by = 7;
+  
+  // Document version
+  string version = 8;
+  
+  // Description
+  string description = 9;
+}
+
+// Weather conditions
+message WeatherConditions {
+  // Temperature
+  double temperature = 1;
+  
+  // Temperature unit
+  string temperature_unit = 2;
+  
+  // Humidity percentage
+  double humidity = 3;
+  
+  // Wind speed
+  double wind_speed = 4;
+  
+  // Wind direction
+  string wind_direction = 5;
+  
+  // Precipitation
+  string precipitation = 6;
+  
+  // Visibility
+  string visibility = 7;
+  
+  // Sky conditions
+  string sky_conditions = 8;
+  
+  // Weather description
+  string description = 9;
+}
+
+// Safety conditions
+message SafetyConditions {
+  // Safety rating
+  string rating = 1;
+  
+  // Safety concerns
+  repeated string concerns = 2;
+  
+  // Safety equipment used
+  repeated string equipment_used = 3;
+  
+  // Safety violations observed
+  repeated string violations = 4;
+  
+  // Safety recommendations
+  repeated string recommendations = 5;
+  
+  // Incident reports
+  repeated string incident_reports = 6;
+}
+
+// Inspection equipment
+message InspectionEquipment {
+  // Equipment name
+  string name = 1;
+  
+  // Equipment type
+  string type = 2;
+  
+  // Model number
+  string model = 3;
+  
+  // Serial number
+  string serial_number = 4;
+  
+  // Calibration date
+  google.protobuf.Timestamp calibration_date = 5;
+  
+  // Calibration due date
+  google.protobuf.Timestamp calibration_due_date = 6;
+  
+  // Equipment status
+  string status = 7;
+}
+
+// Witness information
+message Witness {
+  // Witness name
+  string name = 1;
+  
+  // Witness title
+  string title = 2;
+  
+  // Witness organization
+  string organization = 3;
+  
+  // Witness role
+  string role = 4;
+  
+  // Contact information
+  string contact_info = 5;
+  
+  // Witness statement
+  string statement = 6;
+}
+
+// Compliance information
+message ComplianceInfo {
+  // Applicable codes
+  repeated string applicable_codes = 1;
+  
+  // Applicable standards
+  repeated string applicable_standards = 2;
+  
+  // Applicable regulations
+  repeated string applicable_regulations = 3;
+  
+  // Compliance status
+  string compliance_status = 4;
+  
+  // Non-compliance issues
+  repeated string non_compliance_issues = 5;
+  
+  // Compliance percentage
+  double compliance_percentage = 6;
+  
+  // Regulatory requirements
+  repeated string regulatory_requirements = 7;
+}
+
+// Quality assurance information
+message QualityAssuranceInfo {
+  // QA plan reference
+  string qa_plan_reference = 1;
+  
+  // QA procedures followed
+  repeated string procedures_followed = 2;
+  
+  // QA standards applied
+  repeated string standards_applied = 3;
+  
+  // QA checklist used
+  string checklist_used = 4;
+  
+  // QA review required
+  bool review_required = 5;
+  
+  // QA reviewer
+  string reviewer = 6;
+  
+  // QA review date
+  google.protobuf.Timestamp review_date = 7;
+}
+
+// Risk assessment
+message RiskAssessment {
+  // Overall risk level
+  string overall_risk_level = 1;
+  
+  // Risk factors identified
+  repeated string risk_factors = 2;
+  
+  // Risk mitigation measures
+  repeated string mitigation_measures = 3;
+  
+  // Risk probability
+  string probability = 4;
+  
+  // Risk impact
+  string impact = 5;
+  
+  // Risk score
+  double risk_score = 6;
+  
+  // Risk recommendations
+  repeated string recommendations = 7;
+}
+
+// Recommendation
+message Recommendation {
+  // Recommendation ID
+  string id = 1;
+  
+  // Recommendation description
+  string description = 2;
+  
+  // Recommendation type
+  string type = 3;
+  
+  // Priority level
+  string priority = 4;
+  
+  // Implementation timeline
+  string timeline = 5;
+  
+  // Responsible party
+  string responsible_party = 6;
+  
+  // Cost estimate
+  double cost_estimate = 7;
+  
+  // Expected benefits
+  string expected_benefits = 8;
+}
+
+// Sampling requirements
+message SamplingRequirements {
+  // Sampling method
+  string method = 1;
+  
+  // Sample size
+  int32 sample_size = 2;
+  
+  // Sampling frequency
+  string frequency = 3;
+  
+  // Sampling locations
+  repeated string locations = 4;
+  
+  // Sampling criteria
+  string criteria = 5;
+}
+
+// Reschedule information
+message RescheduleInfo {
+  // Original scheduled date
+  google.protobuf.Timestamp original_date = 1;
+  
+  // New scheduled date
+  google.protobuf.Timestamp new_date = 2;
+  
+  // Reason for reschedule
+  string reason = 3;
+  
+  // Rescheduled by
+  string rescheduled_by = 4;
+  
+  // Reschedule count
+  int32 reschedule_count = 5;
+}
+
+// Address information
+message Address {
+  // Street address
+  string street = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state_province = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // Additional address details
+  string additional_info = 6;
+}
+
+// GPS coordinates
+message GPSCoordinates {
+  // Latitude
+  double latitude = 1;
+  
+  // Longitude
+  double longitude = 2;
+  
+  // Altitude
+  double altitude = 3;
+  
+  // Accuracy
+  double accuracy = 4;
+}
+
+// Building information
+message BuildingInfo {
+  // Building name
+  string name = 1;
+  
+  // Building number
+  string number = 2;
+  
+  // Building type
+  string type = 3;
+  
+  // Number of floors
+  int32 floors = 4;
+  
+  // Building age
+  int32 age_years = 5;
+}
+
+// Floor information
+message FloorInfo {
+  // Floor number
+  int32 floor_number = 1;
+  
+  // Floor name
+  string floor_name = 2;
+  
+  // Floor type
+  string floor_type = 3;
+  
+  // Floor area
+  double area_sqft = 4;
+}
+
+// Room information
+message RoomInfo {
+  // Room number
+  string room_number = 1;
+  
+  // Room name
+  string room_name = 2;
+  
+  // Room type
+  string room_type = 3;
+  
+  // Room area
+  double area_sqft = 4;
+}
+
+// Contact information
+message ContactInfo {
+  // Primary contact person
+  string primary_contact = 1;
+  
+  // Email address
+  string email = 2;
+  
+  // Phone number
+  string phone = 3;
+  
+  // Mobile phone number
+  string mobile = 4;
+  
+  // Fax number
+  string fax = 5;
+  
+  // Website URL
+  string website = 6;
+}
+
+// Measurement information
+message Measurement {
+  // Measurement name
+  string name = 1;
+  
+  // Measurement value
+  double value = 2;
+  
+  // Measurement unit
+  string unit = 3;
+  
+  // Measurement method
+  string method = 4;
+  
+  // Measurement accuracy
+  double accuracy = 5;
+  
+  // Measurement date
+  google.protobuf.Timestamp measurement_date = 6;
+}
+
+// Test result information
+message TestResult {
+  // Test name
+  string name = 1;
+  
+  // Test value
+  double value = 2;
+  
+  // Test unit
+  string unit = 3;
+  
+  // Test method
+  string method = 4;
+  
+  // Test standard
+  string standard = 5;
+  
+  // Pass/fail status
+  bool passed = 6;
+  
+  // Test date
+  google.protobuf.Timestamp test_date = 7;
+  
+  // Test notes
+  string notes = 8;
+}

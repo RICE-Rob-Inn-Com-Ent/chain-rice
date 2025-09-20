@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package logistics.customs.enums;
+
+// Customs processing status enumeration
+enum CustomsStatus {
+  CUSTOMS_STATUS_UNSPECIFIED = 0;
+  CUSTOMS_STATUS_PENDING = 1;           // Awaiting customs processing
+  CUSTOMS_STATUS_SUBMITTED = 2;         // Declaration submitted to customs
+  CUSTOMS_STATUS_UNDER_REVIEW = 3;      // Under customs review
+  CUSTOMS_STATUS_INSPECTION_REQUIRED = 4; // Physical inspection required
+  CUSTOMS_STATUS_INSPECTION_IN_PROGRESS = 5; // Inspection currently underway
+  CUSTOMS_STATUS_CLEARED = 6;           // Successfully cleared customs
+  CUSTOMS_STATUS_REJECTED = 7;          // Rejected by customs
+  CUSTOMS_STATUS_DELAYED = 8;           // Processing delayed
+  CUSTOMS_STATUS_APPEALED = 9;          // Under appeal process
+  CUSTOMS_STATUS_SUSPENDED = 10;        // Processing suspended
+}

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package projects.enums;
+
+// ProjectStatus represents the current state of a project
+enum ProjectStatus {
+  // Default value - should not be used
+  PROJECT_STATUS_UNSPECIFIED = 0;
+  
+  // Project is in planning phase
+  PROJECT_STATUS_PLANNING = 1;
+  
+  // Project is actively being worked on
+  PROJECT_STATUS_ACTIVE = 2;
+  
+  // Project is temporarily paused
+  PROJECT_STATUS_PAUSED = 3;
+  
+  // Project is completed successfully
+  PROJECT_STATUS_COMPLETED = 4;
+  
+  // Project has been cancelled
+  PROJECT_STATUS_CANCELLED = 5;
+  
+  // Project is on hold waiting for external dependencies
+  PROJECT_STATUS_ON_HOLD = 6;
+  
+  // Project is in review phase
+  PROJECT_STATUS_IN_REVIEW = 7;
+}

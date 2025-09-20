@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package horeca.kitchen.enums;
+
+// Kitchen stations/work areas
+enum KitchenStation {
+  KITCHEN_STATION_UNSPECIFIED = 0;
+  KITCHEN_STATION_GRILL = 1;              // Grill station
+  KITCHEN_STATION_BAR = 2;                // Bar/beverage station
+  KITCHEN_STATION_PASTRY = 3;             // Pastry and dessert station
+  KITCHEN_STATION_PREP = 4;               // Food preparation station
+  KITCHEN_STATION_COLD = 5;               // Cold kitchen station
+  KITCHEN_STATION_HOT = 6;                // Hot kitchen station
+  KITCHEN_STATION_PIZZA = 7;              // Pizza station
+  KITCHEN_STATION_SALAD = 8;              // Salad station
+  KITCHEN_STATION_SANDWICH = 9;           // Sandwich station
+  KITCHEN_STATION_DESSERT = 10;           // Dessert station
+}

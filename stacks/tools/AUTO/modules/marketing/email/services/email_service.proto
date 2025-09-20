@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.email.services;
+
+import "marketing/email/messages/email_request.proto";
+import "marketing/email/messages/email_response.proto";
+
+// Email service for managing email marketing campaigns
+service EmailService {
+  // Create a new email
+  rpc CreateEmail(marketing.email.messages.CreateEmailRequest) returns (marketing.email.messages.CreateEmailResponse);
+  
+  // Get an email by ID
+  rpc GetEmail(marketing.email.messages.GetEmailRequest) returns (marketing.email.messages.GetEmailResponse);
+  
+  // List emails with pagination and filtering
+  rpc ListEmail(marketing.email.messages.ListEmailRequest) returns (marketing.email.messages.ListEmailResponse);
+  
+  // Update an existing email
+  rpc UpdateEmail(marketing.email.messages.UpdateEmailRequest) returns (marketing.email.messages.UpdateEmailResponse);
+  
+  // Delete an email
+  rpc DeleteEmail(marketing.email.messages.DeleteEmailRequest) returns (marketing.email.messages.DeleteEmailResponse);
+}

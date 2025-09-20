@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+package settings.themes.messages;
+
+import "google/protobuf/field_mask.proto";
+import "settings/themes/enums/theme_mode.proto";
+import "settings/themes/enums/theme_color.proto";
+
+// Request message for creating a new theme
+message CreateThemeRequest {
+  // The theme name identifier
+  string name = 1;
+  
+  // The theme display name
+  string display_name = 2;
+  
+  // The theme mode (light, dark, auto, etc.)
+  settings.themes.enums.ThemeMode mode = 3;
+  
+  // The primary color scheme
+  settings.themes.enums.ThemeColor primary_color = 4;
+  
+  // The secondary color scheme
+  settings.themes.enums.ThemeColor secondary_color = 5;
+  
+  // Optional description of the theme
+  string description = 6;
+  
+  // Custom primary color value (hex code) when using custom color
+  string custom_primary_color = 7;
+  
+  // Custom secondary color value (hex code) when using custom color
+  string custom_secondary_color = 8;
+  
+  // Custom accent color value (hex code)
+  string custom_accent_color = 9;
+  
+  // Custom background color value (hex code)
+  string custom_background_color = 10;
+  
+  // Custom surface color value (hex code)
+  string custom_surface_color = 11;
+  
+  // Custom error color value (hex code)
+  string custom_error_color = 12;
+  
+  // Custom warning color value (hex code)
+  string custom_warning_color = 13;
+  
+  // Custom success color value (hex code)
+  string custom_success_color = 14;
+  
+  // Custom info color value (hex code)
+  string custom_info_color = 15;
+  
+  // Font family for the theme
+  string font_family = 16;
+  
+  // Font size multiplier (1.0 = default, 1.2 = 20% larger)
+  double font_size_multiplier = 17;
+  
+  // Border radius for UI elements (in pixels)
+  int32 border_radius = 18;
+  
+  // Shadow intensity (0.0 = none, 1.0 = full)
+  double shadow_intensity = 19;
+  
+  // Animation duration multiplier (1.0 = default, 0.5 = faster)
+  double animation_speed = 20;
+  
+  // Whether this theme is publicly available
+  bool is_public = 21;
+  
+  // Optional tags for categorization
+  repeated string tags = 22;
+  
+  // Optional metadata about the theme
+  map<string, string> metadata = 23;
+  
+  // CSS custom properties as key-value pairs
+  map<string, string> css_variables = 24;
+}
+
+// Request message for retrieving a specific theme
+message GetThemeRequest {
+  // The unique identifier of the theme
+  string id = 1;
+  
+  // Optional: include CSS variables in response
+  bool include_css_variables = 2;
+}
+
+// Request message for retrieving a theme by name
+message GetThemeByNameRequest {
+  // The theme name to retrieve
+  string name = 1;
+  
+  // Optional: include CSS variables in response
+  bool include_css_variables = 2;
+}
+
+// Request message for listing themes with filtering
+message ListThemesRequest {
+  // Optional filter by theme name pattern
+  string name_filter = 1;
+  
+  // Optional filter by mode
+  settings.themes.enums.ThemeMode mode_filter = 2;
+  
+  // Optional filter by primary color
+  settings.themes.enums.ThemeColor primary_color_filter = 3;
+  
+  // Optional filter by secondary color
+  settings.themes.enums.ThemeColor secondary_color_filter = 4;
+  
+  // Optional filter by tags
+  repeated string tag_filters = 5;
+  
+  // Optional filter by public availability
+  bool is_public_filter = 6;
+  
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 7;
+  
+  // Page token for pagination
+  string page_token = 8;
+  
+  // Sort order: "name", "display_name", "mode", "created_at", "updated_at"
+  string order_by = 9;
+  
+  // Sort direction: "asc" or "desc" (default: "asc")
+  string sort_direction = 10;
+}
+
+// Request message for updating an existing theme
+message UpdateThemeRequest {
+  // The unique identifier of the theme to update
+  string id = 1;
+  
+  // Updated theme display name
+  string display_name = 2;
+  
+  // Updated theme mode
+  settings.themes.enums.ThemeMode mode = 3;
+  
+  // Updated primary color
+  settings.themes.enums.ThemeColor primary_color = 4;
+  
+  // Updated secondary color
+  settings.themes.enums.ThemeColor secondary_color = 5;
+  
+  // Updated description
+  string description = 6;
+  
+  // Updated custom colors
+  string custom_primary_color = 7;
+  string custom_secondary_color = 8;
+  string custom_accent_color = 9;
+  string custom_background_color = 10;
+  string custom_surface_color = 11;
+  string custom_error_color = 12;
+  string custom_warning_color = 13;
+  string custom_success_color = 14;
+  string custom_info_color = 15;
+  
+  // Updated font settings
+  string font_family = 16;
+  double font_size_multiplier = 17;
+  
+  // Updated visual settings
+  int32 border_radius = 18;
+  double shadow_intensity = 19;
+  double animation_speed = 20;
+  
+  // Updated availability
+  bool is_public = 21;
+  
+  // Updated tags
+  repeated string tags = 22;
+  
+  // Updated metadata
+  map<string, string> metadata = 23;
+  
+  // Updated CSS variables
+  map<string, string> css_variables = 24;
+  
+  // Field mask to specify which fields to update
+  google.protobuf.FieldMask update_mask = 25;
+}
+
+// Request message for deleting a theme
+message DeleteThemeRequest {
+  // The unique identifier of the theme to delete
+  string id = 1;
+  
+  // Optional: force deletion even if theme is in use
+  bool force = 2;
+}
+
+// Request message for duplicating a theme
+message DuplicateThemeRequest {
+  // The unique identifier of the theme to duplicate
+  string source_theme_id = 1;
+  
+  // New name for the duplicated theme
+  string new_name = 2;
+  
+  // New display name for the duplicated theme
+  string new_display_name = 3;
+  
+  // Whether the duplicated theme should be public
+  bool is_public = 4;
+}
+
+// Request message for applying a theme
+message ApplyThemeRequest {
+  // The unique identifier of the theme to apply
+  string theme_id = 1;
+  
+  // Target scope: "user", "organization", "project", "global"
+  string target_scope = 2;
+  
+  // Target scope ID (e.g., user_id, organization_id)
+  string target_scope_id = 3;
+  
+  // Whether to override existing theme settings
+  bool override_existing = 4;
+}
+
+// Request message for previewing a theme
+message PreviewThemeRequest {
+  // The unique identifier of the theme to preview
+  string theme_id = 1;
+  
+  // Optional modifications to preview
+  map<string, string> modifications = 2;
+  
+  // Preview format: "css", "json", "html"
+  string format = 3;
+}

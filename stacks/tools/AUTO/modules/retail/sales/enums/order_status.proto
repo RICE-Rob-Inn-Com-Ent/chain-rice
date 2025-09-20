@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package retail.sales.enums;
+
+// OrderStatus represents the current status of an order
+enum OrderStatus {
+  // Default value - should not be used
+  ORDER_STATUS_UNSPECIFIED = 0;
+  
+  // Order is pending payment
+  ORDER_STATUS_PENDING_PAYMENT = 1;
+  
+  // Order is confirmed and payment received
+  ORDER_STATUS_CONFIRMED = 2;
+  
+  // Order is being processed
+  ORDER_STATUS_PROCESSING = 3;
+  
+  // Order is ready for pickup/shipping
+  ORDER_STATUS_READY = 4;
+  
+  // Order has been shipped
+  ORDER_STATUS_SHIPPED = 5;
+  
+  // Order is out for delivery
+  ORDER_STATUS_OUT_FOR_DELIVERY = 6;
+  
+  // Order has been delivered
+  ORDER_STATUS_DELIVERED = 7;
+  
+  // Order has been completed
+  ORDER_STATUS_COMPLETED = 8;
+  
+  // Order has been cancelled
+  ORDER_STATUS_CANCELLED = 9;
+  
+  // Order has been refunded
+  ORDER_STATUS_REFUNDED = 10;
+  
+  // Order is on hold
+  ORDER_STATUS_ON_HOLD = 11;
+  
+  // Order is pending review
+  ORDER_STATUS_PENDING_REVIEW = 12;
+  
+  // Order has been returned
+  ORDER_STATUS_RETURNED = 13;
+  
+  // Order has been exchanged
+  ORDER_STATUS_EXCHANGED = 14;
+}

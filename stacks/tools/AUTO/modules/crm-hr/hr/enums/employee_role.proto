@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package crm_hr.hr.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/hr/enums";
+
+// EmployeeRole represents the role or position of an employee in the organization
+enum EmployeeRole {
+  // Unspecified role - should not be used in production
+  EMPLOYEE_ROLE_UNSPECIFIED = 0;
+  
+  // Executive roles
+  CEO = 1;
+  CTO = 2;
+  CFO = 3;
+  COO = 4;
+  VP = 5;
+  DIRECTOR = 6;
+  
+  // Management roles
+  MANAGER = 7;
+  SENIOR_MANAGER = 8;
+  TEAM_LEAD = 9;
+  SUPERVISOR = 10;
+  
+  // Individual contributor roles
+  SENIOR_SPECIALIST = 11;
+  SPECIALIST = 12;
+  ANALYST = 13;
+  COORDINATOR = 14;
+  ASSOCIATE = 15;
+  ASSISTANT = 16;
+  INTERN = 17;
+  
+  // Technical roles
+  SENIOR_ENGINEER = 18;
+  ENGINEER = 19;
+  JUNIOR_ENGINEER = 20;
+  ARCHITECT = 21;
+  DEVOPS = 22;
+  QA_ENGINEER = 23;
+  DATA_SCIENTIST = 24;
+  RESEARCHER = 25;
+  
+  // Sales and Marketing roles
+  SALES_DIRECTOR = 26;
+  SALES_MANAGER = 27;
+  SALES_REPRESENTATIVE = 28;
+  ACCOUNT_MANAGER = 29;
+  MARKETING_MANAGER = 30;
+  MARKETING_SPECIALIST = 31;
+  CONTENT_CREATOR = 32;
+  
+  // Support roles
+  CUSTOMER_SUCCESS_MANAGER = 33;
+  CUSTOMER_SUCCESS_SPECIALIST = 34;
+  SUPPORT_MANAGER = 35;
+  SUPPORT_SPECIALIST = 36;
+  TECHNICAL_WRITER = 37;
+  
+  // Administrative roles
+  HR_MANAGER = 38;
+  HR_SPECIALIST = 39;
+  RECRUITER = 40;
+  ADMINISTRATOR = 41;
+  RECEPTIONIST = 42;
+  ACCOUNTANT = 43;
+  FINANCE_SPECIALIST = 44;
+  
+  // Operations roles
+  OPERATIONS_MANAGER = 45;
+  OPERATIONS_SPECIALIST = 46;
+  PROJECT_MANAGER = 47;
+  PRODUCT_MANAGER = 48;
+  BUSINESS_ANALYST = 49;
+}

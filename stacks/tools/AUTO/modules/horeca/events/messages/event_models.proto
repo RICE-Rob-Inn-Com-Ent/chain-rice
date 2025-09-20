@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package horeca.events.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "../enums/event_type.proto";
+import "../enums/event_status.proto";
+import "../enums/event_priority.proto";
+
+// Event information
+message Event {
+  string event_id = 1;
+  string event_name = 2;
+  string description = 3;
+  EventType type = 4;
+  EventStatus status = 5;
+  EventPriority priority = 6;
+  
+  string organizer_name = 7;
+  string organizer_email = 8;
+  string organizer_phone = 9;
+  
+  EventVenue venue = 10;
+  google.protobuf.Timestamp event_date = 11;
+  google.protobuf.Timestamp event_time = 12;
+  google.protobuf.Timestamp end_time = 13;
+  
+  int32 expected_guests = 14;
+  int32 confirmed_guests = 15;
+  
+  google.protobuf.Money total_cost = 16;
+  google.protobuf.Money deposit_paid = 17;
+  google.protobuf.Money balance_due = 18;
+  
+  repeated EventService services = 19;
+  repeated EventGuest guests = 20;
+  
+  string special_requirements = 21;
+  string event_notes = 22;
+  
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+}
+
+// Event venue information
+message EventVenue {
+  string venue_id = 1;
+  string venue_name = 2;
+  string address = 3;
+  string city = 4;
+  string state = 5;
+  string postal_code = 6;
+  string country = 7;
+  double latitude = 8;
+  double longitude = 9;
+  int32 capacity = 10;
+  repeated string amenities = 11;
+  string contact_person = 12;
+  string contact_phone = 13;
+}
+
+// Event service information
+message EventService {
+  string service_id = 1;
+  string service_name = 2;
+  string service_type = 3;
+  string description = 4;
+  google.protobuf.Money cost = 5;
+  bool is_included = 6;
+  string provider = 7;
+  string contact_info = 8;
+}
+
+// Event guest information
+message EventGuest {
+  string guest_id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string dietary_restrictions = 5;
+  string special_requests = 6;
+  bool confirmed_attendance = 7;
+  google.protobuf.Timestamp rsvp_date = 8;
+}

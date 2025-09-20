@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+// Message definitions for Exam questions.
+package education.exams.messages;
+
+option go_package = "github.com/rice-dev/education/exams/messages;examsmessages";
+option java_multiple_files = true;
+option java_package = "com.rice.education.exams.messages";
+
+// A question in an exam.
+message Question {
+  // Unique identifier for the question.
+  string id = 1;
+
+  // Parent exam ID.
+  string exam_id = 2;
+
+  // Question text.
+  string text = 3;
+
+  // Optional choices for multiple-choice questions.
+  repeated string choices = 4;
+
+  // Index of the correct choice when choices are provided.
+  int32 correct_choice_index = 5;
+
+  // Points allocated to the question.
+  double points = 6;
+}
+
+

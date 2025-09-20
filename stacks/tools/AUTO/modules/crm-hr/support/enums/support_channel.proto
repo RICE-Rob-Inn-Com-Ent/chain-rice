@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package crm_hr.support.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/support/enums";
+
+// SupportChannel represents the channel through which support is provided
+enum SupportChannel {
+  // Unspecified channel - should not be used in production
+  SUPPORT_CHANNEL_UNSPECIFIED = 0;
+  
+  // Digital channels
+  EMAIL = 1;
+  PHONE = 2;
+  CHAT = 3;
+  WEB = 4;
+  MOBILE_APP = 5;
+  DESKTOP_APP = 6;
+  
+  // Social media channels
+  FACEBOOK = 7;
+  TWITTER = 8;
+  LINKEDIN = 9;
+  INSTAGRAM = 10;
+  YOUTUBE = 11;
+  TIKTOK = 12;
+  
+  // Messaging platforms
+  WHATSAPP = 13;
+  TELEGRAM = 14;
+  SLACK = 15;
+  MICROSOFT_TEAMS = 16;
+  DISCORD = 17;
+  ZOOM = 18;
+  
+  // Traditional channels
+  IN_PERSON = 19;
+  MAIL = 20;
+  FAX = 21;
+  VOICE_MAIL = 22;
+  
+  // Self-service channels
+  KNOWLEDGE_BASE = 23;
+  FAQ = 24;
+  COMMUNITY_FORUM = 25;
+  VIDEO_TUTORIAL = 26;
+  DOCUMENTATION = 27;
+  
+  // Specialized channels
+  API = 28;
+  WEBHOOK = 29;
+  INTEGRATION = 30;
+  BOT = 31;
+  AI_ASSISTANT = 32;
+  
+  // Business channels
+  PARTNER_PORTAL = 33;
+  VENDOR_PORTAL = 34;
+  INTERNAL_SYSTEM = 35;
+  ESCALATION = 36;
+  MANAGEMENT = 37;
+}

@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package horeca.events.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/event_models.proto";
+
+// Event Management Service - CRUD operations for events
+service EventManagementService {
+  // Create a new event
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
+  
+  // Get event by ID
+  rpc GetEvent(GetEventRequest) returns (GetEventResponse);
+  
+  // Update existing event
+  rpc UpdateEvent(UpdateEventRequest) returns (UpdateEventResponse);
+  
+  // Delete event
+  rpc DeleteEvent(DeleteEventRequest) returns (google.protobuf.Empty);
+  
+  // List events with filtering
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  
+  // Update event status
+  rpc UpdateEventStatus(UpdateEventStatusRequest) returns (UpdateEventStatusResponse);
+  
+  // Get events by date range
+  rpc GetEventsByDateRange(GetEventsByDateRangeRequest) returns (GetEventsByDateRangeResponse);
+  
+  // Get events by venue
+  rpc GetEventsByVenue(GetEventsByVenueRequest) returns (GetEventsByVenueResponse);
+  
+  // Get events by type
+  rpc GetEventsByType(GetEventsByTypeRequest) returns (GetEventsByTypeResponse);
+  
+  // Add guest to event
+  rpc AddGuest(AddGuestRequest) returns (AddGuestResponse);
+  
+  // Remove guest from event
+  rpc RemoveGuest(RemoveGuestRequest) returns (google.protobuf.Empty);
+  
+  // Update guest information
+  rpc UpdateGuest(UpdateGuestRequest) returns (UpdateGuestResponse);
+}
+
+// Request/Response messages
+message CreateEventRequest {
+  Event event = 1;
+}
+
+message CreateEventResponse {
+  Event event = 1;
+  string message = 2;
+}
+
+message GetEventRequest {
+  string event_id = 1;
+}
+
+message GetEventResponse {
+  Event event = 1;
+}
+
+message UpdateEventRequest {
+  Event event = 1;
+}
+
+message UpdateEventResponse {
+  Event event = 1;
+  string message = 2;
+}
+
+message DeleteEventRequest {
+  string event_id = 1;
+}
+
+message ListEventsRequest {
+  string organizer_id = 1;
+  string status = 2;
+  string event_type = 3;
+  string date_from = 4;
+  string date_to = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+message ListEventsResponse {
+  repeated Event events = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateEventStatusRequest {
+  string event_id = 1;
+  string new_status = 2;
+  string notes = 3;
+}
+
+message UpdateEventStatusResponse {
+  Event event = 1;
+  string message = 2;
+}
+
+message GetEventsByDateRangeRequest {
+  string date_from = 1;
+  string date_to = 2;
+  string venue_id = 3;
+}
+
+message GetEventsByDateRangeResponse {
+  repeated Event events = 1;
+}
+
+message GetEventsByVenueRequest {
+  string venue_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetEventsByVenueResponse {
+  repeated Event events = 1;
+}
+
+message GetEventsByTypeRequest {
+  string event_type = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetEventsByTypeResponse {
+  repeated Event events = 1;
+}
+
+message AddGuestRequest {
+  string event_id = 1;
+  EventGuest guest = 2;
+}
+
+message AddGuestResponse {
+  EventGuest guest = 1;
+  string message = 2;
+}
+
+message RemoveGuestRequest {
+  string event_id = 1;
+  string guest_id = 2;
+}
+
+message UpdateGuestRequest {
+  string event_id = 1;
+  EventGuest guest = 2;
+}
+
+message UpdateGuestResponse {
+  EventGuest guest = 1;
+  string message = 2;
+}

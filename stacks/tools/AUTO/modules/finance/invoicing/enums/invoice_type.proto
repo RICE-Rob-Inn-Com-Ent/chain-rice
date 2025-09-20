@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package finance.invoicing.enums;
+
+// Types of invoices for different business scenarios
+enum InvoiceType {
+  // Default value
+  INVOICE_TYPE_UNSPECIFIED = 0;
+  
+  // Standard invoice
+  INVOICE_TYPE_STANDARD = 1;
+  
+  // Proforma invoice
+  INVOICE_TYPE_PROFORMA = 2;
+  
+  // Credit note
+  INVOICE_TYPE_CREDIT_NOTE = 3;
+  
+  // Debit note
+  INVOICE_TYPE_DEBIT_NOTE = 4;
+  
+  // Recurring invoice
+  INVOICE_TYPE_RECURRING = 5;
+  
+  // Subscription invoice
+  INVOICE_TYPE_SUBSCRIPTION = 6;
+  
+  // Time and materials invoice
+  INVOICE_TYPE_TIME_MATERIALS = 7;
+  
+  // Fixed price invoice
+  INVOICE_TYPE_FIXED_PRICE = 8;
+  
+  // Milestone invoice
+  INVOICE_TYPE_MILESTONE = 9;
+  
+  // Retainer invoice
+  INVOICE_TYPE_RETAINER = 10;
+  
+  // Deposit invoice
+  INVOICE_TYPE_DEPOSIT = 11;
+  
+  // Final invoice
+  INVOICE_TYPE_FINAL = 12;
+  
+  // Interim invoice
+  INVOICE_TYPE_INTERIM = 13;
+  
+  // Correction invoice
+  INVOICE_TYPE_CORRECTION = 14;
+  
+  // Refund invoice
+  INVOICE_TYPE_REFUND = 15;
+  
+  // Adjustment invoice
+  INVOICE_TYPE_ADJUSTMENT = 16;
+  
+  // Service invoice
+  INVOICE_TYPE_SERVICE = 17;
+  
+  // Product invoice
+  INVOICE_TYPE_PRODUCT = 18;
+  
+  // Mixed invoice (products and services)
+  INVOICE_TYPE_MIXED = 19;
+  
+  // International invoice
+  INVOICE_TYPE_INTERNATIONAL = 20;
+  
+  // Domestic invoice
+  INVOICE_TYPE_DOMESTIC = 21;
+}

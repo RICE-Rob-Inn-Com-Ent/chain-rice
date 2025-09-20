@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package marketing.social.enums;
+
+// Enumeration for social media platforms
+enum SocialPlatform {
+  // Default platform - not specified
+  SOCIAL_PLATFORM_UNSPECIFIED = 0;
+  
+  // Facebook
+  SOCIAL_PLATFORM_FACEBOOK = 1;
+  
+  // Instagram
+  SOCIAL_PLATFORM_INSTAGRAM = 2;
+  
+  // Twitter
+  SOCIAL_PLATFORM_TWITTER = 3;
+  
+  // LinkedIn
+  SOCIAL_PLATFORM_LINKEDIN = 4;
+  
+  // YouTube
+  SOCIAL_PLATFORM_YOUTUBE = 5;
+  
+  // TikTok
+  SOCIAL_PLATFORM_TIKTOK = 6;
+  
+  // Snapchat
+  SOCIAL_PLATFORM_SNAPCHAT = 7;
+  
+  // Pinterest
+  SOCIAL_PLATFORM_PINTEREST = 8;
+  
+  // Reddit
+  SOCIAL_PLATFORM_REDDIT = 9;
+  
+  // Discord
+  SOCIAL_PLATFORM_DISCORD = 10;
+  
+  // Telegram
+  SOCIAL_PLATFORM_TELEGRAM = 11;
+  
+  // WhatsApp
+  SOCIAL_PLATFORM_WHATSAPP = 12;
+}

@@ -1,0 +1,333 @@
+syntax = "proto3";
+
+package entertainment.content.services;
+
+import "entertainment/content/messages/content_item.proto";
+import "entertainment/content/messages/content_asset.proto";
+import "entertainment/content/messages/content_metadata.proto";
+import "entertainment/content/messages/localization.proto";
+import "entertainment/content/messages/rights_and_licensing.proto";
+
+// Сервіс управління контентом
+service ContentManagementService {
+  // CRUD операції для контенту
+  rpc CreateContent(CreateContentRequest) returns (CreateContentResponse);
+  rpc GetContent(GetContentRequest) returns (GetContentResponse);
+  rpc UpdateContent(UpdateContentRequest) returns (UpdateContentResponse);
+  rpc DeleteContent(DeleteContentRequest) returns (DeleteContentResponse);
+  rpc ListContent(ListContentRequest) returns (ListContentResponse);
+  
+  // Управління активами
+  rpc UploadAsset(UploadAssetRequest) returns (UploadAssetResponse);
+  rpc GetAsset(GetAssetRequest) returns (GetAssetResponse);
+  rpc UpdateAsset(UpdateAssetRequest) returns (UpdateAssetResponse);
+  rpc DeleteAsset(DeleteAssetRequest) returns (DeleteAssetResponse);
+  rpc ListAssets(ListAssetsRequest) returns (ListAssetsResponse);
+  
+  // Управління метаданими
+  rpc UpdateMetadata(UpdateMetadataRequest) returns (UpdateMetadataResponse);
+  rpc GetMetadata(GetMetadataRequest) returns (GetMetadataResponse);
+  
+  // Управління локалізацією
+  rpc CreateLocalization(CreateLocalizationRequest) returns (CreateLocalizationResponse);
+  rpc GetLocalization(GetLocalizationRequest) returns (GetLocalizationResponse);
+  rpc UpdateLocalization(UpdateLocalizationRequest) returns (UpdateLocalizationResponse);
+  rpc DeleteLocalization(DeleteLocalizationRequest) returns (DeleteLocalizationResponse);
+  rpc ListLocalizations(ListLocalizationsRequest) returns (ListLocalizationsResponse);
+  
+  // Управління правами та ліцензуванням
+  rpc CreateRights(CreateRightsRequest) returns (CreateRightsResponse);
+  rpc GetRights(GetRightsRequest) returns (GetRightsResponse);
+  rpc UpdateRights(UpdateRightsRequest) returns (UpdateRightsResponse);
+  rpc DeleteRights(DeleteRightsRequest) returns (DeleteRightsResponse);
+  rpc ListRights(ListRightsRequest) returns (ListRightsResponse);
+  
+  // Пошук та фільтрація
+  rpc SearchContent(SearchContentRequest) returns (SearchContentResponse);
+  rpc FilterContent(FilterContentRequest) returns (FilterContentResponse);
+  
+  // Масові операції
+  rpc BulkUpdateContent(BulkUpdateContentRequest) returns (BulkUpdateContentResponse);
+  rpc BulkDeleteContent(BulkDeleteContentRequest) returns (BulkDeleteContentResponse);
+}
+
+// Запити та відповіді для контенту
+message CreateContentRequest {
+  entertainment.content.messages.ContentItem content = 1;
+  string user_id = 2;
+}
+
+message CreateContentResponse {
+  entertainment.content.messages.ContentItem content = 1;
+  string message = 2;
+}
+
+message GetContentRequest {
+  string content_id = 1;
+  bool include_assets = 2;
+  bool include_metadata = 3;
+  bool include_localizations = 4;
+  bool include_rights = 5;
+}
+
+message GetContentResponse {
+  entertainment.content.messages.ContentItem content = 1;
+  repeated entertainment.content.messages.ContentAsset assets = 2;
+  entertainment.content.messages.ContentMetadata metadata = 3;
+  repeated entertainment.content.messages.Localization localizations = 4;
+  entertainment.content.messages.RightsAndLicensing rights = 5;
+}
+
+message UpdateContentRequest {
+  string content_id = 1;
+  entertainment.content.messages.ContentItem content = 2;
+  string user_id = 3;
+}
+
+message UpdateContentResponse {
+  entertainment.content.messages.ContentItem content = 1;
+  string message = 2;
+}
+
+message DeleteContentRequest {
+  string content_id = 1;
+  string user_id = 2;
+  bool delete_assets = 3;
+}
+
+message DeleteContentResponse {
+  string message = 1;
+}
+
+message ListContentRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string sort_by = 3;
+  string sort_order = 4;
+  repeated string filters = 5;
+}
+
+message ListContentResponse {
+  repeated entertainment.content.messages.ContentItem content = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+// Запити та відповіді для активів
+message UploadAssetRequest {
+  string content_id = 1;
+  entertainment.content.messages.ContentAsset asset = 2;
+  bytes file_data = 3;
+  string user_id = 4;
+}
+
+message UploadAssetResponse {
+  entertainment.content.messages.ContentAsset asset = 1;
+  string message = 2;
+}
+
+message GetAssetRequest {
+  string asset_id = 1;
+}
+
+message GetAssetResponse {
+  entertainment.content.messages.ContentAsset asset = 1;
+}
+
+message UpdateAssetRequest {
+  string asset_id = 1;
+  entertainment.content.messages.ContentAsset asset = 2;
+  string user_id = 3;
+}
+
+message UpdateAssetResponse {
+  entertainment.content.messages.ContentAsset asset = 1;
+  string message = 2;
+}
+
+message DeleteAssetRequest {
+  string asset_id = 1;
+  string user_id = 2;
+}
+
+message DeleteAssetResponse {
+  string message = 1;
+}
+
+message ListAssetsRequest {
+  string content_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListAssetsResponse {
+  repeated entertainment.content.messages.ContentAsset assets = 1;
+  int32 total_count = 2;
+}
+
+// Запити та відповіді для метаданих
+message UpdateMetadataRequest {
+  string content_id = 1;
+  entertainment.content.messages.ContentMetadata metadata = 2;
+  string user_id = 3;
+}
+
+message UpdateMetadataResponse {
+  entertainment.content.messages.ContentMetadata metadata = 1;
+  string message = 2;
+}
+
+message GetMetadataRequest {
+  string content_id = 1;
+}
+
+message GetMetadataResponse {
+  entertainment.content.messages.ContentMetadata metadata = 1;
+}
+
+// Запити та відповіді для локалізації
+message CreateLocalizationRequest {
+  entertainment.content.messages.Localization localization = 1;
+  string user_id = 2;
+}
+
+message CreateLocalizationResponse {
+  entertainment.content.messages.Localization localization = 1;
+  string message = 2;
+}
+
+message GetLocalizationRequest {
+  string localization_id = 1;
+}
+
+message GetLocalizationResponse {
+  entertainment.content.messages.Localization localization = 1;
+}
+
+message UpdateLocalizationRequest {
+  string localization_id = 1;
+  entertainment.content.messages.Localization localization = 2;
+  string user_id = 3;
+}
+
+message UpdateLocalizationResponse {
+  entertainment.content.messages.Localization localization = 1;
+  string message = 2;
+}
+
+message DeleteLocalizationRequest {
+  string localization_id = 1;
+  string user_id = 2;
+}
+
+message DeleteLocalizationResponse {
+  string message = 1;
+}
+
+message ListLocalizationsRequest {
+  string content_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListLocalizationsResponse {
+  repeated entertainment.content.messages.Localization localizations = 1;
+  int32 total_count = 2;
+}
+
+// Запити та відповіді для прав
+message CreateRightsRequest {
+  entertainment.content.messages.RightsAndLicensing rights = 1;
+  string user_id = 2;
+}
+
+message CreateRightsResponse {
+  entertainment.content.messages.RightsAndLicensing rights = 1;
+  string message = 2;
+}
+
+message GetRightsRequest {
+  string rights_id = 1;
+}
+
+message GetRightsResponse {
+  entertainment.content.messages.RightsAndLicensing rights = 1;
+}
+
+message UpdateRightsRequest {
+  string rights_id = 1;
+  entertainment.content.messages.RightsAndLicensing rights = 2;
+  string user_id = 3;
+}
+
+message UpdateRightsResponse {
+  entertainment.content.messages.RightsAndLicensing rights = 1;
+  string message = 2;
+}
+
+message DeleteRightsRequest {
+  string rights_id = 1;
+  string user_id = 2;
+}
+
+message DeleteRightsResponse {
+  string message = 1;
+}
+
+message ListRightsRequest {
+  string content_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListRightsResponse {
+  repeated entertainment.content.messages.RightsAndLicensing rights = 1;
+  int32 total_count = 2;
+}
+
+// Запити для пошуку та фільтрації
+message SearchContentRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+}
+
+message SearchContentResponse {
+  repeated entertainment.content.messages.ContentItem content = 1;
+  int32 total_count = 2;
+}
+
+message FilterContentRequest {
+  repeated string filters = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message FilterContentResponse {
+  repeated entertainment.content.messages.ContentItem content = 1;
+  int32 total_count = 2;
+}
+
+// Масові операції
+message BulkUpdateContentRequest {
+  repeated string content_ids = 1;
+  map<string, string> updates = 2;
+  string user_id = 3;
+}
+
+message BulkUpdateContentResponse {
+  int32 updated_count = 1;
+  string message = 2;
+}
+
+message BulkDeleteContentRequest {
+  repeated string content_ids = 1;
+  string user_id = 2;
+}
+
+message BulkDeleteContentResponse {
+  int32 deleted_count = 1;
+  string message = 2;
+}

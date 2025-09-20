@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+package blockchain.oracles.messages;
+
+import "blockchain/oracles/enums/oracle_type.proto";
+import "blockchain/oracles/enums/oracle_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/oracles/messages";
+
+// Coin represents a token with denomination and amount
+message Coin {
+  string denom = 1;  // Token denomination
+  string amount = 2; // Token amount as string
+}
+
+// Oracle represents a blockchain oracle
+message Oracle {
+  string id = 1;                    // Unique oracle identifier
+  string name = 2;                  // Oracle name
+  string description = 3;           // Oracle description
+  string creator = 4;               // Oracle creator address (sdk.Address)
+  int64 timestamp = 5;              // Oracle creation timestamp
+  
+  // Oracle classification
+  blockchain.oracles.enums.OracleType oracle_type = 6; // Type of oracle
+  blockchain.oracles.enums.OracleStatus status = 7; // Current oracle status
+  
+  // Oracle configuration
+  string endpoint = 8;              // Oracle data endpoint
+  string api_key = 9;               // API key (encrypted)
+  string data_format = 10;          // Data format (JSON, XML, etc.)
+  string update_frequency = 11;     // Update frequency
+  string timeout = 12;              // Request timeout
+  
+  // Data source information
+  string data_source = 13;          // Data source name
+  string data_source_url = 14;      // Data source URL
+  string data_source_type = 15;     // Data source type
+  string authentication_method = 16; // Authentication method
+  
+  // Oracle parameters
+  repeated string supported_assets = 17; // Supported assets/symbols
+  string precision = 18;            // Data precision
+  string aggregation_method = 19;   // Data aggregation method
+  int64 min_confirmations = 20;     // Minimum confirmations required
+  
+  // Validation and consensus
+  repeated string validators = 21;  // Oracle validators
+  string consensus_threshold = 22;  // Consensus threshold
+  string deviation_threshold = 23;  // Price deviation threshold
+  bool require_consensus = 24;      // Whether consensus is required
+  
+  // Fees and rewards
+  repeated Coin fees = 25;          // Oracle fees
+  repeated Coin rewards = 26;       // Oracle rewards
+  string fee_per_request = 27;      // Fee per request
+  string reward_per_update = 28;    // Reward per update
+  
+  // Performance metrics
+  int64 total_requests = 29;        // Total requests processed
+  int64 successful_requests = 30;   // Successful requests
+  int64 failed_requests = 31;       // Failed requests
+  string uptime_percentage = 32;    // Uptime percentage
+  string response_time = 33;        // Average response time
+  
+  // Reputation and trust
+  string reputation_score = 34;     // Oracle reputation score
+  string trust_level = 35;          // Trust level
+  int64 endorsement_count = 36;     // Number of endorsements
+  repeated string endorsers = 37;   // Endorser addresses
+  
+  // Security information
+  string encryption_key = 38;       // Encryption key
+  repeated string whitelist = 39;   // Whitelisted addresses
+  repeated string blacklist = 40;   // Blacklisted addresses
+  bool is_public = 41;              // Whether oracle is public
+  
+  // Metadata
+  map<string, string> metadata = 42; // Additional metadata
+  int64 last_updated = 43;          // Last update timestamp
+  int64 last_data_update = 44;      // Last data update timestamp
+}
+
+// OracleParams defines the parameters for the oracle module
+message OracleParams {
+  string authority = 1;             // Module authority address
+  repeated Coin default_fees = 2;   // Default oracle fees
+  string max_deviation = 3;         // Maximum price deviation
+  int64 min_confirmations = 4;      // Minimum confirmations
+  int64 max_confirmations = 5;      // Maximum confirmations
+  string consensus_threshold = 6;   // Default consensus threshold
+  bool require_consensus = 7;       // Whether consensus is required by default
+  string update_frequency = 8;      // Default update frequency
+  int64 oracle_timeout = 9;         // Oracle timeout in seconds
+}
+
+// MsgCreateOracle creates a new oracle
+message MsgCreateOracle {
+  string creator = 1;               // Creator address (sdk.Address)
+  string name = 2;                  // Oracle name
+  string description = 3;           // Oracle description
+  blockchain.oracles.enums.OracleType oracle_type = 4; // Oracle type
+  string endpoint = 5;              // Oracle endpoint
+  string data_source = 6;           // Data source
+  repeated string supported_assets = 7; // Supported assets
+  map<string, string> metadata = 8; // Additional metadata
+}
+
+// MsgCreateOracleResponse returns the created oracle
+message MsgCreateOracleResponse {
+  string oracle_id = 1;             // Created oracle ID
+}
+
+// MsgUpdateOracle updates an existing oracle
+message MsgUpdateOracle {
+  string creator = 1;               // Updater address (sdk.Address)
+  string oracle_id = 2;             // Oracle ID to update
+  string name = 3;                  // Updated name
+  string description = 4;           // Updated description
+  string endpoint = 5;              // Updated endpoint
+  repeated string supported_assets = 6; // Updated supported assets
+  map<string, string> metadata = 7; // Updated metadata
+}
+
+// MsgUpdateOracleResponse returns the update result
+message MsgUpdateOracleResponse {
+  bool success = 1;                 // Update success status
+}
+
+// MsgActivateOracle activates an oracle
+message MsgActivateOracle {
+  string creator = 1;               // Activator address (sdk.Address)
+  string oracle_id = 2;             // Oracle ID to activate
+}
+
+// MsgActivateOracleResponse returns the activation result
+message MsgActivateOracleResponse {
+  bool success = 1;                 // Activation success status
+}
+
+// MsgDeactivateOracle deactivates an oracle
+message MsgDeactivateOracle {
+  string creator = 1;               // Deactivator address (sdk.Address)
+  string oracle_id = 2;             // Oracle ID to deactivate
+  string reason = 3;                // Deactivation reason
+}
+
+// MsgDeactivateOracleResponse returns the deactivation result
+message MsgDeactivateOracleResponse {
+  bool success = 1;                 // Deactivation success status
+}

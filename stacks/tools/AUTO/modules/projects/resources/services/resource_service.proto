@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package projects.resources.services;
+
+import "resources/messages/resource_request.proto";
+import "resources/messages/resource_response.proto";
+import "google/api/annotations.proto";
+
+// ResourceService provides CRUD operations for resource management
+service ResourceService {
+  // CreateResource creates a new resource
+  rpc CreateResource(projects.resources.messages.CreateResourceRequest) returns (projects.resources.messages.CreateResourceResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/resources"
+      body: "*"
+    };
+  }
+  
+  // GetResource retrieves a specific resource by ID
+  rpc GetResource(projects.resources.messages.GetResourceRequest) returns (projects.resources.messages.GetResourceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/resources/{resource_id}"
+    };
+  }
+  
+  // ListResources retrieves a paginated list of resources with optional filtering
+  rpc ListResources(projects.resources.messages.ListResourcesRequest) returns (projects.resources.messages.ListResourcesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/resources"
+    };
+  }
+  
+  // UpdateResource updates an existing resource
+  rpc UpdateResource(projects.resources.messages.UpdateResourceRequest) returns (projects.resources.messages.UpdateResourceResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/resources/{resource_id}"
+      body: "*"
+    };
+  }
+  
+  // DeleteResource deletes a specific resource
+  rpc DeleteResource(projects.resources.messages.DeleteResourceRequest) returns (projects.resources.messages.DeleteResourceResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/resources/{resource_id}"
+    };
+  }
+}

@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package horeca.loyalty.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/loyalty_tier.proto";
+import "../enums/loyalty_status.proto";
+
+// Loyalty event log entry
+message LoyaltyEventLog {
+  string log_id = 1;
+  string member_id = 2;
+  string event_type = 3;
+  string description = 4;
+  
+  LoyaltyTier old_tier = 5;
+  LoyaltyTier new_tier = 6;
+  LoyaltyStatus old_status = 7;
+  LoyaltyStatus new_status = 8;
+  
+  int32 points_before = 9;
+  int32 points_after = 10;
+  int32 points_change = 11;
+  
+  string user_id = 12;
+  string user_name = 13;
+  
+  google.protobuf.Timestamp timestamp = 14;
+  string notes = 15;
+  map<string, string> metadata = 16;
+}
+
+// Event types for loyalty operations
+message LoyaltyEventTypes {
+  string MEMBER_REGISTERED = "member_registered";
+  string MEMBER_ACTIVATED = "member_activated";
+  string MEMBER_DEACTIVATED = "member_deactivated";
+  string POINTS_EARNED = "points_earned";
+  string POINTS_REDEEMED = "points_redeemed";
+  string POINTS_EXPIRED = "points_expired";
+  string POINTS_ADJUSTED = "points_adjusted";
+  string TIER_UPGRADED = "tier_upgraded";
+  string TIER_DOWNGRADED = "tier_downgraded";
+  string REWARD_REDEEMED = "reward_redeemed";
+  string REWARD_USED = "reward_used";
+  string REWARD_EXPIRED = "reward_expired";
+  string BIRTHDAY_REWARD = "birthday_reward";
+  string ANNIVERSARY_REWARD = "anniversary_reward";
+  string PROMOTION_APPLIED = "promotion_applied";
+}

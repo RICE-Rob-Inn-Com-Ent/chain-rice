@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package core.auth.enums;
+
+// UserRole enumerates roles used for authorization and access control.
+enum UserRole {
+  // Unspecified role.
+  USER_ROLE_UNSPECIFIED = 0;
+
+  // Basic end user.
+  USER_ROLE_USER = 1;
+
+  // Privileged user with elevated support permissions.
+  USER_ROLE_SUPPORT = 2;
+
+  // Organization administrator.
+  USER_ROLE_ADMIN = 3;
+
+  // System-wide superuser.
+  USER_ROLE_SUPERADMIN = 4;
+
+  // Read-only auditor/compliance.
+  USER_ROLE_AUDITOR = 5;
+
+  // Service-to-service machine account.
+  USER_ROLE_SERVICE = 6;
+
+  // Developer role for sandbox/testing.
+  USER_ROLE_DEVELOPER = 7;
+}
+
+

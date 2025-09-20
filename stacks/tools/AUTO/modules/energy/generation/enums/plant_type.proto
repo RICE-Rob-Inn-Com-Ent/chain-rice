@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package energy.generation.enums;
+
+// Types of power generation plants
+enum PlantType {
+  // Coal-fired power plant
+  PLANT_TYPE_COAL = 0;
+  
+  // Natural gas power plant
+  PLANT_TYPE_NATURAL_GAS = 1;
+  
+  // Oil-fired power plant
+  PLANT_TYPE_OIL = 2;
+  
+  // Nuclear power plant
+  PLANT_TYPE_NUCLEAR = 3;
+  
+  // Hydroelectric power plant
+  PLANT_TYPE_HYDROELECTRIC = 4;
+  
+  // Solar photovoltaic power plant
+  PLANT_TYPE_SOLAR_PV = 5;
+  
+  // Solar thermal power plant
+  PLANT_TYPE_SOLAR_THERMAL = 6;
+  
+  // Wind power plant (onshore)
+  PLANT_TYPE_WIND_ONSHORE = 7;
+  
+  // Wind power plant (offshore)
+  PLANT_TYPE_WIND_OFFSHORE = 8;
+  
+  // Geothermal power plant
+  PLANT_TYPE_GEOTHERMAL = 9;
+  
+  // Biomass power plant
+  PLANT_TYPE_BIOMASS = 10;
+  
+  // Biogas power plant
+  PLANT_TYPE_BIOGAS = 11;
+  
+  // Waste-to-energy power plant
+  PLANT_TYPE_WASTE_TO_ENERGY = 12;
+  
+  // Combined cycle gas turbine (CCGT)
+  PLANT_TYPE_CCGT = 13;
+  
+  // Open cycle gas turbine (OCGT)
+  PLANT_TYPE_OCGT = 14;
+  
+  // Steam turbine power plant
+  PLANT_TYPE_STEAM_TURBINE = 15;
+  
+  // Gas turbine power plant
+  PLANT_TYPE_GAS_TURBINE = 16;
+  
+  // Diesel generator power plant
+  PLANT_TYPE_DIESEL = 17;
+  
+  // Fuel cell power plant
+  PLANT_TYPE_FUEL_CELL = 18;
+  
+  // Tidal power plant
+  PLANT_TYPE_TIDAL = 19;
+  
+  // Wave power plant
+  PLANT_TYPE_WAVE = 20;
+  
+  // Ocean thermal energy conversion (OTEC)
+  PLANT_TYPE_OTEC = 21;
+  
+  // Concentrated solar power (CSP)
+  PLANT_TYPE_CSP = 22;
+  
+  // Pumped storage hydroelectric
+  PLANT_TYPE_PUMPED_STORAGE = 23;
+  
+  // Compressed air energy storage (CAES)
+  PLANT_TYPE_CAES = 24;
+  
+  // Battery storage power plant
+  PLANT_TYPE_BATTERY_STORAGE = 25;
+  
+  // Flywheel energy storage
+  PLANT_TYPE_FLYWHEEL_STORAGE = 26;
+  
+  // Supercapacitor storage
+  PLANT_TYPE_SUPERCAPACITOR_STORAGE = 27;
+  
+  // Hydrogen fuel cell power plant
+  PLANT_TYPE_HYDROGEN_FUEL_CELL = 28;
+  
+  // Microturbine power plant
+  PLANT_TYPE_MICROTURBINE = 29;
+  
+  // Stirling engine power plant
+  PLANT_TYPE_STIRLING_ENGINE = 30;
+  
+  // Organic Rankine cycle (ORC) power plant
+  PLANT_TYPE_ORC = 31;
+  
+  // Kalina cycle power plant
+  PLANT_TYPE_KALINA_CYCLE = 32;
+  
+  // Binary cycle power plant
+  PLANT_TYPE_BINARY_CYCLE = 33;
+  
+  // Flash steam power plant
+  PLANT_TYPE_FLASH_STEAM = 34;
+  
+  // Dry steam power plant
+  PLANT_TYPE_DRY_STEAM = 35;
+  
+  // Hybrid power plant (multiple technologies)
+  PLANT_TYPE_HYBRID = 36;
+  
+  // Microgrid power plant
+  PLANT_TYPE_MICROGRID = 37;
+  
+  // Virtual power plant
+  PLANT_TYPE_VIRTUAL_POWER_PLANT = 38;
+  
+  // Distributed generation plant
+  PLANT_TYPE_DISTRIBUTED_GENERATION = 39;
+  
+  // Emergency backup power plant
+  PLANT_TYPE_EMERGENCY_BACKUP = 40;
+  
+  // Peak shaving power plant
+  PLANT_TYPE_PEAK_SHAVING = 41;
+  
+  // Base load power plant
+  PLANT_TYPE_BASE_LOAD = 42;
+  
+  // Intermediate load power plant
+  PLANT_TYPE_INTERMEDIATE_LOAD = 43;
+  
+  // Peaking power plant
+  PLANT_TYPE_PEAKING = 44;
+  
+  // Spinning reserve power plant
+  PLANT_TYPE_SPINNING_RESERVE = 45;
+  
+  // Non-spinning reserve power plant
+  PLANT_TYPE_NON_SPINNING_RESERVE = 46;
+  
+  // Black start power plant
+  PLANT_TYPE_BLACK_START = 47;
+  
+  // Grid support power plant
+  PLANT_TYPE_GRID_SUPPORT = 48;
+  
+  // Frequency regulation power plant
+  PLANT_TYPE_FREQUENCY_REGULATION = 49;
+  
+  // Voltage support power plant
+  PLANT_TYPE_VOLTAGE_SUPPORT = 50;
+}

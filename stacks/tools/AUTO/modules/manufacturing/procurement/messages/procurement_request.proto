@@ -1,0 +1,318 @@
+syntax = "proto3";
+
+package manufacturing.procurement.messages;
+
+import "google/protobuf/timestamp.proto";
+import "manufacturing/procurement/enums/procurement_type.proto";
+
+// Request message for creating a new procurement request
+message CreateProcurementRequest {
+  // Material or service identifier
+  string item_id = 1;
+  
+  // Item name
+  string item_name = 2;
+  
+  // Item description
+  string description = 3;
+  
+  // Quantity required
+  int32 quantity = 4;
+  
+  // Unit of measurement
+  string unit = 5;
+  
+  // Procurement type
+  manufacturing.procurement.enums.ProcurementType procurement_type = 6;
+  
+  // Priority level
+  string priority = 7;
+  
+  // Required delivery date
+  google.protobuf.Timestamp required_delivery_date = 8;
+  
+  // Budget limit
+  double budget_limit = 9;
+  
+  // Currency code
+  string currency = 10;
+  
+  // Preferred suppliers
+  repeated string preferred_supplier_ids = 11;
+  
+  // Technical specifications
+  map<string, string> technical_specifications = 12;
+  
+  // Quality requirements
+  string quality_requirements = 13;
+  
+  // Additional notes
+  string notes = 14;
+  
+  // Requestor identifier
+  string requestor_id = 15;
+  
+  // Department identifier
+  string department_id = 16;
+}
+
+// Request message for retrieving a procurement request
+message GetProcurementRequest {
+  // Unique identifier of the procurement request
+  string request_id = 1;
+}
+
+// Request message for listing procurement requests
+message ListProcurementRequestsRequest {
+  // Page number for pagination
+  int32 page = 1;
+  
+  // Number of items per page
+  int32 page_size = 2;
+  
+  // Filter by status
+  manufacturing.procurement.enums.ProcurementStatus status = 3;
+  
+  // Filter by procurement type
+  manufacturing.procurement.enums.ProcurementType procurement_type = 4;
+  
+  // Filter by requestor
+  string requestor_id = 5;
+  
+  // Filter by department
+  string department_id = 6;
+  
+  // Filter by date range - start
+  google.protobuf.Timestamp start_date = 7;
+  
+  // Filter by date range - end
+  google.protobuf.Timestamp end_date = 8;
+  
+  // Search by item name or description
+  string search_term = 9;
+}
+
+// Request message for updating a procurement request
+message UpdateProcurementRequest {
+  // Unique identifier of the procurement request
+  string request_id = 1;
+  
+  // Updated quantity
+  int32 quantity = 2;
+  
+  // Updated required delivery date
+  google.protobuf.Timestamp required_delivery_date = 3;
+  
+  // Updated budget limit
+  double budget_limit = 4;
+  
+  // Updated technical specifications
+  map<string, string> technical_specifications = 5;
+  
+  // Updated quality requirements
+  string quality_requirements = 6;
+  
+  // Updated notes
+  string notes = 7;
+  
+  // Updated preferred suppliers
+  repeated string preferred_supplier_ids = 8;
+}
+
+// Request message for deleting a procurement request
+message DeleteProcurementRequest {
+  // Unique identifier of the procurement request
+  string request_id = 1;
+}
+
+// Request message for approving a procurement request
+message ApproveProcurementRequest {
+  // Unique identifier of the procurement request
+  string request_id = 1;
+  
+  // Approver identifier
+  string approver_id = 2;
+  
+  // Approval comments
+  string comments = 3;
+  
+  // Approved budget
+  double approved_budget = 4;
+}
+
+// Request message for rejecting a procurement request
+message RejectProcurementRequest {
+  // Unique identifier of the procurement request
+  string request_id = 1;
+  
+  // Rejector identifier
+  string rejector_id = 2;
+  
+  // Rejection reason
+  string reason = 3;
+  
+  // Additional comments
+  string comments = 4;
+}
+
+// Request message for creating a purchase order
+message CreatePurchaseOrderRequest {
+  // Procurement request identifier
+  string procurement_request_id = 1;
+  
+  // Selected supplier identifier
+  string supplier_id = 2;
+  
+  // Purchase order number
+  string purchase_order_number = 3;
+  
+  // Items to be purchased
+  repeated PurchaseOrderItem items = 4;
+  
+  // Payment terms
+  manufacturing.procurement.enums.PaymentTerms payment_terms = 5;
+  
+  // Delivery terms
+  string delivery_terms = 6;
+  
+  // Shipping address
+  Address shipping_address = 7;
+  
+  // Billing address
+  Address billing_address = 8;
+  
+  // Additional terms and conditions
+  string terms_and_conditions = 9;
+  
+  // Expected delivery date
+  google.protobuf.Timestamp expected_delivery_date = 10;
+  
+  // Created by
+  string created_by = 11;
+}
+
+// Request message for retrieving a purchase order
+message GetPurchaseOrderRequest {
+  // Unique identifier of the purchase order
+  string purchase_order_id = 1;
+}
+
+// Request message for listing purchase orders
+message ListPurchaseOrdersRequest {
+  // Page number for pagination
+  int32 page = 1;
+  
+  // Number of items per page
+  int32 page_size = 2;
+  
+  // Filter by status
+  manufacturing.procurement.enums.PurchaseOrderStatus status = 3;
+  
+  // Filter by supplier
+  string supplier_id = 4;
+  
+  // Filter by date range - start
+  google.protobuf.Timestamp start_date = 5;
+  
+  // Filter by date range - end
+  google.protobuf.Timestamp end_date = 6;
+  
+  // Search by purchase order number
+  string search_term = 7;
+}
+
+// Request message for updating a purchase order
+message UpdatePurchaseOrderRequest {
+  // Unique identifier of the purchase order
+  string purchase_order_id = 1;
+  
+  // Updated items
+  repeated PurchaseOrderItem items = 2;
+  
+  // Updated expected delivery date
+  google.protobuf.Timestamp expected_delivery_date = 3;
+  
+  // Updated terms and conditions
+  string terms_and_conditions = 4;
+  
+  // Updated shipping address
+  Address shipping_address = 5;
+  
+  // Updated billing address
+  Address billing_address = 6;
+}
+
+// Request message for cancelling a purchase order
+message CancelPurchaseOrderRequest {
+  // Unique identifier of the purchase order
+  string purchase_order_id = 1;
+  
+  // Cancellation reason
+  string reason = 2;
+  
+  // Cancelled by
+  string cancelled_by = 3;
+}
+
+// Purchase order item details
+message PurchaseOrderItem {
+  // Item identifier
+  string item_id = 1;
+  
+  // Item name
+  string item_name = 2;
+  
+  // Item description
+  string description = 3;
+  
+  // Quantity
+  int32 quantity = 4;
+  
+  // Unit of measurement
+  string unit = 5;
+  
+  // Unit price
+  double unit_price = 6;
+  
+  // Total price
+  double total_price = 7;
+  
+  // Currency code
+  string currency = 8;
+  
+  // Technical specifications
+  map<string, string> technical_specifications = 9;
+  
+  // Quality requirements
+  string quality_requirements = 10;
+  
+  // Expected delivery date
+  google.protobuf.Timestamp expected_delivery_date = 11;
+}
+
+// Address information
+message Address {
+  // Street address
+  string street = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // Contact person
+  string contact_person = 6;
+  
+  // Phone number
+  string phone = 7;
+  
+  // Email address
+  string email = 8;
+}

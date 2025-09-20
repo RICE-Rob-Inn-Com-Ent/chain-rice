@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package healthcare.medical_records.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/medical-records/enums";
+
+// Diagnosis code system enumeration
+enum DiagnosisCodeSystem {
+  DIAGNOSIS_CODE_SYSTEM_UNSPECIFIED = 0;
+  DIAGNOSIS_CODE_SYSTEM_ICD_10 = 1;
+  DIAGNOSIS_CODE_SYSTEM_ICD_9 = 2;
+  DIAGNOSIS_CODE_SYSTEM_DSM_5 = 3;
+  DIAGNOSIS_CODE_SYSTEM_SNOMED_CT = 4;
+  DIAGNOSIS_CODE_SYSTEM_CUSTOM = 5;
+}
+
+// Diagnosis severity level
+enum DiagnosisSeverity {
+  DIAGNOSIS_SEVERITY_UNSPECIFIED = 0;
+  DIAGNOSIS_SEVERITY_MILD = 1;
+  DIAGNOSIS_SEVERITY_MODERATE = 2;
+  DIAGNOSIS_SEVERITY_SEVERE = 3;
+  DIAGNOSIS_SEVERITY_CRITICAL = 4;
+}
+
+// Diagnosis status
+enum DiagnosisStatus {
+  DIAGNOSIS_STATUS_UNSPECIFIED = 0;
+  DIAGNOSIS_STATUS_PRELIMINARY = 1;
+  DIAGNOSIS_STATUS_CONFIRMED = 2;
+  DIAGNOSIS_STATUS_RULED_OUT = 3;
+  DIAGNOSIS_STATUS_DIFFERENTIAL = 4;
+  DIAGNOSIS_STATUS_HISTORICAL = 5;
+}

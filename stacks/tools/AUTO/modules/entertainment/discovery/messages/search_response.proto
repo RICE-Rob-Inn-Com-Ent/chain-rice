@@ -1,0 +1,154 @@
+syntax = "proto3";
+
+package entertainment.discovery.messages;
+
+// Відповідь пошуку
+message SearchResponse {
+  string request_id = 1;
+  string query = 2;
+  
+  // Результати пошуку
+  repeated SearchResult results = 3;
+  
+  // Метадані результату
+  SearchMetadata metadata = 4;
+  
+  // Рекомендації
+  repeated SearchRecommendation recommendations = 5;
+  
+  // Фасети
+  repeated SearchFacet facets = 6;
+  
+  // Автодоповнення
+  repeated SearchSuggestion suggestions = 7;
+  
+  // Статистика
+  SearchStats stats = 8;
+  
+  // Навігація
+  SearchNavigation navigation = 9;
+  
+  // Дати
+  int64 created_at = 10;
+  int64 processing_time_ms = 11;
+}
+
+// Результат пошуку
+message SearchResult {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string type = 4;
+  string url = 5;
+  string thumbnail_url = 6;
+  repeated string tags = 7;
+  repeated string categories = 8;
+  double relevance_score = 9;
+  double popularity_score = 10;
+  double rating = 11;
+  int32 view_count = 12;
+  int64 created_at = 13;
+  int64 updated_at = 14;
+  map<string, string> metadata = 15;
+  repeated string highlights = 16;
+  string snippet = 17;
+  repeated string related_items = 18;
+}
+
+// Метадані пошуку
+message SearchMetadata {
+  int32 total_results = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int32 total_pages = 4;
+  bool has_more = 5;
+  string next_cursor = 6;
+  string previous_cursor = 7;
+  double max_score = 8;
+  double min_score = 9;
+  double average_score = 10;
+  string search_algorithm = 11;
+  string index_version = 12;
+  int64 search_time_ms = 13;
+  repeated string applied_filters = 14;
+  repeated string applied_sorts = 15;
+}
+
+// Рекомендація пошуку
+message SearchRecommendation {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string type = 4;
+  string reason = 5;
+  double confidence = 6;
+  string algorithm = 7;
+  repeated string related_queries = 8;
+  map<string, string> metadata = 9;
+}
+
+// Фасет пошуку
+message SearchFacet {
+  string field = 1;
+  string display_name = 2;
+  repeated FacetValue values = 3;
+  int32 total_values = 4;
+  bool multi_select = 5;
+  string facet_type = 6;
+  map<string, string> metadata = 7;
+}
+
+// Значення фасету
+message FacetValue {
+  string value = 1;
+  string display_name = 2;
+  int32 count = 3;
+  bool selected = 4;
+  double score = 5;
+  map<string, string> metadata = 6;
+}
+
+// Пропозиція пошуку
+message SearchSuggestion {
+  string text = 1;
+  string type = 2;
+  double confidence = 3;
+  int32 frequency = 4;
+  repeated string related_queries = 5;
+  map<string, string> metadata = 6;
+}
+
+// Статистика пошуку
+message SearchStats {
+  int32 total_searches = 1;
+  int32 successful_searches = 2;
+  int32 failed_searches = 3;
+  double average_response_time = 4;
+  double average_results_count = 5;
+  map<string, int32> searches_by_type = 6;
+  map<string, int32> searches_by_category = 7;
+  repeated string popular_queries = 8;
+  repeated string trending_queries = 9;
+  repeated string zero_result_queries = 10;
+}
+
+// Навігація пошуку
+message SearchNavigation {
+  repeated NavigationItem breadcrumbs = 1;
+  repeated NavigationItem related_categories = 2;
+  repeated NavigationItem related_tags = 3;
+  repeated NavigationItem related_searches = 4;
+  repeated NavigationItem trending_searches = 5;
+  repeated NavigationItem popular_searches = 6;
+}
+
+// Елемент навігації
+message NavigationItem {
+  string id = 1;
+  string title = 2;
+  string url = 3;
+  string type = 4;
+  int32 count = 5;
+  double score = 6;
+  map<string, string> metadata = 7;
+}

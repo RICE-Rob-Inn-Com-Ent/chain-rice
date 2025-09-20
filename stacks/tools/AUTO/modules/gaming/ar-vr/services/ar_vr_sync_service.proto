@@ -1,0 +1,654 @@
+syntax = "proto3";
+
+package gaming.ar_vr.services;
+
+import "gaming/ar_vr/messages/scene_models.proto";
+import "gaming/ar_vr/messages/avatar_models.proto";
+import "gaming/ar_vr/messages/ar_vr_events.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/services";
+
+// Сервіс синхронізації AR/VR контенту
+service ARVRSyncService {
+  // Синхронізувати сцену
+  rpc SyncScene(SyncSceneRequest) returns (SyncSceneResponse);
+  
+  // Синхронізувати аватар
+  rpc SyncAvatar(SyncAvatarRequest) returns (SyncAvatarResponse);
+  
+  // Синхронізувати об'єкт сцени
+  rpc SyncSceneObject(SyncSceneObjectRequest) returns (SyncSceneObjectResponse);
+  
+  // Синхронізувати анімацію аватара
+  rpc SyncAvatarAnimation(SyncAvatarAnimationRequest) returns (SyncAvatarAnimationResponse);
+  
+  // Синхронізувати звук аватара
+  rpc SyncAvatarAudio(SyncAvatarAudioRequest) returns (SyncAvatarAudioResponse);
+  
+  // Синхронізувати ефект аватара
+  rpc SyncAvatarEffect(SyncAvatarEffectRequest) returns (SyncAvatarEffectResponse);
+  
+  // Синхронізувати дані гравця
+  rpc SyncPlayerData(SyncPlayerDataRequest) returns (SyncPlayerDataResponse);
+  
+  // Синхронізувати сесію
+  rpc SyncSession(SyncSessionRequest) returns (SyncSessionResponse);
+  
+  // Отримати статус синхронізації
+  rpc GetSyncStatus(GetSyncStatusRequest) returns (GetSyncStatusResponse);
+  
+  // Отримати історію синхронізації
+  rpc GetSyncHistory(GetSyncHistoryRequest) returns (GetSyncHistoryResponse);
+  
+  // Скинути синхронізацію
+  rpc ResetSync(ResetSyncRequest) returns (ResetSyncResponse);
+  
+  // Призупинити синхронізацію
+  rpc PauseSync(PauseSyncRequest) returns (PauseSyncResponse);
+  
+  // Відновити синхронізацію
+  rpc ResumeSync(ResumeSyncRequest) returns (ResumeSyncResponse);
+  
+  // Отримати конфлікти синхронізації
+  rpc GetSyncConflicts(GetSyncConflictsRequest) returns (GetSyncConflictsResponse);
+  
+  // Вирішити конфлікт синхронізації
+  rpc ResolveSyncConflict(ResolveSyncConflictRequest) returns (ResolveSyncConflictResponse);
+}
+
+// Запит синхронізації сцени
+message SyncSceneRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор сцени
+  string scene_id = 2;
+  
+  // Тип синхронізації
+  SyncType sync_type = 3;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 4;
+}
+
+// Відповідь синхронізації сцени
+message SyncSceneResponse {
+  // Синхронізована сцена
+  gaming.ar_vr.messages.Scene scene = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+  
+  // Кількість синхронізованих об'єктів
+  int64 synced_objects = 5;
+}
+
+// Запит синхронізації аватара
+message SyncAvatarRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Тип синхронізації
+  SyncType sync_type = 3;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 4;
+}
+
+// Відповідь синхронізації аватара
+message SyncAvatarResponse {
+  // Синхронізований аватар
+  gaming.ar_vr.messages.Avatar avatar = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+  
+  // Кількість синхронізованих компонентів
+  int64 synced_components = 5;
+}
+
+// Запит синхронізації об'єкта сцени
+message SyncSceneObjectRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор сцени
+  string scene_id = 2;
+  
+  // Ідентифікатор об'єкта
+  string object_id = 3;
+  
+  // Тип синхронізації
+  SyncType sync_type = 4;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 5;
+}
+
+// Відповідь синхронізації об'єкта сцени
+message SyncSceneObjectResponse {
+  // Синхронізований об'єкт
+  gaming.ar_vr.messages.SceneObject object = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+}
+
+// Запит синхронізації анімації аватара
+message SyncAvatarAnimationRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Ідентифікатор анімації
+  string animation_id = 3;
+  
+  // Тип синхронізації
+  SyncType sync_type = 4;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 5;
+}
+
+// Відповідь синхронізації анімації аватара
+message SyncAvatarAnimationResponse {
+  // Синхронізована анімація
+  gaming.ar_vr.messages.AvatarAnimation animation = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+}
+
+// Запит синхронізації звуку аватара
+message SyncAvatarAudioRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Ідентифікатор звуку
+  string audio_id = 3;
+  
+  // Тип синхронізації
+  SyncType sync_type = 4;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 5;
+}
+
+// Відповідь синхронізації звуку аватара
+message SyncAvatarAudioResponse {
+  // Синхронізований звук
+  gaming.ar_vr.messages.AvatarAudio audio = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+}
+
+// Запит синхронізації ефекту аватара
+message SyncAvatarEffectRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Ідентифікатор ефекту
+  string effect_id = 3;
+  
+  // Тип синхронізації
+  SyncType sync_type = 4;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 5;
+}
+
+// Відповідь синхронізації ефекту аватара
+message SyncAvatarEffectResponse {
+  // Синхронізований ефект
+  gaming.ar_vr.messages.AvatarEffect effect = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+}
+
+// Запит синхронізації даних гравця
+message SyncPlayerDataRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 3;
+}
+
+// Відповідь синхронізації даних гравця
+message SyncPlayerDataResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 3;
+  
+  // Кількість синхронізованих записів
+  int64 synced_records = 4;
+  
+  // Додаткові дані синхронізації
+  map<string, string> sync_data = 5;
+}
+
+// Запит синхронізації сесії
+message SyncSessionRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор сесії
+  string session_id = 2;
+  
+  // Тип синхронізації
+  SyncType sync_type = 3;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 4;
+}
+
+// Відповідь синхронізації сесії
+message SyncSessionResponse {
+  // Синхронізована сесія
+  gaming.ar_vr.messages.ARVRSession session = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+  
+  // Час синхронізації (в мілісекундах)
+  int64 sync_time_ms = 4;
+}
+
+// Запит статусу синхронізації
+message GetSyncStatusRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+}
+
+// Відповідь статусу синхронізації
+message GetSyncStatusResponse {
+  // Статус синхронізації
+  SyncStatus status = 1;
+  
+  // Прогрес синхронізації
+  SyncProgress progress = 2;
+  
+  // Додаткові дані статусу
+  map<string, string> status_data = 3;
+}
+
+// Запит історії синхронізації
+message GetSyncHistoryRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Фільтри
+  SyncHistoryFilters filters = 2;
+  
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь історії синхронізації
+message GetSyncHistoryResponse {
+  // Список записів історії
+  repeated SyncHistoryEntry history_entries = 1;
+  
+  // Загальна кількість записів
+  int64 total_count = 2;
+  
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит скидання синхронізації
+message ResetSyncRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Причина скидання
+  string reason = 3;
+}
+
+// Відповідь скидання синхронізації
+message ResetSyncResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Час скидання
+  google.protobuf.Timestamp reset_time = 3;
+}
+
+// Запит призупинення синхронізації
+message PauseSyncRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Причина призупинення
+  string reason = 3;
+}
+
+// Відповідь призупинення синхронізації
+message PauseSyncResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Час призупинення
+  google.protobuf.Timestamp pause_time = 3;
+}
+
+// Запит відновлення синхронізації
+message ResumeSyncRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Причина відновлення
+  string reason = 3;
+}
+
+// Відповідь відновлення синхронізації
+message ResumeSyncResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Час відновлення
+  google.protobuf.Timestamp resume_time = 3;
+}
+
+// Запит конфліктів синхронізації
+message GetSyncConflictsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Фільтри
+  SyncConflictFilters filters = 3;
+}
+
+// Відповідь конфліктів синхронізації
+message GetSyncConflictsResponse {
+  // Список конфліктів
+  repeated SyncConflict conflicts = 1;
+  
+  // Загальна кількість конфліктів
+  int64 total_count = 2;
+}
+
+// Запит вирішення конфлікту синхронізації
+message ResolveSyncConflictRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор конфлікту
+  string conflict_id = 2;
+  
+  // Рішення конфлікту
+  SyncConflictResolution resolution = 3;
+  
+  // Додаткові параметри
+  map<string, string> resolution_parameters = 4;
+}
+
+// Відповідь вирішення конфлікту синхронізації
+message ResolveSyncConflictResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Час вирішення конфлікту
+  google.protobuf.Timestamp resolution_time = 3;
+}
+
+// Типи синхронізації
+enum SyncType {
+  SYNC_TYPE_UNSPECIFIED = 0;
+  SYNC_TYPE_FULL = 1;
+  SYNC_TYPE_INCREMENTAL = 2;
+  SYNC_TYPE_REALTIME = 3;
+  SYNC_TYPE_MANUAL = 4;
+  SYNC_TYPE_AUTOMATIC = 5;
+}
+
+// Статус синхронізації
+enum SyncStatus {
+  SYNC_STATUS_UNSPECIFIED = 0;
+  SYNC_STATUS_IDLE = 1;
+  SYNC_STATUS_SYNCING = 2;
+  SYNC_STATUS_PAUSED = 3;
+  SYNC_STATUS_COMPLETED = 4;
+  SYNC_STATUS_FAILED = 5;
+  SYNC_STATUS_CONFLICT = 6;
+}
+
+// Прогрес синхронізації
+message SyncProgress {
+  // Поточний прогрес
+  int64 current_progress = 1;
+  
+  // Максимальний прогрес
+  int64 max_progress = 2;
+  
+  // Відсоток виконання
+  double percentage = 3;
+  
+  // Статус прогресу
+  SyncStatus status = 4;
+  
+  // Час останнього оновлення
+  google.protobuf.Timestamp last_updated = 5;
+  
+  // Додаткові дані прогресу
+  map<string, string> progress_data = 6;
+}
+
+// Запис історії синхронізації
+message SyncHistoryEntry {
+  // Ідентифікатор запису
+  string entry_id = 1;
+  
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 3;
+  
+  // Статус синхронізації
+  SyncStatus status = 4;
+  
+  // Час початку синхронізації
+  google.protobuf.Timestamp start_time = 5;
+  
+  // Час закінчення синхронізації
+  google.protobuf.Timestamp end_time = 6;
+  
+  // Тривалість синхронізації (в мілісекундах)
+  int64 duration_ms = 7;
+  
+  // Кількість синхронізованих записів
+  int64 synced_records = 8;
+  
+  // Додаткові дані запису
+  map<string, string> entry_data = 9;
+}
+
+// Конфлікт синхронізації
+message SyncConflict {
+  // Ідентифікатор конфлікту
+  string conflict_id = 1;
+  
+  // Ідентифікатор гравця
+  string player_id = 2;
+  
+  // Тип конфлікту
+  string conflict_type = 3;
+  
+  // Опис конфлікту
+  string conflict_description = 4;
+  
+  // Серйозність конфлікту
+  string conflict_severity = 5;
+  
+  // Час виявлення конфлікту
+  google.protobuf.Timestamp detected_time = 6;
+  
+  // Додаткові дані конфлікту
+  map<string, string> conflict_data = 7;
+}
+
+// Рішення конфлікту синхронізації
+enum SyncConflictResolution {
+  SYNC_CONFLICT_RESOLUTION_UNSPECIFIED = 0;
+  SYNC_CONFLICT_RESOLUTION_KEEP_LOCAL = 1;
+  SYNC_CONFLICT_RESOLUTION_KEEP_REMOTE = 2;
+  SYNC_CONFLICT_RESOLUTION_MERGE = 3;
+  SYNC_CONFLICT_RESOLUTION_SKIP = 4;
+  SYNC_CONFLICT_RESOLUTION_MANUAL = 5;
+}
+
+// Фільтри історії синхронізації
+message SyncHistoryFilters {
+  // Тип синхронізації
+  repeated SyncType sync_types = 1;
+  
+  // Статус синхронізації
+  repeated SyncStatus statuses = 2;
+  
+  // Час початку (від)
+  google.protobuf.Timestamp start_from = 3;
+  
+  // Час початку (до)
+  google.protobuf.Timestamp start_to = 4;
+  
+  // Час закінчення (від)
+  google.protobuf.Timestamp end_from = 5;
+  
+  // Час закінчення (до)
+  google.protobuf.Timestamp end_to = 6;
+}
+
+// Фільтри конфліктів синхронізації
+message SyncConflictFilters {
+  // Тип конфлікту
+  repeated string conflict_types = 1;
+  
+  // Серйозність конфлікту
+  repeated string severities = 2;
+  
+  // Час виявлення (від)
+  google.protobuf.Timestamp detected_from = 3;
+  
+  // Час виявлення (до)
+  google.protobuf.Timestamp detected_to = 4;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+  
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+  
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+  
+  // Чи є наступна сторінка
+  bool has_next = 5;
+  
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package core.notifications.enums;
+
+// PriorityLevel indicates urgency for notification delivery.
+enum PriorityLevel {
+  PRIORITY_LEVEL_UNSPECIFIED = 0; // Unspecified
+  PRIORITY_LEVEL_LOW = 1;         // Low priority
+  PRIORITY_LEVEL_NORMAL = 2;      // Normal priority
+  PRIORITY_LEVEL_HIGH = 3;        // High priority
+  PRIORITY_LEVEL_CRITICAL = 4;    // Critical priority
+}
+
+

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+// Message definitions for Grade entity.
+package education.grading.messages;
+
+import "google/protobuf/timestamp.proto";
+import "AUTO/modules/education/grading/enums/grade_scale.proto";
+
+option go_package = "github.com/rice-dev/education/grading/messages;gradingmessages";
+option java_multiple_files = true;
+option java_package = "com.rice.education.grading.messages";
+
+// Represents a grade awarded to a student for an assessed work.
+message Grade {
+  // Unique identifier for the grade record.
+  string id = 1;
+
+  // Student ID.
+  string student_id = 2;
+
+  // Course ID.
+  string course_id = 3;
+
+  // Optional exam or assessment ID.
+  string exam_id = 4;
+
+  // Raw numeric score (if applicable).
+  double score = 5;
+
+  // Grade scale used for interpretation.
+  education.grading.enums.GradeScale scale = 6;
+
+  // Letter equivalent (if scale is LETTER).
+  string letter = 7;
+
+  // GPA points contribution (if applicable).
+  double gpa_points = 8;
+
+  // Arbitrary metadata for extensions.
+  map<string, string> metadata = 9;
+
+  // Creation timestamp.
+  google.protobuf.Timestamp created_at = 10;
+
+  // Last update timestamp.
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+

@@ -1,0 +1,192 @@
+syntax = "proto3";
+
+package construction.machinery.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "../messages/machine.proto";
+import "../messages/maintenance_log.proto";
+import "../enums/machine_type.proto";
+import "../enums/machine_status.proto";
+import "../enums/machine_condition.proto";
+
+service MachineryService {
+  rpc CreateMachine(CreateMachineRequest) returns (CreateMachineResponse);
+  rpc GetMachine(GetMachineRequest) returns (GetMachineResponse);
+  rpc UpdateMachine(UpdateMachineRequest) returns (UpdateMachineResponse);
+  rpc DeleteMachine(DeleteMachineRequest) returns (google.protobuf.Empty);
+  rpc ListMachines(ListMachinesRequest) returns (ListMachinesResponse);
+  rpc SearchMachines(SearchMachinesRequest) returns (SearchMachinesResponse);
+  rpc GetMachinesByType(GetMachinesByTypeRequest) returns (GetMachinesByTypeResponse);
+  rpc GetMachinesByStatus(GetMachinesByStatusRequest) returns (GetMachinesByStatusResponse);
+  rpc ScheduleMaintenance(ScheduleMaintenanceRequest) returns (ScheduleMaintenanceResponse);
+  rpc CompleteMaintenance(CompleteMaintenanceRequest) returns (CompleteMaintenanceResponse);
+  rpc GetMaintenanceLogs(GetMaintenanceLogsRequest) returns (GetMaintenanceLogsResponse);
+  rpc GetMaintenanceHistory(GetMaintenanceHistoryRequest) returns (GetMaintenanceHistoryResponse);
+  rpc GetMachineAnalytics(GetMachineAnalyticsRequest) returns (GetMachineAnalyticsResponse);
+}
+
+message CreateMachineRequest {
+  construction.machinery.messages.Machine machine = 1;
+}
+
+message CreateMachineResponse {
+  construction.machinery.messages.Machine machine = 1;
+  string message = 2;
+}
+
+message GetMachineRequest {
+  string machine_id = 1;
+}
+
+message GetMachineResponse {
+  construction.machinery.messages.Machine machine = 1;
+}
+
+message UpdateMachineRequest {
+  construction.machinery.messages.Machine machine = 1;
+  repeated string update_fields = 2;
+}
+
+message UpdateMachineResponse {
+  construction.machinery.messages.Machine machine = 1;
+  string message = 2;
+}
+
+message DeleteMachineRequest {
+  string machine_id = 1;
+  string reason = 2;
+}
+
+message ListMachinesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  construction.machinery.enums.MachineType type = 3;
+  construction.machinery.enums.MachineStatus status = 4;
+  construction.machinery.enums.MachineCondition condition = 5;
+  string sort_by = 6;
+  bool sort_descending = 7;
+}
+
+message ListMachinesResponse {
+  repeated construction.machinery.messages.Machine machines = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message SearchMachinesRequest {
+  string query = 1;
+  repeated construction.machinery.enums.MachineType types = 2;
+  repeated construction.machinery.enums.MachineStatus statuses = 3;
+  repeated construction.machinery.enums.MachineCondition conditions = 4;
+  string location = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+message SearchMachinesResponse {
+  repeated construction.machinery.messages.Machine machines = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetMachinesByTypeRequest {
+  construction.machinery.enums.MachineType type = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.machinery.enums.MachineStatus status = 4;
+}
+
+message GetMachinesByTypeResponse {
+  repeated construction.machinery.messages.Machine machines = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetMachinesByStatusRequest {
+  construction.machinery.enums.MachineStatus status = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.machinery.enums.MachineType type = 4;
+}
+
+message GetMachinesByStatusResponse {
+  repeated construction.machinery.messages.Machine machines = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message ScheduleMaintenanceRequest {
+  string machine_id = 1;
+  construction.machinery.messages.MaintenanceLog maintenance_log = 2;
+}
+
+message ScheduleMaintenanceResponse {
+  construction.machinery.messages.MaintenanceLog maintenance_log = 1;
+  string message = 2;
+}
+
+message CompleteMaintenanceRequest {
+  string machine_id = 1;
+  string maintenance_log_id = 2;
+  google.protobuf.Timestamp completed_date = 3;
+  string technician = 4;
+  double cost = 5;
+  repeated string parts_used = 6;
+  string notes = 7;
+}
+
+message CompleteMaintenanceResponse {
+  construction.machinery.messages.MaintenanceLog maintenance_log = 1;
+  string message = 2;
+}
+
+message GetMaintenanceLogsRequest {
+  string machine_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message GetMaintenanceLogsResponse {
+  repeated construction.machinery.messages.MaintenanceLog maintenance_logs = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetMaintenanceHistoryRequest {
+  string machine_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message GetMaintenanceHistoryResponse {
+  repeated construction.machinery.messages.MaintenanceLog maintenance_logs = 1;
+  double total_cost = 2;
+  int32 total_maintenance_count = 3;
+}
+
+message GetMachineAnalyticsRequest {
+  string machine_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  repeated string metrics = 4;
+}
+
+message GetMachineAnalyticsResponse {
+  map<string, double> analytics = 1;
+  repeated PerformanceTrend performance_trends = 2;
+}
+
+message PerformanceTrend {
+  string metric_name = 1;
+  repeated DataPoint data_points = 2;
+  string trend_direction = 3;
+  double trend_percentage = 4;
+}
+
+message DataPoint {
+  google.protobuf.Timestamp date = 1;
+  double value = 2;
+}

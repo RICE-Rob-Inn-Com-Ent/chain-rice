@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package settings.preferences.enums;
+
+// Preference type enumeration defines the data type and behavior of user preferences
+enum PreferenceType {
+  // Default/unspecified type
+  PREFERENCE_TYPE_UNSPECIFIED = 0;
+  
+  // Boolean true/false preferences
+  PREFERENCE_TYPE_BOOLEAN = 1;
+  
+  // String/text preferences
+  PREFERENCE_TYPE_STRING = 2;
+  
+  // Integer numeric preferences
+  PREFERENCE_TYPE_INTEGER = 3;
+  
+  // Floating-point numeric preferences
+  PREFERENCE_TYPE_FLOAT = 4;
+  
+  // JSON object/array preferences
+  PREFERENCE_TYPE_JSON = 5;
+  
+  // Array/list of values
+  PREFERENCE_TYPE_ARRAY = 6;
+  
+  // Object/map key-value pairs
+  PREFERENCE_TYPE_OBJECT = 7;
+  
+  // Date and time preferences
+  PREFERENCE_TYPE_DATETIME = 8;
+  
+  // Date-only preferences
+  PREFERENCE_TYPE_DATE = 9;
+  
+  // Time-only preferences
+  PREFERENCE_TYPE_TIME = 10;
+  
+  // Email address preferences
+  PREFERENCE_TYPE_EMAIL = 11;
+  
+  // URL/URI preferences
+  PREFERENCE_TYPE_URL = 12;
+  
+  // UUID preferences
+  PREFERENCE_TYPE_UUID = 13;
+  
+  // Base64 encoded binary data preferences
+  PREFERENCE_TYPE_BASE64 = 14;
+  
+  // Hexadecimal color preferences
+  PREFERENCE_TYPE_COLOR = 15;
+  
+  // File path or filename preferences
+  PREFERENCE_TYPE_FILEPATH = 16;
+  
+  // Regular expression pattern preferences
+  PREFERENCE_TYPE_REGEX = 17;
+  
+  // IP address preferences
+  PREFERENCE_TYPE_IP_ADDRESS = 18;
+  
+  // MAC address preferences
+  PREFERENCE_TYPE_MAC_ADDRESS = 19;
+  
+  // Version number preferences
+  PREFERENCE_TYPE_VERSION = 20;
+  
+  // Currency amount preferences
+  PREFERENCE_TYPE_CURRENCY = 21;
+  
+  // Percentage preferences (0-100)
+  PREFERENCE_TYPE_PERCENTAGE = 22;
+  
+  // File size preferences
+  PREFERENCE_TYPE_FILE_SIZE = 23;
+  
+  // Duration preferences
+  PREFERENCE_TYPE_DURATION = 24;
+  
+  // Temperature preferences
+  PREFERENCE_TYPE_TEMPERATURE = 25;
+  
+  // Distance preferences
+  PREFERENCE_TYPE_DISTANCE = 26;
+  
+  // Weight preferences
+  PREFERENCE_TYPE_WEIGHT = 27;
+  
+  // Volume preferences
+  PREFERENCE_TYPE_VOLUME = 28;
+  
+  // Enumeration from predefined values
+  PREFERENCE_TYPE_ENUM = 29;
+  
+  // Secret/password preferences (encrypted)
+  PREFERENCE_TYPE_SECRET = 30;
+  
+  // Multi-select from predefined options
+  PREFERENCE_TYPE_MULTI_SELECT = 31;
+  
+  // Single select from predefined options
+  PREFERENCE_TYPE_SELECT = 32;
+  
+  // Range/slider preferences
+  PREFERENCE_TYPE_RANGE = 33;
+  
+  // Text area for longer text
+  PREFERENCE_TYPE_TEXTAREA = 34;
+  
+  // Rich text/HTML preferences
+  PREFERENCE_TYPE_RICH_TEXT = 35;
+  
+  // Markdown text preferences
+  PREFERENCE_TYPE_MARKDOWN = 36;
+  
+  // CSV data preferences
+  PREFERENCE_TYPE_CSV = 37;
+  
+  // XML data preferences
+  PREFERENCE_TYPE_XML = 38;
+  
+  // YAML data preferences
+  PREFERENCE_TYPE_YAML = 39;
+  
+  // Binary data preferences
+  PREFERENCE_TYPE_BINARY = 40;
+}

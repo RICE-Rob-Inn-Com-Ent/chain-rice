@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package blockchain.ledger.messages;
+
+import "blockchain/ledger/enums/transaction_type.proto";
+import "blockchain/ledger/enums/transaction_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/ledger/messages";
+
+// Coin represents a token with denomination and amount
+message Coin {
+  string denom = 1;  // Token denomination
+  string amount = 2; // Token amount as string
+}
+
+// Transaction represents a blockchain transaction
+message Transaction {
+  string id = 1;                    // Unique transaction identifier
+  string hash = 2;                  // Transaction hash
+  string from_address = 3;          // Sender address (sdk.Address)
+  string to_address = 4;            // Recipient address (sdk.Address)
+  int64 timestamp = 5;              // Transaction timestamp
+  
+  // Transaction details
+  blockchain.ledger.enums.TransactionType transaction_type = 6; // Transaction type
+  blockchain.ledger.enums.TransactionStatus status = 7; // Current transaction status
+  
+  // Amount and fees
+  repeated Coin amount = 8;         // Transaction amount
+  repeated Coin fees = 9;           // Transaction fees
+  repeated Coin gas_costs = 10;     // Gas costs
+  
+  // Block information
+  int64 block_height = 11;          // Block height
+  string block_hash = 12;           // Block hash
+  int32 transaction_index = 13;     // Transaction index in block
+  
+  // Transaction data
+  string data = 14;                 // Transaction data (hex)
+  string input = 15;                // Transaction input
+  string output = 16;               // Transaction output
+  string memo = 17;                 // Transaction memo
+  
+  // Gas information
+  string gas_limit = 18;            // Gas limit
+  string gas_used = 19;             // Gas used
+  string gas_price = 20;            // Gas price
+  
+  // Signatures and validation
+  repeated string signatures = 21;  // Transaction signatures
+  string public_key = 22;           // Sender's public key
+  int64 nonce = 23;                 // Transaction nonce
+  
+  // Smart contract information
+  string contract_address = 24;     // Smart contract address (if applicable)
+  string contract_method = 25;      // Contract method called
+  repeated string contract_events = 26; // Contract events emitted
+  
+  // Transaction lifecycle
+  int64 created_time = 27;          // Creation timestamp
+  int64 broadcast_time = 28;        // Broadcast timestamp
+  int64 confirmation_time = 29;     // Confirmation timestamp
+  int64 finalization_time = 30;     // Finalization timestamp
+  
+  // Error information
+  string error_message = 31;        // Error message if failed
+  string error_code = 32;           // Error code
+  string revert_reason = 33;        // Revert reason
+  
+  // Metadata
+  map<string, string> metadata = 34; // Additional metadata
+  repeated string tags = 35;        // Transaction tags
+  int64 version = 36;               // Transaction version
+}
+
+// LedgerParams defines the parameters for the ledger module
+message LedgerParams {
+  string authority = 1;             // Module authority address
+  string default_gas_limit = 2;     // Default gas limit
+  string max_gas_limit = 3;         // Maximum gas limit
+  string min_gas_price = 4;         // Minimum gas price
+  string max_gas_price = 5;         // Maximum gas price
+  int64 block_timeout = 6;          // Block timeout in seconds
+  int64 transaction_timeout = 7;    // Transaction timeout in seconds
+  bool enable_mempool = 8;          // Enable mempool
+  int64 mempool_size = 9;           // Mempool size limit
+  string supported_tokens = 10;     // Supported tokens (JSON)
+}
+
+// MsgCreateTransaction creates a new transaction
+message MsgCreateTransaction {
+  string creator = 1;               // Creator address (sdk.Address)
+  string to_address = 2;            // Recipient address
+  repeated Coin amount = 3;         // Transaction amount
+  blockchain.ledger.enums.TransactionType transaction_type = 4; // Transaction type
+  string data = 5;                  // Transaction data
+  string memo = 6;                  // Transaction memo
+  string gas_limit = 7;             // Gas limit
+  string gas_price = 8;             // Gas price
+}
+
+// MsgCreateTransactionResponse returns the created transaction
+message MsgCreateTransactionResponse {
+  string transaction_id = 1;        // Created transaction ID
+  string transaction_hash = 2;      // Transaction hash
+}
+
+// MsgBroadcastTransaction broadcasts a transaction
+message MsgBroadcastTransaction {
+  string creator = 1;               // Broadcaster address (sdk.Address)
+  string transaction_id = 2;        // Transaction ID to broadcast
+}
+
+// MsgBroadcastTransactionResponse returns the broadcast result
+message MsgBroadcastTransactionResponse {
+  bool success = 1;                 // Broadcast success status
+  string network_response = 2;      // Network response
+}
+
+// MsgConfirmTransaction confirms a transaction
+message MsgConfirmTransaction {
+  string creator = 1;               // Confirmer address (sdk.Address)
+  string transaction_id = 2;        // Transaction ID to confirm
+  int64 block_height = 3;           // Confirmation block height
+  string block_hash = 4;            // Confirmation block hash
+}
+
+// MsgConfirmTransactionResponse returns the confirmation result
+message MsgConfirmTransactionResponse {
+  bool success = 1;                 // Confirmation success status
+  int64 confirmation_time = 2;      // Confirmation timestamp
+}
+
+// MsgCancelTransaction cancels a transaction
+message MsgCancelTransaction {
+  string creator = 1;               // Canceller address (sdk.Address)
+  string transaction_id = 2;        // Transaction ID to cancel
+  string reason = 3;                // Cancellation reason
+}
+
+// MsgCancelTransactionResponse returns the cancellation result
+message MsgCancelTransactionResponse {
+  bool success = 1;                 // Cancellation success status
+}
+
+// MsgUpdateTransactionStatus updates transaction status
+message MsgUpdateTransactionStatus {
+  string creator = 1;               // Updater address (sdk.Address)
+  string transaction_id = 2;        // Transaction ID to update
+  blockchain.ledger.enums.TransactionStatus new_status = 3; // New status
+  string reason = 4;                // Status change reason
+}
+
+// MsgUpdateTransactionStatusResponse returns the update result
+message MsgUpdateTransactionStatusResponse {
+  bool success = 1;                 // Update success status
+}

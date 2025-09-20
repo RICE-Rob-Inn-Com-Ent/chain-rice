@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package entertainment.discovery.messages;
+
+import "entertainment/discovery/enums/rec_algo.proto";
+
+// Рекомендація
+message Recommendation {
+  string id = 1;
+  string user_id = 1;
+  string content_id = 3;
+  
+  // Алгоритм рекомендації
+  entertainment.discovery.enums.RecommendationAlgorithm algorithm = 4;
+  
+  // Оцінка рекомендації
+  RecommendationScore score = 5;
+  
+  // Причини рекомендації
+  repeated RecommendationReason reasons = 6;
+  
+  // Контекст рекомендації
+  RecommendationContext context = 7;
+  
+  // Метадані
+  RecommendationMetadata metadata = 8;
+  
+  // Дати
+  int64 created_at = 9;
+  int64 expires_at = 10;
+  int64 last_updated = 11;
+}
+
+// Оцінка рекомендації
+message RecommendationScore {
+  double overall_score = 1;
+  double relevance_score = 2;
+  double popularity_score = 3;
+  double novelty_score = 4;
+  double diversity_score = 5;
+  double confidence_score = 6;
+  double personalization_score = 7;
+  double quality_score = 8;
+  double recency_score = 9;
+  double trending_score = 10;
+  map<string, double> custom_scores = 11;
+}
+
+// Причина рекомендації
+message RecommendationReason {
+  string type = 1;
+  string description = 2;
+  double weight = 3;
+  repeated string related_items = 4;
+  map<string, string> metadata = 5;
+}
+
+// Контекст рекомендації
+message RecommendationContext {
+  string session_id = 1;
+  string device_type = 2;
+  string location = 3;
+  string time_of_day = 4;
+  string day_of_week = 5;
+  string season = 6;
+  string mood = 7;
+  repeated string recent_activities = 8;
+  repeated string current_interests = 9;
+  repeated string social_context = 10;
+  map<string, string> environmental_factors = 11;
+}
+
+// Метадані рекомендації
+message RecommendationMetadata {
+  string content_type = 1;
+  string genre = 2;
+  string category = 3;
+  repeated string tags = 4;
+  string language = 5;
+  string country = 6;
+  string age_rating = 7;
+  double duration = 8;
+  int32 release_year = 9;
+  repeated string creators = 10;
+  repeated string cast = 11;
+  string studio = 12;
+  double user_rating = 13;
+  int32 rating_count = 14;
+  int32 view_count = 15;
+  int32 like_count = 16;
+  int32 share_count = 17;
+  bool is_premium = 18;
+  bool is_free = 19;
+  bool is_trending = 20;
+  bool is_featured = 21;
+  bool is_new = 22;
+  bool is_popular = 23;
+  map<string, string> custom_metadata = 24;
+}

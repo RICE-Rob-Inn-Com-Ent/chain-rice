@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package settings.localization.enums;
+
+// Language enumeration for internationalization support
+enum Language {
+  // Default/unspecified language
+  LANGUAGE_UNSPECIFIED = 0;
+  
+  // English variants
+  LANGUAGE_EN = 1;          // English (Global)
+  LANGUAGE_EN_US = 2;       // English (United States)
+  LANGUAGE_EN_GB = 3;       // English (United Kingdom)
+  LANGUAGE_EN_AU = 4;       // English (Australia)
+  LANGUAGE_EN_CA = 5;       // English (Canada)
+  
+  // Spanish variants
+  LANGUAGE_ES = 6;          // Spanish (Global)
+  LANGUAGE_ES_ES = 7;       // Spanish (Spain)
+  LANGUAGE_ES_MX = 8;       // Spanish (Mexico)
+  LANGUAGE_ES_AR = 9;       // Spanish (Argentina)
+  LANGUAGE_ES_CO = 10;      // Spanish (Colombia)
+  
+  // French variants
+  LANGUAGE_FR = 11;         // French (Global)
+  LANGUAGE_FR_FR = 12;      // French (France)
+  LANGUAGE_FR_CA = 13;      // French (Canada)
+  LANGUAGE_FR_CH = 14;      // French (Switzerland)
+  
+  // German variants
+  LANGUAGE_DE = 15;         // German (Global)
+  LANGUAGE_DE_DE = 16;      // German (Germany)
+  LANGUAGE_DE_AT = 17;      // German (Austria)
+  LANGUAGE_DE_CH = 18;      // German (Switzerland)
+  
+  // Italian variants
+  LANGUAGE_IT = 19;         // Italian (Global)
+  LANGUAGE_IT_IT = 20;      // Italian (Italy)
+  LANGUAGE_IT_CH = 21;      // Italian (Switzerland)
+  
+  // Portuguese variants
+  LANGUAGE_PT = 22;         // Portuguese (Global)
+  LANGUAGE_PT_PT = 23;      // Portuguese (Portugal)
+  LANGUAGE_PT_BR = 24;      // Portuguese (Brazil)
+  
+  // Dutch variants
+  LANGUAGE_NL = 25;         // Dutch (Global)
+  LANGUAGE_NL_NL = 26;      // Dutch (Netherlands)
+  LANGUAGE_NL_BE = 27;      // Dutch (Belgium)
+  
+  // Asian languages
+  LANGUAGE_JA = 28;         // Japanese
+  LANGUAGE_KO = 29;         // Korean
+  LANGUAGE_ZH = 30;         // Chinese (Global)
+  LANGUAGE_ZH_CN = 31;      // Chinese (Simplified, China)
+  LANGUAGE_ZH_TW = 32;      // Chinese (Traditional, Taiwan)
+  LANGUAGE_ZH_HK = 33;      // Chinese (Traditional, Hong Kong)
+  
+  // Other European languages
+  LANGUAGE_RU = 34;         // Russian
+  LANGUAGE_PL = 35;         // Polish
+  LANGUAGE_CS = 36;         // Czech
+  LANGUAGE_HU = 37;         // Hungarian
+  LANGUAGE_RO = 38;         // Romanian
+  LANGUAGE_BG = 39;         // Bulgarian
+  LANGUAGE_HR = 40;         // Croatian
+  LANGUAGE_SK = 41;         // Slovak
+  LANGUAGE_SL = 42;         // Slovenian
+  LANGUAGE_ET = 43;         // Estonian
+  LANGUAGE_LV = 44;         // Latvian
+  LANGUAGE_LT = 45;         // Lithuanian
+  LANGUAGE_FI = 46;         // Finnish
+  LANGUAGE_SV = 47;         // Swedish
+  LANGUAGE_NO = 48;         // Norwegian
+  LANGUAGE_DA = 49;         // Danish
+  
+  // Middle Eastern languages
+  LANGUAGE_AR = 50;         // Arabic
+  LANGUAGE_HE = 51;         // Hebrew
+  LANGUAGE_TR = 52;         // Turkish
+  LANGUAGE_FA = 53;         // Persian
+  
+  // Other languages
+  LANGUAGE_TH = 54;         // Thai
+  LANGUAGE_VI = 55;         // Vietnamese
+  LANGUAGE_HI = 56;         // Hindi
+  LANGUAGE_BN = 57;         // Bengali
+  LANGUAGE_UR = 58;         // Urdu
+}

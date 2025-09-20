@@ -1,0 +1,776 @@
+syntax = "proto3";
+
+package construction.inspections.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "../messages/inspection.proto";
+import "../messages/inspection_report.proto";
+import "../enums/inspection_type.proto";
+import "../enums/inspection_status.proto";
+import "../enums/severity_level.proto";
+
+// Service for managing inspections and inspection reports
+service InspectionService {
+  // Inspection Management RPCs
+  
+  // Create a new inspection
+  rpc CreateInspection(CreateInspectionRequest) returns (CreateInspectionResponse);
+  
+  // Get inspection by ID
+  rpc GetInspection(GetInspectionRequest) returns (GetInspectionResponse);
+  
+  // Update inspection information
+  rpc UpdateInspection(UpdateInspectionRequest) returns (UpdateInspectionResponse);
+  
+  // Delete inspection
+  rpc DeleteInspection(DeleteInspectionRequest) returns (google.protobuf.Empty);
+  
+  // List inspections with filtering and pagination
+  rpc ListInspections(ListInspectionsRequest) returns (ListInspectionsResponse);
+  
+  // Search inspections by criteria
+  rpc SearchInspections(SearchInspectionsRequest) returns (SearchInspectionsResponse);
+  
+  // Get inspections by project
+  rpc GetInspectionsByProject(GetInspectionsByProjectRequest) returns (GetInspectionsByProjectResponse);
+  
+  // Get inspections by inspector
+  rpc GetInspectionsByInspector(GetInspectionsByInspectorRequest) returns (GetInspectionsByInspectorResponse);
+  
+  // Get inspections by type
+  rpc GetInspectionsByType(GetInspectionsByTypeRequest) returns (GetInspectionsByTypeResponse);
+  
+  // Get inspections by status
+  rpc GetInspectionsByStatus(GetInspectionsByStatusRequest) returns (GetInspectionsByStatusResponse);
+  
+  // Schedule inspection
+  rpc ScheduleInspection(ScheduleInspectionRequest) returns (ScheduleInspectionResponse);
+  
+  // Reschedule inspection
+  rpc RescheduleInspection(RescheduleInspectionRequest) returns (RescheduleInspectionResponse);
+  
+  // Cancel inspection
+  rpc CancelInspection(CancelInspectionRequest) returns (CancelInspectionResponse);
+  
+  // Start inspection
+  rpc StartInspection(StartInspectionRequest) returns (StartInspectionResponse);
+  
+  // Complete inspection
+  rpc CompleteInspection(CompleteInspectionRequest) returns (CompleteInspectionResponse);
+  
+  // Add inspection finding
+  rpc AddInspectionFinding(AddInspectionFindingRequest) returns (AddInspectionFindingResponse);
+  
+  // Update inspection finding
+  rpc UpdateInspectionFinding(UpdateInspectionFindingRequest) returns (UpdateInspectionFindingResponse);
+  
+  // Remove inspection finding
+  rpc RemoveInspectionFinding(RemoveInspectionFindingRequest) returns (google.protobuf.Empty);
+  
+  // Get inspection findings
+  rpc GetInspectionFindings(GetInspectionFindingsRequest) returns (GetInspectionFindingsResponse);
+  
+  // Add inspection attachment
+  rpc AddInspectionAttachment(AddInspectionAttachmentRequest) returns (AddInspectionAttachmentResponse);
+  
+  // Remove inspection attachment
+  rpc RemoveInspectionAttachment(RemoveInspectionAttachmentRequest) returns (google.protobuf.Empty);
+  
+  // Get inspection attachments
+  rpc GetInspectionAttachments(GetInspectionAttachmentsRequest) returns (GetInspectionAttachmentsResponse);
+  
+  // Approve inspection
+  rpc ApproveInspection(ApproveInspectionRequest) returns (ApproveInspectionResponse);
+  
+  // Reject inspection
+  rpc RejectInspection(RejectInspectionRequest) returns (RejectInspectionResponse);
+  
+  // Inspection Report Management RPCs
+  
+  // Create inspection report
+  rpc CreateInspectionReport(CreateInspectionReportRequest) returns (CreateInspectionReportResponse);
+  
+  // Get inspection report by ID
+  rpc GetInspectionReport(GetInspectionReportRequest) returns (GetInspectionReportResponse);
+  
+  // Update inspection report
+  rpc UpdateInspectionReport(UpdateInspectionReportRequest) returns (UpdateInspectionReportResponse);
+  
+  // Delete inspection report
+  rpc DeleteInspectionReport(DeleteInspectionReportRequest) returns (google.protobuf.Empty);
+  
+  // List inspection reports with filtering and pagination
+  rpc ListInspectionReports(ListInspectionReportsRequest) returns (ListInspectionReportsResponse);
+  
+  // Search inspection reports by criteria
+  rpc SearchInspectionReports(SearchInspectionReportsRequest) returns (SearchInspectionReportsResponse);
+  
+  // Get inspection reports by project
+  rpc GetInspectionReportsByProject(GetInspectionReportsByProjectRequest) returns (GetInspectionReportsByProjectResponse);
+  
+  // Get inspection reports by inspector
+  rpc GetInspectionReportsByInspector(GetInspectionReportsByInspectorRequest) returns (GetInspectionReportsByInspectorResponse);
+  
+  // Generate inspection report
+  rpc GenerateInspectionReport(GenerateInspectionReportRequest) returns (GenerateInspectionReportResponse);
+  
+  // Approve inspection report
+  rpc ApproveInspectionReport(ApproveInspectionReportRequest) returns (ApproveInspectionReportResponse);
+  
+  // Reject inspection report
+  rpc RejectInspectionReport(RejectInspectionReportRequest) returns (RejectInspectionReportResponse);
+  
+  // Distribute inspection report
+  rpc DistributeInspectionReport(DistributeInspectionReportRequest) returns (DistributeInspectionReportResponse);
+  
+  // Get inspection report attachments
+  rpc GetInspectionReportAttachments(GetInspectionReportAttachmentsRequest) returns (GetInspectionReportAttachmentsResponse);
+  
+  // Add inspection report attachment
+  rpc AddInspectionReportAttachment(AddInspectionReportAttachmentRequest) returns (AddInspectionReportAttachmentResponse);
+  
+  // Remove inspection report attachment
+  rpc RemoveInspectionReportAttachment(RemoveInspectionReportAttachmentRequest) returns (google.protobuf.Empty);
+  
+  // Business Intelligence RPCs
+  
+  // Get inspection analytics
+  rpc GetInspectionAnalytics(GetInspectionAnalyticsRequest) returns (GetInspectionAnalyticsResponse);
+  
+  // Get inspection performance metrics
+  rpc GetInspectionPerformanceMetrics(GetInspectionPerformanceMetricsRequest) returns (GetInspectionPerformanceMetricsResponse);
+  
+  // Get compliance reports
+  rpc GetComplianceReports(GetComplianceReportsRequest) returns (GetComplianceReportsResponse);
+  
+  // Get quality reports
+  rpc GetQualityReports(GetQualityReportsRequest) returns (GetQualityReportsResponse);
+  
+  // Get safety reports
+  rpc GetSafetyReports(GetSafetyReportsRequest) returns (GetSafetyReportsResponse);
+  
+  // Get inspection trends
+  rpc GetInspectionTrends(GetInspectionTrendsRequest) returns (GetInspectionTrendsResponse);
+  
+  // Get inspector performance
+  rpc GetInspectorPerformance(GetInspectorPerformanceRequest) returns (GetInspectorPerformanceResponse);
+  
+  // Get project inspection summary
+  rpc GetProjectInspectionSummary(GetProjectInspectionSummaryRequest) returns (GetProjectInspectionSummaryResponse);
+}
+
+// Request/Response Messages for Inspection Management
+
+message CreateInspectionRequest {
+  construction.inspections.messages.Inspection inspection = 1;
+}
+
+message CreateInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message GetInspectionRequest {
+  string inspection_id = 1;
+}
+
+message GetInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+}
+
+message UpdateInspectionRequest {
+  construction.inspections.messages.Inspection inspection = 1;
+  repeated string update_fields = 2; // Fields to update
+}
+
+message UpdateInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message DeleteInspectionRequest {
+  string inspection_id = 1;
+  string reason = 2;
+}
+
+message ListInspectionsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  construction.inspections.enums.InspectionType type = 3;
+  construction.inspections.enums.InspectionStatus status = 4;
+  string project_id = 5;
+  string inspector_id = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  string sort_by = 9;
+  bool sort_descending = 10;
+}
+
+message ListInspectionsResponse {
+  repeated construction.inspections.messages.Inspection inspections = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message SearchInspectionsRequest {
+  string query = 1;
+  repeated construction.inspections.enums.InspectionType types = 2;
+  repeated construction.inspections.enums.InspectionStatus statuses = 3;
+  string project_id = 4;
+  string inspector_id = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  construction.inspections.enums.SeverityLevel min_severity = 8;
+  int32 page_size = 9;
+  string page_token = 10;
+}
+
+message SearchInspectionsResponse {
+  repeated construction.inspections.messages.Inspection inspections = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetInspectionsByProjectRequest {
+  string project_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.inspections.enums.InspectionType type = 4;
+  construction.inspections.enums.InspectionStatus status = 5;
+}
+
+message GetInspectionsByProjectResponse {
+  repeated construction.inspections.messages.Inspection inspections = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetInspectionsByInspectorRequest {
+  string inspector_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.inspections.enums.InspectionType type = 4;
+  construction.inspections.enums.InspectionStatus status = 5;
+}
+
+message GetInspectionsByInspectorResponse {
+  repeated construction.inspections.messages.Inspection inspections = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetInspectionsByTypeRequest {
+  construction.inspections.enums.InspectionType type = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.inspections.enums.InspectionStatus status = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
+message GetInspectionsByTypeResponse {
+  repeated construction.inspections.messages.Inspection inspections = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetInspectionsByStatusRequest {
+  construction.inspections.enums.InspectionStatus status = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.inspections.enums.InspectionType type = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
+message GetInspectionsByStatusResponse {
+  repeated construction.inspections.messages.Inspection inspections = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message ScheduleInspectionRequest {
+  string inspection_id = 1;
+  google.protobuf.Timestamp scheduled_date = 2;
+  string inspector_id = 3;
+  string location = 4;
+  string notes = 5;
+}
+
+message ScheduleInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message RescheduleInspectionRequest {
+  string inspection_id = 1;
+  google.protobuf.Timestamp new_scheduled_date = 2;
+  string reason = 3;
+  string rescheduled_by = 4;
+}
+
+message RescheduleInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message CancelInspectionRequest {
+  string inspection_id = 1;
+  string reason = 2;
+  string cancelled_by = 3;
+}
+
+message CancelInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message StartInspectionRequest {
+  string inspection_id = 1;
+  string inspector_id = 2;
+  google.protobuf.Timestamp start_time = 3;
+  string location = 4;
+  string notes = 5;
+}
+
+message StartInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message CompleteInspectionRequest {
+  string inspection_id = 1;
+  google.protobuf.Timestamp end_time = 2;
+  string summary = 3;
+  string notes = 4;
+  repeated string findings = 5;
+}
+
+message CompleteInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message AddInspectionFindingRequest {
+  string inspection_id = 1;
+  construction.inspections.messages.InspectionFinding finding = 2;
+}
+
+message AddInspectionFindingResponse {
+  construction.inspections.messages.InspectionFinding finding = 1;
+  string message = 2;
+}
+
+message UpdateInspectionFindingRequest {
+  string inspection_id = 1;
+  string finding_id = 2;
+  construction.inspections.messages.InspectionFinding finding = 3;
+}
+
+message UpdateInspectionFindingResponse {
+  construction.inspections.messages.InspectionFinding finding = 1;
+  string message = 2;
+}
+
+message RemoveInspectionFindingRequest {
+  string inspection_id = 1;
+  string finding_id = 2;
+  string reason = 3;
+}
+
+message GetInspectionFindingsRequest {
+  string inspection_id = 1;
+  construction.inspections.enums.SeverityLevel severity = 2;
+  string category = 3;
+}
+
+message GetInspectionFindingsResponse {
+  repeated construction.inspections.messages.InspectionFinding findings = 1;
+}
+
+message AddInspectionAttachmentRequest {
+  string inspection_id = 1;
+  construction.inspections.messages.DocumentAttachment attachment = 2;
+}
+
+message AddInspectionAttachmentResponse {
+  construction.inspections.messages.DocumentAttachment attachment = 1;
+  string message = 2;
+}
+
+message RemoveInspectionAttachmentRequest {
+  string inspection_id = 1;
+  string attachment_id = 2;
+  string reason = 3;
+}
+
+message GetInspectionAttachmentsRequest {
+  string inspection_id = 1;
+  string attachment_type = 2;
+}
+
+message GetInspectionAttachmentsResponse {
+  repeated construction.inspections.messages.DocumentAttachment attachments = 1;
+}
+
+message ApproveInspectionRequest {
+  string inspection_id = 1;
+  string approved_by = 2;
+  string approval_notes = 3;
+}
+
+message ApproveInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+message RejectInspectionRequest {
+  string inspection_id = 1;
+  string rejected_by = 2;
+  string rejection_reason = 3;
+}
+
+message RejectInspectionResponse {
+  construction.inspections.messages.Inspection inspection = 1;
+  string message = 2;
+}
+
+// Request/Response Messages for Inspection Report Management
+
+message CreateInspectionReportRequest {
+  construction.inspections.messages.InspectionReport report = 1;
+}
+
+message CreateInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+  string message = 2;
+}
+
+message GetInspectionReportRequest {
+  string report_id = 1;
+}
+
+message GetInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+}
+
+message UpdateInspectionReportRequest {
+  construction.inspections.messages.InspectionReport report = 1;
+  repeated string update_fields = 2; // Fields to update
+}
+
+message UpdateInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+  string message = 2;
+}
+
+message DeleteInspectionReportRequest {
+  string report_id = 1;
+  string reason = 2;
+}
+
+message ListInspectionReportsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  construction.inspections.enums.InspectionType type = 3;
+  construction.inspections.enums.InspectionStatus status = 4;
+  string project_id = 5;
+  string inspector_id = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  string sort_by = 9;
+  bool sort_descending = 10;
+}
+
+message ListInspectionReportsResponse {
+  repeated construction.inspections.messages.InspectionReport reports = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message SearchInspectionReportsRequest {
+  string query = 1;
+  repeated construction.inspections.enums.InspectionType types = 2;
+  repeated construction.inspections.enums.InspectionStatus statuses = 3;
+  string project_id = 4;
+  string inspector_id = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  construction.inspections.enums.SeverityLevel min_severity = 8;
+  int32 page_size = 9;
+  string page_token = 10;
+}
+
+message SearchInspectionReportsResponse {
+  repeated construction.inspections.messages.InspectionReport reports = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetInspectionReportsByProjectRequest {
+  string project_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.inspections.enums.InspectionType type = 4;
+  construction.inspections.enums.InspectionStatus status = 5;
+}
+
+message GetInspectionReportsByProjectResponse {
+  repeated construction.inspections.messages.InspectionReport reports = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetInspectionReportsByInspectorRequest {
+  string inspector_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  construction.inspections.enums.InspectionType type = 4;
+  construction.inspections.enums.InspectionStatus status = 5;
+}
+
+message GetInspectionReportsByInspectorResponse {
+  repeated construction.inspections.messages.InspectionReport reports = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GenerateInspectionReportRequest {
+  string inspection_id = 1;
+  string report_template = 2;
+  string report_format = 3;
+  repeated string include_sections = 4;
+  string custom_notes = 5;
+}
+
+message GenerateInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+  string message = 2;
+}
+
+message ApproveInspectionReportRequest {
+  string report_id = 1;
+  string approved_by = 2;
+  string approval_notes = 3;
+}
+
+message ApproveInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+  string message = 2;
+}
+
+message RejectInspectionReportRequest {
+  string report_id = 1;
+  string rejected_by = 2;
+  string rejection_reason = 3;
+}
+
+message RejectInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+  string message = 2;
+}
+
+message DistributeInspectionReportRequest {
+  string report_id = 1;
+  repeated string recipient_emails = 2;
+  string distribution_method = 3;
+  string custom_message = 4;
+}
+
+message DistributeInspectionReportResponse {
+  construction.inspections.messages.InspectionReport report = 1;
+  string message = 2;
+}
+
+message GetInspectionReportAttachmentsRequest {
+  string report_id = 1;
+  string attachment_type = 2;
+}
+
+message GetInspectionReportAttachmentsResponse {
+  repeated construction.inspections.messages.DocumentAttachment attachments = 1;
+}
+
+message AddInspectionReportAttachmentRequest {
+  string report_id = 1;
+  construction.inspections.messages.DocumentAttachment attachment = 2;
+}
+
+message AddInspectionReportAttachmentResponse {
+  construction.inspections.messages.DocumentAttachment attachment = 1;
+  string message = 2;
+}
+
+message RemoveInspectionReportAttachmentRequest {
+  string report_id = 1;
+  string attachment_id = 2;
+  string reason = 3;
+}
+
+// Request/Response Messages for Business Intelligence
+
+message GetInspectionAnalyticsRequest {
+  string project_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  repeated string metrics = 4;
+  construction.inspections.enums.InspectionType type = 5;
+}
+
+message GetInspectionAnalyticsResponse {
+  map<string, double> analytics = 1;
+  repeated PerformanceTrend performance_trends = 2;
+}
+
+message PerformanceTrend {
+  string metric_name = 1;
+  repeated DataPoint data_points = 2;
+  string trend_direction = 3;
+  double trend_percentage = 4;
+}
+
+message DataPoint {
+  google.protobuf.Timestamp date = 1;
+  double value = 2;
+}
+
+message GetInspectionPerformanceMetricsRequest {
+  string inspector_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  repeated string metrics = 4;
+}
+
+message GetInspectionPerformanceMetricsResponse {
+  map<string, double> metrics = 1;
+  repeated PerformanceTrend performance_trends = 2;
+}
+
+message GetComplianceReportsRequest {
+  string project_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string report_type = 4;
+  string format = 5;
+}
+
+message GetComplianceReportsResponse {
+  bytes report_data = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message GetQualityReportsRequest {
+  string project_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string report_type = 4;
+  string format = 5;
+}
+
+message GetQualityReportsResponse {
+  bytes report_data = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message GetSafetyReportsRequest {
+  string project_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string report_type = 4;
+  string format = 5;
+}
+
+message GetSafetyReportsResponse {
+  bytes report_data = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message GetInspectionTrendsRequest {
+  string project_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  construction.inspections.enums.InspectionType type = 4;
+  repeated string trend_metrics = 5;
+}
+
+message GetInspectionTrendsResponse {
+  repeated TrendAnalysis trends = 1;
+}
+
+message TrendAnalysis {
+  string metric_name = 1;
+  repeated DataPoint data_points = 2;
+  string trend_direction = 3;
+  double trend_percentage = 4;
+  string trend_description = 5;
+}
+
+message GetInspectorPerformanceRequest {
+  string inspector_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  repeated string performance_metrics = 4;
+}
+
+message GetInspectorPerformanceResponse {
+  map<string, double> performance_metrics = 1;
+  repeated PerformanceTrend performance_trends = 2;
+  InspectorPerformanceSummary summary = 3;
+}
+
+message InspectorPerformanceSummary {
+  string inspector_name = 1;
+  int32 total_inspections = 2;
+  int32 completed_inspections = 3;
+  int32 on_time_inspections = 4;
+  double average_rating = 5;
+  int32 total_findings = 6;
+  int32 critical_findings = 7;
+  double compliance_rate = 8;
+}
+
+message GetProjectInspectionSummaryRequest {
+  string project_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message GetProjectInspectionSummaryResponse {
+  ProjectInspectionSummary summary = 1;
+  repeated InspectionTypeSummary type_summaries = 2;
+  repeated InspectionStatusSummary status_summaries = 3;
+}
+
+message ProjectInspectionSummary {
+  string project_name = 1;
+  int32 total_inspections = 2;
+  int32 completed_inspections = 3;
+  int32 pending_inspections = 4;
+  int32 overdue_inspections = 5;
+  double overall_compliance_rate = 6;
+  double average_quality_score = 7;
+  int32 total_findings = 8;
+  int32 critical_findings = 9;
+  int32 major_findings = 10;
+  int32 minor_findings = 11;
+}
+
+message InspectionTypeSummary {
+  construction.inspections.enums.InspectionType type = 1;
+  int32 count = 2;
+  int32 completed = 3;
+  int32 pending = 4;
+  int32 overdue = 5;
+  double compliance_rate = 6;
+  double average_quality_score = 7;
+}
+
+message InspectionStatusSummary {
+  construction.inspections.enums.InspectionStatus status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}

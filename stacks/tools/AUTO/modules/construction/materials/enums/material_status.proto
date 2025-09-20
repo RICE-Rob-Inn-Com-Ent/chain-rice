@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package construction.materials.enums;
+
+enum MaterialStatus {
+  MATERIAL_STATUS_UNSPECIFIED = 0;
+  AVAILABLE = 1;
+  OUT_OF_STOCK = 2;
+  ORDERED = 3;
+  IN_TRANSIT = 4;
+  DELIVERED = 5;
+  RESERVED = 6;
+  ALLOCATED = 7;
+  USED = 8;
+  DAMAGED = 9;
+  EXPIRED = 10;
+  RETURNED = 11;
+  DISPOSED = 12;
+  QUARANTINED = 13;
+  PENDING_APPROVAL = 14;
+  REJECTED = 15;
+  CANCELLED = 16;
+  BACKORDERED = 17;
+  PENDING_RECEIPT = 18;
+  IN_INSPECTION = 19;
+  APPROVED = 20;
+}

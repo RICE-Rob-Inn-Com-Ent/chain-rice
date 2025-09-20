@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package logistics.customs.messages;
+
+import "google/protobuf/timestamp.proto";
+import "logistics/customs/enums/customs_status.proto";
+import "logistics/customs/enums/customs_risk_level.proto";
+import "logistics/customs/enums/customs_clearance_result.proto";
+
+// Customs declaration information
+message CustomsDeclaration {
+  string declaration_id = 1;                    // Unique declaration identifier
+  string shipment_id = 2;                       // Associated shipment ID
+  string importer_id = 3;                       // Importer/exporter ID
+  string customs_office_code = 4;              // Customs office handling the declaration
+  
+  // Declaration details
+  string commodity_code = 5;                    // Harmonized System (HS) code
+  string description = 6;                       // Goods description
+  double declared_value = 7;                    // Declared value in base currency
+  string currency_code = 8;                     // Currency code (ISO 4217)
+  double weight_kg = 9;                         // Total weight in kilograms
+  int32 quantity = 10;                          // Number of items/packages
+  
+  // Status and processing
+  logistics.customs.enums.CustomsStatus status = 11;
+  logistics.customs.enums.CustomsRiskLevel risk_level = 12;
+  logistics.customs.enums.CustomsClearanceResult clearance_result = 13;
+  
+  // Timestamps
+  google.protobuf.Timestamp submission_time = 14;
+  google.protobuf.Timestamp last_updated = 15;
+  google.protobuf.Timestamp clearance_time = 16;
+  
+  // Additional information
+  string customs_officer_id = 17;               // Assigned customs officer
+  string notes = 18;                           // Additional notes or comments
+  repeated string document_ids = 19;           // Associated document IDs
+  map<string, string> metadata = 20;           // Additional metadata
+}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package integrations.edi.enums;
+
+option go_package = "github.com/rice-dev/integrations/edi/enums";
+
+// EDI Processing Status for tracking document lifecycle
+enum EdiStatus {
+  EDI_STATUS_UNSPECIFIED = 0;
+  
+  // Initial States
+  EDI_STATUS_PENDING = 1;           // Document received, awaiting processing
+  EDI_STATUS_QUEUED = 2;            // Document in processing queue
+  EDI_STATUS_RECEIVED = 3;          // Document successfully received
+  
+  // Processing States
+  EDI_STATUS_PROCESSING = 10;       // Document being processed
+  EDI_STATUS_VALIDATING = 11;       // Document validation in progress
+  EDI_STATUS_TRANSFORMING = 12;     // Document transformation in progress
+  EDI_STATUS_MAPPING = 13;          // Data mapping in progress
+  
+  // Success States
+  EDI_STATUS_SUCCESS = 20;          // Document processed successfully
+  EDI_STATUS_COMPLETED = 21;        // All processing steps completed
+  EDI_STATUS_ACKNOWLEDGED = 22;     // Acknowledgment sent/received
+  EDI_STATUS_DELIVERED = 23;        // Document delivered to target system
+  
+  // Error States
+  EDI_STATUS_FAILED = 30;           // Processing failed
+  EDI_STATUS_VALIDATION_ERROR = 31; // Document validation failed
+  EDI_STATUS_TRANSFORMATION_ERROR = 32; // Document transformation failed
+  EDI_STATUS_MAPPING_ERROR = 33;    // Data mapping failed
+  EDI_STATUS_DELIVERY_ERROR = 34;   // Delivery to target system failed
+  EDI_STATUS_TIMEOUT = 35;          // Processing timeout
+  EDI_STATUS_REJECTED = 36;         // Document rejected by target system
+  
+  // Retry States
+  EDI_STATUS_RETRYING = 40;         // Retrying failed operation
+  EDI_STATUS_RETRY_EXHAUSTED = 41;  // All retry attempts exhausted
+  
+  // Manual Intervention
+  EDI_STATUS_MANUAL_REVIEW = 50;    // Requires manual review
+  EDI_STATUS_SUSPENDED = 51;        // Processing suspended
+  EDI_STATUS_CANCELLED = 52;        // Processing cancelled
+  
+  // Archive States
+  EDI_STATUS_ARCHIVED = 60;         // Document archived
+  EDI_STATUS_DELETED = 61;          // Document deleted
+}

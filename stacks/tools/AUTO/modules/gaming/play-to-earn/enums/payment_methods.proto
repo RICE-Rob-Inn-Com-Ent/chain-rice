@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.play_to_earn.enums;
+
+option go_package = "github.com/rice-dev/gaming/play-to-earn/enums";
+
+// Методи платежів
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  
+  // Криптовалюта
+  PAYMENT_METHOD_CRYPTOCURRENCY = 1;
+  
+  // Біткоін
+  PAYMENT_METHOD_BITCOIN = 2;
+  
+  // Ефіріум
+  PAYMENT_METHOD_ETHEREUM = 3;
+  
+  // Бінанс коін
+  PAYMENT_METHOD_BINANCE_COIN = 4;
+  
+  // Кардано
+  PAYMENT_METHOD_CARDANO = 5;
+  
+  // Солана
+  PAYMENT_METHOD_SOLANA = 6;
+  
+  // Полігон
+  PAYMENT_METHOD_POLYGON = 7;
+  
+  // Аваланч
+  PAYMENT_METHOD_AVALANCHE = 8;
+  
+  // Фантом
+  PAYMENT_METHOD_FANTOM = 9;
+  
+  // Арбітрум
+  PAYMENT_METHOD_ARBITRUM = 10;
+  
+  // Оптимізм
+  PAYMENT_METHOD_OPTIMISM = 11;
+  
+  // ZkSync
+  PAYMENT_METHOD_ZKSYNC = 12;
+  
+  // Старкнет
+  PAYMENT_METHOD_STARKNET = 13;
+  
+  // Іммутабл
+  PAYMENT_METHOD_IMMUTABLE = 14;
+  
+  // Лупрінг
+  PAYMENT_METHOD_LOOPRING = 15;
+  
+  // Полігон ZkEVM
+  PAYMENT_METHOD_POLYGON_ZKEVM = 16;
+  
+  // Скролл
+  PAYMENT_METHOD_SCROLL = 17;
+  
+  // Бейс
+  PAYMENT_METHOD_BASE = 18;
+  
+  // Лінеа
+  PAYMENT_METHOD_LINEA = 19;
+  
+  // Мантл
+  PAYMENT_METHOD_MANTLE = 20;
+  
+  // Село
+  PAYMENT_METHOD_CELO = 21;
+  
+  // Нір
+  PAYMENT_METHOD_NEAR = 22;
+  
+  // Алгоританд
+  PAYMENT_METHOD_ALGORAND = 23;
+  
+  // Космос
+  PAYMENT_METHOD_COSMOS = 24;
+  
+  // ПолкаДот
+  PAYOUT_STATUS_POLKADOT = 25;
+  
+  // Кусама
+  PAYMENT_METHOD_KUSAMA = 26;
+  
+  // Сабстрат
+  PAYMENT_METHOD_SUBSTRATE = 27;
+  
+  // Чейнлінк
+  PAYMENT_METHOD_CHAINLINK = 28;
+  
+  // Файлкоін
+  PAYMENT_METHOD_FILECOIN = 29;
+  
+  // IPFS
+  PAYMENT_METHOD_IPFS = 30;
+  
+  // Арвів
+  PAYMENT_METHOD_ARWEAVE = 31;
+  
+  // Скайнет
+  PAYMENT_METHOD_SKYNET = 32;
+  
+  // Стордж
+  PAYMENT_METHOD_STORJ = 33;
+  
+  // Сіа
+  PAYMENT_METHOD_SIA = 34;
+  
+  // Мейдсейф
+  PAYMENT_METHOD_MAIDSAFE = 35;
+  
+  // Сворм
+  PAYMENT_METHOD_SWARM = 36;
+  
+  // ДАТ
+  PAYMENT_METHOD_DAT = 37;
+  
+  // Гіперкор
+  PAYMENT_METHOD_HYPERCORE = 38;
+  
+  // Кабал
+  PAYMENT_METHOD_CABAL = 39;
+  
+  // SSB
+  PAYMENT_METHOD_SSB = 40;
+  
+  // Секюр Скетлбат
+  PAYMENT_METHOD_SECURE_SCUTTLEBUTT = 41;
+  
+  // Банківський переказ
+  PAYMENT_METHOD_BANK_TRANSFER = 42;
+  
+  // Кредитна картка
+  PAYMENT_METHOD_CREDIT_CARD = 43;
+  
+  // Дебетна картка
+  PAYMENT_METHOD_DEBIT_CARD = 44;
+  
+  // PayPal
+  PAYMENT_METHOD_PAYPAL = 45;
+  
+  // Stripe
+  PAYMENT_METHOD_STRIPE = 46;
+  
+  // Square
+  PAYMENT_METHOD_SQUARE = 47;
+  
+  // Apple Pay
+  PAYMENT_METHOD_APPLE_PAY = 48;
+  
+  // Google Pay
+  PAYMENT_METHOD_GOOGLE_PAY = 49;
+  
+  // Samsung Pay
+  PAYMENT_METHOD_SAMSUNG_PAY = 50;
+  
+  // Venmo
+  PAYMENT_METHOD_VENMO = 51;
+  
+  // Cash App
+  PAYMENT_METHOD_CASH_APP = 52;
+  
+  // Zelle
+  PAYMENT_METHOD_ZELLE = 53;
+  
+  // Wise
+  PAYMENT_METHOD_WISE = 54;
+  
+  // Revolut
+  PAYMENT_METHOD_REVOLUT = 55;
+  
+  // N26
+  PAYMENT_METHOD_N26 = 56;
+  
+  // Monzo
+  PAYMENT_METHOD_MONZO = 57;
+  
+  // Starling
+  PAYMENT_METHOD_STARLING = 58;
+  
+  // Chime
+  PAYMENT_METHOD_CHIME = 59;
+  
+  // Varo
+  PAYMENT_METHOD_VARO = 60;
+  
+  // Current
+  PAYMENT_METHOD_CURRENT = 61;
+  
+  // Aspiration
+  PAYMENT_METHOD_ASPIRATION = 62;
+  
+  // Simple
+  PAYMENT_METHOD_SIMPLE = 63;
+  
+  // Ally
+  PAYMENT_METHOD_ALLY = 64;
+  
+  // Capital One
+  PAYMENT_METHOD_CAPITAL_ONE = 65;
+  
+  // Chase
+  PAYMENT_METHOD_CHASE = 66;
+  
+  // Bank of America
+  PAYMENT_METHOD_BANK_OF_AMERICA = 67;
+  
+  // Wells Fargo
+  PAYMENT_METHOD_WELLS_FARGO = 68;
+  
+  // Citibank
+  PAYMENT_METHOD_CITIBANK = 69;
+  
+  // US Bank
+  PAYMENT_METHOD_US_BANK = 70;
+  
+  // PNC Bank
+  PAYMENT_METHOD_PNC_BANK = 71;
+  
+  // TD Bank
+  PAYMENT_METHOD_TD_BANK = 72;
+  
+  // Regions Bank
+  PAYMENT_METHOD_REGIONS_BANK = 73;
+  
+  // Fifth Third Bank
+  PAYMENT_METHOD_FIFTH_THIRD_BANK = 74;
+  
+  // KeyBank
+  PAYMENT_METHOD_KEYBANK = 75;
+  
+  // Huntington Bank
+  PAYMENT_METHOD_HUNTINGTON_BANK = 76;
+  
+  // Citizens Bank
+  PAYMENT_METHOD_CITIZENS_BANK = 77;
+  
+  // M&T Bank
+  PAYMENT_METHOD_MT_BANK = 78;
+  
+  // BB&T
+  PAYMENT_METHOD_BBT = 79;
+  
+  // SunTrust
+  PAYMENT_METHOD_SUNTRUST = 80;
+  
+  // Truist
+  PAYMENT_METHOD_TRUIST = 81;
+  
+  // First National Bank
+  PAYMENT_METHOD_FIRST_NATIONAL_BANK = 82;
+  
+  // Comerica
+  PAYMENT_METHOD_COMERICA = 83;
+  
+  // Zions Bank
+  PAYMENT_METHOD_ZIONS_BANK = 84;
+  
+  // BMO Harris
+  PAYMENT_METHOD_BMO_HARRIS = 85;
+  
+  // Associated Bank
+  PAYMENT_METHOD_ASSOCIATED_BANK = 86;
+  
+  // Webster Bank
+  PAYMENT_METHOD_WEBSTER_BANK = 87;
+  
+  // New York Community Bank
+  PAYMENT_METHOD_NEW_YORK_COMMUNITY_BANK = 88;
+  
+  // Flagstar Bank
+  PAYMENT_METHOD_FLAGSTAR_BANK = 89;
+  
+  // First Horizon Bank
+  PAYMENT_METHOD_FIRST_HORIZON_BANK = 90;
+  
+  // Synovus Bank
+  PAYMENT_METHOD_SYNOVUS_BANK = 91;
+  
+  // First Citizens Bank
+  PAYMENT_METHOD_FIRST_CITIZENS_BANK = 92;
+  
+  // Valley National Bank
+  PAYMENT_METHOD_VALLEY_NATIONAL_BANK = 93;
+  
+  // People's United Bank
+  PAYMENT_METHOD_PEOPLES_UNITED_BANK = 94;
+  
+  // Umpqua Bank
+  PAYMENT_METHOD_UMPQUA_BANK = 95;
+  
+  // Columbia Bank
+  PAYMENT_METHOD_COLUMBIA_BANK = 96;
+  
+  // First Interstate Bank
+  PAYMENT_METHOD_FIRST_INTERSTATE_BANK = 97;
+  
+  // Glacier Bank
+  PAYMENT_METHOD_GLACIER_BANK = 98;
+  
+  // First National Bank of Alaska
+  PAYMENT_METHOD_FIRST_NATIONAL_BANK_OF_ALASKA = 99;
+  
+  // Northrim Bank
+  PAYMENT_METHOD_NORTHRIM_BANK = 100;
+}

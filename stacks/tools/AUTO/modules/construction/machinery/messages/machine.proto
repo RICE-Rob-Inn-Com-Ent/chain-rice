@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package construction.machinery.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "../enums/machine_type.proto";
+import "../enums/machine_status.proto";
+import "../enums/machine_condition.proto";
+
+message Machine {
+  string id = 1;
+  string name = 2;
+  string model = 3;
+  string manufacturer = 4;
+  string serial_number = 5;
+  construction.machinery.enums.MachineType type = 6;
+  construction.machinery.enums.MachineStatus status = 7;
+  construction.machinery.enums.MachineCondition condition = 8;
+  string description = 9;
+  string specifications = 10;
+  double purchase_price = 11;
+  google.protobuf.Timestamp purchase_date = 12;
+  google.protobuf.Timestamp warranty_expiry = 13;
+  string location = 14;
+  string operator = 15;
+  repeated MaintenanceLog maintenance_logs = 16;
+  repeated string attachments = 17;
+  map<string, string> properties = 18;
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
+}
+
+message MaintenanceLog {
+  string id = 1;
+  string machine_id = 2;
+  string maintenance_type = 3;
+  string description = 4;
+  google.protobuf.Timestamp scheduled_date = 5;
+  google.protobuf.Timestamp completed_date = 6;
+  string technician = 7;
+  double cost = 8;
+  repeated string parts_used = 9;
+  string notes = 10;
+  string status = 11;
+}

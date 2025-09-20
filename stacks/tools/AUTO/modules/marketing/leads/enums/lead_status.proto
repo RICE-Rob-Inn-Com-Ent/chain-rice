@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package marketing.leads.enums;
+
+// Enumeration for lead status
+enum LeadStatus {
+  // Default status - not specified
+  LEAD_STATUS_UNSPECIFIED = 0;
+  
+  // New lead
+  LEAD_STATUS_NEW = 1;
+  
+  // Lead is being qualified
+  LEAD_STATUS_QUALIFYING = 2;
+  
+  // Lead is qualified
+  LEAD_STATUS_QUALIFIED = 3;
+  
+  // Lead is being contacted
+  LEAD_STATUS_CONTACTING = 4;
+  
+  // Lead has been contacted
+  LEAD_STATUS_CONTACTED = 5;
+  
+  // Lead is interested
+  LEAD_STATUS_INTERESTED = 6;
+  
+  // Lead is not interested
+  LEAD_STATUS_NOT_INTERESTED = 7;
+  
+  // Lead converted to customer
+  LEAD_STATUS_CONVERTED = 8;
+  
+  // Lead is lost
+  LEAD_STATUS_LOST = 9;
+  
+  // Lead is unqualified
+  LEAD_STATUS_UNQUALIFIED = 10;
+}

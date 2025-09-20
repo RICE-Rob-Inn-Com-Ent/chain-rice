@@ -1,0 +1,607 @@
+syntax = "proto3";
+
+package automation.workflow.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// Workflow Event message
+// Represents an event in a workflow execution
+message WorkflowEvent {
+  // Unique identifier for the event
+  string id = 1;
+  
+  // Workflow ID this event belongs to
+  string workflow_id = 2;
+  
+  // Execution ID this event belongs to
+  string execution_id = 3;
+  
+  // Step ID this event belongs to
+  string step_id = 4;
+  
+  // Event name
+  string name = 5;
+  
+  // Event type
+  string event_type = 6;
+  
+  // Event category
+  string category = 7;
+  
+  // Event severity
+  string severity = 8;
+  
+  // Event status
+  string status = 9;
+  
+  // Event message
+  string message = 10;
+  
+  // Event description
+  string description = 11;
+  
+  // Event data
+  google.protobuf.Struct data = 12;
+  
+  // Event context
+  EventContext context = 13;
+  
+  // Event metadata
+  map<string, string> metadata = 14;
+  
+  // Event tags
+  repeated string tags = 15;
+  
+  // Event timestamp
+  google.protobuf.Timestamp timestamp = 16;
+  
+  // Event source
+  string source = 17;
+  
+  // Event correlation ID
+  string correlation_id = 18;
+  
+  // Event trace ID
+  string trace_id = 19;
+  
+  // Event span ID
+  string span_id = 20;
+  
+  // Event parent span ID
+  string parent_span_id = 21;
+  
+  // Event duration in milliseconds
+  int64 duration_ms = 22;
+  
+  // Event size in bytes
+  int64 size_bytes = 23;
+  
+  // Event format
+  string format = 24;
+  
+  // Event encoding
+  string encoding = 25;
+  
+  // Event compression
+  string compression = 26;
+  
+  // Event retention
+  EventRetention retention = 27;
+}
+
+// Event context
+message EventContext {
+  // Execution context
+  ExecutionContext execution = 1;
+  
+  // System context
+  SystemContext system = 2;
+  
+  // User context
+  UserContext user = 3;
+  
+  // Application context
+  ApplicationContext application = 4;
+  
+  // Network context
+  NetworkContext network = 5;
+  
+  // Security context
+  SecurityContext security = 6;
+  
+  // Performance context
+  PerformanceContext performance = 7;
+  
+  // Custom context
+  map<string, string> custom = 8;
+}
+
+// Execution context
+message ExecutionContext {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Execution phase
+  string phase = 2;
+  
+  // Execution step
+  string step = 3;
+  
+  // Execution function
+  string function = 4;
+  
+  // Execution method
+  string method = 5;
+  
+  // Execution line number
+  int32 line_number = 6;
+  
+  // Execution file
+  string file = 7;
+  
+  // Execution thread
+  string thread = 8;
+  
+  // Execution process
+  string process = 9;
+}
+
+// System context
+message SystemContext {
+  // Operating system
+  string operating_system = 1;
+  
+  // System architecture
+  string architecture = 2;
+  
+  // System hostname
+  string hostname = 3;
+  
+  // System IP address
+  string ip_address = 4;
+  
+  // System timezone
+  string timezone = 5;
+  
+  // System locale
+  string locale = 6;
+  
+  // System environment
+  string environment = 7;
+  
+  // System region
+  string region = 8;
+  
+  // System zone
+  string zone = 9;
+}
+
+// User context
+message UserContext {
+  // User ID
+  string user_id = 1;
+  
+  // Username
+  string username = 2;
+  
+  // User email
+  string email = 3;
+  
+  // User role
+  string role = 4;
+  
+  // User permissions
+  repeated string permissions = 5;
+  
+  // User session
+  string session = 6;
+  
+  // User organization
+  string organization = 7;
+  
+  // User department
+  string department = 8;
+}
+
+// Application context
+message ApplicationContext {
+  // Application name
+  string application_name = 1;
+  
+  // Application version
+  string application_version = 2;
+  
+  // Application instance
+  string application_instance = 3;
+  
+  // Application environment
+  string application_environment = 4;
+  
+  // Application configuration
+  google.protobuf.Struct application_config = 5;
+  
+  // Application features
+  repeated string application_features = 6;
+  
+  // Application modules
+  repeated string application_modules = 7;
+}
+
+// Network context
+message NetworkContext {
+  // Network protocol
+  string protocol = 1;
+  
+  // Network host
+  string host = 2;
+  
+  // Network port
+  int32 port = 3;
+  
+  // Network endpoint
+  string endpoint = 4;
+  
+  // Network method
+  string method = 5;
+  
+  // Network status code
+  int32 status_code = 6;
+  
+  // Network latency
+  int64 latency_ms = 7;
+  
+  // Network bandwidth
+  int64 bandwidth_bytes_per_second = 8;
+  
+  // Network connection ID
+  string connection_id = 9;
+}
+
+// Security context
+message SecurityContext {
+  // Security level
+  string security_level = 1;
+  
+  // Authentication method
+  string authentication_method = 2;
+  
+  // Authorization level
+  string authorization_level = 3;
+  
+  // Security token
+  string security_token = 4;
+  
+  // Security session
+  string security_session = 5;
+  
+  // Security permissions
+  repeated string security_permissions = 6;
+  
+  // Security roles
+  repeated string security_roles = 7;
+  
+  // Security policies
+  repeated string security_policies = 8;
+}
+
+// Performance context
+message PerformanceContext {
+  // CPU usage percentage
+  double cpu_usage_percentage = 1;
+  
+  // Memory usage in bytes
+  int64 memory_usage_bytes = 2;
+  
+  // Memory usage percentage
+  double memory_usage_percentage = 3;
+  
+  // Disk usage in bytes
+  int64 disk_usage_bytes = 4;
+  
+  // Disk usage percentage
+  double disk_usage_percentage = 5;
+  
+  // Network usage in bytes
+  int64 network_usage_bytes = 6;
+  
+  // Network usage percentage
+  double network_usage_percentage = 7;
+  
+  // Response time in milliseconds
+  int64 response_time_ms = 8;
+  
+  // Throughput (operations per second)
+  double throughput_ops_per_second = 9;
+}
+
+// Event retention
+message EventRetention {
+  // Retention policy
+  string policy = 1;
+  
+  // Retention duration in days
+  int32 duration_days = 2;
+  
+  // Retention size limit in bytes
+  int64 size_limit_bytes = 3;
+  
+  // Retention count limit
+  int64 count_limit = 4;
+  
+  // Retention compression
+  string compression = 5;
+  
+  // Retention encryption
+  string encryption = 6;
+  
+  // Retention archive
+  string archive = 7;
+  
+  // Retention deletion
+  bool deletion_enabled = 8;
+}
+
+// Event aggregation
+message EventAggregation {
+  // Aggregation enabled
+  bool enabled = 1;
+  
+  // Aggregation interval in seconds
+  int32 interval_seconds = 2;
+  
+  // Aggregation fields
+  repeated string fields = 3;
+  
+  // Aggregation functions
+  repeated string functions = 4;
+  
+  // Aggregation groups
+  repeated string groups = 5;
+  
+  // Aggregation filters
+  repeated EventFilter filters = 6;
+}
+
+// Event filter
+message EventFilter {
+  // Filter name
+  string name = 1;
+  
+  // Filter field
+  string field = 2;
+  
+  // Filter operator
+  string operator = 3;
+  
+  // Filter value
+  string value = 4;
+  
+  // Filter enabled
+  bool enabled = 5;
+}
+
+// Event search
+message EventSearch {
+  // Search query
+  string query = 1;
+  
+  // Search fields
+  repeated string fields = 2;
+  
+  // Search filters
+  repeated EventFilter filters = 3;
+  
+  // Search time range
+  TimeRange time_range = 4;
+  
+  // Search limit
+  int32 limit = 5;
+  
+  // Search offset
+  int32 offset = 6;
+  
+  // Search sort
+  EventSort sort = 7;
+}
+
+// Time range
+message TimeRange {
+  // Start time
+  google.protobuf.Timestamp start_time = 1;
+  
+  // End time
+  google.protobuf.Timestamp end_time = 2;
+  
+  // Time zone
+  string time_zone = 3;
+}
+
+// Event sort
+message EventSort {
+  // Sort field
+  string field = 1;
+  
+  // Sort order
+  string order = 2;
+  
+  // Sort type
+  string type = 3;
+}
+
+// Event statistics
+message EventStatistics {
+  // Total event count
+  int64 total_count = 1;
+  
+  // Event count by type
+  map<string, int64> count_by_type = 2;
+  
+  // Event count by category
+  map<string, int64> count_by_category = 3;
+  
+  // Event count by severity
+  map<string, int64> count_by_severity = 4;
+  
+  // Event count by status
+  map<string, int64> count_by_status = 5;
+  
+  // Event count by workflow
+  map<string, int64> count_by_workflow = 6;
+  
+  // Event count by execution
+  map<string, int64> count_by_execution = 7;
+  
+  // Event count by step
+  map<string, int64> count_by_step = 8;
+  
+  // Event count by time
+  map<string, int64> count_by_time = 9;
+  
+  // Average event size
+  double average_size_bytes = 10;
+  
+  // Total event size
+  int64 total_size_bytes = 11;
+  
+  // Event rate (events per second)
+  double event_rate = 12;
+}
+
+// Event alert
+message EventAlert {
+  // Alert ID
+  string id = 1;
+  
+  // Alert name
+  string name = 2;
+  
+  // Alert description
+  string description = 3;
+  
+  // Alert condition
+  string condition = 4;
+  
+  // Alert threshold
+  double threshold = 5;
+  
+  // Alert severity
+  string severity = 6;
+  
+  // Alert enabled
+  bool enabled = 7;
+  
+  // Alert notification channels
+  repeated string notification_channels = 8;
+  
+  // Alert cooldown in seconds
+  int64 cooldown_seconds = 9;
+  
+  // Alert created timestamp
+  google.protobuf.Timestamp created_at = 10;
+  
+  // Alert last triggered timestamp
+  google.protobuf.Timestamp last_triggered_at = 11;
+  
+  // Alert trigger count
+  int64 trigger_count = 12;
+}
+
+// Event export
+message EventExport {
+  // Export ID
+  string id = 1;
+  
+  // Export name
+  string name = 2;
+  
+  // Export format
+  string format = 3;
+  
+  // Export filters
+  repeated EventFilter filters = 4;
+  
+  // Export time range
+  TimeRange time_range = 5;
+  
+  // Export fields
+  repeated string fields = 6;
+  
+  // Export destination
+  string destination = 7;
+  
+  // Export status
+  string status = 8;
+  
+  // Export created timestamp
+  google.protobuf.Timestamp created_at = 9;
+  
+  // Export completed timestamp
+  google.protobuf.Timestamp completed_at = 10;
+  
+  // Export file size
+  int64 file_size_bytes = 11;
+  
+  // Export file URL
+  string file_url = 12;
+}
+
+// Event subscription
+message EventSubscription {
+  // Subscription ID
+  string id = 1;
+  
+  // Subscription name
+  string name = 2;
+  
+  // Subscription description
+  string description = 3;
+  
+  // Subscription filters
+  repeated EventFilter filters = 4;
+  
+  // Subscription destination
+  string destination = 5;
+  
+  // Subscription enabled
+  bool enabled = 6;
+  
+  // Subscription created timestamp
+  google.protobuf.Timestamp created_at = 7;
+  
+  // Subscription updated timestamp
+  google.protobuf.Timestamp updated_at = 8;
+  
+  // Subscription metadata
+  map<string, string> metadata = 9;
+}
+
+// Event notification
+message EventNotification {
+  // Notification ID
+  string id = 1;
+  
+  // Event ID
+  string event_id = 2;
+  
+  // Notification type
+  string notification_type = 3;
+  
+  // Notification channel
+  string channel = 4;
+  
+  // Notification recipient
+  string recipient = 5;
+  
+  // Notification message
+  string message = 6;
+  
+  // Notification status
+  string status = 7;
+  
+  // Notification timestamp
+  google.protobuf.Timestamp timestamp = 8;
+  
+  // Notification metadata
+  map<string, string> metadata = 9;
+}

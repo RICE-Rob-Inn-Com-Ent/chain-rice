@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package energy.billing.enums;
+
+// Billing cycle types for energy consumption
+enum BillingCycle {
+  // Monthly billing cycle (most common)
+  BILLING_CYCLE_MONTHLY = 0;
+  
+  // Quarterly billing cycle (every 3 months)
+  BILLING_CYCLE_QUARTERLY = 1;
+  
+  // Annual billing cycle (yearly)
+  BILLING_CYCLE_ANNUAL = 2;
+  
+  // Weekly billing cycle (for commercial/industrial)
+  BILLING_CYCLE_WEEKLY = 3;
+  
+  // Daily billing cycle (for large industrial consumers)
+  BILLING_CYCLE_DAILY = 4;
+  
+  // Bi-monthly billing cycle (every 2 months)
+  BILLING_CYCLE_BI_MONTHLY = 5;
+  
+  // Semi-annual billing cycle (every 6 months)
+  BILLING_CYCLE_SEMI_ANNUAL = 6;
+  
+  // Variable billing cycle (custom intervals)
+  BILLING_CYCLE_VARIABLE = 7;
+  
+  // Prepaid billing cycle (pay before consumption)
+  BILLING_CYCLE_PREPAID = 8;
+  
+  // Postpaid billing cycle (pay after consumption)
+  BILLING_CYCLE_POSTPAID = 9;
+}

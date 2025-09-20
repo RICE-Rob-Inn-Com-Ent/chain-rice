@@ -1,0 +1,368 @@
+syntax = "proto3";
+
+package entertainment.streaming.services;
+
+import "entertainment/streaming/enums/stream_type.proto";
+
+// Сервіс стрімінгу
+service StreamingService {
+  // Управління стрімами
+  rpc StartStream(StartStreamRequest) returns (StartStreamResponse);
+  rpc StopStream(StopStreamRequest) returns (StopStreamResponse);
+  rpc PauseStream(PauseStreamRequest) returns (PauseStreamResponse);
+  rpc ResumeStream(ResumeStreamRequest) returns (ResumeStreamResponse);
+  rpc GetStreamStatus(GetStreamStatusRequest) returns (GetStreamStatusResponse);
+  
+  // Управління сесіями перегляду
+  rpc CreateViewingSession(CreateViewingSessionRequest) returns (CreateViewingSessionResponse);
+  rpc UpdateViewingSession(UpdateViewingSessionRequest) returns (UpdateViewingSessionResponse);
+  rpc EndViewingSession(EndViewingSessionRequest) returns (EndViewingSessionResponse);
+  rpc GetViewingSession(GetViewingSessionRequest) returns (GetViewingSessionResponse);
+  
+  // Адаптивний стрімінг
+  rpc GetAdaptiveStream(GetAdaptiveStreamRequest) returns (GetAdaptiveStreamResponse);
+  rpc UpdateStreamQuality(UpdateStreamQualityRequest) returns (UpdateStreamQualityResponse);
+  rpc GetStreamVariants(GetStreamVariantsRequest) returns (GetStreamVariantsResponse);
+  
+  // DRM та безпека
+  rpc GetDRMLicense(GetDRMLicenseRequest) returns (GetDRMLicenseResponse);
+  rpc ValidateDRM(ValidateDRMRequest) returns (ValidateDRMResponse);
+  rpc GetEncryptionKey(GetEncryptionKeyRequest) returns (GetEncryptionKeyResponse);
+  
+  // Аналітика стрімінгу
+  rpc GetStreamingAnalytics(GetStreamingAnalyticsRequest) returns (GetStreamingAnalyticsResponse);
+  rpc GetStreamingMetrics(GetStreamingMetricsRequest) returns (GetStreamingMetricsResponse);
+  rpc GetPlaybackMetrics(GetPlaybackMetricsRequest) returns (GetPlaybackMetricsResponse);
+  
+  // Моніторинг стрімінгу
+  rpc MonitorStream(MonitorStreamRequest) returns (MonitorStreamResponse);
+  rpc GetStreamHealth(GetStreamHealthRequest) returns (GetStreamHealthResponse);
+  rpc GetStreamPerformance(GetStreamPerformanceRequest) returns (GetStreamPerformanceResponse);
+}
+
+// Запити та відповіді для стрімів
+message StartStreamRequest {
+  string content_id = 1;
+  entertainment.streaming.enums.StreamType stream_type = 2;
+  StreamConfiguration config = 3;
+  string user_id = 4;
+}
+
+message StartStreamResponse {
+  string stream_id = 1;
+  string stream_url = 2;
+  StreamConfiguration config = 3;
+  string message = 4;
+}
+
+message StopStreamRequest {
+  string stream_id = 1;
+  string user_id = 2;
+}
+
+message StopStreamResponse {
+  bool stopped = 1;
+  string message = 2;
+}
+
+message PauseStreamRequest {
+  string stream_id = 1;
+  string user_id = 2;
+}
+
+message PauseStreamResponse {
+  bool paused = 1;
+  string message = 2;
+}
+
+message ResumeStreamRequest {
+  string stream_id = 1;
+  string user_id = 2;
+}
+
+message ResumeStreamResponse {
+  bool resumed = 1;
+  string message = 2;
+}
+
+message GetStreamStatusRequest {
+  string stream_id = 1;
+}
+
+message GetStreamStatusResponse {
+  StreamStatus status = 1;
+}
+
+// Запити для сесій перегляду
+message CreateViewingSessionRequest {
+  string content_id = 1;
+  string user_id = 2;
+  ViewingSessionConfig config = 3;
+}
+
+message CreateViewingSessionResponse {
+  string session_id = 1;
+  ViewingSession session = 2;
+}
+
+message UpdateViewingSessionRequest {
+  string session_id = 1;
+  ViewingSessionUpdate update = 2;
+}
+
+message UpdateViewingSessionResponse {
+  ViewingSession session = 1;
+}
+
+message EndViewingSessionRequest {
+  string session_id = 1;
+  string user_id = 2;
+}
+
+message EndViewingSessionResponse {
+  bool ended = 1;
+  ViewingSessionSummary summary = 2;
+}
+
+message GetViewingSessionRequest {
+  string session_id = 1;
+}
+
+message GetViewingSessionResponse {
+  ViewingSession session = 1;
+}
+
+// Запити для адаптивного стрімінгу
+message GetAdaptiveStreamRequest {
+  string content_id = 1;
+  AdaptiveStreamConfig config = 2;
+}
+
+message GetAdaptiveStreamResponse {
+  repeated StreamVariant variants = 1;
+  AdaptiveStreamConfig config = 2;
+}
+
+message UpdateStreamQualityRequest {
+  string stream_id = 1;
+  string quality_level = 2;
+}
+
+message UpdateStreamQualityResponse {
+  bool updated = 1;
+  string new_quality = 2;
+}
+
+message GetStreamVariantsRequest {
+  string content_id = 1;
+}
+
+message GetStreamVariantsResponse {
+  repeated StreamVariant variants = 1;
+}
+
+// Запити для DRM
+message GetDRMLicenseRequest {
+  string content_id = 1;
+  string user_id = 2;
+  DRMConfig config = 3;
+}
+
+message GetDRMLicenseResponse {
+  string license_url = 1;
+  string license_key = 2;
+  DRMConfig config = 3;
+}
+
+message ValidateDRMRequest {
+  string license_key = 1;
+  string content_id = 2;
+}
+
+message ValidateDRMResponse {
+  bool valid = 1;
+  string message = 2;
+}
+
+message GetEncryptionKeyRequest {
+  string content_id = 1;
+  string key_id = 2;
+}
+
+message GetEncryptionKeyResponse {
+  string encryption_key = 1;
+  string key_format = 2;
+}
+
+// Запити для аналітики
+message GetStreamingAnalyticsRequest {
+  string content_id = 1;
+  string time_period = 2;
+}
+
+message GetStreamingAnalyticsResponse {
+  StreamingAnalytics analytics = 1;
+}
+
+message GetStreamingMetricsRequest {
+  string stream_id = 1;
+  string metric_type = 2;
+}
+
+message GetStreamingMetricsResponse {
+  StreamingMetrics metrics = 1;
+}
+
+message GetPlaybackMetricsRequest {
+  string session_id = 1;
+}
+
+message GetPlaybackMetricsResponse {
+  PlaybackMetrics metrics = 1;
+}
+
+// Запити для моніторингу
+message MonitorStreamRequest {
+  string stream_id = 1;
+}
+
+message MonitorStreamResponse {
+  StreamMonitoringData data = 1;
+}
+
+message GetStreamHealthRequest {
+  string stream_id = 1;
+}
+
+message GetStreamHealthResponse {
+  StreamHealth health = 1;
+}
+
+message GetStreamPerformanceRequest {
+  string stream_id = 1;
+}
+
+message GetStreamPerformanceResponse {
+  StreamPerformance performance = 1;
+}
+
+// Допоміжні повідомлення
+message StreamConfiguration {
+  string quality = 1;
+  string bitrate = 2;
+  string resolution = 3;
+  string codec = 4;
+  bool adaptive_bitrate = 5;
+  bool drm_enabled = 6;
+}
+
+message StreamStatus {
+  string stream_id = 1;
+  string status = 2;
+  string quality = 3;
+  int32 bitrate = 4;
+  int32 viewers = 5;
+  int64 start_time = 6;
+  int64 duration = 7;
+}
+
+message ViewingSessionConfig {
+  string device_type = 1;
+  string quality_preference = 2;
+  bool subtitles_enabled = 3;
+  string language = 4;
+}
+
+message ViewingSession {
+  string session_id = 1;
+  string content_id = 2;
+  string user_id = 3;
+  int64 start_time = 4;
+  int64 last_activity = 5;
+  int32 watch_time = 6;
+  string current_position = 7;
+  ViewingSessionConfig config = 8;
+}
+
+message ViewingSessionUpdate {
+  string current_position = 1;
+  int32 watch_time = 2;
+  string quality = 3;
+  bool paused = 4;
+}
+
+message ViewingSessionSummary {
+  int32 total_watch_time = 1;
+  double completion_percentage = 2;
+  repeated string quality_changes = 3;
+  int32 pause_count = 4;
+}
+
+message AdaptiveStreamConfig {
+  repeated string quality_levels = 1;
+  int32 initial_bitrate = 2;
+  double buffer_target = 3;
+  bool auto_quality = 4;
+}
+
+message StreamVariant {
+  string quality = 1;
+  int32 bitrate = 2;
+  string resolution = 3;
+  string url = 4;
+  string codec = 5;
+}
+
+message DRMConfig {
+  string scheme = 1;
+  string license_server = 2;
+  string key_id = 3;
+  map<string, string> parameters = 4;
+}
+
+message StreamingAnalytics {
+  int32 total_streams = 1;
+  int32 total_viewers = 2;
+  double average_watch_time = 3;
+  double completion_rate = 4;
+  map<string, int32> quality_distribution = 5;
+}
+
+message StreamingMetrics {
+  double bitrate = 1;
+  double frame_rate = 2;
+  double buffer_health = 3;
+  double packet_loss = 4;
+  double latency = 5;
+}
+
+message PlaybackMetrics {
+  int32 total_play_time = 1;
+  int32 pause_count = 2;
+  int32 seek_count = 3;
+  double average_bitrate = 4;
+  repeated string quality_changes = 5;
+}
+
+message StreamMonitoringData {
+  double cpu_usage = 1;
+  double memory_usage = 2;
+  double bandwidth_usage = 3;
+  int32 active_connections = 4;
+  double error_rate = 5;
+}
+
+message StreamHealth {
+  string status = 1;
+  double health_score = 2;
+  repeated string issues = 3;
+  repeated string recommendations = 4;
+}
+
+message StreamPerformance {
+  double throughput = 1;
+  double latency = 2;
+  double jitter = 3;
+  double packet_loss = 4;
+  double quality_score = 5;
+}

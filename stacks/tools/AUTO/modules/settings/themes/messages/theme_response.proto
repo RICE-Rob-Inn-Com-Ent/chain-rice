@@ -1,0 +1,292 @@
+syntax = "proto3";
+
+package settings.themes.messages;
+
+import "google/protobuf/timestamp.proto";
+import "settings/themes/enums/theme_mode.proto";
+import "settings/themes/enums/theme_color.proto";
+
+// Theme data structure
+message Theme {
+  // Unique identifier for the theme
+  string id = 1;
+  
+  // The theme name identifier
+  string name = 2;
+  
+  // The theme display name
+  string display_name = 3;
+  
+  // The theme mode (light, dark, auto, etc.)
+  settings.themes.enums.ThemeMode mode = 4;
+  
+  // The primary color scheme
+  settings.themes.enums.ThemeColor primary_color = 5;
+  
+  // The secondary color scheme
+  settings.themes.enums.ThemeColor secondary_color = 6;
+  
+  // Optional description of the theme
+  string description = 7;
+  
+  // Custom primary color value (hex code)
+  string custom_primary_color = 8;
+  
+  // Custom secondary color value (hex code)
+  string custom_secondary_color = 9;
+  
+  // Custom accent color value (hex code)
+  string custom_accent_color = 10;
+  
+  // Custom background color value (hex code)
+  string custom_background_color = 11;
+  
+  // Custom surface color value (hex code)
+  string custom_surface_color = 12;
+  
+  // Custom error color value (hex code)
+  string custom_error_color = 13;
+  
+  // Custom warning color value (hex code)
+  string custom_warning_color = 14;
+  
+  // Custom success color value (hex code)
+  string custom_success_color = 15;
+  
+  // Custom info color value (hex code)
+  string custom_info_color = 16;
+  
+  // Font family for the theme
+  string font_family = 17;
+  
+  // Font size multiplier
+  double font_size_multiplier = 18;
+  
+  // Border radius for UI elements (in pixels)
+  int32 border_radius = 19;
+  
+  // Shadow intensity (0.0 = none, 1.0 = full)
+  double shadow_intensity = 20;
+  
+  // Animation duration multiplier
+  double animation_speed = 21;
+  
+  // Whether this theme is publicly available
+  bool is_public = 22;
+  
+  // Optional tags for categorization
+  repeated string tags = 23;
+  
+  // Optional metadata about the theme
+  map<string, string> metadata = 24;
+  
+  // CSS custom properties as key-value pairs
+  map<string, string> css_variables = 25;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 26;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 27;
+  
+  // Version number for optimistic concurrency control
+  int32 version = 28;
+  
+  // Whether this theme is active
+  bool is_active = 29;
+  
+  // User who created the theme
+  string created_by = 30;
+  
+  // User who last updated the theme
+  string updated_by = 31;
+  
+  // Usage count (how many times this theme has been applied)
+  int32 usage_count = 32;
+}
+
+// Response message for creating a theme
+message CreateThemeResponse {
+  // The created theme
+  Theme theme = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for retrieving a theme
+message GetThemeResponse {
+  // The requested theme
+  Theme theme = 1;
+}
+
+// Response message for retrieving a theme by name
+message GetThemeByNameResponse {
+  // The requested theme
+  Theme theme = 1;
+}
+
+// Response message for listing themes
+message ListThemesResponse {
+  // List of themes
+  repeated Theme themes = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of themes matching the filter
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Response message for updating a theme
+message UpdateThemeResponse {
+  // The updated theme
+  Theme theme = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for deleting a theme
+message DeleteThemeResponse {
+  // Whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status message
+  string message = 2;
+  
+  // ID of the deleted theme
+  string deleted_id = 3;
+}
+
+// Response message for duplicating a theme
+message DuplicateThemeResponse {
+  // The duplicated theme
+  Theme theme = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for applying a theme
+message ApplyThemeResponse {
+  // Whether the theme was applied successfully
+  bool success = 1;
+  
+  // Operation status message
+  string message = 2;
+  
+  // The applied theme
+  Theme applied_theme = 3;
+  
+  // Number of settings updated
+  int32 settings_updated = 4;
+}
+
+// Response message for previewing a theme
+message PreviewThemeResponse {
+  // Preview data in the requested format
+  string preview_data = 1;
+  
+  // Content type of the preview data
+  string content_type = 2;
+  
+  // Preview generation timestamp
+  string generated_at = 3;
+  
+  // The previewed theme
+  Theme theme = 4;
+}
+
+// Theme statistics for analytics
+message ThemeStats {
+  // Total number of themes
+  int32 total_themes = 1;
+  
+  // Number of themes by mode
+  map<string, int32> themes_by_mode = 2;
+  
+  // Number of themes by primary color
+  map<string, int32> themes_by_primary_color = 3;
+  
+  // Number of themes by secondary color
+  map<string, int32> themes_by_secondary_color = 4;
+  
+  // Number of public themes
+  int32 public_themes = 5;
+  
+  // Number of private themes
+  int32 private_themes = 6;
+  
+  // Most popular themes by usage count
+  repeated PopularTheme popular_themes = 7;
+  
+  // Last updated timestamp
+  google.protobuf.Timestamp last_updated = 8;
+}
+
+// Popular theme information
+message PopularTheme {
+  // Theme ID
+  string theme_id = 1;
+  
+  // Theme name
+  string theme_name = 2;
+  
+  // Theme display name
+  string theme_display_name = 3;
+  
+  // Usage count
+  int32 usage_count = 4;
+  
+  // Last used timestamp
+  google.protobuf.Timestamp last_used = 5;
+}
+
+// Theme usage information
+message ThemeUsage {
+  // Theme ID
+  string theme_id = 1;
+  
+  // Theme name
+  string theme_name = 2;
+  
+  // Scope where theme is applied
+  string scope = 3;
+  
+  // Scope ID
+  string scope_id = 4;
+  
+  // User who applied the theme
+  string applied_by = 5;
+  
+  // When the theme was applied
+  google.protobuf.Timestamp applied_at = 6;
+  
+  // Whether this is the current active theme
+  bool is_active = 7;
+}
+
+// Theme validation result
+message ThemeValidation {
+  // Whether the theme is valid
+  bool is_valid = 1;
+  
+  // List of validation errors
+  repeated string errors = 2;
+  
+  // List of validation warnings
+  repeated string warnings = 3;
+  
+  // Accessibility score (0-100)
+  int32 accessibility_score = 4;
+  
+  // Color contrast ratio
+  double contrast_ratio = 5;
+  
+  // Validation timestamp
+  string validated_at = 6;
+}

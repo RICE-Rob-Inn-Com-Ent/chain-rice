@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+// Service definitions for teacher management.
+package education.teachers.services;
+
+import "google/protobuf/empty.proto";
+import "AUTO/modules/education/teachers/messages/teacher.proto";
+import "AUTO/modules/education/teachers/messages/teaching_assignment.proto";
+import "AUTO/modules/education/teachers/messages/teacher_evaluation.proto";
+
+option go_package = "github.com/rice-dev/education/teachers/services;teachersservices";
+option java_multiple_files = true;
+option java_package = "com.rice.education.teachers.services";
+
+// CRUD requests
+message CreateTeacherRequest { education.teachers.messages.Teacher teacher = 1; }
+message GetTeacherRequest { string id = 1; }
+message UpdateTeacherRequest { education.teachers.messages.Teacher teacher = 1; }
+message DeleteTeacherRequest { string id = 1; }
+
+message ListTeachersRequest {
+  int32 page_size = 1;  // Page size
+  string page_token = 2;// Page token
+}
+message ListTeachersResponse {
+  repeated education.teachers.messages.Teacher teachers = 1; // Teachers
+  string next_page_token = 2;                              // Next token
+}
+
+// Business: assignment and evaluations
+message AssignTeacherRequest {
+  string teacher_id = 1; // Teacher to assign
+  string course_id = 2;  // Course ID
+  string class_id = 3;   // Optional class section
+  string role = 4;       // Role label
+}
+message UnassignTeacherRequest { string assignment_id = 1; }
+
+message SubmitTeacherEvaluationRequest { education.teachers.messages.TeacherEvaluation evaluation = 1; }
+
+// Analytics
+message GetTeacherPerformanceRequest { string teacher_id = 1; }
+message GetTeacherPerformanceResponse {
+  double average_rating = 1; // Average evaluation score [0.0 - 5.0]
+}
+
+// Service for teacher lifecycle, assignments, and analytics.
+service TeacherService {
+  // Create a new teacher.
+  rpc CreateTeacher(CreateTeacherRequest) returns (education.teachers.messages.Teacher);
+  // Retrieve a teacher by ID.
+  rpc GetTeacher(GetTeacherRequest) returns (education.teachers.messages.Teacher);
+  // Update an existing teacher.
+  rpc UpdateTeacher(UpdateTeacherRequest) returns (education.teachers.messages.Teacher);
+  // Delete a teacher by ID.
+  rpc DeleteTeacher(DeleteTeacherRequest) returns (google.protobuf.Empty);
+  // List teachers with pagination.
+  rpc ListTeachers(ListTeachersRequest) returns (ListTeachersResponse);
+
+  // Assign a teacher to a course/class.
+  rpc AssignTeacher(AssignTeacherRequest) returns (education.teachers.messages.TeachingAssignment);
+  // Unassign a teaching assignment.
+  rpc UnassignTeacher(UnassignTeacherRequest) returns (google.protobuf.Empty);
+
+  // Submit an evaluation for a teacher.
+  rpc SubmitTeacherEvaluation(SubmitTeacherEvaluationRequest) returns (education.teachers.messages.TeacherEvaluation);
+
+  // Analytics: Get teacher performance score.
+  rpc GetTeacherPerformance(GetTeacherPerformanceRequest) returns (GetTeacherPerformanceResponse);
+}
+
+

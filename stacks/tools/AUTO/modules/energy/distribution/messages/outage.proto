@@ -1,0 +1,569 @@
+syntax = "proto3";
+
+package energy.distribution.messages;
+
+import "energy/distribution/enums/outage_severity.proto";
+
+// Power outage record for distribution network
+message Outage {
+  // Unique identifier for the outage
+  string id = 1;
+  
+  // Outage reference number
+  string reference_number = 2;
+  
+  // Outage type
+  OutageType type = 3;
+  
+  // Outage severity
+  energy.distribution.enums.OutageSeverity severity = 4;
+  
+  // Outage status
+  OutageStatus status = 5;
+  
+  // Outage cause
+  OutageCause cause = 6;
+  
+  // Outage start time (unix milliseconds)
+  int64 start_time = 7;
+  
+  // Outage end time (unix milliseconds)
+  int64 end_time = 8;
+  
+  // Estimated restoration time (unix milliseconds)
+  int64 estimated_restoration_time = 9;
+  
+  // Actual restoration time (unix milliseconds)
+  int64 actual_restoration_time = 10;
+  
+  // Outage duration in minutes
+  int32 duration_minutes = 11;
+  
+  // Affected area
+  AffectedArea affected_area = 12;
+  
+  // Affected customers
+  CustomerImpact customer_impact = 13;
+  
+  // Affected assets
+  repeated string affected_assets = 14;
+  
+  // Affected circuits
+  repeated string affected_circuits = 15;
+  
+  // Affected feeders
+  repeated string affected_feeders = 16;
+  
+  // Outage location
+  OutageLocation location = 17;
+  
+  // Weather conditions
+  WeatherConditions weather_conditions = 18;
+  
+  // Response information
+  ResponseInfo response_info = 19;
+  
+  // Restoration information
+  RestorationInfo restoration_info = 20;
+  
+  // Communication information
+  CommunicationInfo communication_info = 21;
+  
+  // Financial impact
+  FinancialImpact financial_impact = 22;
+  
+  // Regulatory reporting
+  RegulatoryReporting regulatory_reporting = 23;
+  
+  // Investigation information
+  InvestigationInfo investigation_info = 24;
+  
+  // Prevention measures
+  repeated PreventionMeasure prevention_measures = 25;
+  
+  // Lessons learned
+  repeated string lessons_learned = 26;
+  
+  // Additional metadata
+  map<string, string> metadata = 27;
+  
+  // Timestamp when this outage was created (unix milliseconds)
+  int64 created_at = 28;
+  
+  // Timestamp when this outage was last updated (unix milliseconds)
+  int64 updated_at = 29;
+}
+
+// Outage type enumeration
+enum OutageType {
+  // Planned outage for maintenance
+  OUTAGE_TYPE_PLANNED = 0;
+  
+  // Unplanned outage due to equipment failure
+  OUTAGE_TYPE_UNPLANNED = 1;
+  
+  // Emergency outage
+  OUTAGE_TYPE_EMERGENCY = 2;
+  
+  // Weather-related outage
+  OUTAGE_TYPE_WEATHER = 3;
+  
+  // Equipment failure outage
+  OUTAGE_TYPE_EQUIPMENT_FAILURE = 4;
+  
+  // Human error outage
+  OUTAGE_TYPE_HUMAN_ERROR = 5;
+  
+  // Cyber attack outage
+  OUTAGE_TYPE_CYBER_ATTACK = 6;
+  
+  // Natural disaster outage
+  OUTAGE_TYPE_NATURAL_DISASTER = 7;
+  
+  // Third-party outage
+  OUTAGE_TYPE_THIRD_PARTY = 8;
+  
+  // Regulatory outage
+  OUTAGE_TYPE_REGULATORY = 9;
+  
+  // Fuel supply outage
+  OUTAGE_TYPE_FUEL_SUPPLY = 10;
+  
+  // Generation outage
+  OUTAGE_TYPE_GENERATION = 11;
+  
+  // Transmission outage
+  OUTAGE_TYPE_TRANSMISSION = 12;
+  
+  // Distribution outage
+  OUTAGE_TYPE_DISTRIBUTION = 13;
+  
+  // Load shedding outage
+  OUTAGE_TYPE_LOAD_SHEDDING = 14;
+  
+  // Brownout
+  OUTAGE_TYPE_BROWNOUT = 15;
+  
+  // Blackout
+  OUTAGE_TYPE_BLACKOUT = 16;
+  
+  // Rolling blackout
+  OUTAGE_TYPE_ROLLING_BLACKOUT = 17;
+  
+  // Voltage sag
+  OUTAGE_TYPE_VOLTAGE_SAG = 18;
+  
+  // Voltage swell
+  OUTAGE_TYPE_VOLTAGE_SWELL = 19;
+  
+  // Frequency deviation
+  OUTAGE_TYPE_FREQUENCY_DEVIATION = 20;
+  
+  // Power quality issue
+  OUTAGE_TYPE_POWER_QUALITY = 21;
+}
+
+// Outage status enumeration
+enum OutageStatus {
+  // Outage is being investigated
+  OUTAGE_STATUS_INVESTIGATING = 0;
+  
+  // Outage has been confirmed
+  OUTAGE_STATUS_CONFIRMED = 1;
+  
+  // Crew has been dispatched
+  OUTAGE_STATUS_CREW_DISPATCHED = 2;
+  
+  // Crew has arrived on site
+  OUTAGE_STATUS_CREW_ON_SITE = 3;
+  
+  // Work is in progress
+  OUTAGE_STATUS_WORK_IN_PROGRESS = 4;
+  
+  // Outage has been restored
+  OUTAGE_STATUS_RESTORED = 5;
+  
+  // Outage has been cancelled
+  OUTAGE_STATUS_CANCELLED = 6;
+  
+  // Outage has been escalated
+  OUTAGE_STATUS_ESCALATED = 7;
+  
+  // Outage is under review
+  OUTAGE_STATUS_UNDER_REVIEW = 8;
+  
+  // Outage has been closed
+  OUTAGE_STATUS_CLOSED = 9;
+  
+  // Outage is in dispute
+  OUTAGE_STATUS_DISPUTED = 10;
+  
+  // Outage has been resolved
+  OUTAGE_STATUS_RESOLVED = 11;
+  
+  // Outage is archived
+  OUTAGE_STATUS_ARCHIVED = 12;
+}
+
+// Outage cause information
+message OutageCause {
+  // Primary cause
+  string primary_cause = 1;
+  
+  // Secondary cause
+  string secondary_cause = 2;
+  
+  // Root cause
+  string root_cause = 3;
+  
+  // Contributing factors
+  repeated string contributing_factors = 4;
+  
+  // Cause category
+  string cause_category = 5;
+  
+  // Cause description
+  string description = 6;
+  
+  // Investigation findings
+  string investigation_findings = 7;
+  
+  // Preventive actions
+  repeated string preventive_actions = 8;
+}
+
+// Affected area information
+message AffectedArea {
+  // Geographic area description
+  string geographic_area = 1;
+  
+  // Service territory
+  string service_territory = 2;
+  
+  // Distribution circuit
+  string distribution_circuit = 3;
+  
+  // Feeder
+  string feeder = 4;
+  
+  // Substation
+  string substation = 5;
+  
+  // Grid section
+  string grid_section = 6;
+  
+  // Area coordinates
+  repeated GeoCoordinate area_coordinates = 7;
+  
+  // Area radius in meters
+  double area_radius = 8;
+}
+
+// Geographic coordinate
+message GeoCoordinate {
+  // Latitude
+  double latitude = 1;
+  
+  // Longitude
+  double longitude = 2;
+  
+  // Elevation in meters
+  double elevation = 3;
+}
+
+// Customer impact information
+message CustomerImpact {
+  // Total affected customers
+  int32 total_affected_customers = 1;
+  
+  // Residential customers affected
+  int32 residential_customers = 2;
+  
+  // Commercial customers affected
+  int32 commercial_customers = 3;
+  
+  // Industrial customers affected
+  int32 industrial_customers = 4;
+  
+  // Critical customers affected
+  int32 critical_customers = 5;
+  
+  // Customers restored
+  int32 customers_restored = 6;
+  
+  // Customers still affected
+  int32 customers_still_affected = 7;
+  
+  // Average restoration time in minutes
+  double average_restoration_time = 8;
+  
+  // Customer minutes lost
+  int64 customer_minutes_lost = 9;
+  
+  // System average interruption duration index (SAIDI)
+  double saidi = 10;
+  
+  // System average interruption frequency index (SAIFI)
+  double saifi = 11;
+}
+
+// Outage location information
+message OutageLocation {
+  // Street address
+  string street_address = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state_province = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // GPS coordinates (latitude)
+  double latitude = 6;
+  
+  // GPS coordinates (longitude)
+  double longitude = 7;
+  
+  // Elevation in meters
+  double elevation = 8;
+  
+  // Location accuracy in meters
+  double location_accuracy = 9;
+  
+  // Location description
+  string location_description = 10;
+}
+
+// Weather conditions during outage
+message WeatherConditions {
+  // Temperature in Celsius
+  double temperature = 1;
+  
+  // Humidity percentage
+  double humidity = 2;
+  
+  // Wind speed in km/h
+  double wind_speed = 3;
+  
+  // Wind direction in degrees
+  double wind_direction = 4;
+  
+  // Precipitation in mm
+  double precipitation = 5;
+  
+  // Weather condition description
+  string condition = 6;
+  
+  // Visibility in km
+  double visibility = 7;
+  
+  // Barometric pressure in hPa
+  double barometric_pressure = 8;
+  
+  // Weather alerts
+  repeated string weather_alerts = 9;
+}
+
+// Response information
+message ResponseInfo {
+  // Response time in minutes
+  int32 response_time_minutes = 1;
+  
+  // Dispatch time in minutes
+  int32 dispatch_time_minutes = 2;
+  
+  // Arrival time in minutes
+  int32 arrival_time_minutes = 3;
+  
+  // Response team
+  string response_team = 4;
+  
+  // Response supervisor
+  string response_supervisor = 5;
+  
+  // Response vehicles
+  repeated string response_vehicles = 6;
+  
+  // Response equipment
+  repeated string response_equipment = 7;
+  
+  // Response notes
+  string response_notes = 8;
+}
+
+// Restoration information
+message RestorationInfo {
+  // Restoration method
+  string restoration_method = 1;
+  
+  // Restoration steps
+  repeated string restoration_steps = 2;
+  
+  // Restoration team
+  string restoration_team = 3;
+  
+  // Restoration supervisor
+  string restoration_supervisor = 4;
+  
+  // Restoration vehicles
+  repeated string restoration_vehicles = 5;
+  
+  // Restoration equipment
+  repeated string restoration_equipment = 6;
+  
+  // Restoration materials
+  repeated string restoration_materials = 7;
+  
+  // Restoration notes
+  string restoration_notes = 8;
+  
+  // Restoration challenges
+  repeated string restoration_challenges = 9;
+  
+  // Restoration solutions
+  repeated string restoration_solutions = 10;
+}
+
+// Communication information
+message CommunicationInfo {
+  // Communication channels used
+  repeated string communication_channels = 1;
+  
+  // Communication with customers
+  string customer_communication = 2;
+  
+  // Communication with regulators
+  string regulator_communication = 3;
+  
+  // Communication with media
+  string media_communication = 4;
+  
+  // Communication with emergency services
+  string emergency_services_communication = 5;
+  
+  // Communication frequency
+  string communication_frequency = 6;
+  
+  // Communication effectiveness
+  string communication_effectiveness = 7;
+  
+  // Communication feedback
+  string communication_feedback = 8;
+}
+
+// Financial impact information
+message FinancialImpact {
+  // Estimated cost of outage
+  double estimated_cost = 1;
+  
+  // Actual cost of outage
+  double actual_cost = 2;
+  
+  // Labor costs
+  double labor_costs = 3;
+  
+  // Equipment costs
+  double equipment_costs = 4;
+  
+  // Material costs
+  double material_costs = 5;
+  
+  // Transportation costs
+  double transportation_costs = 6;
+  
+  // Customer compensation costs
+  double customer_compensation_costs = 7;
+  
+  // Regulatory penalty costs
+  double regulatory_penalty_costs = 8;
+  
+  // Lost revenue
+  double lost_revenue = 9;
+  
+  // Insurance claims
+  double insurance_claims = 10;
+}
+
+// Regulatory reporting information
+message RegulatoryReporting {
+  // Regulatory report required
+  bool report_required = 1;
+  
+  // Report submission deadline
+  int64 report_deadline = 2;
+  
+  // Report submission date
+  int64 report_submission_date = 3;
+  
+  // Regulatory body
+  string regulatory_body = 4;
+  
+  // Report reference number
+  string report_reference_number = 5;
+  
+  // Report status
+  string report_status = 6;
+  
+  // Report findings
+  string report_findings = 7;
+  
+  // Regulatory actions
+  repeated string regulatory_actions = 8;
+}
+
+// Investigation information
+message InvestigationInfo {
+  // Investigation required
+  bool investigation_required = 1;
+  
+  // Investigation team
+  string investigation_team = 2;
+  
+  // Investigation lead
+  string investigation_lead = 3;
+  
+  // Investigation start date
+  int64 investigation_start_date = 4;
+  
+  // Investigation completion date
+  int64 investigation_completion_date = 5;
+  
+  // Investigation findings
+  string investigation_findings = 6;
+  
+  // Investigation recommendations
+  repeated string investigation_recommendations = 7;
+  
+  // Investigation status
+  string investigation_status = 8;
+}
+
+// Prevention measure
+message PreventionMeasure {
+  // Measure type
+  string measure_type = 1;
+  
+  // Measure description
+  string description = 2;
+  
+  // Implementation status
+  string implementation_status = 3;
+  
+  // Implementation date
+  int64 implementation_date = 4;
+  
+  // Implementation cost
+  double implementation_cost = 5;
+  
+  // Effectiveness rating
+  string effectiveness_rating = 6;
+  
+  // Maintenance requirements
+  string maintenance_requirements = 7;
+}

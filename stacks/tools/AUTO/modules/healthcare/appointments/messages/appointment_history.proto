@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package healthcare.appointments.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/appointment_status.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/messages";
+
+// Appointment history entry
+message AppointmentHistoryEntry {
+  string history_id = 1;
+  string appointment_id = 2;
+  healthcare.appointments.enums.AppointmentStatus previous_status = 3;
+  healthcare.appointments.enums.AppointmentStatus new_status = 4;
+  string change_reason = 5;
+  string changed_by = 6;
+  google.protobuf.Timestamp changed_at = 7;
+  string notes = 8;
+}
+
+// Appointment history request
+message AppointmentHistoryRequest {
+  string appointment_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+// Appointment history response
+message AppointmentHistoryResponse {
+  repeated AppointmentHistoryEntry history_entries = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Create history entry request
+message CreateHistoryEntryRequest {
+  string appointment_id = 1;
+  healthcare.appointments.enums.AppointmentStatus previous_status = 2;
+  healthcare.appointments.enums.AppointmentStatus new_status = 3;
+  string change_reason = 4;
+  string changed_by = 5;
+  string notes = 6;
+}

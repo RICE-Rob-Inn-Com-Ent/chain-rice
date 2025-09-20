@@ -1,0 +1,277 @@
+syntax = "proto3";
+
+package retail.sales.messages;
+
+import "sales/enums/sales_channel.proto";
+import "sales/enums/order_status.proto";
+import "google/protobuf/timestamp.proto";
+
+// Sale represents a retail sale transaction
+message Sale {
+  // Unique identifier for the sale
+  string id = 1;
+  
+  // Order ID associated with this sale
+  string order_id = 2;
+  
+  // ID of the product sold
+  string product_id = 3;
+  
+  // Quantity sold
+  int32 quantity = 4;
+  
+  // Unit price at time of sale
+  double unit_price = 5;
+  
+  // Total amount for this sale line item
+  double total = 6;
+  
+  // Sales channel used
+  retail.sales.enums.SalesChannel channel = 7;
+  
+  // Current order status
+  retail.sales.enums.OrderStatus status = 8;
+  
+  // ID of the customer who made the purchase
+  string customer_id = 9;
+  
+  // ID of the store where sale occurred (for in-store sales)
+  string store_id = 10;
+  
+  // ID of the salesperson (for in-store sales)
+  string salesperson_id = 11;
+  
+  // Discount amount applied
+  double discount_amount = 12;
+  
+  // Tax amount
+  double tax_amount = 13;
+  
+  // Shipping cost
+  double shipping_cost = 14;
+  
+  // Promotion ID applied (if any)
+  string promotion_id = 15;
+  
+  // Timestamp when sale was made
+  google.protobuf.Timestamp sale_date = 16;
+  
+  // Timestamp when sale was created
+  google.protobuf.Timestamp created_at = 17;
+  
+  // Timestamp when sale was last updated
+  google.protobuf.Timestamp updated_at = 18;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 19;
+}
+
+// Order represents a complete customer order
+message Order {
+  // Unique identifier for the order
+  string id = 1;
+  
+  // Order number (human-readable)
+  string order_number = 2;
+  
+  // ID of the customer who placed the order
+  string customer_id = 3;
+  
+  // Sales channel used
+  retail.sales.enums.SalesChannel channel = 4;
+  
+  // Current order status
+  retail.sales.enums.OrderStatus status = 5;
+  
+  // List of sale items in this order
+  repeated Sale sale_items = 6;
+  
+  // Subtotal amount (before tax and shipping)
+  double subtotal = 7;
+  
+  // Total tax amount
+  double tax_amount = 8;
+  
+  // Total shipping cost
+  double shipping_cost = 9;
+  
+  // Total discount amount
+  double discount_amount = 10;
+  
+  // Final total amount
+  double total_amount = 11;
+  
+  // ID of the store (for in-store orders)
+  string store_id = 12;
+  
+  // ID of the salesperson (for in-store orders)
+  string salesperson_id = 13;
+  
+  // Promotion IDs applied
+  repeated string promotion_ids = 14;
+  
+  // Customer shipping address
+  Address shipping_address = 15;
+  
+  // Customer billing address
+  Address billing_address = 16;
+  
+  // Payment method used
+  string payment_method = 17;
+  
+  // Payment status
+  string payment_status = 18;
+  
+  // Timestamp when order was placed
+  google.protobuf.Timestamp order_date = 19;
+  
+  // Timestamp when order was created
+  google.protobuf.Timestamp created_at = 20;
+  
+  // Timestamp when order was last updated
+  google.protobuf.Timestamp updated_at = 21;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 22;
+}
+
+// Address represents a customer address
+message Address {
+  // Street address line 1
+  string street_address_1 = 1;
+  
+  // Street address line 2
+  string street_address_2 = 2;
+  
+  // City
+  string city = 3;
+  
+  // State or province
+  string state_province = 4;
+  
+  // Postal or ZIP code
+  string postal_code = 5;
+  
+  // Country
+  string country = 6;
+}
+
+// CreateSaleRequest contains the data needed to create a new sale
+message CreateSaleRequest {
+  // Order ID (required)
+  string order_id = 1;
+  
+  // ID of the product sold (required)
+  string product_id = 2;
+  
+  // Quantity sold (required)
+  int32 quantity = 3;
+  
+  // Unit price at time of sale (required)
+  double unit_price = 4;
+  
+  // Sales channel used (required)
+  retail.sales.enums.SalesChannel channel = 5;
+  
+  // ID of the customer (required)
+  string customer_id = 6;
+  
+  // ID of the store (optional, for in-store sales)
+  string store_id = 7;
+  
+  // ID of the salesperson (optional, for in-store sales)
+  string salesperson_id = 8;
+  
+  // Discount amount applied (optional)
+  double discount_amount = 9;
+  
+  // Tax amount (optional)
+  double tax_amount = 10;
+  
+  // Shipping cost (optional)
+  double shipping_cost = 11;
+  
+  // Promotion ID applied (optional)
+  string promotion_id = 12;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 13;
+}
+
+// GetSaleRequest contains the identifier to retrieve a specific sale
+message GetSaleRequest {
+  // Unique identifier of the sale to retrieve
+  string sale_id = 1;
+}
+
+// ListSalesRequest contains parameters for listing sales
+message ListSalesRequest {
+  // Maximum number of sales to return (default: 50, max: 1000)
+  int32 page_size = 1;
+  
+  // Token to retrieve the next page of results
+  string page_token = 2;
+  
+  // Filter by order ID
+  string order_id = 3;
+  
+  // Filter by product ID
+  string product_id = 4;
+  
+  // Filter by customer ID
+  string customer_id = 5;
+  
+  // Filter by store ID
+  string store_id = 6;
+  
+  // Filter by sales channel
+  retail.sales.enums.SalesChannel channel = 7;
+  
+  // Filter by order status
+  retail.sales.enums.OrderStatus status = 8;
+  
+  // Filter by date range - start date
+  google.protobuf.Timestamp start_date = 9;
+  
+  // Filter by date range - end date
+  google.protobuf.Timestamp end_date = 10;
+  
+  // Filter by salesperson ID
+  string salesperson_id = 11;
+}
+
+// UpdateSaleRequest contains the data needed to update an existing sale
+message UpdateSaleRequest {
+  // Unique identifier of the sale to update
+  string sale_id = 1;
+  
+  // Updated quantity (optional)
+  int32 quantity = 2;
+  
+  // Updated unit price (optional)
+  double unit_price = 3;
+  
+  // Updated order status (optional)
+  retail.sales.enums.OrderStatus status = 4;
+  
+  // Updated discount amount (optional)
+  double discount_amount = 5;
+  
+  // Updated tax amount (optional)
+  double tax_amount = 6;
+  
+  // Updated shipping cost (optional)
+  double shipping_cost = 7;
+  
+  // Updated promotion ID (optional)
+  string promotion_id = 8;
+  
+  // Updated metadata (optional)
+  map<string, string> metadata = 9;
+}
+
+// DeleteSaleRequest contains the identifier to delete a specific sale
+message DeleteSaleRequest {
+  // Unique identifier of the sale to delete
+  string sale_id = 1;
+}

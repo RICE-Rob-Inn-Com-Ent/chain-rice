@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package healthcare.patients.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/patient_status.proto";
+import "../enums/patient_type.proto";
+import "../enums/insurance_status.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/patients/messages";
+
+// Address information
+message Address {
+  string address_id = 1;
+  string street_address = 2;
+  string city = 3;
+  string state = 4;
+  string postal_code = 5;
+  string country = 6;
+  string address_type = 7; // home, work, mailing, emergency
+  bool is_primary = 8;
+}
+
+// Insurance information
+message Insurance {
+  string insurance_id = 1;
+  string insurance_company = 2;
+  string policy_number = 3;
+  string group_number = 4;
+  string subscriber_id = 5;
+  string subscriber_name = 6;
+  healthcare.patients.enums.InsuranceType insurance_type = 7;
+  healthcare.patients.enums.InsuranceStatus status = 8;
+  google.protobuf.Timestamp effective_date = 9;
+  google.protobuf.Timestamp expiration_date = 10;
+  string copay_amount = 11;
+  string deductible_amount = 12;
+  string coverage_percentage = 13;
+  string notes = 14;
+}
+
+// Patient model
+message Patient {
+  string patient_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string middle_name = 4;
+  string preferred_name = 5;
+  string title = 6; // Mr., Mrs., Dr., etc.
+  string suffix = 7; // Jr., Sr., III, etc.
+  google.protobuf.Timestamp date_of_birth = 8;
+  string gender = 9;
+  string marital_status = 10;
+  string race = 11;
+  string ethnicity = 12;
+  string language_preference = 13;
+  string religion = 14;
+  string occupation = 15;
+  string employer = 16;
+  string ssn = 17; // Social Security Number (encrypted)
+  string mrn = 18; // Medical Record Number
+  healthcare.patients.enums.PatientStatus status = 19;
+  healthcare.patients.enums.PatientType patient_type = 20;
+  repeated Address addresses = 21;
+  repeated Insurance insurance_info = 22;
+  string primary_phone = 23;
+  string secondary_phone = 24;
+  string email = 25;
+  string emergency_contact_name = 26;
+  string emergency_contact_phone = 27;
+  string emergency_contact_relationship = 28;
+  string primary_physician = 29;
+  string referring_physician = 30;
+  repeated string allergies = 31;
+  repeated string medications = 32;
+  repeated string medical_conditions = 33;
+  string notes = 34;
+  google.protobuf.Timestamp registration_date = 35;
+  google.protobuf.Timestamp last_visit_date = 36;
+  google.protobuf.Timestamp created_at = 37;
+  google.protobuf.Timestamp updated_at = 38;
+  string created_by = 39;
+  string updated_by = 40;
+}
+
+// Patient request for creating/updating
+message PatientRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string middle_name = 3;
+  string preferred_name = 4;
+  string title = 5;
+  string suffix = 6;
+  google.protobuf.Timestamp date_of_birth = 7;
+  string gender = 8;
+  string marital_status = 9;
+  string race = 10;
+  string ethnicity = 11;
+  string language_preference = 12;
+  string religion = 13;
+  string occupation = 14;
+  string employer = 15;
+  string ssn = 16;
+  healthcare.patients.enums.PatientType patient_type = 17;
+  repeated Address addresses = 18;
+  repeated Insurance insurance_info = 19;
+  string primary_phone = 20;
+  string secondary_phone = 21;
+  string email = 22;
+  string emergency_contact_name = 23;
+  string emergency_contact_phone = 24;
+  string emergency_contact_relationship = 25;
+  string primary_physician = 26;
+  string referring_physician = 27;
+  repeated string allergies = 28;
+  repeated string medications = 29;
+  repeated string medical_conditions = 30;
+  string notes = 31;
+}
+
+// Patient response
+message PatientResponse {
+  bool success = 1;
+  string message = 2;
+  Patient patient = 3;
+}
+
+// List patients request
+message ListPatientsRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string mrn = 3;
+  string ssn = 4;
+  string phone = 5;
+  string email = 6;
+  healthcare.patients.enums.PatientStatus status = 7;
+  healthcare.patients.enums.PatientType patient_type = 8;
+  healthcare.patients.enums.InsuranceStatus insurance_status = 9;
+  google.protobuf.Timestamp registration_start_date = 10;
+  google.protobuf.Timestamp registration_end_date = 11;
+  int32 page_size = 12;
+  string page_token = 13;
+}
+
+// List patients response
+message ListPatientsResponse {
+  repeated Patient patients = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Patient summary
+message PatientSummary {
+  string patient_id = 1;
+  string full_name = 2;
+  string mrn = 3;
+  google.protobuf.Timestamp date_of_birth = 4;
+  int32 age = 5;
+  string gender = 6;
+  healthcare.patients.enums.PatientStatus status = 7;
+  healthcare.patients.enums.PatientType patient_type = 8;
+  string primary_phone = 9;
+  string email = 10;
+  google.protobuf.Timestamp last_visit_date = 11;
+  int32 total_visits = 12;
+  string primary_physician = 13;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package healthcare.patients.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/patients/enums";
+
+// Patient status enumeration
+enum PatientStatus {
+  PATIENT_STATUS_UNSPECIFIED = 0;
+  PATIENT_STATUS_ACTIVE = 1;
+  PATIENT_STATUS_INACTIVE = 2;
+  PATIENT_STATUS_DECEASED = 3;
+  PATIENT_STATUS_SUSPENDED = 4;
+  PATIENT_STATUS_TRANSFERRED = 5;
+  PATIENT_STATUS_DISCHARGED = 6;
+  PATIENT_STATUS_PENDING_REGISTRATION = 7;
+}

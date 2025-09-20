@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package entertainment.content.messages;
+
+// Локалізація контенту
+message Localization {
+  string id = 1;
+  string content_id = 2;
+  string language_code = 3;
+  string country_code = 4;
+  
+  // Локалізований контент
+  string title = 5;
+  string description = 6;
+  string short_description = 7;
+  repeated string tags = 8;
+  repeated string keywords = 9;
+  
+  // Медіа файли
+  repeated string subtitle_urls = 10;
+  repeated string audio_track_urls = 11;
+  repeated string thumbnail_urls = 12;
+  repeated string poster_urls = 13;
+  
+  // Метадані локалізації
+  string translator = 14;
+  string voice_actor = 15;
+  string dubbing_studio = 16;
+  string subtitle_provider = 17;
+  
+  // Якість та статус
+  LocalizationQuality quality = 18;
+  LocalizationStatus status = 19;
+  bool is_auto_generated = 20;
+  bool is_verified = 21;
+  
+  // Дати
+  int64 created_at = 22;
+  int64 updated_at = 23;
+  int64 verified_at = 24;
+  
+  // Додаткові поля
+  map<string, string> custom_fields = 25;
+  string external_id = 26;
+}
+
+// Якість локалізації
+enum LocalizationQuality {
+  LOCALIZATION_QUALITY_UNSPECIFIED = 0;
+  PROFESSIONAL = 1;
+  COMMUNITY = 2;
+  AUTO_GENERATED = 3;
+  MACHINE_TRANSLATED = 4;
+  HUMAN_REVIEWED = 5;
+  EXPERT_REVIEWED = 6;
+}
+
+// Статус локалізації
+enum LocalizationStatus {
+  LOCALIZATION_STATUS_UNSPECIFIED = 0;
+  PENDING = 1;
+  IN_PROGRESS = 2;
+  COMPLETED = 3;
+  REVIEWED = 4;
+  APPROVED = 5;
+  REJECTED = 6;
+  NEEDS_REVISION = 7;
+  EXPIRED = 8;
+}

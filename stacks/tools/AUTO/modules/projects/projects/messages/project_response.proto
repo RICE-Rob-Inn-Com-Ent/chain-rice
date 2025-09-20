@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package projects.messages;
+
+import "projects/messages/project_request.proto";
+import "google/rpc/status.proto";
+
+// CreateProjectResponse contains the result of creating a new project
+message CreateProjectResponse {
+  // The created project
+  Project project = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// GetProjectResponse contains the result of retrieving a project
+message GetProjectResponse {
+  // The requested project
+  Project project = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// ListProjectsResponse contains the result of listing projects
+message ListProjectsResponse {
+  // List of projects matching the request criteria
+  repeated Project projects = 1;
+  
+  // Token to retrieve the next page of results
+  string next_page_token = 2;
+  
+  // Total number of projects matching the criteria
+  int32 total_count = 3;
+  
+  // Operation status
+  google.rpc.Status status = 4;
+}
+
+// UpdateProjectResponse contains the result of updating a project
+message UpdateProjectResponse {
+  // The updated project
+  Project project = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// DeleteProjectResponse contains the result of deleting a project
+message DeleteProjectResponse {
+  // Indicates whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}

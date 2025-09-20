@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package construction.contractors.enums;
+
+// Enumeration of different statuses for contractors
+enum ContractorStatus {
+  // Default value for unset contractor status
+  CONTRACTOR_STATUS_UNSPECIFIED = 0;
+  
+  // Contractor is active and available for work
+  ACTIVE = 1;
+  
+  // Contractor is temporarily unavailable
+  INACTIVE = 2;
+  
+  // Contractor is suspended due to violations or issues
+  SUSPENDED = 3;
+  
+  // Contractor is no longer in business
+  DISSOLVED = 4;
+  
+  // Contractor is under review or investigation
+  UNDER_REVIEW = 5;
+  
+  // Contractor is pending approval or certification
+  PENDING_APPROVAL = 6;
+  
+  // Contractor is blacklisted and cannot be used
+  BLACKLISTED = 7;
+  
+  // Contractor is on probation
+  ON_PROBATION = 8;
+  
+  // Contractor is in good standing
+  GOOD_STANDING = 9;
+  
+  // Contractor has outstanding issues
+  HAS_ISSUES = 10;
+  
+  // Contractor is certified and verified
+  CERTIFIED = 11;
+  
+  // Contractor is not certified
+  NOT_CERTIFIED = 12;
+  
+  // Contractor is expired (certification or license)
+  EXPIRED = 13;
+  
+  // Contractor is in the process of renewal
+  RENEWAL_PENDING = 14;
+}

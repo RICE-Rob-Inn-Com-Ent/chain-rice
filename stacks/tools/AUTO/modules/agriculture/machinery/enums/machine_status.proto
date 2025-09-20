@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package agriculture.machinery.enums;
+
+// MachineStatus enum defines the operational status of agricultural machinery
+enum MachineStatus {
+  // Operational states
+  MACHINE_STATUS_UNSPECIFIED = 0;
+  MACHINE_STATUS_OPERATIONAL = 1;    // Machine is working normally
+  MACHINE_STATUS_IDLE = 2;           // Machine is available but not in use
+  MACHINE_STATUS_IN_USE = 3;         // Machine is currently being used
+  MACHINE_STATUS_MAINTENANCE = 4;    // Machine is under maintenance
+  MACHINE_STATUS_REPAIR = 5;         // Machine is being repaired
+  
+  // Non-operational states
+  MACHINE_STATUS_OUT_OF_SERVICE = 6; // Machine is out of service
+  MACHINE_STATUS_RETIRED = 7;        // Machine has been retired
+  MACHINE_STATUS_SOLD = 8;           // Machine has been sold
+  MACHINE_STATUS_SCRAPPED = 9;       // Machine has been scrapped
+  
+  // Problem states
+  MACHINE_STATUS_BROKEN = 10;        // Machine is broken and needs repair
+  MACHINE_STATUS_MALFUNCTIONING = 11; // Machine has operational issues
+  MACHINE_STATUS_OVERHEATING = 12;   // Machine is overheating
+  MACHINE_STATUS_FUEL_ISSUE = 13;    // Machine has fuel-related problems
+  MACHINE_STATUS_ELECTRICAL_ISSUE = 14; // Machine has electrical problems
+  MACHINE_STATUS_HYDRAULIC_ISSUE = 15; // Machine has hydraulic problems
+  MACHINE_STATUS_ENGINE_ISSUE = 16;  // Machine has engine problems
+  MACHINE_STATUS_TRANSMISSION_ISSUE = 17; // Machine has transmission problems
+  
+  // Maintenance states
+  MACHINE_STATUS_SCHEDULED_MAINTENANCE = 18; // Scheduled maintenance due
+  MACHINE_STATUS_OVERDUE_MAINTENANCE = 19;   // Maintenance is overdue
+  MACHINE_STATUS_MAINTENANCE_IN_PROGRESS = 20; // Currently under maintenance
+  MACHINE_STATUS_MAINTENANCE_COMPLETE = 21;  // Maintenance completed
+  MACHINE_STATUS_INSPECTION_DUE = 22;        // Inspection is due
+  MACHINE_STATUS_INSPECTION_OVERDUE = 23;    // Inspection is overdue
+  
+  // Seasonal states
+  MACHINE_STATUS_STORED = 24;        // Machine is in storage
+  MACHINE_STATUS_WINTERIZED = 25;    // Machine is prepared for winter storage
+  MACHINE_STATUS_READY_FOR_SEASON = 26; // Machine is ready for the season
+  MACHINE_STATUS_SEASONAL_USE = 27;  // Machine is used seasonally
+  
+  // Safety states
+  MACHINE_STATUS_SAFETY_CHECK_DUE = 28; // Safety check is due
+  MACHINE_STATUS_SAFETY_ISSUE = 29;     // Machine has safety issues
+  MACHINE_STATUS_LOCKED_OUT = 30;       // Machine is locked out for safety
+  MACHINE_STATUS_QUARANTINED = 31;      // Machine is quarantined
+  
+  // Financial states
+  MACHINE_STATUS_LEASED = 32;        // Machine is leased
+  MACHINE_STATUS_RENTED = 33;        // Machine is rented out
+  MACHINE_STATUS_FOR_SALE = 34;      // Machine is for sale
+  MACHINE_STATUS_PENDING_SALE = 35;  // Machine sale is pending
+  
+  // Transport states
+  MACHINE_STATUS_IN_TRANSIT = 36;    // Machine is being transported
+  MACHINE_STATUS_DELIVERED = 37;     // Machine has been delivered
+  MACHINE_STATUS_PICKED_UP = 38;     // Machine has been picked up
+  
+  // Weather-related states
+  MACHINE_STATUS_WEATHER_DELAY = 39; // Operation delayed due to weather
+  MACHINE_STATUS_WET_CONDITIONS = 40; // Machine cannot operate in wet conditions
+  MACHINE_STATUS_FROZEN = 41;        // Machine is frozen and cannot operate
+  
+  // Operator states
+  MACHINE_STATUS_NO_OPERATOR = 42;   // No qualified operator available
+  MACHINE_STATUS_OPERATOR_TRAINING = 43; // Operator is being trained
+  MACHINE_STATUS_OPERATOR_SICK = 44; // Operator is sick
+  
+  // Fuel and energy states
+  MACHINE_STATUS_LOW_FUEL = 45;      // Machine is low on fuel
+  MACHINE_STATUS_NO_FUEL = 46;       // Machine is out of fuel
+  MACHINE_STATUS_CHARGING = 47;      // Electric machine is charging
+  MACHINE_STATUS_LOW_BATTERY = 48;   // Electric machine has low battery
+  
+  // Performance states
+  MACHINE_STATUS_UNDERPERFORMING = 49; // Machine is not performing optimally
+  MACHINE_STATUS_OVERPERFORMING = 50;  // Machine is exceeding expectations
+  MACHINE_STATUS_EFFICIENCY_ISSUE = 51; // Machine has efficiency problems
+}

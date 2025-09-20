@@ -1,0 +1,201 @@
+syntax = "proto3";
+
+package retail;
+
+// Retail Module - Enterprise-grade gRPC microservices for retail management
+// This module provides comprehensive retail operations capabilities including:
+// - Inventory management and stock tracking
+// - Product catalog and lifecycle management
+// - Promotions and discount management
+// - Sales processing and order management
+// - Store location and operations management
+
+// =============================================================================
+// INVENTORY SUBMODULE
+// =============================================================================
+
+// Import inventory enums
+import "inventory/enums/stock_status.proto";
+import "inventory/enums/inventory_action.proto";
+
+// Import inventory messages
+import "inventory/messages/inventory_request.proto";
+import "inventory/messages/inventory_response.proto";
+
+// Import inventory services
+import "inventory/services/inventory_service.proto";
+
+// =============================================================================
+// PRODUCTS SUBMODULE
+// =============================================================================
+
+// Import product enums
+import "products/enums/product_category.proto";
+import "products/enums/product_status.proto";
+
+// Import product messages
+import "products/messages/product_request.proto";
+import "products/messages/product_response.proto";
+
+// Import product services
+import "products/services/product_service.proto";
+
+// =============================================================================
+// PROMOTIONS SUBMODULE
+// =============================================================================
+
+// Import promotion enums
+import "promotions/enums/promotion_type.proto";
+import "promotions/enums/promotion_status.proto";
+
+// Import promotion messages
+import "promotions/messages/promotion_request.proto";
+import "promotions/messages/promotion_response.proto";
+
+// Import promotion services
+import "promotions/services/promotion_service.proto";
+
+// =============================================================================
+// SALES SUBMODULE
+// =============================================================================
+
+// Import sales enums
+import "sales/enums/sales_channel.proto";
+import "sales/enums/order_status.proto";
+
+// Import sales messages
+import "sales/messages/sales_request.proto";
+import "sales/messages/sales_response.proto";
+
+// Import sales services
+import "sales/services/sales_service.proto";
+
+// =============================================================================
+// STORES SUBMODULE
+// =============================================================================
+
+// Import store enums
+import "stores/enums/store_type.proto";
+import "stores/enums/store_status.proto";
+
+// Import store messages
+import "stores/messages/store_request.proto";
+import "stores/messages/store_response.proto";
+
+// Import store services
+import "stores/services/store_service.proto";
+
+// =============================================================================
+// MODULE DOCUMENTATION
+// =============================================================================
+
+/*
+Retail Module Architecture:
+
+This module follows enterprise-grade microservices architecture patterns for retail operations:
+
+1. DOMAIN SEPARATION:
+   - inventory/: Stock management and inventory tracking
+   - products/: Product catalog and lifecycle management
+   - promotions/: Discount and promotion management
+   - sales/: Order processing and sales transactions
+   - stores/: Store location and operations management
+
+2. LAYERED STRUCTURE:
+   - enums/: Domain-specific enumerations
+   - messages/: Request/response data structures
+   - services/: gRPC service definitions
+
+3. DESIGN PRINCIPLES:
+   - Single Responsibility: Each service handles one retail domain
+   - Consistency: Uniform CRUD operations across all services
+   - Extensibility: Metadata fields for future enhancements
+   - Validation: Proper field validation and error handling
+   - Documentation: Comprehensive inline documentation
+
+4. API CONVENTIONS:
+   - RESTful HTTP mappings via google.api.http annotations
+   - Consistent naming: Create, Get, List, Update, Delete operations
+   - Pagination: Standard page_size/page_token pattern
+   - Filtering: Flexible query parameters for all list operations
+   - Error Handling: google.rpc.Status for consistent error responses
+
+5. DATA MODELING:
+   - UUID-based identifiers for all entities
+   - Timestamp fields for audit trails
+   - Metadata maps for extensibility
+   - Proper enum usage for type safety
+   - Optional fields with sensible defaults
+
+Usage Examples:
+
+// Create a new product
+CreateProductRequest {
+  name: "Wireless Bluetooth Headphones"
+  description: "High-quality wireless headphones with noise cancellation"
+  category: PRODUCT_CATEGORY_ELECTRONICS
+  sku: "WBH-001"
+  price: 199.99
+  brand: "TechSound"
+}
+
+// Add inventory for the product
+CreateInventoryRequest {
+  product_id: "product-123"
+  store_id: "store-456"
+  quantity: 50
+  reorder_threshold: 10
+  unit_cost: 120.00
+  unit_price: 199.99
+}
+
+// Create a promotion
+CreatePromotionRequest {
+  name: "Black Friday Sale"
+  description: "20% off all electronics"
+  type: PROMOTION_TYPE_PERCENTAGE_DISCOUNT
+  discount_percent: 20.0
+  start_date: "2024-11-24T00:00:00Z"
+  end_date: "2024-11-30T23:59:59Z"
+  category_ids: ["electronics-category-id"]
+}
+
+// Process a sale
+CreateSaleRequest {
+  order_id: "order-789"
+  product_id: "product-123"
+  quantity: 1
+  unit_price: 199.99
+  channel: SALES_CHANNEL_STORE
+  customer_id: "customer-101"
+  store_id: "store-456"
+  promotion_id: "promotion-202"
+}
+
+// Create a store location
+CreateStoreRequest {
+  name: "TechSound Downtown"
+  type: STORE_TYPE_BRICK_AND_MORTAR
+  location: {
+    address: "123 Main Street"
+    city: "New York"
+    state_province: "NY"
+    postal_code: "10001"
+    country: "USA"
+  }
+  contact: {
+    phone_number: "+1-555-123-4567"
+    email: "downtown@techsound.com"
+  }
+  operating_hours: [
+    { day_of_week: 1, opening_time: "09:00", closing_time: "21:00" },
+    { day_of_week: 2, opening_time: "09:00", closing_time: "21:00" },
+    { day_of_week: 3, opening_time: "09:00", closing_time: "21:00" },
+    { day_of_week: 4, opening_time: "09:00", closing_time: "21:00" },
+    { day_of_week: 5, opening_time: "09:00", closing_time: "21:00" },
+    { day_of_week: 6, opening_time: "10:00", closing_time: "22:00" },
+    { day_of_week: 0, opening_time: "10:00", closing_time: "20:00" }
+  ]
+  manager_id: "manager-303"
+}
+*/

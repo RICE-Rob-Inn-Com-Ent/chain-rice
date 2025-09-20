@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package horeca.loyalty.services;
+
+import "google/protobuf/timestamp.proto";
+
+// Loyalty Analytics Service - Member stats and engagement
+service LoyaltyAnalyticsService {
+  // Get member engagement metrics
+  rpc GetMemberEngagementMetrics(GetMemberEngagementMetricsRequest) returns (GetMemberEngagementMetricsResponse);
+  
+  // Get tier distribution
+  rpc GetTierDistribution(GetTierDistributionRequest) returns (GetTierDistributionResponse);
+  
+  // Get points analytics
+  rpc GetPointsAnalytics(GetPointsAnalyticsRequest) returns (GetPointsAnalyticsResponse);
+  
+  // Get redemption analytics
+  rpc GetRedemptionAnalytics(GetRedemptionAnalyticsRequest) returns (GetRedemptionAnalyticsResponse);
+  
+  // Get member lifetime value
+  rpc GetMemberLifetimeValue(GetMemberLifetimeValueRequest) returns (GetMemberLifetimeValueResponse);
+  
+  // Get retention analysis
+  rpc GetRetentionAnalysis(GetRetentionAnalysisRequest) returns (GetRetentionAnalysisResponse);
+  
+  // Get acquisition analysis
+  rpc GetAcquisitionAnalysis(GetAcquisitionAnalysisRequest) returns (GetAcquisitionAnalysisResponse);
+  
+  // Get program performance
+  rpc GetProgramPerformance(GetProgramPerformanceRequest) returns (GetProgramPerformanceResponse);
+}
+
+// Request/Response messages
+message GetMemberEngagementMetricsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string tier = 3;
+}
+
+message GetMemberEngagementMetricsResponse {
+  repeated EngagementMetricsData engagement_data = 1;
+  double average_engagement_score = 2;
+  int32 active_members = 3;
+  int32 total_members = 4;
+  double engagement_rate = 5;
+}
+
+message GetTierDistributionRequest {
+  google.protobuf.Timestamp date = 1;
+}
+
+message GetTierDistributionResponse {
+  repeated TierDistributionData tier_data = 1;
+  int32 total_members = 2;
+  double average_tier_value = 3;
+}
+
+message GetPointsAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string group_by = 3; // day, week, month, tier
+}
+
+message GetPointsAnalyticsResponse {
+  repeated PointsAnalyticsData points_data = 1;
+  int32 total_points_earned = 2;
+  int32 total_points_redeemed = 3;
+  int32 total_points_expired = 4;
+  double points_utilization_rate = 5;
+}
+
+message GetRedemptionAnalyticsRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string reward_type = 3;
+}
+
+message GetRedemptionAnalyticsResponse {
+  repeated RedemptionAnalyticsData redemption_data = 1;
+  int32 total_redemptions = 2;
+  double average_redemption_value = 3;
+  double redemption_rate = 4;
+}
+
+message GetMemberLifetimeValueRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string tier = 3;
+}
+
+message GetMemberLifetimeValueResponse {
+  repeated LifetimeValueData lifetime_value_data = 1;
+  double average_lifetime_value = 2;
+  double total_program_value = 3;
+  double roi = 4;
+}
+
+message GetRetentionAnalysisRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string period = 3; // monthly, quarterly, yearly
+}
+
+message GetRetentionAnalysisResponse {
+  repeated RetentionData retention_data = 1;
+  double average_retention_rate = 2;
+  double churn_rate = 3;
+  int32 retained_members = 4;
+}
+
+message GetAcquisitionAnalysisRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+  string acquisition_channel = 3;
+}
+
+message GetAcquisitionAnalysisResponse {
+  repeated AcquisitionData acquisition_data = 1;
+  int32 total_new_members = 2;
+  double average_acquisition_cost = 3;
+  double conversion_rate = 4;
+}
+
+message GetProgramPerformanceRequest {
+  google.protobuf.Timestamp date_from = 1;
+  google.protobuf.Timestamp date_to = 2;
+}
+
+message GetProgramPerformanceResponse {
+  ProgramPerformanceData performance_data = 1;
+  double program_roi = 2;
+  double member_satisfaction = 3;
+  double engagement_score = 4;
+}
+
+// Data structures
+message EngagementMetricsData {
+  google.protobuf.Timestamp date = 1;
+  double engagement_score = 2;
+  int32 active_members = 3;
+  int32 transactions = 4;
+  double average_transaction_value = 5;
+}
+
+message TierDistributionData {
+  string tier = 1;
+  int32 member_count = 2;
+  double percentage = 3;
+  double average_points = 4;
+  double average_spending = 5;
+}
+
+message PointsAnalyticsData {
+  google.protobuf.Timestamp date = 1;
+  int32 points_earned = 2;
+  int32 points_redeemed = 3;
+  int32 points_expired = 4;
+  int32 active_members = 5;
+}
+
+message RedemptionAnalyticsData {
+  google.protobuf.Timestamp date = 1;
+  string reward_type = 2;
+  int32 redemptions = 3;
+  double total_value = 4;
+  double average_value = 5;
+}
+
+message LifetimeValueData {
+  string tier = 1;
+  double average_lifetime_value = 2;
+  double average_spending = 3;
+  double average_points_earned = 4;
+  double average_redemptions = 5;
+}
+
+message RetentionData {
+  google.protobuf.Timestamp period = 1;
+  double retention_rate = 2;
+  int32 retained_members = 3;
+  int32 churned_members = 4;
+  double churn_rate = 5;
+}
+
+message AcquisitionData {
+  google.protobuf.Timestamp date = 1;
+  string acquisition_channel = 2;
+  int32 new_members = 3;
+  double acquisition_cost = 4;
+  double conversion_rate = 5;
+}
+
+message ProgramPerformanceData {
+  int32 total_members = 1;
+  double total_revenue = 2;
+  double total_costs = 3;
+  double net_profit = 4;
+  double profit_margin = 5;
+  double member_satisfaction = 6;
+  double engagement_score = 7;
+}

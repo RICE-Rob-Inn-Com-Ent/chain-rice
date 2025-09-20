@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package entertainment.content.enums;
+
+// Статуси контенту в системі
+enum ContentStatus {
+  CONTENT_STATUS_UNSPECIFIED = 0;
+  
+  // Статуси розробки
+  DRAFT = 1;
+  IN_PRODUCTION = 2;
+  POST_PRODUCTION = 3;
+  EDITING = 4;
+  
+  // Статуси якості
+  QUALITY_CHECK = 5;
+  APPROVED = 6;
+  REJECTED = 7;
+  NEEDS_REVISION = 8;
+  
+  // Статуси публікації
+  SCHEDULED = 9;
+  PUBLISHED = 10;
+  UNPUBLISHED = 11;
+  ARCHIVED = 12;
+  
+  // Статуси доступності
+  AVAILABLE = 13;
+  UNAVAILABLE = 14;
+  GEO_BLOCKED = 15;
+  AGE_RESTRICTED = 16;
+  
+  // Статуси модерації
+  PENDING_MODERATION = 17;
+  MODERATED = 18;
+  FLAGGED = 19;
+  REMOVED = 20;
+  
+  // Статуси ліцензування
+  LICENSED = 21;
+  LICENSE_EXPIRED = 22;
+  LICENSE_PENDING = 23;
+  LICENSE_REJECTED = 24;
+  
+  // Статуси технічні
+  PROCESSING = 25;
+  FAILED_PROCESSING = 26;
+  READY_FOR_DISTRIBUTION = 27;
+  DISTRIBUTED = 28;
+}

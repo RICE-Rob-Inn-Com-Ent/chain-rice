@@ -1,0 +1,188 @@
+syntax = "proto3";
+
+package blockchain.smart_contracts.messages;
+
+import "blockchain/smart_contracts/enums/contract_type.proto";
+import "blockchain/smart_contracts/enums/contract_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/smart_contracts/messages";
+
+// Coin represents a token with denomination and amount
+message Coin {
+  string denom = 1;  // Token denomination
+  string amount = 2; // Token amount as string
+}
+
+// SmartContract represents a smart contract
+message SmartContract {
+  string id = 1;                    // Unique contract identifier
+  string address = 2;               // Contract address
+  string name = 3;                  // Contract name
+  string description = 4;           // Contract description
+  string creator = 5;               // Contract creator address (sdk.Address)
+  int64 timestamp = 6;              // Contract creation timestamp
+  
+  // Contract classification
+  blockchain.smart_contracts.enums.ContractType contract_type = 7; // Type of contract
+  blockchain.smart_contracts.enums.ContractStatus status = 8; // Current contract status
+  
+  // Contract code and metadata
+  string bytecode = 9;              // Contract bytecode (hex)
+  string source_code = 10;          // Contract source code
+  string abi = 11;                  // Contract ABI (JSON)
+  string compiler_version = 12;     // Compiler version used
+  string language = 13;             // Programming language (Solidity, Vyper, etc.)
+  
+  // Contract deployment
+  string deployment_tx_hash = 14;   // Deployment transaction hash
+  int64 deployment_block = 15;      // Deployment block number
+  int64 deployment_gas_used = 16;   // Gas used for deployment
+  string deployment_gas_price = 17; // Gas price for deployment
+  
+  // Contract configuration
+  repeated string supported_tokens = 18; // Supported tokens
+  map<string, string> parameters = 19; // Contract parameters
+  string upgrade_proxy = 20;        // Upgrade proxy address (if applicable)
+  string implementation = 21;       // Implementation address (if applicable)
+  
+  // Contract functionality
+  repeated string functions = 22;   // Available functions
+  repeated string events = 23;      // Available events
+  repeated string interfaces = 24;  // Implemented interfaces
+  string standard = 25;             // Contract standard (ERC-20, ERC-721, etc.)
+  
+  // Security and verification
+  bool is_verified = 26;            // Whether contract is verified
+  bool is_audited = 27;             // Whether contract is audited
+  string audit_report = 28;         // Audit report URL
+  string security_score = 29;       // Security score
+  repeated string vulnerabilities = 30; // Known vulnerabilities
+  
+  // Contract usage
+  int64 total_transactions = 31;    // Total transactions
+  int64 unique_users = 32;          // Number of unique users
+  string total_volume = 33;         // Total transaction volume
+  string tvl = 34;                  // Total value locked
+  
+  // Contract fees and economics
+  repeated Coin fees = 35;          // Contract fees
+  string fee_percentage = 36;       // Fee percentage
+  repeated Coin treasury_balance = 37; // Treasury balance
+  string revenue = 38;              // Contract revenue
+  
+  // Governance and administration
+  string admin = 39;                // Admin address
+  string owner = 40;                // Owner address
+  repeated string authorized_addresses = 41; // Authorized addresses
+  bool is_upgradeable = 42;         // Whether contract is upgradeable
+  
+  // Contract metadata
+  string website = 43;              // Contract website
+  string documentation = 44;        // Documentation URL
+  string github_repo = 45;          // GitHub repository
+  map<string, string> metadata = 46; // Additional metadata
+  int64 last_updated = 47;          // Last update timestamp
+  int64 last_interaction = 48;      // Last interaction timestamp
+}
+
+// ContractParams defines the parameters for the smart contracts module
+message ContractParams {
+  string authority = 1;             // Module authority address
+  repeated Coin deployment_fees = 2; // Contract deployment fees
+  string max_contract_size = 3;     // Maximum contract size
+  string max_gas_limit = 4;         // Maximum gas limit
+  string min_gas_price = 5;         // Minimum gas price
+  bool require_verification = 6;    // Whether verification is required
+  bool require_audit = 7;           // Whether audit is required
+  string security_threshold = 8;    // Security score threshold
+  int64 max_contracts_per_address = 9; // Maximum contracts per address
+}
+
+// MsgDeployContract deploys a new smart contract
+message MsgDeployContract {
+  string creator = 1;               // Deployer address (sdk.Address)
+  string name = 2;                  // Contract name
+  string description = 3;           // Contract description
+  blockchain.smart_contracts.enums.ContractType contract_type = 4; // Contract type
+  string bytecode = 5;              // Contract bytecode
+  string abi = 6;                   // Contract ABI
+  string constructor_params = 7;    // Constructor parameters (JSON)
+  repeated Coin deployment_fees = 8; // Deployment fees
+  map<string, string> metadata = 9; // Additional metadata
+}
+
+// MsgDeployContractResponse returns the deployed contract
+message MsgDeployContractResponse {
+  string contract_id = 1;           // Created contract ID
+  string contract_address = 2;      // Deployed contract address
+  string deployment_tx_hash = 3;    // Deployment transaction hash
+}
+
+// MsgUpdateContract updates an existing contract
+message MsgUpdateContract {
+  string creator = 1;               // Updater address (sdk.Address)
+  string contract_id = 2;           // Contract ID to update
+  string name = 3;                  // Updated name
+  string description = 4;           // Updated description
+  map<string, string> parameters = 5; // Updated parameters
+  map<string, string> metadata = 6; // Updated metadata
+}
+
+// MsgUpdateContractResponse returns the update result
+message MsgUpdateContractResponse {
+  bool success = 1;                 // Update success status
+}
+
+// MsgVerifyContract verifies a contract
+message MsgVerifyContract {
+  string creator = 1;               // Verifier address (sdk.Address)
+  string contract_id = 2;           // Contract ID to verify
+  string source_code = 3;           // Source code
+  string compiler_version = 4;      // Compiler version
+  string verification_proof = 5;    // Verification proof
+}
+
+// MsgVerifyContractResponse returns the verification result
+message MsgVerifyContractResponse {
+  bool success = 1;                 // Verification success status
+  string verification_id = 2;       // Created verification ID
+}
+
+// MsgUpgradeContract upgrades a contract
+message MsgUpgradeContract {
+  string creator = 1;               // Upgrader address (sdk.Address)
+  string contract_id = 2;           // Contract ID to upgrade
+  string new_implementation = 3;    // New implementation address
+  string upgrade_data = 4;          // Upgrade data
+  string reason = 5;                // Upgrade reason
+}
+
+// MsgUpgradeContractResponse returns the upgrade result
+message MsgUpgradeContractResponse {
+  bool success = 1;                 // Upgrade success status
+  string new_contract_address = 2;  // New contract address
+}
+
+// MsgPauseContract pauses a contract
+message MsgPauseContract {
+  string creator = 1;               // Pauser address (sdk.Address)
+  string contract_id = 2;           // Contract ID to pause
+  string reason = 3;                // Pause reason
+}
+
+// MsgPauseContractResponse returns the pause result
+message MsgPauseContractResponse {
+  bool success = 1;                 // Pause success status
+}
+
+// MsgResumeContract resumes a paused contract
+message MsgResumeContract {
+  string creator = 1;               // Resumer address (sdk.Address)
+  string contract_id = 2;           // Contract ID to resume
+  string reason = 3;                // Resume reason
+}
+
+// MsgResumeContractResponse returns the resume result
+message MsgResumeContractResponse {
+  bool success = 1;                 // Resume success status
+}

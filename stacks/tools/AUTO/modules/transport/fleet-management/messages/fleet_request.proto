@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package transport.fleet_management.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "fleet-management/enums/vehicle_type.proto";
+import "fleet-management/enums/fleet_status.proto";
+
+option go_package = "github.com/rice-dev/transport/fleet_management/v1";
+
+// CreateFleetRequest represents a request to add a new vehicle to the fleet
+message CreateFleetRequest {
+  // Vehicle type (required)
+  VehicleType vehicle_type = 1;
+  
+  // License plate number (required)
+  string license_plate = 2;
+  
+  // Vehicle capacity in passengers (required)
+  int32 capacity = 3;
+  
+  // Vehicle manufacturer
+  string manufacturer = 4;
+  
+  // Vehicle model
+  string model = 5;
+  
+  // Year of manufacture
+  int32 year = 6;
+  
+  // Vehicle identification number (VIN)
+  string vin = 7;
+  
+  // Current mileage
+  int64 mileage = 8;
+  
+  // Fuel type (petrol, diesel, electric, hybrid)
+  string fuel_type = 9;
+  
+  // Initial status (defaults to ACTIVE)
+  FleetStatus status = 10;
+  
+  // Optional route assignment
+  string assigned_route_id = 11;
+  
+  // Additional vehicle specifications
+  map<string, string> specifications = 12;
+}
+
+// GetFleetRequest represents a request to retrieve a specific vehicle
+message GetFleetRequest {
+  // Vehicle ID (required)
+  string vehicle_id = 1;
+  
+  // Fields to include in response (optional)
+  google.protobuf.FieldMask field_mask = 2;
+}
+
+// ListFleetRequest represents a request to list vehicles with filtering
+message ListFleetRequest {
+  // Page size for pagination
+  int32 page_size = 1;
+  
+  // Page token for pagination
+  string page_token = 2;
+  
+  // Filter by vehicle type
+  VehicleType vehicle_type = 3;
+  
+  // Filter by status
+  FleetStatus status = 4;
+  
+  // Filter by assigned route
+  string assigned_route_id = 5;
+  
+  // Search by license plate
+  string license_plate = 6;
+  
+  // Sort field (license_plate, vehicle_type, status, created_at)
+  string sort_by = 7;
+  
+  // Sort order (asc, desc)
+  string sort_order = 8;
+}
+
+// UpdateFleetRequest represents a request to update vehicle information
+message UpdateFleetRequest {
+  // Vehicle ID (required)
+  string vehicle_id = 1;
+  
+  // Updated vehicle information
+  FleetUpdateData vehicle = 2;
+  
+  // Fields to update (required)
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+// FleetUpdateData contains updatable vehicle fields
+message FleetUpdateData {
+  // Vehicle type
+  VehicleType vehicle_type = 1;
+  
+  // License plate number
+  string license_plate = 2;
+  
+  // Vehicle capacity
+  int32 capacity = 3;
+  
+  // Vehicle manufacturer
+  string manufacturer = 4;
+  
+  // Vehicle model
+  string model = 5;
+  
+  // Current mileage
+  int64 mileage = 6;
+  
+  // Fuel type
+  string fuel_type = 7;
+  
+  // Status
+  FleetStatus status = 8;
+  
+  // Route assignment
+  string assigned_route_id = 9;
+  
+  // Additional specifications
+  map<string, string> specifications = 10;
+}
+
+// DeleteFleetRequest represents a request to remove a vehicle from the fleet
+message DeleteFleetRequest {
+  // Vehicle ID (required)
+  string vehicle_id = 1;
+  
+  // Reason for deletion
+  string reason = 2;
+  
+  // Force deletion even if vehicle is in use
+  bool force = 3;
+}

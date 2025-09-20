@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package government.permits.enums;
+
+// Пріоритети дозволів
+enum PermitPriority {
+  PERMIT_PRIORITY_UNSPECIFIED = 0;
+  PERMIT_PRIORITY_LOW = 1;          // Низький пріоритет
+  PERMIT_PRIORITY_MEDIUM = 2;       // Середній пріоритет
+  PERMIT_PRIORITY_HIGH = 3;         // Високий пріоритет
+  PERMIT_PRIORITY_URGENT = 4;       // Терміновий пріоритет
+  PERMIT_PRIORITY_CRITICAL = 5;     // Критичний пріоритет
+  PERMIT_PRIORITY_EXPRESS = 6;      // Експрес обробка
+}

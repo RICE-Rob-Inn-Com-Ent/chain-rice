@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package healthcare.medical_records.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/medical-records/enums";
+
+// Medical record status enumeration
+enum RecordStatus {
+  RECORD_STATUS_UNSPECIFIED = 0;
+  RECORD_STATUS_ACTIVE = 1;
+  RECORD_STATUS_ARCHIVED = 2;
+  RECORD_STATUS_CONFIDENTIAL = 3;
+  RECORD_STATUS_DRAFT = 4;
+  RECORD_STATUS_PENDING_REVIEW = 5;
+  RECORD_STATUS_APPROVED = 6;
+  RECORD_STATUS_REJECTED = 7;
+  RECORD_STATUS_DELETED = 8;
+}

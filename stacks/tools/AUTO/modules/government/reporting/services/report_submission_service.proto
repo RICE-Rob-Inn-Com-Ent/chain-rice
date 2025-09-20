@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package government.reporting.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/report_models.proto";
+
+// Сервіс подання звітів
+service ReportSubmissionService {
+  // Подати звіт
+  rpc SubmitReport(SubmitReportRequest) returns (ReportSubmissionResponse);
+  
+  // Затвердити звіт
+  rpc ApproveReport(ApproveReportRequest) returns (ReportSubmissionResponse);
+  
+  // Відхилити звіт
+  rpc RejectReport(RejectReportRequest) returns (ReportSubmissionResponse);
+  
+  // Отримати звіти на затвердження
+  rpc GetPendingReports(google.protobuf.Empty) returns (ReportSearchResult);
+  
+  // Отримати історію подань
+  rpc GetSubmissionHistory(GetSubmissionHistoryRequest) returns (SubmissionHistoryResponse);
+}
+
+// Запити та відповіді
+message SubmitReportRequest {
+  string report_id = 1;
+  string submitted_by = 2;
+  string submission_notes = 3;
+}
+
+message ApproveReportRequest {
+  string report_id = 1;
+  string approved_by = 2;
+  string approval_notes = 3;
+}
+
+message RejectReportRequest {
+  string report_id = 1;
+  string rejected_by = 2;
+  string rejection_reason = 3;
+  string rejection_notes = 4;
+}
+
+message GetSubmissionHistoryRequest {
+  string report_id = 1;
+  int32 page_number = 2;
+  int32 page_size = 3;
+}
+
+message ReportSubmissionResponse {
+  bool success = 1;
+  string message = 2;
+  Report report = 3;
+  string submission_id = 4;
+}
+
+message SubmissionHistoryResponse {
+  repeated SubmissionRecord submissions = 1;
+  int32 total_count = 2;
+  int32 page_number = 3;
+  int32 page_size = 4;
+}
+
+message SubmissionRecord {
+  string submission_id = 1;
+  string report_id = 2;
+  string action = 3;
+  string performed_by = 4;
+  string timestamp = 5;
+  string notes = 6;
+}

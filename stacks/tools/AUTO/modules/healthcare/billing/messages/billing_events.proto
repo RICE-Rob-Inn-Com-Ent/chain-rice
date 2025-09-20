@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package healthcare.billing.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/billing_status.proto";
+import "../enums/payment_method.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/billing/messages";
+
+// Billing event types
+enum BillingEventType {
+  BILLING_EVENT_TYPE_UNSPECIFIED = 0;
+  BILLING_EVENT_TYPE_INVOICE_ISSUED = 1;
+  BILLING_EVENT_TYPE_PAYMENT_RECEIVED = 2;
+  BILLING_EVENT_TYPE_PAYMENT_REFUNDED = 3;
+  BILLING_EVENT_TYPE_INVOICE_OVERDUE = 4;
+  BILLING_EVENT_TYPE_INVOICE_CANCELLED = 5;
+  BILLING_EVENT_TYPE_PAYMENT_FAILED = 6;
+  BILLING_EVENT_TYPE_DISCOUNT_APPLIED = 7;
+  BILLING_EVENT_TYPE_INSURANCE_CLAIM_SUBMITTED = 8;
+  BILLING_EVENT_TYPE_INSURANCE_CLAIM_APPROVED = 9;
+  BILLING_EVENT_TYPE_INSURANCE_CLAIM_DENIED = 10;
+}
+
+// Billing event
+message BillingEvent {
+  string event_id = 1;
+  string invoice_id = 2;
+  string payment_id = 3;
+  string patient_id = 4;
+  BillingEventType event_type = 5;
+  google.protobuf.Timestamp event_time = 6;
+  double amount = 7;
+  healthcare.billing.enums.BillingStatus previous_status = 8;
+  healthcare.billing.enums.BillingStatus new_status = 9;
+  healthcare.billing.enums.PaymentMethod payment_method = 10;
+  string event_data = 11; // JSON string for additional event-specific data
+  string triggered_by = 12;
+  string description = 13;
+}
+
+// Billing event request
+message BillingEventRequest {
+  string invoice_id = 1;
+  string payment_id = 2;
+  string patient_id = 3;
+  BillingEventType event_type = 4;
+  double amount = 5;
+  healthcare.billing.enums.BillingStatus previous_status = 6;
+  healthcare.billing.enums.BillingStatus new_status = 7;
+  healthcare.billing.enums.PaymentMethod payment_method = 8;
+  string event_data = 9;
+  string triggered_by = 10;
+  string description = 11;
+}
+
+// Billing event response
+message BillingEventResponse {
+  bool success = 1;
+  string message = 2;
+  BillingEvent event = 3;
+}
+
+// List billing events request
+message ListBillingEventsRequest {
+  string invoice_id = 1;
+  string payment_id = 2;
+  string patient_id = 3;
+  BillingEventType event_type = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  int32 page_size = 7;
+  string page_token = 8;
+}
+
+// List billing events response
+message ListBillingEventsResponse {
+  repeated BillingEvent events = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Billing event summary
+message BillingEventSummary {
+  BillingEventType event_type = 1;
+  int32 count = 2;
+  double total_amount = 3;
+  google.protobuf.Timestamp last_occurrence = 4;
+}

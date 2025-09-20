@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package healthcare.patients.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/patient_status.proto";
+import "../enums/patient_type.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/patients/messages";
+
+// Patient event types
+enum PatientEventType {
+  PATIENT_EVENT_TYPE_UNSPECIFIED = 0;
+  PATIENT_EVENT_TYPE_REGISTRATION = 1;
+  PATIENT_EVENT_TYPE_STATUS_CHANGE = 2;
+  PATIENT_EVENT_TYPE_UPDATE = 3;
+  PATIENT_EVENT_TYPE_DISCHARGE = 4;
+  PATIENT_EVENT_TYPE_TRANSFER = 5;
+  PATIENT_EVENT_TYPE_APPOINTMENT_SCHEDULED = 6;
+  PATIENT_EVENT_TYPE_APPOINTMENT_COMPLETED = 7;
+  PATIENT_EVENT_TYPE_APPOINTMENT_CANCELLED = 8;
+  PATIENT_EVENT_TYPE_MEDICAL_RECORD_CREATED = 9;
+  PATIENT_EVENT_TYPE_MEDICAL_RECORD_UPDATED = 10;
+  PATIENT_EVENT_TYPE_LAB_TEST_ORDERED = 11;
+  PATIENT_EVENT_TYPE_LAB_RESULT_RECEIVED = 12;
+  PATIENT_EVENT_TYPE_PRESCRIPTION_ISSUED = 13;
+  PATIENT_EVENT_TYPE_INSURANCE_UPDATED = 14;
+  PATIENT_EVENT_TYPE_CONTACT_UPDATED = 15;
+  PATIENT_EVENT_TYPE_ALLERGY_ADDED = 16;
+  PATIENT_EVENT_TYPE_ALLERGY_UPDATED = 17;
+  PATIENT_EVENT_TYPE_MEDICATION_ADDED = 18;
+  PATIENT_EVENT_TYPE_MEDICATION_UPDATED = 19;
+  PATIENT_EVENT_TYPE_CONDITION_ADDED = 20;
+  PATIENT_EVENT_TYPE_CONDITION_UPDATED = 21;
+}
+
+// Patient event
+message PatientEvent {
+  string event_id = 1;
+  string patient_id = 2;
+  PatientEventType event_type = 3;
+  google.protobuf.Timestamp event_time = 4;
+  string event_description = 5;
+  string event_data = 6; // JSON string for additional event-specific data
+  string triggered_by = 7;
+  string clinic_id = 8;
+  string doctor_id = 9;
+  string appointment_id = 10;
+  healthcare.patients.enums.PatientStatus previous_status = 11;
+  healthcare.patients.enums.PatientStatus new_status = 12;
+  healthcare.patients.enums.PatientType patient_type = 13;
+  string notes = 14;
+  string ip_address = 15;
+  string user_agent = 16;
+}
+
+// Patient event request
+message PatientEventRequest {
+  string patient_id = 1;
+  PatientEventType event_type = 2;
+  string event_description = 3;
+  string event_data = 4;
+  string triggered_by = 5;
+  string clinic_id = 6;
+  string doctor_id = 7;
+  string appointment_id = 8;
+  healthcare.patients.enums.PatientStatus previous_status = 9;
+  healthcare.patients.enums.PatientStatus new_status = 10;
+  string notes = 11;
+  string ip_address = 12;
+  string user_agent = 13;
+}
+
+// Patient event response
+message PatientEventResponse {
+  bool success = 1;
+  string message = 2;
+  PatientEvent event = 3;
+}
+
+// List patient events request
+message ListPatientEventsRequest {
+  string patient_id = 1;
+  PatientEventType event_type = 2;
+  string clinic_id = 3;
+  string doctor_id = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  int32 page_size = 7;
+  string page_token = 8;
+}
+
+// List patient events response
+message ListPatientEventsResponse {
+  repeated PatientEvent events = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Patient event summary
+message PatientEventSummary {
+  PatientEventType event_type = 1;
+  int32 count = 2;
+  google.protobuf.Timestamp last_occurrence = 3;
+  repeated string recent_users = 4;
+}
+
+// Patient activity timeline
+message PatientActivityTimeline {
+  string patient_id = 1;
+  repeated PatientEvent events = 2;
+  google.protobuf.Timestamp first_event = 3;
+  google.protobuf.Timestamp last_event = 4;
+  int32 total_events = 5;
+  repeated PatientEventSummary event_summaries = 6;
+}
+
+// Patient audit trail
+message PatientAuditTrail {
+  string patient_id = 1;
+  repeated PatientEvent events = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp last_updated = 4;
+  string last_updated_by = 5;
+  int32 total_updates = 6;
+  repeated string update_fields = 7;
+}
+
+// Patient status change event
+message PatientStatusChangeEvent {
+  string patient_id = 1;
+  healthcare.patients.enums.PatientStatus previous_status = 2;
+  healthcare.patients.enums.PatientStatus new_status = 3;
+  string reason = 4;
+  string changed_by = 5;
+  google.protobuf.Timestamp changed_at = 6;
+  string notes = 7;
+}
+
+// Patient registration event
+message PatientRegistrationEvent {
+  string patient_id = 1;
+  string registration_method = 2; // online, walk-in, referral, etc.
+  string referred_by = 3;
+  string registration_source = 4;
+  google.protobuf.Timestamp registration_date = 5;
+  string registered_by = 6;
+  string clinic_id = 7;
+  string notes = 8;
+}

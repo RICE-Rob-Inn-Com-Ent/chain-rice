@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package transport.fleet_management.v1;
+
+option go_package = "github.com/rice-dev/transport/fleet_management/v1";
+
+// VehicleType enum defines the different types of vehicles in the fleet
+enum VehicleType {
+  // Default value - should not be used
+  VEHICLE_TYPE_UNSPECIFIED = 0;
+  
+  // Standard passenger bus for urban and intercity routes
+  BUS = 1;
+  
+  // Railway vehicle for long-distance passenger transport
+  TRAIN = 2;
+  
+  // Small passenger vehicle for short routes or special services
+  VAN = 3;
+  
+  // Large vehicle for freight and cargo transport
+  TRUCK = 4;
+  
+  // Electric bus for eco-friendly urban transport
+  ELECTRIC_BUS = 5;
+  
+  // High-speed train for express routes
+  HIGH_SPEED_TRAIN = 6;
+}

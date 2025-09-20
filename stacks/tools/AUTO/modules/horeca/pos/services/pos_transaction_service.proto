@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package horeca.pos.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/pos_transaction_models.proto";
+
+// POS Transaction Service - Payments and refunds
+service PosTransactionService {
+  // Create a new transaction
+  rpc CreateTransaction(CreateTransactionRequest) returns (CreateTransactionResponse);
+  
+  // Get transaction by ID
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+  
+  // Update existing transaction
+  rpc UpdateTransaction(UpdateTransactionRequest) returns (UpdateTransactionResponse);
+  
+  // Delete transaction
+  rpc DeleteTransaction(DeleteTransactionRequest) returns (google.protobuf.Empty);
+  
+  // List transactions with filtering
+  rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse);
+  
+  // Process payment
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  
+  // Process refund
+  rpc ProcessRefund(ProcessRefundRequest) returns (ProcessRefundResponse);
+  
+  // Void transaction
+  rpc VoidTransaction(VoidTransactionRequest) returns (VoidTransactionResponse);
+  
+  // Get transactions by date
+  rpc GetTransactionsByDate(GetTransactionsByDateRequest) returns (GetTransactionsByDateResponse);
+  
+  // Get transactions by payment method
+  rpc GetTransactionsByPaymentMethod(GetTransactionsByPaymentMethodRequest) returns (GetTransactionsByPaymentMethodResponse);
+  
+  // Get transaction summary
+  rpc GetTransactionSummary(GetTransactionSummaryRequest) returns (GetTransactionSummaryResponse);
+  
+  // Get payment methods summary
+  rpc GetPaymentMethodsSummary(GetPaymentMethodsSummaryRequest) returns (GetPaymentMethodsSummaryResponse);
+}
+
+// Request/Response messages
+message CreateTransactionRequest {
+  PosTransaction transaction = 1;
+}
+
+message CreateTransactionResponse {
+  PosTransaction transaction = 1;
+  string message = 2;
+}
+
+message GetTransactionRequest {
+  string transaction_id = 1;
+}
+
+message GetTransactionResponse {
+  PosTransaction transaction = 1;
+}
+
+message UpdateTransactionRequest {
+  PosTransaction transaction = 1;
+}
+
+message UpdateTransactionResponse {
+  PosTransaction transaction = 1;
+  string message = 2;
+}
+
+message DeleteTransactionRequest {
+  string transaction_id = 1;
+}
+
+message ListTransactionsRequest {
+  string order_id = 1;
+  string customer_id = 2;
+  string status = 3;
+  string payment_method = 4;
+  string date_from = 5;
+  string date_to = 6;
+  int32 page_size = 7;
+  string page_token = 8;
+}
+
+message ListTransactionsResponse {
+  repeated PosTransaction transactions = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message ProcessPaymentRequest {
+  string transaction_id = 1;
+  PosPayment payment = 2;
+}
+
+message ProcessPaymentResponse {
+  PosPayment payment = 1;
+  string message = 2;
+}
+
+message ProcessRefundRequest {
+  string transaction_id = 1;
+  string payment_id = 2;
+  double refund_amount = 3;
+  string reason = 4;
+}
+
+message ProcessRefundResponse {
+  PosPayment refund = 1;
+  string message = 2;
+}
+
+message VoidTransactionRequest {
+  string transaction_id = 1;
+  string reason = 2;
+}
+
+message VoidTransactionResponse {
+  PosTransaction transaction = 1;
+  string message = 2;
+}
+
+message GetTransactionsByDateRequest {
+  string date = 1;
+  string terminal_id = 2;
+}
+
+message GetTransactionsByDateResponse {
+  repeated PosTransaction transactions = 1;
+}
+
+message GetTransactionsByPaymentMethodRequest {
+  string payment_method = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetTransactionsByPaymentMethodResponse {
+  repeated PosTransaction transactions = 1;
+}
+
+message GetTransactionSummaryRequest {
+  string date_from = 1;
+  string date_to = 2;
+  string terminal_id = 3;
+  string cashier_id = 4;
+}
+
+message GetTransactionSummaryResponse {
+  TransactionSummaryData summary = 1;
+}
+
+message GetPaymentMethodsSummaryRequest {
+  string date_from = 1;
+  string date_to = 2;
+  string terminal_id = 3;
+}
+
+message GetPaymentMethodsSummaryResponse {
+  repeated PaymentMethodSummary payment_methods = 1;
+}
+
+// Data structures
+message TransactionSummaryData {
+  int32 total_transactions = 1;
+  double total_amount = 2;
+  double total_tax = 3;
+  double total_tips = 4;
+  double total_refunds = 5;
+  int32 successful_transactions = 6;
+  int32 failed_transactions = 7;
+  double success_rate = 8;
+}
+
+message PaymentMethodSummary {
+  string payment_method = 1;
+  int32 transaction_count = 2;
+  double total_amount = 3;
+  double refund_amount = 4;
+  double net_amount = 5;
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+// Message definitions for teaching assignments.
+package education.teachers.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/education/teachers/messages;teachersmessages";
+option java_multiple_files = true;
+option java_package = "com.rice.education.teachers.messages";
+
+// Assignment of a teacher to a course/class.
+message TeachingAssignment {
+  // Unique identifier for the assignment.
+  string id = 1;
+
+  // Teacher ID.
+  string teacher_id = 2;
+
+  // Course ID assigned to.
+  string course_id = 3;
+
+  // Optional class ID for specific section.
+  string class_id = 4;
+
+  // Role descriptor (e.g., "instructor", "TA").
+  string role = 5;
+
+  // Start date of the assignment.
+  google.protobuf.Timestamp start_at = 6;
+
+  // End date of the assignment.
+  google.protobuf.Timestamp end_at = 7;
+}
+
+

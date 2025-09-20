@@ -1,0 +1,252 @@
+syntax = "proto3";
+
+package commerce.orders.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/order_status.proto";
+import "../enums/order_type.proto";
+import "../enums/payment_status.proto";
+import "order_item.proto";
+import "payment.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/orders/messages";
+
+// Order message representing a complete order
+message Order {
+  // Unique identifier for the order
+  string id = 1;
+  
+  // Order number for customer reference
+  string order_number = 2;
+  
+  // Customer identifier
+  string customer_id = 3;
+  
+  // Seller identifier
+  string seller_id = 4;
+  
+  // Current order status
+  commerce.orders.enums.OrderStatus status = 5;
+  
+  // Order type
+  commerce.orders.enums.OrderType type = 6;
+  
+  // Payment status
+  commerce.orders.enums.PaymentStatus payment_status = 7;
+  
+  // Order items
+  repeated OrderItem items = 8;
+  
+  // Order totals
+  OrderTotals totals = 9;
+  
+  // Shipping information
+  ShippingInfo shipping_info = 10;
+  
+  // Billing information
+  BillingInfo billing_info = 11;
+  
+  // Payment information
+  repeated Payment payments = 12;
+  
+  // Order notes
+  string notes = 13;
+  
+  // Internal notes
+  string internal_notes = 14;
+  
+  // Customer notes
+  string customer_notes = 15;
+  
+  // Order date
+  google.protobuf.Timestamp order_date = 16;
+  
+  // Expected delivery date
+  google.protobuf.Timestamp expected_delivery_date = 17;
+  
+  // Actual delivery date
+  google.protobuf.Timestamp actual_delivery_date = 18;
+  
+  // Date when order was created
+  google.protobuf.Timestamp created_at = 19;
+  
+  // Date when order was last updated
+  google.protobuf.Timestamp updated_at = 20;
+  
+  // Date when order was cancelled
+  google.protobuf.Timestamp cancelled_at = 21;
+  
+  // Cancellation reason
+  string cancellation_reason = 22;
+  
+  // Order source (web, mobile, phone, etc.)
+  string source = 23;
+  
+  // Order channel (online, retail, wholesale, etc.)
+  string channel = 24;
+  
+  // Additional metadata
+  map<string, string> metadata = 25;
+  
+  // Order tags
+  repeated string tags = 26;
+}
+
+// Order totals information
+message OrderTotals {
+  // Subtotal before taxes and discounts
+  double subtotal = 1;
+  
+  // Total tax amount
+  double tax_amount = 2;
+  
+  // Total discount amount
+  double discount_amount = 3;
+  
+  // Shipping cost
+  double shipping_cost = 4;
+  
+  // Handling cost
+  double handling_cost = 5;
+  
+  // Total order amount
+  double total = 6;
+  
+  // Currency code (ISO 4217)
+  string currency = 7;
+  
+  // Applied discounts
+  repeated AppliedDiscount applied_discounts = 8;
+  
+  // Tax breakdown
+  repeated TaxBreakdown tax_breakdown = 9;
+}
+
+// Applied discount information
+message AppliedDiscount {
+  // Discount identifier
+  string discount_id = 1;
+  
+  // Discount code used
+  string discount_code = 2;
+  
+  // Discount name
+  string discount_name = 3;
+  
+  // Discount amount
+  double discount_amount = 4;
+  
+  // Discount type (percentage, fixed, etc.)
+  string discount_type = 5;
+}
+
+// Tax breakdown information
+message TaxBreakdown {
+  // Tax name
+  string tax_name = 1;
+  
+  // Tax rate
+  double tax_rate = 2;
+  
+  // Tax amount
+  double tax_amount = 3;
+  
+  // Taxable amount
+  double taxable_amount = 4;
+}
+
+// Shipping information
+message ShippingInfo {
+  // Shipping method
+  string shipping_method = 1;
+  
+  // Shipping carrier
+  string shipping_carrier = 2;
+  
+  // Tracking number
+  string tracking_number = 3;
+  
+  // Shipping address
+  Address shipping_address = 4;
+  
+  // Delivery instructions
+  string delivery_instructions = 5;
+  
+  // Signature required
+  bool signature_required = 6;
+  
+  // Insurance value
+  double insurance_value = 7;
+  
+  // Shipping cost
+  double shipping_cost = 8;
+  
+  // Estimated delivery date
+  google.protobuf.Timestamp estimated_delivery_date = 9;
+}
+
+// Billing information
+message BillingInfo {
+  // Billing address
+  Address billing_address = 1;
+  
+  // Billing contact information
+  ContactInfo billing_contact = 2;
+  
+  // Tax ID
+  string tax_id = 3;
+  
+  // Company name
+  string company_name = 4;
+}
+
+// Address information
+message Address {
+  // First name
+  string first_name = 1;
+  
+  // Last name
+  string last_name = 2;
+  
+  // Company name
+  string company = 3;
+  
+  // Street address line 1
+  string street_address_1 = 4;
+  
+  // Street address line 2
+  string street_address_2 = 5;
+  
+  // City
+  string city = 6;
+  
+  // State or province
+  string state_province = 7;
+  
+  // Postal or ZIP code
+  string postal_code = 8;
+  
+  // Country
+  string country = 9;
+  
+  // Phone number
+  string phone = 10;
+  
+  // Email address
+  string email = 11;
+}
+
+// Contact information
+message ContactInfo {
+  // Contact person name
+  string contact_person = 1;
+  
+  // Phone number
+  string phone = 2;
+  
+  // Email address
+  string email = 3;
+  
+  // Fax number
+  string fax = 4;
+}

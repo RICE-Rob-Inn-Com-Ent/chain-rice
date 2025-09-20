@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package government.reporting.messages;
+
+import "google/protobuf/timestamp.proto";
+
+// Дані звіту
+message ReportData {
+  string data_id = 1;                       // Унікальний ідентифікатор даних
+  string report_id = 2;                     // ID звіту
+  string data_type = 3;                     // Тип даних
+  string source = 4;                        // Джерело даних
+  string content = 5;                       // Зміст даних
+  string format = 6;                        // Формат (JSON, CSV, XML)
+  google.protobuf.Timestamp collected_at = 7; // Час збору
+  string collected_by = 8;                  // Ким зібрано
+  repeated string metadata = 9;             // Метадані
+  string validation_status = 10;            // Статус валідації
+  string quality_score = 11;                // Оцінка якості
+}
+
+// Таблиця даних
+message DataTable {
+  string table_id = 1;
+  string table_name = 2;
+  repeated string columns = 3;
+  repeated DataRow rows = 4;
+  int32 total_rows = 5;
+  string description = 6;
+}
+
+// Рядок даних
+message DataRow {
+  repeated string values = 1;
+  int32 row_number = 2;
+}
+
+// Графік даних
+message DataChart {
+  string chart_id = 1;
+  string chart_type = 2;                    // bar, line, pie, etc.
+  string title = 3;
+  string x_axis_label = 4;
+  string y_axis_label = 5;
+  repeated DataPoint data_points = 6;
+  string description = 7;
+}
+
+// Точка даних для графіка
+message DataPoint {
+  string label = 1;
+  double value = 2;
+  string color = 3;
+  string tooltip = 4;
+}

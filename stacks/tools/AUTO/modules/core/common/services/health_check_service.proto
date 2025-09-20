@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package core.common.services;
+
+import "core/common/messages/timestamp.proto";
+
+// HealthCheckService provides a simple health check endpoint.
+service HealthCheckService {
+  // Check returns service health and basic info.
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message HealthCheckRequest {
+  // Optional service name to check; empty means current service.
+  string service = 1;
+}
+
+message HealthCheckResponse {
+  // Overall status string, e.g., "SERVING", "NOT_SERVING".
+  string status = 1;
+  // Server current timestamp.
+  core.common.messages.Timestamp now = 2;
+  // Version information when available.
+  string version = 3;
+  // Arbitrary system metrics (e.g., cpu, mem).
+  map<string, string> metrics = 4;
+}
+
+

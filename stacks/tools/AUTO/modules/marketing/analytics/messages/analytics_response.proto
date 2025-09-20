@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package marketing.analytics.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/analytics/enums/analytics_type.proto";
+
+// Analytics data transfer object
+message Analytics {
+  // Analytics ID
+  string id = 1;
+  
+  // Analytics name
+  string name = 2;
+  
+  // Analytics type
+  marketing.analytics.enums.AnalyticsType type = 3;
+  
+  // Analytics description
+  string description = 4;
+  
+  // Data source
+  string data_source = 5;
+  
+  // Metrics data in JSON format
+  string metrics_data = 6;
+  
+  // Campaign ID (if applicable)
+  string campaign_id = 7;
+  
+  // Date for the analytics data
+  google.protobuf.Timestamp date = 8;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 9;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 10;
+  
+  // Analytics summary
+  AnalyticsSummary summary = 11;
+}
+
+// Analytics summary data
+message AnalyticsSummary {
+  // Total views/impressions
+  int64 total_views = 1;
+  
+  // Total clicks
+  int64 total_clicks = 2;
+  
+  // Total conversions
+  int64 total_conversions = 3;
+  
+  // Conversion rate
+  double conversion_rate = 4;
+  
+  // Click-through rate
+  double ctr = 5;
+  
+  // Total revenue
+  double total_revenue = 6;
+  
+  // Cost per acquisition
+  double cpa = 7;
+  
+  // Return on ad spend
+  double roas = 8;
+}
+
+// Response message for creating analytics data
+message CreateAnalyticsResponse {
+  // Created analytics data
+  Analytics analytics = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for getting analytics data
+message GetAnalyticsResponse {
+  // Analytics data
+  Analytics analytics = 1;
+}
+
+// Response message for listing analytics data
+message ListAnalyticsResponse {
+  // List of analytics data
+  repeated Analytics analytics = 1;
+  
+  // Total count of analytics records
+  int32 total_count = 2;
+  
+  // Current page number
+  int32 page = 3;
+  
+  // Number of items per page
+  int32 page_size = 4;
+}
+
+// Response message for updating analytics data
+message UpdateAnalyticsResponse {
+  // Updated analytics data
+  Analytics analytics = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for deleting analytics data
+message DeleteAnalyticsResponse {
+  // Success message
+  string message = 1;
+}

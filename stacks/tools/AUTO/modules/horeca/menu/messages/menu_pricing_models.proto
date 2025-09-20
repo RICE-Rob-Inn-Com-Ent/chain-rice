@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package horeca.menu.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+
+// Menu pricing rule
+message MenuPricingRule {
+  string rule_id = 1;
+  string rule_name = 2;
+  string description = 3;
+  
+  RuleType type = 4;
+  PricingScope scope = 5;
+  
+  repeated string applicable_items = 6;
+  repeated string applicable_categories = 7;
+  
+  google.protobuf.Money fixed_price = 8;
+  double percentage_discount = 9;
+  double percentage_markup = 10;
+  
+  google.protobuf.Timestamp valid_from = 11;
+  google.protobuf.Timestamp valid_until = 12;
+  
+  repeated string applicable_days = 13;
+  repeated string applicable_times = 14;
+  
+  bool is_active = 15;
+  int32 usage_count = 16;
+  
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+// Rule type
+enum RuleType {
+  RULE_TYPE_UNSPECIFIED = 0;
+  RULE_TYPE_FIXED_PRICE = 1;
+  RULE_TYPE_DISCOUNT = 2;
+  RULE_TYPE_MARKUP = 3;
+  RULE_TYPE_DYNAMIC = 4;
+}
+
+// Pricing scope
+enum PricingScope {
+  PRICING_SCOPE_UNSPECIFIED = 0;
+  PRICING_SCOPE_ITEM = 1;
+  PRICING_SCOPE_CATEGORY = 2;
+  PRICING_SCOPE_MENU = 3;
+  PRICING_SCOPE_GLOBAL = 4;
+}
+
+// Dynamic pricing factor
+message DynamicPricingFactor {
+  string factor_id = 1;
+  string factor_name = 2;
+  string description = 3;
+  
+  FactorType type = 4;
+  double weight = 5;
+  double min_adjustment = 6;
+  double max_adjustment = 7;
+  
+  bool is_active = 8;
+  google.protobuf.Timestamp last_calculated = 9;
+}
+
+// Factor type
+enum FactorType {
+  FACTOR_TYPE_UNSPECIFIED = 0;
+  FACTOR_TYPE_DEMAND = 1;
+  FACTOR_TYPE_TIME = 2;
+  FACTOR_TYPE_SEASON = 3;
+  FACTOR_TYPE_INVENTORY = 4;
+  FACTOR_TYPE_COMPETITION = 5;
+  FACTOR_TYPE_WEATHER = 6;
+}
+
+// Menu pricing history
+message MenuPricingHistory {
+  string history_id = 1;
+  string item_id = 2;
+  google.protobuf.Money old_price = 3;
+  google.protobuf.Money new_price = 4;
+  
+  string reason = 5;
+  string user_id = 6;
+  string user_name = 7;
+  
+  google.protobuf.Timestamp change_date = 8;
+  map<string, string> metadata = 9;
+}

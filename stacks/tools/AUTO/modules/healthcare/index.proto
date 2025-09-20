@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package healthcare;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare";
+
+// Healthcare module index file
+// This file imports all enums, messages, and services from submodules
+
+// Appointments module imports
+import "appointments/enums/appointment_status.proto";
+import "appointments/enums/appointment_type.proto";
+import "appointments/enums/priority_level.proto";
+import "appointments/messages/appointment_models.proto";
+import "appointments/messages/appointment_history.proto";
+import "appointments/messages/appointment_events.proto";
+import "appointments/services/appointment_service.proto";
+import "appointments/services/scheduling_service.proto";
+import "appointments/services/notifications_service.proto";
+
+// Billing module imports
+import "billing/enums/billing_status.proto";
+import "billing/enums/billing_type.proto";
+import "billing/enums/payment_method.proto";
+import "billing/messages/invoice_models.proto";
+import "billing/messages/payment_models.proto";
+import "billing/messages/billing_events.proto";
+import "billing/services/billing_service.proto";
+import "billing/services/payment_service.proto";
+import "billing/services/billing_analytics_service.proto";
+
+// Medical Records module imports
+import "medical-records/enums/record_type.proto";
+import "medical-records/enums/record_status.proto";
+import "medical-records/enums/diagnosis_code.proto";
+import "medical-records/messages/medical_record_models.proto";
+import "medical-records/messages/lab_results.proto";
+import "medical-records/messages/record_events.proto";
+import "medical-records/services/medical_record_service.proto";
+import "medical-records/services/lab_service.proto";
+import "medical-records/services/record_analytics_service.proto";
+
+// Patients module imports
+import "patients/enums/patient_status.proto";
+import "patients/enums/patient_type.proto";
+import "patients/enums/insurance_status.proto";
+import "patients/messages/patient_models.proto";
+import "patients/messages/patient_contacts.proto";
+import "patients/messages/patient_events.proto";
+import "patients/services/patient_service.proto";
+import "patients/services/insurance_service.proto";
+import "patients/services/patient_reporting_service.proto";
+
+// Pharmacy module imports
+import "pharmacy/enums/drug_type.proto";
+import "pharmacy/enums/stock_status.proto";
+import "pharmacy/enums/prescription_status.proto";
+import "pharmacy/messages/drug_models.proto";
+import "pharmacy/messages/prescription_models.proto";
+import "pharmacy/messages/pharmacy_events.proto";
+import "pharmacy/services/pharmacy_service.proto";
+import "pharmacy/services/prescription_service.proto";
+import "pharmacy/services/inventory_service.proto";
+
+// Healthcare module version information
+message HealthcareModuleVersion {
+  string version = 1;
+  string build_date = 2;
+  string git_commit = 3;
+  repeated string supported_features = 4;
+}
+
+// Healthcare module configuration
+message HealthcareModuleConfig {
+  bool enable_appointments = 1;
+  bool enable_billing = 2;
+  bool enable_medical_records = 3;
+  bool enable_patients = 4;
+  bool enable_pharmacy = 5;
+  repeated string enabled_features = 6;
+  map<string, string> configuration = 7;
+}
+
+// Healthcare module health check
+message HealthcareModuleHealth {
+  bool is_healthy = 1;
+  string status = 2;
+  google.protobuf.Timestamp last_check = 3;
+  repeated string active_services = 4;
+  repeated string inactive_services = 5;
+  map<string, string> service_status = 6;
+}
+
+// Healthcare module statistics
+message HealthcareModuleStats {
+  int32 total_appointments = 1;
+  int32 total_patients = 2;
+  int32 total_prescriptions = 3;
+  int32 total_medical_records = 4;
+  int32 total_invoices = 5;
+  int32 active_doctors = 6;
+  int32 active_pharmacies = 7;
+  google.protobuf.Timestamp stats_date = 8;
+}

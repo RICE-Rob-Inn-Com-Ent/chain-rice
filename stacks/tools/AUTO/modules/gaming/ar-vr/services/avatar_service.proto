@@ -1,0 +1,671 @@
+syntax = "proto3";
+
+package gaming.ar_vr.services;
+
+import "gaming/ar_vr/messages/avatar_models.proto";
+import "gaming/ar_vr/messages/ar_vr_events.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/services";
+
+// Сервіс управління аватарами AR/VR
+service AvatarService {
+  // Створити новий аватар
+  rpc CreateAvatar(CreateAvatarRequest) returns (CreateAvatarResponse);
+  
+  // Отримати аватар за ID
+  rpc GetAvatar(GetAvatarRequest) returns (GetAvatarResponse);
+  
+  // Оновити аватар
+  rpc UpdateAvatar(UpdateAvatarRequest) returns (UpdateAvatarResponse);
+  
+  // Видалити аватар
+  rpc DeleteAvatar(DeleteAvatarRequest) returns (google.protobuf.Empty);
+  
+  // Отримати список аватарів
+  rpc ListAvatars(ListAvatarsRequest) returns (ListAvatarsResponse);
+  
+  // Отримати аватари гравця
+  rpc GetPlayerAvatars(GetPlayerAvatarsRequest) returns (GetPlayerAvatarsResponse);
+  
+  // Встановити активний аватар гравця
+  rpc SetActiveAvatar(SetActiveAvatarRequest) returns (SetActiveAvatarResponse);
+  
+  // Отримати активний аватар гравця
+  rpc GetActiveAvatar(GetActiveAvatarRequest) returns (GetActiveAvatarResponse);
+  
+  // Отримати статистику аватарів
+  rpc GetAvatarStats(GetAvatarStatsRequest) returns (GetAvatarStatsResponse);
+  
+  // Пошук аватарів
+  rpc SearchAvatars(SearchAvatarsRequest) returns (SearchAvatarsResponse);
+  
+  // Отримати рекомендації аватарів
+  rpc GetAvatarRecommendations(GetAvatarRecommendationsRequest) returns (GetAvatarRecommendationsResponse);
+  
+  // Оцінити аватар
+  rpc RateAvatar(RateAvatarRequest) returns (RateAvatarResponse);
+  
+  // Додати анімацію до аватара
+  rpc AddAnimationToAvatar(AddAnimationToAvatarRequest) returns (AddAnimationToAvatarResponse);
+  
+  // Видалити анімацію з аватара
+  rpc RemoveAnimationFromAvatar(RemoveAnimationFromAvatarRequest) returns (RemoveAnimationFromAvatarResponse);
+  
+  // Оновити анімацію аватара
+  rpc UpdateAvatarAnimation(UpdateAvatarAnimationRequest) returns (UpdateAvatarAnimationResponse);
+  
+  // Додати звук до аватара
+  rpc AddAudioToAvatar(AddAudioToAvatarRequest) returns (AddAudioToAvatarResponse);
+  
+  // Видалити звук з аватара
+  rpc RemoveAudioFromAvatar(RemoveAudioFromAvatarRequest) returns (RemoveAudioFromAvatarResponse);
+  
+  // Оновити звук аватара
+  rpc UpdateAvatarAudio(UpdateAvatarAudioRequest) returns (UpdateAvatarAudioResponse);
+  
+  // Додати ефект до аватара
+  rpc AddEffectToAvatar(AddEffectToAvatarRequest) returns (AddEffectToAvatarResponse);
+  
+  // Видалити ефект з аватара
+  rpc RemoveEffectFromAvatar(RemoveEffectFromAvatarRequest) returns (RemoveEffectFromAvatarResponse);
+  
+  // Оновити ефект аватара
+  rpc UpdateAvatarEffect(UpdateAvatarEffectRequest) returns (UpdateAvatarEffectResponse);
+}
+
+// Запит створення аватара
+message CreateAvatarRequest {
+  // Дані аватара
+  gaming.ar_vr.messages.Avatar avatar = 1;
+  
+  // Автор аватара
+  string author_id = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь створення аватара
+message CreateAvatarResponse {
+  // Створений аватар
+  gaming.ar_vr.messages.Avatar avatar = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання аватара
+message GetAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 2;
+}
+
+// Відповідь отримання аватара
+message GetAvatarResponse {
+  // Аватар
+  gaming.ar_vr.messages.Avatar avatar = 1;
+  
+  // Додаткові дані гравця (якщо вказано player_id)
+  map<string, string> player_data = 2;
+}
+
+// Запит оновлення аватара
+message UpdateAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Дані для оновлення
+  gaming.ar_vr.messages.Avatar avatar = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення аватара
+message UpdateAvatarResponse {
+  // Оновлений аватар
+  gaming.ar_vr.messages.Avatar avatar = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення аватара
+message DeleteAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Причина видалення
+  string reason = 2;
+}
+
+// Запит списку аватарів
+message ListAvatarsRequest {
+  // Фільтри
+  AvatarFilters filters = 1;
+  
+  // Пагінація
+  Pagination pagination = 2;
+  
+  // Сортування
+  Sorting sorting = 3;
+}
+
+// Відповідь списку аватарів
+message ListAvatarsResponse {
+  // Список аватарів
+  repeated gaming.ar_vr.messages.Avatar avatars = 1;
+  
+  // Загальна кількість
+  int64 total_count = 2;
+  
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит аватарів гравця
+message GetPlayerAvatarsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Фільтри
+  PlayerAvatarFilters filters = 2;
+  
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь аватарів гравця
+message GetPlayerAvatarsResponse {
+  // Список аватарів гравця
+  repeated gaming.ar_vr.messages.PlayerAvatar player_avatars = 1;
+  
+  // Статистика гравця
+  gaming.ar_vr.messages.AvatarStats stats = 2;
+  
+  // Загальна кількість
+  int64 total_count = 3;
+}
+
+// Запит встановлення активного аватара
+message SetActiveAvatarRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь встановлення активного аватара
+message SetActiveAvatarResponse {
+  // Активний аватар
+  gaming.ar_vr.messages.PlayerAvatar active_avatar = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит активного аватара
+message GetActiveAvatarRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+}
+
+// Відповідь активного аватара
+message GetActiveAvatarResponse {
+  // Активний аватар
+  gaming.ar_vr.messages.PlayerAvatar active_avatar = 1;
+}
+
+// Запит статистики аватарів
+message GetAvatarStatsRequest {
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 1;
+  
+  // Фільтри
+  AvatarStatsFilters filters = 2;
+}
+
+// Відповідь статистики аватарів
+message GetAvatarStatsResponse {
+  // Статистика аватарів
+  gaming.ar_vr.messages.AvatarStats stats = 1;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Запит пошуку аватарів
+message SearchAvatarsRequest {
+  // Пошуковий запит
+  string query = 1;
+  
+  // Фільтри
+  AvatarFilters filters = 2;
+  
+  // Пагінація
+  Pagination pagination = 3;
+  
+  // Сортування
+  Sorting sorting = 4;
+}
+
+// Відповідь пошуку аватарів
+message SearchAvatarsResponse {
+  // Список знайдених аватарів
+  repeated gaming.ar_vr.messages.Avatar avatars = 1;
+  
+  // Загальна кількість результатів
+  int64 total_count = 2;
+  
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+  
+  // Час пошуку (в мілісекундах)
+  int64 search_time_ms = 4;
+}
+
+// Запит рекомендацій аватарів
+message GetAvatarRecommendationsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Кількість рекомендацій
+  int32 limit = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь рекомендацій аватарів
+message GetAvatarRecommendationsResponse {
+  // Список рекомендованих аватарів
+  repeated gaming.ar_vr.messages.Avatar recommended_avatars = 1;
+  
+  // Загальна кількість рекомендацій
+  int64 total_count = 2;
+  
+  // Додаткові дані рекомендацій
+  map<string, string> recommendation_data = 3;
+}
+
+// Запит оцінки аватара
+message RateAvatarRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Оцінка (1-5)
+  int32 rating = 3;
+  
+  // Коментар (опціонально)
+  string comment = 4;
+}
+
+// Відповідь оцінки аватара
+message RateAvatarResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Нова середня оцінка аватара
+  double new_average_rating = 3;
+}
+
+// Запит додавання анімації до аватара
+message AddAnimationToAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Дані анімації
+  gaming.ar_vr.messages.AvatarAnimation animation = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь додавання анімації до аватара
+message AddAnimationToAvatarResponse {
+  // Додана анімація
+  gaming.ar_vr.messages.AvatarAnimation animation = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення анімації з аватара
+message RemoveAnimationFromAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор анімації
+  string animation_id = 2;
+  
+  // Причина видалення
+  string reason = 3;
+}
+
+// Відповідь видалення анімації з аватара
+message RemoveAnimationFromAvatarResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+}
+
+// Запит оновлення анімації аватара
+message UpdateAvatarAnimationRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор анімації
+  string animation_id = 2;
+  
+  // Дані для оновлення
+  gaming.ar_vr.messages.AvatarAnimation animation = 3;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь оновлення анімації аватара
+message UpdateAvatarAnimationResponse {
+  // Оновлена анімація
+  gaming.ar_vr.messages.AvatarAnimation animation = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит додавання звуку до аватара
+message AddAudioToAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Дані звуку
+  gaming.ar_vr.messages.AvatarAudio audio = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь додавання звуку до аватара
+message AddAudioToAvatarResponse {
+  // Доданий звук
+  gaming.ar_vr.messages.AvatarAudio audio = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення звуку з аватара
+message RemoveAudioFromAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор звуку
+  string audio_id = 2;
+  
+  // Причина видалення
+  string reason = 3;
+}
+
+// Відповідь видалення звуку з аватара
+message RemoveAudioFromAvatarResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+}
+
+// Запит оновлення звуку аватара
+message UpdateAvatarAudioRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор звуку
+  string audio_id = 2;
+  
+  // Дані для оновлення
+  gaming.ar_vr.messages.AvatarAudio audio = 3;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь оновлення звуку аватара
+message UpdateAvatarAudioResponse {
+  // Оновлений звук
+  gaming.ar_vr.messages.AvatarAudio audio = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит додавання ефекту до аватара
+message AddEffectToAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Дані ефекту
+  gaming.ar_vr.messages.AvatarEffect effect = 2;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь додавання ефекту до аватара
+message AddEffectToAvatarResponse {
+  // Доданий ефект
+  gaming.ar_vr.messages.AvatarEffect effect = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення ефекту з аватара
+message RemoveEffectFromAvatarRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор ефекту
+  string effect_id = 2;
+  
+  // Причина видалення
+  string reason = 3;
+}
+
+// Відповідь видалення ефекту з аватара
+message RemoveEffectFromAvatarResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+}
+
+// Запит оновлення ефекту аватара
+message UpdateAvatarEffectRequest {
+  // Ідентифікатор аватара
+  string avatar_id = 1;
+  
+  // Ідентифікатор ефекту
+  string effect_id = 2;
+  
+  // Дані для оновлення
+  gaming.ar_vr.messages.AvatarEffect effect = 3;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь оновлення ефекту аватара
+message UpdateAvatarEffectResponse {
+  // Оновлений ефект
+  gaming.ar_vr.messages.AvatarEffect effect = 1;
+  
+  // Статус операції
+  string status = 2;
+  
+  // Повідомлення
+  string message = 3;
+}
+
+// Фільтри аватарів
+message AvatarFilters {
+  // Тип аватара
+  repeated string types = 1;
+  
+  // Категорія аватара
+  repeated string categories = 2;
+  
+  // Автор аватара
+  string author = 3;
+  
+  // Теги аватара
+  repeated string tags = 4;
+  
+  // Мова аватара
+  string language = 5;
+  
+  // Мінімальний рейтинг
+  double min_rating = 6;
+  
+  // Максимальний рейтинг
+  double max_rating = 7;
+  
+  // Час створення (від)
+  google.protobuf.Timestamp created_from = 8;
+  
+  // Час створення (до)
+  google.protobuf.Timestamp created_to = 9;
+  
+  // Розмір файлу (від)
+  int64 file_size_from = 10;
+  
+  // Розмір файлу (до)
+  int64 file_size_to = 11;
+}
+
+// Фільтри аватарів гравця
+message PlayerAvatarFilters {
+  // Тип аватара
+  repeated string types = 1;
+  
+  // Категорія аватара
+  repeated string categories = 2;
+  
+  // Час створення (від)
+  google.protobuf.Timestamp created_from = 3;
+  
+  // Час створення (до)
+  google.protobuf.Timestamp created_to = 4;
+  
+  // Час останнього використання (від)
+  google.protobuf.Timestamp last_used_from = 5;
+  
+  // Час останнього використання (до)
+  google.protobuf.Timestamp last_used_to = 6;
+}
+
+// Фільтри статистики аватарів
+message AvatarStatsFilters {
+  // Період часу (від)
+  google.protobuf.Timestamp period_from = 1;
+  
+  // Період часу (до)
+  google.protobuf.Timestamp period_to = 2;
+  
+  // Тип аватара
+  repeated string types = 3;
+  
+  // Категорія аватара
+  repeated string categories = 4;
+  
+  // Автор аватара
+  string author = 5;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+  
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+  
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+  
+  // Чи є наступна сторінка
+  bool has_next = 5;
+  
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}
+
+// Сортування
+message Sorting {
+  // Поле для сортування
+  string field = 1;
+  
+  // Напрямок сортування
+  SortDirection direction = 2;
+}
+
+// Напрямок сортування
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

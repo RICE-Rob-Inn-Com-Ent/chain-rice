@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// Grading policy definitions.
+package education.grading.enums;
+
+option go_package = "github.com/rice-dev/education/grading/enums;grdgenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.grading.enums";
+
+// Policies that influence grade calculations.
+enum GradingPolicy {
+  GRADING_POLICY_UNSPECIFIED = 0; // Unknown
+  GRADING_POLICY_ABSOLUTE = 1;    // Fixed cutoffs
+  GRADING_POLICY_CURVED = 2;      // Curved distribution
+  GRADING_POLICY_MASTERY = 3;     // Mastery-based grading
+  GRADING_POLICY_COMPETENCY = 4;  // Competency-based
+  GRADING_POLICY_CUMULATIVE = 5;  // Cumulative weighted
+}
+
+

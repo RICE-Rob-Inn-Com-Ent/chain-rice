@@ -1,0 +1,251 @@
+syntax = "proto3";
+
+package tourism.bookings.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/bookings/enums/booking_status.proto";
+import "tourism/bookings/enums/payment_status.proto";
+
+// CreateBookingRequest represents a request to create a new booking
+message CreateBookingRequest {
+  // Customer ID making the booking
+  string customer_id = 1;
+  
+  // Type of service being booked (flight, hotel, tour, package)
+  string service_type = 2;
+  
+  // ID of the specific service being booked
+  string service_id = 3;
+  
+  // Initial booking status
+  tourism.bookings.enums.BookingStatus status = 4;
+  
+  // Total amount for the booking (in smallest currency unit)
+  int64 total_amount = 5;
+  
+  // Currency code (ISO 4217 format)
+  string currency = 6;
+  
+  // Number of travelers/guests
+  int32 number_of_travelers = 7;
+  
+  // Booking start date
+  google.protobuf.Timestamp start_date = 8;
+  
+  // Booking end date
+  google.protobuf.Timestamp end_date = 9;
+  
+  // Special requests or notes
+  google.protobuf.StringValue special_requests = 10;
+  
+  // Contact information
+  ContactInfo contact_info = 11;
+  
+  // Traveler details
+  repeated TravelerInfo travelers = 12;
+  
+  // Payment information
+  PaymentInfo payment_info = 13;
+  
+  // Booking source (website, mobile app, agent, etc.)
+  google.protobuf.StringValue booking_source = 14;
+  
+  // Promotional code used (if any)
+  google.protobuf.StringValue promotional_code = 15;
+}
+
+// UpdateBookingRequest represents a request to update an existing booking
+message UpdateBookingRequest {
+  // Booking ID to update
+  string booking_id = 1;
+  
+  // Optional new status
+  tourism.bookings.enums.BookingStatus status = 2;
+  
+  // Optional new total amount
+  google.protobuf.DoubleValue total_amount = 3;
+  
+  // Optional new start date
+  google.protobuf.Timestamp start_date = 4;
+  
+  // Optional new end date
+  google.protobuf.Timestamp end_date = 5;
+  
+  // Optional new special requests
+  google.protobuf.StringValue special_requests = 6;
+  
+  // Optional new contact information
+  ContactInfo contact_info = 7;
+  
+  // Optional new traveler information
+  repeated TravelerInfo travelers = 8;
+  
+  // Optional new payment information
+  PaymentInfo payment_info = 9;
+}
+
+// GetBookingRequest represents a request to retrieve a specific booking
+message GetBookingRequest {
+  // Booking ID to retrieve
+  string booking_id = 1;
+}
+
+// ListBookingsRequest represents a request to list bookings with filtering
+message ListBookingsRequest {
+  // Customer ID to filter by (optional)
+  google.protobuf.StringValue customer_id = 1;
+  
+  // Service type to filter by (optional)
+  google.protobuf.StringValue service_type = 2;
+  
+  // Booking status to filter by (optional)
+  tourism.bookings.enums.BookingStatus status = 3;
+  
+  // Payment status to filter by (optional)
+  tourism.bookings.enums.PaymentStatus payment_status = 4;
+  
+  // Date range for booking creation (optional)
+  google.protobuf.Timestamp created_after = 5;
+  google.protobuf.Timestamp created_before = 6;
+  
+  // Date range for booking dates (optional)
+  google.protobuf.Timestamp booking_start_after = 7;
+  google.protobuf.Timestamp booking_end_before = 8;
+  
+  // Page number for pagination (starts from 1)
+  int32 page = 9;
+  
+  // Page size for pagination (max 100)
+  int32 page_size = 10;
+}
+
+// DeleteBookingRequest represents a request to delete a booking
+message DeleteBookingRequest {
+  // Booking ID to delete
+  string booking_id = 1;
+  
+  // Reason for deletion
+  google.protobuf.StringValue reason = 2;
+}
+
+// CancelBookingRequest represents a request to cancel a booking
+message CancelBookingRequest {
+  // Booking ID to cancel
+  string booking_id = 1;
+  
+  // Cancellation reason
+  google.protobuf.StringValue reason = 2;
+  
+  // Whether to process refund
+  bool process_refund = 3;
+  
+  // Cancellation effective date
+  google.protobuf.Timestamp effective_date = 4;
+}
+
+// ConfirmBookingRequest represents a request to confirm a booking
+message ConfirmBookingRequest {
+  // Booking ID to confirm
+  string booking_id = 1;
+  
+  // Confirmation notes
+  google.protobuf.StringValue confirmation_notes = 2;
+  
+  // Confirmation method (email, sms, phone)
+  google.protobuf.StringValue confirmation_method = 3;
+}
+
+// ContactInfo represents contact information for a booking
+message ContactInfo {
+  // Full name
+  string full_name = 1;
+  
+  // Email address
+  string email = 2;
+  
+  // Phone number
+  string phone = 3;
+  
+  // Address information
+  Address address = 4;
+  
+  // Preferred contact method
+  google.protobuf.StringValue preferred_contact_method = 5;
+  
+  // Emergency contact information
+  google.protobuf.StringValue emergency_contact = 6;
+}
+
+// TravelerInfo represents information about a traveler
+message TravelerInfo {
+  // Traveler type (adult, child, infant)
+  string traveler_type = 1;
+  
+  // First name
+  string first_name = 2;
+  
+  // Last name
+  string last_name = 3;
+  
+  // Date of birth
+  google.protobuf.Timestamp date_of_birth = 4;
+  
+  // Gender
+  google.protobuf.StringValue gender = 5;
+  
+  // Nationality
+  google.protobuf.StringValue nationality = 6;
+  
+  // Passport information
+  google.protobuf.StringValue passport_number = 7;
+  
+  // Dietary restrictions
+  google.protobuf.StringValue dietary_restrictions = 8;
+  
+  // Medical conditions
+  google.protobuf.StringValue medical_conditions = 9;
+}
+
+// PaymentInfo represents payment information for a booking
+message PaymentInfo {
+  // Payment method (credit_card, bank_transfer, cash, etc.)
+  string payment_method = 1;
+  
+  // Payment status
+  tourism.bookings.enums.PaymentStatus payment_status = 2;
+  
+  // Payment reference or transaction ID
+  google.protobuf.StringValue payment_reference = 3;
+  
+  // Payment date
+  google.protobuf.Timestamp payment_date = 4;
+  
+  // Payment amount
+  google.protobuf.DoubleValue payment_amount = 5;
+  
+  // Currency
+  google.protobuf.StringValue currency = 6;
+  
+  // Billing address
+  Address billing_address = 7;
+}
+
+// Address represents an address structure
+message Address {
+  // Street address
+  string street_address = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  google.protobuf.StringValue state_province = 3;
+  
+  // Postal code
+  google.protobuf.StringValue postal_code = 4;
+  
+  // Country code (ISO 3166-1 alpha-2)
+  string country_code = 5;
+}

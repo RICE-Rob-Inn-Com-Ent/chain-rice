@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package blockchain.governance.messages;
+
+option go_package = "github.com/chainrice/proto/blockchain/governance/messages";
+
+// VoteOption defines the options for governance votes
+enum VoteOption {
+  // VOTE_OPTION_UNSPECIFIED indicates an unspecified vote option
+  VOTE_OPTION_UNSPECIFIED = 0;
+  
+  // VOTE_OPTION_YES indicates a yes vote
+  VOTE_OPTION_YES = 1;
+  
+  // VOTE_OPTION_ABSTAIN indicates an abstain vote
+  VOTE_OPTION_ABSTAIN = 2;
+  
+  // VOTE_OPTION_NO indicates a no vote
+  VOTE_OPTION_NO = 3;
+  
+  // VOTE_OPTION_NO_WITH_VETO indicates a no-with-veto vote
+  VOTE_OPTION_NO_WITH_VETO = 4;
+}
+
+// Vote represents a governance vote
+message Vote {
+  string id = 1;                    // Unique vote identifier
+  string proposal_id = 2;           // Proposal ID being voted on
+  string voter = 3;                 // Voter address (sdk.Address)
+  VoteOption option = 4;            // Vote option
+  string metadata = 5;              // Vote metadata
+  int64 timestamp = 6;              // Vote timestamp
+  
+  // Voting power and delegation
+  string voting_power = 7;          // Voter's voting power
+  repeated string delegator_addresses = 8; // Delegator addresses
+  string delegated_voting_power = 9; // Delegated voting power
+  
+  // Vote validation
+  string signature = 10;            // Vote signature
+  string public_key = 11;           // Voter's public key
+  
+  // Vote context
+  int64 block_height = 12;          // Block height when vote was cast
+  string transaction_hash = 13;     // Transaction hash
+  map<string, string> metadata_map = 14; // Additional metadata
+}
+
+// VoteWeight represents the weight of a vote
+message VoteWeight {
+  string voter = 1;                 // Voter address (sdk.Address)
+  VoteOption option = 2;            // Vote option
+  string weight = 3;                // Vote weight
+  string percentage = 4;            // Vote percentage of total
+}
+
+// TallyResult represents the tally result of a proposal
+message TallyResult {
+  string proposal_id = 1;           // Proposal ID
+  int64 yes_count = 2;              // Number of yes votes
+  int64 abstain_count = 3;          // Number of abstain votes
+  int64 no_count = 4;               // Number of no votes
+  int64 no_with_veto_count = 5;     // Number of no-with-veto votes
+  string total_voting_power = 6;    // Total voting power
+  string yes_power = 7;             // Yes voting power
+  string abstain_power = 8;         // Abstain voting power
+  string no_power = 9;              // No voting power
+  string no_with_veto_power = 10;   // No-with-veto voting power
+  
+  // Thresholds
+  string quorum = 11;               // Quorum threshold
+  string threshold = 12;            // Approval threshold
+  string veto_threshold = 13;       // Veto threshold
+  
+  // Results
+  bool quorum_reached = 14;         // Whether quorum is reached
+  bool threshold_reached = 15;      // Whether approval threshold is reached
+  bool veto_threshold_reached = 16; // Whether veto threshold is reached
+  bool proposal_passed = 17;        // Whether proposal passed
+  
+  // Metadata
+  int64 tally_time = 18;            // Tally timestamp
+  map<string, string> metadata = 19; // Additional metadata
+}
+
+// MsgCastVote casts a vote on a governance proposal
+message MsgCastVote {
+  string creator = 1;               // Voter address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to vote on
+  VoteOption option = 3;            // Vote option
+  string metadata = 4;              // Vote metadata
+}
+
+// MsgCastVoteResponse returns the vote result
+message MsgCastVoteResponse {
+  bool success = 1;                 // Vote success status
+  string vote_id = 2;               // Created vote ID
+}
+
+// MsgUpdateVote updates an existing vote
+message MsgUpdateVote {
+  string creator = 1;               // Voter address (sdk.Address)
+  string vote_id = 2;               // Vote ID to update
+  VoteOption new_option = 3;        // New vote option
+  string metadata = 4;              // Updated metadata
+  string reason = 5;                // Update reason
+}
+
+// MsgUpdateVoteResponse returns the update result
+message MsgUpdateVoteResponse {
+  bool success = 1;                 // Update success status
+}
+
+// MsgRetractVote retracts a vote
+message MsgRetractVote {
+  string creator = 1;               // Voter address (sdk.Address)
+  string vote_id = 2;               // Vote ID to retract
+  string reason = 3;                // Retraction reason
+}
+
+// MsgRetractVoteResponse returns the retraction result
+message MsgRetractVoteResponse {
+  bool success = 1;                 // Retraction success status
+}
+
+// MsgCalculateTally calculates the tally for a proposal
+message MsgCalculateTally {
+  string creator = 1;               // Calculator address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to tally
+  bool force_recalculate = 3;       // Force recalculate even if cached
+}
+
+// MsgCalculateTallyResponse returns the tally result
+message MsgCalculateTallyResponse {
+  bool success = 1;                 // Calculation success status
+  TallyResult tally_result = 2;     // Calculated tally result
+}
+
+// MsgDelegateVotingPower delegates voting power to another address
+message MsgDelegateVotingPower {
+  string creator = 1;               // Delegator address (sdk.Address)
+  string delegatee = 2;             // Delegatee address (sdk.Address)
+  string voting_power = 3;          // Voting power to delegate
+  string proposal_id = 4;           // Optional proposal ID for specific delegation
+  int64 expiry_time = 5;            // Optional expiry time
+}
+
+// MsgDelegateVotingPowerResponse returns the delegation result
+message MsgDelegateVotingPowerResponse {
+  bool success = 1;                 // Delegation success status
+  string delegation_id = 2;         // Created delegation ID
+}
+
+// MsgUndelegateVotingPower undelegates voting power
+message MsgUndelegateVotingPower {
+  string creator = 1;               // Delegator address (sdk.Address)
+  string delegatee = 2;             // Delegatee address (sdk.Address)
+  string delegation_id = 3;         // Delegation ID to remove
+}
+
+// MsgUndelegateVotingPowerResponse returns the undelegation result
+message MsgUndelegateVotingPowerResponse {
+  bool success = 1;                 // Undelegation success status
+}

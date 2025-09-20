@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package manufacturing.manufacturing.enums;
+
+// Manufacturing status enumeration
+// Defines the various states a manufacturing process can be in
+enum ManufacturingStatus {
+  // Default value - should not be used
+  MANUFACTURING_STATUS_UNSPECIFIED = 0;
+  
+  // Manufacturing process is being planned
+  PLANNING = 1;
+  
+  // Manufacturing process is ready to start
+  READY = 2;
+  
+  // Manufacturing process is currently in progress
+  IN_PROGRESS = 3;
+  
+  // Manufacturing process is paused temporarily
+  PAUSED = 4;
+  
+  // Manufacturing process has been completed successfully
+  COMPLETED = 5;
+  
+  // Manufacturing process has been cancelled
+  CANCELLED = 6;
+  
+  // Manufacturing process encountered an error
+  ERROR = 7;
+  
+  // Manufacturing process is on hold pending external dependencies
+  ON_HOLD = 8;
+  
+  // Manufacturing process is in quality review
+  QUALITY_REVIEW = 9;
+  
+  // Manufacturing process is awaiting approval
+  PENDING_APPROVAL = 10;
+}
+
+// Production line status enumeration
+enum ProductionLineStatus {
+  // Default value - should not be used
+  PRODUCTION_LINE_STATUS_UNSPECIFIED = 0;
+  
+  // Production line is active and running
+  ACTIVE = 1;
+  
+  // Production line is inactive/stopped
+  INACTIVE = 2;
+  
+  // Production line is in maintenance mode
+  MAINTENANCE = 3;
+  
+  // Production line is being set up
+  SETUP = 4;
+  
+  // Production line has encountered an error
+  ERROR = 5;
+  
+  // Production line is being cleaned
+  CLEANING = 6;
+}
+
+// Work order priority enumeration
+enum WorkOrderPriority {
+  // Default value - should not be used
+  WORK_ORDER_PRIORITY_UNSPECIFIED = 0;
+  
+  // Low priority work order
+  LOW = 1;
+  
+  // Normal priority work order
+  NORMAL = 2;
+  
+  // High priority work order
+  HIGH = 3;
+  
+  // Urgent priority work order
+  URGENT = 4;
+  
+  // Critical priority work order
+  CRITICAL = 5;
+}

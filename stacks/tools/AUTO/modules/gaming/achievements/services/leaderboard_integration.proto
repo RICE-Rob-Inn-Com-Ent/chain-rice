@@ -1,0 +1,467 @@
+syntax = "proto3";
+
+package gaming.achievements.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/achievements/services";
+
+// Сервіс інтеграції з лідербордами
+service LeaderboardIntegrationService {
+  // Оновити лідерборд досягнень
+  rpc UpdateAchievementLeaderboard(UpdateAchievementLeaderboardRequest) returns (UpdateAchievementLeaderboardResponse);
+  
+  // Отримати позицію гравця в лідерборді досягнень
+  rpc GetPlayerAchievementRank(GetPlayerAchievementRankRequest) returns (GetPlayerAchievementRankResponse);
+  
+  // Отримати топ гравців за досягненнями
+  rpc GetTopAchievementPlayers(GetTopAchievementPlayersRequest) returns (GetTopAchievementPlayersResponse);
+  
+  // Синхронізувати дані досягнень з лідербордом
+  rpc SyncAchievementData(SyncAchievementDataRequest) returns (SyncAchievementDataResponse);
+  
+  // Отримати статистику лідерборду досягнень
+  rpc GetAchievementLeaderboardStats(GetAchievementLeaderboardStatsRequest) returns (GetAchievementLeaderboardStatsResponse);
+  
+  // Оновити лідерборд нагород
+  rpc UpdateRewardLeaderboard(UpdateRewardLeaderboardRequest) returns (UpdateRewardLeaderboardResponse);
+  
+  // Отримати позицію гравця в лідерборді нагород
+  rpc GetPlayerRewardRank(GetPlayerRewardRankRequest) returns (GetPlayerRewardRankResponse);
+  
+  // Отримати топ гравців за нагородами
+  rpc GetTopRewardPlayers(GetTopRewardPlayersRequest) returns (GetTopRewardPlayersResponse);
+  
+  // Синхронізувати дані нагород з лідербордом
+  rpc SyncRewardData(SyncRewardDataRequest) returns (SyncRewardDataResponse);
+  
+  // Отримати статистику лідерборду нагород
+  rpc GetRewardLeaderboardStats(GetRewardLeaderboardStatsRequest) returns (GetRewardLeaderboardStatsResponse);
+}
+
+// Запит оновлення лідерборду досягнень
+message UpdateAchievementLeaderboardRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор досягнення
+  string achievement_id = 2;
+  
+  // Тип оновлення
+  LeaderboardUpdateType update_type = 3;
+  
+  // Додаткові дані
+  map<string, string> update_data = 4;
+}
+
+// Відповідь оновлення лідерборду досягнень
+message UpdateAchievementLeaderboardResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Нова позиція гравця
+  int64 new_rank = 3;
+  
+  // Попередня позиція гравця
+  int64 previous_rank = 4;
+}
+
+// Запит позиції гравця в лідерборді досягнень
+message GetPlayerAchievementRankRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип лідерборду
+  string leaderboard_type = 2;
+  
+  // Період часу
+  LeaderboardTimePeriod time_period = 3;
+}
+
+// Відповідь позиції гравця в лідерборді досягнень
+message GetPlayerAchievementRankResponse {
+  // Позиція гравця
+  int64 rank = 1;
+  
+  // Загальна кількість гравців
+  int64 total_players = 2;
+  
+  // Кількість досягнень гравця
+  int64 player_achievements = 3;
+  
+  // Відсоток від топ гравця
+  double percentage_of_top = 4;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 5;
+}
+
+// Запит топ гравців за досягненнями
+message GetTopAchievementPlayersRequest {
+  // Тип лідерборду
+  string leaderboard_type = 1;
+  
+  // Період часу
+  LeaderboardTimePeriod time_period = 2;
+  
+  // Кількість гравців
+  int32 limit = 3;
+  
+  // Зміщення
+  int32 offset = 4;
+}
+
+// Відповідь топ гравців за досягненнями
+message GetTopAchievementPlayersResponse {
+  // Список топ гравців
+  repeated AchievementLeaderboardEntry players = 1;
+  
+  // Загальна кількість гравців
+  int64 total_players = 2;
+  
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит синхронізації даних досягнень
+message SyncAchievementDataRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 3;
+}
+
+// Відповідь синхронізації даних досягнень
+message SyncAchievementDataResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Кількість синхронізованих записів
+  int64 synced_records = 3;
+  
+  // Час синхронізації
+  google.protobuf.Timestamp sync_time = 4;
+}
+
+// Запит статистики лідерборду досягнень
+message GetAchievementLeaderboardStatsRequest {
+  // Тип лідерборду
+  string leaderboard_type = 1;
+  
+  // Період часу
+  LeaderboardTimePeriod time_period = 2;
+}
+
+// Відповідь статистики лідерборду досягнень
+message GetAchievementLeaderboardStatsResponse {
+  // Статистика лідерборду
+  AchievementLeaderboardStats stats = 1;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Запит оновлення лідерборду нагород
+message UpdateRewardLeaderboardRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор нагороди
+  string reward_id = 2;
+  
+  // Тип оновлення
+  LeaderboardUpdateType update_type = 3;
+  
+  // Додаткові дані
+  map<string, string> update_data = 4;
+}
+
+// Відповідь оновлення лідерборду нагород
+message UpdateRewardLeaderboardResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Нова позиція гравця
+  int64 new_rank = 3;
+  
+  // Попередня позиція гравця
+  int64 previous_rank = 4;
+}
+
+// Запит позиції гравця в лідерборді нагород
+message GetPlayerRewardRankRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип лідерборду
+  string leaderboard_type = 2;
+  
+  // Період часу
+  LeaderboardTimePeriod time_period = 3;
+}
+
+// Відповідь позиції гравця в лідерборді нагород
+message GetPlayerRewardRankResponse {
+  // Позиція гравця
+  int64 rank = 1;
+  
+  // Загальна кількість гравців
+  int64 total_players = 2;
+  
+  // Кількість нагород гравця
+  int64 player_rewards = 3;
+  
+  // Відсоток від топ гравця
+  double percentage_of_top = 4;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 5;
+}
+
+// Запит топ гравців за нагородами
+message GetTopRewardPlayersRequest {
+  // Тип лідерборду
+  string leaderboard_type = 1;
+  
+  // Період часу
+  LeaderboardTimePeriod time_period = 2;
+  
+  // Кількість гравців
+  int32 limit = 3;
+  
+  // Зміщення
+  int32 offset = 4;
+}
+
+// Відповідь топ гравців за нагородами
+message GetTopRewardPlayersResponse {
+  // Список топ гравців
+  repeated RewardLeaderboardEntry players = 1;
+  
+  // Загальна кількість гравців
+  int64 total_players = 2;
+  
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит синхронізації даних нагород
+message SyncRewardDataRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Тип синхронізації
+  SyncType sync_type = 2;
+  
+  // Додаткові параметри
+  map<string, string> sync_parameters = 3;
+}
+
+// Відповідь синхронізації даних нагород
+message SyncRewardDataResponse {
+  // Статус операції
+  string status = 1;
+  
+  // Повідомлення
+  string message = 2;
+  
+  // Кількість синхронізованих записів
+  int64 synced_records = 3;
+  
+  // Час синхронізації
+  google.protobuf.Timestamp sync_time = 4;
+}
+
+// Запит статистики лідерборду нагород
+message GetRewardLeaderboardStatsRequest {
+  // Тип лідерборду
+  string leaderboard_type = 1;
+  
+  // Період часу
+  LeaderboardTimePeriod time_period = 2;
+}
+
+// Відповідь статистики лідерборду нагород
+message GetRewardLeaderboardStatsResponse {
+  // Статистика лідерборду
+  RewardLeaderboardStats stats = 1;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Типи оновлення лідерборду
+enum LeaderboardUpdateType {
+  LEADERBOARD_UPDATE_TYPE_UNSPECIFIED = 0;
+  LEADERBOARD_UPDATE_TYPE_ADD = 1;
+  LEADERBOARD_UPDATE_TYPE_UPDATE = 2;
+  LEADERBOARD_UPDATE_TYPE_REMOVE = 3;
+  LEADERBOARD_UPDATE_TYPE_RESET = 4;
+}
+
+// Періоди часу для лідерборду
+enum LeaderboardTimePeriod {
+  LEADERBOARD_TIME_PERIOD_UNSPECIFIED = 0;
+  LEADERBOARD_TIME_PERIOD_DAILY = 1;
+  LEADERBOARD_TIME_PERIOD_WEEKLY = 2;
+  LEADERBOARD_TIME_PERIOD_MONTHLY = 3;
+  LEADERBOARD_TIME_PERIOD_YEARLY = 4;
+  LEADERBOARD_TIME_PERIOD_ALL_TIME = 5;
+}
+
+// Типи синхронізації
+enum SyncType {
+  SYNC_TYPE_UNSPECIFIED = 0;
+  SYNC_TYPE_FULL = 1;
+  SYNC_TYPE_INCREMENTAL = 2;
+  SYNC_TYPE_REALTIME = 3;
+}
+
+// Запис лідерборду досягнень
+message AchievementLeaderboardEntry {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ім'я гравця
+  string player_name = 2;
+  
+  // Позиція в лідерборді
+  int64 rank = 3;
+  
+  // Кількість досягнень
+  int64 achievement_count = 4;
+  
+  // Кількість завершених досягнень
+  int64 completed_achievements = 5;
+  
+  // Кількість отриманих нагород
+  int64 claimed_rewards = 6;
+  
+  // Відсоток завершення
+  double completion_percentage = 7;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 8;
+}
+
+// Запис лідерборду нагород
+message RewardLeaderboardEntry {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ім'я гравця
+  string player_name = 2;
+  
+  // Позиція в лідерборді
+  int64 rank = 3;
+  
+  // Кількість нагород
+  int64 reward_count = 4;
+  
+  // Загальна вартість нагород
+  double total_value = 5;
+  
+  // Середня вартість нагороди
+  double average_value = 6;
+  
+  // Кількість рідкісних нагород
+  int64 rare_rewards = 7;
+  
+  // Додаткові метрики
+  map<string, double> additional_metrics = 8;
+}
+
+// Статистика лідерборду досягнень
+message AchievementLeaderboardStats {
+  // Загальна кількість гравців
+  int64 total_players = 1;
+  
+  // Середня кількість досягнень
+  double average_achievements = 2;
+  
+  // Медіанна кількість досягнень
+  double median_achievements = 3;
+  
+  // Максимальна кількість досягнень
+  int64 max_achievements = 4;
+  
+  // Мінімальна кількість досягнень
+  int64 min_achievements = 5;
+  
+  // Стандартне відхилення
+  double standard_deviation = 6;
+  
+  // Розподіл по категоріях
+  map<string, int64> category_distribution = 7;
+  
+  // Розподіл по типах
+  map<string, int64> type_distribution = 8;
+}
+
+// Статистика лідерборду нагород
+message RewardLeaderboardStats {
+  // Загальна кількість гравців
+  int64 total_players = 1;
+  
+  // Середня кількість нагород
+  double average_rewards = 2;
+  
+  // Медіанна кількість нагород
+  double median_rewards = 3;
+  
+  // Максимальна кількість нагород
+  int64 max_rewards = 4;
+  
+  // Мінімальна кількість нагород
+  int64 min_rewards = 5;
+  
+  // Стандартне відхилення
+  double standard_deviation = 6;
+  
+  // Розподіл по типах
+  map<string, int64> type_distribution = 7;
+  
+  // Розподіл по рідкості
+  map<string, int64> rarity_distribution = 8;
+  
+  // Загальна вартість всіх нагород
+  double total_value = 9;
+  
+  // Середня вартість нагороди
+  double average_value = 10;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+  
+  // Розмір сторінки
+  int32 page_size = 2;
+  
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+  
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+  
+  // Чи є наступна сторінка
+  bool has_next = 5;
+  
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}

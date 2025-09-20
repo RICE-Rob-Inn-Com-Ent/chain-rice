@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package government.permits.enums;
+
+// Типи дозволів
+enum PermitType {
+  PERMIT_TYPE_UNSPECIFIED = 0;
+  PERMIT_TYPE_CONSTRUCTION = 1;     // Дозвіл на будівництво
+  PERMIT_TYPE_BUSINESS = 2;         // Дозвіл на ведення бізнесу
+  PERMIT_TYPE_DRIVING = 3;          // Дозвіл на водіння
+  PERMIT_TYPE_FIREARM = 4;          // Дозвіл на зброю
+  PERMIT_TYPE_EVENT = 5;            // Дозвіл на проведення заходів
+  PERMIT_TYPE_PARKING = 6;          // Дозвіл на парковку
+  PERMIT_TYPE_VENDING = 7;          // Дозвіл на торгівлю
+  PERMIT_TYPE_PUBLIC_UTILITY = 8;   // Дозвіл на комунальні послуги
+  PERMIT_TYPE_ENVIRONMENTAL = 9;    // Екологічний дозвіл
+  PERMIT_TYPE_HEALTH = 10;          // Санітарний дозвіл
+  PERMIT_TYPE_IMPORT_EXPORT = 11;   // Дозвіл на імпорт/експорт
+  PERMIT_TYPE_RESIDENCE = 12;       // Дозвіл на проживання
+  PERMIT_TYPE_WORK = 13;            // Дозвіл на роботу
+  PERMIT_TYPE_EDUCATION = 14;       // Дозвіл на освітню діяльність
+  PERMIT_TYPE_MEDIA = 15;           // Дозвіл на медіа діяльність
+}

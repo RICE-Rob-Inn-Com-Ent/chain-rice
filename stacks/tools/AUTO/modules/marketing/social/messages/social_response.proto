@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package marketing.social.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/social/enums/social_platform.proto";
+
+// Social media post data transfer object
+message Social {
+  // Social media post ID
+  string id = 1;
+  
+  // Post content
+  string content = 2;
+  
+  // Social media platforms
+  repeated marketing.social.enums.SocialPlatform platforms = 3;
+  
+  // Post type
+  string post_type = 4;
+  
+  // Media URLs (images, videos)
+  repeated string media_urls = 5;
+  
+  // Hashtags
+  repeated string hashtags = 6;
+  
+  // Mentions
+  repeated string mentions = 7;
+  
+  // Campaign ID (if applicable)
+  string campaign_id = 8;
+  
+  // Scheduled post time
+  google.protobuf.Timestamp scheduled_time = 9;
+  
+  // Actual post time
+  google.protobuf.Timestamp posted_time = 10;
+  
+  // Post tags
+  repeated string tags = 11;
+  
+  // Post priority
+  int32 priority = 12;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 13;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 14;
+  
+  // Social media metrics
+  SocialMetrics metrics = 15;
+}
+
+// Social media performance metrics
+message SocialMetrics {
+  // Total reach
+  int64 total_reach = 1;
+  
+  // Total impressions
+  int64 total_impressions = 2;
+  
+  // Total likes
+  int64 total_likes = 3;
+  
+  // Total comments
+  int64 total_comments = 4;
+  
+  // Total shares
+  int64 total_shares = 5;
+  
+  // Total clicks
+  int64 total_clicks = 6;
+  
+  // Total saves
+  int64 total_saves = 7;
+  
+  // Engagement rate
+  double engagement_rate = 8;
+  
+  // Click-through rate
+  double ctr = 9;
+  
+  // Cost per engagement
+  double cpe = 10;
+  
+  // Cost per click
+  double cpc = 11;
+  
+  // Cost per impression
+  double cpm = 12;
+  
+  // Total spend
+  double total_spend = 13;
+}
+
+// Response message for creating a social media post
+message CreateSocialResponse {
+  // Created social media post
+  Social social = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for getting a social media post
+message GetSocialResponse {
+  // Social media post data
+  Social social = 1;
+}
+
+// Response message for listing social media posts
+message ListSocialResponse {
+  // List of social media posts
+  repeated Social social_posts = 1;
+  
+  // Total count of social media posts
+  int32 total_count = 2;
+  
+  // Current page number
+  int32 page = 3;
+  
+  // Number of items per page
+  int32 page_size = 4;
+}
+
+// Response message for updating a social media post
+message UpdateSocialResponse {
+  // Updated social media post
+  Social social = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for deleting a social media post
+message DeleteSocialResponse {
+  // Success message
+  string message = 1;
+}

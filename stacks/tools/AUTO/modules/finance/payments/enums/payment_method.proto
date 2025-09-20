@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package finance.payments.enums;
+
+// Payment methods for processing payments
+enum PaymentMethod {
+  // Default value
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  
+  // Credit card
+  PAYMENT_METHOD_CREDIT_CARD = 1;
+  
+  // Debit card
+  PAYMENT_METHOD_DEBIT_CARD = 2;
+  
+  // Bank transfer
+  PAYMENT_METHOD_BANK_TRANSFER = 3;
+  
+  // Wire transfer
+  PAYMENT_METHOD_WIRE_TRANSFER = 4;
+  
+  // ACH transfer
+  PAYMENT_METHOD_ACH = 5;
+  
+  // SEPA transfer
+  PAYMENT_METHOD_SEPA = 6;
+  
+  // PayPal
+  PAYMENT_METHOD_PAYPAL = 7;
+  
+  // Stripe
+  PAYMENT_METHOD_STRIPE = 8;
+  
+  // Square
+  PAYMENT_METHOD_SQUARE = 9;
+  
+  // Apple Pay
+  PAYMENT_METHOD_APPLE_PAY = 10;
+  
+  // Google Pay
+  PAYMENT_METHOD_GOOGLE_PAY = 11;
+  
+  // Cryptocurrency
+  PAYMENT_METHOD_CRYPTO = 12;
+  
+  // Bitcoin
+  PAYMENT_METHOD_BITCOIN = 13;
+  
+  // Ethereum
+  PAYMENT_METHOD_ETHEREUM = 14;
+  
+  // Check
+  PAYMENT_METHOD_CHECK = 15;
+  
+  // Cash
+  PAYMENT_METHOD_CASH = 16;
+  
+  // Money order
+  PAYMENT_METHOD_MONEY_ORDER = 17;
+  
+  // Gift card
+  PAYMENT_METHOD_GIFT_CARD = 18;
+  
+  // Store credit
+  PAYMENT_METHOD_STORE_CREDIT = 19;
+  
+  // Loyalty points
+  PAYMENT_METHOD_LOYALTY_POINTS = 20;
+  
+  // Installment
+  PAYMENT_METHOD_INSTALLMENT = 21;
+  
+  // Buy now pay later
+  PAYMENT_METHOD_BNPL = 22;
+  
+  // Klarna
+  PAYMENT_METHOD_KLARNA = 23;
+  
+  // Afterpay
+  PAYMENT_METHOD_AFTERPAY = 24;
+  
+  // Other
+  PAYMENT_METHOD_OTHER = 25;
+}

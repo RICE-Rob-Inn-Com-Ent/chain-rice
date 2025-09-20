@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sports.leagues.v1;
+
+import "sports/leagues/messages/leagues_messages.proto";
+
+option go_package = "github.com/rice-dev/sports/leagues/v1";
+
+// LeagueService provides operations for managing sports leagues
+service LeagueService {
+  // CreateLeague creates a new sports league
+  rpc CreateLeague(CreateLeagueRequest) returns (CreateLeagueResponse);
+
+  // GetLeague retrieves a league by its ID
+  rpc GetLeague(GetLeagueRequest) returns (GetLeagueResponse);
+
+  // ListLeagues retrieves a list of leagues with optional filtering
+  rpc ListLeagues(ListLeaguesRequest) returns (ListLeaguesResponse);
+
+  // UpdateLeague updates an existing league
+  rpc UpdateLeague(UpdateLeagueRequest) returns (UpdateLeagueResponse);
+
+  // DeleteLeague deletes a league by its ID
+  rpc DeleteLeague(DeleteLeagueRequest) returns (DeleteLeagueResponse);
+}

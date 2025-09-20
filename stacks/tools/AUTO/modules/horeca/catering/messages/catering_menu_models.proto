@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package horeca.catering.messages;
+
+import "google/protobuf/money.proto";
+import "../enums/catering_service_type.proto";
+import "../../menu/enums/menu_category.proto";
+import "../../menu/enums/menu_item_status.proto";
+
+// Catering menu package
+message CateringMenu {
+  string menu_id = 1;
+  string menu_name = 2;
+  string description = 3;
+  CateringServiceType service_type = 4;
+  int32 min_guests = 5;
+  int32 max_guests = 6;
+  google.protobuf.Money base_price_per_person = 7;
+  bool is_active = 8;
+  
+  repeated CateringMenuCategory categories = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// Menu category within catering menu
+message CateringMenuCategory {
+  string category_id = 1;
+  string category_name = 2;
+  string description = 3;
+  MenuCategory type = 4;
+  int32 display_order = 5;
+  bool is_required = 6;
+  int32 min_selections = 7;
+  int32 max_selections = 8;
+  
+  repeated CateringMenuItem items = 9;
+}
+
+// Individual menu item in catering menu
+message CateringMenuItem {
+  string item_id = 1;
+  string item_name = 2;
+  string description = 3;
+  MenuItemStatus status = 4;
+  google.protobuf.Money price_per_person = 5;
+  repeated string allergens = 6;
+  repeated string dietary_tags = 7;
+  string preparation_notes = 8;
+  int32 prep_time_minutes = 9;
+  bool is_popular = 10;
+  string image_url = 11;
+}

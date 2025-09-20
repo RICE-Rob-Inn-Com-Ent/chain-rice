@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package transport.fleet_management.v1;
+
+import "google/protobuf/timestamp.proto";
+import "fleet-management/enums/vehicle_type.proto";
+import "fleet-management/enums/fleet_status.proto";
+
+option go_package = "github.com/rice-dev/transport/fleet_management/v1";
+
+// Fleet represents a vehicle in the transport fleet
+message Fleet {
+  // Unique vehicle identifier
+  string vehicle_id = 1;
+  
+  // Vehicle type
+  VehicleType vehicle_type = 2;
+  
+  // License plate number
+  string license_plate = 3;
+  
+  // Vehicle capacity in passengers
+  int32 capacity = 4;
+  
+  // Vehicle manufacturer
+  string manufacturer = 5;
+  
+  // Vehicle model
+  string model = 6;
+  
+  // Year of manufacture
+  int32 year = 7;
+  
+  // Vehicle identification number (VIN)
+  string vin = 8;
+  
+  // Current mileage
+  int64 mileage = 9;
+  
+  // Fuel type
+  string fuel_type = 10;
+  
+  // Current operational status
+  FleetStatus status = 11;
+  
+  // Currently assigned route ID
+  string assigned_route_id = 12;
+  
+  // Additional vehicle specifications
+  map<string, string> specifications = 13;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 14;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 15;
+  
+  // Last maintenance date
+  google.protobuf.Timestamp last_maintenance = 16;
+  
+  // Next scheduled maintenance
+  google.protobuf.Timestamp next_maintenance = 17;
+}
+
+// CreateFleetResponse represents the response after creating a new vehicle
+message CreateFleetResponse {
+  // Created vehicle information
+  Fleet vehicle = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// GetFleetResponse represents the response for retrieving a vehicle
+message GetFleetResponse {
+  // Requested vehicle information
+  Fleet vehicle = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// ListFleetResponse represents the response for listing vehicles
+message ListFleetResponse {
+  // List of vehicles
+  repeated Fleet vehicles = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of vehicles matching the filter
+  int32 total_count = 3;
+  
+  // Operation success status
+  bool success = 4;
+  
+  // Response message
+  string message = 5;
+}
+
+// UpdateFleetResponse represents the response after updating a vehicle
+message UpdateFleetResponse {
+  // Updated vehicle information
+  Fleet vehicle = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// DeleteFleetResponse represents the response after deleting a vehicle
+message DeleteFleetResponse {
+  // Deleted vehicle ID
+  string vehicle_id = 1;
+  
+  // Operation success status
+  bool success = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 4;
+}

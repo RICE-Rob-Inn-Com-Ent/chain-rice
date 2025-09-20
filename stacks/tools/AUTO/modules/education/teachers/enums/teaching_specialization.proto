@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+// Teacher specialization areas.
+package education.teachers.enums;
+
+option go_package = "github.com/rice-dev/education/teachers/enums;teachersenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.teachers.enums";
+
+// Specialization domains for teachers.
+enum TeachingSpecialization {
+  TEACHING_SPECIALIZATION_UNSPECIFIED = 0; // Unknown
+  TEACHING_SPECIALIZATION_SCIENCE = 1;     // Science
+  TEACHING_SPECIALIZATION_TECHNOLOGY = 2;  // Technology/CS
+  TEACHING_SPECIALIZATION_ENGINEERING = 3; // Engineering
+  TEACHING_SPECIALIZATION_MATHEMATICS = 4; // Math
+  TEACHING_SPECIALIZATION_ARTS = 5;        // Arts
+  TEACHING_SPECIALIZATION_HUMANITIES = 6;  // Humanities
+  TEACHING_SPECIALIZATION_BUSINESS = 7;    // Business
+  TEACHING_SPECIALIZATION_SOCIAL_SCIENCES = 8; // Social Sciences
+  TEACHING_SPECIALIZATION_LANGUAGE = 9;    // Languages
+  TEACHING_SPECIALIZATION_HEALTH = 10;     // Health/Medicine
+  TEACHING_SPECIALIZATION_LAW = 11;        // Law
+}
+
+

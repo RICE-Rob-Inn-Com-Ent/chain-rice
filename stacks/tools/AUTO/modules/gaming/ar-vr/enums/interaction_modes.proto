@@ -1,0 +1,412 @@
+syntax = "proto3";
+
+package gaming.ar_vr.enums;
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/enums";
+
+// Режими взаємодії в AR/VR
+enum InteractionMode {
+  INTERACTION_MODE_UNSPECIFIED = 0;
+  
+  // Жести
+  INTERACTION_MODE_GESTURE = 1;
+  
+  // Голосове управління
+  INTERACTION_MODE_VOICE = 2;
+  
+  // Дотик
+  INTERACTION_MODE_TOUCH = 3;
+  
+  // Погляд
+  INTERACTION_MODE_GAZE = 4;
+  
+  // Рух голови
+  INTERACTION_MODE_HEAD_MOVEMENT = 5;
+  
+  // Рух тіла
+  INTERACTION_MODE_BODY_MOVEMENT = 6;
+  
+  // Контролери
+  INTERACTION_MODE_CONTROLLER = 7;
+  
+  // Клавіатура і миша
+  INTERACTION_MODE_KEYBOARD_MOUSE = 8;
+  
+  // Геймпад
+  INTERACTION_MODE_GAMEPAD = 9;
+  
+  // Мобільний дотик
+  INTERACTION_MODE_MOBILE_TOUCH = 10;
+  
+  // Розпізнавання обличчя
+  INTERACTION_MODE_FACE_RECOGNITION = 11;
+  
+  // Розпізнавання емоцій
+  INTERACTION_MODE_EMOTION_RECOGNITION = 12;
+  
+  // Біометричні дані
+  INTERACTION_MODE_BIOMETRIC = 13;
+  
+  // Мозкові хвилі
+  INTERACTION_MODE_BRAIN_WAVES = 14;
+  
+  // М'язова активність
+  INTERACTION_MODE_MUSCLE_ACTIVITY = 15;
+  
+  // Серцевий ритм
+  INTERACTION_MODE_HEART_RATE = 16;
+  
+  // Дихання
+  INTERACTION_MODE_BREATHING = 17;
+  
+  // Температура тіла
+  INTERACTION_MODE_BODY_TEMPERATURE = 18;
+  
+  // Рух очей
+  INTERACTION_MODE_EYE_TRACKING = 19;
+  
+  // Рух рук
+  INTERACTION_MODE_HAND_TRACKING = 20;
+  
+  // Рух пальців
+  INTERACTION_MODE_FINGER_TRACKING = 21;
+}
+
+// Типи жестів
+enum GestureType {
+  GESTURE_TYPE_UNSPECIFIED = 0;
+  
+  // Помах рукою
+  GESTURE_TYPE_WAVE = 1;
+  
+  // Вказівка пальцем
+  GESTURE_TYPE_POINT = 2;
+  
+  // Щипок
+  GESTURE_TYPE_PINCH = 3;
+  
+  // Захоплення
+  GESTURE_TYPE_GRAB = 4;
+  
+  // Відпускання
+  GESTURE_TYPE_RELEASE = 5;
+  
+  // Тягнення
+  GESTURE_TYPE_PULL = 6;
+  
+  // Штовхання
+  GESTURE_TYPE_PUSH = 7;
+  
+  // Обертання
+  GESTURE_TYPE_ROTATE = 8;
+  
+  // Масштабування
+  GESTURE_TYPE_SCALE = 9;
+  
+  // Переміщення
+  GESTURE_TYPE_MOVE = 10;
+  
+  // Клік
+  GESTURE_TYPE_CLICK = 11;
+  
+  // Подвійний клік
+  GESTURE_TYPE_DOUBLE_CLICK = 12;
+  
+  // Довгий натиск
+  GESTURE_TYPE_LONG_PRESS = 13;
+  
+  // Свайп
+  GESTURE_TYPE_SWIPE = 14;
+  
+  // Скрол
+  GESTURE_TYPE_SCROLL = 15;
+  
+  // Зуми
+  GESTURE_TYPE_ZOOM = 16;
+  
+  // Поворот
+  GESTURE_TYPE_TURN = 17;
+  
+  // Наклон
+  GESTURE_TYPE_TILT = 18;
+  
+  // Стискання
+  GESTURE_TYPE_SQUEEZE = 19;
+  
+  // Розтискання
+  GESTURE_TYPE_SPREAD = 20;
+}
+
+// Типи голосових команд
+enum VoiceCommandType {
+  VOICE_COMMAND_TYPE_UNSPECIFIED = 0;
+  
+  // Навігація
+  VOICE_COMMAND_TYPE_NAVIGATION = 1;
+  
+  // Управління об'єктами
+  VOICE_COMMAND_TYPE_OBJECT_CONTROL = 2;
+  
+  // Управління меню
+  VOICE_COMMAND_TYPE_MENU_CONTROL = 3;
+  
+  // Управління грою
+  VOICE_COMMAND_TYPE_GAME_CONTROL = 4;
+  
+  // Управління аватаром
+  VOICE_COMMAND_TYPE_AVATAR_CONTROL = 5;
+  
+  // Управління камерою
+  VOICE_COMMAND_TYPE_CAMERA_CONTROL = 6;
+  
+  // Управління звуком
+  VOICE_COMMAND_TYPE_AUDIO_CONTROL = 7;
+  
+  // Управління освітленням
+  VOICE_COMMAND_TYPE_LIGHTING_CONTROL = 8;
+  
+  // Управління погодою
+  VOICE_COMMAND_TYPE_WEATHER_CONTROL = 9;
+  
+  // Управління часом
+  VOICE_COMMAND_TYPE_TIME_CONTROL = 10;
+  
+  // Управління фізикою
+  VOICE_COMMAND_TYPE_PHYSICS_CONTROL = 11;
+  
+  // Управління інтерфейсом
+  VOICE_COMMAND_TYPE_UI_CONTROL = 12;
+  
+  // Управління налаштуваннями
+  VOICE_COMMAND_TYPE_SETTINGS_CONTROL = 13;
+  
+  // Управління соціальними функціями
+  VOICE_COMMAND_TYPE_SOCIAL_CONTROL = 14;
+  
+  // Управління чатом
+  VOICE_COMMAND_TYPE_CHAT_CONTROL = 15;
+  
+  // Управління друзями
+  VOICE_COMMAND_TYPE_FRIENDS_CONTROL = 16;
+  
+  // Управління групами
+  VOICE_COMMAND_TYPE_GROUP_CONTROL = 17;
+  
+  // Управління подіями
+  VOICE_COMMAND_TYPE_EVENT_CONTROL = 18;
+  
+  // Управління досягненнями
+  VOICE_COMMAND_TYPE_ACHIEVEMENT_CONTROL = 19;
+  
+  // Управління нагородами
+  VOICE_COMMAND_TYPE_REWARD_CONTROL = 20;
+}
+
+// Типи дотиків
+enum TouchType {
+  TOUCH_TYPE_UNSPECIFIED = 0;
+  
+  // Одиночний дотик
+  TOUCH_TYPE_SINGLE_TAP = 1;
+  
+  // Подвійний дотик
+  TOUCH_TYPE_DOUBLE_TAP = 2;
+  
+  // Довгий дотик
+  TOUCH_TYPE_LONG_PRESS = 3;
+  
+  // Свайп вгору
+  TOUCH_TYPE_SWIPE_UP = 4;
+  
+  // Свайп вниз
+  TOUCH_TYPE_SWIPE_DOWN = 5;
+  
+  // Свайп вліво
+  TOUCH_TYPE_SWIPE_LEFT = 6;
+  
+  // Свайп вправо
+  TOUCH_TYPE_SWIPE_RIGHT = 7;
+  
+  // Пічінг (зум)
+  TOUCH_TYPE_PINCH = 8;
+  
+  // Розтискання
+  TOUCH_TYPE_SPREAD = 9;
+  
+  // Обертання
+  TOUCH_TYPE_ROTATE = 10;
+  
+  // Переміщення
+  TOUCH_TYPE_DRAG = 11;
+  
+  // Швидкий дотик
+  TOUCH_TYPE_FLICK = 12;
+  
+  // Множинний дотик
+  TOUCH_TYPE_MULTI_TOUCH = 13;
+  
+  // Дотик з силою
+  TOUCH_TYPE_FORCE_TOUCH = 14;
+  
+  // Дотик з вібрацією
+  TOUCH_TYPE_HAPTIC_TOUCH = 15;
+}
+
+// Типи поглядів
+enum GazeType {
+  GAZE_TYPE_UNSPECIFIED = 0;
+  
+  // Фіксація погляду
+  GAZE_TYPE_FIXATION = 1;
+  
+  // Переміщення погляду
+  GAZE_TYPE_SACCADE = 2;
+  
+  // Плавне переміщення погляду
+  GAZE_TYPE_SMOOTH_PURSUIT = 3;
+  
+  // Блінк
+  GAZE_TYPE_BLINK = 4;
+  
+  // Подвійний блінк
+  GAZE_TYPE_DOUBLE_BLINK = 5;
+  
+  // Довгий блінк
+  GAZE_TYPE_LONG_BLINK = 6;
+  
+  // Розширення зіниць
+  GAZE_TYPE_PUPIL_DILATION = 7;
+  
+  // Звуження зіниць
+  GAZE_TYPE_PUPIL_CONSTRICTION = 8;
+  
+  // Рух очей вгору
+  GAZE_TYPE_EYE_MOVEMENT_UP = 9;
+  
+  // Рух очей вниз
+  GAZE_TYPE_EYE_MOVEMENT_DOWN = 10;
+  
+  // Рух очей вліво
+  GAZE_TYPE_EYE_MOVEMENT_LEFT = 11;
+  
+  // Рух очей вправо
+  GAZE_TYPE_EYE_MOVEMENT_RIGHT = 12;
+  
+  // Конвергенція очей
+  GAZE_TYPE_CONVERGENCE = 13;
+  
+  // Дивергенція очей
+  GAZE_TYPE_DIVERGENCE = 14;
+  
+  // Вертикальний рух очей
+  GAZE_TYPE_VERTICAL_MOVEMENT = 15;
+  
+  // Горизонтальний рух очей
+  GAZE_TYPE_HORIZONTAL_MOVEMENT = 16;
+}
+
+// Типи рухів голови
+enum HeadMovementType {
+  HEAD_MOVEMENT_TYPE_UNSPECIFIED = 0;
+  
+  // Кивок
+  HEAD_MOVEMENT_TYPE_NOD = 1;
+  
+  // Покачівання
+  HEAD_MOVEMENT_TYPE_SHAKE = 2;
+  
+  // Поворот голови
+  HEAD_MOVEMENT_TYPE_TURN = 3;
+  
+  // Наклон голови
+  HEAD_MOVEMENT_TYPE_TILT = 4;
+  
+  // Рух голови вгору
+  HEAD_MOVEMENT_TYPE_UP = 5;
+  
+  // Рух голови вниз
+  HEAD_MOVEMENT_TYPE_DOWN = 6;
+  
+  // Рух голови вліво
+  HEAD_MOVEMENT_TYPE_LEFT = 7;
+  
+  // Рух голови вправо
+  HEAD_MOVEMENT_TYPE_RIGHT = 8;
+  
+  // Рух голови вперед
+  HEAD_MOVEMENT_TYPE_FORWARD = 9;
+  
+  // Рух голови назад
+  HEAD_MOVEMENT_TYPE_BACKWARD = 10;
+  
+  // Круговий рух голови
+  HEAD_MOVEMENT_TYPE_CIRCULAR = 11;
+  
+  // Тремтіння голови
+  HEAD_MOVEMENT_TYPE_TREMOR = 12;
+  
+  // Швидкий рух голови
+  HEAD_MOVEMENT_TYPE_QUICK_MOVEMENT = 13;
+  
+  // Повільний рух голови
+  HEAD_MOVEMENT_TYPE_SLOW_MOVEMENT = 14;
+  
+  // Плавний рух голови
+  HEAD_MOVEMENT_TYPE_SMOOTH_MOVEMENT = 15;
+  
+  // Різкий рух голови
+  HEAD_MOVEMENT_TYPE_JERKY_MOVEMENT = 16;
+}
+
+// Типи рухів тіла
+enum BodyMovementType {
+  BODY_MOVEMENT_TYPE_UNSPECIFIED = 0;
+  
+  // Ходьба
+  BODY_MOVEMENT_TYPE_WALKING = 1;
+  
+  // Біг
+  BODY_MOVEMENT_TYPE_RUNNING = 2;
+  
+  // Стрибки
+  BODY_MOVEMENT_TYPE_JUMPING = 3;
+  
+  // Присідання
+  BODY_MOVEMENT_TYPE_SQUATTING = 4;
+  
+  // Нахили
+  BODY_MOVEMENT_TYPE_BENDING = 5;
+  
+  // Повороти тіла
+  BODY_MOVEMENT_TYPE_TURNING = 6;
+  
+  // Рух руками
+  BODY_MOVEMENT_TYPE_ARM_MOVEMENT = 7;
+  
+  // Рух ногами
+  BODY_MOVEMENT_TYPE_LEG_MOVEMENT = 8;
+  
+  // Рух тулубом
+  BODY_MOVEMENT_TYPE_TORSO_MOVEMENT = 9;
+  
+  // Рух плечами
+  BODY_MOVEMENT_TYPE_SHOULDER_MOVEMENT = 10;
+  
+  // Рух стегнами
+  BODY_MOVEMENT_TYPE_HIP_MOVEMENT = 11;
+  
+  // Рух колінами
+  BODY_MOVEMENT_TYPE_KNEE_MOVEMENT = 12;
+  
+  // Рух щиколотками
+  BODY_MOVEMENT_TYPE_ANKLE_MOVEMENT = 13;
+  
+  // Рух зап'ястками
+  BODY_MOVEMENT_TYPE_WRIST_MOVEMENT = 14;
+  
+  // Рух пальцями
+  BODY_MOVEMENT_TYPE_FINGER_MOVEMENT = 15;
+  
+  // Рух шиєю
+  BODY_MOVEMENT_TYPE_NECK_MOVEMENT = 16;
+}

@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package government.citizens.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/document_type.proto";
+
+// Документ громадянина
+message Document {
+  string document_id = 1;                   // Унікальний ідентифікатор документу
+  string citizen_id = 2;                    // ID громадянина
+  DocumentType type = 3;                    // Тип документу
+  string document_number = 4;               // Номер документу
+  string issuing_authority = 5;             // Орган, що видав документ
+  google.protobuf.Timestamp issue_date = 6; // Дата видачі
+  google.protobuf.Timestamp expiry_date = 7; // Дата закінчення дії
+  string status = 8;                        // Статус документу (активний, застарілий, втрачений)
+  repeated string attachments = 9;          // Додатки (фото, скани)
+  string notes = 10;                        // Примітки
+  google.protobuf.Timestamp created_at = 11; // Дата створення запису
+  google.protobuf.Timestamp updated_at = 12; // Дата останнього оновлення
+}
+
+// Паспорт
+message Passport {
+  string passport_id = 1;
+  string citizen_id = 2;
+  string passport_number = 3;
+  string issuing_country = 4;
+  google.protobuf.Timestamp issue_date = 5;
+  google.protobuf.Timestamp expiry_date = 6;
+  string place_of_birth = 7;
+  repeated string visa_stamps = 8;          // Візові штемпелі
+  string status = 9;
+}
+
+// ID картка
+message IdCard {
+  string id_card_id = 1;
+  string citizen_id = 2;
+  string card_number = 3;
+  string issuing_authority = 4;
+  google.protobuf.Timestamp issue_date = 5;
+  google.protobuf.Timestamp expiry_date = 6;
+  string photo_url = 7;                     // URL фото
+  string biometric_data = 8;                // Біометричні дані
+  string status = 9;
+}
+
+// Віза
+message Visa {
+  string visa_id = 1;
+  string citizen_id = 2;
+  string visa_number = 3;
+  string issuing_consulate = 4;
+  google.protobuf.Timestamp issue_date = 5;
+  google.protobuf.Timestamp expiry_date = 6;
+  string purpose = 7;                       // Мета поїздки
+  string entry_type = 8;                    // Тип в'їзду (одноразовий, багаторазовий)
+  string status = 9;
+}
+
+// Запит на створення документа
+message CreateDocumentRequest {
+  string citizen_id = 1;
+  DocumentType type = 2;
+  string document_number = 3;
+  string issuing_authority = 4;
+  google.protobuf.Timestamp issue_date = 5;
+  google.protobuf.Timestamp expiry_date = 6;
+  string notes = 7;
+}
+
+// Запит на оновлення документа
+message UpdateDocumentRequest {
+  string document_id = 1;
+  string document_number = 2;
+  string issuing_authority = 3;
+  google.protobuf.Timestamp expiry_date = 4;
+  string status = 5;
+  string notes = 6;
+}
+
+// Результат операції з документом
+message DocumentResponse {
+  bool success = 1;
+  string message = 2;
+  Document document = 3;
+}

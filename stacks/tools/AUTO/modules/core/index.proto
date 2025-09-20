@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package core;
+
+// Re-export core modules by importing their protos.
+
+// Analytics
+import "core/analytics/enums/report_type.proto";
+import "core/analytics/enums/analytics_status.proto";
+import "core/analytics/enums/metric_type.proto";
+import "core/analytics/messages/report.proto";
+import "core/analytics/messages/analytics_event.proto";
+import "core/analytics/services/analytics_service.proto";
+
+// Auth
+import "core/auth/enums/user_role.proto";
+import "core/auth/enums/auth_status.proto";
+import "core/auth/enums/session_type.proto";
+import "core/auth/messages/user.proto";
+import "core/auth/messages/auth_request.proto";
+import "core/auth/messages/auth_response.proto";
+import "core/auth/services/auth_service.proto";
+
+// Common
+import "core/common/enums/country_code.proto";
+import "core/common/enums/currency_code.proto";
+import "core/common/enums/language_code.proto";
+import "core/common/messages/timestamp.proto";
+import "core/common/messages/money.proto";
+import "core/common/messages/location.proto";
+import "core/common/services/health_check_service.proto";
+
+// Files
+import "core/files/enums/file_type.proto";
+import "core/files/enums/file_status.proto";
+import "core/files/enums/storage_provider.proto";
+import "core/files/messages/file.proto";
+import "core/files/messages/file_metadata.proto";
+import "core/files/services/file_service.proto";
+
+// Notifications
+import "core/notifications/enums/notification_type.proto";
+import "core/notifications/enums/notification_status.proto";
+import "core/notifications/enums/priority_level.proto";
+import "core/notifications/messages/notification.proto";
+import "core/notifications/messages/notification_channel.proto";
+import "core/notifications/services/notification_service.proto";
+
+

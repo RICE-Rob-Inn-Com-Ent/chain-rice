@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package horeca.delivery.messages;
+
+import "google/protobuf/timestamp.proto";
+
+// Delivery driver information
+message DeliveryDriver {
+  string driver_id = 1;
+  string name = 2;
+  string phone = 3;
+  string email = 4;
+  string license_number = 5;
+  string vehicle_type = 6;
+  string vehicle_plate = 7;
+  
+  DriverStatus status = 8;
+  DriverAvailability availability = 9;
+  
+  double current_latitude = 10;
+  double current_longitude = 11;
+  google.protobuf.Timestamp last_location_update = 12;
+  
+  int32 active_deliveries = 13;
+  int32 completed_deliveries_today = 14;
+  google.protobuf.Timestamp shift_start = 15;
+  google.protobuf.Timestamp shift_end = 16;
+  
+  DriverRating rating = 17;
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// Driver status
+enum DriverStatus {
+  DRIVER_STATUS_UNSPECIFIED = 0;
+  DRIVER_STATUS_AVAILABLE = 1;
+  DRIVER_STATUS_BUSY = 2;
+  DRIVER_STATUS_OFFLINE = 3;
+  DRIVER_STATUS_ON_BREAK = 4;
+  DRIVER_STATUS_MAINTENANCE = 5;
+}
+
+// Driver availability
+enum DriverAvailability {
+  DRIVER_AVAILABILITY_UNSPECIFIED = 0;
+  DRIVER_AVAILABILITY_AVAILABLE = 1;
+  DRIVER_AVAILABILITY_UNAVAILABLE = 2;
+  DRIVER_AVAILABILITY_SCHEDULED = 3;
+  DRIVER_AVAILABILITY_EMERGENCY_ONLY = 4;
+}
+
+// Driver rating information
+message DriverRating {
+  double average_rating = 1;
+  int32 total_ratings = 2;
+  int32 five_star_ratings = 3;
+  int32 four_star_ratings = 4;
+  int32 three_star_ratings = 5;
+  int32 two_star_ratings = 6;
+  int32 one_star_ratings = 7;
+  google.protobuf.Timestamp last_rating_update = 8;
+}

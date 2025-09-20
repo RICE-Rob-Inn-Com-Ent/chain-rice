@@ -1,0 +1,239 @@
+syntax = "proto3";
+
+package healthcare.billing.services;
+
+import "google/protobuf/timestamp.proto";
+import "../messages/invoice_models.proto";
+import "../messages/payment_models.proto";
+import "../messages/billing_events.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/billing/services";
+
+// Billing analytics service for reports and revenue statistics
+service BillingAnalyticsService {
+  // Get revenue report
+  rpc GetRevenueReport(RevenueReportRequest) returns (RevenueReportResponse);
+  
+  // Get payment analytics
+  rpc GetPaymentAnalytics(PaymentAnalyticsRequest) returns (PaymentAnalyticsResponse);
+  
+  // Get outstanding invoices report
+  rpc GetOutstandingInvoicesReport(OutstandingInvoicesRequest) returns (OutstandingInvoicesResponse);
+  
+  // Get billing trends
+  rpc GetBillingTrends(BillingTrendsRequest) returns (BillingTrendsResponse);
+  
+  // Get patient billing summary
+  rpc GetPatientBillingSummary(PatientBillingSummaryRequest) returns (PatientBillingSummaryResponse);
+  
+  // Get doctor revenue report
+  rpc GetDoctorRevenueReport(DoctorRevenueReportRequest) returns (DoctorRevenueReportResponse);
+  
+  // Get clinic revenue report
+  rpc GetClinicRevenueReport(ClinicRevenueReportRequest) returns (ClinicRevenueReportResponse);
+  
+  // Get billing event analytics
+  rpc GetBillingEventAnalytics(BillingEventAnalyticsRequest) returns (BillingEventAnalyticsResponse);
+}
+
+// Revenue report request
+message RevenueReportRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  string group_by = 5; // daily, weekly, monthly, yearly
+}
+
+// Revenue report response
+message RevenueReportResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  double total_revenue = 3;
+  double total_invoiced = 4;
+  double total_collected = 5;
+  double total_outstanding = 6;
+  repeated RevenueDataPoint data_points = 7;
+  RevenueBreakdown breakdown = 8;
+}
+
+// Revenue data point
+message RevenueDataPoint {
+  google.protobuf.Timestamp date = 1;
+  double revenue = 2;
+  double invoiced = 3;
+  double collected = 4;
+  double outstanding = 5;
+  int32 invoice_count = 6;
+  int32 payment_count = 7;
+}
+
+// Revenue breakdown
+message RevenueBreakdown {
+  double consultation_revenue = 1;
+  double procedure_revenue = 2;
+  double medication_revenue = 3;
+  double laboratory_revenue = 4;
+  double imaging_revenue = 5;
+  double surgery_revenue = 6;
+  double therapy_revenue = 7;
+  double emergency_revenue = 8;
+  double other_revenue = 9;
+}
+
+// Payment analytics request
+message PaymentAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+}
+
+// Payment analytics response
+message PaymentAnalyticsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_payments = 3;
+  double total_payment_amount = 4;
+  double average_payment_amount = 5;
+  repeated PaymentMethodBreakdown payment_methods = 6;
+  repeated PaymentTrendData trend_data = 7;
+}
+
+// Payment method breakdown
+message PaymentMethodBreakdown {
+  string payment_method = 1;
+  int32 count = 2;
+  double total_amount = 3;
+  double percentage = 4;
+}
+
+// Payment trend data
+message PaymentTrendData {
+  google.protobuf.Timestamp date = 1;
+  int32 payment_count = 2;
+  double payment_amount = 3;
+}
+
+// Outstanding invoices request
+message OutstandingInvoicesRequest {
+  google.protobuf.Timestamp as_of_date = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+// Outstanding invoices response
+message OutstandingInvoicesResponse {
+  repeated Invoice outstanding_invoices = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+  double total_outstanding_amount = 4;
+  double average_outstanding_amount = 5;
+  int32 overdue_count = 6;
+  double overdue_amount = 7;
+}
+
+// Billing trends request
+message BillingTrendsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string trend_type = 3; // revenue, payments, invoices, outstanding
+  string doctor_id = 4;
+  string clinic_id = 5;
+}
+
+// Billing trends response
+message BillingTrendsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string trend_type = 3;
+  repeated TrendDataPoint data_points = 4;
+  double trend_direction = 5; // positive or negative percentage change
+  string trend_description = 6;
+}
+
+// Trend data point
+message TrendDataPoint {
+  google.protobuf.Timestamp date = 1;
+  double value = 2;
+  double change_from_previous = 3;
+  double percentage_change = 4;
+}
+
+// Patient billing summary request
+message PatientBillingSummaryRequest {
+  string patient_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Patient billing summary response
+message PatientBillingSummaryResponse {
+  string patient_id = 1;
+  PaymentSummary payment_summary = 2;
+  repeated Invoice recent_invoices = 3;
+  repeated Payment recent_payments = 4;
+  double average_invoice_amount = 5;
+  double average_payment_amount = 6;
+  int32 total_visits = 7;
+}
+
+// Doctor revenue report request
+message DoctorRevenueReportRequest {
+  string doctor_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Doctor revenue report response
+message DoctorRevenueReportResponse {
+  string doctor_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  double total_revenue = 4;
+  int32 total_patients = 5;
+  int32 total_appointments = 6;
+  double average_revenue_per_patient = 7;
+  double average_revenue_per_appointment = 8;
+  RevenueBreakdown revenue_breakdown = 9;
+}
+
+// Clinic revenue report request
+message ClinicRevenueReportRequest {
+  string clinic_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Clinic revenue report response
+message ClinicRevenueReportResponse {
+  string clinic_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  double total_revenue = 4;
+  int32 total_doctors = 5;
+  int32 total_patients = 6;
+  int32 total_appointments = 7;
+  double average_revenue_per_doctor = 8;
+  double average_revenue_per_patient = 9;
+  RevenueBreakdown revenue_breakdown = 10;
+}
+
+// Billing event analytics request
+message BillingEventAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+}
+
+// Billing event analytics response
+message BillingEventAnalyticsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  repeated BillingEventSummary event_summaries = 3;
+  int32 total_events = 4;
+  double total_event_amount = 5;
+}

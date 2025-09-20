@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package blockchain.ledger.messages;
+
+import "blockchain/ledger/enums/transaction_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/ledger/messages";
+
+// Coin represents a token with denomination and amount
+message Coin {
+  string denom = 1;  // Token denomination
+  string amount = 2; // Token amount as string
+}
+
+// BlockchainState represents the current state of the blockchain
+message BlockchainState {
+  string chain_id = 1;              // Chain identifier
+  int64 current_height = 2;         // Current blockchain height
+  string current_hash = 3;          // Current block hash
+  int64 timestamp = 4;              // State timestamp
+  
+  // Network information
+  string network_id = 5;            // Network identifier
+  string consensus_algorithm = 6;   // Consensus algorithm
+  int64 active_validators = 7;      // Number of active validators
+  string total_staked = 8;          // Total staked amount
+  
+  // Block information
+  int64 block_time = 9;             // Average block time (ms)
+  int64 block_size = 10;            // Average block size
+  int64 transaction_count = 11;     // Total transaction count
+  int64 pending_transactions = 12;  // Number of pending transactions
+  
+  // Gas and fee information
+  string current_gas_price = 13;    // Current gas price
+  string average_gas_price = 14;    // Average gas price
+  string gas_limit = 15;            // Gas limit per block
+  string gas_used = 16;             // Gas used in last block
+  
+  // Supply information
+  repeated Coin total_supply = 17;  // Total token supply
+  repeated Coin circulating_supply = 18; // Circulating token supply
+  repeated Coin burned_supply = 19; // Burned token supply
+  
+  // Economic metrics
+  string inflation_rate = 20;       // Current inflation rate
+  string staking_reward_rate = 21;  // Staking reward rate
+  string fee_revenue = 22;          // Total fee revenue
+  string treasury_balance = 23;     // Treasury balance
+  
+  // Performance metrics
+  string tps = 24;                  // Transactions per second
+  string bps = 25;                  // Blocks per second
+  string network_uptime = 26;       // Network uptime percentage
+  string sync_status = 27;          // Network sync status
+  
+  // Governance information
+  int64 active_proposals = 28;      // Number of active proposals
+  string participation_rate = 29;   // Governance participation rate
+  string voting_power = 30;         // Total voting power
+  
+  // Security information
+  string security_score = 31;       // Network security score
+  int64 slashing_events = 32;       // Number of slashing events
+  int64 jailing_events = 33;        // Number of jailing events
+  
+  // Metadata
+  map<string, string> metadata = 34; // Additional metadata
+  int64 last_updated = 35;          // Last update timestamp
+}
+
+// AccountBalance represents an account's balance
+message AccountBalance {
+  string address = 1;               // Account address (sdk.Address)
+  repeated Coin balances = 2;       // Token balances
+  string total_balance = 3;         // Total balance value
+  int64 last_updated = 4;           // Last update timestamp
+  
+  // Account information
+  int64 transaction_count = 5;      // Number of transactions
+  int64 nonce = 6;                  // Account nonce
+  string account_type = 7;          // Account type
+  bool is_contract = 8;             // Whether account is a contract
+  
+  // Staking information
+  repeated Coin staked_amount = 9;  // Staked amounts
+  repeated Coin delegated_amount = 10; // Delegated amounts
+  repeated Coin rewards = 11;       // Pending rewards
+  
+  // Metadata
+  map<string, string> metadata = 12; // Additional metadata
+}
+
+// BlockInfo represents information about a blockchain block
+message BlockInfo {
+  int64 height = 1;                 // Block height
+  string hash = 2;                  // Block hash
+  string previous_hash = 3;         // Previous block hash
+  string proposer = 4;              // Block proposer address
+  int64 timestamp = 5;              // Block timestamp
+  
+  // Block content
+  int64 transaction_count = 6;      // Number of transactions
+  repeated string transaction_hashes = 7; // Transaction hashes
+  string merkle_root = 8;           // Merkle root
+  
+  // Block metrics
+  string block_size = 9;            // Block size in bytes
+  string gas_used = 10;             // Gas used
+  string gas_limit = 11;            // Gas limit
+  string block_time = 12;           // Time to create block
+  
+  // Validation
+  repeated string validator_votes = 13; // Validator votes
+  bool is_finalized = 14;           // Whether block is finalized
+  int64 finalization_time = 15;     // Finalization timestamp
+  
+  // Metadata
+  map<string, string> metadata = 16; // Additional metadata
+}
+
+// MsgUpdateBlockchainState updates the blockchain state
+message MsgUpdateBlockchainState {
+  string creator = 1;               // Updater address (sdk.Address)
+  BlockchainState state = 2;        // New blockchain state
+}
+
+// MsgUpdateBlockchainStateResponse returns the update result
+message MsgUpdateBlockchainStateResponse {
+  bool success = 1;                 // Update success status
+}
+
+// MsgCreateAccountBalance creates an account balance record
+message MsgCreateAccountBalance {
+  string creator = 1;               // Creator address (sdk.Address)
+  string address = 2;               // Account address
+  repeated Coin initial_balances = 3; // Initial balances
+}
+
+// MsgCreateAccountBalanceResponse returns the creation result
+message MsgCreateAccountBalanceResponse {
+  bool success = 1;                 // Creation success status
+}
+
+// MsgUpdateAccountBalance updates an account balance
+message MsgUpdateAccountBalance {
+  string creator = 1;               // Updater address (sdk.Address)
+  string address = 2;               // Account address
+  repeated Coin balances = 3;       // Updated balances
+  string reason = 4;                // Update reason
+}
+
+// MsgUpdateAccountBalanceResponse returns the update result
+message MsgUpdateAccountBalanceResponse {
+  bool success = 1;                 // Update success status
+}
+
+// MsgRecordBlockInfo records block information
+message MsgRecordBlockInfo {
+  string creator = 1;               // Recorder address (sdk.Address)
+  BlockInfo block_info = 2;         // Block information to record
+}
+
+// MsgRecordBlockInfoResponse returns the recording result
+message MsgRecordBlockInfoResponse {
+  bool success = 1;                 // Recording success status
+}

@@ -1,0 +1,276 @@
+syntax = "proto3";
+
+package crm_hr.hr.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/hr/messages";
+
+// Timesheet represents a timesheet entry for an employee
+message Timesheet {
+  // Unique identifier for the timesheet
+  string id = 1;
+  
+  // Associated employee ID
+  string employee_id = 2;
+  
+  // Timesheet period
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  string period_type = 5; // weekly, bi_weekly, monthly
+  
+  // Status information
+  string status = 6; // draft, submitted, approved, rejected, paid
+  string approval_status = 7; // pending, approved, rejected, needs_revision
+  
+  // Time entries
+  repeated TimeEntry time_entries = 8;
+  
+  // Summary information
+  google.protobuf.Duration total_hours = 9;
+  google.protobuf.Duration regular_hours = 10;
+  google.protobuf.Duration overtime_hours = 11;
+  google.protobuf.Duration vacation_hours = 12;
+  google.protobuf.Duration sick_hours = 13;
+  google.protobuf.Duration holiday_hours = 14;
+  
+  // Approval information
+  string submitted_by = 15;
+  google.protobuf.Timestamp submitted_at = 16;
+  string approved_by = 17;
+  google.protobuf.Timestamp approved_at = 18;
+  string rejection_reason = 19;
+  
+  // Additional information
+  string notes = 20;
+  repeated string attachments = 21;
+  map<string, string> custom_fields = 22;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+  
+  // Version for optimistic concurrency control
+  int32 version = 25;
+}
+
+// TimeEntry represents a single time entry within a timesheet
+message TimeEntry {
+  // Unique identifier for the time entry
+  string id = 1;
+  
+  // Associated timesheet ID
+  string timesheet_id = 2;
+  
+  // Date and time information
+  google.protobuf.Timestamp date = 3;
+  google.protobuf.Timestamp start_time = 4;
+  google.protobuf.Timestamp end_time = 5;
+  google.protobuf.Duration duration = 6;
+  
+  // Entry details
+  string entry_type = 7; // regular, overtime, vacation, sick, holiday, break
+  string project_id = 8;
+  string project_name = 9;
+  string task_id = 10;
+  string task_name = 11;
+  string client_id = 12;
+  string client_name = 13;
+  
+  // Description and notes
+  string description = 14;
+  string notes = 15;
+  repeated string tags = 16;
+  
+  // Status and approval
+  string status = 17; // draft, submitted, approved, rejected
+  bool is_billable = 18;
+  bool is_approved = 19;
+  string approved_by = 20;
+  google.protobuf.Timestamp approved_at = 21;
+  
+  // Location information
+  string location = 22;
+  string work_location_type = 23; // office, remote, client_site, travel
+  
+  // Additional information
+  map<string, string> custom_fields = 24;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 25;
+  google.protobuf.Timestamp updated_at = 26;
+}
+
+// TimeOffRequest represents a time off request from an employee
+message TimeOffRequest {
+  // Unique identifier for the time off request
+  string id = 1;
+  
+  // Associated employee ID
+  string employee_id = 2;
+  
+  // Request details
+  string request_type = 3; // vacation, sick, personal, bereavement, jury_duty, etc.
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  google.protobuf.Duration total_days = 6;
+  google.protobuf.Duration total_hours = 7;
+  
+  // Request information
+  string reason = 8;
+  string description = 9;
+  string status = 10; // pending, approved, rejected, cancelled
+  string priority = 11; // low, medium, high, urgent
+  
+  // Approval workflow
+  string requested_by = 12;
+  google.protobuf.Timestamp requested_at = 13;
+  string approved_by = 14;
+  google.protobuf.Timestamp approved_at = 15;
+  string rejection_reason = 16;
+  string approval_notes = 17;
+  
+  // Coverage information
+  string coverage_employee_id = 18;
+  string coverage_notes = 19;
+  bool requires_coverage = 20;
+  
+  // Additional information
+  repeated string attachments = 21;
+  map<string, string> custom_fields = 22;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+}
+
+// AttendanceRecord represents an attendance record for an employee
+message AttendanceRecord {
+  // Unique identifier for the attendance record
+  string id = 1;
+  
+  // Associated employee ID
+  string employee_id = 2;
+  
+  // Date and time information
+  google.protobuf.Timestamp date = 3;
+  google.protobuf.Timestamp clock_in_time = 4;
+  google.protobuf.Timestamp clock_out_time = 5;
+  google.protobuf.Duration total_hours = 6;
+  google.protobuf.Duration regular_hours = 7;
+  google.protobuf.Duration overtime_hours = 8;
+  
+  // Attendance status
+  string status = 9; // present, absent, late, early_departure, partial_day
+  string attendance_type = 10; // regular, remote, travel, training, meeting
+  string location = 11;
+  string work_location_type = 12; // office, remote, client_site, travel
+  
+  // Break information
+  repeated BreakRecord breaks = 13;
+  google.protobuf.Duration total_break_time = 14;
+  
+  // Additional information
+  string notes = 15;
+  string approved_by = 16;
+  google.protobuf.Timestamp approved_at = 17;
+  map<string, string> custom_fields = 18;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
+}
+
+// BreakRecord represents a break taken during work hours
+message BreakRecord {
+  // Unique identifier for the break record
+  string id = 1;
+  
+  // Associated attendance record ID
+  string attendance_record_id = 2;
+  
+  // Break information
+  string break_type = 3; // lunch, coffee, personal, rest
+  google.protobuf.Timestamp start_time = 4;
+  google.protobuf.Timestamp end_time = 5;
+  google.protobuf.Duration duration = 6;
+  
+  // Additional information
+  string notes = 7;
+  string location = 8;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// WorkSchedule represents a work schedule for an employee
+message WorkSchedule {
+  // Unique identifier for the work schedule
+  string id = 1;
+  
+  // Associated employee ID
+  string employee_id = 2;
+  
+  // Schedule information
+  string schedule_type = 3; // fixed, flexible, rotating, shift
+  string name = 4;
+  string description = 5;
+  
+  // Schedule details
+  repeated ScheduleDay schedule_days = 6;
+  google.protobuf.Duration total_weekly_hours = 7;
+  google.protobuf.Duration total_daily_hours = 8;
+  
+  // Schedule period
+  google.protobuf.Timestamp effective_start_date = 9;
+  google.protobuf.Timestamp effective_end_date = 10;
+  bool is_active = 11;
+  
+  // Additional information
+  string notes = 12;
+  string created_by = 13;
+  map<string, string> custom_fields = 14;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+// ScheduleDay represents a day in a work schedule
+message ScheduleDay {
+  // Day of the week (0 = Sunday, 1 = Monday, etc.)
+  int32 day_of_week = 1;
+  
+  // Work hours for this day
+  google.protobuf.Timestamp start_time = 2;
+  google.protobuf.Timestamp end_time = 3;
+  google.protobuf.Duration duration = 4;
+  
+  // Break information
+  repeated BreakPeriod breaks = 5;
+  google.protobuf.Duration total_break_time = 6;
+  
+  // Day status
+  bool is_working_day = 7;
+  bool is_required = 8;
+  string day_type = 9; // regular, holiday, weekend, special
+  
+  // Additional information
+  string notes = 10;
+}
+
+// BreakPeriod represents a break period in a work schedule
+message BreakPeriod {
+  // Break information
+  string break_type = 1; // lunch, coffee, personal, rest
+  google.protobuf.Timestamp start_time = 2;
+  google.protobuf.Timestamp end_time = 3;
+  google.protobuf.Duration duration = 4;
+  
+  // Break details
+  bool is_paid = 5;
+  bool is_required = 6;
+  string notes = 7;
+}

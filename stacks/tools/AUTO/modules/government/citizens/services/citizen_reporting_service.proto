@@ -1,0 +1,335 @@
+syntax = "proto3";
+
+package government.citizens.services;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "../messages/citizen_models.proto";
+
+// Сервіс звітності та аналітики громадян
+service CitizenReportingService {
+  // Генерувати звіт по громадянах
+  rpc GenerateCitizenReport(GenerateCitizenReportRequest) returns (CitizenReportResponse);
+  
+  // Отримати демографічну статистику
+  rpc GetDemographicsReport(GetDemographicsReportRequest) returns (DemographicsReportResponse);
+  
+  // Отримати звіт по реєстраціях
+  rpc GetRegistrationReport(GetRegistrationReportRequest) returns (RegistrationReportResponse);
+  
+  // Отримати звіт по документах
+  rpc GetDocumentReport(GetDocumentReportRequest) returns (DocumentReportResponse);
+  
+  // Отримати звіт по адресах
+  rpc GetAddressReport(GetAddressReportRequest) returns (AddressReportResponse);
+  
+  // Експорт даних громадян
+  rpc ExportCitizenData(ExportCitizenDataRequest) returns (ExportCitizenDataResponse);
+  
+  // Отримати аналітику по віковим групах
+  rpc GetAgeGroupAnalytics(GetAgeGroupAnalyticsRequest) returns (AgeGroupAnalyticsResponse);
+  
+  // Отримати аналітику по національностях
+  rpc GetNationalityAnalytics(GetNationalityAnalyticsRequest) returns (NationalityAnalyticsResponse);
+  
+  // Отримати звіт по статусах громадян
+  rpc GetStatusReport(GetStatusReportRequest) returns (StatusReportResponse);
+  
+  // Отримати звіт по типах громадян
+  rpc GetTypeReport(GetTypeReportRequest) returns (TypeReportResponse);
+  
+  // Отримати звіт по географічному розподілу
+  rpc GetGeographicReport(GetGeographicReportRequest) returns (GeographicReportResponse);
+  
+  // Отримати звіт по тенденціях
+  rpc GetTrendReport(GetTrendReportRequest) returns (TrendReportResponse);
+}
+
+// Запити та відповіді
+message GenerateCitizenReportRequest {
+  ReportType report_type = 1;
+  google.protobuf.Timestamp from_date = 2;
+  google.protobuf.Timestamp to_date = 3;
+  repeated string filters = 4;
+  string format = 5; // PDF, CSV, JSON
+}
+
+message GetDemographicsReportRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+  string region = 3;
+  bool include_breakdown = 4;
+}
+
+message GetRegistrationReportRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+  string registration_type = 3;
+  bool include_trends = 4;
+}
+
+message GetDocumentReportRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+  string document_type = 3;
+  bool include_expiring = 4;
+}
+
+message GetAddressReportRequest {
+  string city = 1;
+  string region = 2;
+  bool include_coordinates = 3;
+}
+
+message ExportCitizenDataRequest {
+  repeated string citizen_ids = 1;
+  ExportFormat format = 2;
+  repeated string fields = 3;
+  bool include_documents = 4;
+  bool include_events = 5;
+}
+
+message GetAgeGroupAnalyticsRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+  string region = 3;
+}
+
+message GetNationalityAnalyticsRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+  string region = 3;
+}
+
+message GetStatusReportRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+}
+
+message GetTypeReportRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+}
+
+message GetGeographicReportRequest {
+  string region = 1;
+  bool include_coordinates = 2;
+}
+
+message GetTrendReportRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+  string trend_type = 3; // registrations, status_changes, etc.
+}
+
+// Типи звітів
+enum ReportType {
+  REPORT_TYPE_UNSPECIFIED = 0;
+  REPORT_TYPE_DEMOGRAPHICS = 1;
+  REPORT_TYPE_REGISTRATIONS = 2;
+  REPORT_TYPE_DOCUMENTS = 3;
+  REPORT_TYPE_ADDRESSES = 4;
+  REPORT_TYPE_STATUS = 5;
+  REPORT_TYPE_TYPE = 6;
+  REPORT_TYPE_GEOGRAPHIC = 7;
+  REPORT_TYPE_TRENDS = 8;
+}
+
+// Формати експорту
+enum ExportFormat {
+  EXPORT_FORMAT_UNSPECIFIED = 0;
+  EXPORT_FORMAT_CSV = 1;
+  EXPORT_FORMAT_JSON = 2;
+  EXPORT_FORMAT_XML = 3;
+  EXPORT_FORMAT_PDF = 4;
+}
+
+// Відповіді
+message CitizenReportResponse {
+  bool success = 1;
+  string message = 2;
+  string report_id = 3;
+  string report_url = 4;
+  ReportMetadata metadata = 5;
+}
+
+message DemographicsReportResponse {
+  bool success = 1;
+  string message = 2;
+  DemographicsReport report = 3;
+}
+
+message RegistrationReportResponse {
+  bool success = 1;
+  string message = 2;
+  RegistrationReport report = 3;
+}
+
+message DocumentReportResponse {
+  bool success = 1;
+  string message = 2;
+  DocumentReport report = 3;
+}
+
+message AddressReportResponse {
+  bool success = 1;
+  string message = 2;
+  AddressReport report = 3;
+}
+
+message ExportCitizenDataResponse {
+  bool success = 1;
+  string message = 2;
+  string export_id = 3;
+  string download_url = 4;
+  int32 record_count = 5;
+}
+
+message AgeGroupAnalyticsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated AgeGroupData age_groups = 3;
+}
+
+message NationalityAnalyticsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated NationalityData nationalities = 3;
+}
+
+message StatusReportResponse {
+  bool success = 1;
+  string message = 2;
+  repeated StatusData statuses = 3;
+}
+
+message TypeReportResponse {
+  bool success = 1;
+  string message = 2;
+  repeated TypeData types = 3;
+}
+
+message GeographicReportResponse {
+  bool success = 1;
+  string message = 2;
+  repeated GeographicData locations = 3;
+}
+
+message TrendReportResponse {
+  bool success = 1;
+  string message = 2;
+  repeated TrendData trends = 3;
+}
+
+// Моделі звітів
+message ReportMetadata {
+  string report_id = 1;
+  string report_name = 2;
+  google.protobuf.Timestamp generated_at = 3;
+  google.protobuf.Timestamp from_date = 4;
+  google.protobuf.Timestamp to_date = 5;
+  string generated_by = 6;
+  int32 record_count = 7;
+}
+
+message DemographicsReport {
+  int32 total_citizens = 1;
+  repeated AgeGroupData age_groups = 2;
+  repeated NationalityData nationalities = 3;
+  repeated GenderData genders = 4;
+  repeated RegionData regions = 5;
+}
+
+message RegistrationReport {
+  int32 total_registrations = 1;
+  repeated RegistrationData registrations = 2;
+  repeated TrendData trends = 3;
+}
+
+message DocumentReport {
+  int32 total_documents = 1;
+  repeated DocumentTypeData document_types = 2;
+  int32 expiring_soon = 3;
+  repeated ExpiringDocumentData expiring_documents = 4;
+}
+
+message AddressReport {
+  int32 total_addresses = 1;
+  repeated CityData cities = 2;
+  repeated RegionData regions = 3;
+}
+
+message AgeGroupData {
+  string age_group = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message NationalityData {
+  string nationality = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message GenderData {
+  string gender = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message RegionData {
+  string region = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message RegistrationData {
+  string date = 1;
+  int32 count = 2;
+  string type = 3;
+}
+
+message DocumentTypeData {
+  string document_type = 1;
+  int32 count = 2;
+  int32 active = 3;
+  int32 expired = 4;
+}
+
+message ExpiringDocumentData {
+  string document_id = 1;
+  string citizen_id = 2;
+  string document_type = 3;
+  string expiry_date = 4;
+  int32 days_until_expiry = 5;
+}
+
+message CityData {
+  string city = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message StatusData {
+  string status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message TypeData {
+  string type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message GeographicData {
+  string location = 1;
+  int32 count = 2;
+  string coordinates = 3;
+}
+
+message TrendData {
+  string period = 1;
+  int32 value = 2;
+  double change_percentage = 3;
+}

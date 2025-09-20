@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Course level classifications.
+package education.courses.enums;
+
+option go_package = "github.com/rice-dev/education/courses/enums;coursesenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.courses.enums";
+
+// Enum representing course difficulty/level tiers.
+enum CourseLevel {
+  COURSE_LEVEL_UNSPECIFIED = 0; // Unknown level
+  COURSE_LEVEL_BEGINNER = 1;    // Introductory
+  COURSE_LEVEL_INTERMEDIATE = 2;// Requires some prior knowledge
+  COURSE_LEVEL_ADVANCED = 3;    // Complex and in-depth
+  COURSE_LEVEL_PROFESSIONAL = 4;// Professional certification/prep
+  COURSE_LEVEL_GRADUATE = 5;    // Graduate-level
+  COURSE_LEVEL_UNDERGRADUATE = 6;// Undergraduate-level
+}
+
+

@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package construction.materials.enums;
+
+enum MaterialType {
+  MATERIAL_TYPE_UNSPECIFIED = 0;
+  CONCRETE = 1;
+  STEEL = 2;
+  WOOD = 3;
+  BRICK = 4;
+  STONE = 5;
+  GLASS = 6;
+  PLASTIC = 7;
+  CERAMIC = 8;
+  INSULATION = 9;
+  PAINT = 10;
+  ADHESIVE = 11;
+  SEALANT = 12;
+  FABRIC = 13;
+  METAL = 14;
+  COMPOSITE = 15;
+  AGGREGATE = 16;
+  CEMENT = 17;
+  SAND = 18;
+  GRAVEL = 19;
+  ASPHALT = 20;
+  TAR = 21;
+  LUBRICANT = 22;
+  CHEMICAL = 23;
+  ELECTRICAL = 24;
+  PLUMBING = 25;
+  HVAC = 26;
+  FIREPROOFING = 27;
+  WATERPROOFING = 28;
+  SOUNDPROOFING = 29;
+  OTHER = 30;
+}

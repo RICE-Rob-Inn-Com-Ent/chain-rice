@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package blockchain.ledger.services;
+
+import "blockchain/ledger/messages/transaction.proto";
+import "blockchain/ledger/messages/blockchain_state.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/ledger/services";
+
+// LedgerMsgService handles state-changing ledger operations
+service LedgerMsgService {
+  // CreateTransaction creates a new transaction
+  rpc CreateTransaction(blockchain.ledger.messages.MsgCreateTransaction) returns (blockchain.ledger.messages.MsgCreateTransactionResponse);
+  
+  // BroadcastTransaction broadcasts a transaction
+  rpc BroadcastTransaction(blockchain.ledger.messages.MsgBroadcastTransaction) returns (blockchain.ledger.messages.MsgBroadcastTransactionResponse);
+  
+  // ConfirmTransaction confirms a transaction
+  rpc ConfirmTransaction(blockchain.ledger.messages.MsgConfirmTransaction) returns (blockchain.ledger.messages.MsgConfirmTransactionResponse);
+  
+  // CancelTransaction cancels a transaction
+  rpc CancelTransaction(blockchain.ledger.messages.MsgCancelTransaction) returns (blockchain.ledger.messages.MsgCancelTransactionResponse);
+  
+  // UpdateTransactionStatus updates transaction status
+  rpc UpdateTransactionStatus(blockchain.ledger.messages.MsgUpdateTransactionStatus) returns (blockchain.ledger.messages.MsgUpdateTransactionStatusResponse);
+  
+  // UpdateBlockchainState updates the blockchain state
+  rpc UpdateBlockchainState(blockchain.ledger.messages.MsgUpdateBlockchainState) returns (blockchain.ledger.messages.MsgUpdateBlockchainStateResponse);
+  
+  // CreateAccountBalance creates an account balance record
+  rpc CreateAccountBalance(blockchain.ledger.messages.MsgCreateAccountBalance) returns (blockchain.ledger.messages.MsgCreateAccountBalanceResponse);
+  
+  // UpdateAccountBalance updates an account balance
+  rpc UpdateAccountBalance(blockchain.ledger.messages.MsgUpdateAccountBalance) returns (blockchain.ledger.messages.MsgUpdateAccountBalanceResponse);
+  
+  // RecordBlockInfo records block information
+  rpc RecordBlockInfo(blockchain.ledger.messages.MsgRecordBlockInfo) returns (blockchain.ledger.messages.MsgRecordBlockInfoResponse);
+}
+
+// LedgerQueryService handles ledger state queries
+service LedgerQueryService {
+  // GetTransaction retrieves a specific transaction
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+  
+  // ListTransactions lists transactions with pagination and filters
+  rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse);
+  
+  // GetBlockchainState retrieves the current blockchain state
+  rpc GetBlockchainState(GetBlockchainStateRequest) returns (GetBlockchainStateResponse);
+  
+  // GetAccountBalance retrieves account balance
+  rpc GetAccountBalance(GetAccountBalanceRequest) returns (GetAccountBalanceResponse);
+  
+  // GetBlockInfo retrieves block information
+  rpc GetBlockInfo(GetBlockInfoRequest) returns (GetBlockInfoResponse);
+  
+  // ListBlocks lists blocks with pagination
+  rpc ListBlocks(ListBlocksRequest) returns (ListBlocksResponse);
+  
+  // GetLedgerParams retrieves ledger module parameters
+  rpc GetLedgerParams(GetLedgerParamsRequest) returns (GetLedgerParamsResponse);
+  
+  // GetLedgerStats retrieves ledger statistics
+  rpc GetLedgerStats(GetLedgerStatsRequest) returns (GetLedgerStatsResponse);
+  
+  // GetTransactionHistory retrieves transaction history for an address
+  rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse);
+  
+  // GetPendingTransactions retrieves pending transactions
+  rpc GetPendingTransactions(GetPendingTransactionsRequest) returns (GetPendingTransactionsResponse);
+  
+  // GetGasEstimate estimates gas for a transaction
+  rpc GetGasEstimate(GetGasEstimateRequest) returns (GetGasEstimateResponse);
+  
+  // GetNetworkStatus retrieves network status
+  rpc GetNetworkStatus(GetNetworkStatusRequest) returns (GetNetworkStatusResponse);
+}
+
+// Query request and response messages
+
+message GetTransactionRequest {
+  string transaction_id = 1; // Transaction ID or hash
+}
+
+message GetTransactionResponse {
+  blockchain.ledger.messages.Transaction transaction = 1;
+}
+
+message ListTransactionsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string transaction_type = 3; // Filter by transaction type
+  string status = 4;         // Filter by status
+  string from_address = 5;   // Filter by sender address
+  string to_address = 6;     // Filter by recipient address
+  int64 start_time = 7;      // Filter by start time
+  int64 end_time = 8;        // Filter by end time
+  int64 min_height = 9;      // Filter by minimum block height
+  int64 max_height = 10;     // Filter by maximum block height
+}
+
+message ListTransactionsResponse {
+  repeated blockchain.ledger.messages.Transaction transactions = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetBlockchainStateRequest {
+  // No parameters needed
+}
+
+message GetBlockchainStateResponse {
+  blockchain.ledger.messages.BlockchainState state = 1;
+}
+
+message GetAccountBalanceRequest {
+  string address = 1; // Account address
+}
+
+message GetAccountBalanceResponse {
+  blockchain.ledger.messages.AccountBalance balance = 1;
+}
+
+message GetBlockInfoRequest {
+  int64 height = 1; // Block height
+}
+
+message GetBlockInfoResponse {
+  blockchain.ledger.messages.BlockInfo block_info = 1;
+}
+
+message ListBlocksRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  int64 start_height = 3;    // Filter by start height
+  int64 end_height = 4;      // Filter by end height
+  string proposer = 5;       // Filter by proposer address
+}
+
+message ListBlocksResponse {
+  repeated blockchain.ledger.messages.BlockInfo blocks = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetLedgerParamsRequest {
+  // No parameters needed
+}
+
+message GetLedgerParamsResponse {
+  blockchain.ledger.messages.LedgerParams params = 1;
+}
+
+message GetLedgerStatsRequest {
+  string time_period = 1; // Optional time period filter
+}
+
+message GetLedgerStatsResponse {
+  int64 total_transactions = 1;     // Total number of transactions
+  int64 successful_transactions = 2; // Number of successful transactions
+  int64 failed_transactions = 3;    // Number of failed transactions
+  int64 pending_transactions = 4;   // Number of pending transactions
+  string total_volume = 5;          // Total transaction volume
+  string total_fees = 6;            // Total fees collected
+  string average_gas_price = 7;     // Average gas price
+  string average_transaction_time = 8; // Average transaction time
+  int64 current_height = 9;         // Current blockchain height
+  string network_uptime = 10;       // Network uptime percentage
+}
+
+message GetTransactionHistoryRequest {
+  string address = 1;               // Address to query
+  string pagination_key = 2;        // Pagination key for next page
+  int32 limit = 3;                  // Number of results per page
+  int64 start_time = 4;             // Filter by start time
+  int64 end_time = 5;               // Filter by end time
+  string transaction_type = 6;      // Filter by transaction type
+}
+
+message GetTransactionHistoryResponse {
+  repeated blockchain.ledger.messages.Transaction transactions = 1;
+  string next_pagination_key = 2;   // Key for next page
+}
+
+message GetPendingTransactionsRequest {
+  string pagination_key = 1; // Pagination key for next page
+  int32 limit = 2;           // Number of results per page
+  string from_address = 3;   // Filter by sender address
+}
+
+message GetPendingTransactionsResponse {
+  repeated blockchain.ledger.messages.Transaction transactions = 1;
+  string next_pagination_key = 2; // Key for next page
+}
+
+message GetGasEstimateRequest {
+  string from_address = 1;          // Sender address
+  string to_address = 2;            // Recipient address
+  string transaction_type = 3;      // Transaction type
+  string data = 4;                  // Transaction data
+  repeated blockchain.ledger.messages.Coin amount = 5; // Transaction amount
+}
+
+message GetGasEstimateResponse {
+  string estimated_gas = 1;         // Estimated gas amount
+  string gas_price = 2;             // Recommended gas price
+  string total_cost = 3;            // Total estimated cost
+}
+
+message GetNetworkStatusRequest {
+  // No parameters needed
+}
+
+message GetNetworkStatusResponse {
+  string status = 1;                // Network status
+  bool is_synced = 2;              // Whether network is synced
+  int64 current_height = 3;        // Current height
+  int64 latest_height = 4;         // Latest height
+  string consensus_algorithm = 5;  // Consensus algorithm
+  int64 active_validators = 6;     // Number of active validators
+  string block_time = 7;           // Average block time
+  string chain_id = 8;             // Chain identifier
+}

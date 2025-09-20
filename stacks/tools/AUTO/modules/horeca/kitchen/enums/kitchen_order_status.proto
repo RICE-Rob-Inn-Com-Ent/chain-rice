@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package horeca.kitchen.enums;
+
+// Status of kitchen orders
+enum KitchenOrderStatus {
+  KITCHEN_ORDER_STATUS_UNSPECIFIED = 0;
+  KITCHEN_ORDER_STATUS_PENDING = 1;       // Order received, awaiting preparation
+  KITCHEN_ORDER_STATUS_ACCEPTED = 2;       // Order accepted by kitchen
+  KITCHEN_ORDER_STATUS_PREPARING = 3;      // Food preparation started
+  KITCHEN_ORDER_STATUS_COOKING = 4;        // Food is being cooked
+  KITCHEN_ORDER_STATUS_READY = 5;          // Order ready for pickup/serving
+  KITCHEN_ORDER_STATUS_SERVED = 6;         // Order served to customer
+  KITCHEN_ORDER_STATUS_COMPLETED = 7;      // Order completed
+  KITCHEN_ORDER_STATUS_CANCELED = 8;       // Order canceled
+  KITCHEN_ORDER_STATUS_HOLD = 9;          // Order on hold
+}

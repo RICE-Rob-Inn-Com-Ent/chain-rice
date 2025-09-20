@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package construction.projects.enums;
+
+enum ProjectPriority {
+  PROJECT_PRIORITY_UNSPECIFIED = 0;
+  CRITICAL = 1;
+  HIGH = 2;
+  MEDIUM = 3;
+  LOW = 4;
+  URGENT = 5;
+  NORMAL = 6;
+  EMERGENCY = 7;
+  ROUTINE = 8;
+  STRATEGIC = 9;
+  TACTICAL = 10;
+  OPERATIONAL = 11;
+  MAINTENANCE = 12;
+  PREVENTIVE = 13;
+  REACTIVE = 14;
+  PROACTIVE = 15;
+  MANDATORY = 16;
+  OPTIONAL = 17;
+  RECOMMENDED = 18;
+  REQUIRED = 19;
+  DESIRED = 20;
+}

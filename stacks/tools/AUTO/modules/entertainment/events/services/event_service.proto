@@ -1,0 +1,229 @@
+syntax = "proto3";
+
+package entertainment.events.services;
+
+import "entertainment/events/messages/event.proto";
+
+// Сервіс управління подіями
+service EventService {
+  // CRUD операції для подій
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
+  rpc GetEvent(GetEventRequest) returns (GetEventResponse);
+  rpc UpdateEvent(UpdateEventRequest) returns (UpdateEventResponse);
+  rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse);
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  
+  // Пошук та фільтрація подій
+  rpc SearchEvents(SearchEventsRequest) returns (SearchEventsResponse);
+  rpc FilterEvents(FilterEventsRequest) returns (FilterEventsResponse);
+  rpc GetTrendingEvents(GetTrendingEventsRequest) returns (GetTrendingEventsResponse);
+  
+  // Управління квитками
+  rpc GetAvailableTickets(GetAvailableTicketsRequest) returns (GetAvailableTicketsResponse);
+  rpc ReserveTickets(ReserveTicketsRequest) returns (ReserveTicketsResponse);
+  rpc PurchaseTickets(PurchaseTicketsRequest) returns (PurchaseTicketsResponse);
+  
+  // Аналітика подій
+  rpc GetEventAnalytics(GetEventAnalyticsRequest) returns (GetEventAnalyticsResponse);
+  rpc GetEventMetrics(GetEventMetricsRequest) returns (GetEventMetricsResponse);
+  rpc GetEventStats(GetEventStatsRequest) returns (GetEventStatsResponse);
+}
+
+// Запити та відповіді для подій
+message CreateEventRequest {
+  entertainment.events.messages.Event event = 1;
+  string organizer_id = 2;
+}
+
+message CreateEventResponse {
+  entertainment.events.messages.Event event = 1;
+  string message = 2;
+}
+
+message GetEventRequest {
+  string event_id = 1;
+}
+
+message GetEventResponse {
+  entertainment.events.messages.Event event = 1;
+}
+
+message UpdateEventRequest {
+  string event_id = 1;
+  entertainment.events.messages.Event event = 2;
+  string updater_id = 3;
+}
+
+message UpdateEventResponse {
+  entertainment.events.messages.Event event = 1;
+  string message = 2;
+}
+
+message DeleteEventRequest {
+  string event_id = 1;
+  string deleter_id = 2;
+}
+
+message DeleteEventResponse {
+  string message = 1;
+}
+
+message ListEventsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  repeated string filters = 3;
+  string sort_by = 4;
+  string sort_order = 5;
+}
+
+message ListEventsResponse {
+  repeated entertainment.events.messages.Event events = 1;
+  int32 total_count = 2;
+}
+
+// Запити для пошуку
+message SearchEventsRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+}
+
+message SearchEventsResponse {
+  repeated entertainment.events.messages.Event events = 1;
+  int32 total_count = 2;
+}
+
+message FilterEventsRequest {
+  repeated string filters = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message FilterEventsResponse {
+  repeated entertainment.events.messages.Event events = 1;
+  int32 total_count = 2;
+}
+
+message GetTrendingEventsRequest {
+  string time_period = 1;
+  int32 count = 2;
+  repeated string filters = 3;
+}
+
+message GetTrendingEventsResponse {
+  repeated entertainment.events.messages.Event events = 1;
+}
+
+// Запити для квитків
+message GetAvailableTicketsRequest {
+  string event_id = 1;
+}
+
+message GetAvailableTicketsResponse {
+  repeated TicketTier available_tickets = 1;
+  int32 total_available = 2;
+}
+
+message ReserveTicketsRequest {
+  string event_id = 1;
+  repeated TicketReservation reservations = 2;
+  string user_id = 3;
+}
+
+message ReserveTicketsResponse {
+  repeated TicketReservation reservations = 1;
+  string reservation_id = 2;
+  int64 expires_at = 3;
+}
+
+message PurchaseTicketsRequest {
+  string reservation_id = 1;
+  string user_id = 2;
+  PaymentInfo payment_info = 3;
+}
+
+message PurchaseTicketsResponse {
+  repeated TicketPurchase purchases = 1;
+  string transaction_id = 2;
+  string confirmation_number = 3;
+}
+
+// Запити для аналітики
+message GetEventAnalyticsRequest {
+  string event_id = 1;
+  string time_period = 2;
+}
+
+message GetEventAnalyticsResponse {
+  EventAnalytics analytics = 1;
+}
+
+message GetEventMetricsRequest {
+  string event_id = 1;
+  string metric_type = 2;
+}
+
+message GetEventMetricsResponse {
+  EventMetrics metrics = 1;
+}
+
+message GetEventStatsRequest {
+  string event_id = 1;
+}
+
+message GetEventStatsResponse {
+  EventStats stats = 1;
+}
+
+// Допоміжні повідомлення
+message TicketTier {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+  int32 available = 4;
+  string description = 5;
+}
+
+message TicketReservation {
+  string tier_id = 1;
+  int32 quantity = 2;
+  double total_price = 3;
+}
+
+message TicketPurchase {
+  string ticket_id = 1;
+  string tier_id = 2;
+  double price = 3;
+  string status = 4;
+}
+
+message PaymentInfo {
+  string payment_method = 1;
+  string billing_address = 2;
+  string email = 3;
+}
+
+message EventAnalytics {
+  int32 total_views = 1;
+  int32 total_interests = 2;
+  int32 total_shares = 3;
+  int32 total_tickets_sold = 4;
+  double revenue = 5;
+  map<string, int32> views_by_source = 6;
+}
+
+message EventMetrics {
+  double conversion_rate = 1;
+  double engagement_rate = 2;
+  double satisfaction_score = 3;
+  double popularity_score = 4;
+}
+
+message EventStats {
+  int32 total_events = 1;
+  int32 active_events = 2;
+  int32 completed_events = 3;
+  int32 cancelled_events = 4;
+  double average_attendance = 5;
+}

@@ -1,0 +1,241 @@
+syntax = "proto3";
+
+package finance.accounting.messages;
+
+import "finance/accounting/enums/ledger_entry_type.proto";
+import "finance/accounting/enums/accounting_status.proto";
+
+// Ledger entry for double-entry bookkeeping
+message LedgerEntry {
+  // Unique entry identifier
+  string entry_id = 1;
+  
+  // Entry date
+  int64 entry_date = 2;
+  
+  // Entry type
+  finance.accounting.enums.LedgerEntryType entry_type = 3;
+  
+  // Entry status
+  finance.accounting.enums.AccountingStatus status = 4;
+  
+  // Reference number
+  string reference_number = 5;
+  
+  // Description
+  string description = 6;
+  
+  // Debit account ID
+  string debit_account_id = 7;
+  
+  // Credit account ID
+  string credit_account_id = 8;
+  
+  // Debit amount
+  double debit_amount = 9;
+  
+  // Credit amount
+  double credit_amount = 10;
+  
+  // Currency code
+  string currency = 11;
+  
+  // Exchange rate (if different from base currency)
+  double exchange_rate = 12;
+  
+  // Base currency amount
+  double base_currency_amount = 13;
+  
+  // Related transaction ID
+  string transaction_id = 14;
+  
+  // Related document ID
+  string document_id = 15;
+  
+  // Entry tags
+  repeated string tags = 16;
+  
+  // Custom fields
+  map<string, string> custom_fields = 17;
+  
+  // Creation timestamp
+  int64 created_at = 18;
+  
+  // Last update timestamp
+  int64 updated_at = 19;
+  
+  // Created by user ID
+  string created_by = 20;
+  
+  // Updated by user ID
+  string updated_by = 21;
+  
+  // Approval timestamp
+  int64 approved_at = 22;
+  
+  // Approved by user ID
+  string approved_by = 23;
+}
+
+// Ledger entry creation request
+message CreateLedgerEntryRequest {
+  // Entry date
+  int64 entry_date = 1;
+  
+  // Entry type
+  finance.accounting.enums.LedgerEntryType entry_type = 2;
+  
+  // Reference number
+  string reference_number = 3;
+  
+  // Description
+  string description = 4;
+  
+  // Debit account ID
+  string debit_account_id = 5;
+  
+  // Credit account ID
+  string credit_account_id = 6;
+  
+  // Debit amount
+  double debit_amount = 7;
+  
+  // Credit amount
+  double credit_amount = 8;
+  
+  // Currency code
+  string currency = 9;
+  
+  // Exchange rate
+  double exchange_rate = 10;
+  
+  // Related transaction ID
+  string transaction_id = 11;
+  
+  // Related document ID
+  string document_id = 12;
+  
+  // Entry tags
+  repeated string tags = 13;
+  
+  // Custom fields
+  map<string, string> custom_fields = 14;
+}
+
+// Ledger entry creation response
+message CreateLedgerEntryResponse {
+  // Created ledger entry
+  LedgerEntry entry = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Ledger entry list request
+message ListLedgerEntriesRequest {
+  // Filter by account ID
+  string account_id = 1;
+  
+  // Filter by entry type
+  finance.accounting.enums.LedgerEntryType entry_type = 2;
+  
+  // Filter by status
+  finance.accounting.enums.AccountingStatus status = 3;
+  
+  // Filter by date range
+  int64 start_date = 4;
+  int64 end_date = 5;
+  
+  // Filter by currency
+  string currency = 6;
+  
+  // Filter by transaction ID
+  string transaction_id = 7;
+  
+  // Search term
+  string search_term = 8;
+  
+  // Page number
+  int32 page = 9;
+  
+  // Page size
+  int32 page_size = 10;
+}
+
+// Ledger entry list response
+message ListLedgerEntriesResponse {
+  // List of ledger entries
+  repeated LedgerEntry entries = 1;
+  
+  // Total count
+  int64 total_count = 2;
+  
+  // Page number
+  int32 page = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Success status
+  bool success = 5;
+  
+  // Error message if any
+  string error_message = 6;
+}
+
+// Journal entry (compound ledger entry)
+message JournalEntry {
+  // Unique journal entry identifier
+  string journal_entry_id = 1;
+  
+  // Entry date
+  int64 entry_date = 2;
+  
+  // Reference number
+  string reference_number = 3;
+  
+  // Description
+  string description = 4;
+  
+  // Status
+  finance.accounting.enums.AccountingStatus status = 5;
+  
+  // List of ledger entries
+  repeated LedgerEntry entries = 6;
+  
+  // Total debit amount
+  double total_debit = 7;
+  
+  // Total credit amount
+  double total_credit = 8;
+  
+  // Currency code
+  string currency = 9;
+  
+  // Related transaction ID
+  string transaction_id = 10;
+  
+  // Related document ID
+  string document_id = 11;
+  
+  // Entry tags
+  repeated string tags = 12;
+  
+  // Custom fields
+  map<string, string> custom_fields = 13;
+  
+  // Creation timestamp
+  int64 created_at = 14;
+  
+  // Last update timestamp
+  int64 updated_at = 15;
+  
+  // Created by user ID
+  string created_by = 16;
+  
+  // Updated by user ID
+  string updated_by = 17;
+}

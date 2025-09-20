@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sports.players.v1;
+
+import "sports/players/messages/players_messages.proto";
+
+option go_package = "github.com/rice-dev/sports/players/v1";
+
+// PlayerService provides operations for managing sports players
+service PlayerService {
+  // CreatePlayer creates a new sports player
+  rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse);
+
+  // GetPlayer retrieves a player by its ID
+  rpc GetPlayer(GetPlayerRequest) returns (GetPlayerResponse);
+
+  // ListPlayers retrieves a list of players with optional filtering
+  rpc ListPlayers(ListPlayersRequest) returns (ListPlayersResponse);
+
+  // UpdatePlayer updates an existing player
+  rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse);
+
+  // DeletePlayer deletes a player by its ID
+  rpc DeletePlayer(DeletePlayerRequest) returns (DeletePlayerResponse);
+}

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.social.services;
+
+import "marketing/social/messages/social_request.proto";
+import "marketing/social/messages/social_response.proto";
+
+// Social media service for managing social media marketing
+service SocialService {
+  // Create a new social media post
+  rpc CreateSocial(marketing.social.messages.CreateSocialRequest) returns (marketing.social.messages.CreateSocialResponse);
+  
+  // Get a social media post by ID
+  rpc GetSocial(marketing.social.messages.GetSocialRequest) returns (marketing.social.messages.GetSocialResponse);
+  
+  // List social media posts with pagination and filtering
+  rpc ListSocial(marketing.social.messages.ListSocialRequest) returns (marketing.social.messages.ListSocialResponse);
+  
+  // Update an existing social media post
+  rpc UpdateSocial(marketing.social.messages.UpdateSocialRequest) returns (marketing.social.messages.UpdateSocialResponse);
+  
+  // Delete a social media post
+  rpc DeleteSocial(marketing.social.messages.DeleteSocialRequest) returns (marketing.social.messages.DeleteSocialResponse);
+}

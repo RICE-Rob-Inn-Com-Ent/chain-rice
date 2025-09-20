@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+package commerce.marketplace.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/listing_status.proto";
+import "../enums/marketplace_type.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/marketplace/messages";
+
+// Listing message representing a product listing on the marketplace
+message Listing {
+  // Unique identifier for the listing
+  string id = 1;
+  
+  // Product identifier
+  string product_id = 2;
+  
+  // Seller identifier
+  string seller_id = 3;
+  
+  // Listing title
+  string title = 4;
+  
+  // Listing description
+  string description = 5;
+  
+  // Current status of the listing
+  commerce.marketplace.enums.ListingStatus status = 6;
+  
+  // Marketplace type
+  commerce.marketplace.enums.MarketplaceType marketplace_type = 7;
+  
+  // Listing price
+  Price price = 8;
+  
+  // Available quantity for sale
+  int32 quantity = 9;
+  
+  // Minimum quantity for purchase
+  int32 minimum_quantity = 10;
+  
+  // Maximum quantity per order
+  int32 maximum_quantity = 11;
+  
+  // Shipping information
+  ShippingInfo shipping_info = 12;
+  
+  // Product images
+  repeated string image_urls = 13;
+  
+  // Product categories
+  repeated string categories = 14;
+  
+  // Product tags for search
+  repeated string tags = 15;
+  
+  // Listing start date
+  google.protobuf.Timestamp start_date = 16;
+  
+  // Listing end date
+  google.protobuf.Timestamp end_date = 17;
+  
+  // Date when listing was created
+  google.protobuf.Timestamp created_at = 18;
+  
+  // Date when listing was last updated
+  google.protobuf.Timestamp updated_at = 19;
+  
+  // View count
+  int32 view_count = 20;
+  
+  // Like count
+  int32 like_count = 21;
+  
+  // Share count
+  int32 share_count = 22;
+  
+  // Additional metadata
+  map<string, string> metadata = 23;
+  
+  // Listing notes
+  string notes = 24;
+  
+  // Featured listing flag
+  bool is_featured = 25;
+  
+  // Promoted listing flag
+  bool is_promoted = 26;
+}
+
+// Price information for the listing
+message Price {
+  // Base price amount
+  double amount = 1;
+  
+  // Currency code (ISO 4217)
+  string currency = 2;
+  
+  // Compare at price (original price for discounts)
+  double compare_at_price = 3;
+  
+  // Cost price (for seller reference)
+  double cost_price = 4;
+  
+  // Price per unit
+  double price_per_unit = 5;
+  
+  // Unit of measurement
+  string unit = 6;
+}
+
+// Shipping information for the listing
+message ShippingInfo {
+  // Whether shipping is free
+  bool free_shipping = 1;
+  
+  // Shipping cost
+  double shipping_cost = 2;
+  
+  // Shipping method
+  string shipping_method = 3;
+  
+  // Estimated delivery time in days
+  int32 estimated_delivery_days = 4;
+  
+  // Shipping zones where item can be shipped
+  repeated string shipping_zones = 5;
+  
+  // Handling time in days
+  int32 handling_time_days = 6;
+  
+  // Weight of the item
+  double weight = 7;
+  
+  // Dimensions of the item
+  Dimensions dimensions = 8;
+}
+
+// Product dimensions
+message Dimensions {
+  // Length
+  double length = 1;
+  
+  // Width
+  double width = 2;
+  
+  // Height
+  double height = 3;
+  
+  // Unit of measurement
+  string unit = 4;
+}

@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package integrations.edi.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "integrations/edi/enums/edi_document_type.proto";
+import "integrations/edi/enums/edi_status.proto";
+import "integrations/edi/enums/edi_partner_type.proto";
+
+option go_package = "github.com/rice-dev/integrations/edi/messages";
+
+// EDI Document represents a business document in the EDI system
+message EdiDocument {
+  // Unique document identifier
+  string document_id = 1;
+  
+  // Document type classification
+  integrations.edi.enums.EdiDocumentType document_type = 2;
+  
+  // Document status in processing pipeline
+  integrations.edi.enums.EdiStatus status = 3;
+  
+  // Partner information
+  EdiPartnerInfo partner = 4;
+  
+  // Document metadata
+  EdiDocumentMetadata metadata = 5;
+  
+  // Document payload (raw EDI data or structured content)
+  EdiDocumentPayload payload = 6;
+  
+  // Processing information
+  EdiProcessingInfo processing = 7;
+  
+  // Timestamps
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  google.protobuf.Timestamp processed_at = 10;
+}
+
+// Partner information for EDI documents
+message EdiPartnerInfo {
+  string partner_id = 1;
+  string partner_name = 2;
+  integrations.edi.enums.EdiPartnerType partner_type = 3;
+  string partner_code = 4;
+  string trading_partner_id = 5;
+  string gln = 6; // Global Location Number
+  string duns = 7; // Data Universal Numbering System
+}
+
+// Document metadata
+message EdiDocumentMetadata {
+  string control_number = 1;
+  string reference_number = 2;
+  string version = 3;
+  string standard = 4; // EDI standard (X12, EDIFACT, etc.)
+  string transaction_set_id = 5;
+  string functional_group_id = 6;
+  string interchange_id = 7;
+  string sender_id = 8;
+  string receiver_id = 9;
+  string test_indicator = 10; // P=Production, T=Test
+  map<string, string> custom_fields = 11;
+}
+
+// Document payload containing the actual data
+message EdiDocumentPayload {
+  // Raw EDI data
+  string raw_data = 1;
+  
+  // Structured data (parsed EDI)
+  google.protobuf.Any structured_data = 2;
+  
+  // File information if document came from file
+  EdiFileInfo file_info = 3;
+  
+  // Data format information
+  string format = 4; // EDI, XML, JSON, etc.
+  string encoding = 5; // UTF-8, ASCII, etc.
+  int64 size_bytes = 6;
+}
+
+// File information for file-based EDI documents
+message EdiFileInfo {
+  string filename = 1;
+  string file_path = 2;
+  string file_hash = 3;
+  google.protobuf.Timestamp file_modified_at = 4;
+  int64 file_size = 5;
+}
+
+// Processing information for EDI documents
+message EdiProcessingInfo {
+  string processor_version = 1;
+  string processing_engine = 2;
+  repeated string processing_steps = 3;
+  map<string, string> processing_config = 4;
+  int32 retry_count = 5;
+  int32 max_retries = 6;
+  google.protobuf.Timestamp next_retry_at = 7;
+  repeated EdiProcessingError errors = 8;
+  repeated EdiProcessingWarning warnings = 9;
+}
+
+// Processing error details
+message EdiProcessingError {
+  string error_code = 1;
+  string error_message = 2;
+  string error_category = 3; // VALIDATION, TRANSFORMATION, DELIVERY, etc.
+  string error_severity = 4; // CRITICAL, HIGH, MEDIUM, LOW
+  string field_path = 5;
+  int32 line_number = 6;
+  int32 column_number = 7;
+  google.protobuf.Timestamp occurred_at = 8;
+  map<string, string> error_context = 9;
+}
+
+// Processing warning details
+message EdiProcessingWarning {
+  string warning_code = 1;
+  string warning_message = 2;
+  string warning_category = 3;
+  string field_path = 4;
+  int32 line_number = 5;
+  int32 column_number = 6;
+  google.protobuf.Timestamp occurred_at = 7;
+  map<string, string> warning_context = 8;
+}
+
+// EDI Document Search/Filter criteria
+message EdiDocumentFilter {
+  repeated string document_ids = 1;
+  repeated integrations.edi.enums.EdiDocumentType document_types = 2;
+  repeated integrations.edi.enums.EdiStatus statuses = 3;
+  repeated string partner_ids = 4;
+  repeated integrations.edi.enums.EdiPartnerType partner_types = 5;
+  google.protobuf.Timestamp created_from = 6;
+  google.protobuf.Timestamp created_to = 7;
+  google.protobuf.Timestamp processed_from = 8;
+  google.protobuf.Timestamp processed_to = 9;
+  string control_number = 10;
+  string reference_number = 11;
+  string standard = 12;
+  string test_indicator = 13;
+  int32 limit = 14;
+  int32 offset = 15;
+  string sort_by = 16;
+  string sort_order = 17; // ASC, DESC
+}
+
+// EDI Document List Response
+message EdiDocumentList {
+  repeated EdiDocument documents = 1;
+  int32 total_count = 2;
+  int32 page_size = 3;
+  int32 page_number = 4;
+  bool has_next_page = 5;
+  bool has_previous_page = 6;
+}

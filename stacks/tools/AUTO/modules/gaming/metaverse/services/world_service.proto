@@ -1,0 +1,370 @@
+syntax = "proto3";
+
+package gaming.metaverse.services;
+
+import "gaming/metaverse/messages/world_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/metaverse/services";
+
+// Сервіс управління світами
+service WorldService {
+  // Створити світ
+  rpc CreateWorld(CreateWorldRequest) returns (CreateWorldResponse);
+  
+  // Отримати світ
+  rpc GetWorld(GetWorldRequest) returns (GetWorldResponse);
+  
+  // Оновити світ
+  rpc UpdateWorld(UpdateWorldRequest) returns (UpdateWorldResponse);
+  
+  // Видалити світ
+  rpc DeleteWorld(DeleteWorldRequest) returns (DeleteWorldResponse);
+  
+  // Отримати список світів
+  rpc ListWorlds(ListWorldsRequest) returns (ListWorldsResponse);
+  
+  // Отримати статистику світу
+  rpc GetWorldStats(GetWorldStatsRequest) returns (GetWorldStatsResponse);
+  
+  // Очистити світ
+  rpc ClearWorld(ClearWorldRequest) returns (ClearWorldResponse);
+  
+  // Скинути світ
+  rpc ResetWorld(ResetWorldRequest) returns (ResetWorldResponse);
+  
+  // Зберегти світ
+  rpc SaveWorld(SaveWorldRequest) returns (SaveWorldResponse);
+  
+  // Завантажити світ
+  rpc LoadWorld(LoadWorldRequest) returns (LoadWorldResponse);
+}
+
+// Запит створення світу
+message CreateWorldRequest {
+  string name = 1;
+  string description = 2;
+  gaming.metaverse.enums.WorldType type = 3;
+  string creator_id = 4;
+  string game_mode = 5;
+  string map = 6;
+  string server = 7;
+  string region = 8;
+  int32 max_players = 9;
+  int32 max_objects = 10;
+  int32 max_buildings = 11;
+  int32 max_vehicles = 12;
+  int32 max_characters = 13;
+  int32 max_items = 14;
+  int32 max_resources = 15;
+  int32 max_energy = 16;
+  int32 max_health = 17;
+  int32 max_mana = 18;
+  int32 max_stamina = 19;
+  int32 max_experience = 20;
+  int32 max_level = 21;
+  int32 max_skill_points = 22;
+  int32 max_ability_points = 23;
+  int32 max_talent_points = 24;
+  int32 max_perk_points = 25;
+  int32 max_trait_points = 26;
+  int32 max_stat_points = 27;
+  int32 max_attribute_points = 28;
+  int32 max_characteristic_points = 29;
+  int32 max_property_points = 30;
+  int32 max_feature_points = 31;
+  int32 max_aspect_points = 32;
+  int32 max_element_points = 33;
+  int32 max_component_points = 34;
+  int32 max_module_points = 35;
+  int32 max_system_points = 36;
+  int32 max_process_points = 37;
+  int32 max_procedure_points = 38;
+  int32 max_protocol_points = 39;
+  int32 max_standard_points = 40;
+  int32 max_rule_points = 41;
+  int32 max_regulation_points = 42;
+  int32 max_law_points = 43;
+  int32 max_act_points = 44;
+  int32 max_statute_points = 45;
+  int32 max_ordinance_points = 46;
+  int32 max_decree_points = 47;
+  int32 max_edict_points = 48;
+  int32 max_mandate_points = 49;
+  int32 max_order_points = 50;
+  int32 max_command_points = 51;
+  int32 max_instruction_points = 52;
+  int32 max_direction_points = 53;
+  int64 expires_at = 54;
+  map<string, string> metadata = 55;
+}
+
+// Відповідь створення світу
+message CreateWorldResponse {
+  bool success = 1;
+  string world_id = 2;
+  string message = 3;
+  gaming.metaverse.messages.World world = 4;
+}
+
+// Запит отримання світу
+message GetWorldRequest {
+  string world_id = 1;
+}
+
+// Відповідь отримання світу
+message GetWorldResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.metaverse.messages.World world = 3;
+}
+
+// Запит оновлення світу
+message UpdateWorldRequest {
+  string world_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.metaverse.enums.WorldType type = 4;
+  gaming.metaverse.enums.WorldStatus status = 5;
+  string game_mode = 6;
+  string map = 7;
+  string server = 8;
+  string region = 9;
+  int32 max_players = 10;
+  int32 max_objects = 11;
+  int32 max_buildings = 12;
+  int32 max_vehicles = 13;
+  int32 max_characters = 14;
+  int32 max_items = 15;
+  int32 max_resources = 16;
+  int32 max_energy = 17;
+  int32 max_health = 18;
+  int32 max_mana = 19;
+  int32 max_stamina = 20;
+  int32 max_experience = 21;
+  int32 max_level = 22;
+  int32 max_skill_points = 23;
+  int32 max_ability_points = 24;
+  int32 max_talent_points = 25;
+  int32 max_perk_points = 26;
+  int32 max_trait_points = 27;
+  int32 max_stat_points = 28;
+  int32 max_attribute_points = 29;
+  int32 max_characteristic_points = 30;
+  int32 max_property_points = 31;
+  int32 max_feature_points = 32;
+  int32 max_aspect_points = 33;
+  int32 max_element_points = 34;
+  int32 max_component_points = 35;
+  int32 max_module_points = 36;
+  int32 max_system_points = 37;
+  int32 max_process_points = 38;
+  int32 max_procedure_points = 39;
+  int32 max_protocol_points = 40;
+  int32 max_standard_points = 41;
+  int32 max_rule_points = 42;
+  int32 max_regulation_points = 43;
+  int32 max_law_points = 44;
+  int32 max_act_points = 45;
+  int32 max_statute_points = 46;
+  int32 max_ordinance_points = 47;
+  int32 max_decree_points = 48;
+  int32 max_edict_points = 49;
+  int32 max_mandate_points = 50;
+  int32 max_order_points = 51;
+  int32 max_command_points = 52;
+  int32 max_instruction_points = 53;
+  int32 max_direction_points = 54;
+  int64 expires_at = 55;
+  map<string, string> metadata = 56;
+}
+
+// Відповідь оновлення світу
+message UpdateWorldResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.metaverse.messages.World world = 3;
+}
+
+// Запит видалення світу
+message DeleteWorldRequest {
+  string world_id = 1;
+}
+
+// Відповідь видалення світу
+message DeleteWorldResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку світів
+message ListWorldsRequest {
+  string creator_id = 1;
+  string game_mode = 2;
+  string map = 3;
+  string server = 4;
+  string region = 5;
+  gaming.metaverse.enums.WorldType type = 6;
+  gaming.metaverse.enums.WorldStatus status = 7;
+  int32 max_players_min = 8;
+  int32 max_players_max = 9;
+  int32 max_objects_min = 10;
+  int32 max_objects_max = 11;
+  int32 max_buildings_min = 12;
+  int32 max_buildings_max = 13;
+  int32 max_vehicles_min = 14;
+  int32 max_vehicles_max = 15;
+  int32 max_characters_min = 16;
+  int32 max_characters_max = 17;
+  int32 max_items_min = 18;
+  int32 max_items_max = 19;
+  int32 max_resources_min = 20;
+  int32 max_resources_max = 21;
+  int32 max_energy_min = 22;
+  int32 max_energy_max = 23;
+  int32 max_health_min = 24;
+  int32 max_health_max = 25;
+  int32 max_mana_min = 26;
+  int32 max_mana_max = 27;
+  int32 max_stamina_min = 28;
+  int32 max_stamina_max = 29;
+  int32 max_experience_min = 30;
+  int32 max_experience_max = 31;
+  int32 max_level_min = 32;
+  int32 max_level_max = 33;
+  int32 max_skill_points_min = 34;
+  int32 max_skill_points_max = 35;
+  int32 max_ability_points_min = 36;
+  int32 max_ability_points_max = 37;
+  int32 max_talent_points_min = 38;
+  int32 max_talent_points_max = 39;
+  int32 max_perk_points_min = 40;
+  int32 max_perk_points_max = 41;
+  int32 max_trait_points_min = 42;
+  int32 max_trait_points_max = 43;
+  int32 max_stat_points_min = 44;
+  int32 max_stat_points_max = 45;
+  int32 max_attribute_points_min = 46;
+  int32 max_attribute_points_max = 47;
+  int32 max_characteristic_points_min = 48;
+  int32 max_characteristic_points_max = 49;
+  int32 max_property_points_min = 50;
+  int32 max_property_points_max = 51;
+  int32 max_feature_points_min = 52;
+  int32 max_feature_points_max = 53;
+  int32 max_aspect_points_min = 54;
+  int32 max_aspect_points_max = 55;
+  int32 max_element_points_min = 56;
+  int32 max_element_points_max = 57;
+  int32 max_component_points_min = 58;
+  int32 max_component_points_max = 59;
+  int32 max_module_points_min = 60;
+  int32 max_module_points_max = 61;
+  int32 max_system_points_min = 62;
+  int32 max_system_points_max = 63;
+  int32 max_process_points_min = 64;
+  int32 max_process_points_max = 65;
+  int32 max_procedure_points_min = 66;
+  int32 max_procedure_points_max = 67;
+  int32 max_protocol_points_min = 68;
+  int32 max_protocol_points_max = 69;
+  int32 max_standard_points_min = 70;
+  int32 max_standard_points_max = 71;
+  int32 max_rule_points_min = 72;
+  int32 max_rule_points_max = 73;
+  int32 max_regulation_points_min = 74;
+  int32 max_regulation_points_max = 75;
+  int32 max_law_points_min = 76;
+  int32 max_law_points_max = 77;
+  int32 max_act_points_min = 78;
+  int32 max_act_points_max = 79;
+  int32 max_statute_points_min = 80;
+  int32 max_statute_points_max = 81;
+  int32 max_ordinance_points_min = 82;
+  int32 max_ordinance_points_max = 83;
+  int32 max_decree_points_min = 84;
+  int32 max_decree_points_max = 85;
+  int32 max_edict_points_min = 86;
+  int32 max_edict_points_max = 87;
+  int32 max_mandate_points_min = 88;
+  int32 max_mandate_points_max = 89;
+  int32 max_order_points_min = 90;
+  int32 max_order_points_max = 91;
+  int32 max_command_points_min = 92;
+  int32 max_command_points_max = 93;
+  int32 max_instruction_points_min = 94;
+  int32 max_instruction_points_max = 95;
+  int32 max_direction_points_min = 96;
+  int32 max_direction_points_max = 97;
+  int32 limit = 98;
+  int32 offset = 99;
+  string sort_by = 100;
+  bool ascending = 101;
+  map<string, string> metadata_filters = 102;
+}
+
+// Відповідь списку світів
+message ListWorldsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.metaverse.messages.World worlds = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит статистики світу
+message GetWorldStatsRequest {
+  string world_id = 1;
+}
+
+// Відповідь статистики світу
+message GetWorldStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.metaverse.messages.WorldStats stats = 3;
+}
+
+// Запит очищення світу
+message ClearWorldRequest {
+  string world_id = 1;
+}
+
+// Відповідь очищення світу
+message ClearWorldResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит скидання світу
+message ResetWorldRequest {
+  string world_id = 1;
+}
+
+// Відповідь скидання світу
+message ResetWorldResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит збереження світу
+message SaveWorldRequest {
+  string world_id = 1;
+}
+
+// Відповідь збереження світу
+message SaveWorldResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит завантаження світу
+message LoadWorldRequest {
+  string world_id = 1;
+}
+
+// Відповідь завантаження світу
+message LoadWorldResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.metaverse.messages.World world = 3;
+}

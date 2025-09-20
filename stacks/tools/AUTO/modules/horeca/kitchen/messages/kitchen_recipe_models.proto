@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package horeca.kitchen.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+
+// Kitchen recipe information
+message KitchenRecipe {
+  string recipe_id = 1;
+  string recipe_name = 2;
+  string description = 3;
+  string category = 4;
+  
+  RecipeStatus status = 5;
+  int32 prep_time_minutes = 6;
+  int32 cook_time_minutes = 7;
+  int32 total_time_minutes = 8;
+  
+  int32 servings = 9;
+  string difficulty_level = 10;
+  
+  repeated RecipeIngredient ingredients = 11;
+  repeated RecipeStep steps = 12;
+  
+  RecipeNutrition nutrition = 13;
+  repeated string allergens = 14;
+  repeated string dietary_tags = 15;
+  
+  google.protobuf.Money cost_per_serving = 16;
+  google.protobuf.Money selling_price = 17;
+  double profit_margin = 18;
+  
+  string chef_notes = 19;
+  string image_url = 20;
+  
+  google.protobuf.Timestamp created_at = 21;
+  google.protobuf.Timestamp updated_at = 22;
+}
+
+// Recipe status
+enum RecipeStatus {
+  RECIPE_STATUS_UNSPECIFIED = 0;
+  RECIPE_STATUS_ACTIVE = 1;
+  RECIPE_STATUS_INACTIVE = 2;
+  RECIPE_STATUS_DRAFT = 3;
+  RECIPE_STATUS_TESTING = 4;
+}
+
+// Recipe ingredient
+message RecipeIngredient {
+  string ingredient_id = 1;
+  string ingredient_name = 2;
+  double quantity = 3;
+  string unit_of_measure = 4;
+  google.protobuf.Money unit_cost = 5;
+  google.protobuf.Money total_cost = 6;
+  string notes = 7;
+}
+
+// Recipe step
+message RecipeStep {
+  int32 step_number = 1;
+  string instruction = 2;
+  int32 time_minutes = 3;
+  string temperature = 4;
+  string equipment_needed = 5;
+  string notes = 6;
+}
+
+// Recipe nutrition information
+message RecipeNutrition {
+  int32 calories_per_serving = 1;
+  double protein_grams = 2;
+  double carbohydrates_grams = 3;
+  double fat_grams = 4;
+  double fiber_grams = 5;
+  double sugar_grams = 6;
+  double sodium_mg = 7;
+  string nutrition_notes = 8;
+}
+
+// Recipe usage tracking
+message RecipeUsage {
+  string usage_id = 1;
+  string recipe_id = 2;
+  string order_id = 3;
+  int32 servings_made = 4;
+  google.protobuf.Timestamp usage_date = 5;
+  string chef_id = 6;
+  string notes = 7;
+}

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package logistics.shipping.enums;
+
+// Shipping methods available
+enum ShippingMethod {
+  SHIPPING_METHOD_UNSPECIFIED = 0;
+  SHIPPING_METHOD_GROUND = 1;                  // Ground transportation
+  SHIPPING_METHOD_AIR = 2;                     // Air freight
+  SHIPPING_METHOD_SEA = 3;                     // Sea freight
+  SHIPPING_METHOD_RAIL = 4;                    // Rail freight
+  SHIPPING_METHOD_EXPRESS = 5;                 // Express delivery
+  SHIPPING_METHOD_OVERNIGHT = 6;               // Overnight delivery
+  SHIPPING_METHOD_SAME_DAY = 7;                // Same day delivery
+  SHIPPING_METHOD_INTERMODAL = 8;              // Intermodal transportation
+  SHIPPING_METHOD_LTL = 9;                     // Less than truckload
+  SHIPPING_METHOD_FTL = 10;                    // Full truckload
+  SHIPPING_METHOD_PARCEL = 11;                 // Parcel delivery
+  SHIPPING_METHOD_COURIER = 12;                // Courier service
+  SHIPPING_METHOD_DRONE = 13;                  // Drone delivery
+  SHIPPING_METHOD_PIPELINE = 14;               // Pipeline transportation
+}

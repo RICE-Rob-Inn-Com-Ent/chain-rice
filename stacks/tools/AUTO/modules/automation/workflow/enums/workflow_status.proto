@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package automation.workflow.enums;
+
+// Workflow Status enumeration
+// Defines the different states of workflows in the automation system
+enum WorkflowStatus {
+  // Unspecified workflow status
+  WORKFLOW_STATUS_UNSPECIFIED = 0;
+  
+  // Initial States
+  WORKFLOW_STATUS_CREATED = 1;               // Workflow has been created but not started
+  WORKFLOW_STATUS_DRAFT = 2;                 // Workflow is in draft state
+  WORKFLOW_STATUS_PENDING = 3;               // Workflow is pending activation
+  WORKFLOW_STATUS_SCHEDULED = 4;             // Workflow is scheduled for future execution
+  WORKFLOW_STATUS_QUEUED = 5;                // Workflow is in the execution queue
+  WORKFLOW_STATUS_READY = 6;                 // Workflow is ready to execute
+  
+  // Active States
+  WORKFLOW_STATUS_RUNNING = 7;               // Workflow is currently running
+  WORKFLOW_STATUS_EXECUTING = 8;             // Workflow is executing steps
+  WORKFLOW_STATUS_PROCESSING = 9;            // Workflow is processing data
+  WORKFLOW_STATUS_WAITING = 10;              // Workflow is waiting for conditions or resources
+  WORKFLOW_STATUS_PAUSED = 11;               // Workflow is paused and can be resumed
+  WORKFLOW_STATUS_SUSPENDED = 12;            // Workflow is suspended by system or user
+  WORKFLOW_STATUS_RETRYING = 13;             // Workflow is retrying after failure
+  
+  // Completion States
+  WORKFLOW_STATUS_COMPLETED = 14;            // Workflow completed successfully
+  WORKFLOW_STATUS_SUCCEEDED = 15;            // Workflow succeeded with expected results
+  WORKFLOW_STATUS_FINISHED = 16;             // Workflow finished execution
+  WORKFLOW_STATUS_TERMINATED = 17;           // Workflow was terminated
+  WORKFLOW_STATUS_CANCELLED = 18;            // Workflow was cancelled by user or system
+  WORKFLOW_STATUS_ABORTED = 19;              // Workflow was aborted due to system issues
+  
+  // Error States
+  WORKFLOW_STATUS_FAILED = 20;               // Workflow failed due to an error
+  WORKFLOW_STATUS_ERROR = 21;                // Workflow encountered an error
+  WORKFLOW_STATUS_CRASHED = 22;              // Workflow crashed unexpectedly
+  WORKFLOW_STATUS_TIMEOUT = 23;              // Workflow timed out during execution
+  WORKFLOW_STATUS_RETRY_FAILED = 24;         // Workflow failed after retry attempts
+  WORKFLOW_STATUS_RETRY_EXHAUSTED = 25;      // Workflow exhausted all retry attempts
+  
+  // Resource States
+  WORKFLOW_STATUS_RESOURCE_LIMITED = 26;     // Workflow is limited by available resources
+  WORKFLOW_STATUS_WAITING_FOR_RESOURCES = 27; // Workflow is waiting for required resources
+  WORKFLOW_STATUS_OVERLOADED = 28;           // Workflow is overloaded with tasks
+  WORKFLOW_STATUS_THROTTLED = 29;            // Workflow is throttled due to rate limits
+  WORKFLOW_STATUS_QUEUE_FULL = 30;           // Workflow queue is full
+  
+  // Validation States
+  WORKFLOW_STATUS_VALIDATING = 31;           // Workflow is validating configuration
+  WORKFLOW_STATUS_VALIDATION_FAILED = 32;    // Workflow failed validation checks
+  WORKFLOW_STATUS_TESTING = 33;              // Workflow is in testing mode
+  WORKFLOW_STATUS_QUALITY_CHECK = 34;        // Workflow is undergoing quality checks
+  WORKFLOW_STATUS_APPROVAL_PENDING = 35;     // Workflow is pending approval
+  WORKFLOW_STATUS_APPROVAL_REJECTED = 36;    // Workflow approval was rejected
+  
+  // Deployment States
+  WORKFLOW_STATUS_DEPLOYING = 37;            // Workflow is being deployed
+  WORKFLOW_STATUS_DEPLOYED = 38;             // Workflow has been deployed
+  WORKFLOW_STATUS_DEPLOYMENT_FAILED = 39;    // Workflow deployment failed
+  WORKFLOW_STATUS_UNDEPLOYING = 40;          // Workflow is being undeployed
+  WORKFLOW_STATUS_UNDEPLOYED = 41;           // Workflow has been undeployed
+  WORKFLOW_STATUS_ACTIVATING = 42;           // Workflow is being activated
+  WORKFLOW_STATUS_ACTIVATED = 43;            // Workflow has been activated
+  WORKFLOW_STATUS_DEACTIVATING = 44;         // Workflow is being deactivated
+  WORKFLOW_STATUS_DEACTIVATED = 45;          // Workflow has been deactivated
+  
+  // Health States
+  WORKFLOW_STATUS_HEALTHY = 46;              // Workflow is healthy and functioning normally
+  WORKFLOW_STATUS_UNHEALTHY = 47;            // Workflow is unhealthy and needs attention
+  WORKFLOW_STATUS_DEGRADED = 48;             // Workflow is degraded but still functional
+  WORKFLOW_STATUS_RECOVERING = 49;           // Workflow is recovering from an issue
+  WORKFLOW_STATUS_MAINTENANCE = 50;          // Workflow is in maintenance mode
+  WORKFLOW_STATUS_UPDATING = 51;             // Workflow is being updated
+  WORKFLOW_STATUS_RESTARTING = 52;           // Workflow is restarting
+  WORKFLOW_STATUS_RECONFIGURING = 53;        // Workflow is being reconfigured
+  
+  // Communication States
+  WORKFLOW_STATUS_CONNECTING = 54;           // Workflow is connecting to external services
+  WORKFLOW_STATUS_CONNECTED = 55;            // Workflow is connected to external services
+  WORKFLOW_STATUS_DISCONNECTED = 56;         // Workflow is disconnected from external services
+  WORKFLOW_STATUS_RECONNECTING = 57;         // Workflow is attempting to reconnect
+  WORKFLOW_STATUS_COMMUNICATION_ERROR = 58;  // Workflow has communication errors
+  
+  // Data States
+  WORKFLOW_STATUS_DATA_PROCESSING = 59;      // Workflow is processing data
+  WORKFLOW_STATUS_DATA_SYNCING = 60;         // Workflow is synchronizing data
+  WORKFLOW_STATUS_DATA_BACKUP = 61;          // Workflow is performing data backup
+  WORKFLOW_STATUS_DATA_RESTORE = 62;         // Workflow is restoring data
+  WORKFLOW_STATUS_DATA_VALIDATION = 63;      // Workflow is validating data
+  WORKFLOW_STATUS_DATA_TRANSFORMATION = 64;  // Workflow is transforming data
+  
+  // Security States
+  WORKFLOW_STATUS_SECURITY_SCAN = 65;        // Workflow is performing security scan
+  WORKFLOW_STATUS_SECURITY_ALERT = 66;       // Workflow triggered security alert
+  WORKFLOW_STATUS_SECURITY_BLOCKED = 67;     // Workflow is blocked due to security issues
+  WORKFLOW_STATUS_AUTHENTICATING = 68;       // Workflow is authenticating
+  WORKFLOW_STATUS_AUTHORIZATION_PENDING = 69; // Workflow is pending authorization
+  
+  // Performance States
+  WORKFLOW_STATUS_PERFORMANCE_ISSUE = 70;    // Workflow has performance issues
+  WORKFLOW_STATUS_SLOW = 71;                 // Workflow is running slowly
+  WORKFLOW_STATUS_FAST = 72;                 // Workflow is running fast
+  WORKFLOW_STATUS_OPTIMIZING = 73;           // Workflow is being optimized
+  
+  // Custom States
+  WORKFLOW_STATUS_CUSTOM = 74;               // Custom user-defined status
+  WORKFLOW_STATUS_UNKNOWN = 75;              // Workflow status is unknown
+  WORKFLOW_STATUS_PARTIAL = 76;              // Workflow is partially completed
+  WORKFLOW_STATUS_INCOMPLETE = 77;           // Workflow is incomplete
+  WORKFLOW_STATUS_SKIPPED = 78;              // Workflow was skipped
+  WORKFLOW_STATUS_IGNORED = 79;              // Workflow was ignored
+}

@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package horeca.catering.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/catering_order_models.proto";
+import "../messages/catering_event_log.proto";
+
+// Catering Order Service - CRUD operations for catering orders
+service CateringOrderService {
+  // Create a new catering order
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  
+  // Get order by ID
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  
+  // Update existing order
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+  
+  // Delete order
+  rpc DeleteOrder(DeleteOrderRequest) returns (google.protobuf.Empty);
+  
+  // List orders with filtering
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+  
+  // Update order status
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (UpdateOrderStatusResponse);
+  
+  // Get order history
+  rpc GetOrderHistory(GetOrderHistoryRequest) returns (GetOrderHistoryResponse);
+  
+  // Cancel order
+  rpc CancelOrder(CancelOrderRequest) returns (CancelOrderResponse);
+  
+  // Confirm order
+  rpc ConfirmOrder(ConfirmOrderRequest) returns (ConfirmOrderResponse);
+}
+
+// Request/Response messages
+message CreateOrderRequest {
+  CateringOrder order = 1;
+}
+
+message CreateOrderResponse {
+  CateringOrder order = 1;
+  string message = 2;
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message GetOrderResponse {
+  CateringOrder order = 1;
+}
+
+message UpdateOrderRequest {
+  CateringOrder order = 1;
+}
+
+message UpdateOrderResponse {
+  CateringOrder order = 1;
+  string message = 2;
+}
+
+message DeleteOrderRequest {
+  string order_id = 1;
+}
+
+message ListOrdersRequest {
+  string customer_id = 1;
+  string status = 2;
+  string date_from = 3;
+  string date_to = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message ListOrdersResponse {
+  repeated CateringOrder orders = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateOrderStatusRequest {
+  string order_id = 1;
+  string new_status = 2;
+  string notes = 3;
+}
+
+message UpdateOrderStatusResponse {
+  CateringOrder order = 1;
+  string message = 2;
+}
+
+message GetOrderHistoryRequest {
+  string order_id = 1;
+}
+
+message GetOrderHistoryResponse {
+  repeated CateringEventLog events = 1;
+}
+
+message CancelOrderRequest {
+  string order_id = 1;
+  string reason = 2;
+}
+
+message CancelOrderResponse {
+  CateringOrder order = 1;
+  string message = 2;
+}
+
+message ConfirmOrderRequest {
+  string order_id = 1;
+  string confirmation_notes = 2;
+}
+
+message ConfirmOrderResponse {
+  CateringOrder order = 1;
+  string message = 2;
+}

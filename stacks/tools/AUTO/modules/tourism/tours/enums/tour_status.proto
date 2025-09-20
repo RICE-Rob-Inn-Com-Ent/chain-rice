@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package tourism.tours.enums;
+
+// TourStatus represents the current operational status of a tour
+enum TourStatus {
+  // Unspecified status - should not be used in production
+  TOUR_STATUS_UNSPECIFIED = 0;
+  
+  // Tour is scheduled for the future
+  UPCOMING = 1;
+  
+  // Tour is currently in progress
+  ONGOING = 2;
+  
+  // Tour has been completed successfully
+  COMPLETED = 3;
+  
+  // Tour has been cancelled
+  CANCELLED = 4;
+  
+  // Tour is fully booked
+  FULLY_BOOKED = 5;
+  
+  // Tour has limited availability
+  LIMITED_AVAILABILITY = 6;
+  
+  // Tour is on hold
+  ON_HOLD = 7;
+  
+  // Tour is under review
+  UNDER_REVIEW = 8;
+  
+  // Tour is being modified
+  BEING_MODIFIED = 9;
+  
+  // Tour is postponed
+  POSTPONED = 10;
+  
+  // Tour is suspended
+  SUSPENDED = 11;
+  
+  // Tour is archived
+  ARCHIVED = 12;
+  
+  // Tour is in draft status
+  DRAFT = 13;
+  
+  // Tour is published and available for booking
+  PUBLISHED = 14;
+  
+  // Tour is temporarily unavailable
+  TEMPORARILY_UNAVAILABLE = 15;
+}

@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package government.permits.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/permit_type.proto";
+import "../enums/permit_status.proto";
+import "../enums/permit_priority.proto";
+
+// Модель дозволу
+message Permit {
+  string permit_id = 1;                     // Унікальний ідентифікатор дозволу
+  string permit_number = 2;                 // Номер дозволу
+  PermitType type = 3;                      // Тип дозволу
+  PermitStatus status = 4;                  // Статус дозволу
+  PermitPriority priority = 5;              // Пріоритет
+  string applicant_id = 6;                  // ID заявника
+  string applicant_name = 7;                // Ім'я заявника
+  string applicant_type = 8;                // Тип заявника (фізична/юридична особа)
+  string description = 9;                   // Опис дозволу
+  string purpose = 10;                      // Мета дозволу
+  google.protobuf.Timestamp application_date = 11; // Дата подачі заяви
+  google.protobuf.Timestamp review_date = 12;      // Дата розгляду
+  google.protobuf.Timestamp approval_date = 13;    // Дата затвердження
+  google.protobuf.Timestamp expiry_date = 14;      // Дата закінчення дії
+  google.protobuf.Timestamp renewal_date = 15;     // Дата продовження
+  string location = 16;                     // Місце дії дозволу
+  repeated string required_documents = 17;  // Необхідні документи
+  repeated string attachments = 18;         // Додатки
+  string notes = 19;                        // Примітки
+  string approved_by = 20;                  // Хто затвердив
+  string reviewed_by = 21;                  // Хто розглядав
+  google.protobuf.Timestamp created_at = 22; // Дата створення
+  google.protobuf.Timestamp updated_at = 23; // Дата оновлення
+}
+
+// Заявник
+message Applicant {
+  string applicant_id = 1;
+  string name = 2;
+  string type = 3;                          // individual, company, organization
+  string contact_person = 4;
+  string email = 5;
+  string phone = 6;
+  string address = 7;
+  string tax_id = 8;                        // Податковий номер
+  string registration_number = 9;           // Реєстраційний номер
+  google.protobuf.Timestamp created_at = 10;
+}
+
+// Локація дозволу
+message PermitLocation {
+  string address = 1;
+  string city = 2;
+  string region = 3;
+  string postal_code = 4;
+  string coordinates = 5;                   // Широта, довгота
+  string building_type = 6;                 // Тип будівлі
+  string land_use = 7;                      // Використання землі
+  double area = 8;                          // Площа
+}
+
+// Фільтр для пошуку дозволів
+message PermitFilter {
+  PermitType type = 1;
+  PermitStatus status = 2;
+  PermitPriority priority = 3;
+  string applicant_id = 4;
+  string location = 5;
+  google.protobuf.Timestamp application_date_from = 6;
+  google.protobuf.Timestamp application_date_to = 7;
+  google.protobuf.Timestamp expiry_date_from = 8;
+  google.protobuf.Timestamp expiry_date_to = 9;
+  string approved_by = 10;
+}
+
+// Результат пошуку дозволів
+message PermitSearchResult {
+  repeated Permit permits = 1;
+  int32 total_count = 2;
+  int32 page_number = 3;
+  int32 page_size = 4;
+}
+
+// Статистика дозволів
+message PermitStatistics {
+  int32 total_permits = 1;
+  int32 pending_permits = 2;
+  int32 approved_permits = 3;
+  int32 rejected_permits = 4;
+  int32 expired_permits = 5;
+  repeated PermitTypeStatistics by_type = 6;
+  repeated PermitStatusStatistics by_status = 7;
+  repeated PermitPriorityStatistics by_priority = 8;
+}
+
+message PermitTypeStatistics {
+  PermitType type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message PermitStatusStatistics {
+  PermitStatus status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+message PermitPriorityStatistics {
+  PermitPriority priority = 1;
+  int32 count = 2;
+  double percentage = 3;
+}

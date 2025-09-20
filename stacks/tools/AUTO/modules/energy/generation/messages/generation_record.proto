@@ -1,0 +1,402 @@
+syntax = "proto3";
+
+package energy.generation.messages;
+
+import "energy/generation/enums/generation_status.proto";
+import "energy/generation/enums/fuel_type.proto";
+
+// Power generation record for tracking production
+message GenerationRecord {
+  // Unique identifier for the generation record
+  string id = 1;
+  
+  // Plant ID
+  string plant_id = 2;
+  
+  // Unit ID
+  string unit_id = 3;
+  
+  // Generation timestamp (unix milliseconds)
+  int64 timestamp = 4;
+  
+  // Generation status
+  energy.generation.enums.GenerationStatus status = 5;
+  
+  // Power generation data
+  PowerGenerationData power_data = 6;
+  
+  // Fuel consumption data
+  FuelConsumptionData fuel_data = 7;
+  
+  // Emissions data
+  EmissionsData emissions_data = 8;
+  
+  // Performance data
+  PerformanceData performance_data = 9;
+  
+  // Environmental conditions
+  EnvironmentalConditions environmental_conditions = 10;
+  
+  // Operational parameters
+  OperationalParameters operational_parameters = 11;
+  
+  // Quality indicators
+  QualityIndicators quality_indicators = 12;
+  
+  // Additional metadata
+  map<string, string> metadata = 13;
+  
+  // Timestamp when this record was created (unix milliseconds)
+  int64 created_at = 14;
+  
+  // Timestamp when this record was last updated (unix milliseconds)
+  int64 updated_at = 15;
+}
+
+// Power generation data
+message PowerGenerationData {
+  // Active power in MW
+  double active_power = 1;
+  
+  // Reactive power in MVAr
+  double reactive_power = 2;
+  
+  // Apparent power in MVA
+  double apparent_power = 3;
+  
+  // Power factor
+  double power_factor = 4;
+  
+  // Voltage in kV
+  double voltage = 5;
+  
+  // Current in A
+  double current = 6;
+  
+  // Frequency in Hz
+  double frequency = 7;
+  
+  // Energy generated in MWh
+  double energy_generated = 8;
+  
+  // Maximum power in MW
+  double maximum_power = 9;
+  
+  // Minimum power in MW
+  double minimum_power = 10;
+  
+  // Average power in MW
+  double average_power = 11;
+  
+  // Power quality metrics
+  PowerQualityMetrics power_quality = 12;
+}
+
+// Power quality metrics
+message PowerQualityMetrics {
+  // Total harmonic distortion (voltage)
+  double thd_voltage = 1;
+  
+  // Total harmonic distortion (current)
+  double thd_current = 2;
+  
+  // Voltage unbalance
+  double voltage_unbalance = 3;
+  
+  // Current unbalance
+  double current_unbalance = 4;
+  
+  // Frequency deviation
+  double frequency_deviation = 5;
+  
+  // Voltage flicker
+  double voltage_flicker = 6;
+  
+  // Voltage sag
+  double voltage_sag = 7;
+  
+  // Voltage swell
+  double voltage_swell = 8;
+  
+  // Voltage interruption
+  double voltage_interruption = 9;
+}
+
+// Fuel consumption data
+message FuelConsumptionData {
+  // Primary fuel type
+  energy.generation.enums.FuelType primary_fuel = 1;
+  
+  // Secondary fuel types
+  repeated energy.generation.enums.FuelType secondary_fuels = 2;
+  
+  // Fuel consumption rate in tons per hour
+  double fuel_consumption_rate = 3;
+  
+  // Total fuel consumed in tons
+  double total_fuel_consumed = 4;
+  
+  // Fuel inventory remaining in tons
+  double fuel_inventory_remaining = 5;
+  
+  // Fuel cost per ton in USD
+  double fuel_cost_per_ton = 6;
+  
+  // Total fuel cost in USD
+  double total_fuel_cost = 7;
+  
+  // Fuel efficiency in MWh per ton
+  double fuel_efficiency = 8;
+  
+  // Heat rate in BTU per kWh
+  double heat_rate = 9;
+  
+  // Fuel quality parameters
+  FuelQualityParameters fuel_quality = 10;
+}
+
+// Fuel quality parameters
+message FuelQualityParameters {
+  // Heating value in BTU per ton
+  double heating_value = 1;
+  
+  // Moisture content percentage
+  double moisture_content = 2;
+  
+  // Ash content percentage
+  double ash_content = 3;
+  
+  // Sulfur content percentage
+  double sulfur_content = 4;
+  
+  // Nitrogen content percentage
+  double nitrogen_content = 5;
+  
+  // Carbon content percentage
+  double carbon_content = 6;
+  
+  // Hydrogen content percentage
+  double hydrogen_content = 7;
+  
+  // Oxygen content percentage
+  double oxygen_content = 8;
+}
+
+// Emissions data
+message EmissionsData {
+  // CO2 emissions in tons per MWh
+  double co2_emissions = 1;
+  
+  // NOx emissions in lbs per MWh
+  double nox_emissions = 2;
+  
+  // SO2 emissions in lbs per MWh
+  double so2_emissions = 3;
+  
+  // Particulate matter emissions in lbs per MWh
+  double pm_emissions = 4;
+  
+  // Mercury emissions in lbs per MWh
+  double mercury_emissions = 5;
+  
+  // CO emissions in lbs per MWh
+  double co_emissions = 6;
+  
+  // VOC emissions in lbs per MWh
+  double voc_emissions = 7;
+  
+  // Ammonia emissions in lbs per MWh
+  double ammonia_emissions = 8;
+  
+  // HCl emissions in lbs per MWh
+  double hcl_emissions = 9;
+  
+  // HF emissions in lbs per MWh
+  double hf_emissions = 10;
+  
+  // Total emissions in tons CO2 equivalent
+  double total_emissions_co2e = 11;
+  
+  // Emissions intensity in lbs CO2 per MWh
+  double emissions_intensity = 12;
+}
+
+// Performance data
+message PerformanceData {
+  // Efficiency percentage
+  double efficiency = 1;
+  
+  // Capacity factor
+  double capacity_factor = 2;
+  
+  // Load factor
+  double load_factor = 3;
+  
+  // Availability percentage
+  double availability = 4;
+  
+  // Reliability percentage
+  double reliability = 5;
+  
+  // Forced outage rate
+  double forced_outage_rate = 6;
+  
+  // Planned outage rate
+  double planned_outage_rate = 7;
+  
+  // Mean time between failures in hours
+  double mtbf = 8;
+  
+  // Mean time to repair in hours
+  double mttr = 9;
+  
+  // Operating hours
+  double operating_hours = 10;
+  
+  // Maintenance hours
+  double maintenance_hours = 11;
+  
+  // Performance rating
+  string performance_rating = 12;
+  
+  // Performance trends
+  repeated PerformanceTrend performance_trends = 13;
+}
+
+// Performance trend
+message PerformanceTrend {
+  // Trend date (unix milliseconds)
+  int64 date = 1;
+  
+  // Trend metric name
+  string metric = 2;
+  
+  // Trend value
+  double value = 3;
+  
+  // Trend unit
+  string unit = 4;
+  
+  // Trend direction
+  string direction = 5;
+}
+
+// Environmental conditions
+message EnvironmentalConditions {
+  // Temperature in Celsius
+  double temperature = 1;
+  
+  // Humidity percentage
+  double humidity = 2;
+  
+  // Barometric pressure in hPa
+  double barometric_pressure = 3;
+  
+  // Wind speed in km/h
+  double wind_speed = 4;
+  
+  // Wind direction in degrees
+  double wind_direction = 5;
+  
+  // Precipitation in mm
+  double precipitation = 6;
+  
+  // Visibility in km
+  double visibility = 7;
+  
+  // Weather condition
+  string weather_condition = 8;
+  
+  // Solar irradiance in W/m²
+  double solar_irradiance = 9;
+  
+  // Air quality index
+  double air_quality_index = 10;
+}
+
+// Operational parameters
+message OperationalParameters {
+  // Control mode
+  string control_mode = 1;
+  
+  // Control setpoint in MW
+  double control_setpoint = 2;
+  
+  // Control deadband in MW
+  double control_deadband = 3;
+  
+  // Ramp rate in MW per minute
+  double ramp_rate = 4;
+  
+  // Startup time in minutes
+  int32 startup_time_minutes = 5;
+  
+  // Shutdown time in minutes
+  int32 shutdown_time_minutes = 6;
+  
+  // Minimum uptime in hours
+  int32 minimum_uptime_hours = 7;
+  
+  // Minimum downtime in hours
+  int32 minimum_downtime_hours = 8;
+  
+  // Grid synchronization status
+  string grid_synchronization_status = 9;
+  
+  // Islanding status
+  string islanding_status = 10;
+  
+  // Black start capability
+  bool black_start_capability = 11;
+  
+  // Load following capability
+  bool load_following_capability = 12;
+  
+  // Frequency regulation capability
+  bool frequency_regulation_capability = 13;
+  
+  // Voltage regulation capability
+  bool voltage_regulation_capability = 14;
+  
+  // Reactive power support capability
+  bool reactive_power_support_capability = 15;
+}
+
+// Quality indicators
+message QualityIndicators {
+  // Data completeness percentage
+  double data_completeness = 1;
+  
+  // Data accuracy percentage
+  double data_accuracy = 2;
+  
+  // Data reliability percentage
+  double data_reliability = 3;
+  
+  // Data consistency percentage
+  double data_consistency = 4;
+  
+  // Data timeliness percentage
+  double data_timeliness = 5;
+  
+  // Data validity percentage
+  double data_validity = 6;
+  
+  // Quality score (0-100)
+  double quality_score = 7;
+  
+  // Quality flags
+  repeated string quality_flags = 8;
+  
+  // Data anomalies
+  repeated string data_anomalies = 9;
+  
+  // Validation status
+  string validation_status = 10;
+  
+  // Validation timestamp (unix milliseconds)
+  int64 validation_timestamp = 11;
+  
+  // Validated by
+  string validated_by = 12;
+}

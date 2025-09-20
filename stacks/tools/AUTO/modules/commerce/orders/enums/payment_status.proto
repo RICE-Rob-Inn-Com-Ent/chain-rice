@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package commerce.orders.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/orders/enums";
+
+// Payment status enumeration
+enum PaymentStatus {
+  // Unknown or unspecified payment status
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  
+  // Payment is pending
+  PAYMENT_STATUS_PENDING = 1;
+  
+  // Payment is processing
+  PAYMENT_STATUS_PROCESSING = 2;
+  
+  // Payment has been authorized
+  PAYMENT_STATUS_AUTHORIZED = 3;
+  
+  // Payment has been captured
+  PAYMENT_STATUS_CAPTURED = 4;
+  
+  // Payment has been completed
+  PAYMENT_STATUS_COMPLETED = 5;
+  
+  // Payment has failed
+  PAYMENT_STATUS_FAILED = 6;
+  
+  // Payment has been declined
+  PAYMENT_STATUS_DECLINED = 7;
+  
+  // Payment has been cancelled
+  PAYMENT_STATUS_CANCELLED = 8;
+  
+  // Payment has been refunded
+  PAYMENT_STATUS_REFUNDED = 9;
+  
+  // Payment is being refunded
+  PAYMENT_STATUS_REFUNDING = 10;
+  
+  // Payment has been partially refunded
+  PAYMENT_STATUS_PARTIALLY_REFUNDED = 11;
+  
+  // Payment has expired
+  PAYMENT_STATUS_EXPIRED = 12;
+  
+  // Payment is on hold
+  PAYMENT_STATUS_ON_HOLD = 13;
+  
+  // Payment requires action from customer
+  PAYMENT_STATUS_REQUIRES_ACTION = 14;
+  
+  // Payment is disputed
+  PAYMENT_STATUS_DISPUTED = 15;
+  
+  // Payment is under review
+  PAYMENT_STATUS_UNDER_REVIEW = 16;
+}

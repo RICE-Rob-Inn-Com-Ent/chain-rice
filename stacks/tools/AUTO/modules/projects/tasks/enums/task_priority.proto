@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package projects.tasks.enums;
+
+// TaskPriority represents the priority level of a task
+enum TaskPriority {
+  // Default value - should not be used
+  TASK_PRIORITY_UNSPECIFIED = 0;
+  
+  // Low priority - can be delayed if needed
+  TASK_PRIORITY_LOW = 1;
+  
+  // Normal priority - standard task priority
+  TASK_PRIORITY_NORMAL = 2;
+  
+  // High priority - important task that should be prioritized
+  TASK_PRIORITY_HIGH = 3;
+  
+  // Critical priority - urgent task requiring immediate attention
+  TASK_PRIORITY_CRITICAL = 4;
+  
+  // Emergency priority - highest possible priority
+  TASK_PRIORITY_EMERGENCY = 5;
+}

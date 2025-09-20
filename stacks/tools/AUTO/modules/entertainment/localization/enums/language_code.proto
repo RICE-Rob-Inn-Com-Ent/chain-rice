@@ -1,0 +1,217 @@
+syntax = "proto3";
+
+package entertainment.localization.enums;
+
+// Коди мов
+enum LanguageCode {
+  LANGUAGE_CODE_UNSPECIFIED = 0;
+  
+  // Основні мови
+  ENGLISH = 1;
+  SPANISH = 2;
+  FRENCH = 3;
+  GERMAN = 4;
+  ITALIAN = 5;
+  PORTUGUESE = 6;
+  RUSSIAN = 7;
+  CHINESE = 8;
+  JAPANESE = 9;
+  KOREAN = 10;
+  
+  // Європейські мови
+  DUTCH = 11;
+  SWEDISH = 12;
+  NORWEGIAN = 13;
+  DANISH = 14;
+  FINNISH = 15;
+  POLISH = 16;
+  CZECH = 17;
+  HUNGARIAN = 18;
+  ROMANIAN = 19;
+  BULGARIAN = 20;
+  
+  // Слов'янські мови
+  UKRAINIAN = 21;
+  BELARUSIAN = 22;
+  SLOVAK = 23;
+  SLOVENIAN = 24;
+  CROATIAN = 25;
+  SERBIAN = 26;
+  BOSNIAN = 27;
+  MACEDONIAN = 28;
+  
+  // Романські мови
+  CATALAN = 29;
+  GALICIAN = 30;
+  BASQUE = 31;
+  ROMANSH = 32;
+  LADINO = 33;
+  
+  // Германські мови
+  ICELANDIC = 34;
+  FAROESE = 35;
+  LUXEMBOURGISH = 36;
+  AFRIKAANS = 37;
+  
+  // Кельтські мови
+  IRISH = 38;
+  SCOTTISH_GAELIC = 39;
+  WELSH = 40;
+  BRETON = 41;
+  CORNISH = 42;
+  MANX = 43;
+  
+  // Азійські мови
+  HINDI = 44;
+  URDU = 45;
+  BENGALI = 46;
+  TAMIL = 47;
+  TELUGU = 48;
+  MARATHI = 49;
+  GUJARATI = 50;
+  KANNADA = 51;
+  MALAYALAM = 52;
+  PUNJABI = 53;
+  
+  // Китайські діалекти
+  MANDARIN = 54;
+  CANTONESE = 55;
+  HAKKA = 56;
+  MIN_NAN = 57;
+  WU = 58;
+  XIANG = 59;
+  GAN = 60;
+  JIN = 61;
+  
+  // Японські діалекти
+  TOKYO_JAPANESE = 62;
+  OSAKA_JAPANESE = 63;
+  KYOTO_JAPANESE = 64;
+  HIROSHIMA_JAPANESE = 65;
+  
+  // Корейські діалекти
+  SEOUL_KOREAN = 66;
+  BUSAN_KOREAN = 67;
+  JEJU_KOREAN = 68;
+  
+  // Південно-східні азійські мови
+  THAI = 69;
+  VIETNAMESE = 70;
+  INDONESIAN = 71;
+  MALAY = 72;
+  TAGALOG = 73;
+  CEBUANO = 74;
+  ILOCANO = 75;
+  HILIGAYNON = 76;
+  
+  // Бірманські мови
+  BURMESE = 77;
+  KAREN = 78;
+  SHAN = 79;
+  KACHIN = 80;
+  
+  // Лаоські мови
+  LAO = 81;
+  HMONG = 82;
+  KHMER = 83;
+  
+  // Арабські мови
+  ARABIC = 84;
+  EGYPTIAN_ARABIC = 85;
+  LEVANTINE_ARABIC = 86;
+  GULF_ARABIC = 87;
+  MAGHREBI_ARABIC = 88;
+  
+  // Перські мови
+  PERSIAN = 89;
+  DARI = 90;
+  TAJIK = 91;
+  KURDISH = 92;
+  
+  // Турецькі мови
+  TURKISH = 93;
+  AZERBAIJANI = 94;
+  UZBEK = 95;
+  KAZAKH = 96;
+  KYRGYZ = 97;
+  TURKMEN = 98;
+  
+  // Монгольські мови
+  MONGOLIAN = 99;
+  BURYAT = 100;
+  KALMYK = 101;
+  
+  // Тибетські мови
+  TIBETAN = 102;
+  BHUTANESE = 103;
+  
+  // Африканські мови
+  SWAHILI = 104;
+  HAUSA = 105;
+  YORUBA = 106;
+  IGBO = 107;
+  AMHARIC = 108;
+  TIGRINYA = 109;
+  SOMALI = 110;
+  OROMO = 111;
+  
+  // Північноамериканські мови
+  NAVAJO = 112;
+  CREE = 113;
+  OJIBWE = 114;
+  CHEROKEE = 115;
+  SIOUX = 116;
+  APACHE = 117;
+  
+  // Південноамериканські мови
+  QUECHUA = 118;
+  AYMARA = 119;
+  GUARANI = 120;
+  MAPUCHE = 121;
+  
+  // Австралійські мови
+  ABORIGINAL_ENGLISH = 122;
+  KRIOL = 123;
+  
+  // Тихоокеанські мови
+  HAWAIIAN = 124;
+  SAMOAN = 125;
+  TONGAN = 126;
+  FIJIAN = 127;
+  MAORI = 128;
+  
+  // Штучні мови
+  ESPERANTO = 129;
+  INTERLINGUA = 130;
+  IDO = 131;
+  VOLAPUK = 132;
+  
+  // Мови програмування
+  PYTHON = 133;
+  JAVASCRIPT = 134;
+  JAVA = 135;
+  C_SHARP = 136;
+  CPP = 137;
+  GO = 138;
+  RUST = 139;
+  SWIFT = 140;
+  KOTLIN = 141;
+  
+  // Мови розмітки
+  HTML = 142;
+  CSS = 143;
+  XML = 144;
+  JSON = 145;
+  YAML = 146;
+  MARKDOWN = 147;
+  
+  // Спеціальні коди
+  AUTO_DETECT = 148;
+  MULTILINGUAL = 149;
+  REGIONAL = 150;
+  DIALECT = 151;
+  CREOLE = 152;
+  PIDGIN = 153;
+  SIGN_LANGUAGE = 154;
+  BRAILLE = 155;
+}

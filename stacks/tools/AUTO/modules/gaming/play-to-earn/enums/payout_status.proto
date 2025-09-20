@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.play_to_earn.enums;
+
+option go_package = "github.com/rice-dev/gaming/play-to-earn/enums";
+
+// Статуси виплат
+enum PayoutStatus {
+  PAYOUT_STATUS_UNSPECIFIED = 0;
+  
+  // Створений
+  PAYOUT_STATUS_CREATED = 1;
+  
+  // В процесі
+  PAYOUT_STATUS_PROCESSING = 2;
+  
+  // Завершений
+  PAYOUT_STATUS_COMPLETED = 3;
+  
+  // Невдалий
+  PAYOUT_STATUS_FAILED = 4;
+  
+  // Скасований
+  PAYOUT_STATUS_CANCELLED = 5;
+  
+  // Призупинений
+  PAYOUT_STATUS_PAUSED = 6;
+  
+  // Відновлений
+  PAYOUT_STATUS_RESUMED = 7;
+  
+  // Перерваний
+  PAYOUT_STATUS_INTERRUPTED = 8;
+  
+  // Відкладений
+  PAYOUT_STATUS_POSTPONED = 9;
+  
+  // Перенесений
+  PAYOUT_STATUS_RESCHEDULED = 10;
+  
+  // Відхилений
+  PAYOUT_STATUS_REJECTED = 11;
+  
+  // Прийнятий
+  PAYOUT_STATUS_ACCEPTED = 12;
+  
+  // Підтверджений
+  PAYOUT_STATUS_CONFIRMED = 13;
+  
+  // Очікує підтвердження
+  PAYOUT_STATUS_PENDING_CONFIRMATION = 14;
+  
+  // Очікує схвалення
+  PAYOUT_STATUS_PENDING_APPROVAL = 15;
+  
+  // Очікує модерації
+  PAYOUT_STATUS_PENDING_MODERATION = 16;
+  
+  // Очікує перевірки
+  PAYOUT_STATUS_PENDING_VERIFICATION = 17;
+  
+  // Очікує валідації
+  PAYOUT_STATUS_PENDING_VALIDATION = 18;
+  
+  // Очікує авторизації
+  PAYOUT_STATUS_PENDING_AUTHORIZATION = 19;
+  
+  // Очікує аутентифікації
+  PAYOUT_STATUS_PENDING_AUTHENTICATION = 20;
+  
+  // Очікує ідентифікації
+  PAYOUT_STATUS_PENDING_IDENTIFICATION = 21;
+  
+  // Очікує реєстрації
+  PAYOUT_STATUS_PENDING_REGISTRATION = 22;
+  
+  // Очікує активації
+  PAYOUT_STATUS_PENDING_ACTIVATION = 23;
+  
+  // Очікує деактивації
+  PAYOUT_STATUS_PENDING_DEACTIVATION = 24;
+  
+  // Очікує блокування
+  PAYOUT_STATUS_PENDING_BLOCKING = 25;
+  
+  // Очікує розблокування
+  PAYOUT_STATUS_PENDING_UNBLOCKING = 26;
+  
+  // Очікує бану
+  PAYOUT_STATUS_PENDING_BANNING = 27;
+  
+  // Очікує розбану
+  PAYOUT_STATUS_PENDING_UNBANNING = 28;
+  
+  // Очікує мутінгу
+  PAYOUT_STATUS_PENDING_MUTING = 29;
+  
+  // Очікує розмутування
+  PAYOUT_STATUS_PENDING_UNMUTING = 30;
+  
+  // Очікує кікування
+  PAYOUT_STATUS_PENDING_KICKING = 31;
+  
+  // Очікує виключення
+  PAYOUT_STATUS_PENDING_EXCLUSION = 32;
+  
+  // Очікує включення
+  PAYOUT_STATUS_PENDING_INCLUSION = 33;
+  
+  // Очікує додавання
+  PAYOUT_STATUS_PENDING_ADDITION = 34;
+  
+  // Очікує видалення
+  PAYOUT_STATUS_PENDING_REMOVAL = 35;
+  
+  // Очікує оновлення
+  PAYOUT_STATUS_PENDING_UPDATE = 36;
+  
+  // Очікує зміни
+  PAYOUT_STATUS_PENDING_CHANGE = 37;
+  
+  // Очікує модифікації
+  PAYOUT_STATUS_PENDING_MODIFICATION = 38;
+  
+  // Очікує адаптації
+  PAYOUT_STATUS_PENDING_ADAPTATION = 39;
+  
+  // Очікує кастомізації
+  PAYOUT_STATUS_PENDING_CUSTOMIZATION = 40;
+  
+  // Очікує персоналізації
+  PAYOUT_STATUS_PENDING_PERSONALIZATION = 41;
+  
+  // Очікує налаштування
+  PAYOUT_STATUS_PENDING_CONFIGURATION = 42;
+  
+  // Очікує конфігурації
+  PAYOUT_STATUS_PENDING_SETUP = 43;
+  
+  // Очікує установки
+  PAYOUT_STATUS_PENDING_INSTALLATION = 44;
+  
+  // Очікує інсталяції
+  PAYOUT_STATUS_PENDING_DEPLOYMENT = 45;
+  
+  // Очікує розгортання
+  PAYOUT_STATUS_PENDING_ROLLOUT = 46;
+  
+  // Очікує запуску
+  PAYOUT_STATUS_PENDING_LAUNCH = 47;
+  
+  // Очікує старту
+  PAYOUT_STATUS_PENDING_START = 48;
+  
+  // Очікує початку
+  PAYOUT_STATUS_PENDING_BEGINNING = 49;
+  
+  // Очікує ініціації
+  PAYOUT_STATUS_PENDING_INITIATION = 50;
+  
+  // Очікує ініціалізації
+  PAYOUT_STATUS_PENDING_INITIALIZATION = 51;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_PREPARATION = 52;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_SETUP = 53;
+  
+  // Очікує налаштування
+  PAYOUT_STATUS_PENDING_CONFIGURATION = 54;
+  
+  // Очікує конфігурації
+  PAYOUT_STATUS_PENDING_SETUP = 55;
+  
+  // Очікує установки
+  PAYOUT_STATUS_PENDING_INSTALLATION = 56;
+  
+  // Очікує інсталяції
+  PAYOUT_STATUS_PENDING_DEPLOYMENT = 57;
+  
+  // Очікує розгортання
+  PAYOUT_STATUS_PENDING_ROLLOUT = 58;
+  
+  // Очікує запуску
+  PAYOUT_STATUS_PENDING_LAUNCH = 59;
+  
+  // Очікує старту
+  PAYOUT_STATUS_PENDING_START = 60;
+  
+  // Очікує початку
+  PAYOUT_STATUS_PENDING_BEGINNING = 61;
+  
+  // Очікує ініціації
+  PAYOUT_STATUS_PENDING_INITIATION = 62;
+  
+  // Очікує ініціалізації
+  PAYOUT_STATUS_PENDING_INITIALIZATION = 63;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_PREPARATION = 64;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_SETUP = 65;
+  
+  // Очікує налаштування
+  PAYOUT_STATUS_PENDING_CONFIGURATION = 66;
+  
+  // Очікує конфігурації
+  PAYOUT_STATUS_PENDING_SETUP = 67;
+  
+  // Очікує установки
+  PAYOUT_STATUS_PENDING_INSTALLATION = 68;
+  
+  // Очікує інсталяції
+  PAYOUT_STATUS_PENDING_DEPLOYMENT = 69;
+  
+  // Очікує розгортання
+  PAYOUT_STATUS_PENDING_ROLLOUT = 70;
+  
+  // Очікує запуску
+  PAYOUT_STATUS_PENDING_LAUNCH = 71;
+  
+  // Очікує старту
+  PAYOUT_STATUS_PENDING_START = 72;
+  
+  // Очікує початку
+  PAYOUT_STATUS_PENDING_BEGINNING = 73;
+  
+  // Очікує ініціації
+  PAYOUT_STATUS_PENDING_INITIATION = 74;
+  
+  // Очікує ініціалізації
+  PAYOUT_STATUS_PENDING_INITIALIZATION = 75;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_PREPARATION = 76;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_SETUP = 77;
+  
+  // Очікує налаштування
+  PAYOUT_STATUS_PENDING_CONFIGURATION = 78;
+  
+  // Очікує конфігурації
+  PAYOUT_STATUS_PENDING_SETUP = 79;
+  
+  // Очікує установки
+  PAYOUT_STATUS_PENDING_INSTALLATION = 80;
+  
+  // Очікує інсталяції
+  PAYOUT_STATUS_PENDING_DEPLOYMENT = 81;
+  
+  // Очікує розгортання
+  PAYOUT_STATUS_PENDING_ROLLOUT = 82;
+  
+  // Очікує запуску
+  PAYOUT_STATUS_PENDING_LAUNCH = 83;
+  
+  // Очікує старту
+  PAYOUT_STATUS_PENDING_START = 84;
+  
+  // Очікує початку
+  PAYOUT_STATUS_PENDING_BEGINNING = 85;
+  
+  // Очікує ініціації
+  PAYOUT_STATUS_PENDING_INITIATION = 86;
+  
+  // Очікує ініціалізації
+  PAYOUT_STATUS_PENDING_INITIALIZATION = 87;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_PREPARATION = 88;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_SETUP = 89;
+  
+  // Очікує налаштування
+  PAYOUT_STATUS_PENDING_CONFIGURATION = 90;
+  
+  // Очікує конфігурації
+  PAYOUT_STATUS_PENDING_SETUP = 91;
+  
+  // Очікує установки
+  PAYOUT_STATUS_PENDING_INSTALLATION = 92;
+  
+  // Очікує інсталяції
+  PAYOUT_STATUS_PENDING_DEPLOYMENT = 93;
+  
+  // Очікує розгортання
+  PAYOUT_STATUS_PENDING_ROLLOUT = 94;
+  
+  // Очікує запуску
+  PAYOUT_STATUS_PENDING_LAUNCH = 95;
+  
+  // Очікує старту
+  PAYOUT_STATUS_PENDING_START = 96;
+  
+  // Очікує початку
+  PAYOUT_STATUS_PENDING_BEGINNING = 97;
+  
+  // Очікує ініціації
+  PAYOUT_STATUS_PENDING_INITIATION = 98;
+  
+  // Очікує ініціалізації
+  PAYOUT_STATUS_PENDING_INITIALIZATION = 99;
+  
+  // Очікує підготовки
+  PAYOUT_STATUS_PENDING_PREPARATION = 100;
+}

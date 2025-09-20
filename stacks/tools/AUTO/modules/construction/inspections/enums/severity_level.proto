@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package construction.inspections.enums;
+
+// Enumeration of severity levels for inspection findings
+enum SeverityLevel {
+  // Default value for unset severity level
+  SEVERITY_LEVEL_UNSPECIFIED = 0;
+  
+  // Critical severity - immediate action required
+  CRITICAL = 1;
+  
+  // High severity - urgent action required
+  HIGH = 2;
+  
+  // Medium severity - action required within reasonable time
+  MEDIUM = 3;
+  
+  // Low severity - minor issue, can be addressed later
+  LOW = 4;
+  
+  // Informational - no action required, just noted
+  INFORMATIONAL = 5;
+  
+  // Minor - very minor issue, cosmetic only
+  MINOR = 6;
+  
+  // Major - significant issue requiring attention
+  MAJOR = 7;
+  
+  // Severe - serious issue requiring immediate attention
+  SEVERE = 8;
+  
+  // Fatal - life-threatening or catastrophic issue
+  FATAL = 9;
+  
+  // Warning - potential issue that should be monitored
+  WARNING = 10;
+  
+  // Error - definite issue that needs correction
+  ERROR = 11;
+  
+  // Notice - general information or observation
+  NOTICE = 12;
+  
+  // Alert - attention-grabbing but not critical
+  ALERT = 13;
+  
+  // Emergency - requires immediate emergency response
+  EMERGENCY = 14;
+  
+  // Urgent - requires prompt action
+  URGENT = 15;
+  
+  // Normal - standard finding, no special action needed
+  NORMAL = 16;
+  
+  // Acceptable - within acceptable limits
+  ACCEPTABLE = 17;
+  
+  // Unacceptable - outside acceptable limits
+  UNACCEPTABLE = 18;
+  
+  // Deficient - below required standards
+  DEFICIENT = 19;
+  
+  // Satisfactory - meets minimum requirements
+  SATISFACTORY = 20;
+  
+  // Good - exceeds minimum requirements
+  GOOD = 21;
+  
+  // Excellent - exceeds expectations
+  EXCELLENT = 22;
+  
+  // Outstanding - exceptional quality
+  OUTSTANDING = 23;
+}

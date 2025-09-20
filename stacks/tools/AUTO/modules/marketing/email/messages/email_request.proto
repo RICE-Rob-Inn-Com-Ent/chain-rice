@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package marketing.email.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/email/enums/email_status.proto";
+
+// Request message for creating a new email
+message CreateEmailRequest {
+  // Email subject
+  string subject = 1;
+  
+  // Email content/body
+  string content = 2;
+  
+  // Email template ID (if using template)
+  string template_id = 3;
+  
+  // Recipient email addresses
+  repeated string recipients = 4;
+  
+  // Sender email address
+  string sender_email = 5;
+  
+  // Sender name
+  string sender_name = 6;
+  
+  // Campaign ID (if applicable)
+  string campaign_id = 7;
+  
+  // Scheduled send time
+  google.protobuf.Timestamp scheduled_time = 8;
+  
+  // Email priority
+  int32 priority = 9;
+  
+  // Email tags
+  repeated string tags = 10;
+}
+
+// Request message for getting an email by ID
+message GetEmailRequest {
+  // Email ID
+  string id = 1;
+}
+
+// Request message for listing emails
+message ListEmailRequest {
+  // Page number for pagination
+  int32 page = 1;
+  
+  // Number of items per page
+  int32 page_size = 2;
+  
+  // Filter by status
+  marketing.email.enums.EmailStatus status = 3;
+  
+  // Filter by campaign ID
+  string campaign_id = 4;
+  
+  // Filter by sender email
+  string sender_email = 5;
+  
+  // Filter by tags
+  repeated string tags = 6;
+  
+  // Filter by date range - start
+  google.protobuf.Timestamp start_date = 7;
+  
+  // Filter by date range - end
+  google.protobuf.Timestamp end_date = 8;
+}
+
+// Request message for updating an email
+message UpdateEmailRequest {
+  // Email ID
+  string id = 1;
+  
+  // Email subject
+  string subject = 2;
+  
+  // Email content/body
+  string content = 3;
+  
+  // Email template ID (if using template)
+  string template_id = 4;
+  
+  // Recipient email addresses
+  repeated string recipients = 5;
+  
+  // Sender email address
+  string sender_email = 6;
+  
+  // Sender name
+  string sender_name = 7;
+  
+  // Scheduled send time
+  google.protobuf.Timestamp scheduled_time = 8;
+  
+  // Email priority
+  int32 priority = 9;
+  
+  // Email status
+  marketing.email.enums.EmailStatus status = 10;
+  
+  // Email tags
+  repeated string tags = 11;
+}
+
+// Request message for deleting an email
+message DeleteEmailRequest {
+  // Email ID
+  string id = 1;
+}

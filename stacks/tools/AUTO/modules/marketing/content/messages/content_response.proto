@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package marketing.content.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/content/enums/content_type.proto";
+
+// Content data transfer object
+message Content {
+  // Content ID
+  string id = 1;
+  
+  // Content title
+  string title = 2;
+  
+  // Content description
+  string description = 3;
+  
+  // Content type
+  marketing.content.enums.ContentType type = 4;
+  
+  // Content body/text
+  string body = 5;
+  
+  // Content tags
+  repeated string tags = 6;
+  
+  // Author ID
+  string author_id = 7;
+  
+  // Campaign ID (if applicable)
+  string campaign_id = 8;
+  
+  // SEO metadata
+  string seo_title = 9;
+  string seo_description = 10;
+  repeated string seo_keywords = 11;
+  
+  // Publication date
+  google.protobuf.Timestamp publish_date = 12;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 13;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 14;
+  
+  // Content performance metrics
+  ContentMetrics metrics = 15;
+}
+
+// Content performance metrics
+message ContentMetrics {
+  // Total views
+  int64 total_views = 1;
+  
+  // Total likes
+  int64 total_likes = 2;
+  
+  // Total shares
+  int64 total_shares = 3;
+  
+  // Total comments
+  int64 total_comments = 4;
+  
+  // Engagement rate
+  double engagement_rate = 5;
+  
+  // Time spent reading (in seconds)
+  double avg_time_spent = 6;
+  
+  // Bounce rate
+  double bounce_rate = 7;
+  
+  // Conversion rate
+  double conversion_rate = 8;
+}
+
+// Response message for creating content
+message CreateContentResponse {
+  // Created content
+  Content content = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for getting content
+message GetContentResponse {
+  // Content data
+  Content content = 1;
+}
+
+// Response message for listing content
+message ListContentResponse {
+  // List of content
+  repeated Content content = 1;
+  
+  // Total count of content items
+  int32 total_count = 2;
+  
+  // Current page number
+  int32 page = 3;
+  
+  // Number of items per page
+  int32 page_size = 4;
+}
+
+// Response message for updating content
+message UpdateContentResponse {
+  // Updated content
+  Content content = 1;
+  
+  // Success message
+  string message = 2;
+}
+
+// Response message for deleting content
+message DeleteContentResponse {
+  // Success message
+  string message = 1;
+}

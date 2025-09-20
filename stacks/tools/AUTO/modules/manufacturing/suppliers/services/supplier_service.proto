@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package manufacturing.suppliers.services;
+
+import "manufacturing/suppliers/messages/supplier_request.proto";
+import "manufacturing/suppliers/messages/supplier_response.proto";
+
+// Supplier Service
+// Provides comprehensive supplier management capabilities
+// including supplier lifecycle management, performance tracking, and certification management
+service SupplierService {
+  
+  // Create a new supplier
+  // Creates a new supplier with complete company, contact, and business information
+  rpc CreateSupplier(manufacturing.suppliers.messages.CreateSupplierRequest)
+      returns (manufacturing.suppliers.messages.CreateSupplierResponse);
+  
+  // Get a specific supplier by ID
+  // Retrieves detailed information about a supplier
+  rpc GetSupplier(manufacturing.suppliers.messages.GetSupplierRequest)
+      returns (manufacturing.suppliers.messages.GetSupplierResponse);
+  
+  // List suppliers with filtering and pagination
+  // Retrieves a paginated list of suppliers with optional filtering
+  rpc ListSuppliers(manufacturing.suppliers.messages.ListSuppliersRequest)
+      returns (manufacturing.suppliers.messages.ListSuppliersResponse);
+  
+  // Update an existing supplier
+  // Updates supplier details including company, contact, and business information
+  rpc UpdateSupplier(manufacturing.suppliers.messages.UpdateSupplierRequest)
+      returns (manufacturing.suppliers.messages.UpdateSupplierResponse);
+  
+  // Delete a supplier
+  // Removes a supplier from the system
+  rpc DeleteSupplier(manufacturing.suppliers.messages.DeleteSupplierRequest)
+      returns (manufacturing.suppliers.messages.DeleteSupplierResponse);
+  
+  // Approve a supplier
+  // Approves a supplier and sets their relationship type and credit limit
+  rpc ApproveSupplier(manufacturing.suppliers.messages.ApproveSupplierRequest)
+      returns (manufacturing.suppliers.messages.ApproveSupplierResponse);
+  
+  // Reject a supplier
+  // Rejects a supplier with specified reason
+  rpc RejectSupplier(manufacturing.suppliers.messages.RejectSupplierRequest)
+      returns (manufacturing.suppliers.messages.RejectSupplierResponse);
+  
+  // Suspend a supplier
+  // Suspends a supplier for a specified duration with reason
+  rpc SuspendSupplier(manufacturing.suppliers.messages.SuspendSupplierRequest)
+      returns (manufacturing.suppliers.messages.SuspendSupplierResponse);
+  
+  // Reactivate a supplier
+  // Reactivates a previously suspended supplier
+  rpc ReactivateSupplier(manufacturing.suppliers.messages.ReactivateSupplierRequest)
+      returns (manufacturing.suppliers.messages.ReactivateSupplierResponse);
+  
+  // Update supplier performance
+  // Updates supplier performance rating and metrics
+  rpc UpdateSupplierPerformance(manufacturing.suppliers.messages.UpdateSupplierPerformanceRequest)
+      returns (manufacturing.suppliers.messages.UpdateSupplierPerformanceResponse);
+  
+  // Add supplier certification
+  // Adds a new quality certification to a supplier
+  rpc AddSupplierCertification(manufacturing.suppliers.messages.AddSupplierCertificationRequest)
+      returns (manufacturing.suppliers.messages.AddSupplierCertificationResponse);
+  
+  // Update supplier certification
+  // Updates an existing quality certification for a supplier
+  rpc UpdateSupplierCertification(manufacturing.suppliers.messages.UpdateSupplierCertificationRequest)
+      returns (manufacturing.suppliers.messages.UpdateSupplierCertificationResponse);
+  
+  // Remove supplier certification
+  // Removes a quality certification from a supplier
+  rpc RemoveSupplierCertification(manufacturing.suppliers.messages.RemoveSupplierCertificationRequest)
+      returns (manufacturing.suppliers.messages.RemoveSupplierCertificationResponse);
+}

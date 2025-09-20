@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package entertainment.content.messages;
+
+// Медіа актив контенту
+message ContentAsset {
+  string id = 1;
+  string content_id = 2;
+  string name = 3;
+  string description = 4;
+  
+  // Тип активу
+  AssetType asset_type = 5;
+  string mime_type = 6;
+  string file_extension = 7;
+  
+  // Розміри та якість
+  int64 file_size_bytes = 8;
+  int32 width = 9;
+  int32 height = 10;
+  int32 bitrate = 11;
+  int32 sample_rate = 12;
+  int32 channels = 13;
+  
+  // URL та шляхи
+  string url = 14;
+  string cdn_url = 15;
+  string thumbnail_url = 16;
+  string preview_url = 17;
+  
+  // Статус обробки
+  ProcessingStatus processing_status = 18;
+  string processing_error = 19;
+  int32 processing_progress = 20;
+  
+  // Версії та варіанти
+  string version = 21;
+  repeated string variants = 22;
+  string master_asset_id = 23;
+  
+  // Метадані
+  map<string, string> metadata = 24;
+  repeated string tags = 25;
+  
+  // Дати
+  int64 created_at = 26;
+  int64 updated_at = 27;
+  int64 processed_at = 28;
+  
+  // Додаткові поля
+  bool is_encrypted = 29;
+  string encryption_key_id = 30;
+  string checksum = 31;
+  string external_id = 32;
+}
+
+// Типи активів
+enum AssetType {
+  ASSET_TYPE_UNSPECIFIED = 0;
+  VIDEO = 1;
+  AUDIO = 2;
+  IMAGE = 3;
+  SUBTITLE = 4;
+  CAPTION = 5;
+  THUMBNAIL = 6;
+  POSTER = 7;
+  TRAILER = 8;
+  PREVIEW = 9;
+  MANIFEST = 10;
+  METADATA = 11;
+  ARCHIVE = 12;
+  DOCUMENT = 13;
+  INTERACTIVE = 14;
+}
+
+// Статуси обробки
+enum ProcessingStatus {
+  PROCESSING_STATUS_UNSPECIFIED = 0;
+  PENDING = 1;
+  PROCESSING = 2;
+  COMPLETED = 3;
+  FAILED = 4;
+  CANCELLED = 5;
+  QUEUED = 6;
+  RETRYING = 7;
+}

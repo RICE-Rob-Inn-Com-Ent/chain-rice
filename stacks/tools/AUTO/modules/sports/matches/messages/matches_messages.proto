@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package sports.matches.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "sports/matches/enums/matches_enums.proto";
+
+option go_package = "github.com/rice-dev/sports/matches/v1";
+
+// Score represents the score for a team in a match
+message Score {
+  int32 goals = 1;                         // Number of goals
+  int32 points = 2;                        // Number of points (for point-based sports)
+  int32 assists = 3;                       // Number of assists
+  google.protobuf.Int32Value first_half_goals = 4;  // Goals in first half
+  google.protobuf.Int32Value second_half_goals = 5; // Goals in second half
+  google.protobuf.Int32Value extra_time_goals = 6;  // Goals in extra time
+  google.protobuf.Int32Value penalty_goals = 7;     // Goals from penalties
+  map<string, int32> additional_stats = 8; // Additional sport-specific stats
+}
+
+// Match represents a sports match with all its properties
+message Match {
+  string id = 1;                           // Unique identifier for the match
+  string league_id = 2;                    // ID of the league this match belongs to
+  string home_team_id = 3;                 // ID of the home team
+  string away_team_id = 4;                 // ID of the away team
+  string venue_id = 5;                     // ID of the venue where match is played
+  string match_number = 6;                 // Match number in the season/competition
+  MatchStatus status = 7;                  // Current status of the match
+  MatchType type = 8;                      // Type of match
+  MatchResult result = 9;                  // Result of the match (if finished)
+  MatchPhase phase = 10;                   // Current phase of the match
+  MatchImportance importance = 11;         // Importance level of the match
+  google.protobuf.Timestamp scheduled_time = 12; // When the match is scheduled
+  google.protobuf.Timestamp start_time = 13;     // When the match actually started
+  google.protobuf.Timestamp end_time = 14;       // When the match ended
+  google.protobuf.Int32Value duration_minutes = 15; // Match duration in minutes
+  Score home_score = 16;                   // Home team score
+  Score away_score = 17;                   // Away team score
+  WeatherCondition weather = 18;           // Weather conditions
+  int32 attendance = 19;                   // Number of spectators
+  string referee = 20;                     // Main referee name
+  repeated string assistant_referees = 21; // Assistant referees
+  string fourth_official = 22;             // Fourth official name
+  google.protobuf.StringValue notes = 23; // Additional notes about the match
+  google.protobuf.Timestamp created_at = 24; // When the match was created
+  google.protobuf.Timestamp updated_at = 25; // When the match was last updated
+  map<string, string> metadata = 26;      // Additional metadata
+}
+
+// CreateMatchRequest represents the request to create a new match
+message CreateMatchRequest {
+  string league_id = 1;                    // League ID (required)
+  string home_team_id = 2;                 // Home team ID (required)
+  string away_team_id = 3;                 // Away team ID (required)
+  google.protobuf.StringValue venue_id = 4; // Optional venue ID
+  google.protobuf.StringValue match_number = 5; // Optional match number
+  MatchType type = 6;                      // Match type (required)
+  MatchImportance importance = 7;          // Match importance (required)
+  google.protobuf.Timestamp scheduled_time = 8; // Scheduled time (required)
+  google.protobuf.Int32Value duration_minutes = 9; // Optional duration
+  WeatherCondition weather = 10;           // Optional weather condition
+  google.protobuf.StringValue referee = 11; // Optional referee
+  repeated string assistant_referees = 12; // Optional assistant referees
+  google.protobuf.StringValue fourth_official = 13; // Optional fourth official
+  google.protobuf.StringValue notes = 14; // Optional notes
+  map<string, string> metadata = 15;      // Optional metadata
+}
+
+// CreateMatchResponse represents the response after creating a match
+message CreateMatchResponse {
+  Match match = 1;                         // The created match
+  bool success = 2;                        // Whether the operation was successful
+  string message = 3;                      // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// GetMatchRequest represents the request to get a match by ID
+message GetMatchRequest {
+  string match_id = 1;                     // ID of the match to retrieve
+}
+
+// GetMatchResponse represents the response containing match data
+message GetMatchResponse {
+  Match match = 1;                         // The requested match
+  bool success = 2;                        // Whether the operation was successful
+  string message = 3;                      // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// ListMatchesRequest represents the request to list matches with filters
+message ListMatchesRequest {
+  google.protobuf.Int32Value page_size = 1;    // Number of matches per page
+  google.protobuf.StringValue page_token = 2;  // Token for pagination
+  google.protobuf.StringValue league_id = 3;   // Filter by league ID
+  google.protobuf.StringValue home_team_id = 4; // Filter by home team ID
+  google.protobuf.StringValue away_team_id = 5; // Filter by away team ID
+  google.protobuf.StringValue venue_id = 6;    // Filter by venue ID
+  MatchStatus status = 7;                     // Filter by match status
+  MatchType type = 8;                         // Filter by match type
+  google.protobuf.Timestamp start_date = 9;   // Filter matches from this date
+  google.protobuf.Timestamp end_date = 10;    // Filter matches until this date
+  google.protobuf.StringValue search_query = 11; // Search query
+}
+
+// ListMatchesResponse represents the response containing a list of matches
+message ListMatchesResponse {
+  repeated Match matches = 1;              // List of matches
+  string next_page_token = 2;              // Token for next page
+  int32 total_count = 3;                   // Total number of matches matching filters
+  bool success = 4;                        // Whether the operation was successful
+  string message = 5;                      // Response message
+  google.protobuf.Timestamp timestamp = 6; // Response timestamp
+}
+
+// UpdateMatchRequest represents the request to update a match
+message UpdateMatchRequest {
+  string match_id = 1;                     // ID of the match to update
+  google.protobuf.StringValue league_id = 2; // Optional new league ID
+  google.protobuf.StringValue home_team_id = 3; // Optional new home team ID
+  google.protobuf.StringValue away_team_id = 4; // Optional new away team ID
+  google.protobuf.StringValue venue_id = 5; // Optional new venue ID
+  google.protobuf.StringValue match_number = 6; // Optional new match number
+  MatchStatus status = 7;                  // Optional new status
+  MatchType type = 8;                      // Optional new type
+  MatchResult result = 9;                  // Optional new result
+  MatchPhase phase = 10;                   // Optional new phase
+  MatchImportance importance = 11;         // Optional new importance
+  google.protobuf.Timestamp scheduled_time = 12; // Optional new scheduled time
+  google.protobuf.Timestamp start_time = 13;     // Optional new start time
+  google.protobuf.Timestamp end_time = 14;       // Optional new end time
+  google.protobuf.Int32Value duration_minutes = 15; // Optional new duration
+  Score home_score = 16;                   // Optional new home score
+  Score away_score = 17;                   // Optional new away score
+  WeatherCondition weather = 18;           // Optional new weather
+  google.protobuf.Int32Value attendance = 19; // Optional new attendance
+  google.protobuf.StringValue referee = 20; // Optional new referee
+  repeated string assistant_referees = 21; // Optional new assistant referees
+  google.protobuf.StringValue fourth_official = 22; // Optional new fourth official
+  google.protobuf.StringValue notes = 23; // Optional new notes
+  map<string, string> metadata = 24;      // Optional new metadata
+}
+
+// UpdateMatchResponse represents the response after updating a match
+message UpdateMatchResponse {
+  Match match = 1;                         // The updated match
+  bool success = 2;                        // Whether the operation was successful
+  string message = 3;                      // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// DeleteMatchRequest represents the request to delete a match
+message DeleteMatchRequest {
+  string match_id = 1;                     // ID of the match to delete
+}
+
+// DeleteMatchResponse represents the response after deleting a match
+message DeleteMatchResponse {
+  bool success = 1;                        // Whether the operation was successful
+  string message = 2;                      // Response message
+  google.protobuf.Timestamp timestamp = 3; // Response timestamp
+}

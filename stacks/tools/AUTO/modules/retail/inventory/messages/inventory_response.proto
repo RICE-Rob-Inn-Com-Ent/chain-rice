@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package retail.inventory.messages;
+
+import "inventory/messages/inventory_request.proto";
+import "google/rpc/status.proto";
+
+// CreateInventoryResponse contains the result of creating a new inventory item
+message CreateInventoryResponse {
+  // The created inventory item
+  InventoryItem inventory_item = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// GetInventoryResponse contains the result of retrieving an inventory item
+message GetInventoryResponse {
+  // The requested inventory item
+  InventoryItem inventory_item = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// ListInventoryResponse contains the result of listing inventory items
+message ListInventoryResponse {
+  // List of inventory items matching the request criteria
+  repeated InventoryItem inventory_items = 1;
+  
+  // Token to retrieve the next page of results
+  string next_page_token = 2;
+  
+  // Total number of inventory items matching the criteria
+  int32 total_count = 3;
+  
+  // Total value of inventory items
+  double total_value = 4;
+  
+  // Operation status
+  google.rpc.Status status = 5;
+}
+
+// UpdateInventoryResponse contains the result of updating an inventory item
+message UpdateInventoryResponse {
+  // The updated inventory item
+  InventoryItem inventory_item = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// AdjustInventoryResponse contains the result of adjusting inventory
+message AdjustInventoryResponse {
+  // The updated inventory item
+  InventoryItem inventory_item = 1;
+  
+  // The inventory movement record
+  InventoryMovement movement = 2;
+  
+  // Operation status
+  google.rpc.Status status = 3;
+}
+
+// DeleteInventoryResponse contains the result of deleting an inventory item
+message DeleteInventoryResponse {
+  // Indicates whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}

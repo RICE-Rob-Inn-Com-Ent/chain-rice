@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package government.reporting.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+// Подія звіту
+message ReportEvent {
+  string event_id = 1;                      // Унікальний ідентифікатор події
+  string report_id = 2;                     // ID звіту
+  EventType event_type = 3;                 // Тип події
+  google.protobuf.Timestamp timestamp = 4;  // Час події
+  string description = 5;                   // Опис події
+  google.protobuf.Any event_data = 6;       // Додаткові дані події
+  string user_id = 7;                       // ID користувача
+  string source_system = 8;                 // Система-джерело
+}
+
+// Типи подій звітів
+enum EventType {
+  EVENT_TYPE_UNSPECIFIED = 0;
+  EVENT_TYPE_REPORT_CREATED = 1;            // Звіт створено
+  EVENT_TYPE_REPORT_UPDATED = 2;            // Звіт оновлено
+  EVENT_TYPE_REPORT_SUBMITTED = 3;          // Звіт подано
+  EVENT_TYPE_REPORT_APPROVED = 4;           // Звіт затверджено
+  EVENT_TYPE_REPORT_REJECTED = 5;           // Звіт відхилено
+  EVENT_TYPE_REPORT_PUBLISHED = 6;          // Звіт опубліковано
+  EVENT_TYPE_REPORT_GENERATED = 7;          // Звіт згенеровано
+  EVENT_TYPE_REPORT_EXPORTED = 8;           // Звіт експортовано
+  EVENT_TYPE_DATA_UPDATED = 9;              // Дані оновлено
+  EVENT_TYPE_SCHEDULE_UPDATED = 10;         // Розклад оновлено
+}
+
+// Запит на створення події
+message CreateReportEventRequest {
+  string report_id = 1;
+  EventType event_type = 2;
+  string description = 3;
+  google.protobuf.Any event_data = 4;
+  string user_id = 5;
+  string source_system = 6;
+}
+
+// Результат створення події
+message ReportEventResponse {
+  bool success = 1;
+  string message = 2;
+  ReportEvent event = 3;
+}

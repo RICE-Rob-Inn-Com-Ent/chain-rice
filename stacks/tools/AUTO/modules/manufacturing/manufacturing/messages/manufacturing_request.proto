@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package manufacturing.manufacturing.messages;
+
+import "google/protobuf/timestamp.proto";
+import "manufacturing/manufacturing/enums/status.proto";
+
+// Request message for creating a new manufacturing order
+message CreateManufacturingOrderRequest {
+  // Product identifier to be manufactured
+  string product_id = 1;
+  
+  // Quantity to be manufactured
+  int32 quantity = 2;
+  
+  // Priority level for this manufacturing order
+  manufacturing.manufacturing.enums.WorkOrderPriority priority = 3;
+  
+  // Target completion date
+  google.protobuf.Timestamp target_completion_date = 4;
+  
+  // Production line identifier
+  string production_line_id = 5;
+  
+  // Additional notes or specifications
+  string notes = 6;
+  
+  // Required materials list
+  repeated MaterialRequirement materials = 7;
+  
+  // Quality requirements
+  QualityRequirement quality_requirements = 8;
+}
+
+// Request message for retrieving a manufacturing order
+message GetManufacturingOrderRequest {
+  // Unique identifier of the manufacturing order
+  string order_id = 1;
+}
+
+// Request message for listing manufacturing orders
+message ListManufacturingOrdersRequest {
+  // Page number for pagination
+  int32 page = 1;
+  
+  // Number of items per page
+  int32 page_size = 2;
+  
+  // Filter by status
+  manufacturing.manufacturing.enums.ManufacturingStatus status = 3;
+  
+  // Filter by production line
+  string production_line_id = 4;
+  
+  // Filter by priority
+  manufacturing.manufacturing.enums.WorkOrderPriority priority = 5;
+  
+  // Filter by date range - start
+  google.protobuf.Timestamp start_date = 6;
+  
+  // Filter by date range - end
+  google.protobuf.Timestamp end_date = 7;
+  
+  // Search by product ID
+  string product_id = 8;
+}
+
+// Request message for updating a manufacturing order
+message UpdateManufacturingOrderRequest {
+  // Unique identifier of the manufacturing order
+  string order_id = 1;
+  
+  // New status for the order
+  manufacturing.manufacturing.enums.ManufacturingStatus status = 2;
+  
+  // Updated quantity
+  int32 quantity = 3;
+  
+  // Updated priority
+  manufacturing.manufacturing.enums.WorkOrderPriority priority = 4;
+  
+  // Updated target completion date
+  google.protobuf.Timestamp target_completion_date = 5;
+  
+  // Updated production line
+  string production_line_id = 6;
+  
+  // Updated notes
+  string notes = 7;
+  
+  // Updated materials list
+  repeated MaterialRequirement materials = 8;
+  
+  // Updated quality requirements
+  QualityRequirement quality_requirements = 9;
+}
+
+// Request message for deleting a manufacturing order
+message DeleteManufacturingOrderRequest {
+  // Unique identifier of the manufacturing order
+  string order_id = 1;
+}
+
+// Request message for starting a manufacturing process
+message StartManufacturingProcessRequest {
+  // Unique identifier of the manufacturing order
+  string order_id = 1;
+  
+  // Production line identifier
+  string production_line_id = 2;
+  
+  // Operator identifier
+  string operator_id = 3;
+  
+  // Additional notes
+  string notes = 4;
+}
+
+// Request message for pausing a manufacturing process
+message PauseManufacturingProcessRequest {
+  // Unique identifier of the manufacturing order
+  string order_id = 1;
+  
+  // Reason for pausing
+  string reason = 2;
+  
+  // Operator identifier
+  string operator_id = 3;
+}
+
+// Request message for resuming a manufacturing process
+message ResumeManufacturingProcessRequest {
+  // Unique identifier of the manufacturing order
+  string order_id = 1;
+  
+  // Operator identifier
+  string operator_id = 2;
+  
+  // Additional notes
+  string notes = 3;
+}
+
+// Material requirement for manufacturing
+message MaterialRequirement {
+  // Material identifier
+  string material_id = 1;
+  
+  // Required quantity
+  int32 quantity = 2;
+  
+  // Unit of measurement
+  string unit = 3;
+  
+  // Whether this material is critical
+  bool is_critical = 4;
+  
+  // Supplier preference
+  string preferred_supplier_id = 5;
+}
+
+// Quality requirements for manufacturing
+message QualityRequirement {
+  // Quality level required
+  string quality_level = 1;
+  
+  // Inspection requirements
+  repeated string inspection_points = 2;
+  
+  // Tolerance specifications
+  map<string, double> tolerances = 3;
+  
+  // Testing requirements
+  repeated string test_requirements = 4;
+  
+  // Documentation requirements
+  repeated string documentation_requirements = 5;
+}

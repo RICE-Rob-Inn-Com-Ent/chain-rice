@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package healthcare.appointments.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/enums";
+
+// Appointment status enumeration
+enum AppointmentStatus {
+  APPOINTMENT_STATUS_UNSPECIFIED = 0;
+  APPOINTMENT_STATUS_SCHEDULED = 1;
+  APPOINTMENT_STATUS_COMPLETED = 2;
+  APPOINTMENT_STATUS_CANCELED = 3;
+  APPOINTMENT_STATUS_NO_SHOW = 4;
+  APPOINTMENT_STATUS_RESCHEDULED = 5;
+  APPOINTMENT_STATUS_IN_PROGRESS = 6;
+}

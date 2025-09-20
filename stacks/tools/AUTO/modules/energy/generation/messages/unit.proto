@@ -1,0 +1,483 @@
+syntax = "proto3";
+
+package energy.generation.messages;
+
+import "energy/generation/enums/generation_status.proto";
+import "energy/generation/enums/fuel_type.proto";
+
+// Power generation unit
+message Unit {
+  // Unique identifier for the unit
+  string id = 1;
+  
+  // Unit name
+  string name = 2;
+  
+  // Plant ID this unit belongs to
+  string plant_id = 3;
+  
+  // Unit type
+  string type = 4;
+  
+  // Unit status
+  energy.generation.enums.GenerationStatus status = 5;
+  
+  // Unit specifications
+  UnitSpecifications specifications = 6;
+  
+  // Unit performance
+  UnitPerformance performance = 7;
+  
+  // Unit control
+  UnitControl control = 8;
+  
+  // Unit maintenance
+  UnitMaintenance maintenance = 9;
+  
+  // Unit fuel
+  UnitFuel fuel = 10;
+  
+  // Unit emissions
+  UnitEmissions emissions = 11;
+  
+  // Unit economics
+  UnitEconomics economics = 12;
+  
+  // Additional metadata
+  map<string, string> metadata = 13;
+  
+  // Timestamp when this unit was created (unix milliseconds)
+  int64 created_at = 14;
+  
+  // Timestamp when this unit was last updated (unix milliseconds)
+  int64 updated_at = 15;
+}
+
+// Unit technical specifications
+message UnitSpecifications {
+  // Rated power in MW
+  double rated_power = 1;
+  
+  // Minimum power in MW
+  double minimum_power = 2;
+  
+  // Maximum power in MW
+  double maximum_power = 3;
+  
+  // Rated voltage in kV
+  double rated_voltage = 4;
+  
+  // Rated current in A
+  double rated_current = 5;
+  
+  // Rated frequency in Hz
+  double rated_frequency = 6;
+  
+  // Power factor
+  double power_factor = 7;
+  
+  // Efficiency percentage
+  double efficiency = 8;
+  
+  // Heat rate in BTU/kWh
+  double heat_rate = 9;
+  
+  // Startup time in minutes
+  int32 startup_time_minutes = 10;
+  
+  // Shutdown time in minutes
+  int32 shutdown_time_minutes = 11;
+  
+  // Ramp rate in MW per minute
+  double ramp_rate = 12;
+  
+  // Minimum uptime in hours
+  int32 minimum_uptime_hours = 13;
+  
+  // Minimum downtime in hours
+  int32 minimum_downtime_hours = 14;
+  
+  // Fuel types
+  repeated energy.generation.enums.FuelType fuel_types = 15;
+  
+  // Cooling system type
+  string cooling_system_type = 16;
+  
+  // Water consumption in gallons per hour
+  double water_consumption = 17;
+  
+  // Dimensions
+  string dimensions = 18;
+  
+  // Weight in tons
+  double weight_tons = 19;
+  
+  // Manufacturer
+  string manufacturer = 20;
+  
+  // Model
+  string model = 21;
+  
+  // Serial number
+  string serial_number = 22;
+  
+  // Installation date (unix milliseconds)
+  int64 installation_date = 23;
+  
+  // Commissioning date (unix milliseconds)
+  int64 commissioning_date = 24;
+}
+
+// Unit performance metrics
+message UnitPerformance {
+  // Current power output in MW
+  double current_power = 1;
+  
+  // Current efficiency percentage
+  double current_efficiency = 2;
+  
+  // Current heat rate in BTU/kWh
+  double current_heat_rate = 3;
+  
+  // Availability percentage
+  double availability = 4;
+  
+  // Capacity factor
+  double capacity_factor = 5;
+  
+  // Load factor
+  double load_factor = 6;
+  
+  // Forced outage rate
+  double forced_outage_rate = 7;
+  
+  // Planned outage rate
+  double planned_outage_rate = 8;
+  
+  // Mean time between failures in hours
+  double mtbf = 9;
+  
+  // Mean time to repair in hours
+  double mttr = 10;
+  
+  // Energy production in MWh
+  double energy_production = 11;
+  
+  // Operating hours
+  double operating_hours = 12;
+  
+  // Performance rating
+  string performance_rating = 13;
+  
+  // Performance trends
+  repeated PerformanceTrend performance_trends = 14;
+}
+
+// Performance trend data
+message PerformanceTrend {
+  // Trend date (unix milliseconds)
+  int64 date = 1;
+  
+  // Trend metric name
+  string metric = 2;
+  
+  // Trend value
+  double value = 3;
+  
+  // Trend unit
+  string unit = 4;
+  
+  // Trend direction
+  string direction = 5;
+}
+
+// Unit control information
+message UnitControl {
+  // Control mode
+  string control_mode = 1;
+  
+  // Control setpoint in MW
+  double control_setpoint = 2;
+  
+  // Control deadband in MW
+  double control_deadband = 3;
+  
+  // Control response time in seconds
+  int32 control_response_time = 4;
+  
+  // Automatic control enabled
+  bool automatic_control_enabled = 1;
+  
+  // Remote control enabled
+  bool remote_control_enabled = 2;
+  
+  // Local control enabled
+  bool local_control_enabled = 3;
+  
+  // Emergency stop enabled
+  bool emergency_stop_enabled = 4;
+  
+  // Load following enabled
+  bool load_following_enabled = 5;
+  
+  // Frequency regulation enabled
+  bool frequency_regulation_enabled = 6;
+  
+  // Voltage regulation enabled
+  bool voltage_regulation_enabled = 7;
+  
+  // Reactive power support enabled
+  bool reactive_power_support_enabled = 8;
+  
+  // Grid synchronization enabled
+  bool grid_synchronization_enabled = 9;
+  
+  // Islanding capability
+  bool islanding_capability = 10;
+  
+  // Black start capability
+  bool black_start_capability = 11;
+}
+
+// Unit maintenance information
+message UnitMaintenance {
+  // Last maintenance date (unix milliseconds)
+  int64 last_maintenance_date = 1;
+  
+  // Next maintenance date (unix milliseconds)
+  int64 next_maintenance_date = 2;
+  
+  // Maintenance interval in days
+  int32 maintenance_interval_days = 3;
+  
+  // Maintenance type
+  string maintenance_type = 4;
+  
+  // Maintenance status
+  string maintenance_status = 5;
+  
+  // Maintenance team
+  string maintenance_team = 6;
+  
+  // Maintenance supervisor
+  string maintenance_supervisor = 7;
+  
+  // Maintenance cost
+  double maintenance_cost = 8;
+  
+  // Maintenance duration in hours
+  double maintenance_duration_hours = 9;
+  
+  // Maintenance history
+  repeated MaintenanceRecord maintenance_history = 10;
+  
+  // Spare parts inventory
+  repeated SparePart spare_parts = 11;
+}
+
+// Maintenance record
+message MaintenanceRecord {
+  // Maintenance date (unix milliseconds)
+  int64 maintenance_date = 1;
+  
+  // Maintenance type
+  string maintenance_type = 2;
+  
+  // Maintenance description
+  string description = 3;
+  
+  // Maintenance performed by
+  string performed_by = 4;
+  
+  // Maintenance duration in hours
+  double duration_hours = 5;
+  
+  // Maintenance cost
+  double cost = 6;
+  
+  // Maintenance results
+  string results = 7;
+  
+  // Maintenance recommendations
+  repeated string recommendations = 8;
+  
+  // Maintenance notes
+  string notes = 9;
+}
+
+// Spare part information
+message SparePart {
+  // Part number
+  string part_number = 1;
+  
+  // Part description
+  string description = 2;
+  
+  // Part quantity
+  int32 quantity = 3;
+  
+  // Part location
+  string location = 4;
+  
+  // Part cost
+  double cost = 5;
+  
+  // Part supplier
+  string supplier = 6;
+  
+  // Part lead time in days
+  int32 lead_time_days = 7;
+  
+  // Part criticality
+  string criticality = 8;
+}
+
+// Unit fuel information
+message UnitFuel {
+  // Primary fuel type
+  energy.generation.enums.FuelType primary_fuel = 1;
+  
+  // Secondary fuel types
+  repeated energy.generation.enums.FuelType secondary_fuels = 2;
+  
+  // Fuel consumption rate in tons per hour
+  double fuel_consumption_rate = 3;
+  
+  // Fuel inventory in tons
+  double fuel_inventory = 4;
+  
+  // Fuel cost per ton in USD
+  double fuel_cost_per_ton = 5;
+  
+  // Fuel delivery schedule
+  repeated FuelDelivery fuel_deliveries = 6;
+  
+  // Fuel quality specifications
+  FuelQualitySpecifications fuel_quality = 7;
+}
+
+// Fuel delivery information
+message FuelDelivery {
+  // Delivery date (unix milliseconds)
+  int64 delivery_date = 1;
+  
+  // Delivery quantity in tons
+  double delivery_quantity = 2;
+  
+  // Delivery cost in USD
+  double delivery_cost = 3;
+  
+  // Delivery supplier
+  string delivery_supplier = 4;
+  
+  // Delivery method
+  string delivery_method = 5;
+  
+  // Delivery status
+  string delivery_status = 6;
+}
+
+// Fuel quality specifications
+message FuelQualitySpecifications {
+  // Heating value in BTU per ton
+  double heating_value = 1;
+  
+  // Moisture content percentage
+  double moisture_content = 2;
+  
+  // Ash content percentage
+  double ash_content = 3;
+  
+  // Sulfur content percentage
+  double sulfur_content = 4;
+  
+  // Nitrogen content percentage
+  double nitrogen_content = 5;
+  
+  // Carbon content percentage
+  double carbon_content = 6;
+  
+  // Hydrogen content percentage
+  double hydrogen_content = 7;
+  
+  // Oxygen content percentage
+  double oxygen_content = 8;
+  
+  // Chlorine content percentage
+  double chlorine_content = 9;
+  
+  // Mercury content in ppm
+  double mercury_content = 10;
+}
+
+// Unit emissions information
+message UnitEmissions {
+  // CO2 emissions in tons per MWh
+  double co2_emissions = 1;
+  
+  // NOx emissions in lbs per MWh
+  double nox_emissions = 2;
+  
+  // SO2 emissions in lbs per MWh
+  double so2_emissions = 3;
+  
+  // Particulate matter emissions in lbs per MWh
+  double pm_emissions = 4;
+  
+  // Mercury emissions in lbs per MWh
+  double mercury_emissions = 5;
+  
+  // CO emissions in lbs per MWh
+  double co_emissions = 6;
+  
+  // VOC emissions in lbs per MWh
+  double voc_emissions = 7;
+  
+  // Ammonia emissions in lbs per MWh
+  double ammonia_emissions = 8;
+  
+  // HCl emissions in lbs per MWh
+  double hcl_emissions = 9;
+  
+  // HF emissions in lbs per MWh
+  double hf_emissions = 10;
+  
+  // Emissions control systems
+  repeated string emissions_control_systems = 11;
+  
+  // Emissions monitoring systems
+  repeated string emissions_monitoring_systems = 12;
+}
+
+// Unit economic information
+message UnitEconomics {
+  // Capital cost in USD
+  double capital_cost = 1;
+  
+  // Operating cost per MWh in USD
+  double operating_cost_per_mwh = 2;
+  
+  // Fuel cost per MWh in USD
+  double fuel_cost_per_mwh = 3;
+  
+  // Maintenance cost per MWh in USD
+  double maintenance_cost_per_mwh = 4;
+  
+  // Revenue per MWh in USD
+  double revenue_per_mwh = 5;
+  
+  // Net profit per MWh in USD
+  double net_profit_per_mwh = 6;
+  
+  // Levelized cost of electricity in USD/MWh
+  double lcoe = 7;
+  
+  // Payback period in years
+  double payback_period = 8;
+  
+  // Internal rate of return percentage
+  double irr = 9;
+  
+  // Net present value in USD
+  double npv = 10;
+}

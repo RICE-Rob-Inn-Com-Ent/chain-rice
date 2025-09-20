@@ -1,0 +1,210 @@
+syntax = "proto3";
+
+package energy.consumption.messages;
+
+import "energy/consumption/enums/meter_type.proto";
+import "energy/consumption/enums/consumption_unit.proto";
+
+// Energy meter for measuring consumption
+message Meter {
+  // Unique identifier for the meter
+  string id = 1;
+  
+  // Meter serial number
+  string serial_number = 2;
+  
+  // Meter manufacturer
+  string manufacturer = 3;
+  
+  // Meter model
+  string model = 4;
+  
+  // Meter type
+  energy.consumption.enums.MeterType type = 5;
+  
+  // Customer ID this meter belongs to
+  string customer_id = 6;
+  
+  // Service location ID
+  string service_location_id = 7;
+  
+  // Installation date (unix milliseconds)
+  int64 installation_date = 8;
+  
+  // Last calibration date (unix milliseconds)
+  int64 last_calibration_date = 9;
+  
+  // Next calibration due date (unix milliseconds)
+  int64 next_calibration_date = 10;
+  
+  // Meter status
+  MeterStatus status = 11;
+  
+  // Current reading value
+  double current_reading = 12;
+  
+  // Previous reading value
+  double previous_reading = 13;
+  
+  // Reading multiplier (for scaling readings)
+  double reading_multiplier = 14;
+  
+  // Unit of measurement for this meter
+  energy.consumption.enums.ConsumptionUnit unit = 15;
+  
+  // Reading interval in minutes (for smart meters)
+  int32 reading_interval_minutes = 16;
+  
+  // Communication protocol used (for smart meters)
+  string communication_protocol = 17;
+  
+  // Network address or identifier
+  string network_address = 18;
+  
+  // Meter configuration parameters
+  map<string, string> configuration = 19;
+  
+  // Physical location details
+  MeterLocation location = 20;
+  
+  // Meter specifications
+  MeterSpecifications specifications = 21;
+  
+  // Additional metadata
+  map<string, string> metadata = 22;
+  
+  // Timestamp when this meter was created (unix milliseconds)
+  int64 created_at = 23;
+  
+  // Timestamp when this meter was last updated (unix milliseconds)
+  int64 updated_at = 24;
+}
+
+// Meter status enumeration
+enum MeterStatus {
+  // Meter is active and functioning normally
+  METER_STATUS_ACTIVE = 0;
+  
+  // Meter is inactive or turned off
+  METER_STATUS_INACTIVE = 1;
+  
+  // Meter is in maintenance mode
+  METER_STATUS_MAINTENANCE = 2;
+  
+  // Meter has failed and needs repair
+  METER_STATUS_FAILED = 3;
+  
+  // Meter is offline (communication issues)
+  METER_STATUS_OFFLINE = 4;
+  
+  // Meter is being replaced
+  METER_STATUS_BEING_REPLACED = 5;
+  
+  // Meter is being installed
+  METER_STATUS_INSTALLING = 6;
+  
+  // Meter is being removed
+  METER_STATUS_BEING_REMOVED = 7;
+  
+  // Meter is in test mode
+  METER_STATUS_TEST_MODE = 8;
+  
+  // Meter is in calibration
+  METER_STATUS_CALIBRATING = 9;
+  
+  // Meter is locked/disabled
+  METER_STATUS_LOCKED = 10;
+  
+  // Meter is in error state
+  METER_STATUS_ERROR = 11;
+  
+  // Meter is pending activation
+  METER_STATUS_PENDING_ACTIVATION = 12;
+  
+  // Meter is suspended
+  METER_STATUS_SUSPENDED = 13;
+  
+  // Meter is archived
+  METER_STATUS_ARCHIVED = 14;
+}
+
+// Physical location of the meter
+message MeterLocation {
+  // Street address
+  string street_address = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state_province = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // GPS coordinates (latitude)
+  double latitude = 6;
+  
+  // GPS coordinates (longitude)
+  double longitude = 7;
+  
+  // Floor or level
+  string floor_level = 8;
+  
+  // Room or area
+  string room_area = 9;
+  
+  // Additional location details
+  string additional_details = 10;
+}
+
+// Technical specifications of the meter
+message MeterSpecifications {
+  // Maximum reading value
+  double max_reading = 1;
+  
+  // Minimum reading value
+  double min_reading = 2;
+  
+  // Accuracy class (e.g., "Class 1", "Class 2")
+  string accuracy_class = 3;
+  
+  // Operating voltage range
+  string voltage_range = 4;
+  
+  // Operating current range
+  string current_range = 5;
+  
+  // Frequency range
+  string frequency_range = 6;
+  
+  // Temperature range
+  string temperature_range = 7;
+  
+  // Humidity range
+  string humidity_range = 8;
+  
+  // Protection rating (IP code)
+  string protection_rating = 9;
+  
+  // Communication interfaces
+  repeated string communication_interfaces = 10;
+  
+  // Data storage capacity
+  string storage_capacity = 11;
+  
+  // Power consumption
+  double power_consumption = 12;
+  
+  // Dimensions (width x height x depth)
+  string dimensions = 13;
+  
+  // Weight
+  double weight = 14;
+  
+  // Certifications and approvals
+  repeated string certifications = 15;
+}

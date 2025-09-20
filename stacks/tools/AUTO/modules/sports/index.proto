@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package sports.v1;
+
+import "google/protobuf/empty.proto";
+import "sports/leagues/services/leagues_service.proto";
+import "sports/matches/services/matches_service.proto";
+import "sports/players/services/players_service.proto";
+import "sports/teams/services/teams_service.proto";
+import "sports/venues/services/venues_service.proto";
+
+option go_package = "github.com/rice-dev/sports/v1";
+
+// SportsService provides a unified interface for all sports-related operations
+// This service aggregates functionality from all sports subdomains
+service SportsService {
+  // League operations
+  rpc CreateLeague(sports.leagues.v1.CreateLeagueRequest) returns (sports.leagues.v1.CreateLeagueResponse);
+  rpc GetLeague(sports.leagues.v1.GetLeagueRequest) returns (sports.leagues.v1.GetLeagueResponse);
+  rpc ListLeagues(sports.leagues.v1.ListLeaguesRequest) returns (sports.leagues.v1.ListLeaguesResponse);
+  rpc UpdateLeague(sports.leagues.v1.UpdateLeagueRequest) returns (sports.leagues.v1.UpdateLeagueResponse);
+  rpc DeleteLeague(sports.leagues.v1.DeleteLeagueRequest) returns (sports.leagues.v1.DeleteLeagueResponse);
+
+  // Match operations
+  rpc CreateMatch(sports.matches.v1.CreateMatchRequest) returns (sports.matches.v1.CreateMatchResponse);
+  rpc GetMatch(sports.matches.v1.GetMatchRequest) returns (sports.matches.v1.GetMatchResponse);
+  rpc ListMatches(sports.matches.v1.ListMatchesRequest) returns (sports.matches.v1.ListMatchesResponse);
+  rpc UpdateMatch(sports.matches.v1.UpdateMatchRequest) returns (sports.matches.v1.UpdateMatchResponse);
+  rpc DeleteMatch(sports.matches.v1.DeleteMatchRequest) returns (sports.matches.v1.DeleteMatchResponse);
+
+  // Player operations
+  rpc CreatePlayer(sports.players.v1.CreatePlayerRequest) returns (sports.players.v1.CreatePlayerResponse);
+  rpc GetPlayer(sports.players.v1.GetPlayerRequest) returns (sports.players.v1.GetPlayerResponse);
+  rpc ListPlayers(sports.players.v1.ListPlayersRequest) returns (sports.players.v1.ListPlayersResponse);
+  rpc UpdatePlayer(sports.players.v1.UpdatePlayerRequest) returns (sports.players.v1.UpdatePlayerResponse);
+  rpc DeletePlayer(sports.players.v1.DeletePlayerRequest) returns (sports.players.v1.DeletePlayerResponse);
+
+  // Team operations
+  rpc CreateTeam(sports.teams.v1.CreateTeamRequest) returns (sports.teams.v1.CreateTeamResponse);
+  rpc GetTeam(sports.teams.v1.GetTeamRequest) returns (sports.teams.v1.GetTeamResponse);
+  rpc ListTeams(sports.teams.v1.ListTeamsRequest) returns (sports.teams.v1.ListTeamsResponse);
+  rpc UpdateTeam(sports.teams.v1.UpdateTeamRequest) returns (sports.teams.v1.UpdateTeamResponse);
+  rpc DeleteTeam(sports.teams.v1.DeleteTeamRequest) returns (sports.teams.v1.DeleteTeamResponse);
+
+  // Venue operations
+  rpc CreateVenue(sports.venues.v1.CreateVenueRequest) returns (sports.venues.v1.CreateVenueResponse);
+  rpc GetVenue(sports.venues.v1.GetVenueRequest) returns (sports.venues.v1.GetVenueResponse);
+  rpc ListVenues(sports.venues.v1.ListVenuesRequest) returns (sports.venues.v1.ListVenuesResponse);
+  rpc UpdateVenue(sports.venues.v1.UpdateVenueRequest) returns (sports.venues.v1.UpdateVenueResponse);
+  rpc DeleteVenue(sports.venues.v1.DeleteVenueRequest) returns (sports.venues.v1.DeleteVenueResponse);
+
+  // Health check
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+}
+
+// Health check response for the unified sports service
+message HealthCheckResponse {
+  string status = 1;
+  string message = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  repeated string available_services = 4;
+}

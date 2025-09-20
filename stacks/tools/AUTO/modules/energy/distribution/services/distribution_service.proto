@@ -1,0 +1,826 @@
+syntax = "proto3";
+
+package energy.distribution.services;
+
+import "energy/distribution/messages/grid_node.proto";
+import "energy/distribution/messages/outage.proto";
+import "energy/distribution/messages/distribution_asset.proto";
+import "energy/distribution/enums/grid_status.proto";
+import "energy/distribution/enums/outage_severity.proto";
+
+// Distribution service for managing grid operations, outages, and assets
+service DistributionMsgService {
+  // Create a new grid node
+  rpc CreateGridNode(CreateGridNodeRequest) returns (CreateGridNodeResponse);
+  
+  // Update grid node information
+  rpc UpdateGridNode(UpdateGridNodeRequest) returns (UpdateGridNodeResponse);
+  
+  // Remove grid node
+  rpc RemoveGridNode(RemoveGridNodeRequest) returns (RemoveGridNodeResponse);
+  
+  // Update grid node status
+  rpc UpdateGridNodeStatus(UpdateGridNodeStatusRequest) returns (UpdateGridNodeStatusResponse);
+  
+  // Configure grid node
+  rpc ConfigureGridNode(ConfigureGridNodeRequest) returns (ConfigureGridNodeResponse);
+  
+  // Report an outage
+  rpc ReportOutage(ReportOutageRequest) returns (ReportOutageResponse);
+  
+  // Update outage information
+  rpc UpdateOutage(UpdateOutageRequest) returns (UpdateOutageResponse);
+  
+  // Escalate outage
+  rpc EscalateOutage(EscalateOutageRequest) returns (EscalateOutageResponse);
+  
+  // Restore outage
+  rpc RestoreOutage(RestoreOutageRequest) returns (RestoreOutageResponse);
+  
+  // Close outage
+  rpc CloseOutage(CloseOutageRequest) returns (CloseOutageResponse);
+  
+  // Create distribution asset
+  rpc CreateDistributionAsset(CreateDistributionAssetRequest) returns (CreateDistributionAssetResponse);
+  
+  // Update distribution asset
+  rpc UpdateDistributionAsset(UpdateDistributionAssetRequest) returns (UpdateDistributionAssetResponse);
+  
+  // Remove distribution asset
+  rpc RemoveDistributionAsset(RemoveDistributionAssetRequest) returns (RemoveDistributionAssetResponse);
+  
+  // Schedule maintenance for asset
+  rpc ScheduleAssetMaintenance(ScheduleAssetMaintenanceRequest) returns (ScheduleAssetMaintenanceResponse);
+  
+  // Update asset status
+  rpc UpdateAssetStatus(UpdateAssetStatusRequest) returns (UpdateAssetStatusResponse);
+  
+  // Perform load balancing
+  rpc PerformLoadBalancing(PerformLoadBalancingRequest) returns (PerformLoadBalancingResponse);
+  
+  // Switch circuit
+  rpc SwitchCircuit(SwitchCircuitRequest) returns (SwitchCircuitResponse);
+  
+  // Isolate section
+  rpc IsolateSection(IsolateSectionRequest) returns (IsolateSectionResponse);
+  
+  // Restore section
+  rpc RestoreSection(RestoreSectionRequest) returns (RestoreSectionResponse);
+  
+  // Update grid topology
+  rpc UpdateGridTopology(UpdateGridTopologyRequest) returns (UpdateGridTopologyResponse);
+}
+
+// Query service for reading distribution data
+service DistributionQueryService {
+  // Get a specific grid node by ID
+  rpc GetGridNode(GetGridNodeRequest) returns (GetGridNodeResponse);
+  
+  // List grid nodes with filters
+  rpc ListGridNodes(ListGridNodesRequest) returns (ListGridNodesResponse);
+  
+  // Get grid topology
+  rpc GetGridTopology(GetGridTopologyRequest) returns (GetGridTopologyResponse);
+  
+  // Get grid status
+  rpc GetGridStatus(GetGridStatusRequest) returns (GetGridStatusResponse);
+  
+  // Get grid statistics
+  rpc GetGridStatistics(GetGridStatisticsRequest) returns (GetGridStatisticsResponse);
+  
+  // Get a specific outage by ID
+  rpc GetOutage(GetOutageRequest) returns (GetOutageResponse);
+  
+  // List outages with filters
+  rpc ListOutages(ListOutagesRequest) returns (ListOutagesResponse);
+  
+  // Get active outages
+  rpc GetActiveOutages(GetActiveOutagesRequest) returns (GetActiveOutagesResponse);
+  
+  // Get outage statistics
+  rpc GetOutageStatistics(GetOutageStatisticsRequest) returns (GetOutageStatisticsResponse);
+  
+  // Get outage trends
+  rpc GetOutageTrends(GetOutageTrendsRequest) returns (GetOutageTrendsResponse);
+  
+  // Get a specific distribution asset by ID
+  rpc GetDistributionAsset(GetDistributionAssetRequest) returns (GetDistributionAssetResponse);
+  
+  // List distribution assets with filters
+  rpc ListDistributionAssets(ListDistributionAssetsRequest) returns (ListDistributionAssetsResponse);
+  
+  // Get asset statistics
+  rpc GetAssetStatistics(GetAssetStatisticsRequest) returns (GetAssetStatisticsResponse);
+  
+  // Get asset performance
+  rpc GetAssetPerformance(GetAssetPerformanceRequest) returns (GetAssetPerformanceResponse);
+  
+  // Get maintenance schedule
+  rpc GetMaintenanceSchedule(GetMaintenanceScheduleRequest) returns (GetMaintenanceScheduleResponse);
+  
+  // Get load flow analysis
+  rpc GetLoadFlowAnalysis(GetLoadFlowAnalysisRequest) returns (GetLoadFlowAnalysisResponse);
+  
+  // Get power quality analysis
+  rpc GetPowerQualityAnalysis(GetPowerQualityAnalysisRequest) returns (GetPowerQualityAnalysisResponse);
+  
+  // Get system reliability metrics
+  rpc GetSystemReliabilityMetrics(GetSystemReliabilityMetricsRequest) returns (GetSystemReliabilityMetricsResponse);
+  
+  // Get customer impact analysis
+  rpc GetCustomerImpactAnalysis(GetCustomerImpactAnalysisRequest) returns (GetCustomerImpactAnalysisResponse);
+  
+  // Get grid optimization recommendations
+  rpc GetGridOptimizationRecommendations(GetGridOptimizationRecommendationsRequest) returns (GetGridOptimizationRecommendationsResponse);
+}
+
+// Request/Response messages for CreateGridNode
+message CreateGridNodeRequest {
+  GridNode grid_node = 1;
+}
+
+message CreateGridNodeResponse {
+  GridNode grid_node = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdateGridNode
+message UpdateGridNodeRequest {
+  string grid_node_id = 1;
+  GridNode grid_node = 2;
+}
+
+message UpdateGridNodeResponse {
+  GridNode grid_node = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RemoveGridNode
+message RemoveGridNodeRequest {
+  string grid_node_id = 1;
+  string reason = 2;
+}
+
+message RemoveGridNodeResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for UpdateGridNodeStatus
+message UpdateGridNodeStatusRequest {
+  string grid_node_id = 1;
+  energy.distribution.enums.GridStatus status = 2;
+  string reason = 3;
+}
+
+message UpdateGridNodeStatusResponse {
+  GridNode grid_node = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for ConfigureGridNode
+message ConfigureGridNodeRequest {
+  string grid_node_id = 1;
+  GridNodeConfiguration configuration = 2;
+}
+
+message ConfigureGridNodeResponse {
+  GridNode grid_node = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for ReportOutage
+message ReportOutageRequest {
+  Outage outage = 1;
+}
+
+message ReportOutageResponse {
+  Outage outage = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdateOutage
+message UpdateOutageRequest {
+  string outage_id = 1;
+  Outage outage = 2;
+}
+
+message UpdateOutageResponse {
+  Outage outage = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for EscalateOutage
+message EscalateOutageRequest {
+  string outage_id = 1;
+  string escalation_reason = 2;
+  string escalated_to = 3;
+}
+
+message EscalateOutageResponse {
+  Outage outage = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RestoreOutage
+message RestoreOutageRequest {
+  string outage_id = 1;
+  string restoration_method = 2;
+  string restoration_team = 3;
+  map<string, string> restoration_details = 4;
+}
+
+message RestoreOutageResponse {
+  Outage outage = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for CloseOutage
+message CloseOutageRequest {
+  string outage_id = 1;
+  string close_reason = 2;
+  string closed_by = 3;
+}
+
+message CloseOutageResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for CreateDistributionAsset
+message CreateDistributionAssetRequest {
+  DistributionAsset asset = 1;
+}
+
+message CreateDistributionAssetResponse {
+  DistributionAsset asset = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for UpdateDistributionAsset
+message UpdateDistributionAssetRequest {
+  string asset_id = 1;
+  DistributionAsset asset = 2;
+}
+
+message UpdateDistributionAssetResponse {
+  DistributionAsset asset = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for RemoveDistributionAsset
+message RemoveDistributionAssetRequest {
+  string asset_id = 1;
+  string reason = 2;
+}
+
+message RemoveDistributionAssetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for ScheduleAssetMaintenance
+message ScheduleAssetMaintenanceRequest {
+  string asset_id = 1;
+  int64 maintenance_date = 2;
+  string maintenance_type = 3;
+  string maintenance_team = 4;
+  map<string, string> maintenance_details = 5;
+}
+
+message ScheduleAssetMaintenanceResponse {
+  bool success = 1;
+  string message = 2;
+  string maintenance_schedule_id = 3;
+}
+
+// Request/Response messages for UpdateAssetStatus
+message UpdateAssetStatusRequest {
+  string asset_id = 1;
+  string status = 2;
+  string reason = 3;
+}
+
+message UpdateAssetStatusResponse {
+  DistributionAsset asset = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for PerformLoadBalancing
+message PerformLoadBalancingRequest {
+  string grid_section = 1;
+  map<string, double> load_parameters = 2;
+  string balancing_method = 3;
+}
+
+message PerformLoadBalancingResponse {
+  bool success = 1;
+  string message = 2;
+  LoadBalancingResult result = 3;
+}
+
+// Request/Response messages for SwitchCircuit
+message SwitchCircuitRequest {
+  string circuit_id = 1;
+  string switch_operation = 2;
+  string operator = 3;
+  map<string, string> switch_parameters = 4;
+}
+
+message SwitchCircuitResponse {
+  bool success = 1;
+  string message = 2;
+  CircuitSwitchResult result = 3;
+}
+
+// Request/Response messages for IsolateSection
+message IsolateSectionRequest {
+  string section_id = 1;
+  string isolation_reason = 2;
+  string operator = 3;
+  map<string, string> isolation_parameters = 4;
+}
+
+message IsolateSectionResponse {
+  bool success = 1;
+  string message = 2;
+  SectionIsolationResult result = 3;
+}
+
+// Request/Response messages for RestoreSection
+message RestoreSectionRequest {
+  string section_id = 1;
+  string restoration_reason = 2;
+  string operator = 3;
+  map<string, string> restoration_parameters = 4;
+}
+
+message RestoreSectionResponse {
+  bool success = 1;
+  string message = 2;
+  SectionRestorationResult result = 3;
+}
+
+// Request/Response messages for UpdateGridTopology
+message UpdateGridTopologyRequest {
+  string topology_id = 1;
+  GridTopology topology = 2;
+}
+
+message UpdateGridTopologyResponse {
+  GridTopology topology = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Request/Response messages for GetGridNode
+message GetGridNodeRequest {
+  string grid_node_id = 1;
+}
+
+message GetGridNodeResponse {
+  GridNode grid_node = 1;
+}
+
+// Request/Response messages for ListGridNodes
+message ListGridNodesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string status_filter = 3;
+  string type_filter = 4;
+  string location_filter = 5;
+  string sort_by = 6;
+  bool sort_descending = 7;
+}
+
+message ListGridNodesResponse {
+  repeated GridNode grid_nodes = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetGridTopology
+message GetGridTopologyRequest {
+  string topology_id = 1;
+}
+
+message GetGridTopologyResponse {
+  GridTopology topology = 1;
+}
+
+// Request/Response messages for GetGridStatus
+message GetGridStatusRequest {
+  string grid_section = 1;
+}
+
+message GetGridStatusResponse {
+  energy.distribution.enums.GridStatus status = 1;
+  GridStatusDetails status_details = 2;
+}
+
+// Request/Response messages for GetGridStatistics
+message GetGridStatisticsRequest {
+  string grid_section = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetGridStatisticsResponse {
+  GridStatistics statistics = 1;
+}
+
+// Request/Response messages for GetOutage
+message GetOutageRequest {
+  string outage_id = 1;
+}
+
+message GetOutageResponse {
+  Outage outage = 1;
+}
+
+// Request/Response messages for ListOutages
+message ListOutagesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string status_filter = 3;
+  string severity_filter = 4;
+  string type_filter = 5;
+  int64 date_from = 6;
+  int64 date_to = 7;
+  string location_filter = 8;
+  string sort_by = 9;
+  bool sort_descending = 10;
+}
+
+message ListOutagesResponse {
+  repeated Outage outages = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetActiveOutages
+message GetActiveOutagesRequest {
+  string location_filter = 1;
+  string severity_filter = 2;
+}
+
+message GetActiveOutagesResponse {
+  repeated Outage active_outages = 1;
+  int32 total_active_outages = 2;
+  double total_affected_customers = 3;
+}
+
+// Request/Response messages for GetOutageStatistics
+message GetOutageStatisticsRequest {
+  string grid_section = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetOutageStatisticsResponse {
+  OutageStatistics statistics = 1;
+}
+
+// Request/Response messages for GetOutageTrends
+message GetOutageTrendsRequest {
+  string grid_section = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+  string trend_type = 4;
+}
+
+message GetOutageTrendsResponse {
+  repeated OutageTrendData trend_data = 1;
+  OutageTrendAnalysis trend_analysis = 2;
+}
+
+// Request/Response messages for GetDistributionAsset
+message GetDistributionAssetRequest {
+  string asset_id = 1;
+}
+
+message GetDistributionAssetResponse {
+  DistributionAsset asset = 1;
+}
+
+// Request/Response messages for ListDistributionAssets
+message ListDistributionAssetsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string status_filter = 3;
+  string type_filter = 4;
+  string location_filter = 5;
+  string criticality_filter = 6;
+  string sort_by = 7;
+  bool sort_descending = 8;
+}
+
+message ListDistributionAssetsResponse {
+  repeated DistributionAsset assets = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Request/Response messages for GetAssetStatistics
+message GetAssetStatisticsRequest {
+  string asset_type = 1;
+  string location_filter = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+}
+
+message GetAssetStatisticsResponse {
+  AssetStatistics statistics = 1;
+}
+
+// Request/Response messages for GetAssetPerformance
+message GetAssetPerformanceRequest {
+  string asset_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetAssetPerformanceResponse {
+  AssetPerformance performance = 1;
+}
+
+// Request/Response messages for GetMaintenanceSchedule
+message GetMaintenanceScheduleRequest {
+  string asset_id = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetMaintenanceScheduleResponse {
+  repeated MaintenanceScheduleItem maintenance_schedule = 1;
+}
+
+// Request/Response messages for GetLoadFlowAnalysis
+message GetLoadFlowAnalysisRequest {
+  string grid_section = 1;
+  LoadFlowParameters parameters = 2;
+}
+
+message GetLoadFlowAnalysisResponse {
+  LoadFlowAnalysis analysis = 1;
+}
+
+// Request/Response messages for GetPowerQualityAnalysis
+message GetPowerQualityAnalysisRequest {
+  string grid_section = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetPowerQualityAnalysisResponse {
+  PowerQualityAnalysis analysis = 1;
+}
+
+// Request/Response messages for GetSystemReliabilityMetrics
+message GetSystemReliabilityMetricsRequest {
+  string grid_section = 1;
+  int64 period_start = 2;
+  int64 period_end = 3;
+}
+
+message GetSystemReliabilityMetricsResponse {
+  SystemReliabilityMetrics metrics = 1;
+}
+
+// Request/Response messages for GetCustomerImpactAnalysis
+message GetCustomerImpactAnalysisRequest {
+  string outage_id = 1;
+  string grid_section = 2;
+}
+
+message GetCustomerImpactAnalysisResponse {
+  CustomerImpactAnalysis analysis = 1;
+}
+
+// Request/Response messages for GetGridOptimizationRecommendations
+message GetGridOptimizationRecommendationsRequest {
+  string grid_section = 1;
+  OptimizationCriteria criteria = 2;
+}
+
+message GetGridOptimizationRecommendationsResponse {
+  repeated OptimizationRecommendation recommendations = 1;
+}
+
+// Supporting message types
+message GridNodeConfiguration {
+  map<string, string> configuration = 1;
+}
+
+message LoadBalancingResult {
+  bool success = 1;
+  double load_reduction = 2;
+  double efficiency_improvement = 3;
+  repeated string actions_taken = 4;
+}
+
+message CircuitSwitchResult {
+  bool success = 1;
+  string switch_status = 2;
+  double power_flow = 3;
+  repeated string affected_nodes = 4;
+}
+
+message SectionIsolationResult {
+  bool success = 1;
+  string isolation_status = 2;
+  repeated string isolated_assets = 3;
+  repeated string affected_customers = 4;
+}
+
+message SectionRestorationResult {
+  bool success = 1;
+  string restoration_status = 2;
+  repeated string restored_assets = 3;
+  repeated string restored_customers = 4;
+}
+
+message GridTopology {
+  string id = 1;
+  string name = 2;
+  repeated GridNode grid_nodes = 3;
+  repeated GridConnection connections = 4;
+  int64 last_updated = 5;
+}
+
+message GridConnection {
+  string from_node_id = 1;
+  string to_node_id = 2;
+  string connection_type = 3;
+  double impedance = 4;
+  double capacity = 5;
+}
+
+message GridStatusDetails {
+  string status_description = 1;
+  repeated string status_factors = 2;
+  double health_score = 3;
+  repeated string warnings = 4;
+  repeated string alerts = 5;
+}
+
+message GridStatistics {
+  int32 total_nodes = 1;
+  int32 active_nodes = 2;
+  int32 inactive_nodes = 3;
+  double total_capacity = 4;
+  double available_capacity = 5;
+  double utilization_percentage = 6;
+  double reliability_percentage = 7;
+}
+
+message OutageStatistics {
+  int32 total_outages = 1;
+  int32 active_outages = 2;
+  int32 resolved_outages = 3;
+  double average_duration_minutes = 4;
+  double total_customer_minutes_lost = 5;
+  double saidi = 6;
+  double saifi = 7;
+}
+
+message OutageTrendData {
+  int64 date = 1;
+  int32 outage_count = 2;
+  double customer_minutes_lost = 3;
+  double average_duration = 4;
+}
+
+message OutageTrendAnalysis {
+  string trend_direction = 1;
+  double trend_strength = 2;
+  repeated string trend_factors = 3;
+}
+
+message AssetStatistics {
+  int32 total_assets = 1;
+  int32 active_assets = 2;
+  int32 failed_assets = 3;
+  int32 maintenance_assets = 4;
+  double average_age = 5;
+  double reliability_percentage = 6;
+}
+
+message AssetPerformance {
+  double availability = 1;
+  double reliability = 2;
+  double efficiency = 3;
+  double mtbf = 4;
+  double mttr = 5;
+  repeated PerformanceMetric metrics = 6;
+}
+
+message PerformanceMetric {
+  string metric_name = 1;
+  double value = 2;
+  string unit = 3;
+  int64 timestamp = 4;
+}
+
+message MaintenanceScheduleItem {
+  string asset_id = 1;
+  int64 scheduled_date = 2;
+  string maintenance_type = 3;
+  string maintenance_team = 4;
+  string status = 5;
+}
+
+message LoadFlowParameters {
+  double base_mva = 1;
+  double voltage_tolerance = 2;
+  double power_tolerance = 3;
+  int32 max_iterations = 4;
+}
+
+message LoadFlowAnalysis {
+  bool convergence = 1;
+  int32 iterations = 2;
+  repeated NodeVoltage node_voltages = 3;
+  repeated BranchFlow branch_flows = 4;
+  double total_losses = 5;
+}
+
+message NodeVoltage {
+  string node_id = 1;
+  double voltage_magnitude = 2;
+  double voltage_angle = 3;
+}
+
+message BranchFlow {
+  string from_node_id = 1;
+  string to_node_id = 2;
+  double active_power = 3;
+  double reactive_power = 4;
+}
+
+message PowerQualityAnalysis {
+  double thd_voltage = 1;
+  double thd_current = 2;
+  double voltage_unbalance = 3;
+  double current_unbalance = 4;
+  double frequency_deviation = 5;
+  repeated PowerQualityEvent events = 6;
+}
+
+message PowerQualityEvent {
+  string event_type = 1;
+  int64 timestamp = 2;
+  double duration = 3;
+  double magnitude = 4;
+}
+
+message SystemReliabilityMetrics {
+  double saidi = 1;
+  double saifi = 2;
+  double caidi = 3;
+  double asai = 4;
+  double eaid = 5;
+  double eaif = 6;
+}
+
+message CustomerImpactAnalysis {
+  int32 total_affected_customers = 1;
+  int32 residential_customers = 2;
+  int32 commercial_customers = 3;
+  int32 industrial_customers = 4;
+  double customer_minutes_lost = 5;
+  repeated CustomerSegmentImpact segment_impacts = 6;
+}
+
+message CustomerSegmentImpact {
+  string segment = 1;
+  int32 affected_customers = 2;
+  double average_duration = 3;
+  double economic_impact = 4;
+}
+
+message OptimizationCriteria {
+  string optimization_type = 1;
+  map<string, double> weights = 2;
+  repeated string constraints = 3;
+}
+
+message OptimizationRecommendation {
+  string recommendation_type = 1;
+  string description = 2;
+  double potential_benefit = 3;
+  double implementation_cost = 4;
+  double payback_period = 5;
+  string priority = 6;
+}

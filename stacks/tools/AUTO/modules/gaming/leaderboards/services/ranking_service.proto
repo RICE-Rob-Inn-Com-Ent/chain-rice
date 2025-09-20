@@ -1,0 +1,184 @@
+syntax = "proto3";
+
+package gaming.leaderboards.services;
+
+import "gaming/leaderboards/messages/ranking_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/leaderboards/services";
+
+// Сервіс управління рейтингами
+service RankingService {
+  // Отримати рейтинг гравця
+  rpc GetPlayerRanking(GetPlayerRankingRequest) returns (GetPlayerRankingResponse);
+  
+  // Отримати рейтинги гравця
+  rpc GetPlayerRankings(GetPlayerRankingsRequest) returns (GetPlayerRankingsResponse);
+  
+  // Оновити рейтинг гравця
+  rpc UpdatePlayerRanking(UpdatePlayerRankingRequest) returns (UpdatePlayerRankingResponse);
+  
+  // Отримати статистику рейтингу
+  rpc GetRankingStats(GetRankingStatsRequest) returns (GetRankingStatsResponse);
+  
+  // Отримати історію рейтингу
+  rpc GetRankingHistory(GetRankingHistoryRequest) returns (GetRankingHistoryResponse);
+  
+  // Отримати прогноз рейтингу
+  rpc GetRankingPrediction(GetRankingPredictionRequest) returns (GetRankingPredictionResponse);
+  
+  // Отримати порівняння рейтингів
+  rpc GetRankingComparison(GetRankingComparisonRequest) returns (GetRankingComparisonResponse);
+  
+  // Отримати аналіз рейтингу
+  rpc GetRankingAnalysis(GetRankingAnalysisRequest) returns (GetRankingAnalysisResponse);
+  
+  // Отримати топ рейтингів
+  rpc GetTopRankings(GetTopRankingsRequest) returns (GetTopRankingsResponse);
+  
+  // Отримати рейтинги навколо гравця
+  rpc GetRankingsAroundPlayer(GetRankingsAroundPlayerRequest) returns (GetRankingsAroundPlayerResponse);
+}
+
+// Запит рейтингу гравця
+message GetPlayerRankingRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+}
+
+// Відповідь рейтингу гравця
+message GetPlayerRankingResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.Ranking ranking = 3;
+}
+
+// Запит рейтингів гравця
+message GetPlayerRankingsRequest {
+  string player_id = 1;
+  string game_id = 2;
+  string category_id = 3;
+  string season_id = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Відповідь рейтингів гравця
+message GetPlayerRankingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Ranking rankings = 3;
+}
+
+// Запит оновлення рейтингу гравця
+message UpdatePlayerRankingRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  int64 score = 3;
+  map<string, string> metadata = 4;
+}
+
+// Відповідь оновлення рейтингу гравця
+message UpdatePlayerRankingResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.Ranking ranking = 3;
+}
+
+// Запит статистики рейтингу
+message GetRankingStatsRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+}
+
+// Відповідь статистики рейтингу
+message GetRankingStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.RankingStats stats = 3;
+}
+
+// Запит історії рейтингу
+message GetRankingHistoryRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  int64 start_date = 3;
+  int64 end_date = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Відповідь історії рейтингу
+message GetRankingHistoryResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.RankingHistory history = 3;
+}
+
+// Запит прогнозу рейтингу
+message GetRankingPredictionRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  int64 target_date = 3;
+}
+
+// Відповідь прогнозу рейтингу
+message GetRankingPredictionResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.RankingPrediction prediction = 3;
+}
+
+// Запит порівняння рейтингів
+message GetRankingComparisonRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  int32 target_rank = 3;
+}
+
+// Відповідь порівняння рейтингів
+message GetRankingComparisonResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.RankingComparison comparison = 3;
+}
+
+// Запит аналізу рейтингу
+message GetRankingAnalysisRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+}
+
+// Відповідь аналізу рейтингу
+message GetRankingAnalysisResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.RankingAnalysis analysis = 3;
+}
+
+// Запит топ рейтингів
+message GetTopRankingsRequest {
+  string leaderboard_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+// Відповідь топ рейтингів
+message GetTopRankingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Ranking rankings = 3;
+}
+
+// Запит рейтингів навколо гравця
+message GetRankingsAroundPlayerRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  int32 range = 3;
+}
+
+// Відповідь рейтингів навколо гравця
+message GetRankingsAroundPlayerResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Ranking rankings = 3;
+}

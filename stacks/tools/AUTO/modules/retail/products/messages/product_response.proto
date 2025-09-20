@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package retail.products.messages;
+
+import "products/messages/product_request.proto";
+import "google/rpc/status.proto";
+
+// CreateProductResponse contains the result of creating a new product
+message CreateProductResponse {
+  // The created product
+  Product product = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// GetProductResponse contains the result of retrieving a product
+message GetProductResponse {
+  // The requested product
+  Product product = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// ListProductsResponse contains the result of listing products
+message ListProductsResponse {
+  // List of products matching the request criteria
+  repeated Product products = 1;
+  
+  // Token to retrieve the next page of results
+  string next_page_token = 2;
+  
+  // Total number of products matching the criteria
+  int32 total_count = 3;
+  
+  // Operation status
+  google.rpc.Status status = 4;
+}
+
+// UpdateProductResponse contains the result of updating a product
+message UpdateProductResponse {
+  // The updated product
+  Product product = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}
+
+// DeleteProductResponse contains the result of deleting a product
+message DeleteProductResponse {
+  // Indicates whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status
+  google.rpc.Status status = 2;
+}

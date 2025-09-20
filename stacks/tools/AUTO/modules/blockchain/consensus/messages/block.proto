@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package blockchain.consensus.messages;
+
+import "blockchain/consensus/enums/consensus_algorithm.proto";
+import "blockchain/consensus/enums/consensus_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/consensus/messages";
+
+// Block represents a blockchain block
+message Block {
+  string id = 1;                    // Unique block identifier
+  int64 height = 2;                 // Block height
+  string hash = 3;                  // Block hash
+  string previous_hash = 4;         // Previous block hash
+  string proposer = 5;              // Block proposer address (sdk.Address)
+  int64 timestamp = 6;              // Block timestamp
+  
+  // Block structure
+  string merkle_root = 7;           // Merkle root of transactions
+  repeated string transaction_hashes = 8; // Transaction hashes in block
+  int32 transaction_count = 9;      // Number of transactions
+  
+  // Consensus information
+  blockchain.consensus.enums.ConsensusAlgorithm consensus_algorithm = 10; // Consensus algorithm used
+  blockchain.consensus.enums.ConsensusStatus status = 11; // Block status
+  
+  // Validation and finality
+  repeated string validator_votes = 12; // Validator vote signatures
+  string proof = 13;                // Consensus proof
+  bool is_finalized = 14;           // Whether block is finalized
+  int64 finalization_time = 15;     // Block finalization timestamp
+  
+  // Block metadata
+  string version = 16;              // Block version
+  string network_id = 17;           // Network identifier
+  map<string, string> metadata = 18; // Additional metadata
+  
+  // Performance metrics
+  int64 block_time = 19;            // Time to create block (ms)
+  string gas_used = 20;             // Gas used by block
+  string gas_limit = 21;            // Gas limit for block
+  string size_bytes = 22;           // Block size in bytes
+  
+  // Chain information
+  string chain_id = 23;             // Chain identifier
+  int64 epoch = 24;                 // Consensus epoch
+  int64 round = 25;                 // Consensus round
+  string step = 26;                 // Consensus step
+}
+
+// BlockHeader represents the header of a blockchain block
+message BlockHeader {
+  string hash = 1;                  // Block hash
+  string previous_hash = 2;         // Previous block hash
+  int64 height = 3;                 // Block height
+  int64 timestamp = 4;              // Block timestamp
+  string proposer = 5;              // Block proposer address
+  string merkle_root = 6;           // Merkle root of transactions
+  string version = 7;               // Block version
+  string chain_id = 8;              // Chain identifier
+  string network_id = 9;            // Network identifier
+  string proof = 10;                // Consensus proof
+  map<string, string> metadata = 11; // Additional metadata
+}
+
+// BlockProof represents proof of block validity
+message BlockProof {
+  string block_hash = 1;            // Block hash being proven
+  repeated string validator_signatures = 2; // Validator signatures
+  string merkle_proof = 3;          // Merkle proof
+  string consensus_proof = 4;       // Consensus algorithm proof
+  int64 proof_timestamp = 5;        // Proof creation timestamp
+  blockchain.consensus.enums.ConsensusAlgorithm consensus_algorithm = 6; // Consensus algorithm
+}
+
+// MsgCreateBlock creates a new block (typically internal)
+message MsgCreateBlock {
+  string creator = 1;               // Creator address (sdk.Address)
+  int64 height = 2;                 // Block height
+  string previous_hash = 3;         // Previous block hash
+  repeated string transaction_hashes = 4; // Transaction hashes
+  string merkle_root = 5;           // Merkle root
+  string version = 6;               // Block version
+  map<string, string> metadata = 7; // Additional metadata
+}
+
+// MsgCreateBlockResponse returns the created block
+message MsgCreateBlockResponse {
+  string block_id = 1;              // Created block ID
+  string block_hash = 2;            // Block hash
+}
+
+// MsgValidateBlock validates a block
+message MsgValidateBlock {
+  string creator = 1;               // Validator address (sdk.Address)
+  string block_id = 2;              // Block ID to validate
+  string validation_proof = 3;      // Validation proof
+  bool is_valid = 4;                // Validation result
+  string reason = 5;                // Validation reason if invalid
+}
+
+// MsgValidateBlockResponse returns the validation result
+message MsgValidateBlockResponse {
+  bool success = 1;                 // Validation success status
+  string validation_id = 2;         // Validation ID
+}
+
+// MsgFinalizeBlock finalizes a block
+message MsgFinalizeBlock {
+  string creator = 1;               // Finalizer address (sdk.Address)
+  string block_id = 2;              // Block ID to finalize
+  string finalization_proof = 3;    // Finalization proof
+  int64 finalization_time = 4;      // Finalization timestamp
+}
+
+// MsgFinalizeBlockResponse returns the finalization result
+message MsgFinalizeBlockResponse {
+  bool success = 1;                 // Finalization success status
+  int64 finalization_timestamp = 2; // Finalization timestamp
+}
+
+// MsgProposeBlock proposes a new block
+message MsgProposeBlock {
+  string creator = 1;               // Proposer address (sdk.Address)
+  int64 height = 2;                 // Proposed block height
+  string previous_hash = 3;         // Previous block hash
+  repeated string transaction_hashes = 4; // Proposed transaction hashes
+  string merkle_root = 5;           // Merkle root
+  string proposal_proof = 6;        // Proposal proof
+}
+
+// MsgProposeBlockResponse returns the proposal result
+message MsgProposeBlockResponse {
+  bool success = 1;                 // Proposal success status
+  string proposal_id = 2;           // Proposal ID
+  string block_hash = 3;            // Proposed block hash
+}

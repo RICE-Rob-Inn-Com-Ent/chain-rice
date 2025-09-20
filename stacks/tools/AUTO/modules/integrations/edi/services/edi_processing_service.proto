@@ -1,0 +1,382 @@
+syntax = "proto3";
+
+package integrations.edi.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "integrations/edi/messages/edi_document_models.proto";
+import "integrations/edi/messages/edi_transaction_log.proto";
+
+option go_package = "github.com/rice-dev/integrations/edi/services";
+
+// EDI Processing Service for handling document processing pipeline
+service EdiProcessingService {
+  // Document Processing Operations
+  rpc ProcessDocument(ProcessDocumentRequest) returns (ProcessDocumentResponse);
+  rpc ValidateDocument(ValidateDocumentRequest) returns (ValidateDocumentResponse);
+  rpc TransformDocument(TransformDocumentRequest) returns (TransformDocumentResponse);
+  rpc DeliverDocument(DeliverDocumentRequest) returns (DeliverDocumentResponse);
+  
+  // Batch Processing
+  rpc ProcessBatch(ProcessBatchRequest) returns (ProcessBatchResponse);
+  rpc GetBatchStatus(GetBatchStatusRequest) returns (GetBatchStatusResponse);
+  
+  // Document Management
+  rpc GetDocument(GetDocumentRequest) returns (GetDocumentResponse);
+  rpc ListDocuments(ListDocumentsRequest) returns (ListDocumentsResponse);
+  rpc UpdateDocumentStatus(UpdateDocumentStatusRequest) returns (UpdateDocumentStatusResponse);
+  rpc RetryDocument(RetryDocumentRequest) returns (RetryDocumentResponse);
+  rpc CancelDocument(CancelDocumentRequest) returns (CancelDocumentResponse);
+  
+  // Processing Control
+  rpc PauseProcessing(PauseProcessingRequest) returns (PauseProcessingResponse);
+  rpc ResumeProcessing(ResumeProcessingRequest) returns (ResumeProcessingResponse);
+  rpc GetProcessingStatus(GetProcessingStatusRequest) returns (GetProcessingStatusResponse);
+  
+  // Health and Monitoring
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+  rpc GetProcessingMetrics(GetProcessingMetricsRequest) returns (GetProcessingMetricsResponse);
+}
+
+// Process Document Request
+message ProcessDocumentRequest {
+  string document_id = 1;
+  integrations.edi.messages.EdiDocument document = 2;
+  EdiProcessingOptions options = 3;
+  string correlation_id = 4;
+}
+
+// Process Document Response
+message ProcessDocumentResponse {
+  string document_id = 1;
+  string processing_id = 2;
+  integrations.edi.enums.EdiStatus status = 3;
+  google.protobuf.Timestamp processed_at = 4;
+  repeated integrations.edi.messages.EdiProcessingError errors = 5;
+  repeated integrations.edi.messages.EdiProcessingWarning warnings = 6;
+  EdiProcessingResult result = 7;
+}
+
+// Validate Document Request
+message ValidateDocumentRequest {
+  string document_id = 1;
+  integrations.edi.messages.EdiDocument document = 2;
+  EdiValidationOptions options = 3;
+}
+
+// Validate Document Response
+message ValidateDocumentResponse {
+  string document_id = 1;
+  bool is_valid = 2;
+  repeated integrations.edi.messages.EdiProcessingError validation_errors = 3;
+  repeated integrations.edi.messages.EdiProcessingWarning validation_warnings = 4;
+  EdiValidationResult result = 5;
+}
+
+// Transform Document Request
+message TransformDocumentRequest {
+  string document_id = 1;
+  integrations.edi.messages.EdiDocument document = 2;
+  EdiTransformationOptions options = 3;
+}
+
+// Transform Document Response
+message TransformDocumentResponse {
+  string document_id = 1;
+  integrations.edi.messages.EdiDocument transformed_document = 2;
+  repeated integrations.edi.messages.EdiProcessingError transformation_errors = 3;
+  repeated integrations.edi.messages.EdiProcessingWarning transformation_warnings = 4;
+  EdiTransformationResult result = 5;
+}
+
+// Deliver Document Request
+message DeliverDocumentRequest {
+  string document_id = 1;
+  integrations.edi.messages.EdiDocument document = 2;
+  EdiDeliveryOptions options = 3;
+}
+
+// Deliver Document Response
+message DeliverDocumentResponse {
+  string document_id = 1;
+  string delivery_id = 2;
+  integrations.edi.enums.EdiStatus delivery_status = 3;
+  google.protobuf.Timestamp delivered_at = 4;
+  repeated integrations.edi.messages.EdiProcessingError delivery_errors = 5;
+  EdiDeliveryResult result = 6;
+}
+
+// Process Batch Request
+message ProcessBatchRequest {
+  string batch_id = 1;
+  repeated string document_ids = 2;
+  EdiProcessingOptions options = 3;
+  string correlation_id = 4;
+}
+
+// Process Batch Response
+message ProcessBatchResponse {
+  string batch_id = 1;
+  string processing_id = 2;
+  EdiBatchStatus status = 3;
+  int32 total_documents = 4;
+  int32 processed_documents = 5;
+  int32 failed_documents = 6;
+  google.protobuf.Timestamp started_at = 7;
+  google.protobuf.Timestamp completed_at = 8;
+  repeated string failed_document_ids = 9;
+}
+
+// Get Batch Status Request
+message GetBatchStatusRequest {
+  string batch_id = 1;
+}
+
+// Get Batch Status Response
+message GetBatchStatusResponse {
+  string batch_id = 1;
+  EdiBatchStatus status = 2;
+  int32 total_documents = 3;
+  int32 processed_documents = 4;
+  int32 failed_documents = 5;
+  int32 pending_documents = 6;
+  google.protobuf.Timestamp started_at = 7;
+  google.protobuf.Timestamp completed_at = 8;
+  double progress_percentage = 9;
+  repeated string failed_document_ids = 10;
+  repeated integrations.edi.messages.EdiProcessingError batch_errors = 11;
+}
+
+// Get Document Request
+message GetDocumentRequest {
+  string document_id = 1;
+  bool include_payload = 2;
+  bool include_logs = 3;
+}
+
+// Get Document Response
+message GetDocumentResponse {
+  integrations.edi.messages.EdiDocument document = 1;
+  repeated integrations.edi.messages.EdiTransactionLog logs = 2;
+}
+
+// List Documents Request
+message ListDocumentsRequest {
+  integrations.edi.messages.EdiDocumentFilter filter = 1;
+}
+
+// List Documents Response
+message ListDocumentsResponse {
+  integrations.edi.messages.EdiDocumentList documents = 1;
+}
+
+// Update Document Status Request
+message UpdateDocumentStatusRequest {
+  string document_id = 1;
+  integrations.edi.enums.EdiStatus new_status = 2;
+  string reason = 3;
+  string updated_by = 4;
+}
+
+// Update Document Status Response
+message UpdateDocumentStatusResponse {
+  string document_id = 1;
+  integrations.edi.enums.EdiStatus old_status = 2;
+  integrations.edi.enums.EdiStatus new_status = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// Retry Document Request
+message RetryDocumentRequest {
+  string document_id = 1;
+  bool force_retry = 2;
+  EdiProcessingOptions options = 3;
+}
+
+// Retry Document Response
+message RetryDocumentResponse {
+  string document_id = 1;
+  string retry_id = 2;
+  integrations.edi.enums.EdiStatus status = 3;
+  google.protobuf.Timestamp retry_at = 4;
+}
+
+// Cancel Document Request
+message CancelDocumentRequest {
+  string document_id = 1;
+  string reason = 2;
+  string cancelled_by = 3;
+}
+
+// Cancel Document Response
+message CancelDocumentResponse {
+  string document_id = 1;
+  bool cancelled = 2;
+  google.protobuf.Timestamp cancelled_at = 3;
+}
+
+// Pause Processing Request
+message PauseProcessingRequest {
+  string processor_id = 1;
+  string reason = 2;
+}
+
+// Pause Processing Response
+message PauseProcessingResponse {
+  string processor_id = 1;
+  bool paused = 2;
+  google.protobuf.Timestamp paused_at = 3;
+}
+
+// Resume Processing Request
+message ResumeProcessingRequest {
+  string processor_id = 1;
+}
+
+// Resume Processing Response
+message ResumeProcessingResponse {
+  string processor_id = 1;
+  bool resumed = 2;
+  google.protobuf.Timestamp resumed_at = 3;
+}
+
+// Get Processing Status Request
+message GetProcessingStatusRequest {
+  string processor_id = 1;
+}
+
+// Get Processing Status Response
+message GetProcessingStatusResponse {
+  string processor_id = 1;
+  EdiProcessorStatus status = 2;
+  int32 active_documents = 3;
+  int32 queued_documents = 4;
+  int32 processed_documents_today = 5;
+  int32 failed_documents_today = 6;
+  double success_rate = 7;
+  google.protobuf.Timestamp last_activity = 8;
+  repeated string active_document_ids = 9;
+}
+
+// Health Check Response
+message HealthCheckResponse {
+  string status = 1; // HEALTHY, DEGRADED, UNHEALTHY
+  string version = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  map<string, string> details = 4;
+}
+
+// Get Processing Metrics Request
+message GetProcessingMetricsRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  string granularity = 3; // HOUR, DAY, WEEK, MONTH
+}
+
+// Get Processing Metrics Response
+message GetProcessingMetricsResponse {
+  integrations.edi.messages.EdiTransactionStatistics statistics = 1;
+  repeated integrations.edi.messages.EdiTransactionMetrics real_time_metrics = 2;
+}
+
+// Processing Options
+message EdiProcessingOptions {
+  bool auto_validate = 1;
+  bool auto_transform = 2;
+  bool auto_deliver = 3;
+  bool enable_retries = 4;
+  int32 max_retries = 5;
+  int32 retry_delay_seconds = 6;
+  int32 timeout_seconds = 7;
+  string processing_priority = 8;
+  map<string, string> custom_options = 9;
+}
+
+// Validation Options
+message EdiValidationOptions {
+  bool strict_validation = 1;
+  bool validate_syntax = 2;
+  bool validate_semantics = 3;
+  bool validate_business_rules = 4;
+  repeated string custom_validation_rules = 5;
+  map<string, string> validation_context = 6;
+}
+
+// Transformation Options
+message EdiTransformationOptions {
+  string target_format = 1;
+  string mapping_template = 2;
+  map<string, string> field_mappings = 3;
+  map<string, string> value_mappings = 4;
+  bool preserve_original = 5;
+  map<string, string> transformation_context = 6;
+}
+
+// Delivery Options
+message EdiDeliveryOptions {
+  string delivery_method = 1;
+  string target_endpoint = 2;
+  map<string, string> delivery_headers = 3;
+  bool require_acknowledgment = 4;
+  int32 acknowledgment_timeout_seconds = 5;
+  map<string, string> delivery_context = 6;
+}
+
+// Processing Result
+message EdiProcessingResult {
+  string result_id = 1;
+  string result_type = 2;
+  map<string, string> result_data = 3;
+  google.protobuf.Timestamp completed_at = 4;
+  int64 processing_time_ms = 5;
+}
+
+// Validation Result
+message EdiValidationResult {
+  bool is_valid = 1;
+  int32 error_count = 2;
+  int32 warning_count = 3;
+  repeated string validation_summary = 4;
+  map<string, string> validation_details = 5;
+}
+
+// Transformation Result
+message EdiTransformationResult {
+  string transformation_id = 1;
+  string source_format = 2;
+  string target_format = 3;
+  int64 input_size_bytes = 4;
+  int64 output_size_bytes = 5;
+  map<string, string> transformation_details = 6;
+}
+
+// Delivery Result
+message EdiDeliveryResult {
+  string delivery_id = 1;
+  string delivery_method = 2;
+  string target_endpoint = 3;
+  int32 http_status_code = 4;
+  string response_message = 5;
+  map<string, string> delivery_details = 6;
+}
+
+// Batch Status
+enum EdiBatchStatus {
+  EDI_BATCH_STATUS_UNSPECIFIED = 0;
+  EDI_BATCH_STATUS_PENDING = 1;
+  EDI_BATCH_STATUS_PROCESSING = 2;
+  EDI_BATCH_STATUS_COMPLETED = 3;
+  EDI_BATCH_STATUS_FAILED = 4;
+  EDI_BATCH_STATUS_CANCELLED = 5;
+  EDI_BATCH_STATUS_PAUSED = 6;
+}
+
+// Processor Status
+enum EdiProcessorStatus {
+  EDI_PROCESSOR_STATUS_UNSPECIFIED = 0;
+  EDI_PROCESSOR_STATUS_ACTIVE = 1;
+  EDI_PROCESSOR_STATUS_PAUSED = 2;
+  EDI_PROCESSOR_STATUS_STOPPED = 3;
+  EDI_PROCESSOR_STATUS_ERROR = 4;
+  EDI_PROCESSOR_STATUS_MAINTENANCE = 5;
+}

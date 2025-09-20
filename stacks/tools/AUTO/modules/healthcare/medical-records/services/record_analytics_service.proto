@@ -1,0 +1,303 @@
+syntax = "proto3";
+
+package healthcare.medical_records.services;
+
+import "google/protobuf/timestamp.proto";
+import "../messages/medical_record_models.proto";
+import "../messages/lab_results.proto";
+import "../messages/record_events.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/medical-records/services";
+
+// Record analytics service for statistics and reporting
+service RecordAnalyticsService {
+  // Get record statistics
+  rpc GetRecordStatistics(RecordStatisticsRequest) returns (RecordStatisticsResponse);
+  
+  // Get record trends
+  rpc GetRecordTrends(RecordTrendsRequest) returns (RecordTrendsResponse);
+  
+  // Get patient record analytics
+  rpc GetPatientRecordAnalytics(PatientRecordAnalyticsRequest) returns (PatientRecordAnalyticsResponse);
+  
+  // Get doctor record analytics
+  rpc GetDoctorRecordAnalytics(DoctorRecordAnalyticsRequest) returns (DoctorRecordAnalyticsResponse);
+  
+  // Get clinic record analytics
+  rpc GetClinicRecordAnalytics(ClinicRecordAnalyticsRequest) returns (ClinicRecordAnalyticsResponse);
+  
+  // Get lab test analytics
+  rpc GetLabTestAnalytics(LabTestAnalyticsRequest) returns (LabTestAnalyticsResponse);
+  
+  // Get record access analytics
+  rpc GetRecordAccessAnalytics(RecordAccessAnalyticsRequest) returns (RecordAccessAnalyticsResponse);
+  
+  // Get diagnosis analytics
+  rpc GetDiagnosisAnalytics(DiagnosisAnalyticsRequest) returns (DiagnosisAnalyticsResponse);
+  
+  // Get record audit trail
+  rpc GetRecordAuditTrail(GetRecordAuditTrailRequest) returns (RecordAuditTrail);
+}
+
+// Record statistics request
+message RecordStatisticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  healthcare.medical_records.enums.RecordType record_type = 5;
+}
+
+// Record statistics response
+message RecordStatisticsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_records = 3;
+  int32 active_records = 4;
+  int32 archived_records = 5;
+  int32 confidential_records = 6;
+  repeated RecordTypeStatistics record_type_stats = 7;
+  repeated RecordStatusStatistics record_status_stats = 8;
+}
+
+// Record type statistics
+message RecordTypeStatistics {
+  healthcare.medical_records.enums.RecordType record_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Record status statistics
+message RecordStatusStatistics {
+  healthcare.medical_records.enums.RecordStatus record_status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Record trends request
+message RecordTrendsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string trend_type = 3; // daily, weekly, monthly
+  string doctor_id = 4;
+  string clinic_id = 5;
+}
+
+// Record trends response
+message RecordTrendsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string trend_type = 3;
+  repeated RecordTrendDataPoint data_points = 4;
+  double trend_direction = 5; // positive or negative percentage change
+  string trend_description = 6;
+}
+
+// Record trend data point
+message RecordTrendDataPoint {
+  google.protobuf.Timestamp date = 1;
+  int32 record_count = 2;
+  double change_from_previous = 3;
+  double percentage_change = 4;
+}
+
+// Patient record analytics request
+message PatientRecordAnalyticsRequest {
+  string patient_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Patient record analytics response
+message PatientRecordAnalyticsResponse {
+  string patient_id = 1;
+  MedicalRecordSummary record_summary = 2;
+  LabTestSummary lab_summary = 3;
+  repeated DiagnosisFrequency diagnosis_frequencies = 4;
+  repeated TreatmentFrequency treatment_frequencies = 5;
+  google.protobuf.Timestamp first_record_date = 6;
+  google.protobuf.Timestamp last_record_date = 7;
+  int32 total_visits = 8;
+}
+
+// Diagnosis frequency
+message DiagnosisFrequency {
+  string diagnosis_code = 1;
+  string diagnosis_name = 2;
+  int32 frequency = 3;
+  google.protobuf.Timestamp first_diagnosis = 4;
+  google.protobuf.Timestamp last_diagnosis = 5;
+}
+
+// Treatment frequency
+message TreatmentFrequency {
+  string treatment_name = 1;
+  int32 frequency = 2;
+  google.protobuf.Timestamp first_treatment = 3;
+  google.protobuf.Timestamp last_treatment = 4;
+}
+
+// Doctor record analytics request
+message DoctorRecordAnalyticsRequest {
+  string doctor_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Doctor record analytics response
+message DoctorRecordAnalyticsResponse {
+  string doctor_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  int32 total_records = 4;
+  int32 total_patients = 5;
+  int32 total_appointments = 6;
+  double average_records_per_patient = 7;
+  double average_records_per_appointment = 8;
+  repeated RecordTypeStatistics record_type_stats = 9;
+  repeated DiagnosisFrequency top_diagnoses = 10;
+  repeated TreatmentFrequency top_treatments = 11;
+}
+
+// Clinic record analytics request
+message ClinicRecordAnalyticsRequest {
+  string clinic_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Clinic record analytics response
+message ClinicRecordAnalyticsResponse {
+  string clinic_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  int32 total_records = 4;
+  int32 total_doctors = 5;
+  int32 total_patients = 6;
+  double average_records_per_doctor = 7;
+  double average_records_per_patient = 8;
+  repeated RecordTypeStatistics record_type_stats = 9;
+  repeated DiagnosisFrequency top_diagnoses = 10;
+  repeated TreatmentFrequency top_treatments = 11;
+}
+
+// Lab test analytics request
+message LabTestAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  string lab_id = 5;
+}
+
+// Lab test analytics response
+message LabTestAnalyticsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_tests = 3;
+  int32 pending_tests = 4;
+  int32 completed_tests = 5;
+  int32 abnormal_results = 6;
+  int32 critical_results = 7;
+  repeated LabTestTypeStatistics test_type_stats = 8;
+  repeated LabTestStatusStatistics test_status_stats = 9;
+  double average_processing_time_hours = 10;
+}
+
+// Lab test type statistics
+message LabTestTypeStatistics {
+  string test_name = 1;
+  string test_code = 2;
+  int32 count = 3;
+  double percentage = 4;
+}
+
+// Lab test status statistics
+message LabTestStatusStatistics {
+  LabTestStatus status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Record access analytics request
+message RecordAccessAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  string patient_id = 5;
+}
+
+// Record access analytics response
+message RecordAccessAnalyticsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_accesses = 3;
+  int32 unique_records_accessed = 4;
+  int32 unique_users = 5;
+  repeated AccessTypeStatistics access_type_stats = 6;
+  repeated UserAccessStatistics user_access_stats = 7;
+  repeated RecordAccessStatistics record_access_stats = 8;
+}
+
+// Access type statistics
+message AccessTypeStatistics {
+  string access_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// User access statistics
+message UserAccessStatistics {
+  string user_id = 1;
+  string user_name = 2;
+  int32 access_count = 3;
+  int32 records_accessed = 4;
+}
+
+// Record access statistics
+message RecordAccessStatistics {
+  string record_id = 1;
+  string record_type = 2;
+  int32 access_count = 3;
+  int32 unique_users = 4;
+}
+
+// Diagnosis analytics request
+message DiagnosisAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+}
+
+// Diagnosis analytics response
+message DiagnosisAnalyticsResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_diagnoses = 3;
+  repeated DiagnosisFrequency top_diagnoses = 4;
+  repeated DiagnosisSeverityStatistics severity_stats = 5;
+  repeated DiagnosisStatusStatistics status_stats = 6;
+}
+
+// Diagnosis severity statistics
+message DiagnosisSeverityStatistics {
+  healthcare.medical_records.enums.DiagnosisSeverity severity = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Diagnosis status statistics
+message DiagnosisStatusStatistics {
+  healthcare.medical_records.enums.DiagnosisStatus status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Get record audit trail request
+message GetRecordAuditTrailRequest {
+  string record_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}

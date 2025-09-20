@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package settings.settings.enums;
+
+// Setting scope enumeration defines the level at which a setting applies
+enum SettingScope {
+  // Default/unspecified scope
+  SETTING_SCOPE_UNSPECIFIED = 0;
+  
+  // Global system-wide settings that affect all users
+  SETTING_SCOPE_GLOBAL = 1;
+  
+  // Organization-level settings that apply to all users within an organization
+  SETTING_SCOPE_ORGANIZATION = 2;
+  
+  // Team-level settings that apply to all users within a team
+  SETTING_SCOPE_TEAM = 3;
+  
+  // Project-level settings that apply to all users within a project
+  SETTING_SCOPE_PROJECT = 4;
+  
+  // User-level settings that are personal to individual users
+  SETTING_SCOPE_USER = 5;
+  
+  // Role-based settings that apply to users with specific roles
+  SETTING_SCOPE_ROLE = 6;
+  
+  // Environment-specific settings (dev, staging, production)
+  SETTING_SCOPE_ENVIRONMENT = 7;
+  
+  // Feature-specific settings that control individual features
+  SETTING_SCOPE_FEATURE = 8;
+  
+  // Application-specific settings for different applications/modules
+  SETTING_SCOPE_APPLICATION = 9;
+  
+  // Tenant-specific settings in multi-tenant environments
+  SETTING_SCOPE_TENANT = 10;
+  
+  // Device-specific settings for different device types
+  SETTING_SCOPE_DEVICE = 11;
+  
+  // Location-specific settings based on geographic regions
+  SETTING_SCOPE_LOCATION = 12;
+  
+  // Time-based settings that vary by time periods
+  SETTING_SCOPE_TEMPORAL = 13;
+}

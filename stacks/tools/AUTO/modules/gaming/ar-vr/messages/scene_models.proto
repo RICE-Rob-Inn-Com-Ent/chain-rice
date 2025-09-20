@@ -1,0 +1,627 @@
+syntax = "proto3";
+
+package gaming.ar_vr.messages;
+
+import "gaming/ar_vr/enums/scene_types.proto";
+import "gaming/ar_vr/enums/interaction_modes.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/messages";
+
+// Модель сцени AR/VR
+message Scene {
+  // Унікальний ідентифікатор сцени
+  string id = 1;
+  
+  // Назва сцени
+  string name = 2;
+  
+  // Опис сцени
+  string description = 3;
+  
+  // Тип сцени
+  gaming.ar_vr.enums.SceneType type = 4;
+  
+  // Розмір сцени
+  SceneDimensions dimensions = 5;
+  
+  // Освітлення сцени
+  SceneLighting lighting = 6;
+  
+  // Погода в сцені
+  SceneWeather weather = 7;
+  
+  // Атмосфера сцени
+  SceneAtmosphere atmosphere = 8;
+  
+  // Фізика сцени
+  ScenePhysics physics = 9;
+  
+  // Інтерактивність сцени
+  SceneInteractivity interactivity = 10;
+  
+  // Об'єкти в сцені
+  repeated SceneObject objects = 11;
+  
+  // Звуки в сцені
+  repeated SceneAudio audio = 12;
+  
+  // Ефекти в сцені
+  repeated SceneEffect effects = 13;
+  
+  // Метадані сцени
+  SceneMetadata metadata = 14;
+  
+  // Час створення
+  google.protobuf.Timestamp created_at = 15;
+  
+  // Час оновлення
+  google.protobuf.Timestamp updated_at = 16;
+  
+  // Час закінчення терміну дії
+  google.protobuf.Timestamp expires_at = 17;
+}
+
+// Розміри сцени
+message SceneDimensions {
+  // Ширина (в метрах)
+  double width = 1;
+  
+  // Висота (в метрах)
+  double height = 2;
+  
+  // Глибина (в метрах)
+  double depth = 3;
+  
+  // Одиниця вимірювання
+  string unit = 4;
+  
+  // Масштаб
+  double scale = 5;
+  
+  // Межі сцени
+  SceneBounds bounds = 6;
+}
+
+// Межі сцени
+message SceneBounds {
+  // Мінімальні координати
+  Vector3 min = 1;
+  
+  // Максимальні координати
+  Vector3 max = 2;
+  
+  // Центр сцени
+  Vector3 center = 3;
+  
+  // Радіус сцени
+  double radius = 4;
+}
+
+// 3D вектор
+message Vector3 {
+  // X координата
+  double x = 1;
+  
+  // Y координата
+  double y = 2;
+  
+  // Z координата
+  double z = 3;
+}
+
+// Освітлення сцени
+message SceneLighting {
+  // Тип освітлення
+  gaming.ar_vr.enums.LightingType type = 1;
+  
+  // Інтенсивність освітлення
+  double intensity = 2;
+  
+  // Колір освітлення
+  Color color = 3;
+  
+  // Напрямок освітлення
+  Vector3 direction = 4;
+  
+  // Позиція джерела світла
+  Vector3 position = 5;
+  
+  // Діапазон освітлення
+  double range = 6;
+  
+  // Кут освітлення
+  double angle = 7;
+  
+  // Тіні
+  bool shadows_enabled = 8;
+  
+  // Якість тіней
+  string shadow_quality = 9;
+  
+  // Динамічне освітлення
+  bool dynamic_lighting = 10;
+  
+  // Додаткові параметри освітлення
+  map<string, string> lighting_parameters = 11;
+}
+
+// Колір
+message Color {
+  // Червоний компонент (0-255)
+  int32 red = 1;
+  
+  // Зелений компонент (0-255)
+  int32 green = 2;
+  
+  // Синій компонент (0-255)
+  int32 blue = 3;
+  
+  // Альфа компонент (0-255)
+  int32 alpha = 4;
+  
+  // HEX представлення кольору
+  string hex = 5;
+  
+  // HSV представлення кольору
+  HSVColor hsv = 6;
+}
+
+// HSV колір
+message HSVColor {
+  // Відтінок (0-360)
+  double hue = 1;
+  
+  // Насиченість (0-100)
+  double saturation = 2;
+  
+  // Яскравість (0-100)
+  double value = 3;
+}
+
+// Погода в сцені
+message SceneWeather {
+  // Тип погоди
+  gaming.ar_vr.enums.WeatherType type = 1;
+  
+  // Температура (в Цельсіях)
+  double temperature = 2;
+  
+  // Вологість (в відсотках)
+  double humidity = 3;
+  
+  // Швидкість вітру (в м/с)
+  double wind_speed = 4;
+  
+  // Напрямок вітру (в градусах)
+  double wind_direction = 5;
+  
+  // Атмосферний тиск (в Па)
+  double atmospheric_pressure = 6;
+  
+  // Видимість (в метрах)
+  double visibility = 7;
+  
+  // Опади (в мм/год)
+  double precipitation = 8;
+  
+  // Динамічна погода
+  bool dynamic_weather = 9;
+  
+  // Швидкість зміни погоди
+  double weather_change_speed = 10;
+  
+  // Додаткові параметри погоди
+  map<string, string> weather_parameters = 11;
+}
+
+// Атмосфера сцени
+message SceneAtmosphere {
+  // Тип атмосфери
+  gaming.ar_vr.enums.AtmosphereType type = 1;
+  
+  // Щільність атмосфери
+  double density = 2;
+  
+  // Склад атмосфери
+  map<string, double> composition = 3;
+  
+  // Температура атмосфери
+  double temperature = 4;
+  
+  // Тиск атмосфери
+  double pressure = 5;
+  
+  // Вологість атмосфери
+  double humidity = 6;
+  
+  // Видимість в атмосфері
+  double visibility = 7;
+  
+  // Колір атмосфери
+  Color color = 8;
+  
+  // Ефекти атмосфери
+  repeated string effects = 9;
+  
+  // Додаткові параметри атмосфери
+  map<string, string> atmosphere_parameters = 10;
+}
+
+// Фізика сцени
+message ScenePhysics {
+  // Тип фізики
+  gaming.ar_vr.enums.PhysicsType type = 1;
+  
+  // Гравітація
+  Vector3 gravity = 2;
+  
+  // Сила гравітації
+  double gravity_strength = 3;
+  
+  // Опір повітря
+  double air_resistance = 4;
+  
+  // Тертя
+  double friction = 5;
+  
+  // Пружність
+  double elasticity = 6;
+  
+  // В'язкість
+  double viscosity = 7;
+  
+  // Магнітне поле
+  Vector3 magnetic_field = 8;
+  
+  // Електричне поле
+  Vector3 electric_field = 9;
+  
+  // Температура
+  double temperature = 10;
+  
+  // Тиск
+  double pressure = 11;
+  
+  // Додаткові параметри фізики
+  map<string, string> physics_parameters = 12;
+}
+
+// Інтерактивність сцени
+message SceneInteractivity {
+  // Тип інтерактивності
+  gaming.ar_vr.enums.InteractivityType type = 1;
+  
+  // Режими взаємодії
+  repeated gaming.ar_vr.enums.InteractionMode interaction_modes = 2;
+  
+  // Чутливість до взаємодії
+  double sensitivity = 3;
+  
+  // Затримка реакції (в мілісекундах)
+  int64 response_delay = 4;
+  
+  // Тривалість реакції (в мілісекундах)
+  int64 response_duration = 5;
+  
+  // Інтерактивні зони
+  repeated InteractiveZone zones = 6;
+  
+  // Інтерактивні об'єкти
+  repeated string interactive_objects = 7;
+  
+  // Додаткові параметри інтерактивності
+  map<string, string> interactivity_parameters = 8;
+}
+
+// Інтерактивна зона
+message InteractiveZone {
+  // Ідентифікатор зони
+  string id = 1;
+  
+  // Назва зони
+  string name = 2;
+  
+  // Тип зони
+  string type = 3;
+  
+  // Межі зони
+  SceneBounds bounds = 4;
+  
+  // Режими взаємодії в зоні
+  repeated gaming.ar_vr.enums.InteractionMode interaction_modes = 5;
+  
+  // Чутливість зони
+  double sensitivity = 6;
+  
+  // Додаткові параметри зони
+  map<string, string> zone_parameters = 7;
+}
+
+// Об'єкт в сцені
+message SceneObject {
+  // Ідентифікатор об'єкта
+  string id = 1;
+  
+  // Назва об'єкта
+  string name = 2;
+  
+  // Тип об'єкта
+  string type = 3;
+  
+  // Позиція об'єкта
+  Vector3 position = 4;
+  
+  // Обертання об'єкта
+  Vector3 rotation = 5;
+  
+  // Масштаб об'єкта
+  Vector3 scale = 6;
+  
+  // Розміри об'єкта
+  SceneDimensions dimensions = 7;
+  
+  // Колір об'єкта
+  Color color = 8;
+  
+  // Текстура об'єкта
+  string texture = 9;
+  
+  // Матеріал об'єкта
+  string material = 10;
+  
+  // Фізичні властивості об'єкта
+  ObjectPhysics physics = 11;
+  
+  // Інтерактивність об'єкта
+  ObjectInteractivity interactivity = 12;
+  
+  // Анімація об'єкта
+  ObjectAnimation animation = 13;
+  
+  // Звуки об'єкта
+  repeated ObjectAudio audio = 14;
+  
+  // Ефекти об'єкта
+  repeated ObjectEffect effects = 15;
+  
+  // Метадані об'єкта
+  map<string, string> metadata = 16;
+}
+
+// Фізичні властивості об'єкта
+message ObjectPhysics {
+  // Маса об'єкта
+  double mass = 1;
+  
+  // Щільність об'єкта
+  double density = 2;
+  
+  // Тертя об'єкта
+  double friction = 3;
+  
+  // Пружність об'єкта
+  double elasticity = 4;
+  
+  // В'язкість об'єкта
+  double viscosity = 5;
+  
+  // Теплопровідність
+  double thermal_conductivity = 6;
+  
+  // Електропровідність
+  double electrical_conductivity = 7;
+  
+  // Магнітні властивості
+  double magnetic_permeability = 8;
+  
+  // Додаткові фізичні параметри
+  map<string, string> physics_parameters = 9;
+}
+
+// Інтерактивність об'єкта
+message ObjectInteractivity {
+  // Чи інтерактивний об'єкт
+  bool interactive = 1;
+  
+  // Режими взаємодії з об'єктом
+  repeated gaming.ar_vr.enums.InteractionMode interaction_modes = 2;
+  
+  // Чутливість об'єкта
+  double sensitivity = 3;
+  
+  // Затримка реакції об'єкта
+  int64 response_delay = 4;
+  
+  // Тривалість реакції об'єкта
+  int64 response_duration = 5;
+  
+  // Додаткові параметри інтерактивності
+  map<string, string> interactivity_parameters = 6;
+}
+
+// Анімація об'єкта
+message ObjectAnimation {
+  // Чи анімований об'єкт
+  bool animated = 1;
+  
+  // Тип анімації
+  string animation_type = 2;
+  
+  // Швидкість анімації
+  double speed = 3;
+  
+  // Тривалість анімації
+  int64 duration = 4;
+  
+  // Циклічність анімації
+  bool looping = 5;
+  
+  // Напрямок анімації
+  string direction = 6;
+  
+  // Додаткові параметри анімації
+  map<string, string> animation_parameters = 7;
+}
+
+// Звук об'єкта
+message ObjectAudio {
+  // Ідентифікатор звуку
+  string id = 1;
+  
+  // Назва звуку
+  string name = 2;
+  
+  // Тип звуку
+  string type = 3;
+  
+  // URL звукового файлу
+  string audio_url = 4;
+  
+  // Гучність звуку
+  double volume = 5;
+  
+  // Висота звуку
+  double pitch = 6;
+  
+  // Тривалість звуку
+  int64 duration = 7;
+  
+  // Циклічність звуку
+  bool looping = 8;
+  
+  // Просторовий звук
+  bool spatial_audio = 9;
+  
+  // Додаткові параметри звуку
+  map<string, string> audio_parameters = 10;
+}
+
+// Ефект об'єкта
+message ObjectEffect {
+  // Ідентифікатор ефекту
+  string id = 1;
+  
+  // Назва ефекту
+  string name = 2;
+  
+  // Тип ефекту
+  string type = 3;
+  
+  // Інтенсивність ефекту
+  double intensity = 4;
+  
+  // Тривалість ефекту
+  int64 duration = 5;
+  
+  // Циклічність ефекту
+  bool looping = 6;
+  
+  // Додаткові параметри ефекту
+  map<string, string> effect_parameters = 7;
+}
+
+// Звук сцени
+message SceneAudio {
+  // Ідентифікатор звуку
+  string id = 1;
+  
+  // Назва звуку
+  string name = 2;
+  
+  // Тип звуку
+  string type = 3;
+  
+  // URL звукового файлу
+  string audio_url = 4;
+  
+  // Позиція звуку
+  Vector3 position = 5;
+  
+  // Гучність звуку
+  double volume = 6;
+  
+  // Висота звуку
+  double pitch = 7;
+  
+  // Тривалість звуку
+  int64 duration = 8;
+  
+  // Циклічність звуку
+  bool looping = 9;
+  
+  // Просторовий звук
+  bool spatial_audio = 10;
+  
+  // Діапазон звуку
+  double range = 11;
+  
+  // Додаткові параметри звуку
+  map<string, string> audio_parameters = 12;
+}
+
+// Ефект сцени
+message SceneEffect {
+  // Ідентифікатор ефекту
+  string id = 1;
+  
+  // Назва ефекту
+  string name = 2;
+  
+  // Тип ефекту
+  string type = 3;
+  
+  // Позиція ефекту
+  Vector3 position = 4;
+  
+  // Інтенсивність ефекту
+  double intensity = 5;
+  
+  // Тривалість ефекту
+  int64 duration = 6;
+  
+  // Циклічність ефекту
+  bool looping = 7;
+  
+  // Діапазон ефекту
+  double range = 8;
+  
+  // Додаткові параметри ефекту
+  map<string, string> effect_parameters = 9;
+}
+
+// Метадані сцени
+message SceneMetadata {
+  // Версія сцени
+  string version = 1;
+  
+  // Автор сцени
+  string author = 2;
+  
+  // Теги сцени
+  repeated string tags = 3;
+  
+  // Мова сцени
+  string language = 4;
+  
+  // Категорія сцени
+  string category = 5;
+  
+  // Рейтинг сцени
+  double rating = 6;
+  
+  // Кількість переглядів
+  int64 views = 7;
+  
+  // Кількість завантажень
+  int64 downloads = 8;
+  
+  // Розмір файлу сцени
+  int64 file_size = 9;
+  
+  // Формат файлу сцени
+  string file_format = 10;
+  
+  // Додаткові метадані
+  map<string, string> additional_data = 11;
+}

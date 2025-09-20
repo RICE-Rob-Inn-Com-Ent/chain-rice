@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package entertainment.subscriptions.enums;
+
+// Типи планів підписки
+enum SubscriptionPlan {
+  SUBSCRIPTION_PLAN_UNSPECIFIED = 0;
+  
+  // Базові плани
+  FREE = 1;
+  BASIC = 2;
+  PREMIUM = 3;
+  PRO = 4;
+  ENTERPRISE = 5;
+  
+  // Спеціалізовані плани
+  STUDENT = 6;
+  SENIOR = 7;
+  FAMILY = 8;
+  BUSINESS = 9;
+  CORPORATE = 10;
+  
+  // Тимчасові плани
+  TRIAL = 11;
+  MONTHLY = 12;
+  QUARTERLY = 13;
+  YEARLY = 14;
+  BIANNUAL = 15;
+  
+  // Контентні плани
+  MOVIE_PLAN = 16;
+  TV_PLAN = 17;
+  MUSIC_PLAN = 18;
+  GAME_PLAN = 19;
+  NEWS_PLAN = 20;
+  
+  // Якісні плани
+  STANDARD_DEFINITION = 21;
+  HIGH_DEFINITION = 22;
+  ULTRA_HD = 23;
+  4K_PLAN = 24;
+  8K_PLAN = 25;
+  
+  // Аудіо плани
+  STANDARD_AUDIO = 26;
+  HIGH_QUALITY_AUDIO = 27;
+  LOSSLESS_AUDIO = 28;
+  SPATIAL_AUDIO = 29;
+  DOLBY_ATMOS = 30;
+  
+  // Платформні плани
+  MOBILE_ONLY = 31;
+  DESKTOP_ONLY = 32;
+  TV_ONLY = 33;
+  MULTI_DEVICE = 34;
+  UNLIMITED_DEVICES = 35;
+  
+  // Географічні плани
+  LOCAL_PLAN = 36;
+  REGIONAL_PLAN = 37;
+  NATIONAL_PLAN = 38;
+  INTERNATIONAL_PLAN = 39;
+  GLOBAL_PLAN = 40;
+  
+  // Функціональні плани
+  AD_FREE = 41;
+  OFFLINE_DOWNLOAD = 42;
+  EARLY_ACCESS = 43;
+  EXCLUSIVE_CONTENT = 44;
+  PRIORITY_SUPPORT = 45;
+  
+  // Соціальні плани
+  SHARED_PLAN = 46;
+  GROUP_PLAN = 47;
+  COMMUNITY_PLAN = 48;
+  SOCIAL_PLAN = 49;
+  NETWORK_PLAN = 50;
+  
+  // Освітні плани
+  EDUCATIONAL_PLAN = 51;
+  ACADEMIC_PLAN = 52;
+  INSTITUTIONAL_PLAN = 53;
+  RESEARCH_PLAN = 54;
+  TRAINING_PLAN = 55;
+  
+  // Корпоративні плани
+  SMALL_BUSINESS = 56;
+  MEDIUM_BUSINESS = 57;
+  LARGE_BUSINESS = 58;
+  STARTUP_PLAN = 59;
+  NON_PROFIT_PLAN = 60;
+  
+  // Спеціальні плани
+  BETA_PLAN = 61;
+  EARLY_ADOPTER = 62;
+  FOUNDER_PLAN = 63;
+  LEGACY_PLAN = 64;
+  GRANDFATHERED_PLAN = 65;
+  
+  // Гібридні плани
+  FREEMIUM = 66;
+  PAY_AS_YOU_GO = 67;
+  USAGE_BASED = 68;
+  CREDIT_BASED = 69;
+  TOKEN_BASED = 70;
+  
+  // Промоційні плани
+  INTRODUCTORY = 71;
+  PROMOTIONAL = 72;
+  DISCOUNTED = 73;
+  BUNDLED = 74;
+  CROSS_PROMOTIONAL = 75;
+  
+  // Сезонні плани
+  HOLIDAY_PLAN = 76;
+  SEASONAL_PLAN = 77;
+  EVENT_BASED = 78;
+  LIMITED_TIME = 79;
+  SPECIAL_EVENT = 80;
+  
+  // Персоналізовані плани
+  CUSTOM_PLAN = 81;
+  TAILORED_PLAN = 82;
+  PERSONALIZED_PLAN = 83;
+  INDIVIDUAL_PLAN = 84;
+  BESPOKE_PLAN = 85;
+  
+  // Експериментальні плани
+  EXPERIMENTAL = 86;
+  PILOT_PLAN = 87;
+  TEST_PLAN = 88;
+  PROTOTYPE_PLAN = 89;
+  RESEARCH_PLAN = 90;
+  
+  // Ліцензійні плани
+  SINGLE_USER = 91;
+  MULTI_USER = 92;
+  CONCURRENT_USER = 93;
+  NAMED_USER = 94;
+  FLOATING_LICENSE = 95;
+  
+  // Інтеграційні плани
+  API_PLAN = 96;
+  WEBHOOK_PLAN = 97;
+  INTEGRATION_PLAN = 98;
+  DEVELOPER_PLAN = 99;
+  PARTNER_PLAN = 100;
+}

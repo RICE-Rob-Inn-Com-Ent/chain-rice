@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package transport.v1;
+
+option go_package = "github.com/rice-dev/transport/v1";
+
+// Transport module index - unified access to all transport services
+// This file provides a single entry point for all transport-related gRPC services
+
+// Fleet Management Services
+import "fleet-management/services/fleet_service.proto";
+import "fleet-management/messages/fleet_request.proto";
+import "fleet-management/messages/fleet_response.proto";
+import "fleet-management/enums/vehicle_type.proto";
+import "fleet-management/enums/fleet_status.proto";
+
+// Passenger Services
+import "passengers/services/passenger_service.proto";
+import "passengers/messages/passenger_request.proto";
+import "passengers/messages/passenger_response.proto";
+import "passengers/enums/passenger_type.proto";
+import "passengers/enums/passenger_status.proto";
+
+// Route Services
+import "routes/services/route_service.proto";
+import "routes/messages/route_request.proto";
+import "routes/messages/route_response.proto";
+import "routes/enums/route_type.proto";
+import "routes/enums/route_status.proto";
+
+// Schedule Services
+import "schedules/services/schedule_service.proto";
+import "schedules/messages/schedule_request.proto";
+import "schedules/messages/schedule_response.proto";
+import "schedules/enums/schedule_status.proto";
+import "schedules/enums/schedule_type.proto";
+
+// Ticket Services
+import "tickets/services/ticket_service.proto";
+import "tickets/messages/ticket_request.proto";
+import "tickets/messages/ticket_response.proto";
+import "tickets/enums/ticket_type.proto";
+import "tickets/enums/ticket_status.proto";
+
+// Transport module version information
+message TransportModuleInfo {
+  string version = 1;
+  string description = 2;
+  repeated string available_services = 3;
+}

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package crm_hr.customers.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/customers/enums";
+
+// CustomerType represents the type of customer in the system
+enum CustomerType {
+  // Unspecified type - should not be used in production
+  CUSTOMER_TYPE_UNSPECIFIED = 0;
+  
+  // Individual customers
+  INDIVIDUAL = 1;
+  CONSUMER = 2;
+  
+  // Business customers
+  SMALL_BUSINESS = 3;
+  MEDIUM_BUSINESS = 4;
+  ENTERPRISE = 5;
+  CORPORATION = 6;
+  
+  // Special customer types
+  NON_PROFIT = 7;
+  GOVERNMENT = 8;
+  EDUCATIONAL = 9;
+  PARTNER = 10;
+  RESELLER = 11;
+  
+  // Prospect types
+  LEAD = 12;
+  PROSPECT = 13;
+  TRIAL = 14;
+}

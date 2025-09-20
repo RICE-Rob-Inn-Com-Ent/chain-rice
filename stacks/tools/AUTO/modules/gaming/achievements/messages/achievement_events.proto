@@ -1,0 +1,297 @@
+syntax = "proto3";
+
+package gaming.achievements.messages;
+
+import "gaming/achievements/enums/achievement_types.proto";
+import "gaming/achievements/enums/achievement_status.proto";
+import "gaming/achievements/enums/reward_types.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/achievements/messages";
+
+// Базовий клас події досягнення
+message AchievementEvent {
+  // Унікальний ідентифікатор події
+  string event_id = 1;
+  
+  // Тип події
+  AchievementEventType type = 2;
+  
+  // Ідентифікатор гравця
+  string player_id = 3;
+  
+  // Ідентифікатор досягнення
+  string achievement_id = 4;
+  
+  // Час події
+  google.protobuf.Timestamp timestamp = 5;
+  
+  // Додаткові дані події
+  map<string, string> event_data = 6;
+  
+  // Версія події
+  string version = 7;
+}
+
+// Типи подій досягнень
+enum AchievementEventType {
+  ACHIEVEMENT_EVENT_TYPE_UNSPECIFIED = 0;
+  
+  // Досягнення створено
+  ACHIEVEMENT_EVENT_TYPE_CREATED = 1;
+  
+  // Досягнення розблоковано
+  ACHIEVEMENT_EVENT_TYPE_UNLOCKED = 2;
+  
+  // Прогрес оновлено
+  ACHIEVEMENT_EVENT_TYPE_PROGRESS_UPDATED = 3;
+  
+  // Досягнення завершено
+  ACHIEVEMENT_EVENT_TYPE_COMPLETED = 4;
+  
+  // Нагорода отримана
+  ACHIEVEMENT_EVENT_TYPE_REWARD_CLAIMED = 5;
+  
+  // Досягнення скинуто
+  ACHIEVEMENT_EVENT_TYPE_RESET = 6;
+  
+  // Досягнення скасовано
+  ACHIEVEMENT_EVENT_TYPE_CANCELLED = 7;
+  
+  // Досягнення просрочено
+  ACHIEVEMENT_EVENT_TYPE_EXPIRED = 8;
+  
+  // Досягнення оновлено
+  ACHIEVEMENT_EVENT_TYPE_UPDATED = 9;
+  
+  // Досягнення видалено
+  ACHIEVEMENT_EVENT_TYPE_DELETED = 10;
+}
+
+// Подія створення досягнення
+message AchievementCreatedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Дані досягнення
+  Achievement achievement = 2;
+  
+  // Автор досягнення
+  string author_id = 3;
+  
+  // Категорія досягнення
+  gaming.achievements.enums.AchievementCategory category = 4;
+  
+  // Рівень складності
+  gaming.achievements.enums.AchievementDifficulty difficulty = 5;
+}
+
+// Подія розблоковування досягнення
+message AchievementUnlockedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Причина розблоковування
+  string unlock_reason = 2;
+  
+  // Попередній статус
+  gaming.achievements.enums.AchievementStatus previous_status = 3;
+  
+  // Новий статус
+  gaming.achievements.enums.AchievementStatus new_status = 4;
+  
+  // Додаткові умови розблоковування
+  map<string, string> unlock_conditions = 5;
+}
+
+// Подія оновлення прогресу
+message ProgressUpdatedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Попередній прогрес
+  int64 previous_progress = 2;
+  
+  // Новий прогрес
+  int64 new_progress = 3;
+  
+  // Максимальний прогрес
+  int64 max_progress = 4;
+  
+  // Відсоток виконання
+  double completion_percentage = 5;
+  
+  // Причина оновлення
+  string update_reason = 6;
+  
+  // Додаткові дані прогресу
+  map<string, string> progress_data = 7;
+}
+
+// Подія завершення досягнення
+message AchievementCompletedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Час початку виконання
+  google.protobuf.Timestamp started_at = 2;
+  
+  // Час завершення
+  google.protobuf.Timestamp completed_at = 3;
+  
+  // Загальний час виконання (в секундах)
+  int64 total_duration_seconds = 4;
+  
+  // Фінальний прогрес
+  int64 final_progress = 5;
+  
+  // Досягнуті нагороди
+  repeated Reward rewards = 6;
+  
+  // Додаткові дані завершення
+  map<string, string> completion_data = 7;
+}
+
+// Подія отримання нагороди
+message RewardClaimedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Ідентифікатор нагороди
+  string reward_id = 2;
+  
+  // Тип нагороди
+  gaming.achievements.enums.RewardType reward_type = 3;
+  
+  // Кількість нагороди
+  int64 reward_amount = 4;
+  
+  // Рідкість нагороди
+  gaming.achievements.enums.RewardRarity reward_rarity = 5;
+  
+  // Час отримання
+  google.protobuf.Timestamp claimed_at = 6;
+  
+  // Транзакція видачі
+  string transaction_id = 7;
+  
+  // Додаткові дані нагороди
+  map<string, string> reward_data = 8;
+}
+
+// Подія скидання досягнення
+message AchievementResetEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Причина скидання
+  string reset_reason = 2;
+  
+  // Попередній прогрес
+  int64 previous_progress = 3;
+  
+  // Новий прогрес (зазвичай 0)
+  int64 new_progress = 4;
+  
+  // Час скидання
+  google.protobuf.Timestamp reset_at = 5;
+  
+  // Додаткові дані скидання
+  map<string, string> reset_data = 6;
+}
+
+// Подія скасування досягнення
+message AchievementCancelledEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Причина скасування
+  string cancellation_reason = 2;
+  
+  // Попередній статус
+  gaming.achievements.enums.AchievementStatus previous_status = 3;
+  
+  // Новий статус
+  gaming.achievements.enums.AchievementStatus new_status = 4;
+  
+  // Час скасування
+  google.protobuf.Timestamp cancelled_at = 5;
+  
+  // Додаткові дані скасування
+  map<string, string> cancellation_data = 6;
+}
+
+// Подія просрочення досягнення
+message AchievementExpiredEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Причина просрочення
+  string expiration_reason = 2;
+  
+  // Попередній статус
+  gaming.achievements.enums.AchievementStatus previous_status = 3;
+  
+  // Новий статус
+  gaming.achievements.enums.AchievementStatus new_status = 4;
+  
+  // Час просрочення
+  google.protobuf.Timestamp expired_at = 5;
+  
+  // Додаткові дані просрочення
+  map<string, string> expiration_data = 6;
+}
+
+// Подія оновлення досягнення
+message AchievementUpdatedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Попередні дані досягнення
+  Achievement previous_achievement = 2;
+  
+  // Нові дані досягнення
+  Achievement new_achievement = 3;
+  
+  // Список змінених полів
+  repeated string changed_fields = 4;
+  
+  // Час оновлення
+  google.protobuf.Timestamp updated_at = 5;
+  
+  // Додаткові дані оновлення
+  map<string, string> update_data = 6;
+}
+
+// Подія видалення досягнення
+message AchievementDeletedEvent {
+  // Базова подія
+  AchievementEvent base_event = 1;
+  
+  // Дані видаленого досягнення
+  Achievement deleted_achievement = 2;
+  
+  // Причина видалення
+  string deletion_reason = 3;
+  
+  // Час видалення
+  google.protobuf.Timestamp deleted_at = 4;
+  
+  // Додаткові дані видалення
+  map<string, string> deletion_data = 5;
+}
+
+// Пакет подій досягнень
+message AchievementEventBatch {
+  // Список подій
+  repeated AchievementEvent events = 1;
+  
+  // Час створення пакету
+  google.protobuf.Timestamp batch_created_at = 2;
+  
+  // Версія пакету
+  string batch_version = 3;
+  
+  // Додаткові метадані пакету
+  map<string, string> batch_metadata = 4;
+}

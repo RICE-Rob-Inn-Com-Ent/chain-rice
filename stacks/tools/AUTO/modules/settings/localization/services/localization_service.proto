@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package settings.localization.services;
+
+import "google/protobuf/empty.proto";
+import "settings/localization/messages/localization_request.proto";
+import "settings/localization/messages/localization_response.proto";
+
+// LocalizationService provides CRUD operations for managing application translations
+// and internationalization resources across different languages and regions.
+service LocalizationService {
+  // Create a new localization entry with translation key, language, region, and value
+  rpc Create(CreateLocalizationRequest) returns (CreateLocalizationResponse);
+  
+  // Retrieve a specific localization entry by its unique identifier
+  rpc Get(GetLocalizationRequest) returns (GetLocalizationResponse);
+  
+  // List localization entries with optional filtering and pagination
+  rpc List(ListLocalizationsRequest) returns (ListLocalizationsResponse);
+  
+  // Update an existing localization entry with new translation value or metadata
+  rpc Update(UpdateLocalizationRequest) returns (UpdateLocalizationResponse);
+  
+  // Delete a localization entry by its unique identifier
+  rpc Delete(DeleteLocalizationRequest) returns (DeleteLocalizationResponse);
+  
+  // Bulk create, update, or upsert multiple localization entries
+  rpc Bulk(BulkLocalizationRequest) returns (BulkLocalizationResponse);
+  
+  // Search localization entries by translation content, key, or description
+  rpc Search(SearchLocalizationsRequest) returns (SearchLocalizationsResponse);
+  
+  // Get localization statistics and analytics
+  rpc GetStats(google.protobuf.Empty) returns (LocalizationStats);
+  
+  // Validate translation completeness across languages for a given key
+  rpc ValidateCompleteness(ValidateCompletenessRequest) returns (ValidateCompletenessResponse);
+  
+  // Export localizations in various formats (JSON, CSV, XLIFF, etc.)
+  rpc Export(ExportLocalizationsRequest) returns (ExportLocalizationsResponse);
+  
+  // Import localizations from various formats
+  rpc Import(ImportLocalizationsRequest) returns (ImportLocalizationsResponse);
+}
+
+// Request message for validating translation completeness
+message ValidateCompletenessRequest {
+  // Optional translation key to validate (if empty, validates all keys)
+  string translation_key = 1;
+  
+  // List of languages to check for completeness
+  repeated string required_languages = 2;
+  
+  // Whether to include regional variants in validation
+  bool include_regional_variants = 3;
+}
+
+// Response message for translation completeness validation
+message ValidateCompletenessResponse {
+  // Overall completeness percentage
+  double completeness_percentage = 1;
+  
+  // List of missing translations
+  repeated MissingTranslation missing_translations = 2;
+  
+  // List of translation keys with complete coverage
+  repeated string complete_keys = 3;
+  
+  // List of translation keys with incomplete coverage
+  repeated string incomplete_keys = 4;
+  
+  // Validation timestamp
+  string validated_at = 5;
+}
+
+// Missing translation information
+message MissingTranslation {
+  // Translation key that is missing
+  string translation_key = 1;
+  
+  // Missing language
+  string language = 2;
+  
+  // Missing region (if applicable)
+  string region = 3;
+  
+  // Severity level: "low", "medium", "high"
+  string severity = 4;
+}
+
+// Request message for exporting localizations
+message ExportLocalizationsRequest {
+  // Export format: "json", "csv", "xliff", "po", "properties"
+  string format = 1;
+  
+  // Optional language filter for export
+  repeated string languages = 2;
+  
+  // Optional region filter for export
+  repeated string regions = 3;
+  
+  // Optional category filter for export
+  repeated string categories = 4;
+  
+  // Whether to include metadata in export
+  bool include_metadata = 5;
+  
+  // Whether to include inactive translations
+  bool include_inactive = 6;
+}
+
+// Response message for exporting localizations
+message ExportLocalizationsResponse {
+  // Export data in the requested format
+  bytes export_data = 1;
+  
+  // Content type of the export data
+  string content_type = 2;
+  
+  // Filename suggestion for the export
+  string filename = 3;
+  
+  // Number of entries exported
+  int32 exported_count = 4;
+  
+  // Export completion timestamp
+  string exported_at = 5;
+}
+
+// Request message for importing localizations
+message ImportLocalizationsRequest {
+  // Import data in various formats
+  bytes import_data = 1;
+  
+  // Content type of the import data
+  string content_type = 2;
+  
+  // Import mode: "create_only", "update_only", "upsert", "replace"
+  string import_mode = 3;
+  
+  // Whether to validate translations before import
+  bool validate_before_import = 4;
+  
+  // Whether to skip duplicate entries
+  bool skip_duplicates = 5;
+}
+
+// Response message for importing localizations
+message ImportLocalizationsResponse {
+  // Number of entries imported successfully
+  int32 imported_count = 1;
+  
+  // Number of entries skipped (duplicates or validation failures)
+  int32 skipped_count = 2;
+  
+  // Number of entries that failed import
+  int32 failed_count = 3;
+  
+  // List of error messages for failed imports
+  repeated string errors = 4;
+  
+  // Import completion timestamp
+  string imported_at = 5;
+  
+  // Summary of import operation
+  string summary = 6;
+}

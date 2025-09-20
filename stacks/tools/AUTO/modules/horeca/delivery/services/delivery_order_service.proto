@@ -1,0 +1,136 @@
+syntax = "proto3";
+
+package horeca.delivery.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/delivery_order_models.proto";
+
+// Delivery Order Service - CRUD operations for delivery orders
+service DeliveryOrderService {
+  // Create a new delivery order
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  
+  // Get order by ID
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  
+  // Update existing order
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+  
+  // Delete order
+  rpc DeleteOrder(DeleteOrderRequest) returns (google.protobuf.Empty);
+  
+  // List orders with filtering
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+  
+  // Update order status
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (UpdateOrderStatusResponse);
+  
+  // Assign driver to order
+  rpc AssignDriver(AssignDriverRequest) returns (AssignDriverResponse);
+  
+  // Cancel order
+  rpc CancelOrder(CancelOrderRequest) returns (CancelOrderResponse);
+  
+  // Get orders by driver
+  rpc GetOrdersByDriver(GetOrdersByDriverRequest) returns (GetOrdersByDriverResponse);
+  
+  // Get orders by status
+  rpc GetOrdersByStatus(GetOrdersByStatusRequest) returns (GetOrdersByStatusResponse);
+}
+
+// Request/Response messages
+message CreateOrderRequest {
+  DeliveryOrder order = 1;
+}
+
+message CreateOrderResponse {
+  DeliveryOrder order = 1;
+  string message = 2;
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message GetOrderResponse {
+  DeliveryOrder order = 1;
+}
+
+message UpdateOrderRequest {
+  DeliveryOrder order = 1;
+}
+
+message UpdateOrderResponse {
+  DeliveryOrder order = 1;
+  string message = 2;
+}
+
+message DeleteOrderRequest {
+  string order_id = 1;
+}
+
+message ListOrdersRequest {
+  string customer_id = 1;
+  string status = 2;
+  string driver_id = 3;
+  string date_from = 4;
+  string date_to = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+message ListOrdersResponse {
+  repeated DeliveryOrder orders = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateOrderStatusRequest {
+  string order_id = 1;
+  string new_status = 2;
+  string notes = 3;
+}
+
+message UpdateOrderStatusResponse {
+  DeliveryOrder order = 1;
+  string message = 2;
+}
+
+message AssignDriverRequest {
+  string order_id = 1;
+  string driver_id = 2;
+}
+
+message AssignDriverResponse {
+  DeliveryOrder order = 1;
+  string message = 2;
+}
+
+message CancelOrderRequest {
+  string order_id = 1;
+  string reason = 2;
+}
+
+message CancelOrderResponse {
+  DeliveryOrder order = 1;
+  string message = 2;
+}
+
+message GetOrdersByDriverRequest {
+  string driver_id = 1;
+  string status = 2;
+  string date = 3;
+}
+
+message GetOrdersByDriverResponse {
+  repeated DeliveryOrder orders = 1;
+}
+
+message GetOrdersByStatusRequest {
+  string status = 1;
+  string date = 2;
+}
+
+message GetOrdersByStatusResponse {
+  repeated DeliveryOrder orders = 1;
+}

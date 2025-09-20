@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package crm_hr.support.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/support/enums";
+
+// TicketStatus represents the current status of a support ticket
+enum TicketStatus {
+  // Unspecified status - should not be used in production
+  TICKET_STATUS_UNSPECIFIED = 0;
+  
+  // Initial statuses
+  NEW = 1;
+  OPEN = 2;
+  PENDING = 3;
+  
+  // Active statuses
+  IN_PROGRESS = 4;
+  ASSIGNED = 5;
+  ESCALATED = 6;
+  ON_HOLD = 7;
+  
+  // Resolution statuses
+  RESOLVED = 8;
+  CLOSED = 9;
+  CANCELLED = 10;
+  DUPLICATE = 11;
+  
+  // Special statuses
+  WAITING_FOR_CUSTOMER = 12;
+  WAITING_FOR_VENDOR = 13;
+  WAITING_FOR_APPROVAL = 14;
+  SCHEDULED = 15;
+  
+  // Error statuses
+  FAILED = 16;
+  REJECTED = 17;
+  EXPIRED = 18;
+  
+  // Reopened statuses
+  REOPENED = 19;
+  UPDATED = 20;
+}

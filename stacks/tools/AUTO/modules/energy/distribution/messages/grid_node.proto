@@ -1,0 +1,540 @@
+syntax = "proto3";
+
+package energy.distribution.messages;
+
+import "energy/distribution/enums/grid_status.proto";
+import "energy/distribution/enums/asset_type.proto";
+
+// Grid node representing a point in the power distribution network
+message GridNode {
+  // Unique identifier for the grid node
+  string id = 1;
+  
+  // Node name
+  string name = 2;
+  
+  // Node type
+  GridNodeType type = 3;
+  
+  // Node status
+  energy.distribution.enums.GridStatus status = 4;
+  
+  // Voltage level in kV
+  double voltage_level = 5;
+  
+  // Frequency in Hz
+  double frequency = 6;
+  
+  // Active power in MW
+  double active_power = 7;
+  
+  // Reactive power in MVAr
+  double reactive_power = 8;
+  
+  // Apparent power in MVA
+  double apparent_power = 9;
+  
+  // Power factor
+  double power_factor = 10;
+  
+  // Current in A
+  double current = 11;
+  
+  // Temperature in Celsius
+  double temperature = 12;
+  
+  // Humidity percentage
+  double humidity = 13;
+  
+  // Physical location
+  GridNodeLocation location = 14;
+  
+  // Connected nodes
+  repeated string connected_nodes = 15;
+  
+  // Connected assets
+  repeated string connected_assets = 16;
+  
+  // Node configuration
+  GridNodeConfiguration configuration = 17;
+  
+  // Protection settings
+  ProtectionSettings protection_settings = 18;
+  
+  // Monitoring data
+  MonitoringData monitoring_data = 19;
+  
+  // Maintenance information
+  MaintenanceInfo maintenance_info = 20;
+  
+  // Additional metadata
+  map<string, string> metadata = 21;
+  
+  // Timestamp when this node was created (unix milliseconds)
+  int64 created_at = 22;
+  
+  // Timestamp when this node was last updated (unix milliseconds)
+  int64 updated_at = 23;
+}
+
+// Grid node type enumeration
+enum GridNodeType {
+  // Generation node
+  GRID_NODE_TYPE_GENERATION = 0;
+  
+  // Transmission node
+  GRID_NODE_TYPE_TRANSMISSION = 1;
+  
+  // Distribution node
+  GRID_NODE_TYPE_DISTRIBUTION = 2;
+  
+  // Substation node
+  GRID_NODE_TYPE_SUBSTATION = 3;
+  
+  // Switchyard node
+  GRID_NODE_TYPE_SWITCHYARD = 4;
+  
+  // Transformer node
+  GRID_NODE_TYPE_TRANSFORMER = 5;
+  
+  // Bus node
+  GRID_NODE_TYPE_BUS = 6;
+  
+  // Load node
+  GRID_NODE_TYPE_LOAD = 7;
+  
+  // Customer node
+  GRID_NODE_TYPE_CUSTOMER = 8;
+  
+  // Storage node
+  GRID_NODE_TYPE_STORAGE = 9;
+  
+  // Microgrid node
+  GRID_NODE_TYPE_MICROGRID = 10;
+  
+  // Renewable energy node
+  GRID_NODE_TYPE_RENEWABLE = 11;
+  
+  // Control node
+  GRID_NODE_TYPE_CONTROL = 12;
+  
+  // Communication node
+  GRID_NODE_TYPE_COMMUNICATION = 13;
+  
+  // Protection node
+  GRID_NODE_TYPE_PROTECTION = 14;
+  
+  // Metering node
+  GRID_NODE_TYPE_METERING = 15;
+  
+  // Monitoring node
+  GRID_NODE_TYPE_MONITORING = 16;
+  
+  // Maintenance node
+  GRID_NODE_TYPE_MAINTENANCE = 17;
+  
+  // Test node
+  GRID_NODE_TYPE_TEST = 18;
+  
+  // Virtual node
+  GRID_NODE_TYPE_VIRTUAL = 19;
+  
+  // Backup node
+  GRID_NODE_TYPE_BACKUP = 20;
+}
+
+// Physical location of the grid node
+message GridNodeLocation {
+  // Street address
+  string street_address = 1;
+  
+  // City
+  string city = 2;
+  
+  // State or province
+  string state_province = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // GPS coordinates (latitude)
+  double latitude = 6;
+  
+  // GPS coordinates (longitude)
+  double longitude = 7;
+  
+  // Elevation in meters
+  double elevation = 8;
+  
+  // Zone or area
+  string zone = 9;
+  
+  // Circuit or feeder
+  string circuit = 10;
+  
+  // Additional location details
+  string additional_details = 11;
+}
+
+// Grid node configuration
+message GridNodeConfiguration {
+  // Node priority level
+  int32 priority_level = 1;
+  
+  // Node criticality
+  NodeCriticality criticality = 2;
+  
+  // Operating parameters
+  OperatingParameters operating_parameters = 3;
+  
+  // Communication settings
+  CommunicationSettings communication_settings = 4;
+  
+  // Security settings
+  SecuritySettings security_settings = 5;
+  
+  // Backup configuration
+  BackupConfiguration backup_configuration = 6;
+  
+  // Redundancy configuration
+  RedundancyConfiguration redundancy_configuration = 7;
+}
+
+// Node criticality levels
+enum NodeCriticality {
+  // Low criticality
+  NODE_CRITICALITY_LOW = 0;
+  
+  // Medium criticality
+  NODE_CRITICALITY_MEDIUM = 1;
+  
+  // High criticality
+  NODE_CRITICALITY_HIGH = 2;
+  
+  // Critical
+  NODE_CRITICALITY_CRITICAL = 3;
+  
+  // Essential
+  NODE_CRITICALITY_ESSENTIAL = 4;
+}
+
+// Operating parameters
+message OperatingParameters {
+  // Nominal voltage in kV
+  double nominal_voltage = 1;
+  
+  // Voltage tolerance percentage
+  double voltage_tolerance = 2;
+  
+  // Nominal frequency in Hz
+  double nominal_frequency = 3;
+  
+  // Frequency tolerance percentage
+  double frequency_tolerance = 4;
+  
+  // Maximum power in MW
+  double max_power = 5;
+  
+  // Minimum power in MW
+  double min_power = 6;
+  
+  // Power factor range
+  PowerFactorRange power_factor_range = 7;
+  
+  // Temperature limits
+  TemperatureLimits temperature_limits = 8;
+}
+
+// Power factor range
+message PowerFactorRange {
+  // Minimum power factor
+  double min_power_factor = 1;
+  
+  // Maximum power factor
+  double max_power_factor = 2;
+  
+  // Preferred power factor
+  double preferred_power_factor = 3;
+}
+
+// Temperature limits
+message TemperatureLimits {
+  // Minimum operating temperature in Celsius
+  double min_temperature = 1;
+  
+  // Maximum operating temperature in Celsius
+  double max_temperature = 2;
+  
+  // Warning temperature in Celsius
+  double warning_temperature = 3;
+  
+  // Critical temperature in Celsius
+  double critical_temperature = 4;
+}
+
+// Communication settings
+message CommunicationSettings {
+  // Communication protocol
+  string protocol = 1;
+  
+  // Network address
+  string network_address = 2;
+  
+  // Port number
+  int32 port = 3;
+  
+  // Communication timeout in seconds
+  int32 timeout_seconds = 4;
+  
+  // Retry attempts
+  int32 retry_attempts = 5;
+  
+  // Encryption enabled
+  bool encryption_enabled = 6;
+  
+  // Authentication required
+  bool authentication_required = 7;
+}
+
+// Security settings
+message SecuritySettings {
+  // Access control level
+  string access_control_level = 1;
+  
+  // Authentication method
+  string authentication_method = 2;
+  
+  // Encryption method
+  string encryption_method = 3;
+  
+  // Firewall rules
+  repeated string firewall_rules = 4;
+  
+  // Intrusion detection enabled
+  bool intrusion_detection_enabled = 5;
+  
+  // Audit logging enabled
+  bool audit_logging_enabled = 6;
+}
+
+// Backup configuration
+message BackupConfiguration {
+  // Backup enabled
+  bool backup_enabled = 1;
+  
+  // Backup frequency
+  string backup_frequency = 2;
+  
+  // Backup retention days
+  int32 backup_retention_days = 3;
+  
+  // Backup location
+  string backup_location = 4;
+  
+  // Backup method
+  string backup_method = 5;
+}
+
+// Redundancy configuration
+message RedundancyConfiguration {
+  // Redundancy enabled
+  bool redundancy_enabled = 1;
+  
+  // Redundancy type
+  string redundancy_type = 2;
+  
+  // Failover time in seconds
+  int32 failover_time_seconds = 3;
+  
+  // Backup nodes
+  repeated string backup_nodes = 4;
+  
+  // Load sharing enabled
+  bool load_sharing_enabled = 5;
+}
+
+// Protection settings
+message ProtectionSettings {
+  // Overcurrent protection
+  OvercurrentProtection overcurrent_protection = 1;
+  
+  // Overvoltage protection
+  OvervoltageProtection overvoltage_protection = 2;
+  
+  // Undervoltage protection
+  UndervoltageProtection undervoltage_protection = 3;
+  
+  // Frequency protection
+  FrequencyProtection frequency_protection = 4;
+  
+  // Thermal protection
+  ThermalProtection thermal_protection = 5;
+  
+  // Differential protection
+  DifferentialProtection differential_protection = 6;
+  
+  // Distance protection
+  DistanceProtection distance_protection = 7;
+}
+
+// Overcurrent protection settings
+message OvercurrentProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Pickup current in A
+  double pickup_current = 2;
+  
+  // Time delay in seconds
+  double time_delay = 3;
+  
+  // Curve type
+  string curve_type = 4;
+  
+  // Multiplier
+  double multiplier = 5;
+}
+
+// Overvoltage protection settings
+message OvervoltageProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Pickup voltage in kV
+  double pickup_voltage = 2;
+  
+  // Time delay in seconds
+  double time_delay = 3;
+  
+  // Reset voltage in kV
+  double reset_voltage = 4;
+}
+
+// Undervoltage protection settings
+message UndervoltageProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Pickup voltage in kV
+  double pickup_voltage = 2;
+  
+  // Time delay in seconds
+  double time_delay = 3;
+  
+  // Reset voltage in kV
+  double reset_voltage = 4;
+}
+
+// Frequency protection settings
+message FrequencyProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Overfrequency pickup in Hz
+  double overfrequency_pickup = 2;
+  
+  // Underfrequency pickup in Hz
+  double underfrequency_pickup = 3;
+  
+  // Time delay in seconds
+  double time_delay = 4;
+}
+
+// Thermal protection settings
+message ThermalProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Temperature pickup in Celsius
+  double temperature_pickup = 2;
+  
+  // Time delay in seconds
+  double time_delay = 3;
+  
+  // Reset temperature in Celsius
+  double reset_temperature = 4;
+}
+
+// Differential protection settings
+message DifferentialProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Pickup current in A
+  double pickup_current = 2;
+  
+  // Slope percentage
+  double slope_percentage = 3;
+  
+  // Time delay in seconds
+  double time_delay = 4;
+}
+
+// Distance protection settings
+message DistanceProtection {
+  // Protection enabled
+  bool enabled = 1;
+  
+  // Zone 1 reach in ohms
+  double zone1_reach = 2;
+  
+  // Zone 2 reach in ohms
+  double zone2_reach = 3;
+  
+  // Zone 3 reach in ohms
+  double zone3_reach = 4;
+  
+  // Time delay in seconds
+  double time_delay = 5;
+}
+
+// Monitoring data
+message MonitoringData {
+  // Data collection interval in seconds
+  int32 collection_interval = 1;
+  
+  // Data retention days
+  int32 retention_days = 2;
+  
+  // Monitoring parameters
+  repeated string monitoring_parameters = 3;
+  
+  // Alarm thresholds
+  map<string, double> alarm_thresholds = 4;
+  
+  // Trending enabled
+  bool trending_enabled = 5;
+  
+  // Reporting enabled
+  bool reporting_enabled = 6;
+}
+
+// Maintenance information
+message MaintenanceInfo {
+  // Last maintenance date (unix milliseconds)
+  int64 last_maintenance_date = 1;
+  
+  // Next maintenance date (unix milliseconds)
+  int64 next_maintenance_date = 2;
+  
+  // Maintenance interval in days
+  int32 maintenance_interval_days = 3;
+  
+  // Maintenance type
+  string maintenance_type = 4;
+  
+  // Maintenance status
+  string maintenance_status = 5;
+  
+  // Maintenance notes
+  string maintenance_notes = 6;
+  
+  // Maintenance team
+  string maintenance_team = 7;
+  
+  // Maintenance cost
+  double maintenance_cost = 8;
+}

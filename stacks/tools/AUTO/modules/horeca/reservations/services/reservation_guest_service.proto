@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package horeca.reservations.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/reservation_guest_models.proto";
+
+// Reservation Guest Service - Guest preferences and history
+service ReservationGuestService {
+  // Create guest profile
+  rpc CreateGuest(CreateGuestRequest) returns (CreateGuestResponse);
+  
+  // Get guest by ID
+  rpc GetGuest(GetGuestRequest) returns (GetGuestResponse);
+  
+  // Update guest information
+  rpc UpdateGuest(UpdateGuestRequest) returns (UpdateGuestResponse);
+  
+  // Delete guest profile
+  rpc DeleteGuest(DeleteGuestRequest) returns (google.protobuf.Empty);
+  
+  // List guests with filtering
+  rpc ListGuests(ListGuestsRequest) returns (ListGuestsResponse);
+  
+  // Search guests
+  rpc SearchGuests(SearchGuestsRequest) returns (SearchGuestsResponse);
+  
+  // Get guest preferences
+  rpc GetGuestPreferences(GetGuestPreferencesRequest) returns (GetGuestPreferencesResponse);
+  
+  // Update guest preferences
+  rpc UpdateGuestPreferences(UpdateGuestPreferencesRequest) returns (UpdateGuestPreferencesResponse);
+  
+  // Get guest history
+  rpc GetGuestHistory(GetGuestHistoryRequest) returns (GetGuestHistoryResponse);
+  
+  // Get guest statistics
+  rpc GetGuestStatistics(GetGuestStatisticsRequest) returns (GetGuestStatisticsResponse);
+  
+  // Send communication to guest
+  rpc SendCommunication(SendCommunicationRequest) returns (SendCommunicationResponse);
+  
+  // Get guest communications
+  rpc GetGuestCommunications(GetGuestCommunicationsRequest) returns (GetGuestCommunicationsResponse);
+  
+  // Update guest type
+  rpc UpdateGuestType(UpdateGuestTypeRequest) returns (UpdateGuestTypeResponse);
+}
+
+// Request/Response messages
+message CreateGuestRequest {
+  ReservationGuest guest = 1;
+}
+
+message CreateGuestResponse {
+  ReservationGuest guest = 1;
+  string message = 2;
+}
+
+message GetGuestRequest {
+  string guest_id = 1;
+}
+
+message GetGuestResponse {
+  ReservationGuest guest = 1;
+}
+
+message UpdateGuestRequest {
+  ReservationGuest guest = 1;
+}
+
+message UpdateGuestResponse {
+  ReservationGuest guest = 1;
+  string message = 2;
+}
+
+message DeleteGuestRequest {
+  string guest_id = 1;
+}
+
+message ListGuestsRequest {
+  string type = 1;
+  string status = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListGuestsResponse {
+  repeated ReservationGuest guests = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message SearchGuestsRequest {
+  string query = 1;
+  string type = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message SearchGuestsResponse {
+  repeated ReservationGuest guests = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetGuestPreferencesRequest {
+  string guest_id = 1;
+}
+
+message GetGuestPreferencesResponse {
+  MemberPreferences preferences = 1;
+}
+
+message UpdateGuestPreferencesRequest {
+  string guest_id = 1;
+  MemberPreferences preferences = 2;
+}
+
+message UpdateGuestPreferencesResponse {
+  MemberPreferences preferences = 1;
+  string message = 2;
+}
+
+message GetGuestHistoryRequest {
+  string guest_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+message GetGuestHistoryResponse {
+  repeated GuestHistory history = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetGuestStatisticsRequest {
+  string guest_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetGuestStatisticsResponse {
+  MemberStatistics statistics = 1;
+}
+
+message SendCommunicationRequest {
+  GuestCommunication communication = 1;
+}
+
+message SendCommunicationResponse {
+  GuestCommunication communication = 1;
+  string message = 2;
+}
+
+message GetGuestCommunicationsRequest {
+  string guest_id = 1;
+  string type = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message GetGuestCommunicationsResponse {
+  repeated GuestCommunication communications = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateGuestTypeRequest {
+  string guest_id = 1;
+  string new_type = 2;
+  string reason = 3;
+}
+
+message UpdateGuestTypeResponse {
+  ReservationGuest guest = 1;
+  string message = 2;
+}

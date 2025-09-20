@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.content.services;
+
+import "marketing/content/messages/content_request.proto";
+import "marketing/content/messages/content_response.proto";
+
+// Content service for managing marketing content
+service ContentService {
+  // Create new content
+  rpc CreateContent(marketing.content.messages.CreateContentRequest) returns (marketing.content.messages.CreateContentResponse);
+  
+  // Get content by ID
+  rpc GetContent(marketing.content.messages.GetContentRequest) returns (marketing.content.messages.GetContentResponse);
+  
+  // List content with pagination and filtering
+  rpc ListContent(marketing.content.messages.ListContentRequest) returns (marketing.content.messages.ListContentResponse);
+  
+  // Update existing content
+  rpc UpdateContent(marketing.content.messages.UpdateContentRequest) returns (marketing.content.messages.UpdateContentResponse);
+  
+  // Delete content
+  rpc DeleteContent(marketing.content.messages.DeleteContentRequest) returns (marketing.content.messages.DeleteContentResponse);
+}

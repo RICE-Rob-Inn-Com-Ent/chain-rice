@@ -1,0 +1,977 @@
+syntax = "proto3";
+
+package automation.ai.services;
+
+import "automation/ai/messages/model.proto";
+import "automation/ai/messages/dataset.proto";
+import "automation/ai/messages/training_job.proto";
+import "automation/ai/messages/prediction_request.proto";
+import "automation/ai/messages/prediction_response.proto";
+import "automation/ai/enums/ai_model_type.proto";
+import "automation/ai/enums/ai_task_status.proto";
+import "automation/ai/enums/ai_priority.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+// AI Service
+// Provides comprehensive AI model management, training, and prediction services
+service AIService {
+  // Model Management RPCs
+  rpc CreateModel(CreateModelRequest) returns (CreateModelResponse);
+  rpc GetModel(GetModelRequest) returns (GetModelResponse);
+  rpc UpdateModel(UpdateModelRequest) returns (UpdateModelResponse);
+  rpc DeleteModel(DeleteModelRequest) returns (google.protobuf.Empty);
+  rpc ListModels(ListModelsRequest) returns (ListModelsResponse);
+  rpc SearchModels(SearchModelsRequest) returns (SearchModelsResponse);
+  
+  // Model Training RPCs
+  rpc TrainModel(TrainModelRequest) returns (TrainModelResponse);
+  rpc GetTrainingJob(GetTrainingJobRequest) returns (GetTrainingJobResponse);
+  rpc ListTrainingJobs(ListTrainingJobsRequest) returns (ListTrainingJobsResponse);
+  rpc CancelTrainingJob(CancelTrainingJobRequest) returns (google.protobuf.Empty);
+  rpc GetTrainingProgress(GetTrainingProgressRequest) returns (GetTrainingProgressResponse);
+  
+  // Model Prediction RPCs
+  rpc Predict(PredictRequest) returns (PredictResponse);
+  rpc BatchPredict(BatchPredictRequest) returns (BatchPredictResponse);
+  rpc StreamPredict(stream PredictRequest) returns (stream PredictResponse);
+  rpc GetPrediction(GetPredictionRequest) returns (GetPredictionResponse);
+  rpc ListPredictions(ListPredictionsRequest) returns (ListPredictionsResponse);
+  
+  // Dataset Management RPCs
+  rpc CreateDataset(CreateDatasetRequest) returns (CreateDatasetResponse);
+  rpc GetDataset(GetDatasetRequest) returns (GetDatasetResponse);
+  rpc UpdateDataset(UpdateDatasetRequest) returns (UpdateDatasetResponse);
+  rpc DeleteDataset(DeleteDatasetRequest) returns (google.protobuf.Empty);
+  rpc ListDatasets(ListDatasetsRequest) returns (ListDatasetsResponse);
+  rpc SearchDatasets(SearchDatasetsRequest) returns (SearchDatasetsResponse);
+  
+  // Model Evaluation RPCs
+  rpc EvaluateModel(EvaluateModelRequest) returns (EvaluateModelResponse);
+  rpc GetModelMetrics(GetModelMetricsRequest) returns (GetModelMetricsResponse);
+  rpc CompareModels(CompareModelsRequest) returns (CompareModelsResponse);
+  
+  // Model Deployment RPCs
+  rpc DeployModel(DeployModelRequest) returns (DeployModelResponse);
+  rpc UndeployModel(UndeployModelRequest) returns (google.protobuf.Empty);
+  rpc GetDeployment(GetDeploymentRequest) returns (GetDeploymentResponse);
+  rpc ListDeployments(ListDeploymentsRequest) returns (ListDeploymentsResponse);
+  rpc UpdateDeployment(UpdateDeploymentRequest) returns (UpdateDeploymentResponse);
+  
+  // Model Versioning RPCs
+  rpc CreateModelVersion(CreateModelVersionRequest) returns (CreateModelVersionResponse);
+  rpc GetModelVersion(GetModelVersionRequest) returns (GetModelVersionResponse);
+  rpc ListModelVersions(ListModelVersionsRequest) returns (ListModelVersionsResponse);
+  rpc DeleteModelVersion(DeleteModelVersionRequest) returns (google.protobuf.Empty);
+  
+  // Health and Status RPCs
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+  rpc GetServiceStatus(google.protobuf.Empty) returns (ServiceStatusResponse);
+  rpc GetServiceMetrics(google.protobuf.Empty) returns (ServiceMetricsResponse);
+}
+
+// Model Management Request/Response Messages
+
+message CreateModelRequest {
+  // Model name
+  string name = 1;
+  
+  // Model description
+  string description = 2;
+  
+  // Model type
+  automation.ai.enums.AIModelType model_type = 3;
+  
+  // Model priority
+  automation.ai.enums.AIPriority priority = 4;
+  
+  // Model configuration
+  google.protobuf.Struct config = 5;
+  
+  // Model metadata
+  map<string, string> metadata = 6;
+  
+  // Model tags
+  repeated string tags = 7;
+  
+  // Model owner
+  string owner = 8;
+}
+
+message CreateModelResponse {
+  // Created model
+  automation.ai.messages.Model model = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetModelRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Include metadata
+  bool include_metadata = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+}
+
+message GetModelResponse {
+  // Model
+  automation.ai.messages.Model model = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message UpdateModelRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Model name
+  string name = 2;
+  
+  // Model description
+  string description = 3;
+  
+  // Model configuration
+  google.protobuf.Struct config = 4;
+  
+  // Model metadata
+  map<string, string> metadata = 5;
+  
+  // Model tags
+  repeated string tags = 6;
+  
+  // Update mask
+  repeated string update_mask = 7;
+}
+
+message UpdateModelResponse {
+  // Updated model
+  automation.ai.messages.Model model = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message DeleteModelRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Force delete
+  bool force = 2;
+  
+  // Delete dependencies
+  bool delete_dependencies = 3;
+}
+
+message ListModelsRequest {
+  // Page size
+  int32 page_size = 1;
+  
+  // Page token
+  string page_token = 2;
+  
+  // Filter by model type
+  automation.ai.enums.AIModelType model_type = 3;
+  
+  // Filter by priority
+  automation.ai.enums.AIPriority priority = 4;
+  
+  // Filter by owner
+  string owner = 5;
+  
+  // Filter by tags
+  repeated string tags = 6;
+  
+  // Search query
+  string search_query = 7;
+  
+  // Sort field
+  string sort_field = 8;
+  
+  // Sort order
+  string sort_order = 9;
+}
+
+message ListModelsResponse {
+  // Models
+  repeated automation.ai.messages.Model models = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message SearchModelsRequest {
+  // Search query
+  string query = 1;
+  
+  // Search filters
+  google.protobuf.Struct filters = 2;
+  
+  // Page size
+  int32 page_size = 3;
+  
+  // Page token
+  string page_token = 4;
+  
+  // Search fields
+  repeated string search_fields = 5;
+}
+
+message SearchModelsResponse {
+  // Search results
+  repeated automation.ai.messages.Model models = 1;
+  
+  // Search metadata
+  google.protobuf.Struct search_metadata = 2;
+  
+  // Next page token
+  string next_page_token = 3;
+  
+  // Total count
+  int64 total_count = 4;
+}
+
+// Model Training Request/Response Messages
+
+message TrainModelRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Dataset ID
+  string dataset_id = 2;
+  
+  // Training configuration
+  automation.ai.messages.TrainingConfig config = 3;
+  
+  // Training hyperparameters
+  google.protobuf.Struct hyperparameters = 4;
+  
+  // Training priority
+  automation.ai.enums.AIPriority priority = 5;
+  
+  // Training tags
+  repeated string tags = 6;
+  
+  // Training metadata
+  map<string, string> metadata = 7;
+}
+
+message TrainModelResponse {
+  // Training job
+  automation.ai.messages.TrainingJob training_job = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetTrainingJobRequest {
+  // Training job ID
+  string training_job_id = 1;
+  
+  // Include logs
+  bool include_logs = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+}
+
+message GetTrainingJobResponse {
+  // Training job
+  automation.ai.messages.TrainingJob training_job = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListTrainingJobsRequest {
+  // Page size
+  int32 page_size = 1;
+  
+  // Page token
+  string page_token = 2;
+  
+  // Filter by model ID
+  string model_id = 3;
+  
+  // Filter by status
+  automation.ai.enums.AITaskStatus status = 4;
+  
+  // Filter by priority
+  automation.ai.enums.AIPriority priority = 5;
+  
+  // Filter by owner
+  string owner = 6;
+  
+  // Filter by tags
+  repeated string tags = 7;
+  
+  // Sort field
+  string sort_field = 8;
+  
+  // Sort order
+  string sort_order = 9;
+}
+
+message ListTrainingJobsResponse {
+  // Training jobs
+  repeated automation.ai.messages.TrainingJob training_jobs = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message CancelTrainingJobRequest {
+  // Training job ID
+  string training_job_id = 1;
+  
+  // Cancel reason
+  string reason = 2;
+}
+
+message GetTrainingProgressRequest {
+  // Training job ID
+  string training_job_id = 1;
+  
+  // Include detailed progress
+  bool include_detailed = 2;
+}
+
+message GetTrainingProgressResponse {
+  // Training progress
+  automation.ai.messages.TrainingProgress progress = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// Model Prediction Request/Response Messages
+
+message PredictRequest {
+  // Prediction request
+  automation.ai.messages.PredictionRequest request = 1;
+}
+
+message PredictResponse {
+  // Prediction response
+  automation.ai.messages.PredictionResponse response = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message BatchPredictRequest {
+  // Prediction requests
+  repeated automation.ai.messages.PredictionRequest requests = 1;
+  
+  // Batch configuration
+  google.protobuf.Struct batch_config = 2;
+}
+
+message BatchPredictResponse {
+  // Prediction responses
+  repeated automation.ai.messages.PredictionResponse responses = 1;
+  
+  // Batch metadata
+  google.protobuf.Struct batch_metadata = 2;
+  
+  // Response status
+  string status = 3;
+  
+  // Response message
+  string message = 4;
+}
+
+message GetPredictionRequest {
+  // Prediction ID
+  string prediction_id = 1;
+  
+  // Include metadata
+  bool include_metadata = 2;
+  
+  // Include performance
+  bool include_performance = 3;
+}
+
+message GetPredictionResponse {
+  // Prediction response
+  automation.ai.messages.PredictionResponse response = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListPredictionsRequest {
+  // Page size
+  int32 page_size = 1;
+  
+  // Page token
+  string page_token = 2;
+  
+  // Filter by model ID
+  string model_id = 3;
+  
+  // Filter by user
+  string user = 4;
+  
+  // Filter by status
+  string status = 5;
+  
+  // Filter by date range
+  google.protobuf.Struct date_range = 6;
+  
+  // Sort field
+  string sort_field = 7;
+  
+  // Sort order
+  string sort_order = 8;
+}
+
+message ListPredictionsResponse {
+  // Predictions
+  repeated automation.ai.messages.PredictionResponse predictions = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+// Dataset Management Request/Response Messages
+
+message CreateDatasetRequest {
+  // Dataset name
+  string name = 1;
+  
+  // Dataset description
+  string description = 2;
+  
+  // Dataset type
+  string type = 3;
+  
+  // Dataset format
+  string format = 4;
+  
+  // Dataset source
+  automation.ai.messages.DatasetSource source = 5;
+  
+  // Dataset metadata
+  map<string, string> metadata = 6;
+  
+  // Dataset tags
+  repeated string tags = 7;
+  
+  // Dataset owner
+  string owner = 8;
+}
+
+message CreateDatasetResponse {
+  // Created dataset
+  automation.ai.messages.Dataset dataset = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetDatasetRequest {
+  // Dataset ID
+  string dataset_id = 1;
+  
+  // Include statistics
+  bool include_statistics = 2;
+  
+  // Include quality
+  bool include_quality = 3;
+}
+
+message GetDatasetResponse {
+  // Dataset
+  automation.ai.messages.Dataset dataset = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message UpdateDatasetRequest {
+  // Dataset ID
+  string dataset_id = 1;
+  
+  // Dataset name
+  string name = 2;
+  
+  // Dataset description
+  string description = 3;
+  
+  // Dataset metadata
+  map<string, string> metadata = 4;
+  
+  // Dataset tags
+  repeated string tags = 5;
+  
+  // Update mask
+  repeated string update_mask = 6;
+}
+
+message UpdateDatasetResponse {
+  // Updated dataset
+  automation.ai.messages.Dataset dataset = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message DeleteDatasetRequest {
+  // Dataset ID
+  string dataset_id = 1;
+  
+  // Force delete
+  bool force = 2;
+  
+  // Delete dependencies
+  bool delete_dependencies = 3;
+}
+
+message ListDatasetsRequest {
+  // Page size
+  int32 page_size = 1;
+  
+  // Page token
+  string page_token = 2;
+  
+  // Filter by type
+  string type = 3;
+  
+  // Filter by format
+  string format = 4;
+  
+  // Filter by owner
+  string owner = 5;
+  
+  // Filter by tags
+  repeated string tags = 6;
+  
+  // Search query
+  string search_query = 7;
+  
+  // Sort field
+  string sort_field = 8;
+  
+  // Sort order
+  string sort_order = 9;
+}
+
+message ListDatasetsResponse {
+  // Datasets
+  repeated automation.ai.messages.Dataset datasets = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message SearchDatasetsRequest {
+  // Search query
+  string query = 1;
+  
+  // Search filters
+  google.protobuf.Struct filters = 2;
+  
+  // Page size
+  int32 page_size = 3;
+  
+  // Page token
+  string page_token = 4;
+  
+  // Search fields
+  repeated string search_fields = 5;
+}
+
+message SearchDatasetsResponse {
+  // Search results
+  repeated automation.ai.messages.Dataset datasets = 1;
+  
+  // Search metadata
+  google.protobuf.Struct search_metadata = 2;
+  
+  // Next page token
+  string next_page_token = 3;
+  
+  // Total count
+  int64 total_count = 4;
+}
+
+// Model Evaluation Request/Response Messages
+
+message EvaluateModelRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Test dataset ID
+  string test_dataset_id = 2;
+  
+  // Evaluation metrics
+  repeated string metrics = 3;
+  
+  // Evaluation configuration
+  google.protobuf.Struct config = 4;
+}
+
+message EvaluateModelResponse {
+  // Evaluation results
+  google.protobuf.Struct results = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetModelMetricsRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Metrics type
+  string metrics_type = 2;
+  
+  // Time range
+  google.protobuf.Struct time_range = 3;
+}
+
+message GetModelMetricsResponse {
+  // Model metrics
+  google.protobuf.Struct metrics = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message CompareModelsRequest {
+  // Model IDs to compare
+  repeated string model_ids = 1;
+  
+  // Comparison metrics
+  repeated string metrics = 2;
+  
+  // Test dataset ID
+  string test_dataset_id = 3;
+  
+  // Comparison configuration
+  google.protobuf.Struct config = 4;
+}
+
+message CompareModelsResponse {
+  // Comparison results
+  google.protobuf.Struct results = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// Model Deployment Request/Response Messages
+
+message DeployModelRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Deployment environment
+  string environment = 2;
+  
+  // Deployment configuration
+  google.protobuf.Struct config = 3;
+  
+  // Resource requirements
+  google.protobuf.Struct resource_requirements = 4;
+  
+  // Scaling configuration
+  google.protobuf.Struct scaling_config = 5;
+}
+
+message DeployModelResponse {
+  // Deployment ID
+  string deployment_id = 1;
+  
+  // Deployment status
+  string status = 2;
+  
+  // Deployment endpoint
+  string endpoint = 3;
+  
+  // Response message
+  string message = 4;
+}
+
+message UndeployModelRequest {
+  // Deployment ID
+  string deployment_id = 1;
+  
+  // Force undeploy
+  bool force = 2;
+}
+
+message GetDeploymentRequest {
+  // Deployment ID
+  string deployment_id = 1;
+  
+  // Include status
+  bool include_status = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+}
+
+message GetDeploymentResponse {
+  // Deployment information
+  google.protobuf.Struct deployment = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListDeploymentsRequest {
+  // Page size
+  int32 page_size = 1;
+  
+  // Page token
+  string page_token = 2;
+  
+  // Filter by model ID
+  string model_id = 3;
+  
+  // Filter by environment
+  string environment = 4;
+  
+  // Filter by status
+  string status = 5;
+  
+  // Sort field
+  string sort_field = 6;
+  
+  // Sort order
+  string sort_order = 7;
+}
+
+message ListDeploymentsResponse {
+  // Deployments
+  repeated google.protobuf.Struct deployments = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message UpdateDeploymentRequest {
+  // Deployment ID
+  string deployment_id = 1;
+  
+  // Update configuration
+  google.protobuf.Struct config = 2;
+  
+  // Update mask
+  repeated string update_mask = 3;
+}
+
+message UpdateDeploymentResponse {
+  // Updated deployment
+  google.protobuf.Struct deployment = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// Model Versioning Request/Response Messages
+
+message CreateModelVersionRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Version name
+  string version_name = 2;
+  
+  // Version description
+  string description = 3;
+  
+  // Version tags
+  repeated string tags = 4;
+  
+  // Version metadata
+  map<string, string> metadata = 5;
+}
+
+message CreateModelVersionResponse {
+  // Model version
+  google.protobuf.Struct model_version = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetModelVersionRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Version name
+  string version_name = 2;
+  
+  // Include metadata
+  bool include_metadata = 3;
+}
+
+message GetModelVersionResponse {
+  // Model version
+  google.protobuf.Struct model_version = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListModelVersionsRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Page size
+  int32 page_size = 2;
+  
+  // Page token
+  string page_token = 3;
+  
+  // Filter by tags
+  repeated string tags = 4;
+  
+  // Sort field
+  string sort_field = 5;
+  
+  // Sort order
+  string sort_order = 6;
+}
+
+message ListModelVersionsResponse {
+  // Model versions
+  repeated google.protobuf.Struct model_versions = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message DeleteModelVersionRequest {
+  // Model ID
+  string model_id = 1;
+  
+  // Version name
+  string version_name = 2;
+  
+  // Force delete
+  bool force = 3;
+}
+
+// Health and Status Request/Response Messages
+
+message HealthCheckResponse {
+  // Health status
+  string status = 1;
+  
+  // Health message
+  string message = 2;
+  
+  // Health timestamp
+  int64 timestamp = 3;
+  
+  // Health details
+  google.protobuf.Struct details = 4;
+}
+
+message ServiceStatusResponse {
+  // Service status
+  string status = 1;
+  
+  // Service message
+  string message = 2;
+  
+  // Service uptime
+  int64 uptime_seconds = 3;
+  
+  // Service version
+  string version = 4;
+  
+  // Service details
+  google.protobuf.Struct details = 5;
+}
+
+message ServiceMetricsResponse {
+  // Service metrics
+  google.protobuf.Struct metrics = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}

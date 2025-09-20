@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package healthcare.patients.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/patients/messages";
+
+// Contact type enumeration
+enum ContactType {
+  CONTACT_TYPE_UNSPECIFIED = 0;
+  CONTACT_TYPE_EMERGENCY = 1;
+  CONTACT_TYPE_PRIMARY = 2;
+  CONTACT_TYPE_SECONDARY = 3;
+  CONTACT_TYPE_FAMILY = 4;
+  CONTACT_TYPE_FRIEND = 5;
+  CONTACT_TYPE_EMPLOYER = 6;
+  CONTACT_TYPE_INSURANCE = 7;
+  CONTACT_TYPE_REFERRAL = 8;
+}
+
+// Contact method enumeration
+enum ContactMethod {
+  CONTACT_METHOD_UNSPECIFIED = 0;
+  CONTACT_METHOD_PHONE = 1;
+  CONTACT_METHOD_EMAIL = 2;
+  CONTACT_METHOD_SMS = 3;
+  CONTACT_METHOD_MAIL = 4;
+  CONTACT_METHOD_IN_PERSON = 5;
+}
+
+// Patient contact
+message PatientContact {
+  string contact_id = 1;
+  string patient_id = 2;
+  string contact_name = 3;
+  string relationship = 4;
+  ContactType contact_type = 5;
+  string phone_number = 6;
+  string email = 7;
+  string address = 8;
+  string city = 9;
+  string state = 10;
+  string postal_code = 11;
+  string country = 12;
+  ContactMethod preferred_method = 13;
+  bool is_primary = 14;
+  bool is_emergency_contact = 15;
+  string notes = 16;
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+  string created_by = 19;
+  string updated_by = 20;
+}
+
+// Patient contact request
+message PatientContactRequest {
+  string patient_id = 1;
+  string contact_name = 2;
+  string relationship = 3;
+  ContactType contact_type = 4;
+  string phone_number = 5;
+  string email = 6;
+  string address = 7;
+  string city = 8;
+  string state = 9;
+  string postal_code = 10;
+  string country = 11;
+  ContactMethod preferred_method = 12;
+  bool is_primary = 13;
+  bool is_emergency_contact = 14;
+  string notes = 15;
+}
+
+// Patient contact response
+message PatientContactResponse {
+  bool success = 1;
+  string message = 2;
+  PatientContact contact = 3;
+}
+
+// List patient contacts request
+message ListPatientContactsRequest {
+  string patient_id = 1;
+  ContactType contact_type = 2;
+  bool emergency_contacts_only = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+// List patient contacts response
+message ListPatientContactsResponse {
+  repeated PatientContact contacts = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Contact communication log
+message ContactCommunicationLog {
+  string log_id = 1;
+  string contact_id = 2;
+  string patient_id = 3;
+  ContactMethod method = 4;
+  string subject = 5;
+  string message = 6;
+  string outcome = 7;
+  google.protobuf.Timestamp communication_date = 8;
+  string initiated_by = 9;
+  string notes = 10;
+}
+
+// Contact communication request
+message ContactCommunicationRequest {
+  string contact_id = 1;
+  string patient_id = 2;
+  ContactMethod method = 3;
+  string subject = 4;
+  string message = 5;
+  string initiated_by = 6;
+  string notes = 7;
+}
+
+// Contact communication response
+message ContactCommunicationResponse {
+  bool success = 1;
+  string message = 2;
+  ContactCommunicationLog communication_log = 3;
+}
+
+// List contact communications request
+message ListContactCommunicationsRequest {
+  string contact_id = 1;
+  string patient_id = 2;
+  ContactMethod method = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+// List contact communications response
+message ListContactCommunicationsResponse {
+  repeated ContactCommunicationLog communications = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Emergency contact information
+message EmergencyContactInfo {
+  string patient_id = 1;
+  repeated PatientContact emergency_contacts = 2;
+  string primary_emergency_contact_id = 3;
+  string emergency_contact_instructions = 4;
+  string medical_alert_info = 5;
+  string special_instructions = 6;
+  google.protobuf.Timestamp last_updated = 7;
+  string updated_by = 8;
+}

@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package retail.stores.services;
+
+import "stores/messages/store_request.proto";
+import "stores/messages/store_response.proto";
+import "google/api/annotations.proto";
+
+// StoreService provides CRUD operations for store management
+service StoreService {
+  // CreateStore creates a new store
+  rpc CreateStore(retail.stores.messages.CreateStoreRequest) returns (retail.stores.messages.CreateStoreResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/stores"
+      body: "*"
+    };
+  }
+  
+  // GetStore retrieves a specific store by ID
+  rpc GetStore(retail.stores.messages.GetStoreRequest) returns (retail.stores.messages.GetStoreResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/stores/{store_id}"
+    };
+  }
+  
+  // ListStores retrieves a paginated list of stores with optional filtering
+  rpc ListStores(retail.stores.messages.ListStoresRequest) returns (retail.stores.messages.ListStoresResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/stores"
+    };
+  }
+  
+  // UpdateStore updates an existing store
+  rpc UpdateStore(retail.stores.messages.UpdateStoreRequest) returns (retail.stores.messages.UpdateStoreResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/stores/{store_id}"
+      body: "*"
+    };
+  }
+  
+  // DeleteStore deletes a specific store
+  rpc DeleteStore(retail.stores.messages.DeleteStoreRequest) returns (retail.stores.messages.DeleteStoreResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/stores/{store_id}"
+    };
+  }
+}

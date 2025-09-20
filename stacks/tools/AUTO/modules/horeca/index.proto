@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package horeca;
+
+// HORECA (Hotel, Restaurant, Catering) Business Logic Module
+// Comprehensive hospitality management system covering all aspects of hotel, restaurant, and catering operations
+
+// Import all catering modules
+import "catering/enums/catering_order_status.proto";
+import "catering/enums/catering_service_type.proto";
+import "catering/enums/catering_priority.proto";
+import "catering/messages/catering_order_models.proto";
+import "catering/messages/catering_menu_models.proto";
+import "catering/messages/catering_event_log.proto";
+import "catering/services/catering_order_service.proto";
+import "catering/services/catering_menu_service.proto";
+import "catering/services/catering_analytics_service.proto";
+
+// Import all delivery modules
+import "delivery/enums/delivery_status.proto";
+import "delivery/enums/delivery_type.proto";
+import "delivery/enums/delivery_priority.proto";
+import "delivery/messages/delivery_order_models.proto";
+import "delivery/messages/delivery_driver_models.proto";
+import "delivery/messages/delivery_events.proto";
+import "delivery/services/delivery_order_service.proto";
+import "delivery/services/delivery_tracking_service.proto";
+import "delivery/services/delivery_logistics_service.proto";
+
+// Import all events modules
+import "events/enums/event_type.proto";
+import "events/enums/event_status.proto";
+import "events/enums/event_priority.proto";
+import "events/messages/event_models.proto";
+import "events/messages/event_booking_models.proto";
+import "events/messages/event_feedback_models.proto";
+import "events/services/event_management_service.proto";
+import "events/services/event_booking_service.proto";
+import "events/services/event_reporting_service.proto";
+
+// Import all housekeeping modules
+import "housekeeping/enums/room_status.proto";
+import "housekeeping/enums/housekeeping_task_status.proto";
+import "housekeeping/enums/housekeeping_priority.proto";
+import "housekeeping/messages/housekeeping_task_models.proto";
+import "housekeeping/messages/housekeeping_staff_models.proto";
+import "housekeeping/messages/housekeeping_event_log.proto";
+import "housekeeping/services/housekeeping_task_service.proto";
+import "housekeeping/services/housekeeping_staff_service.proto";
+import "housekeeping/services/housekeeping_reporting_service.proto";
+
+// Import all kitchen modules
+import "kitchen/enums/kitchen_order_status.proto";
+import "kitchen/enums/kitchen_station.proto";
+import "kitchen/enums/kitchen_priority.proto";
+import "kitchen/messages/kitchen_order_models.proto";
+import "kitchen/messages/kitchen_inventory_models.proto";
+import "kitchen/messages/kitchen_recipe_models.proto";
+import "kitchen/services/kitchen_order_service.proto";
+import "kitchen/services/kitchen_inventory_service.proto";
+import "kitchen/services/kitchen_recipe_service.proto";
+
+// Import all loyalty modules
+import "loyalty/enums/loyalty_tier.proto";
+import "loyalty/enums/loyalty_reward_type.proto";
+import "loyalty/enums/loyalty_status.proto";
+import "loyalty/messages/loyalty_member_models.proto";
+import "loyalty/messages/loyalty_transaction_models.proto";
+import "loyalty/messages/loyalty_event_log.proto";
+import "loyalty/services/loyalty_member_service.proto";
+import "loyalty/services/loyalty_rewards_service.proto";
+import "loyalty/services/loyalty_analytics_service.proto";
+
+// Import all menu modules
+import "menu/enums/menu_category.proto";
+import "menu/enums/menu_item_status.proto";
+import "menu/enums/allergen_type.proto";
+import "menu/messages/menu_item_models.proto";
+import "menu/messages/menu_category_models.proto";
+import "menu/messages/menu_pricing_models.proto";
+import "menu/services/menu_item_service.proto";
+import "menu/services/menu_category_service.proto";
+import "menu/services/menu_pricing_service.proto";
+
+// Import all POS modules
+import "pos/enums/pos_payment_method.proto";
+import "pos/enums/pos_transaction_status.proto";
+import "pos/enums/pos_terminal_status.proto";
+import "pos/messages/pos_transaction_models.proto";
+import "pos/messages/pos_shift_models.proto";
+import "pos/messages/pos_receipt_models.proto";
+import "pos/services/pos_transaction_service.proto";
+import "pos/services/pos_shift_service.proto";
+import "pos/services/pos_reporting_service.proto";
+
+// Import all reservations modules
+import "reservations/enums/reservation_status.proto";
+import "reservations/enums/reservation_type.proto";
+import "reservations/enums/reservation_priority.proto";
+import "reservations/messages/reservation_models.proto";
+import "reservations/messages/reservation_guest_models.proto";
+import "reservations/messages/reservation_event_log.proto";
+import "reservations/services/reservation_service.proto";
+import "reservations/services/reservation_guest_service.proto";
+import "reservations/services/reservation_reporting_service.proto";
+
+// HORECA Module Overview
+// This module provides comprehensive business logic for hospitality operations including:
+//
+// 1. CATERING - Event catering management
+//    - Order management and tracking
+//    - Menu planning and pricing
+//    - Service coordination and analytics
+//
+// 2. DELIVERY - Food delivery operations
+//    - Order processing and tracking
+//    - Driver management and logistics
+//    - Route optimization and analytics
+//
+// 3. EVENTS - Event management and hosting
+//    - Event planning and coordination
+//    - Booking and payment processing
+//    - Feedback and reporting
+//
+// 4. HOUSEKEEPING - Hotel room maintenance
+//    - Task management and scheduling
+//    - Staff coordination and performance
+//    - Quality control and reporting
+//
+// 5. KITCHEN - Kitchen operations
+//    - Order processing and preparation
+//    - Inventory management and control
+//    - Recipe management and costing
+//
+// 6. LOYALTY - Customer loyalty programs
+//    - Member management and tiers
+//    - Rewards catalog and redemption
+//    - Analytics and engagement metrics
+//
+// 7. MENU - Menu management
+//    - Item catalog and pricing
+//    - Category hierarchy and organization
+//    - Dynamic pricing and promotions
+//
+// 8. POS - Point of sale operations
+//    - Transaction processing and payments
+//    - Shift management and cash control
+//    - Sales analytics and reporting
+//
+// 9. RESERVATIONS - Reservation management
+//    - Booking and scheduling
+//    - Guest preferences and history
+//    - Occupancy analytics and reporting
+//
+// Each submodule includes:
+// - Enums: Status types, priorities, and classifications
+// - Messages: Data models and structures
+// - Services: gRPC service definitions with CRUD operations
+//
+// This comprehensive system enables complete hospitality business management
+// with real-time tracking, analytics, and operational efficiency.

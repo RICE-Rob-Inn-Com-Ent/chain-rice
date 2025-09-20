@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package healthcare.appointments.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/appointment_status.proto";
+import "../enums/appointment_type.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/messages";
+
+// Appointment event types
+enum AppointmentEventType {
+  APPOINTMENT_EVENT_TYPE_UNSPECIFIED = 0;
+  APPOINTMENT_EVENT_TYPE_BOOKED = 1;
+  APPOINTMENT_EVENT_TYPE_RESCHEDULED = 2;
+  APPOINTMENT_EVENT_TYPE_CANCELED = 3;
+  APPOINTMENT_EVENT_TYPE_COMPLETED = 4;
+  APPOINTMENT_EVENT_TYPE_NO_SHOW = 5;
+  APPOINTMENT_EVENT_TYPE_REMINDER_SENT = 6;
+  APPOINTMENT_EVENT_TYPE_CONFIRMED = 7;
+}
+
+// Appointment event
+message AppointmentEvent {
+  string event_id = 1;
+  string appointment_id = 2;
+  AppointmentEventType event_type = 3;
+  google.protobuf.Timestamp event_time = 4;
+  string patient_id = 5;
+  string doctor_id = 6;
+  string clinic_id = 7;
+  healthcare.appointments.enums.AppointmentType appointment_type = 8;
+  healthcare.appointments.enums.AppointmentStatus appointment_status = 9;
+  string event_data = 10; // JSON string for additional event-specific data
+  string triggered_by = 11;
+}
+
+// Appointment event request
+message AppointmentEventRequest {
+  string appointment_id = 1;
+  AppointmentEventType event_type = 2;
+  string event_data = 3;
+  string triggered_by = 4;
+}
+
+// Appointment event response
+message AppointmentEventResponse {
+  bool success = 1;
+  string message = 2;
+  AppointmentEvent event = 3;
+}
+
+// List appointment events request
+message ListAppointmentEventsRequest {
+  string appointment_id = 1;
+  AppointmentEventType event_type = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+// List appointment events response
+message ListAppointmentEventsResponse {
+  repeated AppointmentEvent events = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}

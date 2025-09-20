@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package automation.bots.enums;
+
+// Bot Priority enumeration
+// Defines the priority levels for bot execution and resource allocation
+enum BotPriority {
+  // Unspecified priority
+  BOT_PRIORITY_UNSPECIFIED = 0;
+  
+  // Critical Priority Levels
+  BOT_PRIORITY_CRITICAL = 1;             // Critical priority - highest urgency
+  BOT_PRIORITY_EMERGENCY = 2;            // Emergency priority - immediate attention required
+  BOT_PRIORITY_URGENT = 3;               // Urgent priority - high urgency
+  BOT_PRIORITY_SYSTEM_CRITICAL = 4;      // System critical - essential system functions
+  
+  // High Priority Levels
+  BOT_PRIORITY_HIGH = 5;                 // High priority - important tasks
+  BOT_PRIORITY_IMPORTANT = 6;            // Important priority - significant tasks
+  BOT_PRIORITY_BUSINESS_CRITICAL = 7;    // Business critical - essential business functions
+  BOT_PRIORITY_PRODUCTION = 8;           // Production priority - production environment tasks
+  
+  // Medium Priority Levels
+  BOT_PRIORITY_MEDIUM = 9;               // Medium priority - standard tasks
+  BOT_PRIORITY_NORMAL = 10;              // Normal priority - regular tasks
+  BOT_PRIORITY_STANDARD = 11;            // Standard priority - typical tasks
+  BOT_PRIORITY_DEFAULT = 12;             // Default priority - default task priority
+  
+  // Low Priority Levels
+  BOT_PRIORITY_LOW = 13;                 // Low priority - less urgent tasks
+  BOT_PRIORITY_BACKGROUND = 14;          // Background priority - non-urgent tasks
+  BOT_PRIORITY_BATCH = 15;               // Batch priority - batch processing tasks
+  BOT_PRIORITY_OFF_PEAK = 16;            // Off-peak priority - execute during off-peak hours
+  
+  // Special Priority Levels
+  BOT_PRIORITY_MAINTENANCE = 17;         // Maintenance priority - system maintenance tasks
+  BOT_PRIORITY_DEVELOPMENT = 18;         // Development priority - development/testing tasks
+  BOT_PRIORITY_TESTING = 19;             // Testing priority - testing and validation tasks
+  BOT_PRIORITY_EXPERIMENTAL = 20;        // Experimental priority - experimental tasks
+  BOT_PRIORITY_DEMO = 21;                // Demo priority - demonstration tasks
+  BOT_PRIORITY_POC = 22;                 // Proof of concept priority - POC tasks
+  
+  // Resource-based Priority Levels
+  BOT_PRIORITY_RESOURCE_INTENSIVE = 23;  // Resource intensive - requires significant resources
+  BOT_PRIORITY_CPU_INTENSIVE = 24;       // CPU intensive - requires significant CPU resources
+  BOT_PRIORITY_MEMORY_INTENSIVE = 25;    // Memory intensive - requires significant memory
+  BOT_PRIORITY_GPU_INTENSIVE = 26;       // GPU intensive - requires significant GPU resources
+  BOT_PRIORITY_NETWORK_INTENSIVE = 27;   // Network intensive - requires significant network resources
+  BOT_PRIORITY_STORAGE_INTENSIVE = 28;   // Storage intensive - requires significant storage resources
+  
+  // Time-based Priority Levels
+  BOT_PRIORITY_REAL_TIME = 29;           // Real-time priority - requires immediate processing
+  BOT_PRIORITY_NEAR_REAL_TIME = 30;      // Near real-time priority - requires fast processing
+  BOT_PRIORITY_SCHEDULED = 31;           // Scheduled priority - time-based execution
+  BOT_PRIORITY_IMMEDIATE = 32;           // Immediate priority - execute immediately
+  BOT_PRIORITY_DELAYED = 33;             // Delayed priority - execute after delay
+  
+  // Business Priority Levels
+  BOT_PRIORITY_REVENUE_CRITICAL = 34;    // Revenue critical - affects revenue generation
+  BOT_PRIORITY_CUSTOMER_FACING = 35;     // Customer facing - affects customer experience
+  BOT_PRIORITY_INTERNAL = 36;            // Internal priority - internal business processes
+  BOT_PRIORITY_EXTERNAL = 37;            // External priority - external integrations
+  
+  // Security Priority Levels
+  BOT_PRIORITY_SECURITY_CRITICAL = 38;   // Security critical - security-related tasks
+  BOT_PRIORITY_SECURITY_HIGH = 39;       // Security high - high security priority
+  BOT_PRIORITY_SECURITY_MEDIUM = 40;     // Security medium - medium security priority
+  BOT_PRIORITY_SECURITY_LOW = 41;        // Security low - low security priority
+  
+  // Compliance Priority Levels
+  BOT_PRIORITY_COMPLIANCE_CRITICAL = 42; // Compliance critical - compliance-related tasks
+  BOT_PRIORITY_AUDIT = 43;               // Audit priority - audit and compliance tasks
+  BOT_PRIORITY_REGULATORY = 44;          // Regulatory priority - regulatory compliance tasks
+  
+  // Monitoring Priority Levels
+  BOT_PRIORITY_MONITORING_CRITICAL = 45; // Monitoring critical - critical monitoring tasks
+  BOT_PRIORITY_MONITORING_HIGH = 46;     // Monitoring high - high priority monitoring
+  BOT_PRIORITY_MONITORING_MEDIUM = 47;   // Monitoring medium - medium priority monitoring
+  BOT_PRIORITY_MONITORING_LOW = 48;      // Monitoring low - low priority monitoring
+  
+  // Data Priority Levels
+  BOT_PRIORITY_DATA_CRITICAL = 49;       // Data critical - critical data processing
+  BOT_PRIORITY_DATA_BACKUP = 50;         // Data backup - data backup tasks
+  BOT_PRIORITY_DATA_SYNC = 51;           // Data sync - data synchronization tasks
+  BOT_PRIORITY_DATA_CLEANUP = 52;        // Data cleanup - data cleanup tasks
+  
+  // Custom Priority Levels
+  BOT_PRIORITY_CUSTOM = 53;              // Custom priority - user-defined priority
+  BOT_PRIORITY_DYNAMIC = 54;             // Dynamic priority - priority changes based on conditions
+  BOT_PRIORITY_ADAPTIVE = 55;            // Adaptive priority - priority adapts to system load
+}

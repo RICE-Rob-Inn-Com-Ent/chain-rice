@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package projects.tasks.messages;
+
+import "tasks/enums/task_status.proto";
+import "tasks/enums/task_priority.proto";
+import "google/protobuf/timestamp.proto";
+
+// Task represents a task entity within a project
+message Task {
+  // Unique identifier for the task
+  string id = 1;
+  
+  // Task title
+  string title = 2;
+  
+  // Detailed description of the task
+  string description = 3;
+  
+  // Current status of the task
+  projects.tasks.enums.TaskStatus status = 4;
+  
+  // Priority level of the task
+  projects.tasks.enums.TaskPriority priority = 5;
+  
+  // ID of the user assigned to this task
+  string assignee_id = 6;
+  
+  // ID of the project this task belongs to
+  string project_id = 7;
+  
+  // Estimated hours to complete the task
+  double estimated_hours = 8;
+  
+  // Actual hours spent on the task
+  double actual_hours = 9;
+  
+  // Task due date
+  google.protobuf.Timestamp due_date = 10;
+  
+  // Task start date
+  google.protobuf.Timestamp start_date = 11;
+  
+  // Task completion date
+  google.protobuf.Timestamp completion_date = 12;
+  
+  // Timestamp when the task was created
+  google.protobuf.Timestamp created_at = 13;
+  
+  // Timestamp when the task was last updated
+  google.protobuf.Timestamp updated_at = 14;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 15;
+}
+
+// CreateTaskRequest contains the data needed to create a new task
+message CreateTaskRequest {
+  // Task title (required)
+  string title = 1;
+  
+  // Task description (optional)
+  string description = 2;
+  
+  // Task priority (defaults to NORMAL if not specified)
+  projects.tasks.enums.TaskPriority priority = 3;
+  
+  // ID of the user assigned to this task (optional)
+  string assignee_id = 4;
+  
+  // ID of the project this task belongs to (required)
+  string project_id = 5;
+  
+  // Estimated hours to complete the task (optional)
+  double estimated_hours = 6;
+  
+  // Task due date (optional)
+  google.protobuf.Timestamp due_date = 7;
+  
+  // Task start date (optional, defaults to current time)
+  google.protobuf.Timestamp start_date = 8;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 9;
+}
+
+// GetTaskRequest contains the identifier to retrieve a specific task
+message GetTaskRequest {
+  // Unique identifier of the task to retrieve
+  string task_id = 1;
+}
+
+// ListTasksRequest contains parameters for listing tasks
+message ListTasksRequest {
+  // Maximum number of tasks to return (default: 50, max: 1000)
+  int32 page_size = 1;
+  
+  // Token to retrieve the next page of results
+  string page_token = 2;
+  
+  // Filter by task status
+  projects.tasks.enums.TaskStatus status = 3;
+  
+  // Filter by task priority
+  projects.tasks.enums.TaskPriority priority = 4;
+  
+  // Filter by assignee
+  string assignee_id = 5;
+  
+  // Filter by project ID
+  string project_id = 6;
+  
+  // Search term to filter tasks by title or description
+  string search_term = 7;
+}
+
+// UpdateTaskRequest contains the data needed to update an existing task
+message UpdateTaskRequest {
+  // Unique identifier of the task to update
+  string task_id = 1;
+  
+  // Updated task title (optional)
+  string title = 2;
+  
+  // Updated task description (optional)
+  string description = 3;
+  
+  // Updated task status (optional)
+  projects.tasks.enums.TaskStatus status = 4;
+  
+  // Updated task priority (optional)
+  projects.tasks.enums.TaskPriority priority = 5;
+  
+  // Updated assignee (optional)
+  string assignee_id = 6;
+  
+  // Updated estimated hours (optional)
+  double estimated_hours = 7;
+  
+  // Updated actual hours (optional)
+  double actual_hours = 8;
+  
+  // Updated due date (optional)
+  google.protobuf.Timestamp due_date = 9;
+  
+  // Updated start date (optional)
+  google.protobuf.Timestamp start_date = 10;
+  
+  // Updated completion date (optional)
+  google.protobuf.Timestamp completion_date = 11;
+  
+  // Updated metadata (optional)
+  map<string, string> metadata = 12;
+}
+
+// DeleteTaskRequest contains the identifier to delete a specific task
+message DeleteTaskRequest {
+  // Unique identifier of the task to delete
+  string task_id = 1;
+}

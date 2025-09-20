@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package agriculture.livestock.enums;
+
+// HealthStatus enum defines the health condition of livestock animals
+enum HealthStatus {
+  // General health states
+  HEALTH_STATUS_UNSPECIFIED = 0;
+  HEALTH_STATUS_EXCELLENT = 1;     // Perfect health, no issues
+  HEALTH_STATUS_GOOD = 2;          // Good health, minor or no issues
+  HEALTH_STATUS_FAIR = 3;          // Fair health, some minor issues
+  HEALTH_STATUS_POOR = 4;          // Poor health, significant issues
+  HEALTH_STATUS_CRITICAL = 5;      // Critical health, immediate attention needed
+  
+  // Specific health conditions
+  HEALTH_STATUS_PREGNANT = 6;      // Female animal is pregnant
+  HEALTH_STATUS_LACTATING = 7;     // Female animal is nursing young
+  HEALTH_STATUS_BREEDING = 8;      // Animal is in breeding condition
+  HEALTH_STATUS_GESTATING = 9;     // Animal is carrying offspring
+  
+  // Health issues
+  HEALTH_STATUS_SICK = 10;         // Animal is ill
+  HEALTH_STATUS_INJURED = 11;      // Animal has physical injuries
+  HEALTH_STATUS_LAME = 12;         // Animal has mobility issues
+  HEALTH_STATUS_UNDERWEIGHT = 13;  // Animal is underweight
+  HEALTH_STATUS_OVERWEIGHT = 14;   // Animal is overweight
+  HEALTH_STATUS_DEHYDRATED = 15;   // Animal is dehydrated
+  HEALTH_STATUS_MALNOURISHED = 16; // Animal is malnourished
+  
+  // Reproductive health
+  HEALTH_STATUS_IN_HEAT = 17;      // Female animal is in estrus
+  HEALTH_STATUS_BREEDING_READY = 18; // Animal is ready for breeding
+  HEALTH_STATUS_PREGNANCY_CHECKED = 19; // Pregnancy has been confirmed
+  HEALTH_STATUS_ABORTION_RISK = 20; // High risk of pregnancy loss
+  HEALTH_STATUS_BIRTHING = 21;     // Animal is in labor
+  HEALTH_STATUS_POST_PARTUM = 22;  // Animal has recently given birth
+  
+  // Age-related conditions
+  HEALTH_STATUS_GROWING = 23;      // Young animal still growing
+  HEALTH_STATUS_MATURE = 24;       // Animal has reached maturity
+  HEALTH_STATUS_AGING = 25;        // Animal is showing signs of age
+  HEALTH_STATUS_ELDERLY = 26;      // Old animal with age-related issues
+  
+  // Behavioral health
+  HEALTH_STATUS_STRESSED = 27;     // Animal is under stress
+  HEALTH_STATUS_AGGRESSIVE = 28;   // Animal shows aggressive behavior
+  HEALTH_STATUS_DEPRESSED = 29;    // Animal shows signs of depression
+  HEALTH_STATUS_ANXIOUS = 30;      // Animal shows anxiety
+  
+  // Quarantine and isolation
+  HEALTH_STATUS_QUARANTINED = 31;  // Animal is in quarantine
+  HEALTH_STATUS_ISOLATED = 32;     // Animal is isolated from others
+  HEALTH_STATUS_UNDER_OBSERVATION = 33; // Animal is being monitored
+  
+  // Treatment status
+  HEALTH_STATUS_UNDER_TREATMENT = 34; // Animal is receiving medical treatment
+  HEALTH_STATUS_RECOVERING = 35;   // Animal is recovering from illness/injury
+  HEALTH_STATUS_TREATMENT_COMPLETE = 36; // Treatment has been completed
+  
+  // End of life
+  HEALTH_STATUS_EUTHANASIA_RECOMMENDED = 37; // Euthanasia is recommended
+  HEALTH_STATUS_DECEASED = 38;     // Animal has died
+}

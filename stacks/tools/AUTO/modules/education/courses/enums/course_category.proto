@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+// Course category taxonomy.
+package education.courses.enums;
+
+option go_package = "github.com/rice-dev/education/courses/enums;coursesenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.courses.enums";
+
+// Broad course categories.
+enum CourseCategory {
+  COURSE_CATEGORY_UNSPECIFIED = 0; // Unknown category
+  COURSE_CATEGORY_SCIENCE = 1;     // Natural and physical sciences
+  COURSE_CATEGORY_TECHNOLOGY = 2;  // Computer science, IT, etc.
+  COURSE_CATEGORY_ENGINEERING = 3; // Engineering disciplines
+  COURSE_CATEGORY_MATHEMATICS = 4; // Pure and applied math
+  COURSE_CATEGORY_ARTS = 5;        // Visual and performing arts
+  COURSE_CATEGORY_HUMANITIES = 6;  // History, philosophy, literature
+  COURSE_CATEGORY_BUSINESS = 7;    // Business, management, finance
+  COURSE_CATEGORY_SOCIAL_SCIENCES = 8; // Psychology, sociology, economics
+  COURSE_CATEGORY_LANGUAGE = 9;    // Language learning
+  COURSE_CATEGORY_HEALTH = 10;     // Health sciences, medicine
+  COURSE_CATEGORY_EDUCATION = 11;  // Teaching and pedagogy
+  COURSE_CATEGORY_LAW = 12;        // Legal studies
+  COURSE_CATEGORY_INTERDISCIPLINARY = 13; // Cross-domain
+}
+
+

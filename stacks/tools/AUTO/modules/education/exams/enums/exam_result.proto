@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// Exam result statuses.
+package education.exams.enums;
+
+option go_package = "github.com/rice-dev/education/exams/enums;examsenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.exams.enums";
+
+// Overall result status for a student's exam.
+enum ExamResultStatus {
+  EXAM_RESULT_STATUS_UNSPECIFIED = 0; // Unknown
+  EXAM_RESULT_STATUS_PASS = 1;        // Passed
+  EXAM_RESULT_STATUS_FAIL = 2;        // Failed
+  EXAM_RESULT_STATUS_INCOMPLETE = 3;  // Not completed
+  EXAM_RESULT_STATUS_WITHDRAWN = 4;   // Withdrawn
+  EXAM_RESULT_STATUS_EXEMPTED = 5;    // Exempted
+}
+
+

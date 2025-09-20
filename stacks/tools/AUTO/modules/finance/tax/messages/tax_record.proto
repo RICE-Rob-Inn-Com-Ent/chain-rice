@@ -1,0 +1,335 @@
+syntax = "proto3";
+
+package finance.tax.messages;
+
+import "finance/tax/enums/tax_type.proto";
+import "finance/tax/enums/tax_region.proto";
+
+// Tax record representation
+message TaxRecord {
+  // Unique tax record identifier
+  string tax_record_id = 1;
+  
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 2;
+  
+  // Tax region
+  finance.tax.enums.TaxRegion tax_region = 3;
+  
+  // Tax rate
+  double tax_rate = 4;
+  
+  // Tax amount
+  double tax_amount = 5;
+  
+  // Taxable amount
+  double taxable_amount = 6;
+  
+  // Currency code
+  string currency = 7;
+  
+  // Tax date
+  int64 tax_date = 8;
+  
+  // Tax period start
+  int64 tax_period_start = 9;
+  
+  // Tax period end
+  int64 tax_period_end = 10;
+  
+  // Tax jurisdiction
+  string tax_jurisdiction = 11;
+  
+  // Tax authority
+  string tax_authority = 12;
+  
+  // Tax number
+  string tax_number = 13;
+  
+  // Tax status
+  string tax_status = 14;
+  
+  // Related transaction ID
+  string transaction_id = 15;
+  
+  // Related invoice ID
+  string invoice_id = 16;
+  
+  // Related customer ID
+  string customer_id = 17;
+  
+  // Related vendor ID
+  string vendor_id = 18;
+  
+  // Tax details
+  string tax_details = 19;
+  
+  // Tax notes
+  string tax_notes = 20;
+  
+  // Tax tags
+  repeated string tags = 21;
+  
+  // Custom fields
+  map<string, string> custom_fields = 22;
+  
+  // Creation timestamp
+  int64 created_at = 23;
+  
+  // Last update timestamp
+  int64 updated_at = 24;
+  
+  // Created by user ID
+  string created_by = 25;
+  
+  // Updated by user ID
+  string updated_by = 26;
+  
+  // Filed timestamp
+  int64 filed_at = 27;
+  
+  // Filed by user ID
+  string filed_by = 28;
+}
+
+// Tax record creation request
+message CreateTaxRecordRequest {
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 1;
+  
+  // Tax region
+  finance.tax.enums.TaxRegion tax_region = 2;
+  
+  // Tax rate
+  double tax_rate = 3;
+  
+  // Tax amount
+  double tax_amount = 4;
+  
+  // Taxable amount
+  double taxable_amount = 5;
+  
+  // Currency code
+  string currency = 6;
+  
+  // Tax date
+  int64 tax_date = 7;
+  
+  // Tax period start
+  int64 tax_period_start = 8;
+  
+  // Tax period end
+  int64 tax_period_end = 9;
+  
+  // Tax jurisdiction
+  string tax_jurisdiction = 10;
+  
+  // Tax authority
+  string tax_authority = 11;
+  
+  // Tax number
+  string tax_number = 12;
+  
+  // Related transaction ID
+  string transaction_id = 13;
+  
+  // Related invoice ID
+  string invoice_id = 14;
+  
+  // Related customer ID
+  string customer_id = 15;
+  
+  // Related vendor ID
+  string vendor_id = 16;
+  
+  // Tax details
+  string tax_details = 17;
+  
+  // Tax notes
+  string tax_notes = 18;
+  
+  // Tax tags
+  repeated string tags = 19;
+  
+  // Custom fields
+  map<string, string> custom_fields = 20;
+}
+
+// Tax record creation response
+message CreateTaxRecordResponse {
+  // Created tax record
+  TaxRecord tax_record = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Tax record update request
+message UpdateTaxRecordRequest {
+  // Tax record ID
+  string tax_record_id = 1;
+  
+  // Updated tax rate
+  double tax_rate = 2;
+  
+  // Updated tax amount
+  double tax_amount = 3;
+  
+  // Updated taxable amount
+  double taxable_amount = 4;
+  
+  // Updated tax status
+  string tax_status = 5;
+  
+  // Updated tax details
+  string tax_details = 6;
+  
+  // Updated tax notes
+  string tax_notes = 7;
+  
+  // Updated tax tags
+  repeated string tags = 8;
+  
+  // Updated custom fields
+  map<string, string> custom_fields = 9;
+}
+
+// Tax record update response
+message UpdateTaxRecordResponse {
+  // Updated tax record
+  TaxRecord tax_record = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Tax record list request
+message ListTaxRecordsRequest {
+  // Filter by tax type
+  finance.tax.enums.TaxType tax_type = 1;
+  
+  // Filter by tax region
+  finance.tax.enums.TaxRegion tax_region = 2;
+  
+  // Filter by tax status
+  string tax_status = 3;
+  
+  // Filter by date range
+  int64 start_date = 4;
+  int64 end_date = 5;
+  
+  // Filter by tax period
+  int64 tax_period_start = 6;
+  int64 tax_period_end = 7;
+  
+  // Filter by customer ID
+  string customer_id = 8;
+  
+  // Filter by vendor ID
+  string vendor_id = 9;
+  
+  // Filter by transaction ID
+  string transaction_id = 10;
+  
+  // Filter by invoice ID
+  string invoice_id = 11;
+  
+  // Search term
+  string search_term = 12;
+  
+  // Page number
+  int32 page = 13;
+  
+  // Page size
+  int32 page_size = 14;
+}
+
+// Tax record list response
+message ListTaxRecordsResponse {
+  // List of tax records
+  repeated TaxRecord tax_records = 1;
+  
+  // Total count
+  int64 total_count = 2;
+  
+  // Page number
+  int32 page = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Success status
+  bool success = 5;
+  
+  // Error message if any
+  string error_message = 6;
+}
+
+// Tax calculation request
+message CalculateTaxRequest {
+  // Taxable amount
+  double taxable_amount = 1;
+  
+  // Currency code
+  string currency = 2;
+  
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 3;
+  
+  // Tax region
+  finance.tax.enums.TaxRegion tax_region = 4;
+  
+  // Tax jurisdiction
+  string tax_jurisdiction = 5;
+  
+  // Customer ID
+  string customer_id = 6;
+  
+  // Vendor ID
+  string vendor_id = 7;
+  
+  // Transaction date
+  int64 transaction_date = 8;
+  
+  // Additional parameters
+  map<string, string> parameters = 9;
+}
+
+// Tax calculation response
+message CalculateTaxResponse {
+  // Calculated tax amount
+  double tax_amount = 1;
+  
+  // Tax rate used
+  double tax_rate = 2;
+  
+  // Taxable amount
+  double taxable_amount = 3;
+  
+  // Currency code
+  string currency = 4;
+  
+  // Tax type
+  finance.tax.enums.TaxType tax_type = 5;
+  
+  // Tax region
+  finance.tax.enums.TaxRegion tax_region = 6;
+  
+  // Tax jurisdiction
+  string tax_jurisdiction = 7;
+  
+  // Tax details
+  string tax_details = 8;
+  
+  // Success status
+  bool success = 9;
+  
+  // Error message if any
+  string error_message = 10;
+}

@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.matchmaking.enums;
+
+option go_package = "github.com/rice-dev/gaming/matchmaking/enums";
+
+// Типи черг
+enum QueueType {
+  QUEUE_TYPE_UNSPECIFIED = 0;
+  
+  // Звичайна черга
+  QUEUE_TYPE_NORMAL = 1;
+  
+  // Рангові черги
+  QUEUE_TYPE_RANKED = 2;
+  
+  // Турнірні черги
+  QUEUE_TYPE_TOURNAMENT = 3;
+  
+  // Казуальні черги
+  QUEUE_TYPE_CASUAL = 4;
+  
+  // Компетентні черги
+  QUEUE_TYPE_COMPETITIVE = 5;
+  
+  // Аркадні черги
+  QUEUE_TYPE_ARCADE = 6;
+  
+  // Класичні черги
+  QUEUE_TYPE_CLASSIC = 7;
+  
+  // Модерні черги
+  QUEUE_TYPE_MODERN = 8;
+  
+  // Експериментальні черги
+  QUEUE_TYPE_EXPERIMENTAL = 9;
+  
+  // Бета черги
+  QUEUE_TYPE_BETA = 10;
+  
+  // Альфа черги
+  QUEUE_TYPE_ALPHA = 11;
+  
+  // Тестові черги
+  QUEUE_TYPE_TEST = 12;
+  
+  // Демо черги
+  QUEUE_TYPE_DEMO = 13;
+  
+  // Пробні черги
+  QUEUE_TYPE_TRIAL = 14;
+  
+  // Ознайомлювальні черги
+  QUEUE_TYPE_INTRO = 15;
+  
+  // Початкові черги
+  QUEUE_TYPE_BEGINNER = 16;
+  
+  // Середні черги
+  QUEUE_TYPE_INTERMEDIATE = 17;
+  
+  // Продвинуті черги
+  QUEUE_TYPE_ADVANCED = 18;
+  
+  // Експертні черги
+  QUEUE_TYPE_EXPERT = 19;
+  
+  // Майстер черги
+  QUEUE_TYPE_MASTER = 20;
+  
+  // Грандмайстер черги
+  QUEUE_TYPE_GRANDMASTER = 21;
+  
+  // Чемпіон черги
+  QUEUE_TYPE_CHAMPION = 22;
+  
+  // Легенда черги
+  QUEUE_TYPE_LEGEND = 23;
+  
+  // Міф черги
+  QUEUE_TYPE_MYTH = 24;
+  
+  // Божественні черги
+  QUEUE_TYPE_DIVINE = 25;
+  
+  // Небесні черги
+  QUEUE_TYPE_CELESTIAL = 26;
+  
+  // Космічні черги
+  QUEUE_TYPE_COSMIC = 27;
+  
+  // Всесвітні черги
+  QUEUE_TYPE_UNIVERSAL = 28;
+  
+  // Мультивсесвітні черги
+  QUEUE_TYPE_MULTIVERSE = 29;
+  
+  // Паралельні черги
+  QUEUE_TYPE_PARALLEL = 30;
+  
+  // Альтернативні черги
+  QUEUE_TYPE_ALTERNATIVE = 31;
+  
+  // Зеркальні черги
+  QUEUE_TYPE_MIRROR = 32;
+  
+  // Обернені черги
+  QUEUE_TYPE_REVERSE = 33;
+  
+  // Протилежні черги
+  QUEUE_TYPE_OPPOSITE = 34;
+  
+  // Контрастні черги
+  QUEUE_TYPE_CONTRAST = 35;
+  
+  // Конфліктні черги
+  QUEUE_TYPE_CONFLICT = 36;
+  
+  // Ворогі черги
+  QUEUE_TYPE_HOSTILE = 37;
+  
+  // Дружні черги
+  QUEUE_TYPE_FRIENDLY = 38;
+  
+  // Нейтральні черги
+  QUEUE_TYPE_NEUTRAL = 39;
+  
+  // Мирні черги
+  QUEUE_TYPE_PEACEFUL = 40;
+  
+  // Агресивні черги
+  QUEUE_TYPE_AGGRESSIVE = 41;
+  
+  // Пасивні черги
+  QUEUE_TYPE_PASSIVE = 42;
+  
+  // Активні черги
+  QUEUE_TYPE_ACTIVE = 43;
+  
+  // Інтерактивні черги
+  QUEUE_TYPE_INTERACTIVE = 44;
+  
+  // Реактивні черги
+  QUEUE_TYPE_REACTIVE = 45;
+  
+  // Проактивні черги
+  QUEUE_TYPE_PROACTIVE = 46;
+  
+  // Ініціативні черги
+  QUEUE_TYPE_INITIATIVE = 47;
+  
+  // Креативні черги
+  QUEUE_TYPE_CREATIVE = 48;
+  
+  // Інноваційні черги
+  QUEUE_TYPE_INNOVATIVE = 49;
+  
+  // Оригінальні черги
+  QUEUE_TYPE_ORIGINAL = 50;
+  
+  // Унікальні черги
+  QUEUE_TYPE_UNIQUE = 51;
+  
+  // Рідкісні черги
+  QUEUE_TYPE_RARE = 52;
+  
+  // Епічні черги
+  QUEUE_TYPE_EPIC = 53;
+  
+  // Легендарні черги
+  QUEUE_TYPE_LEGENDARY = 54;
+  
+  // Міфічні черги
+  QUEUE_TYPE_MYTHIC = 55;
+  
+  // Божественні черги
+  QUEUE_TYPE_DIVINE = 56;
+  
+  // Небесні черги
+  QUEUE_TYPE_CELESTIAL = 57;
+  
+  // Космічні черги
+  QUEUE_TYPE_COSMIC = 58;
+  
+  // Всесвітні черги
+  QUEUE_TYPE_UNIVERSAL = 59;
+  
+  // Мультивсесвітні черги
+  QUEUE_TYPE_MULTIVERSE = 60;
+  
+  // Паралельні черги
+  QUEUE_TYPE_PARALLEL = 61;
+  
+  // Альтернативні черги
+  QUEUE_TYPE_ALTERNATIVE = 62;
+  
+  // Зеркальні черги
+  QUEUE_TYPE_MIRROR = 63;
+  
+  // Обернені черги
+  QUEUE_TYPE_REVERSE = 64;
+  
+  // Протилежні черги
+  QUEUE_TYPE_OPPOSITE = 65;
+  
+  // Контрастні черги
+  QUEUE_TYPE_CONTRAST = 66;
+  
+  // Конфліктні черги
+  QUEUE_TYPE_CONFLICT = 67;
+  
+  // Ворогі черги
+  QUEUE_TYPE_HOSTILE = 68;
+  
+  // Дружні черги
+  QUEUE_TYPE_FRIENDLY = 69;
+  
+  // Нейтральні черги
+  QUEUE_TYPE_NEUTRAL = 70;
+  
+  // Мирні черги
+  QUEUE_TYPE_PEACEFUL = 71;
+  
+  // Агресивні черги
+  QUEUE_TYPE_AGGRESSIVE = 72;
+  
+  // Пасивні черги
+  QUEUE_TYPE_PASSIVE = 73;
+  
+  // Активні черги
+  QUEUE_TYPE_ACTIVE = 74;
+  
+  // Інтерактивні черги
+  QUEUE_TYPE_INTERACTIVE = 75;
+  
+  // Реактивні черги
+  QUEUE_TYPE_REACTIVE = 76;
+  
+  // Проактивні черги
+  QUEUE_TYPE_PROACTIVE = 77;
+  
+  // Ініціативні черги
+  QUEUE_TYPE_INITIATIVE = 78;
+  
+  // Креативні черги
+  QUEUE_TYPE_CREATIVE = 79;
+  
+  // Інноваційні черги
+  QUEUE_TYPE_INNOVATIVE = 80;
+  
+  // Оригінальні черги
+  QUEUE_TYPE_ORIGINAL = 81;
+  
+  // Унікальні черги
+  QUEUE_TYPE_UNIQUE = 82;
+  
+  // Рідкісні черги
+  QUEUE_TYPE_RARE = 83;
+  
+  // Епічні черги
+  QUEUE_TYPE_EPIC = 84;
+  
+  // Легендарні черги
+  QUEUE_TYPE_LEGENDARY = 85;
+  
+  // Міфічні черги
+  QUEUE_TYPE_MYTHIC = 86;
+  
+  // Божественні черги
+  QUEUE_TYPE_DIVINE = 87;
+  
+  // Небесні черги
+  QUEUE_TYPE_CELESTIAL = 88;
+  
+  // Космічні черги
+  QUEUE_TYPE_COSMIC = 89;
+  
+  // Всесвітні черги
+  QUEUE_TYPE_UNIVERSAL = 90;
+  
+  // Мультивсесвітні черги
+  QUEUE_TYPE_MULTIVERSE = 91;
+  
+  // Паралельні черги
+  QUEUE_TYPE_PARALLEL = 92;
+  
+  // Альтернативні черги
+  QUEUE_TYPE_ALTERNATIVE = 93;
+  
+  // Зеркальні черги
+  QUEUE_TYPE_MIRROR = 94;
+  
+  // Обернені черги
+  QUEUE_TYPE_REVERSE = 95;
+  
+  // Протилежні черги
+  QUEUE_TYPE_OPPOSITE = 96;
+  
+  // Контрастні черги
+  QUEUE_TYPE_CONTRAST = 97;
+  
+  // Конфліктні черги
+  QUEUE_TYPE_CONFLICT = 98;
+  
+  // Ворогі черги
+  QUEUE_TYPE_HOSTILE = 99;
+  
+  // Дружні черги
+  QUEUE_TYPE_FRIENDLY = 100;
+}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package marketing.influencer.enums;
+
+// Enumeration for influencer types
+enum InfluencerType {
+  // Default type - not specified
+  INFLUENCER_TYPE_UNSPECIFIED = 0;
+  
+  // Mega influencer (1M+ followers)
+  INFLUENCER_TYPE_MEGA = 1;
+  
+  // Macro influencer (100K-1M followers)
+  INFLUENCER_TYPE_MACRO = 2;
+  
+  // Mid-tier influencer (10K-100K followers)
+  INFLUENCER_TYPE_MID_TIER = 3;
+  
+  // Micro influencer (1K-10K followers)
+  INFLUENCER_TYPE_MICRO = 4;
+  
+  // Nano influencer (1K-10K followers)
+  INFLUENCER_TYPE_NANO = 5;
+  
+  // Celebrity influencer
+  INFLUENCER_TYPE_CELEBRITY = 6;
+  
+  // Industry expert
+  INFLUENCER_TYPE_INDUSTRY_EXPERT = 7;
+  
+  // Brand ambassador
+  INFLUENCER_TYPE_BRAND_AMBASSADOR = 8;
+  
+  // Content creator
+  INFLUENCER_TYPE_CONTENT_CREATOR = 9;
+  
+  // Blogger
+  INFLUENCER_TYPE_BLOGGER = 10;
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package blockchain.identity.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/identity/enums";
+
+// IdentityType defines the different types of blockchain identities
+enum IdentityType {
+  // IDENTITY_TYPE_UNSPECIFIED indicates an unspecified identity type
+  IDENTITY_TYPE_UNSPECIFIED = 0;
+  
+  // IDENTITY_TYPE_INDIVIDUAL represents an individual person
+  IDENTITY_TYPE_INDIVIDUAL = 1;
+  
+  // IDENTITY_TYPE_ORGANIZATION represents an organization or company
+  IDENTITY_TYPE_ORGANIZATION = 2;
+  
+  // IDENTITY_TYPE_DEVICE represents a device or IoT entity
+  IDENTITY_TYPE_DEVICE = 3;
+  
+  // IDENTITY_TYPE_SERVICE represents a service or application
+  IDENTITY_TYPE_SERVICE = 4;
+  
+  // IDENTITY_TYPE_VALIDATOR represents a blockchain validator
+  IDENTITY_TYPE_VALIDATOR = 5;
+  
+  // IDENTITY_TYPE_NODE represents a blockchain node
+  IDENTITY_TYPE_NODE = 6;
+  
+  // IDENTITY_TYPE_SMART_CONTRACT represents a smart contract
+  IDENTITY_TYPE_SMART_CONTRACT = 7;
+  
+  // IDENTITY_TYPE_ORACLE represents an oracle service
+  IDENTITY_TYPE_ORACLE = 8;
+  
+  // IDENTITY_TYPE_BRIDGE represents a bridge service
+  IDENTITY_TYPE_BRIDGE = 9;
+  
+  // IDENTITY_TYPE_WALLET represents a wallet application
+  IDENTITY_TYPE_WALLET = 10;
+  
+  // IDENTITY_TYPE_EXCHANGE represents an exchange service
+  IDENTITY_TYPE_EXCHANGE = 11;
+  
+  // IDENTITY_TYPE_DAO represents a decentralized autonomous organization
+  IDENTITY_TYPE_DAO = 12;
+  
+  // IDENTITY_TYPE_GOVERNMENT represents a government entity
+  IDENTITY_TYPE_GOVERNMENT = 13;
+  
+  // IDENTITY_TYPE_NGO represents a non-governmental organization
+  IDENTITY_TYPE_NGO = 14;
+  
+  // IDENTITY_TYPE_EDUCATIONAL represents an educational institution
+  IDENTITY_TYPE_EDUCATIONAL = 15;
+}

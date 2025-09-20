@@ -1,0 +1,1641 @@
+syntax = "proto3";
+
+package automation.workflow.services;
+
+import "automation/workflow/messages/workflow.proto";
+import "automation/workflow/messages/workflow_step.proto";
+import "automation/workflow/messages/workflow_execution.proto";
+import "automation/workflow/messages/workflow_event.proto";
+import "automation/workflow/enums/workflow_type.proto";
+import "automation/workflow/enums/workflow_status.proto";
+import "automation/workflow/enums/workflow_step_type.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+// Workflow Service
+// Provides comprehensive workflow management, execution, and monitoring services
+service WorkflowService {
+  // Workflow Management RPCs
+  rpc CreateWorkflow(CreateWorkflowRequest) returns (CreateWorkflowResponse);
+  rpc GetWorkflow(GetWorkflowRequest) returns (GetWorkflowResponse);
+  rpc UpdateWorkflow(UpdateWorkflowRequest) returns (UpdateWorkflowResponse);
+  rpc DeleteWorkflow(DeleteWorkflowRequest) returns (google.protobuf.Empty);
+  rpc ListWorkflows(ListWorkflowsRequest) returns (ListWorkflowsResponse);
+  rpc SearchWorkflows(SearchWorkflowsRequest) returns (SearchWorkflowsResponse);
+  
+  // Workflow Control RPCs
+  rpc StartWorkflow(StartWorkflowRequest) returns (StartWorkflowResponse);
+  rpc StopWorkflow(StopWorkflowRequest) returns (StopWorkflowResponse);
+  rpc PauseWorkflow(PauseWorkflowRequest) returns (PauseWorkflowResponse);
+  rpc ResumeWorkflow(ResumeWorkflowRequest) returns (ResumeWorkflowResponse);
+  rpc RestartWorkflow(RestartWorkflowRequest) returns (RestartWorkflowResponse);
+  
+  // Workflow Status RPCs
+  rpc GetWorkflowStatus(GetWorkflowStatusRequest) returns (GetWorkflowStatusResponse);
+  rpc GetWorkflowHealth(GetWorkflowHealthRequest) returns (GetWorkflowHealthResponse);
+  rpc GetWorkflowMetrics(GetWorkflowMetricsRequest) returns (GetWorkflowMetricsResponse);
+  rpc GetWorkflowLogs(GetWorkflowLogsRequest) returns (GetWorkflowLogsResponse);
+  
+  // Workflow Execution RPCs
+  rpc ExecuteWorkflow(ExecuteWorkflowRequest) returns (ExecuteWorkflowResponse);
+  rpc GetExecution(GetExecutionRequest) returns (GetExecutionResponse);
+  rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse);
+  rpc SearchExecutions(SearchExecutionsRequest) returns (SearchExecutionsResponse);
+  rpc CancelExecution(CancelExecutionRequest) returns (CancelExecutionResponse);
+  rpc GetExecutionStatus(GetExecutionStatusRequest) returns (GetExecutionStatusResponse);
+  rpc GetExecutionProgress(GetExecutionProgressRequest) returns (GetExecutionProgressResponse);
+  rpc GetExecutionLogs(GetExecutionLogsRequest) returns (GetExecutionLogsResponse);
+  
+  // Workflow Step RPCs
+  rpc CreateStep(CreateStepRequest) returns (CreateStepResponse);
+  rpc GetStep(GetStepRequest) returns (GetStepResponse);
+  rpc UpdateStep(UpdateStepRequest) returns (UpdateStepResponse);
+  rpc DeleteStep(DeleteStepRequest) returns (google.protobuf.Empty);
+  rpc ListSteps(ListStepsRequest) returns (ListStepsResponse);
+  rpc SearchSteps(SearchStepsRequest) returns (SearchStepsResponse);
+  rpc ExecuteStep(ExecuteStepRequest) returns (ExecuteStepResponse);
+  rpc GetStepStatus(GetStepStatusRequest) returns (GetStepStatusResponse);
+  rpc GetStepProgress(GetStepProgressRequest) returns (GetStepProgressResponse);
+  rpc GetStepLogs(GetStepLogsRequest) returns (GetStepLogsResponse);
+  
+  // Workflow Event RPCs
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
+  rpc GetEvent(GetEventRequest) returns (GetEventResponse);
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  rpc SearchEvents(SearchEventsRequest) returns (SearchEventsResponse);
+  rpc ExportEvents(ExportEventsRequest) returns (ExportEventsResponse);
+  rpc GetEventStatistics(GetEventStatisticsRequest) returns (GetEventStatisticsResponse);
+  
+  // Workflow Scheduling RPCs
+  rpc ScheduleWorkflow(ScheduleWorkflowRequest) returns (ScheduleWorkflowResponse);
+  rpc UnscheduleWorkflow(UnscheduleWorkflowRequest) returns (UnscheduleWorkflowResponse);
+  rpc GetWorkflowSchedule(GetWorkflowScheduleRequest) returns (GetWorkflowScheduleResponse);
+  rpc ListWorkflowSchedules(ListWorkflowSchedulesRequest) returns (ListWorkflowSchedulesResponse);
+  
+  // Workflow Versioning RPCs
+  rpc CreateWorkflowVersion(CreateWorkflowVersionRequest) returns (CreateWorkflowVersionResponse);
+  rpc GetWorkflowVersion(GetWorkflowVersionRequest) returns (GetWorkflowVersionResponse);
+  rpc ListWorkflowVersions(ListWorkflowVersionsRequest) returns (ListWorkflowVersionsResponse);
+  rpc DeleteWorkflowVersion(DeleteWorkflowVersionRequest) returns (google.protobuf.Empty);
+  
+  // Health and Status RPCs
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+  rpc GetServiceStatus(google.protobuf.Empty) returns (ServiceStatusResponse);
+  rpc GetServiceMetrics(google.protobuf.Empty) returns (ServiceMetricsResponse);
+}
+
+// Workflow Management Request/Response Messages
+
+message CreateWorkflowRequest {
+  // Workflow name
+  string name = 1;
+  
+  // Workflow description
+  string description = 2;
+  
+  // Workflow type
+  automation.workflow.enums.WorkflowType workflow_type = 3;
+  
+  // Workflow configuration
+  automation.workflow.messages.WorkflowConfiguration config = 4;
+  
+  // Workflow definition
+  automation.workflow.messages.WorkflowDefinition definition = 5;
+  
+  // Workflow steps
+  repeated automation.workflow.messages.WorkflowStep steps = 6;
+  
+  // Workflow variables
+  map<string, automation.workflow.messages.WorkflowVariable> variables = 7;
+  
+  // Workflow triggers
+  repeated automation.workflow.messages.WorkflowTrigger triggers = 8;
+  
+  // Workflow permissions
+  automation.workflow.messages.WorkflowPermissions permissions = 9;
+  
+  // Workflow monitoring
+  automation.workflow.messages.WorkflowMonitoring monitoring = 10;
+  
+  // Workflow metadata
+  map<string, string> metadata = 11;
+  
+  // Workflow tags
+  repeated string tags = 12;
+  
+  // Workflow owner
+  string owner = 13;
+  
+  // Workflow environment
+  string environment = 14;
+}
+
+message CreateWorkflowResponse {
+  // Created workflow
+  automation.workflow.messages.Workflow workflow = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Include configuration
+  bool include_config = 2;
+  
+  // Include steps
+  bool include_steps = 3;
+  
+  // Include variables
+  bool include_variables = 4;
+  
+  // Include triggers
+  bool include_triggers = 5;
+  
+  // Include monitoring
+  bool include_monitoring = 6;
+}
+
+message GetWorkflowResponse {
+  // Workflow
+  automation.workflow.messages.Workflow workflow = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message UpdateWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Workflow name
+  string name = 2;
+  
+  // Workflow description
+  string description = 3;
+  
+  // Workflow configuration
+  automation.workflow.messages.WorkflowConfiguration config = 4;
+  
+  // Workflow definition
+  automation.workflow.messages.WorkflowDefinition definition = 5;
+  
+  // Workflow steps
+  repeated automation.workflow.messages.WorkflowStep steps = 6;
+  
+  // Workflow variables
+  map<string, automation.workflow.messages.WorkflowVariable> variables = 7;
+  
+  // Workflow triggers
+  repeated automation.workflow.messages.WorkflowTrigger triggers = 8;
+  
+  // Workflow permissions
+  automation.workflow.messages.WorkflowPermissions permissions = 9;
+  
+  // Workflow monitoring
+  automation.workflow.messages.WorkflowMonitoring monitoring = 10;
+  
+  // Workflow metadata
+  map<string, string> metadata = 11;
+  
+  // Workflow tags
+  repeated string tags = 12;
+  
+  // Update mask
+  repeated string update_mask = 13;
+}
+
+message UpdateWorkflowResponse {
+  // Updated workflow
+  automation.workflow.messages.Workflow workflow = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message DeleteWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Force delete
+  bool force = 2;
+  
+  // Delete executions
+  bool delete_executions = 3;
+  
+  // Delete events
+  bool delete_events = 4;
+}
+
+message ListWorkflowsRequest {
+  // Page size
+  int32 page_size = 1;
+  
+  // Page token
+  string page_token = 2;
+  
+  // Filter by workflow type
+  automation.workflow.enums.WorkflowType workflow_type = 3;
+  
+  // Filter by status
+  automation.workflow.enums.WorkflowStatus status = 4;
+  
+  // Filter by owner
+  string owner = 5;
+  
+  // Filter by environment
+  string environment = 6;
+  
+  // Filter by tags
+  repeated string tags = 7;
+  
+  // Search query
+  string search_query = 8;
+  
+  // Sort field
+  string sort_field = 9;
+  
+  // Sort order
+  string sort_order = 10;
+}
+
+message ListWorkflowsResponse {
+  // Workflows
+  repeated automation.workflow.messages.Workflow workflows = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message SearchWorkflowsRequest {
+  // Search query
+  string query = 1;
+  
+  // Search filters
+  google.protobuf.Struct filters = 2;
+  
+  // Page size
+  int32 page_size = 3;
+  
+  // Page token
+  string page_token = 4;
+  
+  // Search fields
+  repeated string search_fields = 5;
+}
+
+message SearchWorkflowsResponse {
+  // Search results
+  repeated automation.workflow.messages.Workflow workflows = 1;
+  
+  // Search metadata
+  google.protobuf.Struct search_metadata = 2;
+  
+  // Next page token
+  string next_page_token = 3;
+  
+  // Total count
+  int64 total_count = 4;
+}
+
+// Workflow Control Request/Response Messages
+
+message StartWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Start parameters
+  google.protobuf.Struct parameters = 2;
+  
+  // Start configuration
+  google.protobuf.Struct config = 3;
+  
+  // Start input
+  google.protobuf.Struct input = 4;
+}
+
+message StartWorkflowResponse {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Workflow status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Start timestamp
+  int64 start_timestamp = 4;
+}
+
+message StopWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Stop reason
+  string reason = 3;
+  
+  // Force stop
+  bool force = 4;
+  
+  // Stop timeout
+  int32 timeout_seconds = 5;
+}
+
+message StopWorkflowResponse {
+  // Workflow status
+  string status = 1;
+  
+  // Response message
+  string message = 2;
+  
+  // Stop timestamp
+  int64 stop_timestamp = 3;
+}
+
+message PauseWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Pause reason
+  string reason = 3;
+  
+  // Pause duration
+  int32 duration_seconds = 4;
+}
+
+message PauseWorkflowResponse {
+  // Workflow status
+  string status = 1;
+  
+  // Response message
+  string message = 2;
+  
+  // Pause timestamp
+  int64 pause_timestamp = 3;
+}
+
+message ResumeWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Resume parameters
+  google.protobuf.Struct parameters = 3;
+}
+
+message ResumeWorkflowResponse {
+  // Workflow status
+  string status = 1;
+  
+  // Response message
+  string message = 2;
+  
+  // Resume timestamp
+  int64 resume_timestamp = 3;
+}
+
+message RestartWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Restart reason
+  string reason = 3;
+  
+  // Restart parameters
+  google.protobuf.Struct parameters = 4;
+  
+  // Restart timeout
+  int32 timeout_seconds = 5;
+}
+
+message RestartWorkflowResponse {
+  // New execution ID
+  string execution_id = 1;
+  
+  // Workflow status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Restart timestamp
+  int64 restart_timestamp = 4;
+}
+
+// Workflow Status Request/Response Messages
+
+message GetWorkflowStatusRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Include detailed status
+  bool include_detailed = 3;
+  
+  // Include metrics
+  bool include_metrics = 4;
+}
+
+message GetWorkflowStatusResponse {
+  // Workflow status
+  string status = 1;
+  
+  // Status details
+  google.protobuf.Struct status_details = 2;
+  
+  // Status timestamp
+  int64 status_timestamp = 3;
+  
+  // Response message
+  string message = 4;
+}
+
+message GetWorkflowHealthRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Include detailed health
+  bool include_detailed = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+}
+
+message GetWorkflowHealthResponse {
+  // Workflow health status
+  string health_status = 1;
+  
+  // Health score (0.0 to 1.0)
+  double health_score = 2;
+  
+  // Health details
+  google.protobuf.Struct health_details = 3;
+  
+  // Health timestamp
+  int64 health_timestamp = 4;
+  
+  // Response message
+  string message = 5;
+}
+
+message GetWorkflowMetricsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Metrics type
+  string metrics_type = 2;
+  
+  // Time range
+  google.protobuf.Struct time_range = 3;
+  
+  // Metrics aggregation
+  string aggregation = 4;
+}
+
+message GetWorkflowMetricsResponse {
+  // Workflow metrics
+  google.protobuf.Struct metrics = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetWorkflowLogsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Log level
+  string log_level = 3;
+  
+  // Time range
+  google.protobuf.Struct time_range = 4;
+  
+  // Page size
+  int32 page_size = 5;
+  
+  // Page token
+  string page_token = 6;
+  
+  // Log filters
+  repeated LogFilter filters = 7;
+}
+
+message GetWorkflowLogsResponse {
+  // Workflow logs
+  repeated automation.workflow.messages.WorkflowEvent events = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+// Log filter
+message LogFilter {
+  // Filter field
+  string field = 1;
+  
+  // Filter operator
+  string operator = 2;
+  
+  // Filter value
+  string value = 3;
+}
+
+// Workflow Execution Request/Response Messages
+
+message ExecuteWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution parameters
+  google.protobuf.Struct parameters = 2;
+  
+  // Execution configuration
+  google.protobuf.Struct config = 3;
+  
+  // Execution input
+  google.protobuf.Struct input = 4;
+  
+  // Execution timeout
+  int32 timeout_seconds = 5;
+}
+
+message ExecuteWorkflowResponse {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Execution status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Execution timestamp
+  int64 execution_timestamp = 4;
+}
+
+message GetExecutionRequest {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Include detailed execution
+  bool include_detailed = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+  
+  // Include logs
+  bool include_logs = 4;
+}
+
+message GetExecutionResponse {
+  // Execution
+  automation.workflow.messages.WorkflowExecution execution = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListExecutionsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Page size
+  int32 page_size = 2;
+  
+  // Page token
+  string page_token = 3;
+  
+  // Filter by status
+  automation.workflow.enums.WorkflowStatus status = 4;
+  
+  // Filter by owner
+  string owner = 5;
+  
+  // Filter by time range
+  google.protobuf.Struct time_range = 6;
+  
+  // Sort field
+  string sort_field = 7;
+  
+  // Sort order
+  string sort_order = 8;
+}
+
+message ListExecutionsResponse {
+  // Executions
+  repeated automation.workflow.messages.WorkflowExecution executions = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message SearchExecutionsRequest {
+  // Search query
+  string query = 1;
+  
+  // Search filters
+  google.protobuf.Struct filters = 2;
+  
+  // Page size
+  int32 page_size = 3;
+  
+  // Page token
+  string page_token = 4;
+  
+  // Search fields
+  repeated string search_fields = 5;
+}
+
+message SearchExecutionsResponse {
+  // Search results
+  repeated automation.workflow.messages.WorkflowExecution executions = 1;
+  
+  // Search metadata
+  google.protobuf.Struct search_metadata = 2;
+  
+  // Next page token
+  string next_page_token = 3;
+  
+  // Total count
+  int64 total_count = 4;
+}
+
+message CancelExecutionRequest {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Cancel reason
+  string reason = 2;
+  
+  // Force cancel
+  bool force = 3;
+}
+
+message CancelExecutionResponse {
+  // Execution status
+  string status = 1;
+  
+  // Response message
+  string message = 2;
+  
+  // Cancel timestamp
+  int64 cancel_timestamp = 3;
+}
+
+message GetExecutionStatusRequest {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Include detailed status
+  bool include_detailed = 2;
+  
+  // Include progress
+  bool include_progress = 3;
+}
+
+message GetExecutionStatusResponse {
+  // Execution status
+  string status = 1;
+  
+  // Status details
+  google.protobuf.Struct status_details = 2;
+  
+  // Status timestamp
+  int64 status_timestamp = 3;
+  
+  // Response message
+  string message = 4;
+}
+
+message GetExecutionProgressRequest {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Include detailed progress
+  bool include_detailed = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+}
+
+message GetExecutionProgressResponse {
+  // Execution progress
+  automation.workflow.messages.ExecutionProgress progress = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetExecutionLogsRequest {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Log level
+  string log_level = 2;
+  
+  // Time range
+  google.protobuf.Struct time_range = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Page token
+  string page_token = 5;
+  
+  // Log filters
+  repeated LogFilter filters = 6;
+}
+
+message GetExecutionLogsResponse {
+  // Execution logs
+  repeated automation.workflow.messages.WorkflowEvent events = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+// Workflow Step Request/Response Messages
+
+message CreateStepRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Step name
+  string name = 2;
+  
+  // Step description
+  string description = 3;
+  
+  // Step type
+  automation.workflow.enums.WorkflowStepType step_type = 4;
+  
+  // Step order
+  int32 order = 5;
+  
+  // Step configuration
+  automation.workflow.messages.StepConfiguration config = 6;
+  
+  // Step input
+  automation.workflow.messages.StepInput input = 7;
+  
+  // Step output
+  automation.workflow.messages.StepOutput output = 8;
+  
+  // Step conditions
+  repeated automation.workflow.messages.StepCondition conditions = 9;
+  
+  // Step dependencies
+  repeated string dependencies = 10;
+  
+  // Step timeout
+  int64 timeout_seconds = 11;
+  
+  // Step retry
+  automation.workflow.messages.StepRetry retry = 12;
+  
+  // Step error handling
+  automation.workflow.messages.StepErrorHandling error_handling = 13;
+  
+  // Step metadata
+  map<string, string> metadata = 14;
+  
+  // Step tags
+  repeated string tags = 15;
+  
+  // Step owner
+  string owner = 16;
+}
+
+message CreateStepResponse {
+  // Created step
+  automation.workflow.messages.WorkflowStep step = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetStepRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Include execution details
+  bool include_execution = 2;
+  
+  // Include monitoring
+  bool include_monitoring = 3;
+  
+  // Include logs
+  bool include_logs = 4;
+}
+
+message GetStepResponse {
+  // Step
+  automation.workflow.messages.WorkflowStep step = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message UpdateStepRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Step name
+  string name = 2;
+  
+  // Step description
+  string description = 3;
+  
+  // Step configuration
+  automation.workflow.messages.StepConfiguration config = 4;
+  
+  // Step input
+  automation.workflow.messages.StepInput input = 5;
+  
+  // Step output
+  automation.workflow.messages.StepOutput output = 6;
+  
+  // Step conditions
+  repeated automation.workflow.messages.StepCondition conditions = 7;
+  
+  // Step dependencies
+  repeated string dependencies = 8;
+  
+  // Step timeout
+  int64 timeout_seconds = 9;
+  
+  // Step retry
+  automation.workflow.messages.StepRetry retry = 10;
+  
+  // Step error handling
+  automation.workflow.messages.StepErrorHandling error_handling = 11;
+  
+  // Step metadata
+  map<string, string> metadata = 12;
+  
+  // Step tags
+  repeated string tags = 13;
+  
+  // Update mask
+  repeated string update_mask = 14;
+}
+
+message UpdateStepResponse {
+  // Updated step
+  automation.workflow.messages.WorkflowStep step = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message DeleteStepRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Force delete
+  bool force = 2;
+  
+  // Delete logs
+  bool delete_logs = 3;
+}
+
+message ListStepsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Page size
+  int32 page_size = 2;
+  
+  // Page token
+  string page_token = 3;
+  
+  // Filter by step type
+  automation.workflow.enums.WorkflowStepType step_type = 4;
+  
+  // Filter by status
+  string status = 5;
+  
+  // Filter by owner
+  string owner = 6;
+  
+  // Filter by tags
+  repeated string tags = 7;
+  
+  // Search query
+  string search_query = 8;
+  
+  // Sort field
+  string sort_field = 9;
+  
+  // Sort order
+  string sort_order = 10;
+}
+
+message ListStepsResponse {
+  // Steps
+  repeated automation.workflow.messages.WorkflowStep steps = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message SearchStepsRequest {
+  // Search query
+  string query = 1;
+  
+  // Search filters
+  google.protobuf.Struct filters = 2;
+  
+  // Page size
+  int32 page_size = 3;
+  
+  // Page token
+  string page_token = 4;
+  
+  // Search fields
+  repeated string search_fields = 5;
+}
+
+message SearchStepsResponse {
+  // Search results
+  repeated automation.workflow.messages.WorkflowStep steps = 1;
+  
+  // Search metadata
+  google.protobuf.Struct search_metadata = 2;
+  
+  // Next page token
+  string next_page_token = 3;
+  
+  // Total count
+  int64 total_count = 4;
+}
+
+message ExecuteStepRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Execution parameters
+  google.protobuf.Struct parameters = 2;
+  
+  // Execution configuration
+  google.protobuf.Struct config = 3;
+  
+  // Execution input
+  google.protobuf.Struct input = 4;
+  
+  // Execution timeout
+  int32 timeout_seconds = 5;
+}
+
+message ExecuteStepResponse {
+  // Execution ID
+  string execution_id = 1;
+  
+  // Execution status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Execution timestamp
+  int64 execution_timestamp = 4;
+}
+
+message GetStepStatusRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Include detailed status
+  bool include_detailed = 2;
+  
+  // Include progress
+  bool include_progress = 3;
+}
+
+message GetStepStatusResponse {
+  // Step status
+  string status = 1;
+  
+  // Status details
+  google.protobuf.Struct status_details = 2;
+  
+  // Status timestamp
+  int64 status_timestamp = 3;
+  
+  // Response message
+  string message = 4;
+}
+
+message GetStepProgressRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Include detailed progress
+  bool include_detailed = 2;
+  
+  // Include metrics
+  bool include_metrics = 3;
+}
+
+message GetStepProgressResponse {
+  // Step progress
+  automation.workflow.messages.StepProgress progress = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetStepLogsRequest {
+  // Step ID
+  string step_id = 1;
+  
+  // Log level
+  string log_level = 2;
+  
+  // Time range
+  google.protobuf.Struct time_range = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Page token
+  string page_token = 5;
+  
+  // Log filters
+  repeated LogFilter filters = 6;
+}
+
+message GetStepLogsResponse {
+  // Step logs
+  repeated automation.workflow.messages.WorkflowEvent events = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+// Workflow Event Request/Response Messages
+
+message CreateEventRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Step ID
+  string step_id = 3;
+  
+  // Event name
+  string name = 4;
+  
+  // Event type
+  string event_type = 5;
+  
+  // Event category
+  string category = 6;
+  
+  // Event severity
+  string severity = 7;
+  
+  // Event status
+  string status = 8;
+  
+  // Event message
+  string message = 9;
+  
+  // Event description
+  string description = 10;
+  
+  // Event data
+  google.protobuf.Struct data = 11;
+  
+  // Event context
+  automation.workflow.messages.EventContext context = 12;
+  
+  // Event metadata
+  map<string, string> metadata = 13;
+  
+  // Event tags
+  repeated string tags = 14;
+  
+  // Event source
+  string source = 15;
+  
+  // Event correlation ID
+  string correlation_id = 16;
+  
+  // Event trace ID
+  string trace_id = 17;
+  
+  // Event span ID
+  string span_id = 18;
+  
+  // Event parent span ID
+  string parent_span_id = 19;
+}
+
+message CreateEventResponse {
+  // Created event
+  automation.workflow.messages.WorkflowEvent event = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetEventRequest {
+  // Event ID
+  string event_id = 1;
+  
+  // Include context
+  bool include_context = 2;
+  
+  // Include metadata
+  bool include_metadata = 3;
+}
+
+message GetEventResponse {
+  // Event
+  automation.workflow.messages.WorkflowEvent event = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListEventsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Step ID
+  string step_id = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Page token
+  string page_token = 5;
+  
+  // Filter by event type
+  string event_type = 6;
+  
+  // Filter by category
+  string category = 7;
+  
+  // Filter by severity
+  string severity = 8;
+  
+  // Filter by status
+  string status = 9;
+  
+  // Filter by time range
+  google.protobuf.Struct time_range = 10;
+  
+  // Filter by tags
+  repeated string tags = 11;
+  
+  // Search query
+  string search_query = 12;
+  
+  // Sort field
+  string sort_field = 13;
+  
+  // Sort order
+  string sort_order = 14;
+}
+
+message ListEventsResponse {
+  // Events
+  repeated automation.workflow.messages.WorkflowEvent events = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message SearchEventsRequest {
+  // Search query
+  string query = 1;
+  
+  // Search filters
+  google.protobuf.Struct filters = 2;
+  
+  // Page size
+  int32 page_size = 3;
+  
+  // Page token
+  string page_token = 4;
+  
+  // Search fields
+  repeated string search_fields = 5;
+  
+  // Time range
+  google.protobuf.Struct time_range = 6;
+}
+
+message SearchEventsResponse {
+  // Search results
+  repeated automation.workflow.messages.WorkflowEvent events = 1;
+  
+  // Search metadata
+  google.protobuf.Struct search_metadata = 2;
+  
+  // Next page token
+  string next_page_token = 3;
+  
+  // Total count
+  int64 total_count = 4;
+}
+
+message ExportEventsRequest {
+  // Export configuration
+  google.protobuf.Struct export_config = 1;
+  
+  // Export filters
+  repeated EventFilter filters = 2;
+  
+  // Export format
+  string format = 3;
+  
+  // Export destination
+  string destination = 4;
+  
+  // Time range
+  google.protobuf.Struct time_range = 5;
+}
+
+message ExportEventsResponse {
+  // Export ID
+  string export_id = 1;
+  
+  // Export status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Export file URL
+  string file_url = 4;
+}
+
+// Event filter
+message EventFilter {
+  // Filter field
+  string field = 1;
+  
+  // Filter operator
+  string operator = 2;
+  
+  // Filter value
+  string value = 3;
+}
+
+message GetEventStatisticsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Execution ID
+  string execution_id = 2;
+  
+  // Step ID
+  string step_id = 3;
+  
+  // Time range
+  google.protobuf.Struct time_range = 4;
+  
+  // Statistics aggregation
+  string aggregation = 5;
+  
+  // Statistics grouping
+  repeated string grouping = 6;
+}
+
+message GetEventStatisticsResponse {
+  // Event statistics
+  automation.workflow.messages.EventStatistics statistics = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+// Workflow Scheduling Request/Response Messages
+
+message ScheduleWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Schedule configuration
+  google.protobuf.Struct schedule_config = 2;
+  
+  // Schedule time
+  int64 schedule_time = 3;
+  
+  // Schedule timezone
+  string timezone = 4;
+  
+  // Schedule recurrence
+  string recurrence = 5;
+}
+
+message ScheduleWorkflowResponse {
+  // Schedule ID
+  string schedule_id = 1;
+  
+  // Schedule status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+  
+  // Schedule timestamp
+  int64 schedule_timestamp = 4;
+}
+
+message UnscheduleWorkflowRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Schedule ID
+  string schedule_id = 2;
+  
+  // Unschedule reason
+  string reason = 3;
+}
+
+message UnscheduleWorkflowResponse {
+  // Schedule status
+  string status = 1;
+  
+  // Response message
+  string message = 2;
+  
+  // Unschedule timestamp
+  int64 unschedule_timestamp = 3;
+}
+
+message GetWorkflowScheduleRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Schedule ID
+  string schedule_id = 2;
+  
+  // Include detailed schedule
+  bool include_detailed = 3;
+}
+
+message GetWorkflowScheduleResponse {
+  // Workflow schedule
+  google.protobuf.Struct schedule = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListWorkflowSchedulesRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Page size
+  int32 page_size = 2;
+  
+  // Page token
+  string page_token = 3;
+  
+  // Filter by status
+  string status = 4;
+  
+  // Filter by time range
+  google.protobuf.Struct time_range = 5;
+}
+
+message ListWorkflowSchedulesResponse {
+  // Workflow schedules
+  repeated google.protobuf.Struct schedules = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+// Workflow Versioning Request/Response Messages
+
+message CreateWorkflowVersionRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Version name
+  string version_name = 2;
+  
+  // Version description
+  string description = 3;
+  
+  // Version tags
+  repeated string tags = 4;
+  
+  // Version metadata
+  map<string, string> metadata = 5;
+}
+
+message CreateWorkflowVersionResponse {
+  // Workflow version
+  google.protobuf.Struct workflow_version = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message GetWorkflowVersionRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Version name
+  string version_name = 2;
+  
+  // Include metadata
+  bool include_metadata = 3;
+}
+
+message GetWorkflowVersionResponse {
+  // Workflow version
+  google.protobuf.Struct workflow_version = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}
+
+message ListWorkflowVersionsRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Page size
+  int32 page_size = 2;
+  
+  // Page token
+  string page_token = 3;
+  
+  // Filter by tags
+  repeated string tags = 4;
+  
+  // Sort field
+  string sort_field = 5;
+  
+  // Sort order
+  string sort_order = 6;
+}
+
+message ListWorkflowVersionsResponse {
+  // Workflow versions
+  repeated google.protobuf.Struct workflow_versions = 1;
+  
+  // Next page token
+  string next_page_token = 2;
+  
+  // Total count
+  int64 total_count = 3;
+}
+
+message DeleteWorkflowVersionRequest {
+  // Workflow ID
+  string workflow_id = 1;
+  
+  // Version name
+  string version_name = 2;
+  
+  // Force delete
+  bool force = 3;
+}
+
+// Health and Status Request/Response Messages
+
+message HealthCheckResponse {
+  // Health status
+  string status = 1;
+  
+  // Health message
+  string message = 2;
+  
+  // Health timestamp
+  int64 timestamp = 3;
+  
+  // Health details
+  google.protobuf.Struct details = 4;
+}
+
+message ServiceStatusResponse {
+  // Service status
+  string status = 1;
+  
+  // Service message
+  string message = 2;
+  
+  // Service uptime
+  int64 uptime_seconds = 3;
+  
+  // Service version
+  string version = 4;
+  
+  // Service details
+  google.protobuf.Struct details = 5;
+}
+
+message ServiceMetricsResponse {
+  // Service metrics
+  google.protobuf.Struct metrics = 1;
+  
+  // Response status
+  string status = 2;
+  
+  // Response message
+  string message = 3;
+}

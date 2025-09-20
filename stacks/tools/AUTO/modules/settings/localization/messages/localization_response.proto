@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package settings.localization.messages;
+
+import "google/protobuf/timestamp.proto";
+import "settings/localization/enums/language.proto";
+import "settings/localization/enums/region.proto";
+
+// Localization entry data structure
+message Localization {
+  // Unique identifier for the localization entry
+  string id = 1;
+  
+  // The translation key identifier
+  string translation_key = 2;
+  
+  // The language for this translation
+  settings.localization.enums.Language language = 3;
+  
+  // The region for this translation (optional for regional variants)
+  settings.localization.enums.Region region = 4;
+  
+  // The translated text value
+  string translation_value = 5;
+  
+  // Optional metadata about the translation
+  map<string, string> metadata = 6;
+  
+  // Optional category for organizing translations
+  string category = 7;
+  
+  // Optional description of the translation context
+  string description = 8;
+  
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 9;
+  
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 10;
+  
+  // Version number for optimistic concurrency control
+  int32 version = 11;
+  
+  // Whether this translation is active
+  bool is_active = 12;
+}
+
+// Response message for creating a localization entry
+message CreateLocalizationResponse {
+  // The created localization entry
+  Localization localization = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for retrieving a localization entry
+message GetLocalizationResponse {
+  // The requested localization entry
+  Localization localization = 1;
+}
+
+// Response message for listing localization entries
+message ListLocalizationsResponse {
+  // List of localization entries
+  repeated Localization localizations = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of entries matching the filter
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Response message for updating a localization entry
+message UpdateLocalizationResponse {
+  // The updated localization entry
+  Localization localization = 1;
+  
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for deleting a localization entry
+message DeleteLocalizationResponse {
+  // Whether the deletion was successful
+  bool success = 1;
+  
+  // Operation status message
+  string message = 2;
+  
+  // ID of the deleted entry
+  string deleted_id = 3;
+}
+
+// Response message for bulk operations on localizations
+message BulkLocalizationResponse {
+  // List of created/updated localization entries
+  repeated Localization localizations = 1;
+  
+  // Number of entries processed successfully
+  int32 success_count = 2;
+  
+  // Number of entries that failed processing
+  int32 failure_count = 3;
+  
+  // List of error messages for failed entries
+  repeated string errors = 4;
+  
+  // Overall operation status message
+  string message = 5;
+}
+
+// Response message for searching localizations
+message SearchLocalizationsResponse {
+  // List of matching localization entries
+  repeated Localization localizations = 1;
+  
+  // Next page token for pagination
+  string next_page_token = 2;
+  
+  // Total count of matching entries
+  int32 total_count = 3;
+  
+  // Whether there are more pages available
+  bool has_more = 4;
+  
+  // Search query that was executed
+  string query = 5;
+  
+  // Search execution time in milliseconds
+  int64 execution_time_ms = 6;
+}
+
+// Translation statistics for analytics
+message LocalizationStats {
+  // Total number of translations
+  int32 total_translations = 1;
+  
+  // Number of translations by language
+  map<string, int32> translations_by_language = 2;
+  
+  // Number of translations by region
+  map<string, int32> translations_by_region = 3;
+  
+  // Number of translations by category
+  map<string, int32> translations_by_category = 4;
+  
+  // Completion percentage by language
+  map<string, double> completion_by_language = 5;
+  
+  // Last updated timestamp
+  google.protobuf.Timestamp last_updated = 6;
+}

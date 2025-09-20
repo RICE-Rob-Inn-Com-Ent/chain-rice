@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+package horeca.pos.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/pos_shift_models.proto";
+
+// POS Shift Service - Shifts and cash control
+service PosShiftService {
+  // Start a new shift
+  rpc StartShift(StartShiftRequest) returns (StartShiftResponse);
+  
+  // End shift
+  rpc EndShift(EndShiftRequest) returns (EndShiftResponse);
+  
+  // Get shift by ID
+  rpc GetShift(GetShiftRequest) returns (GetShiftResponse);
+  
+  // Update shift
+  rpc UpdateShift(UpdateShiftRequest) returns (UpdateShiftResponse);
+  
+  // List shifts with filtering
+  rpc ListShifts(ListShiftsRequest) returns (ListShiftsResponse);
+  
+  // Get current shift
+  rpc GetCurrentShift(GetCurrentShiftRequest) returns (GetCurrentShiftResponse);
+  
+  // Get shifts by cashier
+  rpc GetShiftsByCashier(GetShiftsByCashierRequest) returns (GetShiftsByCashierResponse);
+  
+  // Get shifts by terminal
+  rpc GetShiftsByTerminal(GetShiftsByTerminalRequest) returns (GetShiftsByTerminalResponse);
+  
+  // Create cash reconciliation
+  rpc CreateCashReconciliation(CreateCashReconciliationRequest) returns (CreateCashReconciliationResponse);
+  
+  // Get cash reconciliation
+  rpc GetCashReconciliation(GetCashReconciliationRequest) returns (GetCashReconciliationResponse);
+  
+  // Approve cash reconciliation
+  rpc ApproveCashReconciliation(ApproveCashReconciliationRequest) returns (ApproveCashReconciliationResponse);
+  
+  // Get shift summary
+  rpc GetShiftSummary(GetShiftSummaryRequest) returns (GetShiftSummaryResponse);
+}
+
+// Request/Response messages
+message StartShiftRequest {
+  PosShift shift = 1;
+}
+
+message StartShiftResponse {
+  PosShift shift = 1;
+  string message = 2;
+}
+
+message EndShiftRequest {
+  string shift_id = 1;
+  double ending_cash = 2;
+  string notes = 3;
+}
+
+message EndShiftResponse {
+  PosShift shift = 1;
+  string message = 2;
+}
+
+message GetShiftRequest {
+  string shift_id = 1;
+}
+
+message GetShiftResponse {
+  PosShift shift = 1;
+}
+
+message UpdateShiftRequest {
+  PosShift shift = 1;
+}
+
+message UpdateShiftResponse {
+  PosShift shift = 1;
+  string message = 2;
+}
+
+message ListShiftsRequest {
+  string cashier_id = 1;
+  string terminal_id = 2;
+  string status = 3;
+  string date_from = 4;
+  string date_to = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+message ListShiftsResponse {
+  repeated PosShift shifts = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetCurrentShiftRequest {
+  string cashier_id = 1;
+  string terminal_id = 2;
+}
+
+message GetCurrentShiftResponse {
+  PosShift shift = 1;
+}
+
+message GetShiftsByCashierRequest {
+  string cashier_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetShiftsByCashierResponse {
+  repeated PosShift shifts = 1;
+}
+
+message GetShiftsByTerminalRequest {
+  string terminal_id = 1;
+  string date_from = 2;
+  string date_to = 3;
+}
+
+message GetShiftsByTerminalResponse {
+  repeated PosShift shifts = 1;
+}
+
+message CreateCashReconciliationRequest {
+  CashReconciliation reconciliation = 1;
+}
+
+message CreateCashReconciliationResponse {
+  CashReconciliation reconciliation = 1;
+  string message = 2;
+}
+
+message GetCashReconciliationRequest {
+  string reconciliation_id = 1;
+}
+
+message GetCashReconciliationResponse {
+  CashReconciliation reconciliation = 1;
+}
+
+message ApproveCashReconciliationRequest {
+  string reconciliation_id = 1;
+  string supervisor_id = 2;
+  string supervisor_name = 3;
+  string notes = 4;
+}
+
+message ApproveCashReconciliationResponse {
+  CashReconciliation reconciliation = 1;
+  string message = 2;
+}
+
+message GetShiftSummaryRequest {
+  string shift_id = 1;
+}
+
+message GetShiftSummaryResponse {
+  ShiftSummaryData summary = 1;
+}
+
+// Data structures
+message ShiftSummaryData {
+  string shift_id = 1;
+  string cashier_name = 2;
+  string terminal_id = 3;
+  double starting_cash = 4;
+  double ending_cash = 5;
+  double expected_cash = 6;
+  double cash_difference = 7;
+  int32 total_transactions = 8;
+  double total_sales = 9;
+  double total_refunds = 10;
+  double total_tips = 11;
+  repeated PosPaymentMethodSummary payment_summary = 12;
+}

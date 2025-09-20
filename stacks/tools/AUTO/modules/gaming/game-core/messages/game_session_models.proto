@@ -1,0 +1,598 @@
+syntax = "proto3";
+
+package gaming.game_core.messages;
+
+import "gaming/game_core/enums/game_modes.proto";
+import "gaming/game_core/enums/session_status.proto";
+import "gaming/game_core/enums/player_roles.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/game_core/messages";
+
+// Модель ігрової сесії
+message GameSession {
+  // Унікальний ідентифікатор сесії
+  string session_id = 1;
+  
+  // Назва сесії
+  string name = 2;
+  
+  // Опис сесії
+  string description = 3;
+  
+  // Режим гри
+  gaming.game_core.enums.GameMode game_mode = 4;
+  
+  // Тип сесії
+  gaming.game_core.enums.SessionType session_type = 5;
+  
+  // Статус сесії
+  gaming.game_core.enums.SessionStatus status = 6;
+  
+  // Рівень складності
+  gaming.game_core.enums.DifficultyLevel difficulty = 7;
+  
+  // Карта
+  GameMap map = 8;
+  
+  // Гравці в сесії
+  repeated PlayerSession players = 9;
+  
+  // Команди
+  repeated Team teams = 10;
+  
+  // Налаштування сесії
+  SessionSettings settings = 11;
+  
+  // Статистика сесії
+  SessionStats stats = 12;
+  
+  // Метадані сесії
+  SessionMetadata metadata = 13;
+  
+  // Час створення
+  google.protobuf.Timestamp created_at = 14;
+  
+  // Час початку
+  google.protobuf.Timestamp started_at = 15;
+  
+  // Час закінчення
+  google.protobuf.Timestamp ended_at = 16;
+  
+  // Час оновлення
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+// Карта гри
+message GameMap {
+  // Ідентифікатор карти
+  string map_id = 1;
+  
+  // Назва карти
+  string name = 2;
+  
+  // Опис карти
+  string description = 3;
+  
+  // Тип карти
+  gaming.game_core.enums.MapType type = 4;
+  
+  // Розміри карти
+  MapDimensions dimensions = 5;
+  
+  // Об'єкти на карті
+  repeated MapObject objects = 6;
+  
+  // Точки спавну
+  repeated SpawnPoint spawn_points = 7;
+  
+  // Чекпоінти
+  repeated Checkpoint checkpoints = 8;
+  
+  // Цілі
+  repeated Objective objectives = 9;
+  
+  // Налаштування карти
+  MapSettings settings = 10;
+  
+  // Метадані карти
+  MapMetadata metadata = 11;
+}
+
+// Розміри карти
+message MapDimensions {
+  // Ширина
+  double width = 1;
+  
+  // Висота
+  double height = 2;
+  
+  // Глибина
+  double depth = 3;
+  
+  // Одиниця вимірювання
+  string unit = 4;
+}
+
+// Об'єкт на карті
+message MapObject {
+  // Ідентифікатор об'єкта
+  string object_id = 1;
+  
+  // Назва об'єкта
+  string name = 2;
+  
+  // Тип об'єкта
+  gaming.game_core.enums.MapObjectType type = 3;
+  
+  // Позиція об'єкта
+  Vector3 position = 4;
+  
+  // Обертання об'єкта
+  Vector3 rotation = 5;
+  
+  // Масштаб об'єкта
+  Vector3 scale = 6;
+  
+  // Розміри об'єкта
+  MapDimensions dimensions = 7;
+  
+  // Властивості об'єкта
+  ObjectProperties properties = 8;
+  
+  // Метадані об'єкта
+  map<string, string> metadata = 9;
+}
+
+// Властивості об'єкта
+message ObjectProperties {
+  // Чи можна знищити
+  bool destructible = 1;
+  
+  // Чи можна пройти крізь
+  bool passable = 2;
+  
+  // Чи можна взаємодіяти
+  bool interactive = 3;
+  
+  // Здоров'я об'єкта
+  int32 health = 4;
+  
+  // Максимальне здоров'я
+  int32 max_health = 5;
+  
+  // Броня об'єкта
+  int32 armor = 6;
+  
+  // Швидкість об'єкта
+  double speed = 7;
+  
+  // Маса об'єкта
+  double mass = 8;
+  
+  // Додаткові властивості
+  map<string, string> additional_properties = 9;
+}
+
+// Точка спавну
+message SpawnPoint {
+  // Ідентифікатор точки спавну
+  string spawn_id = 1;
+  
+  // Назва точки спавну
+  string name = 2;
+  
+  // Позиція точки спавну
+  Vector3 position = 3;
+  
+  // Обертання точки спавну
+  Vector3 rotation = 4;
+  
+  // Тип точки спавну
+  string spawn_type = 5;
+  
+  // Команда точки спавну
+  gaming.game_core.enums.TeamType team = 6;
+  
+  // Чи активна точка спавну
+  bool active = 7;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 8;
+}
+
+// Чекпоінт
+message Checkpoint {
+  // Ідентифікатор чекпоінту
+  string checkpoint_id = 1;
+  
+  // Назва чекпоінту
+  string name = 2;
+  
+  // Позиція чекпоінту
+  Vector3 position = 3;
+  
+  // Радіус чекпоінту
+  double radius = 4;
+  
+  // Чи активний чекпоінт
+  bool active = 5;
+  
+  // Порядок чекпоінту
+  int32 order = 6;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 7;
+}
+
+// Ціль
+message Objective {
+  // Ідентифікатор цілі
+  string objective_id = 1;
+  
+  // Назва цілі
+  string name = 2;
+  
+  // Опис цілі
+  string description = 3;
+  
+  // Тип цілі
+  string objective_type = 4;
+  
+  // Позиція цілі
+  Vector3 position = 5;
+  
+  // Радіус цілі
+  double radius = 6;
+  
+  // Чи активна ціль
+  bool active = 7;
+  
+  // Чи завершена ціль
+  bool completed = 8;
+  
+  // Додаткові параметри
+  map<string, string> parameters = 9;
+}
+
+// Налаштування карти
+message MapSettings {
+  // Час дня
+  string time_of_day = 1;
+  
+  // Погода
+  string weather = 2;
+  
+  // Освітлення
+  string lighting = 3;
+  
+  // Музика
+  string music = 4;
+  
+  // Звуки
+  repeated string sounds = 5;
+  
+  // Ефекти
+  repeated string effects = 6;
+  
+  // Додаткові налаштування
+  map<string, string> additional_settings = 7;
+}
+
+// Метадані карти
+message MapMetadata {
+  // Версія карти
+  string version = 1;
+  
+  // Автор карти
+  string author = 2;
+  
+  // Теги карти
+  repeated string tags = 3;
+  
+  // Мова карти
+  string language = 4;
+  
+  // Рейтинг карти
+  double rating = 5;
+  
+  // Кількість переглядів
+  int64 views = 6;
+  
+  // Кількість завантажень
+  int64 downloads = 7;
+  
+  // Розмір файлу карти
+  int64 file_size = 8;
+  
+  // Формат файлу карти
+  string file_format = 9;
+  
+  // Додаткові метадані
+  map<string, string> additional_data = 10;
+}
+
+// Сесія гравця
+message PlayerSession {
+  // Ідентифікатор гравця
+  string player_id = 1;
+  
+  // Ідентифікатор сесії
+  string session_id = 2;
+  
+  // Статус гравця в сесії
+  gaming.game_core.enums.PlayerSessionStatus status = 3;
+  
+  // Роль гравця
+  gaming.game_core.enums.PlayerRole role = 4;
+  
+  // Команда гравця
+  gaming.game_core.enums.TeamType team = 5;
+  
+  // Рівень доступу
+  gaming.game_core.enums.AccessLevel access_level = 6;
+  
+  // Позиція гравця
+  Vector3 position = 7;
+  
+  // Обертання гравця
+  Vector3 rotation = 8;
+  
+  // Здоров'я гравця
+  int32 health = 9;
+  
+  // Максимальне здоров'я
+  int32 max_health = 10;
+  
+  // Броня гравця
+  int32 armor = 11;
+  
+  // Максимальна броня
+  int32 max_armor = 12;
+  
+  // Досвід гравця
+  int64 experience = 13;
+  
+  // Рівень гравця
+  int32 level = 14;
+  
+  // Очки гравця
+  int64 score = 15;
+  
+  // Статистика гравця
+  PlayerStats stats = 16;
+  
+  // Час підключення
+  google.protobuf.Timestamp connected_at = 17;
+  
+  // Час відключення
+  google.protobuf.Timestamp disconnected_at = 18;
+  
+  // Час в грі
+  int64 play_time_seconds = 19;
+  
+  // Додаткові дані гравця
+  map<string, string> player_data = 20;
+}
+
+// Статистика гравця
+message PlayerStats {
+  // Кількість вбивств
+  int64 kills = 1;
+  
+  // Кількість смертей
+  int64 deaths = 2;
+  
+  // Кількість асистів
+  int64 assists = 3;
+  
+  // Співвідношення K/D
+  double kill_death_ratio = 4;
+  
+  // Кількість перемог
+  int64 wins = 5;
+  
+  // Кількість поразок
+  int64 losses = 6;
+  
+  // Відсоток перемог
+  double win_rate = 7;
+  
+  // Кількість зіграних ігор
+  int64 games_played = 8;
+  
+  // Середній час гри
+  double average_game_time = 9;
+  
+  // Найдовша гра
+  int64 longest_game = 10;
+  
+  // Найкоротша гра
+  int64 shortest_game = 11;
+  
+  // Додаткові статистики
+  map<string, int64> additional_stats = 12;
+}
+
+// Команда
+message Team {
+  // Ідентифікатор команди
+  string team_id = 1;
+  
+  // Назва команди
+  string name = 2;
+  
+  // Тип команди
+  gaming.game_core.enums.TeamType type = 3;
+  
+  // Гравці в команді
+  repeated string player_ids = 4;
+  
+  // Капітан команди
+  string captain_id = 5;
+  
+  // Очки команди
+  int64 score = 6;
+  
+  // Статистика команди
+  TeamStats stats = 7;
+  
+  // Налаштування команди
+  TeamSettings settings = 8;
+  
+  // Метадані команди
+  map<string, string> metadata = 9;
+}
+
+// Статистика команди
+message TeamStats {
+  // Кількість перемог
+  int64 wins = 1;
+  
+  // Кількість поразок
+  int64 losses = 2;
+  
+  // Відсоток перемог
+  double win_rate = 3;
+  
+  // Кількість зіграних ігор
+  int64 games_played = 4;
+  
+  // Середній час гри
+  double average_game_time = 5;
+  
+  // Додаткові статистики
+  map<string, int64> additional_stats = 6;
+}
+
+// Налаштування команди
+message TeamSettings {
+  // Максимальна кількість гравців
+  int32 max_players = 1;
+  
+  // Мінімальна кількість гравців
+  int32 min_players = 2;
+  
+  // Чи можна приєднуватися під час гри
+  bool allow_join_during_game = 3;
+  
+  // Чи можна покидати під час гри
+  bool allow_leave_during_game = 4;
+  
+  // Додаткові налаштування
+  map<string, string> additional_settings = 5;
+}
+
+// Налаштування сесії
+message SessionSettings {
+  // Максимальна кількість гравців
+  int32 max_players = 1;
+  
+  // Мінімальна кількість гравців
+  int32 min_players = 2;
+  
+  // Час очікування (в секундах)
+  int64 wait_time_seconds = 3;
+  
+  // Час гри (в секундах)
+  int64 game_time_seconds = 4;
+  
+  // Чи можна приєднуватися під час гри
+  bool allow_join_during_game = 5;
+  
+  // Чи можна покидати під час гри
+  bool allow_leave_during_game = 6;
+  
+  // Чи можна паузити гру
+  bool allow_pause = 7;
+  
+  // Чи можна перезапускати гру
+  bool allow_restart = 8;
+  
+  // Чи можна зберігати гру
+  bool allow_save = 9;
+  
+  // Чи можна завантажувати гру
+  bool allow_load = 10;
+  
+  // Додаткові налаштування
+  map<string, string> additional_settings = 11;
+}
+
+// Статистика сесії
+message SessionStats {
+  // Загальна кількість гравців
+  int64 total_players = 1;
+  
+  // Кількість активних гравців
+  int64 active_players = 2;
+  
+  // Кількість завершених гравців
+  int64 completed_players = 3;
+  
+  // Кількість відключених гравців
+  int64 disconnected_players = 4;
+  
+  // Середній час гри
+  double average_game_time = 5;
+  
+  // Загальний час гри
+  int64 total_game_time = 6;
+  
+  // Кількість перемог
+  int64 wins = 7;
+  
+  // Кількість поразок
+  int64 losses = 8;
+  
+  // Відсоток перемог
+  double win_rate = 9;
+  
+  // Додаткові статистики
+  map<string, int64> additional_stats = 10;
+}
+
+// Метадані сесії
+message SessionMetadata {
+  // Версія сесії
+  string version = 1;
+  
+  // Автор сесії
+  string author = 2;
+  
+  // Теги сесії
+  repeated string tags = 3;
+  
+  // Мова сесії
+  string language = 4;
+  
+  // Рейтинг сесії
+  double rating = 5;
+  
+  // Кількість переглядів
+  int64 views = 6;
+  
+  // Кількість завантажень
+  int64 downloads = 7;
+  
+  // Розмір файлу сесії
+  int64 file_size = 8;
+  
+  // Формат файлу сесії
+  string file_format = 9;
+  
+  // Додаткові метадані
+  map<string, string> additional_data = 10;
+}
+
+// 3D вектор
+message Vector3 {
+  // X координата
+  double x = 1;
+  
+  // Y координата
+  double y = 2;
+  
+  // Z координата
+  double z = 3;
+}

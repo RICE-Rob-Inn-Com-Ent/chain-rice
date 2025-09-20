@@ -1,0 +1,212 @@
+syntax = "proto3";
+
+package sports.players.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "sports/players/enums/players_enums.proto";
+
+option go_package = "github.com/rice-dev/sports/players/v1";
+
+// PlayerStats represents comprehensive statistics for a player
+message PlayerStats {
+  // General stats
+  int32 games_played = 1;                 // Total games played
+  int32 minutes_played = 2;               // Total minutes played
+  google.protobuf.Int32Value starts = 3; // Number of starts
+  google.protobuf.Int32Value substitutions = 4; // Number of substitutions
+  
+  // Scoring stats
+  int32 goals = 5;                        // Goals scored
+  int32 assists = 6;                      // Assists made
+  int32 points = 7;                       // Points scored (for point-based sports)
+  google.protobuf.Int32Value shots = 8;  // Total shots taken
+  google.protobuf.Int32Value shots_on_target = 9; // Shots on target
+  
+  // Defensive stats
+  google.protobuf.Int32Value tackles = 10; // Tackles made
+  google.protobuf.Int32Value interceptions = 11; // Interceptions made
+  google.protobuf.Int32Value clearances = 12; // Clearances made
+  google.protobuf.Int32Value blocks = 13; // Blocks made
+  
+  // Disciplinary stats
+  google.protobuf.Int32Value yellow_cards = 14; // Yellow cards received
+  google.protobuf.Int32Value red_cards = 15; // Red cards received
+  google.protobuf.Int32Value fouls_committed = 16; // Fouls committed
+  google.protobuf.Int32Value fouls_suffered = 17; // Fouls suffered
+  
+  // Additional sport-specific stats
+  map<string, int32> additional_stats = 18; // Sport-specific statistics
+}
+
+// PlayerInjury represents information about a player's injury
+message PlayerInjury {
+  string id = 1;                          // Injury ID
+  InjuryType type = 2;                    // Type of injury
+  InjurySeverity severity = 3;            // Severity of injury
+  string description = 4;                 // Description of injury
+  google.protobuf.Timestamp injury_date = 5; // Date of injury
+  google.protobuf.Timestamp expected_return = 6; // Expected return date
+  google.protobuf.Timestamp actual_return = 7; // Actual return date
+  bool is_current = 8;                    // Whether this is a current injury
+  string notes = 9;                       // Additional notes
+}
+
+// PlayerContract represents contract information for a player
+message PlayerContract {
+  string id = 1;                          // Contract ID
+  string team_id = 2;                     // ID of the team
+  ContractType type = 3;                  // Type of contract
+  google.protobuf.Timestamp start_date = 4; // Contract start date
+  google.protobuf.Timestamp end_date = 5;   // Contract end date
+  google.protobuf.Int32Value salary = 6;  // Annual salary (in base currency)
+  google.protobuf.Int32Value signing_bonus = 7; // Signing bonus
+  google.protobuf.StringValue currency = 8; // Currency code (e.g., USD, EUR)
+  bool has_release_clause = 9;            // Whether contract has release clause
+  google.protobuf.Int32Value release_clause_amount = 10; // Release clause amount
+  google.protobuf.StringValue agent = 11; // Player's agent
+  map<string, string> additional_terms = 12; // Additional contract terms
+}
+
+// Player represents a sports player with all their properties
+message Player {
+  string id = 1;                          // Unique identifier for the player
+  string first_name = 2;                  // Player's first name
+  string last_name = 3;                   // Player's last name
+  string full_name = 4;                   // Player's full name
+  google.protobuf.StringValue nickname = 5; // Player's nickname
+  google.protobuf.Timestamp birth_date = 6; // Player's birth date
+  string birth_place = 7;                 // Player's birth place
+  string nationality = 8;                 // Player's nationality
+  repeated string additional_nationalities = 9; // Additional nationalities
+  PlayerNationality nationality_type = 10; // Type of nationality eligibility
+  PlayerHandedness handedness = 11;       // Player's dominant hand/foot
+  PlayerPosition primary_position = 12;   // Primary position
+  repeated PlayerPosition secondary_positions = 13; // Secondary positions
+  PlayerStatus status = 14;               // Current player status
+  google.protobuf.Int32Value height_cm = 15; // Height in centimeters
+  google.protobuf.Int32Value weight_kg = 16; // Weight in kilograms
+  google.protobuf.StringValue jersey_number = 17; // Jersey number
+  string current_team_id = 18;            // ID of current team
+  PlayerStats stats = 19;                 // Player statistics
+  repeated PlayerInjury injuries = 20;    // Injury history
+  PlayerContract current_contract = 21;   // Current contract information
+  google.protobuf.StringValue profile_image_url = 22; // Profile image URL
+  google.protobuf.StringValue biography = 23; // Player biography
+  google.protobuf.Timestamp created_at = 24; // When the player was created
+  google.protobuf.Timestamp updated_at = 25; // When the player was last updated
+  map<string, string> metadata = 26;      // Additional metadata
+}
+
+// CreatePlayerRequest represents the request to create a new player
+message CreatePlayerRequest {
+  string first_name = 1;                  // First name (required)
+  string last_name = 2;                   // Last name (required)
+  google.protobuf.StringValue nickname = 3; // Optional nickname
+  google.protobuf.Timestamp birth_date = 4; // Birth date (required)
+  string birth_place = 5;                 // Birth place (required)
+  string nationality = 6;                 // Nationality (required)
+  repeated string additional_nationalities = 7; // Optional additional nationalities
+  PlayerNationality nationality_type = 8; // Nationality type (required)
+  PlayerHandedness handedness = 9;        // Handedness (required)
+  PlayerPosition primary_position = 10;   // Primary position (required)
+  repeated PlayerPosition secondary_positions = 11; // Optional secondary positions
+  google.protobuf.Int32Value height_cm = 12; // Optional height
+  google.protobuf.Int32Value weight_kg = 13; // Optional weight
+  google.protobuf.StringValue jersey_number = 14; // Optional jersey number
+  string current_team_id = 15;            // Current team ID (required)
+  google.protobuf.StringValue profile_image_url = 16; // Optional profile image
+  google.protobuf.StringValue biography = 17; // Optional biography
+  map<string, string> metadata = 18;      // Optional metadata
+}
+
+// CreatePlayerResponse represents the response after creating a player
+message CreatePlayerResponse {
+  Player player = 1;                      // The created player
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// GetPlayerRequest represents the request to get a player by ID
+message GetPlayerRequest {
+  string player_id = 1;                   // ID of the player to retrieve
+}
+
+// GetPlayerResponse represents the response containing player data
+message GetPlayerResponse {
+  Player player = 1;                      // The requested player
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// ListPlayersRequest represents the request to list players with filters
+message ListPlayersRequest {
+  google.protobuf.Int32Value page_size = 1;    // Number of players per page
+  google.protobuf.StringValue page_token = 2;  // Token for pagination
+  google.protobuf.StringValue team_id = 3;     // Filter by team ID
+  PlayerPosition position = 4;                 // Filter by position
+  PlayerStatus status = 5;                     // Filter by status
+  google.protobuf.StringValue nationality = 6; // Filter by nationality
+  google.protobuf.Int32Value min_age = 7;      // Filter by minimum age
+  google.protobuf.Int32Value max_age = 8;      // Filter by maximum age
+  google.protobuf.StringValue search_query = 9; // Search query for name
+}
+
+// ListPlayersResponse represents the response containing a list of players
+message ListPlayersResponse {
+  repeated Player players = 1;            // List of players
+  string next_page_token = 2;             // Token for next page
+  int32 total_count = 3;                  // Total number of players matching filters
+  bool success = 4;                       // Whether the operation was successful
+  string message = 5;                     // Response message
+  google.protobuf.Timestamp timestamp = 6; // Response timestamp
+}
+
+// UpdatePlayerRequest represents the request to update a player
+message UpdatePlayerRequest {
+  string player_id = 1;                   // ID of the player to update
+  google.protobuf.StringValue first_name = 2; // Optional new first name
+  google.protobuf.StringValue last_name = 3; // Optional new last name
+  google.protobuf.StringValue nickname = 4; // Optional new nickname
+  google.protobuf.Timestamp birth_date = 5; // Optional new birth date
+  google.protobuf.StringValue birth_place = 6; // Optional new birth place
+  google.protobuf.StringValue nationality = 7; // Optional new nationality
+  repeated string additional_nationalities = 8; // Optional new additional nationalities
+  PlayerNationality nationality_type = 9; // Optional new nationality type
+  PlayerHandedness handedness = 10;       // Optional new handedness
+  PlayerPosition primary_position = 11;   // Optional new primary position
+  repeated PlayerPosition secondary_positions = 12; // Optional new secondary positions
+  PlayerStatus status = 13;               // Optional new status
+  google.protobuf.Int32Value height_cm = 14; // Optional new height
+  google.protobuf.Int32Value weight_kg = 15; // Optional new weight
+  google.protobuf.StringValue jersey_number = 16; // Optional new jersey number
+  google.protobuf.StringValue current_team_id = 17; // Optional new team ID
+  PlayerStats stats = 18;                 // Optional new stats
+  repeated PlayerInjury injuries = 19;    // Optional new injuries
+  PlayerContract current_contract = 20;   // Optional new contract
+  google.protobuf.StringValue profile_image_url = 21; // Optional new profile image
+  google.protobuf.StringValue biography = 22; // Optional new biography
+  map<string, string> metadata = 23;      // Optional new metadata
+}
+
+// UpdatePlayerResponse represents the response after updating a player
+message UpdatePlayerResponse {
+  Player player = 1;                      // The updated player
+  bool success = 2;                       // Whether the operation was successful
+  string message = 3;                     // Response message
+  google.protobuf.Timestamp timestamp = 4; // Response timestamp
+}
+
+// DeletePlayerRequest represents the request to delete a player
+message DeletePlayerRequest {
+  string player_id = 1;                   // ID of the player to delete
+}
+
+// DeletePlayerResponse represents the response after deleting a player
+message DeletePlayerResponse {
+  bool success = 1;                       // Whether the operation was successful
+  string message = 2;                     // Response message
+  google.protobuf.Timestamp timestamp = 3; // Response timestamp
+}

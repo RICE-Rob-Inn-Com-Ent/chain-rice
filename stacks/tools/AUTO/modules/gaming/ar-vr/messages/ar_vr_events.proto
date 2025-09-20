@@ -1,0 +1,637 @@
+syntax = "proto3";
+
+package gaming.ar_vr.messages;
+
+import "gaming/ar_vr/enums/interaction_modes.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/messages";
+
+// Базовий клас події AR/VR
+message ARVREvent {
+  // Унікальний ідентифікатор події
+  string event_id = 1;
+  
+  // Тип події
+  ARVREventType type = 2;
+  
+  // Ідентифікатор гравця
+  string player_id = 3;
+  
+  // Ідентифікатор сесії
+  string session_id = 4;
+  
+  // Час події
+  google.protobuf.Timestamp timestamp = 5;
+  
+  // Додаткові дані події
+  map<string, string> event_data = 6;
+  
+  // Версія події
+  string version = 7;
+}
+
+// Типи подій AR/VR
+enum ARVREventType {
+  ARVR_EVENT_TYPE_UNSPECIFIED = 0;
+  
+  // Сесія створена
+  ARVR_EVENT_TYPE_SESSION_CREATED = 1;
+  
+  // Сесія завершена
+  ARVR_EVENT_TYPE_SESSION_ENDED = 2;
+  
+  // Сцена завантажена
+  ARVR_EVENT_TYPE_SCENE_LOADED = 3;
+  
+  // Сцена вивантажена
+  ARVR_EVENT_TYPE_SCENE_UNLOADED = 4;
+  
+  // Аватар створений
+  ARVR_EVENT_TYPE_AVATAR_CREATED = 5;
+  
+  // Аватар оновлений
+  ARVR_EVENT_TYPE_AVATAR_UPDATED = 6;
+  
+  // Аватар видалений
+  ARVR_EVENT_TYPE_AVATAR_DELETED = 7;
+  
+  // Взаємодія з об'єктом
+  ARVR_EVENT_TYPE_OBJECT_INTERACTION = 8;
+  
+  // Взаємодія з сценою
+  ARVR_EVENT_TYPE_SCENE_INTERACTION = 9;
+  
+  // Взаємодія з аватаром
+  ARVR_EVENT_TYPE_AVATAR_INTERACTION = 10;
+  
+  // Рух гравця
+  ARVR_EVENT_TYPE_PLAYER_MOVEMENT = 11;
+  
+  // Рух голови
+  ARVR_EVENT_TYPE_HEAD_MOVEMENT = 12;
+  
+  // Рух рук
+  ARVR_EVENT_TYPE_HAND_MOVEMENT = 13;
+  
+  // Рух очей
+  ARVR_EVENT_TYPE_EYE_MOVEMENT = 14;
+  
+  // Голосова команда
+  ARVR_EVENT_TYPE_VOICE_COMMAND = 15;
+  
+  // Жест
+  ARVR_EVENT_TYPE_GESTURE = 16;
+  
+  // Дотик
+  ARVR_EVENT_TYPE_TOUCH = 17;
+  
+  // Погляд
+  ARVR_EVENT_TYPE_GAZE = 18;
+  
+  // Помилка
+  ARVR_EVENT_TYPE_ERROR = 19;
+  
+  // Попередження
+  ARVR_EVENT_TYPE_WARNING = 20;
+  
+  // Інформація
+  ARVR_EVENT_TYPE_INFO = 21;
+}
+
+// Подія створення сесії
+message SessionCreatedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Дані сесії
+  ARVRSession session = 2;
+  
+  // Причина створення
+  string reason = 3;
+  
+  // Додаткові дані сесії
+  map<string, string> session_data = 4;
+}
+
+// Подія завершення сесії
+message SessionEndedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Дані сесії
+  ARVRSession session = 2;
+  
+  // Причина завершення
+  string reason = 3;
+  
+  // Тривалість сесії (в секундах)
+  int64 duration_seconds = 4;
+  
+  // Додаткові дані сесії
+  map<string, string> session_data = 5;
+}
+
+// Подія завантаження сцени
+message SceneLoadedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Дані сцени
+  Scene scene = 2;
+  
+  // Час завантаження (в мілісекундах)
+  int64 load_time_ms = 3;
+  
+  // Розмір сцени (в байтах)
+  int64 scene_size_bytes = 4;
+  
+  // Додаткові дані сцени
+  map<string, string> scene_data = 5;
+}
+
+// Подія вивантаження сцени
+message SceneUnloadedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Дані сцени
+  Scene scene = 2;
+  
+  // Час вивантаження (в мілісекундах)
+  int64 unload_time_ms = 3;
+  
+  // Причина вивантаження
+  string reason = 4;
+  
+  // Додаткові дані сцени
+  map<string, string> scene_data = 5;
+}
+
+// Подія створення аватара
+message AvatarCreatedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Дані аватара
+  Avatar avatar = 2;
+  
+  // Причина створення
+  string reason = 3;
+  
+  // Додаткові дані аватара
+  map<string, string> avatar_data = 4;
+}
+
+// Подія оновлення аватара
+message AvatarUpdatedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Попередні дані аватара
+  Avatar previous_avatar = 2;
+  
+  // Нові дані аватара
+  Avatar new_avatar = 3;
+  
+  // Список змінених полів
+  repeated string changed_fields = 4;
+  
+  // Причина оновлення
+  string reason = 5;
+  
+  // Додаткові дані оновлення
+  map<string, string> update_data = 6;
+}
+
+// Подія видалення аватара
+message AvatarDeletedEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Дані видаленого аватара
+  Avatar deleted_avatar = 2;
+  
+  // Причина видалення
+  string reason = 3;
+  
+  // Додаткові дані видалення
+  map<string, string> deletion_data = 4;
+}
+
+// Подія взаємодії з об'єктом
+message ObjectInteractionEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Ідентифікатор об'єкта
+  string object_id = 2;
+  
+  // Тип взаємодії
+  gaming.ar_vr.enums.InteractionMode interaction_type = 3;
+  
+  // Тип жесту (якщо застосовно)
+  string gesture_type = 4;
+  
+  // Позиція взаємодії
+  Vector3 interaction_position = 5;
+  
+  // Напрямок взаємодії
+  Vector3 interaction_direction = 6;
+  
+  // Сила взаємодії
+  double interaction_force = 7;
+  
+  // Тривалість взаємодії (в мілісекундах)
+  int64 interaction_duration = 8;
+  
+  // Додаткові дані взаємодії
+  map<string, string> interaction_data = 9;
+}
+
+// Подія взаємодії з сценою
+message SceneInteractionEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Ідентифікатор сцени
+  string scene_id = 2;
+  
+  // Тип взаємодії
+  gaming.ar_vr.enums.InteractionMode interaction_type = 3;
+  
+  // Позиція взаємодії
+  Vector3 interaction_position = 4;
+  
+  // Напрямок взаємодії
+  Vector3 interaction_direction = 5;
+  
+  // Сила взаємодії
+  double interaction_force = 6;
+  
+  // Тривалість взаємодії (в мілісекундах)
+  int64 interaction_duration = 7;
+  
+  // Додаткові дані взаємодії
+  map<string, string> interaction_data = 8;
+}
+
+// Подія взаємодії з аватаром
+message AvatarInteractionEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Ідентифікатор аватара
+  string avatar_id = 2;
+  
+  // Тип взаємодії
+  gaming.ar_vr.enums.InteractionMode interaction_type = 3;
+  
+  // Позиція взаємодії
+  Vector3 interaction_position = 4;
+  
+  // Напрямок взаємодії
+  Vector3 interaction_direction = 5;
+  
+  // Сила взаємодії
+  double interaction_force = 6;
+  
+  // Тривалість взаємодії (в мілісекундах)
+  int64 interaction_duration = 7;
+  
+  // Додаткові дані взаємодії
+  map<string, string> interaction_data = 8;
+}
+
+// Подія руху гравця
+message PlayerMovementEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Попередня позиція
+  Vector3 previous_position = 2;
+  
+  // Нова позиція
+  Vector3 new_position = 3;
+  
+  // Швидкість руху
+  double movement_speed = 4;
+  
+  // Напрямок руху
+  Vector3 movement_direction = 5;
+  
+  // Відстань руху
+  double movement_distance = 6;
+  
+  // Час руху (в мілісекундах)
+  int64 movement_time = 7;
+  
+  // Додаткові дані руху
+  map<string, string> movement_data = 8;
+}
+
+// Подія руху голови
+message HeadMovementEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Попереднє обертання голови
+  Vector3 previous_rotation = 2;
+  
+  // Нове обертання голови
+  Vector3 new_rotation = 3;
+  
+  // Швидкість руху голови
+  double movement_speed = 4;
+  
+  // Напрямок руху голови
+  Vector3 movement_direction = 5;
+  
+  // Кут повороту голови
+  double rotation_angle = 6;
+  
+  // Час руху голови (в мілісекундах)
+  int64 movement_time = 7;
+  
+  // Додаткові дані руху голови
+  map<string, string> movement_data = 8;
+}
+
+// Подія руху рук
+message HandMovementEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Попередня позиція рук
+  Vector3 previous_position = 2;
+  
+  // Нова позиція рук
+  Vector3 new_position = 3;
+  
+  // Попереднє обертання рук
+  Vector3 previous_rotation = 4;
+  
+  // Нове обертання рук
+  Vector3 new_rotation = 5;
+  
+  // Швидкість руху рук
+  double movement_speed = 6;
+  
+  // Напрямок руху рук
+  Vector3 movement_direction = 7;
+  
+  // Час руху рук (в мілісекундах)
+  int64 movement_time = 8;
+  
+  // Додаткові дані руху рук
+  map<string, string> movement_data = 9;
+}
+
+// Подія руху очей
+message EyeMovementEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Попередня позиція очей
+  Vector3 previous_position = 2;
+  
+  // Нова позиція очей
+  Vector3 new_position = 3;
+  
+  // Попереднє обертання очей
+  Vector3 previous_rotation = 4;
+  
+  // Нове обертання очей
+  Vector3 new_rotation = 5;
+  
+  // Швидкість руху очей
+  double movement_speed = 6;
+  
+  // Напрямок руху очей
+  Vector3 movement_direction = 7;
+  
+  // Час руху очей (в мілісекундах)
+  int64 movement_time = 8;
+  
+  // Додаткові дані руху очей
+  map<string, string> movement_data = 9;
+}
+
+// Подія голосової команди
+message VoiceCommandEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Текст команди
+  string command_text = 2;
+  
+  // Тип команди
+  string command_type = 3;
+  
+  // Мова команди
+  string command_language = 4;
+  
+  // Впевненість розпізнавання
+  double confidence = 5;
+  
+  // Час обробки команди (в мілісекундах)
+  int64 processing_time = 6;
+  
+  // Результат виконання команди
+  string execution_result = 7;
+  
+  // Додаткові дані команди
+  map<string, string> command_data = 8;
+}
+
+// Подія жесту
+message GestureEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Тип жесту
+  string gesture_type = 2;
+  
+  // Позиція жесту
+  Vector3 gesture_position = 3;
+  
+  // Напрямок жесту
+  Vector3 gesture_direction = 4;
+  
+  // Сила жесту
+  double gesture_force = 5;
+  
+  // Тривалість жесту (в мілісекундах)
+  int64 gesture_duration = 6;
+  
+  // Впевненість розпізнавання жесту
+  double confidence = 7;
+  
+  // Додаткові дані жесту
+  map<string, string> gesture_data = 8;
+}
+
+// Подія дотику
+message TouchEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Тип дотику
+  string touch_type = 2;
+  
+  // Позиція дотику
+  Vector3 touch_position = 3;
+  
+  // Сила дотику
+  double touch_force = 4;
+  
+  // Тривалість дотику (в мілісекундах)
+  int64 touch_duration = 5;
+  
+  // Розмір області дотику
+  double touch_area = 6;
+  
+  // Додаткові дані дотику
+  map<string, string> touch_data = 7;
+}
+
+// Подія погляду
+message GazeEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Тип погляду
+  string gaze_type = 2;
+  
+  // Позиція погляду
+  Vector3 gaze_position = 3;
+  
+  // Напрямок погляду
+  Vector3 gaze_direction = 4;
+  
+  // Тривалість погляду (в мілісекундах)
+  int64 gaze_duration = 5;
+  
+  // Впевненість розпізнавання погляду
+  double confidence = 6;
+  
+  // Додаткові дані погляду
+  map<string, string> gaze_data = 7;
+}
+
+// Подія помилки
+message ErrorEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Код помилки
+  string error_code = 2;
+  
+  // Повідомлення про помилку
+  string error_message = 3;
+  
+  // Тип помилки
+  string error_type = 4;
+  
+  // Серйозність помилки
+  string error_severity = 5;
+  
+  // Стек викликів
+  string stack_trace = 6;
+  
+  // Додаткові дані помилки
+  map<string, string> error_data = 7;
+}
+
+// Подія попередження
+message WarningEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Код попередження
+  string warning_code = 2;
+  
+  // Повідомлення попередження
+  string warning_message = 3;
+  
+  // Тип попередження
+  string warning_type = 4;
+  
+  // Серйозність попередження
+  string warning_severity = 5;
+  
+  // Додаткові дані попередження
+  map<string, string> warning_data = 6;
+}
+
+// Подія інформації
+message InfoEvent {
+  // Базова подія
+  ARVREvent base_event = 1;
+  
+  // Код інформації
+  string info_code = 2;
+  
+  // Повідомлення інформації
+  string info_message = 3;
+  
+  // Тип інформації
+  string info_type = 4;
+  
+  // Додаткові дані інформації
+  map<string, string> info_data = 5;
+}
+
+// Пакет подій AR/VR
+message ARVREventBatch {
+  // Список подій
+  repeated ARVREvent events = 1;
+  
+  // Час створення пакету
+  google.protobuf.Timestamp batch_created_at = 2;
+  
+  // Версія пакету
+  string batch_version = 3;
+  
+  // Додаткові метадані пакету
+  map<string, string> batch_metadata = 4;
+}
+
+// Сесія AR/VR
+message ARVRSession {
+  // Ідентифікатор сесії
+  string session_id = 1;
+  
+  // Ідентифікатор гравця
+  string player_id = 2;
+  
+  // Тип сесії
+  string session_type = 3;
+  
+  // Статус сесії
+  string session_status = 4;
+  
+  // Час початку сесії
+  google.protobuf.Timestamp start_time = 5;
+  
+  // Час закінчення сесії
+  google.protobuf.Timestamp end_time = 6;
+  
+  // Тривалість сесії (в секундах)
+  int64 duration_seconds = 7;
+  
+  // Додаткові дані сесії
+  map<string, string> session_data = 8;
+}
+
+// 3D вектор
+message Vector3 {
+  // X координата
+  double x = 1;
+  
+  // Y координата
+  double y = 2;
+  
+  // Z координата
+  double z = 3;
+}

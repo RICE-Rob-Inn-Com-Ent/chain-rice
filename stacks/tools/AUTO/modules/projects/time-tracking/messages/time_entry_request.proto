@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package projects.time_tracking.messages;
+
+import "time-tracking/enums/time_entry_type.proto";
+import "google/protobuf/timestamp.proto";
+
+// TimeEntry represents a time tracking entry
+message TimeEntry {
+  // Unique identifier for the time entry
+  string id = 1;
+  
+  // ID of the user who logged the time
+  string user_id = 2;
+  
+  // ID of the project this time entry belongs to
+  string project_id = 3;
+  
+  // ID of the task this time entry belongs to (optional)
+  string task_id = 4;
+  
+  // Number of hours logged
+  double hours = 5;
+  
+  // Type of time entry
+  projects.time_tracking.enums.TimeEntryType entry_type = 6;
+  
+  // Date when the work was performed
+  google.protobuf.Timestamp date = 7;
+  
+  // Description of the work performed
+  string description = 8;
+  
+  // Timestamp when the time entry was created
+  google.protobuf.Timestamp created_at = 9;
+  
+  // Timestamp when the time entry was last updated
+  google.protobuf.Timestamp updated_at = 10;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 11;
+}
+
+// CreateTimeEntryRequest contains the data needed to create a new time entry
+message CreateTimeEntryRequest {
+  // ID of the user who logged the time (required)
+  string user_id = 1;
+  
+  // ID of the project this time entry belongs to (required)
+  string project_id = 2;
+  
+  // ID of the task this time entry belongs to (optional)
+  string task_id = 3;
+  
+  // Number of hours logged (required)
+  double hours = 4;
+  
+  // Type of time entry (defaults to REGULAR if not specified)
+  projects.time_tracking.enums.TimeEntryType entry_type = 5;
+  
+  // Date when the work was performed (required)
+  google.protobuf.Timestamp date = 6;
+  
+  // Description of the work performed (optional)
+  string description = 7;
+  
+  // Additional metadata as key-value pairs
+  map<string, string> metadata = 8;
+}
+
+// GetTimeEntryRequest contains the identifier to retrieve a specific time entry
+message GetTimeEntryRequest {
+  // Unique identifier of the time entry to retrieve
+  string time_entry_id = 1;
+}
+
+// ListTimeEntriesRequest contains parameters for listing time entries
+message ListTimeEntriesRequest {
+  // Maximum number of time entries to return (default: 50, max: 1000)
+  int32 page_size = 1;
+  
+  // Token to retrieve the next page of results
+  string page_token = 2;
+  
+  // Filter by user ID
+  string user_id = 3;
+  
+  // Filter by project ID
+  string project_id = 4;
+  
+  // Filter by task ID
+  string task_id = 5;
+  
+  // Filter by time entry type
+  projects.time_tracking.enums.TimeEntryType entry_type = 6;
+  
+  // Filter by date range - start date
+  google.protobuf.Timestamp start_date = 7;
+  
+  // Filter by date range - end date
+  google.protobuf.Timestamp end_date = 8;
+  
+  // Search term to filter time entries by description
+  string search_term = 9;
+}
+
+// UpdateTimeEntryRequest contains the data needed to update an existing time entry
+message UpdateTimeEntryRequest {
+  // Unique identifier of the time entry to update
+  string time_entry_id = 1;
+  
+  // Updated project ID (optional)
+  string project_id = 2;
+  
+  // Updated task ID (optional)
+  string task_id = 3;
+  
+  // Updated number of hours (optional)
+  double hours = 4;
+  
+  // Updated time entry type (optional)
+  projects.time_tracking.enums.TimeEntryType entry_type = 5;
+  
+  // Updated date (optional)
+  google.protobuf.Timestamp date = 6;
+  
+  // Updated description (optional)
+  string description = 7;
+  
+  // Updated metadata (optional)
+  map<string, string> metadata = 8;
+}
+
+// DeleteTimeEntryRequest contains the identifier to delete a specific time entry
+message DeleteTimeEntryRequest {
+  // Unique identifier of the time entry to delete
+  string time_entry_id = 1;
+}

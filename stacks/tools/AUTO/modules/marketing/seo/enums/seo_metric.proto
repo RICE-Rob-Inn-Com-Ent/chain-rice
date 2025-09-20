@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package marketing.seo.enums;
+
+// Enumeration for SEO metrics
+enum SeoMetric {
+  // Default metric - not specified
+  SEO_METRIC_UNSPECIFIED = 0;
+  
+  // Organic traffic
+  SEO_METRIC_ORGANIC_TRAFFIC = 1;
+  
+  // Keyword rankings
+  SEO_METRIC_KEYWORD_RANKINGS = 2;
+  
+  // Page load speed
+  SEO_METRIC_PAGE_LOAD_SPEED = 3;
+  
+  // Mobile usability
+  SEO_METRIC_MOBILE_USABILITY = 4;
+  
+  // Backlinks
+  SEO_METRIC_BACKLINKS = 5;
+  
+  // Domain authority
+  SEO_METRIC_DOMAIN_AUTHORITY = 6;
+  
+  // Page authority
+  SEO_METRIC_PAGE_AUTHORITY = 7;
+  
+  // Click-through rate
+  SEO_METRIC_CTR = 8;
+  
+  // Bounce rate
+  SEO_METRIC_BOUNCE_RATE = 9;
+  
+  // Average session duration
+  SEO_METRIC_AVG_SESSION_DURATION = 10;
+  
+  // Pages per session
+  SEO_METRIC_PAGES_PER_SESSION = 11;
+  
+  // Conversion rate
+  SEO_METRIC_CONVERSION_RATE = 12;
+}

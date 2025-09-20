@@ -1,0 +1,237 @@
+syntax = "proto3";
+
+package energy.distribution.enums;
+
+// Types of assets in power distribution network
+enum AssetType {
+  // Power transformer
+  ASSET_TYPE_TRANSFORMER = 0;
+  
+  // Distribution transformer
+  ASSET_TYPE_DISTRIBUTION_TRANSFORMER = 1;
+  
+  // Power transformer
+  ASSET_TYPE_POWER_TRANSFORMER = 2;
+  
+  // Current transformer
+  ASSET_TYPE_CURRENT_TRANSFORMER = 3;
+  
+  // Voltage transformer
+  ASSET_TYPE_VOLTAGE_TRANSFORMER = 4;
+  
+  // Circuit breaker
+  ASSET_TYPE_CIRCUIT_BREAKER = 5;
+  
+  // Air circuit breaker
+  ASSET_TYPE_AIR_CIRCUIT_BREAKER = 6;
+  
+  // Oil circuit breaker
+  ASSET_TYPE_OIL_CIRCUIT_BREAKER = 7;
+  
+  // Vacuum circuit breaker
+  ASSET_TYPE_VACUUM_CIRCUIT_BREAKER = 8;
+  
+  // SF6 circuit breaker
+  ASSET_TYPE_SF6_CIRCUIT_BREAKER = 9;
+  
+  // Gas insulated switchgear
+  ASSET_TYPE_GAS_INSULATED_SWITCHGEAR = 10;
+  
+  // Air insulated switchgear
+  ASSET_TYPE_AIR_INSULATED_SWITCHGEAR = 11;
+  
+  // Load break switch
+  ASSET_TYPE_LOAD_BREAK_SWITCH = 12;
+  
+  // Disconnect switch
+  ASSET_TYPE_DISCONNECT_SWITCH = 13;
+  
+  // Fuse
+  ASSET_TYPE_FUSE = 14;
+  
+  // Recloser
+  ASSET_TYPE_RECLOSER = 15;
+  
+  // Sectionalizer
+  ASSET_TYPE_SECTIONALIZER = 16;
+  
+  // Capacitor bank
+  ASSET_TYPE_CAPACITOR_BANK = 17;
+  
+  // Reactor
+  ASSET_TYPE_REACTOR = 18;
+  
+  // Voltage regulator
+  ASSET_TYPE_VOLTAGE_REGULATOR = 19;
+  
+  // Load tap changer
+  ASSET_TYPE_LOAD_TAP_CHANGER = 20;
+  
+  // Power line
+  ASSET_TYPE_POWER_LINE = 21;
+  
+  // Overhead line
+  ASSET_TYPE_OVERHEAD_LINE = 22;
+  
+  // Underground cable
+  ASSET_TYPE_UNDERGROUND_CABLE = 23;
+  
+  // Transmission line
+  ASSET_TYPE_TRANSMISSION_LINE = 24;
+  
+  // Distribution line
+  ASSET_TYPE_DISTRIBUTION_LINE = 25;
+  
+  // Substation
+  ASSET_TYPE_SUBSTATION = 26;
+  
+  // Switchyard
+  ASSET_TYPE_SWITCHYARD = 27;
+  
+  // Control house
+  ASSET_TYPE_CONTROL_HOUSE = 28;
+  
+  // Battery bank
+  ASSET_TYPE_BATTERY_BANK = 29;
+  
+  // UPS system
+  ASSET_TYPE_UPS_SYSTEM = 30;
+  
+  // Generator
+  ASSET_TYPE_GENERATOR = 31;
+  
+  // Motor
+  ASSET_TYPE_MOTOR = 32;
+  
+  // Pump
+  ASSET_TYPE_PUMP = 33;
+  
+  // Compressor
+  ASSET_TYPE_COMPRESSOR = 34;
+  
+  // Fan
+  ASSET_TYPE_FAN = 35;
+  
+  // Heat exchanger
+  ASSET_TYPE_HEAT_EXCHANGER = 36;
+  
+  // Cooling tower
+  ASSET_TYPE_COOLING_TOWER = 37;
+  
+  // Water treatment system
+  ASSET_TYPE_WATER_TREATMENT_SYSTEM = 38;
+  
+  // Fire protection system
+  ASSET_TYPE_FIRE_PROTECTION_SYSTEM = 39;
+  
+  // Security system
+  ASSET_TYPE_SECURITY_SYSTEM = 40;
+  
+  // Communication system
+  ASSET_TYPE_COMMUNICATION_SYSTEM = 41;
+  
+  // SCADA system
+  ASSET_TYPE_SCADA_SYSTEM = 42;
+  
+  // Protection relay
+  ASSET_TYPE_PROTECTION_RELAY = 43;
+  
+  // Metering equipment
+  ASSET_TYPE_METERING_EQUIPMENT = 44;
+  
+  // Power quality equipment
+  ASSET_TYPE_POWER_QUALITY_EQUIPMENT = 45;
+  
+  // Energy storage system
+  ASSET_TYPE_ENERGY_STORAGE_SYSTEM = 46;
+  
+  // Solar panel
+  ASSET_TYPE_SOLAR_PANEL = 47;
+  
+  // Wind turbine
+  ASSET_TYPE_WIND_TURBINE = 48;
+  
+  // Hydro turbine
+  ASSET_TYPE_HYDRO_TURBINE = 49;
+  
+  // Gas turbine
+  ASSET_TYPE_GAS_TURBINE = 50;
+  
+  // Steam turbine
+  ASSET_TYPE_STEAM_TURBINE = 51;
+  
+  // Boiler
+  ASSET_TYPE_BOILER = 52;
+  
+  // Condenser
+  ASSET_TYPE_CONDENSER = 53;
+  
+  // Turbine generator
+  ASSET_TYPE_TURBINE_GENERATOR = 54;
+  
+  // Synchronous generator
+  ASSET_TYPE_SYNCHRONOUS_GENERATOR = 55;
+  
+  // Induction generator
+  ASSET_TYPE_INDUCTION_GENERATOR = 56;
+  
+  // Inverter
+  ASSET_TYPE_INVERTER = 57;
+  
+  // Rectifier
+  ASSET_TYPE_RECTIFIER = 58;
+  
+  // Converter
+  ASSET_TYPE_CONVERTER = 59;
+  
+  // Filter
+  ASSET_TYPE_FILTER = 60;
+  
+  // Surge arrester
+  ASSET_TYPE_SURGE_ARRESTER = 61;
+  
+  // Lightning rod
+  ASSET_TYPE_LIGHTNING_ROD = 62;
+  
+  // Grounding system
+  ASSET_TYPE_GROUNDING_SYSTEM = 63;
+  
+  // Insulator
+  ASSET_TYPE_INSULATOR = 64;
+  
+  // Conductor
+  ASSET_TYPE_CONDUCTOR = 65;
+  
+  // Tower
+  ASSET_TYPE_TOWER = 66;
+  
+  // Pole
+  ASSET_TYPE_POLE = 67;
+  
+  // Foundation
+  ASSET_TYPE_FOUNDATION = 68;
+  
+  // Building
+  ASSET_TYPE_BUILDING = 69;
+  
+  // Structure
+  ASSET_TYPE_STRUCTURE = 70;
+  
+  // Vehicle
+  ASSET_TYPE_VEHICLE = 71;
+  
+  // Tool
+  ASSET_TYPE_TOOL = 72;
+  
+  // Test equipment
+  ASSET_TYPE_TEST_EQUIPMENT = 73;
+  
+  // Safety equipment
+  ASSET_TYPE_SAFETY_EQUIPMENT = 74;
+  
+  // Personal protective equipment
+  ASSET_TYPE_PPE = 75;
+  
+  // Other asset type
+  ASSET_TYPE_OTHER = 76;
+}

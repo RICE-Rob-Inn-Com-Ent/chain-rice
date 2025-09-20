@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package telecom.billing.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "telecom/billing/enums/invoice_status.proto";
+import "telecom/billing/enums/payment_method.proto";
+
+// CreateInvoiceRequest represents a request to create a new billing invoice
+message CreateInvoiceRequest {
+  // Customer ID for whom the invoice is being created
+  string customer_id = 1;
+  
+  // Amount to be billed (in the smallest currency unit, e.g., cents)
+  int64 amount = 2;
+  
+  // Currency code (ISO 4217 format, e.g., "USD", "EUR")
+  string currency = 3;
+  
+  // Description of the invoice
+  string description = 4;
+  
+  // Due date for the invoice
+  google.protobuf.Timestamp due_date = 5;
+  
+  // Optional payment method preference
+  telecom.billing.enums.PaymentMethod preferred_payment_method = 6;
+  
+  // Optional notes for the invoice
+  google.protobuf.StringValue notes = 7;
+  
+  // Optional tax amount (in the smallest currency unit)
+  google.protobuf.DoubleValue tax_amount = 8;
+  
+  // Line items for detailed billing
+  repeated InvoiceLineItem line_items = 9;
+}
+
+// UpdateInvoiceRequest represents a request to update an existing invoice
+message UpdateInvoiceRequest {
+  // Invoice ID to update
+  string invoice_id = 1;
+  
+  // New status for the invoice
+  telecom.billing.enums.InvoiceStatus status = 2;
+  
+  // Optional new amount (if correction is needed)
+  google.protobuf.DoubleValue amount = 3;
+  
+  // Optional new due date
+  google.protobuf.Timestamp due_date = 4;
+  
+  // Optional notes
+  google.protobuf.StringValue notes = 5;
+}
+
+// GetInvoiceRequest represents a request to retrieve a specific invoice
+message GetInvoiceRequest {
+  // Invoice ID to retrieve
+  string invoice_id = 1;
+}
+
+// ListInvoicesRequest represents a request to list invoices with filtering
+message ListInvoicesRequest {
+  // Customer ID to filter by (optional)
+  google.protobuf.StringValue customer_id = 1;
+  
+  // Status to filter by (optional)
+  telecom.billing.enums.InvoiceStatus status = 2;
+  
+  // Start date for filtering (optional)
+  google.protobuf.Timestamp start_date = 3;
+  
+  // End date for filtering (optional)
+  google.protobuf.Timestamp end_date = 4;
+  
+  // Page number for pagination (starts from 1)
+  int32 page = 5;
+  
+  // Page size for pagination (max 100)
+  int32 page_size = 6;
+}
+
+// DeleteInvoiceRequest represents a request to delete an invoice
+message DeleteInvoiceRequest {
+  // Invoice ID to delete
+  string invoice_id = 1;
+}
+
+// ProcessPaymentRequest represents a request to process payment for an invoice
+message ProcessPaymentRequest {
+  // Invoice ID to process payment for
+  string invoice_id = 1;
+  
+  // Payment method to use
+  telecom.billing.enums.PaymentMethod payment_method = 2;
+  
+  // Payment amount (should match or be less than invoice amount)
+  int64 amount = 3;
+  
+  // Payment reference or transaction ID
+  string payment_reference = 4;
+  
+  // Optional payment notes
+  google.protobuf.StringValue notes = 5;
+}
+
+// InvoiceLineItem represents a detailed line item within an invoice
+message InvoiceLineItem {
+  // Description of the line item
+  string description = 1;
+  
+  // Quantity of the item
+  double quantity = 2;
+  
+  // Unit price (in the smallest currency unit)
+  int64 unit_price = 3;
+  
+  // Total amount for this line item (quantity * unit_price)
+  int64 total_amount = 4;
+  
+  // Optional tax rate for this line item (as percentage, e.g., 8.5 for 8.5%)
+  google.protobuf.DoubleValue tax_rate = 5;
+}

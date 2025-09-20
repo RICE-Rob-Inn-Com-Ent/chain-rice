@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package retail.inventory.services;
+
+import "inventory/messages/inventory_request.proto";
+import "inventory/messages/inventory_response.proto";
+import "google/api/annotations.proto";
+
+// InventoryService provides CRUD operations for inventory management
+service InventoryService {
+  // CreateInventory creates a new inventory item
+  rpc CreateInventory(retail.inventory.messages.CreateInventoryRequest) returns (retail.inventory.messages.CreateInventoryResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/inventory"
+      body: "*"
+    };
+  }
+  
+  // GetInventory retrieves a specific inventory item by ID
+  rpc GetInventory(retail.inventory.messages.GetInventoryRequest) returns (retail.inventory.messages.GetInventoryResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/inventory/{inventory_id}"
+    };
+  }
+  
+  // ListInventory retrieves a paginated list of inventory items with optional filtering
+  rpc ListInventory(retail.inventory.messages.ListInventoryRequest) returns (retail.inventory.messages.ListInventoryResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/inventory"
+    };
+  }
+  
+  // UpdateInventory updates an existing inventory item
+  rpc UpdateInventory(retail.inventory.messages.UpdateInventoryRequest) returns (retail.inventory.messages.UpdateInventoryResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/inventory/{inventory_id}"
+      body: "*"
+    };
+  }
+  
+  // AdjustInventory adjusts inventory quantities and creates movement records
+  rpc AdjustInventory(retail.inventory.messages.AdjustInventoryRequest) returns (retail.inventory.messages.AdjustInventoryResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/inventory/{inventory_id}/adjust"
+      body: "*"
+    };
+  }
+  
+  // DeleteInventory deletes a specific inventory item
+  rpc DeleteInventory(retail.inventory.messages.DeleteInventoryRequest) returns (retail.inventory.messages.DeleteInventoryResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/inventory/{inventory_id}"
+    };
+  }
+}

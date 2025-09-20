@@ -1,0 +1,174 @@
+syntax = "proto3";
+
+package entertainment.catalog.enums;
+
+// Типи фільтрів для каталогу
+enum FilterType {
+  FILTER_TYPE_UNSPECIFIED = 0;
+  
+  // Фільтри за типом контенту
+  CONTENT_TYPE = 1;
+  GENRE = 2;
+  CATEGORY = 3;
+  TAG = 4;
+  
+  // Фільтри за статусом
+  STATUS = 5;
+  VISIBILITY = 6;
+  AVAILABILITY = 7;
+  
+  // Фільтри за датою
+  RELEASE_DATE = 8;
+  CREATED_DATE = 9;
+  UPDATED_DATE = 10;
+  PUBLISHED_DATE = 11;
+  
+  // Фільтри за рейтингом
+  USER_RATING = 12;
+  CRITIC_RATING = 13;
+  AGE_RATING = 14;
+  
+  // Фільтри за тривалістю
+  DURATION = 15;
+  FILE_SIZE = 16;
+  
+  // Фільтри за мовою
+  LANGUAGE = 17;
+  SUBTITLE_LANGUAGE = 18;
+  AUDIO_LANGUAGE = 19;
+  
+  // Фільтри за якістю
+  VIDEO_QUALITY = 20;
+  AUDIO_QUALITY = 21;
+  RESOLUTION = 22;
+  
+  // Фільтри за ціною
+  PRICE = 23;
+  PRICING_MODEL = 24;
+  SUBSCRIPTION_TIER = 25;
+  
+  // Фільтри за доступністю
+  FREE_CONTENT = 26;
+  PREMIUM_CONTENT = 27;
+  SUBSCRIPTION_REQUIRED = 28;
+  
+  // Фільтри за платформою
+  PLATFORM = 29;
+  DEVICE_TYPE = 30;
+  BROWSER_SUPPORT = 31;
+  
+  // Фільтри за територією
+  COUNTRY = 32;
+  REGION = 33;
+  TIMEZONE = 34;
+  
+  // Фільтри за ліцензуванням
+  LICENSE_TYPE = 35;
+  LICENSE_STATUS = 36;
+  RIGHTS_STATUS = 37;
+  
+  // Фільтри за модерацією
+  MODERATION_STATUS = 38;
+  MODERATION_LEVEL = 39;
+  CONTENT_WARNING = 40;
+  
+  // Фільтри за доступністю
+  ACCESSIBILITY_FEATURE = 41;
+  ACCESSIBILITY_LEVEL = 42;
+  
+  // Фільтри за персоналізацією
+  USER_PREFERENCE = 43;
+  WATCH_HISTORY = 44;
+  RECOMMENDATION_SCORE = 45;
+  
+  // Фільтри за аналітикою
+  VIEW_COUNT = 46;
+  LIKE_COUNT = 47;
+  SHARE_COUNT = 48;
+  COMMENT_COUNT = 49;
+  
+  // Фільтри за популярністю
+  TRENDING = 50;
+  VIRAL = 51;
+  FEATURED = 52;
+  
+  // Фільтри за новизною
+  NEW_RELEASES = 53;
+  RECENTLY_ADDED = 54;
+  UPCOMING = 55;
+  
+  // Фільтри за сезонністю
+  SEASONAL = 56;
+  HOLIDAY = 57;
+  EVENT_BASED = 58;
+  
+  // Фільтри за форматом
+  FORMAT = 59;
+  CODEC = 60;
+  CONTAINER = 61;
+  
+  // Фільтри за джерелом
+  SOURCE_PLATFORM = 62;
+  CONTENT_CREATOR = 63;
+  STUDIO = 64;
+  
+  // Фільтри за правами
+  DISTRIBUTION_RIGHTS = 65;
+  STREAMING_RIGHTS = 66;
+  DOWNLOAD_RIGHTS = 67;
+  
+  // Фільтри за монетизацією
+  AD_SUPPORTED = 68;
+  SUBSCRIPTION_BASED = 69;
+  PAY_PER_VIEW = 70;
+  
+  // Фільтри за інтерактивністю
+  INTERACTIVE = 71;
+  USER_GENERATED = 72;
+  COMMUNITY_CONTENT = 73;
+  
+  // Фільтри за освітою
+  EDUCATIONAL = 74;
+  TUTORIAL = 75;
+  COURSE = 76;
+  
+  // Фільтри за спортом
+  SPORTS = 77;
+  LIVE_EVENT = 78;
+  HIGHLIGHT = 79;
+  
+  // Фільтри за музикою
+  MUSIC_GENRE = 80;
+  ARTIST = 81;
+  ALBUM = 82;
+  
+  // Фільтри за грою
+  GAME_GENRE = 83;
+  PLATFORM_SUPPORT = 84;
+  MULTIPLAYER = 85;
+  
+  // Фільтри за подіями
+  EVENT_TYPE = 86;
+  VENUE_TYPE = 87;
+  TICKET_STATUS = 88;
+  
+  // Фільтри за стрімінгом
+  STREAM_TYPE = 89;
+  STREAM_QUALITY = 90;
+  CDN_PROVIDER = 91;
+  
+  // Фільтри за підписками
+  SUBSCRIPTION_PLAN = 92;
+  BILLING_CYCLE = 93;
+  PROMO_TYPE = 94;
+  
+  // Фільтри за рекламою
+  AD_TYPE = 95;
+  AD_PLACEMENT = 96;
+  AD_DURATION = 97;
+  
+  // Фільтри за персоналізацією
+  PROFILE_SEGMENT = 98;
+  AB_TEST_STATUS = 99;
+  RECOMMENDATION_ENGINE = 100;
+}

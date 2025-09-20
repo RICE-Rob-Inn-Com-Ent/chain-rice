@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package integrations.external_apis.enums;
+
+option go_package = "github.com/rice-dev/integrations/external_apis/enums";
+
+// API Authentication Methods for external API integrations
+enum ApiAuthMethod {
+  API_AUTH_METHOD_UNSPECIFIED = 0;
+  
+  // API Key Authentication
+  API_AUTH_METHOD_API_KEY = 1;              // Simple API key in header/query
+  API_AUTH_METHOD_API_KEY_HEADER = 2;       // API key in Authorization header
+  API_AUTH_METHOD_API_KEY_QUERY = 3;        // API key in query parameters
+  API_AUTH_METHOD_API_KEY_BODY = 4;         // API key in request body
+  
+  // OAuth 2.0 Authentication
+  API_AUTH_METHOD_OAUTH2_AUTHORIZATION_CODE = 10; // Authorization Code flow
+  API_AUTH_METHOD_OAUTH2_CLIENT_CREDENTIALS = 11; // Client Credentials flow
+  API_AUTH_METHOD_OAUTH2_IMPLICIT = 12;     // Implicit flow
+  API_AUTH_METHOD_OAUTH2_PASSWORD = 13;     // Resource Owner Password flow
+  API_AUTH_METHOD_OAUTH2_DEVICE = 14;       // Device Authorization flow
+  API_AUTH_METHOD_OAUTH2_REFRESH_TOKEN = 15; // Refresh token flow
+  
+  // OAuth 1.0 Authentication
+  API_AUTH_METHOD_OAUTH1 = 20;              // OAuth 1.0a
+  API_AUTH_METHOD_OAUTH1_SIGNATURE = 21;    // OAuth 1.0 with signature
+  
+  // JWT Authentication
+  API_AUTH_METHOD_JWT_BEARER = 30;          // JWT Bearer token
+  API_AUTH_METHOD_JWT_HEADER = 31;          // JWT in custom header
+  API_AUTH_METHOD_JWT_QUERY = 32;           // JWT in query parameter
+  API_AUTH_METHOD_JWT_BODY = 33;            // JWT in request body
+  
+  // Basic Authentication
+  API_AUTH_METHOD_BASIC = 40;               // HTTP Basic Authentication
+  API_AUTH_METHOD_BASIC_DIGEST = 41;        // HTTP Digest Authentication
+  
+  // Certificate-based Authentication
+  API_AUTH_METHOD_CLIENT_CERTIFICATE = 50;  // Client SSL certificate
+  API_AUTH_METHOD_MUTUAL_TLS = 51;          // Mutual TLS authentication
+  API_AUTH_METHOD_CERTIFICATE_PINNING = 52; // Certificate pinning
+  
+  // Token-based Authentication
+  API_AUTH_METHOD_ACCESS_TOKEN = 60;        // Simple access token
+  API_AUTH_METHOD_BEARER_TOKEN = 61;        // Bearer token in Authorization header
+  API_AUTH_METHOD_CUSTOM_TOKEN = 62;        // Custom token format
+  API_AUTH_METHOD_SESSION_TOKEN = 63;       // Session-based token
+  
+  // HMAC Authentication
+  API_AUTH_METHOD_HMAC_SHA1 = 70;           // HMAC-SHA1 signature
+  API_AUTH_METHOD_HMAC_SHA256 = 71;         // HMAC-SHA256 signature
+  API_AUTH_METHOD_HMAC_SHA512 = 72;         // HMAC-SHA512 signature
+  API_AUTH_METHOD_HMAC_MD5 = 73;            // HMAC-MD5 signature
+  
+  // AWS Authentication
+  API_AUTH_METHOD_AWS_SIGNATURE_V4 = 80;    // AWS Signature Version 4
+  API_AUTH_METHOD_AWS_SIGNATURE_V2 = 81;    // AWS Signature Version 2
+  API_AUTH_METHOD_AWS_IAM = 82;             // AWS IAM authentication
+  
+  // Azure Authentication
+  API_AUTH_METHOD_AZURE_AD = 90;            // Azure Active Directory
+  API_AUTH_METHOD_AZURE_SAS = 91;           // Azure Shared Access Signature
+  API_AUTH_METHOD_AZURE_MANAGED_IDENTITY = 92; // Azure Managed Identity
+  
+  // Google Authentication
+  API_AUTH_METHOD_GOOGLE_OAUTH2 = 100;      // Google OAuth 2.0
+  API_AUTH_METHOD_GOOGLE_SERVICE_ACCOUNT = 101; // Google Service Account
+  API_AUTH_METHOD_GOOGLE_JWT = 102;         // Google JWT authentication
+  
+  // Custom Authentication
+  API_AUTH_METHOD_CUSTOM_HEADER = 110;      // Custom header authentication
+  API_AUTH_METHOD_CUSTOM_QUERY = 111;       // Custom query parameter
+  API_AUTH_METHOD_CUSTOM_BODY = 112;        // Custom body parameter
+  API_AUTH_METHOD_CUSTOM_SIGNATURE = 113;   // Custom signature method
+  
+  // Webhook Authentication
+  API_AUTH_METHOD_WEBHOOK_SECRET = 120;     // Webhook secret validation
+  API_AUTH_METHOD_WEBHOOK_SIGNATURE = 121;  // Webhook signature verification
+  API_AUTH_METHOD_WEBHOOK_HMAC = 122;       // Webhook HMAC validation
+  
+  // No Authentication
+  API_AUTH_METHOD_NONE = 200;               // No authentication required
+  API_AUTH_METHOD_PUBLIC = 201;             // Public API access
+  API_AUTH_METHOD_ANONYMOUS = 202;          // Anonymous access
+  
+  // Legacy Authentication
+  API_AUTH_METHOD_LEGACY = 210;             // Legacy authentication method
+  API_AUTH_METHOD_DEPRECATED = 211;         // Deprecated authentication
+}

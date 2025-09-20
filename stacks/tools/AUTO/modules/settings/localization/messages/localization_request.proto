@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package settings.localization.messages;
+
+import "google/protobuf/field_mask.proto";
+import "settings/localization/enums/language.proto";
+import "settings/localization/enums/region.proto";
+
+// Request message for creating a new localization entry
+message CreateLocalizationRequest {
+  // The translation key identifier
+  string translation_key = 1;
+  
+  // The language for this translation
+  settings.localization.enums.Language language = 2;
+  
+  // The region for this translation (optional for regional variants)
+  settings.localization.enums.Region region = 3;
+  
+  // The translated text value
+  string translation_value = 4;
+  
+  // Optional metadata about the translation
+  map<string, string> metadata = 5;
+  
+  // Optional category for organizing translations
+  string category = 6;
+  
+  // Optional description of the translation context
+  string description = 7;
+}
+
+// Request message for retrieving a specific localization entry
+message GetLocalizationRequest {
+  // The unique identifier of the localization entry
+  string id = 1;
+}
+
+// Request message for listing localization entries with filtering
+message ListLocalizationsRequest {
+  // Optional filter by translation key pattern
+  string translation_key_filter = 1;
+  
+  // Optional filter by language
+  settings.localization.enums.Language language_filter = 2;
+  
+  // Optional filter by region
+  settings.localization.enums.Region region_filter = 3;
+  
+  // Optional filter by category
+  string category_filter = 4;
+  
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 5;
+  
+  // Page token for pagination
+  string page_token = 6;
+  
+  // Sort order: "translation_key", "language", "region", "created_at"
+  string order_by = 7;
+  
+  // Sort direction: "asc" or "desc" (default: "asc")
+  string sort_direction = 8;
+}
+
+// Request message for updating an existing localization entry
+message UpdateLocalizationRequest {
+  // The unique identifier of the localization entry to update
+  string id = 1;
+  
+  // The updated translation value
+  string translation_value = 2;
+  
+  // Optional metadata updates
+  map<string, string> metadata = 3;
+  
+  // Optional description update
+  string description = 4;
+  
+  // Field mask to specify which fields to update
+  google.protobuf.FieldMask update_mask = 5;
+}
+
+// Request message for deleting a localization entry
+message DeleteLocalizationRequest {
+  // The unique identifier of the localization entry to delete
+  string id = 1;
+  
+  // Optional: force deletion even if entry is referenced elsewhere
+  bool force = 2;
+}
+
+// Request message for bulk operations on localizations
+message BulkLocalizationRequest {
+  // List of localization entries to create/update
+  repeated CreateLocalizationRequest entries = 1;
+  
+  // Operation type: "create", "update", or "upsert"
+  string operation = 2;
+}
+
+// Request message for searching translations by content
+message SearchLocalizationsRequest {
+  // Search query string
+  string query = 1;
+  
+  // Optional language filter for search
+  settings.localization.enums.Language language_filter = 2;
+  
+  // Optional region filter for search
+  settings.localization.enums.Region region_filter = 3;
+  
+  // Search in: "translation_key", "translation_value", "description", or "all"
+  string search_in = 4;
+  
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 5;
+  
+  // Page token for pagination
+  string page_token = 6;
+}

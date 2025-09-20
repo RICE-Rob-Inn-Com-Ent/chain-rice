@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package gaming.game_core.enums;
+
+option go_package = "github.com/rice-dev/gaming/game_core/enums";
+
+// Статуси ігрових сесій
+enum SessionStatus {
+  SESSION_STATUS_UNSPECIFIED = 0;
+  
+  // Очікування
+  SESSION_STATUS_WAITING = 1;
+  
+  // Підготовка
+  SESSION_STATUS_PREPARING = 2;
+  
+  // Активна
+  SESSION_STATUS_ACTIVE = 3;
+  
+  // Призупинена
+  SESSION_STATUS_PAUSED = 4;
+  
+  // Завершена
+  SESSION_STATUS_COMPLETED = 5;
+  
+  // Скасована
+  SESSION_STATUS_CANCELLED = 6;
+  
+  // Помилка
+  SESSION_STATUS_ERROR = 7;
+  
+  // Тайм-аут
+  SESSION_STATUS_TIMEOUT = 8;
+  
+  // Перервана
+  SESSION_STATUS_INTERRUPTED = 9;
+  
+  // Перезавантажена
+  SESSION_STATUS_RESTARTED = 10;
+  
+  // Збережена
+  SESSION_STATUS_SAVED = 11;
+  
+  // Завантажена
+  SESSION_STATUS_LOADED = 12;
+}
+
+// Статуси гравців в сесії
+enum PlayerSessionStatus {
+  PLAYER_SESSION_STATUS_UNSPECIFIED = 0;
+  
+  // Підключений
+  PLAYER_SESSION_STATUS_CONNECTED = 1;
+  
+  // Відключений
+  PLAYER_SESSION_STATUS_DISCONNECTED = 2;
+  
+  // Очікування
+  PLAYER_SESSION_STATUS_WAITING = 3;
+  
+  // Готовий
+  PLAYER_SESSION_STATUS_READY = 4;
+  
+  // Грає
+  PLAYER_SESSION_STATUS_PLAYING = 5;
+  
+  // Призупинив
+  PLAYER_SESSION_STATUS_PAUSED = 6;
+  
+  // Завершив
+  PLAYER_SESSION_STATUS_FINISHED = 7;
+  
+  // Вибув
+  PLAYER_SESSION_STATUS_ELIMINATED = 8;
+  
+  // Покинув
+  PLAYER_SESSION_STATUS_LEFT = 9;
+  
+  // Кикнутий
+  PLAYER_SESSION_STATUS_KICKED = 10;
+  
+  // Заблокований
+  PLAYER_SESSION_STATUS_BANNED = 11;
+  
+  // Афк
+  PLAYER_SESSION_STATUS_AFK = 12;
+  
+  // Спектатор
+  PLAYER_SESSION_STATUS_SPECTATING = 13;
+  
+  // Режим очікування
+  PLAYER_SESSION_STATUS_QUEUE = 14;
+  
+  // Режим лобі
+  PLAYER_SESSION_STATUS_LOBBY = 15;
+}

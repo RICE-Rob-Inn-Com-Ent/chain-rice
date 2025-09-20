@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package construction.materials.enums;
+
+enum QualityGrade {
+  QUALITY_GRADE_UNSPECIFIED = 0;
+  A_PLUS = 1;
+  A = 2;
+  A_MINUS = 3;
+  B_PLUS = 4;
+  B = 5;
+  B_MINUS = 6;
+  C_PLUS = 7;
+  C = 8;
+  C_MINUS = 9;
+  D = 10;
+  F = 11;
+  PREMIUM = 12;
+  HIGH = 13;
+  MEDIUM = 14;
+  LOW = 15;
+  STANDARD = 16;
+  PREMIUM_PLUS = 17;
+  ECONOMY = 18;
+  COMMERCIAL = 19;
+  INDUSTRIAL = 20;
+  RESIDENTIAL = 21;
+  EXCELLENT = 22;
+  GOOD = 23;
+  FAIR = 24;
+  POOR = 25;
+  UNACCEPTABLE = 26;
+}

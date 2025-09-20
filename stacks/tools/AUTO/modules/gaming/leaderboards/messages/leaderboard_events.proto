@@ -1,0 +1,218 @@
+syntax = "proto3";
+
+package gaming.leaderboards.messages;
+
+import "gaming/leaderboards/enums/leaderboard_types.proto";
+import "gaming/leaderboards/enums/ranking_types.proto";
+import "gaming/leaderboards/enums/score_types.proto";
+
+option go_package = "github.com/rice-dev/gaming/leaderboards/messages";
+
+// Подія створення лідерборду
+message LeaderboardCreatedEvent {
+  string leaderboard_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.leaderboards.enums.LeaderboardType type = 4;
+  gaming.leaderboards.enums.RankingType ranking_type = 5;
+  gaming.leaderboards.enums.ScoreType score_type = 6;
+  string game_id = 7;
+  string category_id = 8;
+  string season_id = 9;
+  int64 created_at = 10;
+  map<string, string> metadata = 11;
+}
+
+// Подія оновлення лідерборду
+message LeaderboardUpdatedEvent {
+  string leaderboard_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.leaderboards.enums.LeaderboardType type = 4;
+  gaming.leaderboards.enums.RankingType ranking_type = 5;
+  gaming.leaderboards.enums.ScoreType score_type = 6;
+  bool is_active = 7;
+  bool is_public = 8;
+  int64 updated_at = 9;
+  map<string, string> metadata = 10;
+}
+
+// Подія видалення лідерборду
+message LeaderboardDeletedEvent {
+  string leaderboard_id = 1;
+  string name = 2;
+  string game_id = 3;
+  int64 deleted_at = 4;
+  map<string, string> metadata = 5;
+}
+
+// Подія додавання запису до лідерборду
+message LeaderboardEntryAddedEvent {
+  string entry_id = 1;
+  string leaderboard_id = 2;
+  string player_id = 3;
+  string player_name = 4;
+  int64 score = 5;
+  int32 rank = 6;
+  int64 timestamp = 7;
+  map<string, string> metadata = 8;
+}
+
+// Подія оновлення запису лідерборду
+message LeaderboardEntryUpdatedEvent {
+  string entry_id = 1;
+  string leaderboard_id = 2;
+  string player_id = 3;
+  string player_name = 4;
+  int64 score = 5;
+  int64 previous_score = 6;
+  int32 rank = 7;
+  int32 previous_rank = 8;
+  int64 timestamp = 9;
+  map<string, string> metadata = 10;
+}
+
+// Подія видалення запису з лідерборду
+message LeaderboardEntryDeletedEvent {
+  string entry_id = 1;
+  string leaderboard_id = 2;
+  string player_id = 3;
+  string player_name = 4;
+  int64 score = 5;
+  int32 rank = 6;
+  int64 deleted_at = 7;
+  map<string, string> metadata = 8;
+}
+
+// Подія зміни рейтингу
+message RankingChangedEvent {
+  string ranking_id = 1;
+  string player_id = 2;
+  string leaderboard_id = 3;
+  int32 rank = 4;
+  int32 previous_rank = 5;
+  int32 rank_change = 6;
+  int64 score = 7;
+  int64 previous_score = 8;
+  int64 score_change = 9;
+  int64 timestamp = 10;
+  map<string, string> metadata = 11;
+}
+
+// Подія зміни очок
+message ScoreChangedEvent {
+  string score_id = 1;
+  string player_id = 2;
+  string leaderboard_id = 3;
+  gaming.leaderboards.enums.ScoreType type = 4;
+  int64 value = 5;
+  int64 previous_value = 6;
+  int64 change = 7;
+  int64 timestamp = 8;
+  map<string, string> metadata = 9;
+}
+
+// Подія скидання лідерборду
+message LeaderboardResetEvent {
+  string leaderboard_id = 1;
+  string name = 2;
+  string game_id = 3;
+  int64 reset_at = 4;
+  int64 previous_reset_at = 5;
+  map<string, string> metadata = 6;
+}
+
+// Подія завершення сезону лідерборду
+message LeaderboardSeasonEndedEvent {
+  string season_id = 1;
+  string name = 2;
+  string game_id = 3;
+  int64 start_date = 4;
+  int64 end_date = 5;
+  int64 ended_at = 6;
+  map<string, string> rewards = 7;
+  map<string, string> metadata = 8;
+}
+
+// Подія початку нового сезону лідерборду
+message LeaderboardSeasonStartedEvent {
+  string season_id = 1;
+  string name = 2;
+  string description = 3;
+  string game_id = 4;
+  int64 start_date = 5;
+  int64 end_date = 6;
+  int64 started_at = 7;
+  map<string, string> rewards = 8;
+  map<string, string> metadata = 9;
+}
+
+// Подія досягнення нового рекорду
+message NewRecordEvent {
+  string record_id = 1;
+  string player_id = 2;
+  string player_name = 3;
+  string leaderboard_id = 4;
+  gaming.leaderboards.enums.ScoreType score_type = 5;
+  int64 score = 6;
+  int64 previous_record = 7;
+  int64 improvement = 8;
+  int64 timestamp = 9;
+  map<string, string> metadata = 10;
+}
+
+// Подія досягнення нового рейтингу
+message NewRankingEvent {
+  string ranking_id = 1;
+  string player_id = 2;
+  string player_name = 3;
+  string leaderboard_id = 4;
+  int32 rank = 5;
+  int32 previous_rank = 6;
+  int32 rank_change = 7;
+  int64 score = 8;
+  int64 timestamp = 9;
+  map<string, string> metadata = 10;
+}
+
+// Подія досягнення нового очок
+message NewScoreEvent {
+  string score_id = 1;
+  string player_id = 2;
+  string player_name = 3;
+  string leaderboard_id = 4;
+  gaming.leaderboards.enums.ScoreType type = 5;
+  int64 value = 6;
+  int64 previous_value = 7;
+  int64 change = 8;
+  int64 timestamp = 9;
+  map<string, string> metadata = 10;
+}
+
+// Подія досягнення нового рейтингу
+message NewRankingEvent {
+  string ranking_id = 1;
+  string player_id = 2;
+  string player_name = 3;
+  string leaderboard_id = 4;
+  int32 rank = 5;
+  int32 previous_rank = 6;
+  int32 rank_change = 7;
+  int64 score = 8;
+  int64 timestamp = 9;
+  map<string, string> metadata = 10;
+}
+
+// Подія досягнення нового очок
+message NewScoreEvent {
+  string score_id = 1;
+  string player_id = 2;
+  string player_name = 3;
+  string leaderboard_id = 4;
+  gaming.leaderboards.enums.ScoreType type = 5;
+  int64 value = 6;
+  int64 previous_value = 7;
+  int64 change = 8;
+  int64 timestamp = 9;
+  map<string, string> metadata = 10;
+}

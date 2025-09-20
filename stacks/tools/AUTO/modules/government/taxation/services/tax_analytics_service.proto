@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+package government.taxation.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/tax_record_models.proto";
+import "../messages/tax_payment_models.proto";
+
+// Сервіс аналітики податків
+service TaxAnalyticsService {
+  // Отримати аналітику податків
+  rpc GetTaxAnalytics(GetTaxAnalyticsRequest) returns (TaxAnalyticsResponse);
+  
+  // Отримати звіт про надходження
+  rpc GetRevenueReport(GetRevenueReportRequest) returns (RevenueReportResponse);
+  
+  // Отримати звіт про заборгованість
+  rpc GetDebtReport(GetDebtReportRequest) returns (DebtReportResponse);
+  
+  // Отримати прогноз надходжень
+  rpc GetRevenueForecast(GetRevenueForecastRequest) returns (RevenueForecastResponse);
+  
+  // Отримати статистику платників
+  rpc GetTaxpayerStatistics(google.protobuf.Empty) returns (TaxpayerStatistics);
+}
+
+// Запити та відповіді
+message GetTaxAnalyticsRequest {
+  string from_date = 1;
+  string to_date = 2;
+  string tax_type = 3;
+  string region = 4;
+}
+
+message GetRevenueReportRequest {
+  string from_date = 1;
+  string to_date = 2;
+  string format = 3;
+}
+
+message GetDebtReportRequest {
+  string from_date = 1;
+  string to_date = 2;
+  string tax_type = 3;
+}
+
+message GetRevenueForecastRequest {
+  string forecast_period = 1;
+  string method = 2;
+}
+
+message TaxAnalyticsResponse {
+  bool success = 1;
+  string message = 2;
+  TaxAnalytics analytics = 3;
+}
+
+message RevenueReportResponse {
+  bool success = 1;
+  string message = 2;
+  RevenueReport report = 3;
+}
+
+message DebtReportResponse {
+  bool success = 1;
+  string message = 2;
+  DebtReport report = 3;
+}
+
+message RevenueForecastResponse {
+  bool success = 1;
+  string message = 2;
+  RevenueForecast forecast = 3;
+}
+
+message TaxpayerStatistics {
+  int32 total_taxpayers = 1;
+  int32 active_taxpayers = 2;
+  int32 individual_taxpayers = 3;
+  int32 corporate_taxpayers = 4;
+  repeated TaxpayerTypeStatistics by_type = 5;
+}
+
+// Моделі аналітики
+message TaxAnalytics {
+  double total_revenue = 1;
+  double total_debt = 2;
+  double collection_rate = 3;
+  repeated TaxTypeAnalytics by_type = 4;
+  repeated MonthlyAnalytics monthly = 5;
+}
+
+message TaxTypeAnalytics {
+  string tax_type = 1;
+  double revenue = 2;
+  double debt = 3;
+  double collection_rate = 4;
+}
+
+message MonthlyAnalytics {
+  string month = 1;
+  double revenue = 2;
+  double debt = 3;
+  int32 payments_count = 4;
+}
+
+message RevenueReport {
+  string period = 1;
+  double total_revenue = 2;
+  repeated RevenueByType by_type = 3;
+  repeated RevenueByMonth by_month = 4;
+}
+
+message RevenueByType {
+  string tax_type = 1;
+  double amount = 2;
+  double percentage = 3;
+}
+
+message RevenueByMonth {
+  string month = 1;
+  double amount = 2;
+}
+
+message DebtReport {
+  string period = 1;
+  double total_debt = 2;
+  repeated DebtByType by_type = 3;
+  repeated DebtByAge by_age = 4;
+}
+
+message DebtByType {
+  string tax_type = 1;
+  double amount = 2;
+  int32 count = 3;
+}
+
+message DebtByAge {
+  string age_range = 1;
+  double amount = 2;
+  int32 count = 3;
+}
+
+message RevenueForecast {
+  string forecast_period = 1;
+  double predicted_revenue = 2;
+  double confidence_level = 3;
+  repeated MonthlyForecast monthly_forecasts = 4;
+}
+
+message MonthlyForecast {
+  string month = 1;
+  double predicted_amount = 2;
+  double min_amount = 3;
+  double max_amount = 4;
+}
+
+message TaxpayerTypeStatistics {
+  string taxpayer_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}

@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package healthcare.medical_records.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/medical_record_models.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/medical-records/services";
+
+// Medical record service for CRUD operations
+service MedicalRecordService {
+  // Create a new medical record
+  rpc CreateMedicalRecord(MedicalRecordRequest) returns (MedicalRecordResponse);
+  
+  // Get medical record by ID
+  rpc GetMedicalRecord(GetMedicalRecordRequest) returns (MedicalRecordResponse);
+  
+  // Update an existing medical record
+  rpc UpdateMedicalRecord(UpdateMedicalRecordRequest) returns (MedicalRecordResponse);
+  
+  // Delete a medical record
+  rpc DeleteMedicalRecord(DeleteMedicalRecordRequest) returns (google.protobuf.Empty);
+  
+  // List medical records with filtering
+  rpc ListMedicalRecords(ListMedicalRecordsRequest) returns (ListMedicalRecordsResponse);
+  
+  // Get medical records by patient
+  rpc GetMedicalRecordsByPatient(GetMedicalRecordsByPatientRequest) returns (ListMedicalRecordsResponse);
+  
+  // Get medical records by doctor
+  rpc GetMedicalRecordsByDoctor(GetMedicalRecordsByDoctorRequest) returns (ListMedicalRecordsResponse);
+  
+  // Get medical records by clinic
+  rpc GetMedicalRecordsByClinic(GetMedicalRecordsByClinicRequest) returns (ListMedicalRecordsResponse);
+  
+  // Archive medical record
+  rpc ArchiveMedicalRecord(ArchiveMedicalRecordRequest) returns (MedicalRecordResponse);
+  
+  // Restore archived medical record
+  rpc RestoreMedicalRecord(RestoreMedicalRecordRequest) returns (MedicalRecordResponse);
+  
+  // Get medical record summary
+  rpc GetMedicalRecordSummary(GetMedicalRecordSummaryRequest) returns (MedicalRecordSummary);
+  
+  // Search medical records
+  rpc SearchMedicalRecords(SearchMedicalRecordsRequest) returns (ListMedicalRecordsResponse);
+}
+
+// Get medical record request
+message GetMedicalRecordRequest {
+  string record_id = 1;
+}
+
+// Update medical record request
+message UpdateMedicalRecordRequest {
+  string record_id = 1;
+  MedicalRecordRequest medical_record = 2;
+}
+
+// Delete medical record request
+message DeleteMedicalRecordRequest {
+  string record_id = 1;
+  string reason = 2;
+}
+
+// Get medical records by patient request
+message GetMedicalRecordsByPatientRequest {
+  string patient_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+// Get medical records by doctor request
+message GetMedicalRecordsByDoctorRequest {
+  string doctor_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+// Get medical records by clinic request
+message GetMedicalRecordsByClinicRequest {
+  string clinic_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+// Archive medical record request
+message ArchiveMedicalRecordRequest {
+  string record_id = 1;
+  string reason = 2;
+  string archived_by = 3;
+}
+
+// Restore medical record request
+message RestoreMedicalRecordRequest {
+  string record_id = 1;
+  string reason = 2;
+  string restored_by = 3;
+}
+
+// Get medical record summary request
+message GetMedicalRecordSummaryRequest {
+  string patient_id = 1;
+}
+
+// Search medical records request
+message SearchMedicalRecordsRequest {
+  string query = 1;
+  string patient_id = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}

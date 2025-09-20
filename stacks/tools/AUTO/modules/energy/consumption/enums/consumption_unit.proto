@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package energy.consumption.enums;
+
+// Units of measurement for energy consumption
+enum ConsumptionUnit {
+  // Kilowatt-hours (most common for electricity)
+  CONSUMPTION_UNIT_KILOWATT_HOUR = 0;
+  
+  // Megawatt-hours (for large industrial consumption)
+  CONSUMPTION_UNIT_MEGAWATT_HOUR = 1;
+  
+  // Gigawatt-hours (for utility-scale consumption)
+  CONSUMPTION_UNIT_GIGAWATT_HOUR = 2;
+  
+  // Watt-hours (for small devices)
+  CONSUMPTION_UNIT_WATT_HOUR = 3;
+  
+  // British Thermal Units (BTU)
+  CONSUMPTION_UNIT_BTU = 4;
+  
+  // Million BTU (MMBTU)
+  CONSUMPTION_UNIT_MMBTU = 5;
+  
+  // Therms (for natural gas)
+  CONSUMPTION_UNIT_THERMS = 6;
+  
+  // Cubic feet (for natural gas volume)
+  CONSUMPTION_UNIT_CUBIC_FEET = 7;
+  
+  // Cubic meters (for natural gas volume)
+  CONSUMPTION_UNIT_CUBIC_METERS = 8;
+  
+  // Gallons (for liquid fuels)
+  CONSUMPTION_UNIT_GALLONS = 9;
+  
+  // Liters (for liquid fuels)
+  CONSUMPTION_UNIT_LITERS = 10;
+  
+  // Barrels (for oil)
+  CONSUMPTION_UNIT_BARRELS = 11;
+  
+  // Tons (for coal)
+  CONSUMPTION_UNIT_TONS = 12;
+  
+  // Metric tons (for coal)
+  CONSUMPTION_UNIT_METRIC_TONS = 13;
+  
+  // Pounds (for coal)
+  CONSUMPTION_UNIT_POUNDS = 14;
+  
+  // Kilograms (for coal)
+  CONSUMPTION_UNIT_KILOGRAMS = 15;
+  
+  // Joules (SI unit of energy)
+  CONSUMPTION_UNIT_JOULES = 16;
+  
+  // Kilojoules
+  CONSUMPTION_UNIT_KILOJOULES = 17;
+  
+  // Megajoules
+  CONSUMPTION_UNIT_MEGAJOULES = 18;
+  
+  // Gigajoules
+  CONSUMPTION_UNIT_GIGAJOULES = 19;
+  
+  // Calories
+  CONSUMPTION_UNIT_CALORIES = 20;
+  
+  // Kilocalories
+  CONSUMPTION_UNIT_KILOCALORIES = 21;
+  
+  // Horsepower-hours
+  CONSUMPTION_UNIT_HORSEPOWER_HOURS = 22;
+  
+  // Ton-hours (for cooling)
+  CONSUMPTION_UNIT_TON_HOURS = 23;
+  
+  // Refrigeration tons
+  CONSUMPTION_UNIT_REFRIGERATION_TONS = 24;
+  
+  // Steam pounds
+  CONSUMPTION_UNIT_STEAM_POUNDS = 25;
+  
+  // Steam kilograms
+  CONSUMPTION_UNIT_STEAM_KILOGRAMS = 26;
+  
+  // Water gallons (for water consumption)
+  CONSUMPTION_UNIT_WATER_GALLONS = 27;
+  
+  // Water liters
+  CONSUMPTION_UNIT_WATER_LITERS = 28;
+  
+  // Water cubic meters
+  CONSUMPTION_UNIT_WATER_CUBIC_METERS = 29;
+}

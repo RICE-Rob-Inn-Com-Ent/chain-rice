@@ -1,0 +1,199 @@
+syntax = "proto3";
+
+package finance.invoicing.messages;
+
+// Invoice adjustment representation
+message InvoiceAdjustment {
+  // Unique adjustment identifier
+  string adjustment_id = 1;
+  
+  // Invoice ID
+  string invoice_id = 2;
+  
+  // Adjustment type
+  string adjustment_type = 3;
+  
+  // Adjustment reason
+  string reason = 4;
+  
+  // Adjustment amount
+  double amount = 5;
+  
+  // Adjustment percentage
+  double percentage = 6;
+  
+  // Currency code
+  string currency = 7;
+  
+  // Adjustment date
+  int64 adjustment_date = 8;
+  
+  // Effective date
+  int64 effective_date = 9;
+  
+  // Reference number
+  string reference_number = 10;
+  
+  // Related document ID
+  string related_document_id = 11;
+  
+  // Approval status
+  string approval_status = 12;
+  
+  // Approved by user ID
+  string approved_by = 13;
+  
+  // Approval timestamp
+  int64 approved_at = 14;
+  
+  // Adjustment notes
+  string notes = 15;
+  
+  // Adjustment tags
+  repeated string tags = 16;
+  
+  // Custom fields
+  map<string, string> custom_fields = 17;
+  
+  // Creation timestamp
+  int64 created_at = 18;
+  
+  // Last update timestamp
+  int64 updated_at = 19;
+  
+  // Created by user ID
+  string created_by = 20;
+  
+  // Updated by user ID
+  string updated_by = 21;
+}
+
+// Invoice adjustment creation request
+message CreateInvoiceAdjustmentRequest {
+  // Invoice ID
+  string invoice_id = 1;
+  
+  // Adjustment type
+  string adjustment_type = 2;
+  
+  // Adjustment reason
+  string reason = 3;
+  
+  // Adjustment amount
+  double amount = 4;
+  
+  // Adjustment percentage
+  double percentage = 5;
+  
+  // Currency code
+  string currency = 6;
+  
+  // Adjustment date
+  int64 adjustment_date = 7;
+  
+  // Effective date
+  int64 effective_date = 8;
+  
+  // Reference number
+  string reference_number = 9;
+  
+  // Related document ID
+  string related_document_id = 10;
+  
+  // Adjustment notes
+  string notes = 11;
+  
+  // Adjustment tags
+  repeated string tags = 12;
+  
+  // Custom fields
+  map<string, string> custom_fields = 13;
+}
+
+// Invoice adjustment creation response
+message CreateInvoiceAdjustmentResponse {
+  // Created invoice adjustment
+  InvoiceAdjustment adjustment = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Invoice adjustment update request
+message UpdateInvoiceAdjustmentRequest {
+  // Adjustment ID
+  string adjustment_id = 1;
+  
+  // Updated approval status
+  string approval_status = 2;
+  
+  // Updated notes
+  string notes = 3;
+  
+  // Updated tags
+  repeated string tags = 4;
+  
+  // Updated custom fields
+  map<string, string> custom_fields = 5;
+}
+
+// Invoice adjustment update response
+message UpdateInvoiceAdjustmentResponse {
+  // Updated invoice adjustment
+  InvoiceAdjustment adjustment = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Invoice adjustment list request
+message ListInvoiceAdjustmentsRequest {
+  // Invoice ID
+  string invoice_id = 1;
+  
+  // Filter by adjustment type
+  string adjustment_type = 2;
+  
+  // Filter by approval status
+  string approval_status = 3;
+  
+  // Filter by date range
+  int64 start_date = 4;
+  int64 end_date = 5;
+  
+  // Search term
+  string search_term = 6;
+  
+  // Page number
+  int32 page = 7;
+  
+  // Page size
+  int32 page_size = 8;
+}
+
+// Invoice adjustment list response
+message ListInvoiceAdjustmentsResponse {
+  // List of invoice adjustments
+  repeated InvoiceAdjustment adjustments = 1;
+  
+  // Total count
+  int64 total_count = 2;
+  
+  // Page number
+  int32 page = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Success status
+  bool success = 5;
+  
+  // Error message if any
+  string error_message = 6;
+}

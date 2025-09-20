@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package blockchain.governance.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/governance/enums";
+
+// ProposalStatus defines the status of governance proposals
+enum ProposalStatus {
+  // PROPOSAL_STATUS_UNSPECIFIED indicates an unspecified proposal status
+  PROPOSAL_STATUS_UNSPECIFIED = 0;
+  
+  // PROPOSAL_STATUS_DEPOSIT_PERIOD indicates the proposal is in deposit period
+  PROPOSAL_STATUS_DEPOSIT_PERIOD = 1;
+  
+  // PROPOSAL_STATUS_VOTING_PERIOD indicates the proposal is in voting period
+  PROPOSAL_STATUS_VOTING_PERIOD = 2;
+  
+  // PROPOSAL_STATUS_PASSED indicates the proposal has passed
+  PROPOSAL_STATUS_PASSED = 3;
+  
+  // PROPOSAL_STATUS_REJECTED indicates the proposal has been rejected
+  PROPOSAL_STATUS_REJECTED = 4;
+  
+  // PROPOSAL_STATUS_FAILED indicates the proposal has failed
+  PROPOSAL_STATUS_FAILED = 5;
+  
+  // PROPOSAL_STATUS_EXECUTED indicates the proposal has been executed
+  PROPOSAL_STATUS_EXECUTED = 6;
+  
+  // PROPOSAL_STATUS_CANCELLED indicates the proposal has been cancelled
+  PROPOSAL_STATUS_CANCELLED = 7;
+  
+  // PROPOSAL_STATUS_EXPIRED indicates the proposal has expired
+  PROPOSAL_STATUS_EXPIRED = 8;
+  
+  // PROPOSAL_STATUS_PENDING indicates the proposal is pending approval
+  PROPOSAL_STATUS_PENDING = 9;
+  
+  // PROPOSAL_STATUS_ACTIVE indicates the proposal is active
+  PROPOSAL_STATUS_ACTIVE = 10;
+  
+  // PROPOSAL_STATUS_QUEUED indicates the proposal is queued for execution
+  PROPOSAL_STATUS_QUEUED = 11;
+  
+  // PROPOSAL_STATUS_EXECUTING indicates the proposal is being executed
+  PROPOSAL_STATUS_EXECUTING = 12;
+  
+  // PROPOSAL_STATUS_DEFEATED indicates the proposal has been defeated
+  PROPOSAL_STATUS_DEFEATED = 13;
+  
+  // PROPOSAL_STATUS_SUCCEEDED indicates the proposal has succeeded
+  PROPOSAL_STATUS_SUCCEEDED = 14;
+  
+  // PROPOSAL_STATUS_READY indicates the proposal is ready for execution
+  PROPOSAL_STATUS_READY = 15;
+}

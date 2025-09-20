@@ -1,0 +1,392 @@
+syntax = "proto3";
+
+package entertainment.catalog.services;
+
+import "entertainment/catalog/messages/catalog_index.proto";
+import "entertainment/catalog/messages/tag.proto";
+import "entertainment/catalog/messages/category.proto";
+import "entertainment/catalog/enums/sort_order.proto";
+import "entertainment/catalog/enums/filter_type.proto";
+
+// Сервіс каталогу
+service CatalogService {
+  // Управління індексом каталогу
+  rpc CreateIndex(CreateIndexRequest) returns (CreateIndexResponse);
+  rpc GetIndex(GetIndexRequest) returns (GetIndexResponse);
+  rpc UpdateIndex(UpdateIndexRequest) returns (UpdateIndexResponse);
+  rpc DeleteIndex(DeleteIndexRequest) returns (DeleteIndexResponse);
+  rpc ListIndexes(ListIndexesRequest) returns (ListIndexesResponse);
+  rpc RebuildIndex(RebuildIndexRequest) returns (RebuildIndexResponse);
+  
+  // Управління тегами
+  rpc CreateTag(CreateTagRequest) returns (CreateTagResponse);
+  rpc GetTag(GetTagRequest) returns (GetTagResponse);
+  rpc UpdateTag(UpdateTagRequest) returns (UpdateTagResponse);
+  rpc DeleteTag(DeleteTagRequest) returns (DeleteTagResponse);
+  rpc ListTags(ListTagsRequest) returns (ListTagsResponse);
+  rpc SearchTags(SearchTagsRequest) returns (SearchTagsResponse);
+  
+  // Управління категоріями
+  rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse);
+  rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse);
+  rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse);
+  rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse);
+  rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse);
+  rpc GetCategoryTree(GetCategoryTreeRequest) returns (GetCategoryTreeResponse);
+  
+  // Пошук та навігація
+  rpc SearchCatalog(SearchCatalogRequest) returns (SearchCatalogResponse);
+  rpc BrowseCatalog(BrowseCatalogRequest) returns (BrowseCatalogResponse);
+  rpc FilterCatalog(FilterCatalogRequest) returns (FilterCatalogResponse);
+  rpc SortCatalog(SortCatalogRequest) returns (SortCatalogResponse);
+  
+  // Рекомендації та персоналізація
+  rpc GetRecommendations(GetRecommendationsRequest) returns (GetRecommendationsResponse);
+  rpc GetTrending(GetTrendingRequest) returns (GetTrendingResponse);
+  rpc GetFeatured(GetFeaturedRequest) returns (GetFeaturedResponse);
+  
+  // Статистика та аналітика
+  rpc GetCatalogStats(GetCatalogStatsRequest) returns (GetCatalogStatsResponse);
+  rpc GetUsageStats(GetUsageStatsRequest) returns (GetUsageStatsResponse);
+  rpc GetPopularItems(GetPopularItemsRequest) returns (GetPopularItemsResponse);
+}
+
+// Запити та відповіді для індексу
+message CreateIndexRequest {
+  entertainment.catalog.messages.CatalogIndex index = 1;
+  string creator_id = 2;
+}
+
+message CreateIndexResponse {
+  entertainment.catalog.messages.CatalogIndex index = 1;
+  string message = 2;
+}
+
+message GetIndexRequest {
+  string index_id = 1;
+}
+
+message GetIndexResponse {
+  entertainment.catalog.messages.CatalogIndex index = 1;
+}
+
+message UpdateIndexRequest {
+  string index_id = 1;
+  entertainment.catalog.messages.CatalogIndex index = 2;
+  string updater_id = 3;
+}
+
+message UpdateIndexResponse {
+  entertainment.catalog.messages.CatalogIndex index = 1;
+  string message = 2;
+}
+
+message DeleteIndexRequest {
+  string index_id = 1;
+  string deleter_id = 2;
+}
+
+message DeleteIndexResponse {
+  string message = 1;
+}
+
+message ListIndexesRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  repeated string filters = 3;
+}
+
+message ListIndexesResponse {
+  repeated entertainment.catalog.messages.CatalogIndex indexes = 1;
+  int32 total_count = 2;
+}
+
+message RebuildIndexRequest {
+  string index_id = 1;
+  string rebuilder_id = 2;
+  bool force_rebuild = 3;
+}
+
+message RebuildIndexResponse {
+  bool rebuilt = 1;
+  string message = 2;
+}
+
+// Запити та відповіді для тегів
+message CreateTagRequest {
+  entertainment.catalog.messages.Tag tag = 1;
+  string creator_id = 2;
+}
+
+message CreateTagResponse {
+  entertainment.catalog.messages.Tag tag = 1;
+  string message = 2;
+}
+
+message GetTagRequest {
+  string tag_id = 1;
+}
+
+message GetTagResponse {
+  entertainment.catalog.messages.Tag tag = 1;
+}
+
+message UpdateTagRequest {
+  string tag_id = 1;
+  entertainment.catalog.messages.Tag tag = 2;
+  string updater_id = 3;
+}
+
+message UpdateTagResponse {
+  entertainment.catalog.messages.Tag tag = 1;
+  string message = 2;
+}
+
+message DeleteTagRequest {
+  string tag_id = 1;
+  string deleter_id = 2;
+}
+
+message DeleteTagResponse {
+  string message = 1;
+}
+
+message ListTagsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  repeated string filters = 3;
+  string sort_by = 4;
+  string sort_order = 5;
+}
+
+message ListTagsResponse {
+  repeated entertainment.catalog.messages.Tag tags = 1;
+  int32 total_count = 2;
+}
+
+message SearchTagsRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+}
+
+message SearchTagsResponse {
+  repeated entertainment.catalog.messages.Tag tags = 1;
+  int32 total_count = 2;
+}
+
+// Запити та відповіді для категорій
+message CreateCategoryRequest {
+  entertainment.catalog.messages.Category category = 1;
+  string creator_id = 2;
+}
+
+message CreateCategoryResponse {
+  entertainment.catalog.messages.Category category = 1;
+  string message = 2;
+}
+
+message GetCategoryRequest {
+  string category_id = 1;
+}
+
+message GetCategoryResponse {
+  entertainment.catalog.messages.Category category = 1;
+}
+
+message UpdateCategoryRequest {
+  string category_id = 1;
+  entertainment.catalog.messages.Category category = 2;
+  string updater_id = 3;
+}
+
+message UpdateCategoryResponse {
+  entertainment.catalog.messages.Category category = 1;
+  string message = 2;
+}
+
+message DeleteCategoryRequest {
+  string category_id = 1;
+  string deleter_id = 2;
+}
+
+message DeleteCategoryResponse {
+  string message = 1;
+}
+
+message ListCategoriesRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  repeated string filters = 3;
+  string sort_by = 4;
+  string sort_order = 5;
+}
+
+message ListCategoriesResponse {
+  repeated entertainment.catalog.messages.Category categories = 1;
+  int32 total_count = 2;
+}
+
+message GetCategoryTreeRequest {
+  string root_category_id = 1;
+  int32 max_depth = 2;
+}
+
+message GetCategoryTreeResponse {
+  entertainment.catalog.messages.Category root_category = 1;
+  repeated entertainment.catalog.messages.Category tree = 2;
+}
+
+// Запити для пошуку та навігації
+message SearchCatalogRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+  entertainment.catalog.enums.SortOrder sort_order = 5;
+  string index_id = 6;
+}
+
+message SearchCatalogResponse {
+  repeated CatalogItem items = 1;
+  int32 total_count = 2;
+  repeated entertainment.catalog.messages.Tag suggested_tags = 3;
+  repeated entertainment.catalog.messages.Category suggested_categories = 4;
+}
+
+message BrowseCatalogRequest {
+  string category_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  repeated string filters = 4;
+  entertainment.catalog.enums.SortOrder sort_order = 5;
+}
+
+message BrowseCatalogResponse {
+  repeated CatalogItem items = 1;
+  int32 total_count = 2;
+  entertainment.catalog.messages.Category current_category = 3;
+  repeated entertainment.catalog.messages.Category subcategories = 4;
+}
+
+message FilterCatalogRequest {
+  repeated string filters = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  entertainment.catalog.enums.SortOrder sort_order = 4;
+}
+
+message FilterCatalogResponse {
+  repeated CatalogItem items = 1;
+  int32 total_count = 2;
+  repeated FilterOption available_filters = 3;
+}
+
+message SortCatalogRequest {
+  repeated CatalogItem items = 1;
+  entertainment.catalog.enums.SortOrder sort_order = 2;
+}
+
+message SortCatalogResponse {
+  repeated CatalogItem items = 1;
+}
+
+// Запити для рекомендацій
+message GetRecommendationsRequest {
+  string user_id = 1;
+  string content_id = 2;
+  int32 count = 3;
+  repeated string filters = 4;
+}
+
+message GetRecommendationsResponse {
+  repeated CatalogItem recommendations = 1;
+  repeated string reasons = 2;
+}
+
+message GetTrendingRequest {
+  string time_period = 1;
+  int32 count = 2;
+  repeated string filters = 3;
+}
+
+message GetTrendingResponse {
+  repeated CatalogItem trending_items = 1;
+}
+
+message GetFeaturedRequest {
+  string feature_type = 1;
+  int32 count = 2;
+  repeated string filters = 3;
+}
+
+message GetFeaturedResponse {
+  repeated CatalogItem featured_items = 1;
+}
+
+// Запити для статистики
+message GetCatalogStatsRequest {
+  string time_period = 1;
+  repeated string filters = 2;
+}
+
+message GetCatalogStatsResponse {
+  CatalogStats stats = 1;
+}
+
+message GetUsageStatsRequest {
+  string user_id = 1;
+  string time_period = 2;
+}
+
+message GetUsageStatsResponse {
+  UsageStats stats = 1;
+}
+
+message GetPopularItemsRequest {
+  string time_period = 1;
+  int32 count = 2;
+  repeated string filters = 3;
+}
+
+message GetPopularItemsResponse {
+  repeated CatalogItem popular_items = 1;
+}
+
+// Допоміжні повідомлення
+message CatalogItem {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string type = 4;
+  repeated entertainment.catalog.messages.Tag tags = 5;
+  repeated entertainment.catalog.messages.Category categories = 6;
+  map<string, string> metadata = 7;
+}
+
+message FilterOption {
+  string name = 1;
+  string value = 2;
+  int32 count = 3;
+  bool selected = 4;
+}
+
+message CatalogStats {
+  int32 total_items = 1;
+  int32 total_tags = 2;
+  int32 total_categories = 3;
+  int32 total_searches = 4;
+  int32 total_views = 5;
+  map<string, int32> items_by_type = 6;
+  map<string, int32> items_by_category = 7;
+}
+
+message UsageStats {
+  int32 total_searches = 1;
+  int32 total_views = 2;
+  int32 total_clicks = 3;
+  repeated string popular_queries = 4;
+  repeated string popular_categories = 5;
+  repeated string popular_tags = 6;
+}

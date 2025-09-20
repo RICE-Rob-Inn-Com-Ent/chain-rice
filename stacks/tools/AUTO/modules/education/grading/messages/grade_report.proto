@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+// Message definitions for grade reports.
+package education.grading.messages;
+
+import "google/protobuf/timestamp.proto";
+import "AUTO/modules/education/grading/enums/grading_status.proto";
+
+option go_package = "github.com/rice-dev/education/grading/messages;gradingmessages";
+option java_multiple_files = true;
+option java_package = "com.rice.education.grading.messages";
+
+// A grade report aggregates course grades for a student within a time window.
+message GradeReport {
+  // Unique identifier for the grade report.
+  string id = 1;
+
+  // Student ID the report is for.
+  string student_id = 2;
+
+  // Courses included in the report.
+  repeated CourseGrade course_grades = 3;
+
+  // Overall GPA for the period.
+  double gpa = 4;
+
+  // Report status.
+  education.grading.enums.GradingStatus status = 5;
+
+  // Arbitrary metadata for extensions.
+  map<string, string> metadata = 6;
+
+  // Creation timestamp.
+  google.protobuf.Timestamp created_at = 7;
+
+  // Last update timestamp.
+  google.protobuf.Timestamp updated_at = 8;
+
+  // Nested per-course grade details.
+  message CourseGrade {
+    // Course ID.
+    string course_id = 1;
+    // Course title snapshot.
+    string course_title = 2;
+    // Credits for the course.
+    double credits = 3;
+    // Letter grade.
+    string letter = 4;
+    // Numeric score if applicable.
+    double score = 5;
+    // GPA points contribution.
+    double gpa_points = 6;
+  }
+}
+
+

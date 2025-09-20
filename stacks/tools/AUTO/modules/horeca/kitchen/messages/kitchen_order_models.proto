@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package horeca.kitchen.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "../enums/kitchen_order_status.proto";
+import "../enums/kitchen_station.proto";
+import "../enums/kitchen_priority.proto";
+
+// Kitchen order information
+message KitchenOrder {
+  string order_id = 1;
+  string customer_id = 2;
+  string customer_name = 3;
+  
+  KitchenOrderStatus status = 4;
+  KitchenPriority priority = 5;
+  
+  google.protobuf.Timestamp order_time = 6;
+  google.protobuf.Timestamp estimated_ready_time = 7;
+  google.protobuf.Timestamp actual_ready_time = 8;
+  
+  repeated KitchenOrderItem items = 9;
+  string special_instructions = 10;
+  string order_notes = 11;
+  
+  string assigned_station = 12;
+  string assigned_chef_id = 13;
+  string assigned_chef_name = 14;
+  
+  google.protobuf.Money total_amount = 15;
+  
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+// Individual item in kitchen order
+message KitchenOrderItem {
+  string item_id = 1;
+  string item_name = 2;
+  string description = 3;
+  int32 quantity = 4;
+  KitchenStation station = 5;
+  
+  KitchenOrderStatus status = 6;
+  google.protobuf.Timestamp started_time = 7;
+  google.protobuf.Timestamp completed_time = 8;
+  
+  string preparation_notes = 9;
+  repeated string allergens = 10;
+  string dietary_restrictions = 11;
+  
+  google.protobuf.Money unit_price = 12;
+  google.protobuf.Money total_price = 13;
+}
+
+// Kitchen station assignment
+message KitchenStationAssignment {
+  string station_id = 1;
+  KitchenStation station_type = 2;
+  string chef_id = 3;
+  string chef_name = 4;
+  
+  StationStatus status = 5;
+  int32 active_orders = 6;
+  int32 completed_orders_today = 7;
+  
+  google.protobuf.Timestamp shift_start = 8;
+  google.protobuf.Timestamp shift_end = 9;
+  
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// Station status
+enum StationStatus {
+  STATION_STATUS_UNSPECIFIED = 0;
+  STATION_STATUS_AVAILABLE = 1;
+  STATION_STATUS_BUSY = 2;
+  STATION_STATUS_MAINTENANCE = 3;
+  STATION_STATUS_CLOSED = 4;
+}

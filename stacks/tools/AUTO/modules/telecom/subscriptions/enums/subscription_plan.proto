@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package telecom.subscriptions.enums;
+
+// SubscriptionPlan represents the different types of subscription plans available
+enum SubscriptionPlan {
+  // Unspecified plan - should not be used in production
+  SUBSCRIPTION_PLAN_UNSPECIFIED = 0;
+  
+  // Basic plan with limited features
+  BASIC = 1;
+  
+  // Standard plan with moderate features
+  STANDARD = 2;
+  
+  // Premium plan with advanced features
+  PREMIUM = 3;
+  
+  // Enterprise plan with full features
+  ENTERPRISE = 4;
+  
+  // Unlimited plan with no restrictions
+  UNLIMITED = 5;
+  
+  // Family plan for multiple users
+  FAMILY = 6;
+  
+  // Student plan with discounted pricing
+  STUDENT = 7;
+  
+  // Senior plan with special pricing
+  SENIOR = 8;
+  
+  // Business plan for small businesses
+  BUSINESS = 9;
+  
+  // Corporate plan for large organizations
+  CORPORATE = 10;
+  
+  // Pay-as-you-go plan
+  PAY_AS_YOU_GO = 11;
+  
+  // Trial plan for new customers
+  TRIAL = 12;
+  
+  // Promotional plan with special offers
+  PROMOTIONAL = 13;
+}

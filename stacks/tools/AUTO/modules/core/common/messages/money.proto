@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package core.common.messages;
+
+import "core/common/enums/currency_code.proto";
+
+// Money represents a monetary amount in a specific currency.
+message Money {
+  core.common.enums.CurrencyCode currency = 1; // ISO-4217 currency code.
+  int64 units = 2;   // Whole currency units.
+  int32 nanos = 3;   // Fractional units in nano precision (1e-9 of currency unit).
+}
+
+

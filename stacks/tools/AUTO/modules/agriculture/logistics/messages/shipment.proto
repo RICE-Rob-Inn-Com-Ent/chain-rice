@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package agriculture.logistics.messages;
+
+import "agriculture/logistics/enums/logistics_type.proto";
+import "agriculture/logistics/enums/transport_type.proto";
+import "google/protobuf/timestamp.proto";
+
+// Shipment message represents a single logistics shipment
+message Shipment {
+  // Unique identifier for the shipment
+  string id = 1;
+  
+  // Basic information
+  string shipment_number = 2;    // Human-readable shipment number
+  string description = 3;        // Description of the shipment
+  agriculture.logistics.enums.LogisticsType logistics_type = 4;
+  agriculture.logistics.enums.TransportType transport_type = 5;
+  
+  // Origin and destination
+  string origin_location = 6;    // Origin location name
+  string origin_address = 7;     // Full origin address
+  double origin_latitude = 8;    // Origin GPS latitude
+  double origin_longitude = 9;   // Origin GPS longitude
+  string destination_location = 10; // Destination location name
+  string destination_address = 11; // Full destination address
+  double destination_latitude = 12; // Destination GPS latitude
+  double destination_longitude = 13; // Destination GPS longitude
+  
+  // Cargo information
+  string cargo_type = 14;        // Type of cargo (grain, livestock, equipment, etc.)
+  string cargo_description = 15; // Detailed cargo description
+  double cargo_weight = 16;      // Cargo weight in kilograms
+  double cargo_volume = 17;      // Cargo volume in cubic meters
+  string cargo_unit = 18;        // Unit for cargo measurement
+  int32 cargo_quantity = 19;     // Number of items/packages
+  string cargo_grade = 20;       // Quality grade of cargo
+  string cargo_condition = 21;   // Condition of cargo (fresh, frozen, dry, etc.)
+  
+  // Packaging information
+  string packaging_type = 22;    // Type of packaging (bags, boxes, crates, etc.)
+  int32 package_count = 23;      // Number of packages
+  string package_dimensions = 24; // Package dimensions
+  string packaging_material = 25; // Packaging material
+  bool is_fragile = 26;          // Whether cargo is fragile
+  bool is_hazardous = 27;        // Whether cargo is hazardous
+  bool requires_refrigeration = 28; // Whether cargo requires refrigeration
+  
+  // Transportation details
+  string carrier_name = 29;      // Name of the carrier
+  string carrier_contact = 30;   // Carrier contact information
+  string driver_name = 31;       // Driver name
+  string driver_license = 32;    // Driver license number
+  string vehicle_id = 33;        // Vehicle identification
+  string vehicle_license_plate = 34; // Vehicle license plate
+  string trailer_id = 35;        // Trailer identification
+  
+  // Scheduling information
+  google.protobuf.Timestamp pickup_date = 36;
+  google.protobuf.Timestamp delivery_date = 37;
+  google.protobuf.Timestamp actual_pickup_date = 38;
+  google.protobuf.Timestamp actual_delivery_date = 39;
+  string pickup_time_window = 40; // Pickup time window
+  string delivery_time_window = 41; // Delivery time window
+  int32 estimated_duration_hours = 42; // Estimated duration in hours
+  int32 actual_duration_hours = 43; // Actual duration in hours
+  
+  // Route information
+  string route_description = 44; // Description of the route
+  double total_distance = 45;    // Total distance in kilometers
+  double actual_distance = 46;   // Actual distance traveled
+  string route_waypoints = 47;   // Route waypoints
+  bool uses_toll_roads = 48;     // Whether route uses toll roads
+  double toll_costs = 49;        // Toll costs
+  
+  // Status and tracking
+  string status = 50;            // Current status of shipment
+  string tracking_number = 51;   // Tracking number for external systems
+  string current_location = 52;  // Current location of shipment
+  double current_latitude = 53;  // Current GPS latitude
+  double current_longitude = 54; // Current GPS longitude
+  google.protobuf.Timestamp last_update = 55; // Last status update
+  string status_notes = 56;      // Notes about current status
+  
+  // Financial information
+  double shipping_cost = 57;     // Total shipping cost
+  string currency = 58;          // Currency for costs
+  double fuel_cost = 59;         // Fuel cost
+  double toll_cost = 60;         // Toll cost
+  double driver_cost = 61;       // Driver cost
+  double vehicle_cost = 62;      // Vehicle cost
+  double insurance_cost = 63;    // Insurance cost
+  double total_cost = 64;        // Total cost
+  double revenue = 65;           // Revenue from shipment
+  double profit = 66;            // Profit from shipment
+  
+  // Documentation
+  repeated string required_documents = 67; // List of required documents
+  repeated string provided_documents = 68; // List of provided documents
+  string bill_of_lading = 69;    // Bill of lading number
+  string invoice_number = 70;    // Invoice number
+  string customs_declaration = 71; // Customs declaration number
+  string insurance_policy = 72;  // Insurance policy number
+  
+  // Quality and compliance
+  bool meets_quality_standards = 73; // Whether shipment meets quality standards
+  bool meets_safety_standards = 74; // Whether shipment meets safety standards
+  bool meets_environmental_standards = 75; // Whether shipment meets environmental standards
+  repeated string certifications = 76; // Required certifications
+  repeated string inspections = 77; // Inspection records
+  string quality_notes = 78;     // Quality control notes
+  
+  // Environmental conditions
+  double temperature_requirement = 79; // Required temperature in Celsius
+  double humidity_requirement = 80; // Required humidity percentage
+  string environmental_notes = 81; // Environmental control notes
+  bool temperature_controlled = 82; // Whether shipment is temperature controlled
+  bool humidity_controlled = 83; // Whether shipment is humidity controlled
+  
+  // Special requirements
+  repeated string special_requirements = 84; // Special handling requirements
+  string handling_instructions = 85; // Handling instructions
+  string storage_requirements = 86; // Storage requirements
+  string delivery_instructions = 87; // Delivery instructions
+  string contact_instructions = 88; // Contact instructions
+  
+  // Communication
+  string customer_contact = 89;  // Customer contact information
+  string customer_phone = 90;    // Customer phone number
+  string customer_email = 91;    // Customer email address
+  string emergency_contact = 92; // Emergency contact information
+  string communication_notes = 93; // Communication notes
+  
+  // Performance metrics
+  double on_time_performance = 94; // On-time performance percentage
+  double damage_rate = 95;       // Damage rate percentage
+  double customer_satisfaction = 96; // Customer satisfaction score
+  double efficiency_rating = 97; // Efficiency rating (0-100)
+  double cost_efficiency = 98;   // Cost efficiency rating
+  
+  // Issues and problems
+  repeated string current_issues = 99; // Current issues or problems
+  repeated string resolved_issues = 100; // Recently resolved issues
+  bool requires_attention = 101; // Whether shipment needs immediate attention
+  string priority_level = 102;   // Priority level (high, medium, low)
+  string problem_description = 103; // Description of any problems
+  
+  // Notes and observations
+  string notes = 104;            // General notes about the shipment
+  repeated string observations = 105; // Regular observations
+  string recommendations = 106;  // Recommendations for improvement
+  
+  // Metadata
+  google.protobuf.Timestamp created_at = 107;
+  google.protobuf.Timestamp updated_at = 108;
+  string created_by = 109;       // User who created this record
+  string updated_by = 110;       // User who last updated this record
+  
+  // Status flags
+  bool is_active = 111;          // Whether shipment is currently active
+  bool is_completed = 112;       // Whether shipment is completed
+  bool is_cancelled = 113;       // Whether shipment is cancelled
+  bool is_delayed = 114;         // Whether shipment is delayed
+}

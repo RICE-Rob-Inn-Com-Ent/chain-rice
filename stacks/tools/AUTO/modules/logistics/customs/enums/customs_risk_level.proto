@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package logistics.customs.enums;
+
+// Risk assessment levels for customs processing
+enum CustomsRiskLevel {
+  CUSTOMS_RISK_LEVEL_UNSPECIFIED = 0;
+  CUSTOMS_RISK_LEVEL_LOW = 1;           // Low risk - minimal scrutiny
+  CUSTOMS_RISK_LEVEL_MEDIUM = 2;        // Medium risk - standard processing
+  CUSTOMS_RISK_LEVEL_HIGH = 3;          // High risk - enhanced screening
+  CUSTOMS_RISK_LEVEL_CRITICAL = 4;      // Critical risk - maximum scrutiny
+  CUSTOMS_RISK_LEVEL_RED_FLAGGED = 5;   // Red flagged - automatic hold
+}

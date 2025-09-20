@@ -1,0 +1,531 @@
+syntax = "proto3";
+
+package finance.subscriptions.messages;
+
+import "finance/subscriptions/enums/subscription_plan.proto";
+import "finance/subscriptions/enums/subscription_status.proto";
+import "finance/subscriptions/enums/billing_cycle.proto";
+import "finance/subscriptions/messages/plan.proto";
+
+// Subscription representation
+message Subscription {
+  // Unique subscription identifier
+  string subscription_id = 1;
+  
+  // Subscription plan
+  finance.subscriptions.enums.SubscriptionPlan plan = 2;
+  
+  // Subscription status
+  finance.subscriptions.enums.SubscriptionStatus status = 3;
+  
+  // Billing cycle
+  finance.subscriptions.enums.BillingCycle billing_cycle = 4;
+  
+  // Customer information
+  SubscriptionCustomer customer = 5;
+  
+  // Subscription details
+  SubscriptionDetails details = 6;
+  
+  // Pricing information
+  SubscriptionPricing pricing = 7;
+  
+  // Billing information
+  SubscriptionBilling billing = 8;
+  
+  // Usage information
+  SubscriptionUsage usage = 9;
+  
+  // Subscription dates
+  SubscriptionDates dates = 10;
+  
+  // Subscription settings
+  SubscriptionSettings settings = 11;
+  
+  // Subscription tags
+  repeated string tags = 12;
+  
+  // Custom fields
+  map<string, string> custom_fields = 13;
+  
+  // Creation timestamp
+  int64 created_at = 14;
+  
+  // Last update timestamp
+  int64 updated_at = 15;
+  
+  // Created by user ID
+  string created_by = 16;
+  
+  // Updated by user ID
+  string updated_by = 17;
+  
+  // Cancelled timestamp
+  int64 cancelled_at = 18;
+  
+  // Cancelled by user ID
+  string cancelled_by = 19;
+  
+  // Cancellation reason
+  string cancellation_reason = 20;
+}
+
+// Subscription customer information
+message SubscriptionCustomer {
+  // Customer ID
+  string customer_id = 1;
+  
+  // Customer name
+  string name = 2;
+  
+  // Customer email
+  string email = 3;
+  
+  // Customer phone
+  string phone = 4;
+  
+  // Customer type
+  string customer_type = 5;
+  
+  // Billing address
+  Address billing_address = 6;
+  
+  // Payment method
+  PaymentMethod payment_method = 7;
+}
+
+// Address information
+message Address {
+  // Street address
+  string street = 1;
+  
+  // City
+  string city = 2;
+  
+  // State/Province
+  string state = 3;
+  
+  // Postal code
+  string postal_code = 4;
+  
+  // Country
+  string country = 5;
+  
+  // Country code
+  string country_code = 6;
+}
+
+// Payment method information
+message PaymentMethod {
+  // Payment method ID
+  string payment_method_id = 1;
+  
+  // Payment method type
+  string payment_method_type = 2;
+  
+  // Payment method details
+  string payment_method_details = 3;
+  
+  // Default payment method
+  bool is_default = 4;
+}
+
+// Subscription details
+message SubscriptionDetails {
+  // Subscription name
+  string name = 1;
+  
+  // Subscription description
+  string description = 2;
+  
+  // Subscription features
+  repeated string features = 3;
+  
+  // Subscription limits
+  SubscriptionLimits limits = 4;
+  
+  // Subscription add-ons
+  repeated SubscriptionAddon addons = 5;
+  
+  // Subscription notes
+  string notes = 6;
+}
+
+// Subscription limits
+message SubscriptionLimits {
+  // User limit
+  int32 user_limit = 1;
+  
+  // Storage limit (in bytes)
+  int64 storage_limit = 2;
+  
+  // Bandwidth limit (in bytes)
+  int64 bandwidth_limit = 3;
+  
+  // Transaction limit
+  int32 transaction_limit = 4;
+  
+  // API call limit
+  int32 api_call_limit = 5;
+  
+  // Custom limits
+  map<string, int64> custom_limits = 6;
+}
+
+// Subscription add-on
+message SubscriptionAddon {
+  // Add-on ID
+  string addon_id = 1;
+  
+  // Add-on name
+  string name = 2;
+  
+  // Add-on description
+  string description = 3;
+  
+  // Add-on price
+  double price = 4;
+  
+  // Add-on currency
+  string currency = 5;
+  
+  // Add-on billing cycle
+  string billing_cycle = 6;
+  
+  // Add-on quantity
+  int32 quantity = 7;
+}
+
+// Subscription pricing
+message SubscriptionPricing {
+  // Base price
+  double base_price = 1;
+  
+  // Currency code
+  string currency = 2;
+  
+  // Discount amount
+  double discount_amount = 3;
+  
+  // Discount percentage
+  double discount_percentage = 4;
+  
+  // Tax amount
+  double tax_amount = 5;
+  
+  // Tax rate
+  double tax_rate = 6;
+  
+  // Total price
+  double total_price = 7;
+  
+  // Setup fee
+  double setup_fee = 8;
+  
+  // Trial price
+  double trial_price = 9;
+  
+  // Trial period (in days)
+  int32 trial_period = 10;
+}
+
+// Subscription billing
+message SubscriptionBilling {
+  // Next billing date
+  int64 next_billing_date = 1;
+  
+  // Last billing date
+  int64 last_billing_date = 2;
+  
+  // Billing address
+  Address billing_address = 3;
+  
+  // Payment terms
+  string payment_terms = 4;
+  
+  // Auto-renewal
+  bool auto_renewal = 5;
+  
+  // Proration
+  bool proration = 6;
+  
+  // Billing notes
+  string billing_notes = 7;
+}
+
+// Subscription usage
+message SubscriptionUsage {
+  // Current usage
+  SubscriptionUsageCurrent current = 1;
+  
+  // Usage limits
+  SubscriptionUsageLimits limits = 2;
+  
+  // Usage history
+  repeated SubscriptionUsageHistory history = 3;
+  
+  // Usage alerts
+  repeated SubscriptionUsageAlert alerts = 4;
+}
+
+// Current usage
+message SubscriptionUsageCurrent {
+  // Users used
+  int32 users_used = 1;
+  
+  // Storage used (in bytes)
+  int64 storage_used = 2;
+  
+  // Bandwidth used (in bytes)
+  int64 bandwidth_used = 3;
+  
+  // Transactions used
+  int32 transactions_used = 4;
+  
+  // API calls used
+  int32 api_calls_used = 5;
+  
+  // Custom usage
+  map<string, int64> custom_usage = 6;
+}
+
+// Usage limits
+message SubscriptionUsageLimits {
+  // User limit
+  int32 user_limit = 1;
+  
+  // Storage limit (in bytes)
+  int64 storage_limit = 2;
+  
+  // Bandwidth limit (in bytes)
+  int64 bandwidth_limit = 3;
+  
+  // Transaction limit
+  int32 transaction_limit = 4;
+  
+  // API call limit
+  int32 api_call_limit = 5;
+  
+  // Custom limits
+  map<string, int64> custom_limits = 6;
+}
+
+// Usage history
+message SubscriptionUsageHistory {
+  // Usage date
+  int64 usage_date = 1;
+  
+  // Usage amount
+  double usage_amount = 2;
+  
+  // Usage type
+  string usage_type = 3;
+  
+  // Usage details
+  string usage_details = 4;
+}
+
+// Usage alert
+message SubscriptionUsageAlert {
+  // Alert ID
+  string alert_id = 1;
+  
+  // Alert type
+  string alert_type = 2;
+  
+  // Alert threshold
+  double threshold = 3;
+  
+  // Alert status
+  string status = 4;
+  
+  // Alert date
+  int64 alert_date = 5;
+  
+  // Alert message
+  string message = 6;
+}
+
+// Subscription dates
+message SubscriptionDates {
+  // Start date
+  int64 start_date = 1;
+  
+  // End date
+  int64 end_date = 2;
+  
+  // Trial start date
+  int64 trial_start_date = 3;
+  
+  // Trial end date
+  int64 trial_end_date = 4;
+  
+  // Next billing date
+  int64 next_billing_date = 5;
+  
+  // Last billing date
+  int64 last_billing_date = 6;
+  
+  // Cancellation date
+  int64 cancellation_date = 7;
+  
+  // Renewal date
+  int64 renewal_date = 8;
+}
+
+// Subscription settings
+message SubscriptionSettings {
+  // Auto-renewal
+  bool auto_renewal = 1;
+  
+  // Proration
+  bool proration = 2;
+  
+  // Trial enabled
+  bool trial_enabled = 3;
+  
+  // Usage tracking
+  bool usage_tracking = 4;
+  
+  // Alerts enabled
+  bool alerts_enabled = 5;
+  
+  // Custom settings
+  map<string, string> custom_settings = 6;
+}
+
+// Subscription creation request
+message CreateSubscriptionRequest {
+  // Subscription plan
+  finance.subscriptions.enums.SubscriptionPlan plan = 1;
+  
+  // Billing cycle
+  finance.subscriptions.enums.BillingCycle billing_cycle = 2;
+  
+  // Customer information
+  SubscriptionCustomer customer = 3;
+  
+  // Subscription details
+  SubscriptionDetails details = 4;
+  
+  // Pricing information
+  SubscriptionPricing pricing = 5;
+  
+  // Billing information
+  SubscriptionBilling billing = 6;
+  
+  // Subscription settings
+  SubscriptionSettings settings = 7;
+  
+  // Subscription tags
+  repeated string tags = 8;
+  
+  // Custom fields
+  map<string, string> custom_fields = 9;
+}
+
+// Subscription creation response
+message CreateSubscriptionResponse {
+  // Created subscription
+  Subscription subscription = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Subscription update request
+message UpdateSubscriptionRequest {
+  // Subscription ID
+  string subscription_id = 1;
+  
+  // Updated subscription plan
+  finance.subscriptions.enums.SubscriptionPlan plan = 2;
+  
+  // Updated subscription status
+  finance.subscriptions.enums.SubscriptionStatus status = 3;
+  
+  // Updated billing cycle
+  finance.subscriptions.enums.BillingCycle billing_cycle = 4;
+  
+  // Updated subscription details
+  SubscriptionDetails details = 5;
+  
+  // Updated pricing information
+  SubscriptionPricing pricing = 6;
+  
+  // Updated billing information
+  SubscriptionBilling billing = 7;
+  
+  // Updated subscription settings
+  SubscriptionSettings settings = 8;
+  
+  // Updated subscription tags
+  repeated string tags = 9;
+  
+  // Updated custom fields
+  map<string, string> custom_fields = 10;
+}
+
+// Subscription update response
+message UpdateSubscriptionResponse {
+  // Updated subscription
+  Subscription subscription = 1;
+  
+  // Success status
+  bool success = 2;
+  
+  // Error message if any
+  string error_message = 3;
+}
+
+// Subscription list request
+message ListSubscriptionsRequest {
+  // Filter by subscription plan
+  finance.subscriptions.enums.SubscriptionPlan plan = 1;
+  
+  // Filter by subscription status
+  finance.subscriptions.enums.SubscriptionStatus status = 2;
+  
+  // Filter by billing cycle
+  finance.subscriptions.enums.BillingCycle billing_cycle = 3;
+  
+  // Filter by customer ID
+  string customer_id = 4;
+  
+  // Filter by date range
+  int64 start_date = 5;
+  int64 end_date = 6;
+  
+  // Search term
+  string search_term = 7;
+  
+  // Page number
+  int32 page = 8;
+  
+  // Page size
+  int32 page_size = 9;
+}
+
+// Subscription list response
+message ListSubscriptionsResponse {
+  // List of subscriptions
+  repeated Subscription subscriptions = 1;
+  
+  // Total count
+  int64 total_count = 2;
+  
+  // Page number
+  int32 page = 3;
+  
+  // Page size
+  int32 page_size = 4;
+  
+  // Success status
+  bool success = 5;
+  
+  // Error message if any
+  string error_message = 6;
+}

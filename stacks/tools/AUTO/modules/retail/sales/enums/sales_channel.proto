@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package retail.sales.enums;
+
+// SalesChannel represents the channel through which a sale was made
+enum SalesChannel {
+  // Default value - should not be used
+  SALES_CHANNEL_UNSPECIFIED = 0;
+  
+  // Physical store location
+  SALES_CHANNEL_STORE = 1;
+  
+  // Online e-commerce website
+  SALES_CHANNEL_ONLINE = 2;
+  
+  // Mobile application
+  SALES_CHANNEL_MOBILE_APP = 3;
+  
+  // Phone orders
+  SALES_CHANNEL_PHONE = 4;
+  
+  // Email orders
+  SALES_CHANNEL_EMAIL = 5;
+  
+  // Social media platform
+  SALES_CHANNEL_SOCIAL_MEDIA = 6;
+  
+  // Third-party marketplace (Amazon, eBay, etc.)
+  SALES_CHANNEL_MARKETPLACE = 7;
+  
+  // Wholesale/B2B sales
+  SALES_CHANNEL_WHOLESALE = 8;
+  
+  // Pop-up store or temporary location
+  SALES_CHANNEL_POPUP = 9;
+  
+  // Kiosk or vending machine
+  SALES_CHANNEL_KIOSK = 10;
+  
+  // Door-to-door sales
+  SALES_CHANNEL_DOOR_TO_DOOR = 11;
+  
+  // Trade show or event
+  SALES_CHANNEL_TRADE_SHOW = 12;
+}

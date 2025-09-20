@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package horeca.housekeeping.enums;
+
+// Priority levels for housekeeping tasks
+enum HousekeepingPriority {
+  HOUSEKEEPING_PRIORITY_UNSPECIFIED = 0;
+  HOUSEKEEPING_PRIORITY_NORMAL = 1;       // Standard priority
+  HOUSEKEEPING_PRIORITY_URGENT = 2;       // Urgent - needs immediate attention
+  HOUSEKEEPING_PRIORITY_VIP = 3;          // VIP room - highest priority
+  HOUSEKEEPING_PRIORITY_CHECKOUT = 4;     // Guest checkout - high priority
+  HOUSEKEEPING_PRIORITY_MAINTENANCE = 5;  // Maintenance related - medium priority
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package logistics.customs.enums;
+
+// Types of customs documents
+enum CustomsDocumentType {
+  CUSTOMS_DOCUMENT_TYPE_UNSPECIFIED = 0;
+  CUSTOMS_DOCUMENT_TYPE_COMMERCIAL_INVOICE = 1;    // Commercial invoice
+  CUSTOMS_DOCUMENT_TYPE_PACKING_LIST = 2;          // Packing list
+  CUSTOMS_DOCUMENT_TYPE_BILL_OF_LADING = 3;        // Bill of lading
+  CUSTOMS_DOCUMENT_TYPE_AIR_WAYBILL = 4;           // Air waybill
+  CUSTOMS_DOCUMENT_TYPE_CERTIFICATE_OF_ORIGIN = 5; // Certificate of origin
+  CUSTOMS_DOCUMENT_TYPE_IMPORT_LICENSE = 6;       // Import license
+  CUSTOMS_DOCUMENT_TYPE_EXPORT_LICENSE = 7;        // Export license
+  CUSTOMS_DOCUMENT_TYPE_PHYTOSANITARY_CERT = 8;   // Phytosanitary certificate
+  CUSTOMS_DOCUMENT_TYPE_HEALTH_CERTIFICATE = 9;   // Health certificate
+  CUSTOMS_DOCUMENT_TYPE_INSURANCE_CERTIFICATE = 10; // Insurance certificate
+  CUSTOMS_DOCUMENT_TYPE_CUSTOMS_DECLARATION = 11;  // Customs declaration form
+  CUSTOMS_DOCUMENT_TYPE_DANGEROUS_GOODS_DECL = 12; // Dangerous goods declaration
+  CUSTOMS_DOCUMENT_TYPE_OTHER = 13;                // Other document type
+}

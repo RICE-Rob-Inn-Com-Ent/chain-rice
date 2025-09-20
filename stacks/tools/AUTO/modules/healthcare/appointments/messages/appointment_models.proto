@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package healthcare.appointments.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "../enums/appointment_status.proto";
+import "../enums/appointment_type.proto";
+import "../enums/priority_level.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/messages";
+
+// Appointment model
+message Appointment {
+  string appointment_id = 1;
+  string patient_id = 2;
+  string doctor_id = 3;
+  string clinic_id = 4;
+  google.protobuf.Timestamp scheduled_time = 5;
+  google.protobuf.Duration duration = 6;
+  healthcare.appointments.enums.AppointmentType type = 7;
+  healthcare.appointments.enums.AppointmentStatus status = 8;
+  healthcare.appointments.enums.PriorityLevel priority = 9;
+  string notes = 10;
+  string room_number = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+  string created_by = 14;
+  string updated_by = 15;
+}
+
+// Appointment request for creating/updating
+message AppointmentRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  google.protobuf.Timestamp scheduled_time = 4;
+  google.protobuf.Duration duration = 5;
+  healthcare.appointments.enums.AppointmentType type = 6;
+  healthcare.appointments.enums.PriorityLevel priority = 7;
+  string notes = 8;
+  string room_number = 9;
+}
+
+// Appointment response
+message AppointmentResponse {
+  bool success = 1;
+  string message = 2;
+  Appointment appointment = 3;
+}
+
+// List appointments request
+message ListAppointmentsRequest {
+  string patient_id = 1;
+  string doctor_id = 2;
+  string clinic_id = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  healthcare.appointments.enums.AppointmentStatus status = 6;
+  healthcare.appointments.enums.AppointmentType type = 7;
+  int32 page_size = 8;
+  string page_token = 9;
+}
+
+// List appointments response
+message ListAppointmentsResponse {
+  repeated Appointment appointments = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package logistics.warehousing.enums;
+
+// Inventory status enumeration
+enum WarehouseInventoryStatus {
+  WAREHOUSE_INVENTORY_STATUS_UNSPECIFIED = 0;
+  WAREHOUSE_INVENTORY_STATUS_AVAILABLE = 1;   // Available for picking
+  WAREHOUSE_INVENTORY_STATUS_RESERVED = 2;     // Reserved for order
+  WAREHOUSE_INVENTORY_STATUS_PICKED = 3;       // Picked for order
+  WAREHOUSE_INVENTORY_STATUS_PACKED = 4;       // Packed for shipping
+  WAREHOUSE_INVENTORY_STATUS_SHIPPED = 5;     // Shipped out
+  WAREHOUSE_INVENTORY_STATUS_DAMAGED = 6;     // Damaged goods
+  WAREHOUSE_INVENTORY_STATUS_EXPIRED = 7;     // Expired goods
+  WAREHOUSE_INVENTORY_STATUS_QUARANTINE = 8;  // In quarantine
+  WAREHOUSE_INVENTORY_STATUS_LOST = 9;        // Lost inventory
+  WAREHOUSE_INVENTORY_STATUS_CYCLE_COUNT = 10; // Under cycle count
+  WAREHOUSE_INVENTORY_STATUS_AUDIT = 11;      // Under audit
+  WAREHOUSE_INVENTORY_STATUS_RETURNED = 12;    // Returned goods
+  WAREHOUSE_INVENTORY_STATUS_DISPOSED = 13;    // Disposed goods
+}

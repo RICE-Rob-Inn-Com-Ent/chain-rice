@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package blockchain.ledger.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/ledger/enums";
+
+// TransactionStatus defines the status of blockchain transactions
+enum TransactionStatus {
+  // TRANSACTION_STATUS_UNSPECIFIED indicates an unspecified transaction status
+  TRANSACTION_STATUS_UNSPECIFIED = 0;
+  
+  // TRANSACTION_STATUS_PENDING indicates the transaction is pending
+  TRANSACTION_STATUS_PENDING = 1;
+  
+  // TRANSACTION_STATUS_CONFIRMED indicates the transaction is confirmed
+  TRANSACTION_STATUS_CONFIRMED = 2;
+  
+  // TRANSACTION_STATUS_PROCESSING indicates the transaction is being processed
+  TRANSACTION_STATUS_PROCESSING = 3;
+  
+  // TRANSACTION_STATUS_SUCCESS indicates the transaction was successful
+  TRANSACTION_STATUS_SUCCESS = 4;
+  
+  // TRANSACTION_STATUS_FAILED indicates the transaction failed
+  TRANSACTION_STATUS_FAILED = 5;
+  
+  // TRANSACTION_STATUS_CANCELLED indicates the transaction was cancelled
+  TRANSACTION_STATUS_CANCELLED = 6;
+  
+  // TRANSACTION_STATUS_TIMEOUT indicates the transaction timed out
+  TRANSACTION_STATUS_TIMEOUT = 7;
+  
+  // TRANSACTION_STATUS_REJECTED indicates the transaction was rejected
+  TRANSACTION_STATUS_REJECTED = 8;
+  
+  // TRANSACTION_STATUS_REVERTED indicates the transaction was reverted
+  TRANSACTION_STATUS_REVERTED = 9;
+  
+  // TRANSACTION_STATUS_EXPIRED indicates the transaction expired
+  TRANSACTION_STATUS_EXPIRED = 10;
+  
+  // TRANSACTION_STATUS_QUEUED indicates the transaction is queued
+  TRANSACTION_STATUS_QUEUED = 11;
+  
+  // TRANSACTION_STATUS_BROADCAST indicates the transaction is broadcasted
+  TRANSACTION_STATUS_BROADCAST = 12;
+  
+  // TRANSACTION_STATUS_MEMPOOL indicates the transaction is in mempool
+  TRANSACTION_STATUS_MEMPOOL = 13;
+  
+  // TRANSACTION_STATUS_INCLUDED indicates the transaction is included in a block
+  TRANSACTION_STATUS_INCLUDED = 14;
+  
+  // TRANSACTION_STATUS_FINALIZED indicates the transaction is finalized
+  TRANSACTION_STATUS_FINALIZED = 15;
+  
+  // TRANSACTION_STATUS_ARCHIVED indicates the transaction is archived
+  TRANSACTION_STATUS_ARCHIVED = 16;
+}

@@ -1,0 +1,289 @@
+syntax = "proto3";
+
+package tourism.flights.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "tourism/flights/enums/flight_class.proto";
+import "tourism/flights/enums/flight_status.proto";
+
+// CreateFlightRequest represents a request to create a new flight
+message CreateFlightRequest {
+  // Flight number (e.g., "AA123", "UA456")
+  string flight_number = 1;
+  
+  // Airline code (IATA format, e.g., "AA", "UA")
+  string airline_code = 2;
+  
+  // Departure airport code (IATA format)
+  string departure_airport = 3;
+  
+  // Arrival airport code (IATA format)
+  string arrival_airport = 4;
+  
+  // Scheduled departure time
+  google.protobuf.Timestamp departure_time = 5;
+  
+  // Scheduled arrival time
+  google.protobuf.Timestamp arrival_time = 6;
+  
+  // Aircraft type/model
+  string aircraft_type = 7;
+  
+  // Flight status
+  tourism.flights.enums.FlightStatus status = 8;
+  
+  // Flight duration in minutes
+  int32 duration_minutes = 9;
+  
+  // Available seats by class
+  repeated SeatAvailability seats_by_class = 10;
+  
+  // Flight prices by class
+  repeated FlightPrice prices_by_class = 11;
+  
+  // Gate information
+  google.protobuf.StringValue gate = 12;
+  
+  // Terminal information
+  google.protobuf.StringValue terminal = 13;
+  
+  // Baggage information
+  BaggageInfo baggage_info = 14;
+  
+  // Flight amenities
+  repeated string amenities = 15;
+  
+  // Route information
+  RouteInfo route_info = 16;
+}
+
+// UpdateFlightRequest represents a request to update an existing flight
+message UpdateFlightRequest {
+  // Flight ID to update
+  string flight_id = 1;
+  
+  // Optional new departure time
+  google.protobuf.Timestamp departure_time = 2;
+  
+  // Optional new arrival time
+  google.protobuf.Timestamp arrival_time = 3;
+  
+  // Optional new status
+  tourism.flights.enums.FlightStatus status = 4;
+  
+  // Optional new gate
+  google.protobuf.StringValue gate = 5;
+  
+  // Optional new terminal
+  google.protobuf.StringValue terminal = 6;
+  
+  // Optional updated seat availability
+  repeated SeatAvailability seats_by_class = 7;
+  
+  // Optional updated prices
+  repeated FlightPrice prices_by_class = 8;
+  
+  // Optional new baggage information
+  BaggageInfo baggage_info = 9;
+}
+
+// GetFlightRequest represents a request to retrieve a specific flight
+message GetFlightRequest {
+  // Flight ID to retrieve
+  string flight_id = 1;
+}
+
+// ListFlightsRequest represents a request to list flights with filtering
+message ListFlightsRequest {
+  // Departure airport filter (optional)
+  google.protobuf.StringValue departure_airport = 1;
+  
+  // Arrival airport filter (optional)
+  google.protobuf.StringValue arrival_airport = 2;
+  
+  // Airline code filter (optional)
+  google.protobuf.StringValue airline_code = 3;
+  
+  // Flight status filter (optional)
+  tourism.flights.enums.FlightStatus status = 4;
+  
+  // Date range for departure (optional)
+  google.protobuf.Timestamp departure_after = 5;
+  google.protobuf.Timestamp departure_before = 6;
+  
+  // Flight class filter (optional)
+  tourism.flights.enums.FlightClass flight_class = 7;
+  
+  // Page number for pagination (starts from 1)
+  int32 page = 8;
+  
+  // Page size for pagination (max 100)
+  int32 page_size = 9;
+}
+
+// DeleteFlightRequest represents a request to delete a flight
+message DeleteFlightRequest {
+  // Flight ID to delete
+  string flight_id = 1;
+}
+
+// SearchFlightsRequest represents a request to search for flights
+message SearchFlightsRequest {
+  // Departure airport code
+  string departure_airport = 1;
+  
+  // Arrival airport code
+  string arrival_airport = 2;
+  
+  // Departure date
+  google.protobuf.Timestamp departure_date = 3;
+  
+  // Return date (for round trip, optional)
+  google.protobuf.Timestamp return_date = 4;
+  
+  // Number of passengers
+  int32 passengers = 5;
+  
+  // Preferred flight class
+  tourism.flights.enums.FlightClass preferred_class = 6;
+  
+  // Maximum price (optional)
+  google.protobuf.DoubleValue max_price = 7;
+  
+  // Preferred airlines (optional)
+  repeated string preferred_airlines = 8;
+  
+  // Flexible dates (allow +/- days)
+  google.protobuf.DoubleValue flexible_days = 9;
+  
+  // Direct flights only
+  bool direct_flights_only = 10;
+  
+  // Sort preference (price, duration, departure_time)
+  google.protobuf.StringValue sort_by = 11;
+}
+
+// SeatAvailability represents seat availability for a flight class
+message SeatAvailability {
+  // Flight class
+  tourism.flights.enums.FlightClass flight_class = 1;
+  
+  // Number of available seats
+  int32 available_seats = 2;
+  
+  // Total seats in this class
+  int32 total_seats = 3;
+  
+  // Seat configuration (e.g., "2-4-2", "3-3")
+  google.protobuf.StringValue seat_configuration = 4;
+}
+
+// FlightPrice represents pricing for a flight class
+message FlightPrice {
+  // Flight class
+  tourism.flights.enums.FlightClass flight_class = 1;
+  
+  // Base price (in smallest currency unit)
+  int64 base_price = 2;
+  
+  // Taxes and fees (in smallest currency unit)
+  int64 taxes_and_fees = 3;
+  
+  // Total price (in smallest currency unit)
+  int64 total_price = 4;
+  
+  // Currency code (ISO 4217 format)
+  string currency = 5;
+  
+  // Price breakdown
+  repeated PriceBreakdown price_breakdown = 6;
+}
+
+// PriceBreakdown represents detailed price breakdown
+message PriceBreakdown {
+  // Price component name (e.g., "Base Fare", "Tax", "Fuel Surcharge")
+  string component_name = 1;
+  
+  // Price amount (in smallest currency unit)
+  int64 amount = 2;
+  
+  // Currency code
+  string currency = 3;
+}
+
+// BaggageInfo represents baggage information for a flight
+message BaggageInfo {
+  // Carry-on baggage allowance
+  BaggageAllowance carry_on = 1;
+  
+  // Checked baggage allowance
+  BaggageAllowance checked = 2;
+  
+  // Additional baggage fees
+  repeated BaggageFee additional_fees = 3;
+  
+  // Baggage restrictions
+  repeated string restrictions = 4;
+}
+
+// BaggageAllowance represents baggage allowance details
+message BaggageAllowance {
+  // Number of bags allowed
+  int32 bags_allowed = 1;
+  
+  // Weight limit per bag (in kg)
+  google.protobuf.DoubleValue weight_limit_kg = 2;
+  
+  // Size limit (length + width + height in cm)
+  google.protobuf.DoubleValue size_limit_cm = 3;
+  
+  // Whether included in fare
+  bool included_in_fare = 4;
+}
+
+// BaggageFee represents additional baggage fees
+message BaggageFee {
+  // Number of bags
+  int32 bag_count = 1;
+  
+  // Fee amount (in smallest currency unit)
+  int64 fee_amount = 2;
+  
+  // Currency code
+  string currency = 3;
+  
+  // Fee description
+  google.protobuf.StringValue description = 4;
+}
+
+// RouteInfo represents flight route information
+message RouteInfo {
+  // Distance in kilometers
+  google.protobuf.DoubleValue distance_km = 1;
+  
+  // Flight path coordinates
+  repeated Coordinate flight_path = 2;
+  
+  // Estimated fuel consumption
+  google.protobuf.DoubleValue estimated_fuel_kg = 3;
+  
+  // Time zones crossed
+  repeated string time_zones = 4;
+  
+  // Countries overflown
+  repeated string countries_overflown = 5;
+}
+
+// Coordinate represents a geographic coordinate
+message Coordinate {
+  // Latitude
+  double latitude = 1;
+  
+  // Longitude
+  double longitude = 2;
+  
+  // Altitude (optional)
+  google.protobuf.DoubleValue altitude = 3;
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Grading workflow statuses.
+package education.grading.enums;
+
+option go_package = "github.com/rice-dev/education/grading/enums;grdgenums";
+option java_multiple_files = true;
+option java_package = "com.rice.education.grading.enums";
+
+// Status of a grade computation/report.
+enum GradingStatus {
+  GRADING_STATUS_UNSPECIFIED = 0; // Unknown
+  GRADING_STATUS_IN_PROGRESS = 1; // Calculation underway
+  GRADING_STATUS_COMPLETED = 2;   // Finalized
+  GRADING_STATUS_REVIEW = 3;      // Under review/appeal
+  GRADING_STATUS_AMENDED = 4;     // Amended after review
+}
+
+

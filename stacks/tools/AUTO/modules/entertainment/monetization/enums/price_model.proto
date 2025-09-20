@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package entertainment.monetization.enums;
+
+// Моделі ціноутворення
+enum PriceModel {
+  PRICE_MODEL_UNSPECIFIED = 0;
+  
+  // Базові моделі
+  FREE = 1;
+  PAID = 2;
+  FREEMIUM = 3;
+  TRIAL = 4;
+  DEMO = 5;
+  
+  // Підписочні моделі
+  SUBSCRIPTION = 6;
+  RECURRING_SUBSCRIPTION = 7;
+  MONTHLY_SUBSCRIPTION = 8;
+  YEARLY_SUBSCRIPTION = 9;
+  QUARTERLY_SUBSCRIPTION = 10;
+  
+  // Платні моделі
+  ONE_TIME_PURCHASE = 11;
+  PAY_PER_VIEW = 12;
+  PAY_PER_DOWNLOAD = 13;
+  PAY_PER_STREAM = 14;
+  PAY_PER_ACCESS = 15;
+  
+  // Рекламні моделі
+  AD_SUPPORTED = 16;
+  AD_FREE = 17;
+  HYBRID_AD_SUPPORTED = 18;
+  SPONSORED_CONTENT = 19;
+  NATIVE_ADVERTISING = 20;
+  
+  // Торгові моделі
+  MARKETPLACE = 21;
+  COMMISSION_BASED = 22;
+  REVENUE_SHARE = 23;
+  AFFILIATE_MARKETING = 24;
+  REFERRAL_PROGRAM = 25;
+  
+  // Ліцензійні моделі
+  LICENSING = 26;
+  ROYALTY_BASED = 27;
+  LICENSING_FEE = 28;
+  DISTRIBUTION_RIGHTS = 29;
+  SYNDICATION = 30;
+  
+  // Корпоративні моделі
+  ENTERPRISE = 31;
+  B2B = 32;
+  WHOLESALE = 33;
+  VOLUME_DISCOUNT = 34;
+  CUSTOM_PRICING = 35;
+  
+  // Динамічні моделі
+  DYNAMIC_PRICING = 36;
+  SURGE_PRICING = 37;
+  DEMAND_BASED = 38;
+  TIME_BASED = 39;
+  LOCATION_BASED = 40;
+  
+  // Персоналізовані моделі
+  PERSONALIZED_PRICING = 41;
+  USER_SEGMENT_PRICING = 42;
+  BEHAVIORAL_PRICING = 43;
+  CONTEXTUAL_PRICING = 44;
+  ADAPTIVE_PRICING = 45;
+  
+  // Бандлінг моделі
+  BUNDLE_PRICING = 46;
+  PACKAGE_PRICING = 47;
+  TIERED_PRICING = 48;
+  GRADUATED_PRICING = 49;
+  VOLUME_PRICING = 50;
+  
+  // Промоційні моделі
+  DISCOUNT_PRICING = 51;
+  PROMOTIONAL_PRICING = 52;
+  SEASONAL_PRICING = 53;
+  EVENT_PRICING = 54;
+  LIMITED_TIME_OFFER = 55;
+  
+  // Аукціонні моделі
+  AUCTION_PRICING = 56;
+  BIDDING_PRICING = 57;
+  REVERSE_AUCTION = 58;
+  DUTCH_AUCTION = 59;
+  ENGLISH_AUCTION = 60;
+  
+  // Кредитні моделі
+  CREDIT_BASED = 61;
+  TOKEN_BASED = 62;
+  POINT_BASED = 63;
+  VOUCHER_BASED = 64;
+  GIFT_CARD_BASED = 65;
+  
+  // Спільнотні моделі
+  COMMUNITY_PRICING = 66;
+  CROWDFUNDING = 67;
+  CROWDSOURCING = 68;
+  PEER_TO_PEER = 69;
+  SHARING_ECONOMY = 70;
+  
+  // Блокчейн моделі
+  CRYPTO_PRICING = 71;
+  NFT_PRICING = 72;
+  DEFI_PRICING = 73;
+  TOKEN_ECONOMY = 74;
+  BLOCKCHAIN_PRICING = 75;
+  
+  // Експериментальні моделі
+  EXPERIMENTAL_PRICING = 76;
+  A_B_TEST_PRICING = 77;
+  MULTI_VARIANT_PRICING = 78;
+  MACHINE_LEARNING_PRICING = 79;
+  AI_OPTIMIZED_PRICING = 80;
+  
+  // Гібридні моделі
+  HYBRID_PRICING = 81;
+  MULTI_MODEL_PRICING = 82;
+  FLEXIBLE_PRICING = 83;
+  ADAPTIVE_MODEL = 84;
+  CONTEXT_AWARE_PRICING = 85;
+  
+  // Спеціалізовані моделі
+  EDUCATION_PRICING = 86;
+  NON_PROFIT_PRICING = 87;
+  GOVERNMENT_PRICING = 88;
+  HEALTHCARE_PRICING = 89;
+  FINANCIAL_PRICING = 90;
+  
+  // Мікроплатежі
+  MICROPAYMENT = 91;
+  NANO_PAYMENT = 92;
+  FRACTIONAL_PAYMENT = 93;
+  USAGE_BASED_MICRO = 94;
+  METERED_PRICING = 95;
+  
+  // Підписка з обмеженнями
+  LIMITED_SUBSCRIPTION = 96;
+  QUOTA_BASED = 97;
+  THROTTLED_ACCESS = 98;
+  BANDWIDTH_LIMITED = 99;
+  STORAGE_LIMITED = 100;
+}

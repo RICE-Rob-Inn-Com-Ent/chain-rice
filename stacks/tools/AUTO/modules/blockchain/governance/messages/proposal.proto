@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package blockchain.governance.messages;
+
+import "blockchain/governance/enums/proposal_type.proto";
+import "blockchain/governance/enums/proposal_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/governance/messages";
+
+// Coin represents a token with denomination and amount
+message Coin {
+  string denom = 1;  // Token denomination
+  string amount = 2; // Token amount as string
+}
+
+// Proposal represents a governance proposal
+message Proposal {
+  string id = 1;                    // Unique proposal identifier
+  string title = 2;                 // Proposal title
+  string description = 3;           // Proposal description
+  string creator = 4;               // Proposal creator address (sdk.Address)
+  int64 timestamp = 5;              // Proposal creation timestamp
+  
+  // Proposal details
+  blockchain.governance.enums.ProposalType proposal_type = 6; // Type of proposal
+  blockchain.governance.enums.ProposalStatus status = 7; // Current proposal status
+  
+  // Voting information
+  int64 voting_start_time = 8;      // Voting start timestamp
+  int64 voting_end_time = 9;        // Voting end timestamp
+  int64 deposit_end_time = 10;      // Deposit end timestamp
+  repeated Coin total_deposit = 11; // Total deposit amount
+  
+  // Vote results
+  int64 yes_votes = 12;             // Number of yes votes
+  int64 no_votes = 13;              // Number of no votes
+  int64 abstain_votes = 14;         // Number of abstain votes
+  int64 no_with_veto_votes = 15;    // Number of no-with-veto votes
+  string total_votes = 16;          // Total voting power
+  
+  // Thresholds
+  string quorum = 17;               // Quorum threshold
+  string threshold = 18;            // Approval threshold
+  string veto_threshold = 19;       // Veto threshold
+  
+  // Proposal content
+  string content = 20;              // Proposal content (JSON)
+  map<string, string> metadata = 21; // Additional metadata
+  
+  // Execution information
+  int64 execution_time = 22;        // Execution timestamp
+  string executor = 23;             // Executor address
+  bool is_executed = 24;            // Whether proposal is executed
+  string execution_result = 25;     // Execution result
+  
+  // Proposal lifecycle
+  int64 submit_time = 26;           // Submit timestamp
+  int64 deposit_time = 27;          // Deposit completion timestamp
+  int64 voting_time = 28;           // Voting completion timestamp
+  int64 final_tally_time = 29;      // Final tally timestamp
+  
+  // Governance parameters
+  repeated Coin min_deposit = 30;   // Minimum deposit required
+  int64 max_deposit_period = 31;    // Maximum deposit period
+  int64 voting_period = 32;         // Voting period duration
+}
+
+// GovernanceParams defines the parameters for the governance module
+message GovernanceParams {
+  string authority = 1;             // Module authority address
+  repeated Coin min_deposit = 2;    // Minimum deposit for proposals
+  int64 max_deposit_period = 3;     // Maximum deposit period
+  int64 voting_period = 4;          // Voting period duration
+  string quorum = 5;                // Quorum threshold
+  string threshold = 6;             // Approval threshold
+  string veto_threshold = 7;        // Veto threshold
+  string min_initial_deposit_ratio = 8; // Minimum initial deposit ratio
+  bool burn_vote_quorum = 9;        // Burn vote quorum if not met
+  bool burn_proposal_deposit_prevote = 10; // Burn deposit on prevote
+  bool burn_vote_veto = 11;         // Burn vote veto
+}
+
+// MsgSubmitProposal submits a new governance proposal
+message MsgSubmitProposal {
+  string creator = 1;               // Creator address (sdk.Address)
+  string title = 2;                 // Proposal title
+  string description = 3;           // Proposal description
+  blockchain.governance.enums.ProposalType proposal_type = 4; // Proposal type
+  string content = 5;               // Proposal content (JSON)
+  repeated Coin initial_deposit = 6; // Initial deposit
+  map<string, string> metadata = 7; // Additional metadata
+}
+
+// MsgSubmitProposalResponse returns the submitted proposal
+message MsgSubmitProposalResponse {
+  string proposal_id = 1;           // Created proposal ID
+}
+
+// MsgVote votes on a governance proposal
+message MsgVote {
+  string creator = 1;               // Voter address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to vote on
+  string vote_option = 3;           // Vote option (yes/no/abstain/no_with_veto)
+  string metadata = 4;              // Vote metadata
+}
+
+// MsgVoteResponse returns the vote result
+message MsgVoteResponse {
+  bool success = 1;                 // Vote success status
+}
+
+// MsgDeposit deposits tokens for a proposal
+message MsgDeposit {
+  string creator = 1;               // Depositor address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to deposit for
+  repeated Coin amount = 3;         // Deposit amount
+}
+
+// MsgDepositResponse returns the deposit result
+message MsgDepositResponse {
+  bool success = 1;                 // Deposit success status
+}
+
+// MsgExecuteProposal executes a passed proposal
+message MsgExecuteProposal {
+  string creator = 1;               // Executor address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to execute
+}
+
+// MsgExecuteProposalResponse returns the execution result
+message MsgExecuteProposalResponse {
+  bool success = 1;                 // Execution success status
+  string result = 2;                // Execution result
+}
+
+// MsgCancelProposal cancels a proposal
+message MsgCancelProposal {
+  string creator = 1;               // Canceller address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to cancel
+  string reason = 3;                // Cancellation reason
+}
+
+// MsgCancelProposalResponse returns the cancellation result
+message MsgCancelProposalResponse {
+  bool success = 1;                 // Cancellation success status
+}
+
+// MsgUpdateProposal updates an existing proposal
+message MsgUpdateProposal {
+  string creator = 1;               // Updater address (sdk.Address)
+  string proposal_id = 2;           // Proposal ID to update
+  string title = 3;                 // Updated title
+  string description = 4;           // Updated description
+  string content = 5;               // Updated content
+  map<string, string> metadata = 6; // Updated metadata
+}
+
+// MsgUpdateProposalResponse returns the update result
+message MsgUpdateProposalResponse {
+  bool success = 1;                 // Update success status
+}

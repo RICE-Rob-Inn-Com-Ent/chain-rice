@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package government.reporting.enums;
+
+// Категорії звітів
+enum ReportCategory {
+  REPORT_CATEGORY_UNSPECIFIED = 0;
+  REPORT_CATEGORY_POPULATION = 1;       // Населення
+  REPORT_CATEGORY_TAXATION = 2;         // Податки
+  REPORT_CATEGORY_PERMITS = 3;          // Дозволи
+  REPORT_CATEGORY_INFRASTRUCTURE = 4;   // Інфраструктура
+  REPORT_CATEGORY_HEALTH = 5;           // Охорона здоров'я
+  REPORT_CATEGORY_EDUCATION = 6;        // Освіта
+  REPORT_CATEGORY_SECURITY = 7;         // Безпека
+  REPORT_CATEGORY_ECONOMY = 8;          // Економіка
+  REPORT_CATEGORY_ENVIRONMENT = 9;      // Екологія
+  REPORT_CATEGORY_SOCIAL = 10;          // Соціальна сфера
+  REPORT_CATEGORY_ADMINISTRATIVE = 11;  // Адміністративні
+  REPORT_CATEGORY_FINANCIAL = 12;       // Фінансові
+  REPORT_CATEGORY_LEGAL = 13;           // Правові
+  REPORT_CATEGORY_STATISTICAL = 14;     // Статистичні
+}

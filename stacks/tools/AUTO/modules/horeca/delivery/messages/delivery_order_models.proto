@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package horeca.delivery.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "../enums/delivery_status.proto";
+import "../enums/delivery_type.proto";
+import "../enums/delivery_priority.proto";
+
+// Delivery order information
+message DeliveryOrder {
+  string order_id = 1;
+  string customer_id = 2;
+  string customer_name = 3;
+  string customer_phone = 4;
+  string customer_email = 5;
+  
+  DeliveryStatus status = 6;
+  DeliveryType type = 7;
+  DeliveryPriority priority = 8;
+  
+  DeliveryAddress delivery_address = 9;
+  google.protobuf.Timestamp order_time = 10;
+  google.protobuf.Timestamp estimated_delivery = 11;
+  google.protobuf.Timestamp actual_delivery = 12;
+  
+  google.protobuf.Money order_total = 13;
+  google.protobuf.Money delivery_fee = 14;
+  google.protobuf.Money tip_amount = 15;
+  
+  string driver_id = 16;
+  string driver_name = 17;
+  string driver_phone = 18;
+  
+  repeated DeliveryItem items = 19;
+  string special_instructions = 20;
+  string delivery_notes = 21;
+  
+  google.protobuf.Timestamp created_at = 22;
+  google.protobuf.Timestamp updated_at = 23;
+}
+
+// Delivery address information
+message DeliveryAddress {
+  string street_address = 1;
+  string city = 2;
+  string state = 3;
+  string postal_code = 4;
+  string country = 5;
+  double latitude = 6;
+  double longitude = 7;
+  string building_name = 8;
+  string apartment_number = 9;
+  string access_code = 10;
+  string delivery_instructions = 11;
+}
+
+// Individual item in delivery order
+message DeliveryItem {
+  string item_id = 1;
+  string item_name = 2;
+  string description = 3;
+  int32 quantity = 4;
+  google.protobuf.Money unit_price = 5;
+  google.protobuf.Money total_price = 6;
+  string special_preparation = 7;
+  repeated string allergens = 8;
+}

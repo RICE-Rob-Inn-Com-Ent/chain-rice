@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.matchmaking.enums;
+
+option go_package = "github.com/rice-dev/gaming/matchmaking/enums";
+
+// Статуси матчів
+enum MatchStatus {
+  MATCH_STATUS_UNSPECIFIED = 0;
+  
+  // Створений
+  MATCH_STATUS_CREATED = 1;
+  
+  // Очікує гравців
+  MATCH_STATUS_WAITING_FOR_PLAYERS = 2;
+  
+  // Готовий до початку
+  MATCH_STATUS_READY_TO_START = 3;
+  
+  // В процесі
+  MATCH_STATUS_IN_PROGRESS = 4;
+  
+  // Завершений
+  MATCH_STATUS_COMPLETED = 5;
+  
+  // Скасований
+  MATCH_STATUS_CANCELLED = 6;
+  
+  // Призупинений
+  MATCH_STATUS_PAUSED = 7;
+  
+  // Відновлений
+  MATCH_STATUS_RESUMED = 8;
+  
+  // Перерваний
+  MATCH_STATUS_INTERRUPTED = 9;
+  
+  // Відкладений
+  MATCH_STATUS_POSTPONED = 10;
+  
+  // Перенесений
+  MATCH_STATUS_RESCHEDULED = 11;
+  
+  // Відхилений
+  MATCH_STATUS_REJECTED = 12;
+  
+  // Прийнятий
+  MATCH_STATUS_ACCEPTED = 13;
+  
+  // Підтверджений
+  MATCH_STATUS_CONFIRMED = 14;
+  
+  // Очікує підтвердження
+  MATCH_STATUS_PENDING_CONFIRMATION = 15;
+  
+  // Очікує схвалення
+  MATCH_STATUS_PENDING_APPROVAL = 16;
+  
+  // Очікує модерації
+  MATCH_STATUS_PENDING_MODERATION = 17;
+  
+  // Очікує перевірки
+  MATCH_STATUS_PENDING_VERIFICATION = 18;
+  
+  // Очікує валідації
+  MATCH_STATUS_PENDING_VALIDATION = 19;
+  
+  // Очікує авторизації
+  MATCH_STATUS_PENDING_AUTHORIZATION = 20;
+  
+  // Очікує аутентифікації
+  MATCH_STATUS_PENDING_AUTHENTICATION = 21;
+  
+  // Очікує ідентифікації
+  MATCH_STATUS_PENDING_IDENTIFICATION = 22;
+  
+  // Очікує реєстрації
+  MATCH_STATUS_PENDING_REGISTRATION = 23;
+  
+  // Очікує активації
+  MATCH_STATUS_PENDING_ACTIVATION = 24;
+  
+  // Очікує деактивації
+  MATCH_STATUS_PENDING_DEACTIVATION = 25;
+  
+  // Очікує блокування
+  MATCH_STATUS_PENDING_BLOCKING = 26;
+  
+  // Очікує розблокування
+  MATCH_STATUS_PENDING_UNBLOCKING = 27;
+  
+  // Очікує бану
+  MATCH_STATUS_PENDING_BANNING = 28;
+  
+  // Очікує розбану
+  MATCH_STATUS_PENDING_UNBANNING = 29;
+  
+  // Очікує мутінгу
+  MATCH_STATUS_PENDING_MUTING = 30;
+  
+  // Очікує розмутування
+  MATCH_STATUS_PENDING_UNMUTING = 31;
+  
+  // Очікує кікування
+  MATCH_STATUS_PENDING_KICKING = 32;
+  
+  // Очікує виключення
+  MATCH_STATUS_PENDING_EXCLUSION = 33;
+  
+  // Очікує включення
+  MATCH_STATUS_PENDING_INCLUSION = 34;
+  
+  // Очікує додавання
+  MATCH_STATUS_PENDING_ADDITION = 35;
+  
+  // Очікує видалення
+  MATCH_STATUS_PENDING_REMOVAL = 36;
+  
+  // Очікує оновлення
+  MATCH_STATUS_PENDING_UPDATE = 37;
+  
+  // Очікує зміни
+  MATCH_STATUS_PENDING_CHANGE = 38;
+  
+  // Очікує модифікації
+  MATCH_STATUS_PENDING_MODIFICATION = 39;
+  
+  // Очікує адаптації
+  MATCH_STATUS_PENDING_ADAPTATION = 40;
+  
+  // Очікує кастомізації
+  MATCH_STATUS_PENDING_CUSTOMIZATION = 41;
+  
+  // Очікує персоналізації
+  MATCH_STATUS_PENDING_PERSONALIZATION = 42;
+  
+  // Очікує налаштування
+  MATCH_STATUS_PENDING_CONFIGURATION = 43;
+  
+  // Очікує конфігурації
+  MATCH_STATUS_PENDING_SETUP = 44;
+  
+  // Очікує установки
+  MATCH_STATUS_PENDING_INSTALLATION = 45;
+  
+  // Очікує інсталяції
+  MATCH_STATUS_PENDING_DEPLOYMENT = 46;
+  
+  // Очікує розгортання
+  MATCH_STATUS_PENDING_ROLLOUT = 47;
+  
+  // Очікує запуску
+  MATCH_STATUS_PENDING_LAUNCH = 48;
+  
+  // Очікує старту
+  MATCH_STATUS_PENDING_START = 49;
+  
+  // Очікує початку
+  MATCH_STATUS_PENDING_BEGINNING = 50;
+  
+  // Очікує ініціації
+  MATCH_STATUS_PENDING_INITIATION = 51;
+  
+  // Очікує ініціалізації
+  MATCH_STATUS_PENDING_INITIALIZATION = 52;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_PREPARATION = 53;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_SETUP = 54;
+  
+  // Очікує налаштування
+  MATCH_STATUS_PENDING_CONFIGURATION = 55;
+  
+  // Очікує конфігурації
+  MATCH_STATUS_PENDING_SETUP = 56;
+  
+  // Очікує установки
+  MATCH_STATUS_PENDING_INSTALLATION = 57;
+  
+  // Очікує інсталяції
+  MATCH_STATUS_PENDING_DEPLOYMENT = 58;
+  
+  // Очікує розгортання
+  MATCH_STATUS_PENDING_ROLLOUT = 59;
+  
+  // Очікує запуску
+  MATCH_STATUS_PENDING_LAUNCH = 60;
+  
+  // Очікує старту
+  MATCH_STATUS_PENDING_START = 61;
+  
+  // Очікує початку
+  MATCH_STATUS_PENDING_BEGINNING = 62;
+  
+  // Очікує ініціації
+  MATCH_STATUS_PENDING_INITIATION = 63;
+  
+  // Очікує ініціалізації
+  MATCH_STATUS_PENDING_INITIALIZATION = 64;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_PREPARATION = 65;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_SETUP = 66;
+  
+  // Очікує налаштування
+  MATCH_STATUS_PENDING_CONFIGURATION = 67;
+  
+  // Очікує конфігурації
+  MATCH_STATUS_PENDING_SETUP = 68;
+  
+  // Очікує установки
+  MATCH_STATUS_PENDING_INSTALLATION = 69;
+  
+  // Очікує інсталяції
+  MATCH_STATUS_PENDING_DEPLOYMENT = 70;
+  
+  // Очікує розгортання
+  MATCH_STATUS_PENDING_ROLLOUT = 71;
+  
+  // Очікує запуску
+  MATCH_STATUS_PENDING_LAUNCH = 72;
+  
+  // Очікує старту
+  MATCH_STATUS_PENDING_START = 73;
+  
+  // Очікує початку
+  MATCH_STATUS_PENDING_BEGINNING = 74;
+  
+  // Очікує ініціації
+  MATCH_STATUS_PENDING_INITIATION = 75;
+  
+  // Очікує ініціалізації
+  MATCH_STATUS_PENDING_INITIALIZATION = 76;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_PREPARATION = 77;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_SETUP = 78;
+  
+  // Очікує налаштування
+  MATCH_STATUS_PENDING_CONFIGURATION = 79;
+  
+  // Очікує конфігурації
+  MATCH_STATUS_PENDING_SETUP = 80;
+  
+  // Очікує установки
+  MATCH_STATUS_PENDING_INSTALLATION = 81;
+  
+  // Очікує інсталяції
+  MATCH_STATUS_PENDING_DEPLOYMENT = 82;
+  
+  // Очікує розгортання
+  MATCH_STATUS_PENDING_ROLLOUT = 83;
+  
+  // Очікує запуску
+  MATCH_STATUS_PENDING_LAUNCH = 84;
+  
+  // Очікує старту
+  MATCH_STATUS_PENDING_START = 85;
+  
+  // Очікує початку
+  MATCH_STATUS_PENDING_BEGINNING = 86;
+  
+  // Очікує ініціації
+  MATCH_STATUS_PENDING_INITIATION = 87;
+  
+  // Очікує ініціалізації
+  MATCH_STATUS_PENDING_INITIALIZATION = 88;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_PREPARATION = 89;
+  
+  // Очікує підготовки
+  MATCH_STATUS_PENDING_SETUP = 90;
+  
+  // Очікує налаштування
+  MATCH_STATUS_PENDING_CONFIGURATION = 91;
+  
+  // Очікує конфігурації
+  MATCH_STATUS_PENDING_SETUP = 92;
+  
+  // Очікує установки
+  MATCH_STATUS_PENDING_INSTALLATION = 93;
+  
+  // Очікує інсталяції
+  MATCH_STATUS_PENDING_DEPLOYMENT = 94;
+  
+  // Очікує розгортання
+  MATCH_STATUS_PENDING_ROLLOUT = 95;
+  
+  // Очікує запуску
+  MATCH_STATUS_PENDING_LAUNCH = 96;
+  
+  // Очікує старту
+  MATCH_STATUS_PENDING_START = 97;
+  
+  // Очікує початку
+  MATCH_STATUS_PENDING_BEGINNING = 98;
+  
+  // Очікує ініціації
+  MATCH_STATUS_PENDING_INITIATION = 99;
+  
+  // Очікує ініціалізації
+  MATCH_STATUS_PENDING_INITIALIZATION = 100;
+}

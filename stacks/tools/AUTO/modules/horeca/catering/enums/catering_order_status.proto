@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package horeca.catering.enums;
+
+// Status of catering orders
+enum CateringOrderStatus {
+  CATERING_ORDER_STATUS_UNSPECIFIED = 0;
+  CATERING_ORDER_STATUS_PENDING = 1;      // Order received, awaiting confirmation
+  CATERING_ORDER_STATUS_CONFIRMED = 2;    // Order confirmed, planning in progress
+  CATERING_ORDER_STATUS_PREPARING = 3;    // Food preparation started
+  CATERING_ORDER_STATUS_READY = 4;        // Order ready for delivery/setup
+  CATERING_ORDER_STATUS_DELIVERED = 5;    // Order delivered to venue
+  CATERING_ORDER_STATUS_SETUP = 6;        // Setup completed at venue
+  CATERING_ORDER_STATUS_COMPLETED = 7;    // Event completed successfully
+  CATERING_ORDER_STATUS_CANCELED = 8;      // Order canceled
+  CATERING_ORDER_STATUS_REFUNDED = 9;     // Order refunded
+}
