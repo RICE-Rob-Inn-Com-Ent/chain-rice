@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package com.agriculture.crops.messages;
+
+import "google/protobuf/timestamp.proto";
+import "agriculture/crops/messages/crop_unit.proto";
+
+message CropHarvest {
+  string id = 1;
+  com.agriculture.crops.messages.CropUnit crop_unit = 2;
+  google.protobuf.Timestamp harvest_date = 3;
+  string method = 4;
+  double quantity_harvested = 5;
+  string quantity_unit = 6;
+  double yield_per_area = 7;
+  string area_unit = 8;
+  double quality_score = 9;
+  double moisture_content = 10;
+  double protein_content = 11;
+  double oil_content = 12;
+  double starch_content = 13;
+  double average_weight = 14;
+  double size_grade = 15;
+  string color_grade = 16;
+  string appearance_notes = 17;
+  string storage_location = 18;
+  string storage_conditions = 19;
+  google.protobuf.Timestamp storage_date = 20;
+  bool is_processed = 21;
+  string processing_method = 22;
+  google.protobuf.Timestamp processing_date = 23;
+  double market_price = 24;
+  string market_grade = 25;
+  bool is_sold = 26;
+  google.protobuf.Timestamp sale_date = 27;
+  double sale_price = 28;
+  repeated string workers = 29;
+  repeated string equipment_used = 30;
+  double labor_hours = 31;
+  double temperature = 32;
+  double humidity = 33;
+  string weather_conditions = 34;
+  string notes = 35;
+  repeated string issues = 36;
+  google.protobuf.Timestamp created_at = 37;
+  google.protobuf.Timestamp updated_at = 38;
+  string created_by = 39;
+  string updated_by = 40;
+  bool is_complete = 41;
+  bool requires_processing = 42;
+}
+
+message CreateCropHarvestRequest {
+  com.agriculture.crops.messages.CropHarvest crop_harvest = 1;
+}
+
+message CreateCropHarvestResponse {
+  com.agriculture.crops.messages.CropHarvest crop_harvest = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetCropHarvestRequest {
+  string crop_harvest_id = 1;
+}
+
+message GetCropHarvestResponse {
+  com.agriculture.crops.messages.CropHarvest crop_harvest = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListCropHarvestsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string crop_unit_id = 3;
+  string storage_location = 4;
+  google.protobuf.Timestamp harvest_date_from = 5;
+  google.protobuf.Timestamp harvest_date_to = 6;
+  bool is_sold = 7;
+}
+
+message ListCropHarvestsResponse {
+  repeated com.agriculture.crops.messages.CropHarvest crop_harvests = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateCropHarvestRequest {
+  com.agriculture.crops.messages.CropHarvest crop_harvest = 1;
+  repeated string update_mask = 2;
+}
+
+message UpdateCropHarvestResponse {
+  com.agriculture.crops.messages.CropHarvest crop_harvest = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteCropHarvestRequest {
+  string crop_harvest_id = 1;
+}

@@ -33,7 +33,7 @@
       "source.fixAll.eslint": "explicit"
     },
     "files.associations": {
-      "*.proto": "protobuf",
+      "*.proto": "proto3",
       "Dockerfile.*": "dockerfile"
     },
     "protoc": {

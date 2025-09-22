@@ -1,0 +1,8 @@
+build --noenable_bzlmod --enable_workspace
+query --noenable_bzlmod --enable_workspace
+test  --noenable_bzlmod --enable_workspace
+
+# Optional: reduce noise
+build --curses=yes --color=yes
+
+

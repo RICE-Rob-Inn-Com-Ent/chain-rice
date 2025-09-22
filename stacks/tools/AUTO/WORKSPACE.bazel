@@ -1,0 +1,66 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# bazel_features required by recent rules_* and toolchains
+http_archive(
+    name = "bazel_features",
+    strip_prefix = "bazel_features-1.36.0",
+    urls = [
+        "https://github.com/bazel-contrib/bazel_features/releases/download/v1.36.0/bazel_features-v1.36.0.tar.gz",
+    ],
+)
+
+# rules_cc and rules_java needed by proto toolchains
+http_archive(
+    name = "rules_cc",
+    strip_prefix = "rules_cc-0.0.16",
+    urls = [
+        "https://github.com/bazelbuild/rules_cc/releases/download/0.0.16/rules_cc-0.0.16.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "rules_java",
+    urls = [
+        "https://github.com/bazelbuild/rules_java/releases/download/8.12.0/rules_java-8.12.0.tar.gz",
+    ],
+)
+
+# rules_proto (core proto rules + protoc toolchain)
+http_archive(
+    name = "rules_proto",
+    strip_prefix = "rules_proto-7.1.0",
+    urls = [
+        "https://github.com/bazelbuild/rules_proto/releases/download/7.1.0/rules_proto-7.1.0.tar.gz",
+    ],
+)
+
+# Bazel Skylib (common utilities required by many rules)
+http_archive(
+    name = "bazel_skylib",
+    urls = [
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.8.1/bazel-skylib-1.8.1.tar.gz",
+    ],
+)
+
+# Go rules (required by go_proto_library in AUTO/BUILD.bazel)
+http_archive(
+    name = "io_bazel_rules_go",
+    urls = [
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.49.0/rules_go-v0.49.0.zip",
+    ],
+)
+
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+
+go_rules_dependencies()
+
+go_register_toolchains(version = "host")
+
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies")
+
+rules_proto_dependencies()
+
+# Register protoc toolchains so Bazel supplies protoc instead of using a system path
+# Toolchains already registered via rules_proto_toolchains(); no direct register_toolchains needed
+
+# Optional: register language generators; usually rules_proto_grpc_toolchains() suffices

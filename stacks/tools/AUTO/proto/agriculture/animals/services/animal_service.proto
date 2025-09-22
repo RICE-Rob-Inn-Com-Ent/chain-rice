@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package com.agriculture.animals.services;
+
+import "agriculture/livestock/messages/animal.proto";
+import "agriculture/livestock/messages/herd.proto";
+import "google/protobuf/empty.proto";
+
+service AnimalService {
+  rpc CreateAnimal(CreateAnimalRequest) returns (CreateAnimalResponse);
+  rpc GetAnimal(GetAnimalRequest) returns (GetAnimalResponse);
+  rpc ListAnimals(ListAnimalsRequest) returns (ListAnimalsResponse);
+  rpc UpdateAnimal(UpdateAnimalRequest) returns (UpdateAnimalResponse);
+  rpc DeleteAnimal(DeleteAnimalRequest) returns (google.protobuf.Empty);
+  rpc CreateHerd(CreateHerdRequest) returns (CreateHerdResponse);
+  rpc GetHerd(GetHerdRequest) returns (GetHerdResponse);
+  rpc ListHerds(ListHerdsRequest) returns (ListHerdsResponse);
+  rpc UpdateHerd(UpdateHerdRequest) returns (UpdateHerdResponse);
+  rpc DeleteHerd(DeleteHerdRequest) returns (google.protobuf.Empty);
+  rpc AddAnimalToHerd(AddAnimalToHerdRequest) returns (AddAnimalToHerdResponse);
+  rpc RemoveAnimalFromHerd(RemoveAnimalFromHerdRequest) returns (RemoveAnimalFromHerdResponse);
+  rpc GetAnimalsInHerd(GetAnimalsInHerdRequest) returns (GetAnimalsInHerdResponse);
+  rpc UpdateAnimalHealth(UpdateAnimalHealthRequest) returns (UpdateAnimalHealthResponse);
+  rpc GetAnimalHealthHistory(GetAnimalHealthHistoryRequest) returns (GetAnimalHealthHistoryResponse);
+  rpc ScheduleHealthCheck(ScheduleHealthCheckRequest) returns (ScheduleHealthCheckResponse);
+  rpc RecordBreeding(RecordBreedingRequest) returns (RecordBreedingResponse);
+  rpc GetBreedingHistory(GetBreedingHistoryRequest) returns (GetBreedingHistoryResponse);
+  rpc GetPregnantAnimals(GetPregnantAnimalsRequest) returns (GetPregnantAnimalsResponse);
+  rpc RecordProduction(RecordProductionRequest) returns (RecordProductionResponse);
+  rpc GetProductionHistory(GetProductionHistoryRequest) returns (GetProductionHistoryResponse);
+  rpc GetProductionSummary(GetProductionSummaryRequest) returns (GetProductionSummaryResponse);
+  rpc RecordExpense(RecordExpenseRequest) returns (RecordExpenseResponse);
+  rpc RecordRevenue(RecordRevenueRequest) returns (RecordRevenueResponse);
+  rpc GetFinancialSummary(GetFinancialSummaryRequest) returns (GetFinancialSummaryResponse);
+  rpc GetHerdAnalytics(GetHerdAnalyticsRequest) returns (GetHerdAnalyticsResponse);
+  rpc GetAnimalPerformance(GetAnimalPerformanceRequest) returns (GetAnimalPerformanceResponse);
+  rpc GetHealthTrends(GetHealthTrendsRequest) returns (GetHealthTrendsResponse);
+}

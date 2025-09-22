@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+
+proto_library(
+    name = "backend_protos",
+    srcs = glob(["proto/**/*.proto"]),
+)
+
+go_proto_library(
+    name = "rice_sdk",
+    importpath = "github.com/rice-dev/stacks/backend/generated/go",
+    proto = ":backend_protos",
+)

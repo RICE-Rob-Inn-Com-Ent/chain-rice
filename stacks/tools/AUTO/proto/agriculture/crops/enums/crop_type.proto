@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package com.agriculture.crops.enums;
+
+enum CropType {
+  UNSPECIFIED = 0;
+  WHEAT = 1;
+  BARLEY = 2;
+  OATS = 3;
+  RYE = 4;
+  CORN = 5;
+  PEAS = 6;
+  BEANS = 7;
+  LENTILS = 8;
+  POTATO = 9;
+  CARROT = 10;
+  ONION = 11;
+  GARLIC = 12;
+  APPLE = 13;
+  PEAR = 14;
+  CHERRY = 15;
+  RASPBERRY = 16;
+  BLUEBERRY = 17;
+  GRAPE = 18;
+  PLUM = 19;
+  SUNFLOWER = 20;
+  CANOLA = 21;
+  OLIVE = 22;
+  FLAX = 23;
+  HEMP = 24;
+  ALFALFA = 25;
+  CLOVER = 26;
+  GRASS = 27;
+  SUGAR_BEET = 28;
+}

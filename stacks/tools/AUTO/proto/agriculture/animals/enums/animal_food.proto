@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.agriculture.animals.enums;
+
+enum AnimalFood {
+  UNSPECIFIED = 0;
+  HAY = 1;
+  SILAGE = 2;
+  GRAIN = 3;
+  PASTURE = 4;
+  COMPOUND_FEED = 5;
+  FRUITS_VEGETABLES = 6;
+  MEAT = 7;
+  FISH = 8;
+  PET_COMMERCIAL_FEED = 9;
+}

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package com.agriculture.animals.enums;
+
+enum AnimalType {
+  UNSPECIFIED = 0;
+  CATTLE = 1;
+  PIG = 2;
+  SHEEP = 3;
+  GOAT = 4;
+  CHICKEN = 5;
+  TURKEY = 6;
+  DUCK = 7;
+  GOOSE = 8;
+  HORSE = 9;
+  PONY = 10;
+  RABBIT = 11;
+  DOG = 12;
+  CAT = 13;
+}

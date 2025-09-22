@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.agriculture.animals.enums;
+
+enum AnimalHealth {
+  UNSPECIFIED = 0;
+  HEALTHY = 1;
+  SICK = 2;
+  INJURED = 3;
+  UNDER_TREATMENT = 4;
+  DECEASED = 5
+}

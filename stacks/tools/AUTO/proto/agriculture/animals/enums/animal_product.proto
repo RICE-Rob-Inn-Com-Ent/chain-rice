@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.agriculture.animals.enums;
+
+enum AnimalProduct {
+  UNSPECIFIED = 0;
+  MILK = 1;
+  EGGS = 2;
+  WOOL = 3;
+  MEAT = 4;
+  OOFSPRING = 5;
+}
