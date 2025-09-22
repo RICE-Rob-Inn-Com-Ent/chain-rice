@@ -70,3 +70,53 @@ message AnimalHerd {
   string created_by = 62;
   string updated_by = 63;
 }
+
+message CreateAnimalHerdRequest {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+}
+
+message CreateAnimalHerdResponse {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetAnimalHerdRequest {
+  string herd_id = 1;
+}
+
+message GetAnimalHerdResponse {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListAnimalHerdRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string facility_id = 3;
+  string herd_type = 4;
+  bool is_active = 5;
+  string search_query = 6;
+}
+
+message ListAnimalHerdResponse {
+  repeated com.agriculture.animals.messages.AnimalHerd herds = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateAnimalHerdRequest {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  repeated string update_mask = 2;
+}
+
+message UpdateAnimalHerdResponse {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteAnimalHerdRequest {
+  string herd_id = 1;
+}
