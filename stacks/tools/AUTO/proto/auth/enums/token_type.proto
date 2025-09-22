@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package com.auth.enums;
+
+// TokenType enumerates types of authentication tokens.
+enum TokenType {
+  UNSPECIFIED = 0;  // Not specified
+  ACCESS = 1;   // Access token
+  REFRESH = 2;  // Refresh token
+  API_KEY = 3;  // API key token
+}

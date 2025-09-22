@@ -1,29 +1,14 @@
 syntax = "proto3";
 
-package core.auth.enums;
+package com.auth.enums;
 
 // AuthStatus enumerates outcomes of authentication attempts and session state.
 enum AuthStatus {
-  // Unspecified status.
-  AUTH_STATUS_UNSPECIFIED = 0;
-
-  // Authentication succeeded.
-  AUTH_STATUS_AUTHENTICATED = 1;
-
-  // Invalid credentials.
-  AUTH_STATUS_INVALID_CREDENTIALS = 2;
-
-  // Account is locked or disabled.
-  AUTH_STATUS_LOCKED = 3;
-
-  // Multi-factor authentication required.
-  AUTH_STATUS_MFA_REQUIRED = 4;
-
-  // Session or token expired.
-  AUTH_STATUS_EXPIRED = 5;
-
-  // Permission denied due to insufficient role/claims.
-  AUTH_STATUS_FORBIDDEN = 6;
+  UNSPECIFIED = 0;  // Unspecified status
+  AUTHENTICATED = 1;  // Successfully authenticated
+  INVALID_CREDENTIALS = 2;  // Wrong username/password
+  LOCKED = 3; // Account locked or disabled
+  MFA_REQUIRED = 4; // Multi-factor authentication required
+  EXPIRED = 5;  // Session or token expired
+  FORBIDDEN = 6;  // Permission denied
 }
-
-

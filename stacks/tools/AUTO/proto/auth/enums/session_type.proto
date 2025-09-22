@@ -1,26 +1,13 @@
 syntax = "proto3";
 
-package core.auth.enums;
+package com.auth.enums;
 
 // SessionType enumerates supported authentication session types.
 enum SessionType {
-  // Unspecified session type.
-  SESSION_TYPE_UNSPECIFIED = 0;
-
-  // Web session using cookies.
-  SESSION_TYPE_WEB = 1;
-
-  // Mobile session using device-bound tokens.
-  SESSION_TYPE_MOBILE = 2;
-
-  // API session using static API keys.
-  SESSION_TYPE_API_KEY = 3;
-
-  // Service-to-service session using JWT/OAuth.
-  SESSION_TYPE_SERVICE = 4;
-
-  // One-time session used for password reset/verification.
-  SESSION_TYPE_ONE_TIME = 5;
+  UNSPECIFIED = 0;  // Unspecified session type
+  WEB = 1;  // Web session using cookies
+  MOBILE = 2; // Mobile session using device-bound tokens
+  API_KEY = 3;  // API session using static API keys
+  SERVICE = 4;  // Service-to-service session (JWT/OAuth)
+  ONE_TIME = 5; // One-time session for verification/reset
 }
-
-

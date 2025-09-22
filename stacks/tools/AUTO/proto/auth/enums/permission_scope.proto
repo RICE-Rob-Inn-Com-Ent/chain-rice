@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.auth.enums;
+
+// PermissionScope defines fine-grained access control levels.
+enum PermissionScope {
+  UNSPECIFIED = 0;  // Not specified
+  READ_ONLY = 1;    // Can only read data
+  WRITE = 2;    // Can modify data
+  ADMIN = 3;    // Full administrative rights
+  SUPER_ADMIN = 4;  // System-wide superuser
+}

@@ -1,0 +1,174 @@
+syntax = "proto3";
+
+package com.auth.messages;
+
+import "auth/enums/account_state.proto";
+import "auth/enums/auth_status.proto";
+import "auth/enums/mfa_type.proto";
+import "auth/enums/password_strength.proto";
+import "auth/enums/permission_scope.proto";
+import "auth/enums/session_type.proto";
+import "auth/enums/token_type.proto";
+import "auth/enums/user_role.proto";
+import "google/protobuf/timestamp.proto";
+import "common/messages/location.proto";
+
+// User account representation
+message User {
+  string id = 1;  // Unique user identifier
+  string email = 2;  // User's email
+  string display_name = 3;  // Display name
+  repeated com.auth.enums.UserRole roles = 4;  // User roles enum
+  bool active = 5;  // Boolean flag for active/inactive user
+  google.protobuf.Timestamp created_at = 6;  // Account creation timestamp
+  google.protobuf.Timestamp updated_at = 7;  // Last update timestamp
+  com.common.messages.Location last_login_at = 8;  // Last login location
+  Profile profile = 9;  // Embedded profile info
+  map<string, string> metadata = 10;  // Extra key-value metadata
+  com.auth.enums.AccountState account_state = 11;  // Enum: current user state (ACTIVE, SUSPENDED, BLOCKED)
+
+  message Profile {
+    string first_name = 1;  // First name
+    string last_name = 2;  // Last name
+    string avatar_url = 3;  // Profile picture URL
+    com.common.messages.Location location = 4;  // Home location
+    string timezone = 5;  // Preferred timezone
+    string preferred_language = 6;  // Preferred language
+  }
+}
+
+// Authentication
+message AuthUserRequest {
+  string email = 1;  // User email for login
+  string password = 2;  // User password
+  com.auth.enums.SessionType session_type = 3;  // Enum: session type (WEB, MOBILE, API)
+  string client_info = 4;  // Device/browser info
+}
+
+message AuthUserResponse {
+  bool success = 1;  // True if authentication succeeded
+  string message = 2;  // Optional status message
+  string session_token = 3;  // Access session token
+  string refresh_token = 4;  // Refresh token
+  repeated com.auth.enums.MFAType mfa_required = 5;  // MFA methods required
+  User user = 6;  // User info
+  com.auth.enums.AuthStatus status = 7;  // Enum: detailed auth status (SUCCESS, FAILURE, MFA_REQUIRED)
+}
+
+// Registration
+message RegisterUserRequest {
+  string email = 1;  // New user email
+  string password = 2;  // New user password
+  string display_name = 3;  // Display name
+  repeated com.auth.enums.UserRole roles = 4;  // Roles assigned on registration
+}
+
+message RegisterUserResponse {
+  bool success = 1;  // True if registration succeeded
+  string message = 2;  // Optional status message
+  User user = 3;  // Created user info
+}
+
+// Update user
+message UpdateUserRequest {
+  User user = 1;  // Full user object with updated data
+  repeated string update_mask = 2;  // List of fields to update
+}
+
+message UpdateUserResponse {
+  bool success = 1;  // True if update succeeded
+  string message = 2;  // Optional status message
+  User user = 3;  // Updated user info
+}
+
+// Change password
+message ChangeUserPasswordRequest {
+  string user_id = 1;  // User ID
+  string old_password = 2;  // Current password
+  string new_password = 3;  // New password
+  com.auth.enums.PasswordStrength new_password_strength = 4;  // Enum: strength of new password
+}
+
+message ChangeUserPasswordResponse {
+  bool success = 1;  // True if password change succeeded
+  string message = 2;  // Optional status message
+}
+
+// Logout
+message LogoutUserRequest {
+  string session_token = 1;  // Token to invalidate
+  com.auth.enums.SessionType session_type = 2;  // Enum: session type to logout
+}
+
+message LogoutUserResponse {
+  bool success = 1;  // True if logout succeeded
+  string message = 2;  // Optional message
+}
+
+// Multi-factor authentication (MFA / 2FA)
+message InitiateUserMFAUnitRequest {
+  string user_id = 1;  // User ID
+  com.auth.enums.MFAType method = 2;  // Enum: MFA method to initiate
+}
+
+message InitiateUserMFAUnitResponse {
+  bool success = 1;  // True if MFA initiation succeeded
+  string message = 2;  // Optional status message
+  string mfa_challenge_id = 3;  // MFA challenge identifier
+}
+
+message VerifyUserMFAUnitRequest {
+  string user_id = 1;  // User ID
+  string mfa_challenge_id = 2;  // MFA challenge ID to verify
+  string code = 3;  // Code entered by user
+}
+
+message VerifyUserMFAUnitResponse {
+  bool success = 1;  // True if MFA verification succeeded
+  string message = 2;  // Optional message
+  string session_token = 3;  // Session token issued after verification
+}
+
+// Forgot / Reset password
+message ForgotUserPasswordRequest {
+  string email = 1;  // Email to send reset instructions
+}
+
+message ForgotUserPasswordResponse {
+  bool success = 1;  // True if request accepted
+  string message = 2;  // Optional message
+}
+
+message ResetUserPasswordRequest {
+  string reset_token = 1;  // Token from email link
+  string new_password = 2;  // New password
+  com.auth.enums.PasswordStrength new_password_strength = 3;  // Enum: strength of new password
+}
+
+message ResetUserPasswordResponse {
+  bool success = 1;  // True if reset succeeded
+  string message = 2;  // Optional message
+}
+
+// List users
+message ListUsersRequest {
+  int32 page_size = 1;   // Number of users per page
+  string page_token = 2; // Token for pagination
+  string query = 3;      // Optional search query (email or display_name)
+}
+
+message ListUsersResponse {
+  repeated User users = 1; // List of users in current page
+  string next_page_token = 2; // Token for next page if more results exist
+}
+
+// Verify token
+message VerifyTokenRequest {
+  string access_token = 1; // Access token to validate
+}
+
+message VerifyTokenResponse {
+  bool valid = 1;          // True if token is valid
+  User user = 2;           // User info if token is valid
+  com.auth.enums.AuthStatus status = 3; // Enum: detailed auth status (VALID, EXPIRED, INVALID)
+}
