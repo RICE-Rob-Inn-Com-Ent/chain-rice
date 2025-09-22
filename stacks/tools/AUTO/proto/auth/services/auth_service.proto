@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package com.auth.services;
 
-import "auth/messages/user_unit.proto";
+import "auth/messages/auth_user.proto";
 
 // AuthService provides full user management and authentication flows
 service AuthService {

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.auth.v1;
+
+import "auth/enums/account_state.proto";
+import "auth/enums/auth_status.proto";
+import "auth/enums/mfa_type.proto";
+import "auth/enums/password_strength.proto";
+import "auth/enums/permission_scope.proto";
+import "auth/enums/session_type.proto";
+import "auth/enums/token_type.proto";
+import "auth/enums/user_role.proto";
+import "auth/messages/auth_user.proto";
+import "auth/services/auth_service.proto";
