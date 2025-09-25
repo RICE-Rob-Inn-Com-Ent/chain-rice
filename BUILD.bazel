@@ -1,0 +1,29 @@
+load("@gazelle//:def.bzl", "gazelle")
+
+# This is the root BUILD file for the rice-dev Bazel module
+package(default_visibility = ["//visibility:public"])
+
+# Gazelle rule to automatically generate BUILD files
+gazelle(
+    name = "gazelle",
+    gazelle = "@gazelle//cmd/gazelle",
+)
+
+# Proto filegroup for all protobuf definitions
+filegroup(
+    name = "proto_files",
+    srcs = glob([
+        "libs/proto/**/*.proto",
+    ], allow_empty = True),
+    visibility = ["//visibility:public"],
+)
+
+# Go modules filegroup
+filegroup(
+    name = "go_mod_files", 
+    srcs = glob([
+        "libs/backend/**/go.mod",
+        "libs/backend/**/go.sum",
+    ], allow_empty = True),
+    visibility = ["//visibility:public"],
+)

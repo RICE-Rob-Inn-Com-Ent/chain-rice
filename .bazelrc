@@ -1,0 +1,23 @@
+# Bazel configuration for rice-dev project
+
+# Enable Bazel mode (Bzlmod)
+common --enable_bzlmod
+
+# Build configuration
+build --compilation_mode=opt
+build --verbose_failures
+build --show_timestamps
+
+# Go configuration
+# build --@io_bazel_rules_go//go/config:static
+
+# Output configuration
+build --show_progress_rate_limit=2
+build --color=yes
+build --curses=yes
+
+# Java configuration (for tools that need it)
+build --java_runtime_version=11
+
+# Python configuration
+build --python_version=PY3

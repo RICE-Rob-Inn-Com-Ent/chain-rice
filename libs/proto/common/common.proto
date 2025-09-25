@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/rice-dev/stacks/backend/GOmain/shared/proto";
+
+// Common error message
+message Error {
+  string code = 1;
+  string message = 2;
+  string details = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+// Common response wrapper
+message Response {
+  bool success = 1;
+  string message = 2;
+  Error error = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+// Pagination request
+message PaginationRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string sort_by = 3;
+  string sort_order = 4; // asc, desc
+}
+
+// Pagination response
+message PaginationResponse {
+  int32 page = 1;
+  int32 page_size = 2;
+  int32 total_pages = 3;
+  int32 total_items = 4;
+  bool has_next = 5;
+  bool has_previous = 6;
+}
+
+// Health check request/response
+message HealthCheckRequest {
+  string service = 1;
+}
+
+message HealthCheckResponse {
+  string service = 1;
+  string status = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  map<string, string> metadata = 4;
+}
+
+// Metadata for requests
+message RequestMetadata {
+  string request_id = 1;
+  string user_id = 2;
+  string ip_address = 3;
+  string user_agent = 4;
+  google.protobuf.Timestamp timestamp = 5;
+}
+
+// Audit log entry
+message AuditLogEntry {
+  string id = 1;
+  string user_id = 2;
+  string action = 3;
+  string resource = 4;
+  string resource_id = 5;
+  string details = 6;
+  string ip_address = 7;
+  string user_agent = 8;
+  google.protobuf.Timestamp timestamp = 9;
+}
+
+// Configuration item
+message ConfigItem {
+  string key = 1;
+  string value = 2;
+  string type = 3; // string, int, bool, json
+  string description = 4;
+  bool is_encrypted = 5;
+}
+
+// Generic list request
+message ListRequest {
+  PaginationRequest pagination = 1;
+  map<string, string> filters = 2;
+  string search = 3;
+}
+
+// Generic list response
+message ListResponse {
+  PaginationResponse pagination = 1;
+  repeated google.protobuf.Any items = 2;
+  Response response = 3;
+}

@@ -1,0 +1,14 @@
+module(
+    name = "rice_dev",
+    version = "1.0.0",
+)
+
+# Load the Bazel extensions we need
+bazel_dep(name = "rules_go", version = "0.46.0")
+bazel_dep(name = "gazelle", version = "0.36.0")
+bazel_dep(name = "rules_python", version = "0.30.0")
+bazel_dep(name = "rules_java", version = "7.5.0")
+
+# Go setup - simplified for basic functionality
+go = use_extension("@gazelle//:extensions.bzl", "go_deps")
+go.from_file(go_mod = "//libs/backend:go.mod")

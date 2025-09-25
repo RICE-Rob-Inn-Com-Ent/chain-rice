@@ -1,28 +1,44 @@
 {
   "folders": [
     {
-      "name": "🌍Root",
+      "name": "🌍ROOT",
       "path": "."
     },
     {
-      "name": "🎨Frontend",
-      "path": "stacks/frontend"
+      "name": "🤖BOT",
+      "path": "bots"
     },
     {
-      "name": "🗄️Backend",
-      "path": "stacks/backend"
+      "name": "🛠️TOOL",
+      "path": "tools"
     },
     {
-      "name": "🛠️Tools",
-      "path": "stacks/tools"
+      "name": "⚙️BACKEND",
+      "path": "libs/backend"
+    },
+    {
+      "name": "🔗CONNECTION",
+      "path": "libs/connection"
+    },
+    {
+      "name": "📄CONTRACT",
+      "path": "libs/contract"
+    },
+    {
+      "name": "🎨FRONTEND",
+      "path": "libs/frontend"
+    },
+    {
+      "name": "📦PROTOTYPE",
+      "path": "libs/proto"
     },
     {
       "name": "🍚ChainRice",
-      "path": "apps/chain-rice/"
+      "path": "projects/chain-rice/"
     },
     {
       "name": "🐱Meowtopia",
-      "path": "apps/meowtopia/"
+      "path": "projects/meowtopia/"
     }
   ],
   "settings": {

@@ -1,0 +1,42 @@
+# AI Bot Core Requirements
+# Core ML libraries
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+transformers>=4.30.0
+diffusers>=0.20.0
+datasets>=2.12.0
+accelerate>=0.20.0
+
+# Numerical computing
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Computer vision and audio
+opencv-python>=4.8.0
+openai-whisper>=20231117
+Pillow>=10.0.0
+
+# Web framework
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+
+# Utilities
+requests>=2.31.0
+aiofiles>=23.1.0
+httpx>=0.24.0
+python-dotenv>=1.0.0
+
+# Development dependencies (optional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.7.0
+flake8>=6.0.0
+mypy>=1.5.0

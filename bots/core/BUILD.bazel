@@ -1,0 +1,224 @@
+"""
+BUILD file for AI Bot Core module.
+
+This module provides the core AI bot functionality with CUDA support,
+including model management, text generation, and image generation capabilities.
+"""
+
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+# Python library for the core AI bot functionality
+py_library(
+    name = "core",
+    srcs = ["app.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@pip//aiofiles",
+        "@pip//diffusers",
+        "@pip//fastapi",
+        "@pip//httpx",
+        "@pip//numpy",
+        "@pip//pillow",
+        "@pip//python-multipart",
+        "@pip//requests",
+        "@pip//torch",
+        "@pip//torchaudio",
+        "@pip//torchvision",
+        "@pip//transformers",
+        "@pip//uvicorn",
+    ],
+)
+
+# Main binary entry point
+py_binary(
+    name = "app",
+    srcs = ["app.py"],
+    data = [
+        # Add any data files here if needed
+    ],
+    main = "app.py",
+    python_version = "PY3",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":core",
+    ],
+)
+
+# Test target for the core module
+py_test(
+    name = "core_test",
+    size = "small",
+    timeout = "short",
+    srcs = ["test_core.py"],
+    python_version = "PY3",
+    deps = [
+        ":core",
+        "@pip//pytest",
+        "@pip//pytest-asyncio",
+    ],
+)
+
+# Docker image for the AI bot core
+oci_image(
+    name = "ai-bot-core-image",
+    base = "@ubuntu22_04_cuda12_1//image",
+    cmd = [
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+    ],
+    entrypoint = [
+        "python",
+        "/app/app.py",
+    ],
+    env = {
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_HOME": "/usr/local/cuda",
+        "PATH": "/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:/usr/local/cuda/lib",
+    },
+    ports = ["8000"],
+    tars = [
+        "@ai_bot_core_tar//file",
+    ],
+    visibility = ["//visibility:public"],
+    workdir = "/app",
+)
+
+# Development Docker image
+oci_image(
+    name = "ai-bot-core-dev-image",
+    base = "@ubuntu22_04_cuda12_1//image",
+    cmd = [
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+    ],
+    entrypoint = [
+        "python",
+        "/app/app.py",
+    ],
+    env = {
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CUDA_HOME": "/usr/local/cuda",
+        "PATH": "/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:/usr/local/cuda/lib",
+        "FLASK_ENV": "development",
+    },
+    ports = ["8000"],
+    tars = [
+        "@ai_bot_core_dev_tar//file",
+    ],
+    visibility = ["//visibility:public"],
+    workdir = "/app",
+)
+
+# Production Docker image
+oci_image(
+    name = "ai-bot-core-prod-image",
+    base = "@ubuntu22_04_cuda12_1//image",
+    cmd = [
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--workers",
+        "4",
+    ],
+    entrypoint = [
+        "python",
+        "/app/app.py",
+    ],
+    env = {
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONOPTIMIZE": "1",
+        "OMP_NUM_THREADS": "1",
+        "CUDA_HOME": "/usr/local/cuda",
+        "PATH": "/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:/usr/local/cuda/lib",
+    },
+    ports = ["8000"],
+    tars = [
+        "@ai_bot_core_prod_tar//file",
+    ],
+    visibility = ["//visibility:public"],
+    workdir = "/app",
+)
+
+# Push targets for container registry
+oci_push(
+    name = "push-dev",
+    image = ":ai-bot-core-dev-image",
+    repository = "your-registry/ai-bot-core",
+    tag = "dev",
+    visibility = ["//visibility:private"],
+)
+
+oci_push(
+    name = "push-prod",
+    image = ":ai-bot-core-prod-image",
+    repository = "your-registry/ai-bot-core",
+    tag = "latest",
+    visibility = ["//visibility:private"],
+)
+
+# Build test to ensure the application builds correctly
+build_test(
+    name = "build_test",
+    targets = [
+        ":core",
+        ":app",
+        ":ai-bot-core-image",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Filegroup for all sources
+filegroup(
+    name = "srcs",
+    srcs = [
+        "BUILD.bazel",
+        "Dockerfile",
+        "app.py",
+        "core.nix",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Filegroup for documentation
+filegroup(
+    name = "docs",
+    srcs = [
+        "README.md",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Package rule for creating a distribution
+pkg_tar(
+    name = "ai-bot-core-package",
+    srcs = [
+        ":docs",
+        ":srcs",
+    ],
+    package_dir = "ai-bot-core",
+    visibility = ["//visibility:public"],
+)
+
+# Test configuration
+test_suite(
+    name = "all_tests",
+    tests = [
+        ":build_test",
+        ":core_test",
+    ],
+    visibility = ["//visibility:public"],
+)
