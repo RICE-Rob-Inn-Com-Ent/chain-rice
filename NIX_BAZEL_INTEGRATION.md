@@ -1,8 +1,10 @@
-# Nix-Bazel Integration для rice-dev
+# 🔧 Nix-Bazel Integration - Технічна документація
 
-Цей документ описує інтеграцію між Nix та Bazel в проекті rice-dev.
+**Детальна технічна документація інтеграції між Nix та Bazel в проекті rice-dev**
 
-## Огляд
+> 📖 **Швидкий старт**: Дивіться [README.md](./README.md) для базового використання
+
+## Огляд архітектури
 
 Проект rice-dev використовує Nix для управління залежностями та середовищами розробки, а Bazel для збірки та тестування. Інтеграція дозволяє Bazel використовувати пакети та інструменти, налаштовані в Nix flake.
 
@@ -21,6 +23,79 @@ rice-dev/
 │   ├── proto_toolchain.bzl # Protobuf toolchain інтеграція
 │   └── BUILD.bazel        # BUILD файл для rules
 └── BUILD.bazel           # Основний BUILD файл
+```
+
+## Технічні деталі інтеграції
+
+### Bazel Rules Implementation
+
+#### nix_shell
+```python
+def _nix_shell_impl(ctx):
+    """Implementation for nix_shell rule."""
+    flake_path = ctx.attr.flake_path
+    shell_name = ctx.attr.shell_name
+    
+    script_content = """#!/usr/bin/env bash
+set -euo pipefail
+cd """ + shell.quote(flake_path) + """
+exec nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command "$@"
+"""
+```
+
+#### nix_build
+```python
+def _nix_build_impl(ctx):
+    """Implementation for nix_build rule."""
+    # Створює скрипт для збірки цілей в Nix shell
+    script_content = """#!/usr/bin/env bash
+set -euo pipefail
+cd """ + shell.quote(flake_path) + """
+nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command bazel build """ + " ".join([shell.quote(t) for t in targets]) + """
+"""
+```
+
+#### nix_test
+```python
+def _nix_test_impl(ctx):
+    """Implementation for nix_test rule."""
+    # Створює скрипт для тестування в Nix shell
+    script_content = """#!/usr/bin/env bash
+set -euo pipefail
+cd """ + shell.quote(flake_path) + """
+nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command bazel test """ + " ".join([shell.quote(t) for t in targets]) + """
+"""
+```
+
+### Toolchain Integration
+
+#### Go Toolchain
+```python
+def _nix_go_toolchain_impl(ctx):
+    """Implementation for nix_go_toolchain rule."""
+    script_content = """#!/usr/bin/env bash
+set -euo pipefail
+cd """ + shell.quote(flake_path) + """
+export GOROOT=$(nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command go env GOROOT)
+export GOPATH=$(nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command go env GOPATH)
+export PATH=$(nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command go env GOROOT)/bin:$PATH
+nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command "$@"
+"""
+```
+
+#### Python Toolchain
+```python
+def _nix_python_toolchain_impl(ctx):
+    """Implementation for nix_python_toolchain rule."""
+    script_content = """#!/usr/bin/env bash
+set -euo pipefail
+cd """ + shell.quote(flake_path) + """
+export PYTHONPATH=$(nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command python -c "import sys; print(':'.join(sys.path))")
+export PYTHONNOUSERSITE=1
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+nix --extra-experimental-features "nix-command flakes" develop .#""" + shell.quote(shell_name) + """ --command "$@"
+"""
 ```
 
 ## Доступні Nix Shells
@@ -126,27 +201,51 @@ bazel run //:nix_build_proto
 
 Цей файл містить Nix-специфічні налаштування для Bazel:
 
-- Експорт Nix змінних середовища
-- Налаштування toolchains для різних мов
-- Інтеграція з Nix store
-- Оптимізації для Nix середовища
+```bash
+# Nix development environment integration
+build --action_env=NIX_PATH
+build --action_env=NIX_STORE
+build --action_env=NIX_PROFILES
+build --action_env=NIX_DEVELOP_SHELL
+build --action_env=NIX_SHELL
+
+# Python configuration for Nix
+build --python_path=/nix/store/*-python3-*/bin/python3
+build --python_version=PY3
+build --action_env=PYTHONPATH
+build --action_env=PYTHONNOUSERSITE
+build --action_env=LC_ALL
+build --action_env=LANG
+
+# Go configuration for Nix
+build --@io_bazel_rules_go//go/config:static
+build --action_env=GOROOT
+build --action_env=GOPATH
+build --action_env=GOBIN
+
+# Rust configuration for Nix
+build --action_env=CARGO_HOME
+build --action_env=RUSTUP_HOME
+build --action_env=RUST_SRC_PATH
+
+# Nix-specific build optimizations
+build --experimental_use_hermetic_linux_sandbox
+build --sandbox_tmpfs_path=/tmp
+build --sandbox_tmpfs_path=/nix
+```
 
 ### Bazel Rules
 
 #### nix_shell
-
 Створює Bazel правило для входу в Nix development shell.
 
 #### nix_build
-
 Створює Bazel правило для збірки цілей в Nix shell.
 
 #### nix_test
-
 Створює Bazel правило для тестування в Nix shell.
 
 #### nix_toolchain
-
 Створює Bazel правило для використання toolchain з Nix.
 
 ## Переваги
@@ -159,6 +258,8 @@ bazel run //:nix_build_proto
 
 ## Тестування
 
+### Автоматичне тестування
+
 Запустіть тест інтеграції:
 
 ```bash
@@ -167,11 +268,57 @@ bazel run //:nix_build_proto
 
 Цей скрипт перевіряє:
 
-- Доступність Nix
-- Валідність flake.nix
-- Роботу Nix shells
-- Інтеграцію з Bazel
-- Доступність toolchains
+- ✅ Доступність Nix
+- ✅ Валідність flake.nix
+- ✅ Роботу Nix shells
+- ✅ Інтеграцію з Bazel
+- ✅ Доступність toolchains
+
+### Результат тестування
+
+```
+🧪 Testing Nix-Bazel Integration for rice-dev
+==============================================
+1. Testing Nix availability...
+✅ Nix is available: nix (Nix) 2.31.2
+2. Testing flake.nix validity...
+✅ flake.nix is valid
+3. Testing Nix development shells...
+  ✅ default shell works
+  ✅ go-backend shell works
+  ✅ python-fastapi-bridge shell works
+  ✅ rust-cosmos shell works
+  ✅ proto-tools shell works
+4. Testing Bazel with Nix integration...
+✅ Bazel can query targets
+5. Testing Nix shell targets...
+✅ Nix shell targets are available
+6. Testing toolchain targets...
+  ✅ nix_go_toolchain is available
+  ✅ nix_python_toolchain is available
+  ✅ nix_rust_toolchain is available
+  ✅ nix_proto_toolchain is available
+7. Testing build targets...
+✅ Nix build targets are available
+8. Testing .bazelrc.nix integration...
+✅ .bazelrc.nix exists
+✅ Nix environment variables configured
+
+🎉 Nix-Bazel Integration Test Complete!
+```
+
+### Ручне тестування
+
+```bash
+# Тестувати конкретний shell
+nix develop .#shell-name --command echo "Shell works"
+
+# Тестувати Bazel з Nix
+nix develop .#bazel-dev --command bazel query //...
+
+# Тестувати toolchain
+bazel run //:go_toolchain -- --version
+```
 
 ## Troubleshooting
 
