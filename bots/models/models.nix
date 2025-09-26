@@ -17,7 +17,7 @@
 
   # Julia runtime (prefer binary distribution for faster startup)
   julia = pkgs.julia-bin or pkgs.julia;
-  juliaPkgs = pkgs.juliaPackages;
+  juliaPkgs = pkgs.juliaPackages or pkgs.julia;
 
   # Python for PyCall interop
   python = pkgs.python311;

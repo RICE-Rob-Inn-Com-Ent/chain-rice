@@ -1,5 +1,5 @@
 {
-  description = "rice-dev: Unified Nix dev shells (2025)";
+  description = "rice-dev: Unified Nix dev shells with Bazel integration (2025)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -9,7 +9,17 @@
   outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs { 
+          inherit system;
+          config = {
+            allowUnfree = true;
+            allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+              "android-sdk-cmdline-tools"
+              "androidsdk"
+              "terraform"
+            ];
+          };
+        };
       in {
         devShells = {
           # =============================================================================
@@ -55,6 +65,41 @@
           # DEVELOPMENT TOOLS
           # =============================================================================
           proto-tools = import ./libs/proto/proto.nix { inherit pkgs; };              # Protobuf multi-language compilation
+          bazel-dev = pkgs.mkShell {                                                  # Bazel development environment
+            packages = with pkgs; [
+              bazel_7
+              bazelisk
+              buildifier
+              buildozer
+              # Java for Bazel
+              openjdk17
+              # Python for Bazel
+              python3
+              # Go for Bazel
+              go
+              # Additional tools
+              git
+              curl
+              jq
+              yq
+            ];
+            shellHook = ''
+              echo "🔨 Bazel Development Environment"
+              echo "Available tools:"
+              echo "  bazel - Build system"
+              echo "  bazelisk - Bazel wrapper"
+              echo "  buildifier - Code formatter"
+              echo "  buildozer - Build file editor"
+              echo "  gazelle - BUILD file generator"
+              echo ""
+              echo "Quick commands:"
+              echo "  bazel build //...     - Build all targets"
+              echo "  bazel test //...      - Test all targets"
+              echo "  bazel run //:dev      - Enter Nix development shell"
+              echo "  bazel run //:build    - Build with Nix environment"
+              echo "  bazel run //:test     - Test with Nix environment"
+            '';
+          };
 
           # =============================================================================
           # DEVOPS & INFRASTRUCTURE

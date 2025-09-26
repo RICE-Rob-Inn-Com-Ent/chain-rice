@@ -1,0 +1,97 @@
+load("//rules:nix.bzl", "nix_shell", "nix_toolchain", "nix_build", "nix_test")
+
+# Export the Nix rules
+exports_files([
+    "nix.bzl",
+])
+
+# Example Nix shell for Go development
+nix_shell(
+    name = "go_shell",
+    flake_path = ".",
+    shell_name = "go-backend",
+    visibility = ["//visibility:public"],
+)
+
+# Example Nix shell for Python development
+nix_shell(
+    name = "python_shell", 
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    visibility = ["//visibility:public"],
+)
+
+# Example Nix shell for Rust development
+nix_shell(
+    name = "rust_shell",
+    flake_path = ".",
+    shell_name = "rust-cosmos",
+    visibility = ["//visibility:public"],
+)
+
+# Example Nix shell for TypeScript development
+nix_shell(
+    name = "ts_shell",
+    flake_path = ".",
+    shell_name = "ts-shared",
+    visibility = ["//visibility:public"],
+)
+
+# Example Nix shell for DevOps
+nix_shell(
+    name = "devops_shell",
+    flake_path = ".",
+    shell_name = "terraform",
+    visibility = ["//visibility:public"],
+)
+
+# Nix-based build targets
+nix_build(
+    name = "build_all",
+    flake_path = ".",
+    shell_name = "default",
+    targets = ["//..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "build_go",
+    flake_path = ".",
+    shell_name = "go-backend", 
+    targets = ["//libs/backend/..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "build_python",
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    targets = ["//bots/core/...", "//libs/connection/FastAPI/..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "build_rust",
+    flake_path = ".",
+    shell_name = "rust-cosmos",
+    targets = ["//libs/contract/rust/..."],
+    visibility = ["//visibility:public"],
+)
+
+# Nix-based test targets
+nix_test(
+    name = "test_all",
+    flake_path = ".",
+    shell_name = "default",
+    targets = ["//..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_test(
+    name = "test_python",
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    targets = ["//bots/core/..."],
+    visibility = ["//visibility:public"],
+)
+

@@ -11,8 +11,8 @@
     system = builtins.currentSystem;
   in flake.legacyPackages.${system}
 }: let
-  # Go toolchain 1.21+
-  go = pkgs.go_1_22 or pkgs.go_1_21;
+  # Go toolchain (latest)
+  go = pkgs.go_1_24 or pkgs.go_1_23 or pkgs.go_1_22 or pkgs.go;
 
   # Protobuf / gRPC toolchain
   protoc = pkgs.protobuf;

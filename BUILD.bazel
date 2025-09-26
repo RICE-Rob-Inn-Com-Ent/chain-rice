@@ -1,4 +1,5 @@
 load("@gazelle//:def.bzl", "gazelle")
+load("//rules:nix.bzl", "nix_shell", "nix_build", "nix_test")
 
 # This is the root BUILD file for the rice-dev Bazel module
 package(default_visibility = ["//visibility:public"])
@@ -25,5 +26,125 @@ filegroup(
         "libs/backend/**/go.mod",
         "libs/backend/**/go.sum",
     ], allow_empty = True),
+    visibility = ["//visibility:public"],
+)
+
+# Nix development shells for different environments
+nix_shell(
+    name = "nix_default",
+    flake_path = ".",
+    shell_name = "default",
+    visibility = ["//visibility:public"],
+)
+
+nix_shell(
+    name = "nix_go",
+    flake_path = ".",
+    shell_name = "go-backend",
+    visibility = ["//visibility:public"],
+)
+
+nix_shell(
+    name = "nix_python",
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    visibility = ["//visibility:public"],
+)
+
+nix_shell(
+    name = "nix_rust",
+    flake_path = ".",
+    shell_name = "rust-cosmos",
+    visibility = ["//visibility:public"],
+)
+
+nix_shell(
+    name = "nix_proto",
+    flake_path = ".",
+    shell_name = "proto-tools",
+    visibility = ["//visibility:public"],
+)
+
+nix_shell(
+    name = "nix_devops",
+    flake_path = ".",
+    shell_name = "terraform",
+    visibility = ["//visibility:public"],
+)
+
+# Nix-based build targets
+nix_build(
+    name = "nix_build_all",
+    flake_path = ".",
+    shell_name = "default",
+    targets = ["//..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "nix_build_go",
+    flake_path = ".",
+    shell_name = "go-backend",
+    targets = ["//libs/backend/..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "nix_build_python",
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    targets = ["//bots/core/...", "//libs/connection/FastAPI/..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "nix_build_rust",
+    flake_path = ".",
+    shell_name = "rust-cosmos",
+    targets = ["//libs/contract/rust/..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_build(
+    name = "nix_build_proto",
+    flake_path = ".",
+    shell_name = "proto-tools",
+    targets = ["//libs/proto/..."],
+    visibility = ["//visibility:public"],
+)
+
+# Nix-based test targets
+nix_test(
+    name = "nix_test_all",
+    flake_path = ".",
+    shell_name = "default",
+    targets = ["//..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_test(
+    name = "nix_test_python",
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    targets = ["//bots/core/..."],
+    visibility = ["//visibility:public"],
+)
+
+# Convenience aliases for common operations
+alias(
+    name = "dev",
+    actual = ":nix_default",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "build",
+    actual = ":nix_build_all",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "test",
+    actual = ":nix_test_all",
     visibility = ["//visibility:public"],
 )

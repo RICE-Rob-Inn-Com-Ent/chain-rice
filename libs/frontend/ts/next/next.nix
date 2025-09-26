@@ -14,9 +14,9 @@
   in flake.legacyPackages.${system}
 }: let
   nodejs = pkgs.nodejs_20 or pkgs.nodejs;
-  npm = pkgs.npm;
+  npm = pkgs.nodePackages.npm;
   yarn = pkgs.yarn;
-  pnpm = pkgs.pnpm;
+  pnpm = pkgs.nodePackages.pnpm;
 
 in pkgs.mkShell {
   name = "next-react-ts-frontend-dev";

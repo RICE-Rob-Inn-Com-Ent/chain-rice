@@ -90,7 +90,7 @@
       "**/chain-data": true
     },
     "terminal.integrated.cwd": "${workspaceFolder}",
-    "workbench.colorTheme": "Default Dark+",
+    "workbench.colorTheme": "Dracula Theme Soft",
     "workbench.iconTheme": "material-icon-theme",
     "ocaml.sandbox": {
       "kind": "dune",

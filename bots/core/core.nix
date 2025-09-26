@@ -28,13 +28,13 @@
   # CUDA toolchain (Linux)
   cudaPkgs = pkgs.cudaPackages;
 
-  # CUDA-enabled deep learning frameworks via overrides (when available)
-  torchCuda = (py.pytorch or py.torch or pkgs.pytorch).override { cudaSupport = true; };
-  torchvisionCuda = (py.torchvision or pkgs.torchvision).override { cudaSupport = true; };
-  torchaudioCuda = (py.torchaudio or pkgs.torchaudio).override { cudaSupport = true; };
-  tensorflowCuda = (py.tensorflow or pkgs.tensorflow).override { cudaSupport = true; };
-  jax = (py.jax or pkgs.jax);
-  jaxlibCuda = (py.jaxlib or pkgs.jaxlib).override { cudaSupport = true; };
+  # CUDA-enabled deep learning frameworks (using CUDA variants when available)
+  torchCuda = py.pytorchWithCuda or py.pytorch or py.torch or pkgs.pytorch;
+  torchvisionCuda = py.torchvisionWithCuda or py.torchvision or pkgs.torchvision;
+  torchaudioCuda = py.torchaudioWithCuda or py.torchaudio or pkgs.torchaudio;
+  tensorflowCuda = py.tensorflowWithCuda or py.tensorflow or pkgs.tensorflow;
+  jax = py.jax or pkgs.jax;
+  jaxlibCuda = py.jaxlibWithCuda or py.jaxlib or pkgs.jaxlib;
 
   # Python environment (3.11+)
   pythonEnv = python.withPackages (ps: with ps; [
@@ -53,8 +53,8 @@
     diffusers
     datasets
 
-    # Computer vision + audio
-    (py.opencv4 or py.opencv)
+    # Computer vision + audio (виключаємо OpenCV через проблеми збірки)
+    # (py.opencv4 or py.opencv)
     (ps.whisper or ps.openai-whisper)
 
     # Core frameworks (CUDA-enabled variants)
@@ -92,8 +92,6 @@ in pkgs.mkShell {
   ] ++ (if isLinux then [
     cudaPkgs.cudatoolkit
     cudaPkgs.cudnn
-    pkgs.nvidia-settings
-    pkgs.nvidia-x11
   ] else []);
 
   # Environment for CUDA-enabled frameworks
