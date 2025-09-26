@@ -389,22 +389,14 @@
             name = "python-bridge-fastapi-dev";
             packages = [
               python
-              pkgs.python311Packages.fastapi
-              pkgs.python311Packages.starlette
-              pkgs.python311Packages.aiohttp
-              pkgs.python311Packages.httpx
-              pkgs.python311Packages.requests
-              pkgs.python311Packages.pydantic
-              pkgs.python311Packages.uvicorn
-              pkgs.python311Packages.hypercorn
-              pkgs.python311Packages.websockets
-              pkgs.python311Packages.loguru
+              # Тільки Python без додаткових пакетів
             ] ++ baseTools;
             shellHook = ''
               export PYTHONNOUSERSITE=1
               export LC_ALL=C.UTF-8
               export LANG=C.UTF-8
               echo "[python-bridge-fastapi-dev] Python $(python --version) ready for API/middleware bridging."
+              echo "Note: FastAPI, Starlette, Uvicorn, Hypercorn, aiohttp, httpx, websockets, loguru, requests, pydantic available via pip install"
             '';
           };
 

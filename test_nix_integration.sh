@@ -38,7 +38,7 @@ done
 
 # Test 4: Test Bazel with Nix integration
 echo "4. Testing Bazel with Nix integration..."
-if bazel query //... >/dev/null 2>&1; then
+if nix --extra-experimental-features "nix-command flakes" develop .#bazel-dev --command bazel query //... >/dev/null 2>&1; then
     echo "✅ Bazel can query targets"
 else
     echo "❌ Bazel query failed"
@@ -47,7 +47,7 @@ fi
 
 # Test 5: Test Nix shell targets
 echo "5. Testing Nix shell targets..."
-if bazel query //:nix_default >/dev/null 2>&1; then
+if nix --extra-experimental-features "nix-command flakes" develop .#bazel-dev --command bazel query //:nix_default >/dev/null 2>&1; then
     echo "✅ Nix shell targets are available"
 else
     echo "❌ Nix shell targets not found"
@@ -59,7 +59,7 @@ echo "6. Testing toolchain targets..."
 toolchains=("nix_go_toolchain" "nix_python_toolchain" "nix_rust_toolchain" "nix_proto_toolchain")
 
 for toolchain in "${toolchains[@]}"; do
-    if bazel query //:$toolchain >/dev/null 2>&1; then
+    if nix --extra-experimental-features "nix-command flakes" develop .#bazel-dev --command bazel query //:$toolchain >/dev/null 2>&1; then
         echo "  ✅ $toolchain is available"
     else
         echo "  ❌ $toolchain not found"
@@ -68,7 +68,7 @@ done
 
 # Test 7: Test build targets
 echo "7. Testing build targets..."
-if bazel query //:nix_build_all >/dev/null 2>&1; then
+if nix --extra-experimental-features "nix-command flakes" develop .#bazel-dev --command bazel query //:nix_build_all >/dev/null 2>&1; then
     echo "✅ Nix build targets are available"
 else
     echo "❌ Nix build targets not found"

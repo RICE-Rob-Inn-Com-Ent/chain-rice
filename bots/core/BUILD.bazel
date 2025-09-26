@@ -81,7 +81,7 @@ oci_image(
         "PATH": "/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
         "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:/usr/local/cuda/lib",
     },
-    ports = ["8000"],
+    # ports = ["8000"],  # Not supported in oci_image
     tars = [
         "@ai_bot_core_tar//file",
     ],
@@ -112,7 +112,7 @@ oci_image(
         "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:/usr/local/cuda/lib",
         "FLASK_ENV": "development",
     },
-    ports = ["8000"],
+    # ports = ["8000"],  # Not supported in oci_image
     tars = [
         "@ai_bot_core_dev_tar//file",
     ],
@@ -145,7 +145,7 @@ oci_image(
         "PATH": "/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
         "LD_LIBRARY_PATH": "/usr/local/cuda/lib64:/usr/local/cuda/lib",
     },
-    ports = ["8000"],
+    # ports = ["8000"],  # Not supported in oci_image
     tars = [
         "@ai_bot_core_prod_tar//file",
     ],
@@ -158,7 +158,7 @@ oci_push(
     name = "push-dev",
     image = ":ai-bot-core-dev-image",
     repository = "your-registry/ai-bot-core",
-    tag = "dev",
+    tags = ["dev"],
     visibility = ["//visibility:private"],
 )
 
@@ -166,7 +166,7 @@ oci_push(
     name = "push-prod",
     image = ":ai-bot-core-prod-image",
     repository = "your-registry/ai-bot-core",
-    tag = "latest",
+    tags = ["latest"],
     visibility = ["//visibility:private"],
 )
 
@@ -203,15 +203,15 @@ filegroup(
 )
 
 # Package rule for creating a distribution
-pkg_tar(
-    name = "ai-bot-core-package",
-    srcs = [
-        ":docs",
-        ":srcs",
-    ],
-    package_dir = "ai-bot-core",
-    visibility = ["//visibility:public"],
-)
+# pkg_tar(
+#     name = "ai-bot-core-package",
+#     srcs = [
+#         ":docs",
+#         ":srcs",
+#     ],
+#     package_dir = "ai-bot-core",
+#     visibility = ["//visibility:public"],
+# )
 
 # Test configuration
 test_suite(

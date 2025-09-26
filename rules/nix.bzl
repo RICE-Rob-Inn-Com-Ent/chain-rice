@@ -103,6 +103,7 @@ nix_test = rule(
         "targets": attr.string_list(mandatory = True),
     },
     executable = True,
+    test = True,
 )
 
 def _nix_toolchain_impl(ctx):
