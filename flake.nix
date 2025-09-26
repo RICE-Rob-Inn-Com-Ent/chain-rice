@@ -18,6 +18,7 @@
               "androidsdk"
               "terraform"
             ];
+            android_sdk.accept_license = true;
           };
         };
 
@@ -62,14 +63,14 @@
         go = pkgs.go_1_24 or pkgs.go_1_23 or pkgs.go_1_22 or pkgs.go;
 
         # Rust toolchain
-        rust = pkgs.rust-bin.stable.latest or pkgs.rustc;
+        rust = pkgs.rustc;
         cargo = pkgs.cargo;
 
         # .NET toolchain
         dotnet = pkgs.dotnet-sdk_8 or pkgs.dotnet-sdk;
 
         # BEAM toolchain
-        beam = pkgs.beam.packages.erlangR26;
+        beam = pkgs.beam.packages.erlang_26;
         erlang = beam.erlang;
         elixir = beam.elixir_1_15;
         rebar3 = beam.rebar3;
@@ -77,24 +78,22 @@
         # Android toolchain
         androidSdk = pkgs.androidsdk;
         androidTools = pkgs.android-tools;
-        androidNdk = pkgs.android-ndk;
 
         # CUDA toolchain
         cudaPkgs = pkgs.cudaPackages;
 
         # Julia toolchain
         julia = pkgs.julia-bin or pkgs.julia;
-        juliaPkgs = pkgs.juliaPackages or pkgs.julia;
 
         # Dart/Flutter toolchain
         dart = pkgs.dart;
         flutter = pkgs.flutter;
 
-        # Swift toolchain
-        swift = pkgs.swift;
-        swiftformat = pkgs.swift-format or pkgs.swiftformat;
-        swiftlint = pkgs.swiftlint or null;
-        swiftgen = pkgs.swiftgen or null;
+        # Swift toolchain (only on macOS)
+        swift = pkgs.lib.optional pkgs.stdenv.isDarwin pkgs.swift;
+        swiftformat = pkgs.lib.optional pkgs.stdenv.isDarwin (pkgs.swift-format or pkgs.swiftformat);
+        swiftlint = pkgs.lib.optional pkgs.stdenv.isDarwin (pkgs.swiftlint or null);
+        swiftgen = pkgs.lib.optional pkgs.stdenv.isDarwin (pkgs.swiftgen or null);
 
         # Kotlin toolchain
         kotlin = pkgs.kotlin;
@@ -225,25 +224,8 @@
           bot-julia-models = pkgs.mkShell {
             name = "julia-modeling-dev";
             packages = [
-              # Julia with packages
-              (juliaPkgs.withPackages julia (ps: with ps; [
-                DataFrames
-                CSV
-                Distributions
-                StatsBase
-                StatsModels
-                TimeSeries
-                MarketData
-                DifferentialEquations
-                ModelingToolkit
-                JuMP
-                Plots
-                Makie
-                Flux
-                DiffEqFlux
-                CUDA
-                PyCall
-              ]))
+              # Julia
+              julia
               python
               # Native build tools
               pkgs.gcc
@@ -254,8 +236,6 @@
               # CUDA libs
               cudaPkgs.cudatoolkit
               cudaPkgs.cudnn
-              pkgs.nvidia-settings
-              pkgs.nvidia-x11
             ] ++ baseTools;
             shellHook = ''
               export LC_ALL=C.UTF-8
@@ -408,18 +388,17 @@
           python-fastapi-bridge = pkgs.mkShell {
             name = "python-bridge-fastapi-dev";
             packages = [
-              (python.withPackages (ps: with ps; [
-                ps.fastapi
-                ps.starlette
-                ps.aiohttp
-                ps.httpx
-                ps.requests
-                ps.pydantic
-                ps.uvicorn
-                ps.hypercorn
-                ps.websockets
-                ps.loguru
-              ]))
+              python
+              pkgs.python311Packages.fastapi
+              pkgs.python311Packages.starlette
+              pkgs.python311Packages.aiohttp
+              pkgs.python311Packages.httpx
+              pkgs.python311Packages.requests
+              pkgs.python311Packages.pydantic
+              pkgs.python311Packages.uvicorn
+              pkgs.python311Packages.hypercorn
+              pkgs.python311Packages.websockets
+              pkgs.python311Packages.loguru
             ] ++ baseTools;
             shellHook = ''
               export PYTHONNOUSERSITE=1
@@ -450,7 +429,7 @@
           php-bridge = pkgs.mkShell {
             name = "php-bridge-dev";
             packages = [
-              (pkgs.php82 or pkgs.php).withExtensions (exts: with exts; [ curl json openssl ])
+              pkgs.php
               pkgs.phpPackages.composer
             ] ++ protoTools ++ baseTools;
             shellHook = ''
@@ -468,7 +447,7 @@
           rust-cosmos = pkgs.mkShell {
             name = "rust-blockchain-dev";
             packages = [
-              (rust.override { extensions = [ "rust-src" "rustfmt" "clippy" ]; })
+              rust
               cargo
             ] ++ protoTools ++ baseTools;
             shellHook = ''
@@ -534,7 +513,6 @@
               kotlin
               gradle
               androidSdk
-              androidNdk
               androidTools
             ] ++ [ unzip which ] ++ baseTools;
             shellHook = ''
@@ -544,8 +522,6 @@
               export PATH=${pkgs.jdk17 or pkgs.jdk}/bin:$PATH
               export ANDROID_HOME=${androidSdk}/libexec/android-sdk
               export ANDROID_SDK_ROOT=$ANDROID_HOME
-              export ANDROID_NDK_HOME=${androidNdk}
-              export ANDROID_NDK_ROOT=${androidNdk}
               export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
               export GRADLE_USER_HOME="$PWD/.gradle"
               echo "[kotlin-android-frontend-dev] Java $(${pkgs.jdk17 or pkgs.jdk}/bin/java -version 2>&1 | head -n1), Gradle $(gradle --version 2>/dev/null | head -n1)."
@@ -554,18 +530,22 @@
 
           swift-ios = pkgs.mkShell {
             name = "swift-frontend-dev";
-            packages = [
-              swift
-            ] ++ pkgs.lib.optional (swiftformat != null) swiftformat
-              ++ pkgs.lib.optional (swiftlint != null) swiftlint
-              ++ pkgs.lib.optional (swiftgen != null) swiftgen
+            packages = if pkgs.stdenv.isDarwin then [
+              pkgs.swift
+            ] ++ pkgs.lib.optional (pkgs.swift-format != null) pkgs.swift-format
+              ++ pkgs.lib.optional (pkgs.swiftlint != null) pkgs.swiftlint
+              ++ pkgs.lib.optional (pkgs.swiftgen != null) pkgs.swiftgen
               ++ pkgs.lib.optional pkgs.stdenv.isDarwin pkgs.cocoapods
-              ++ [ unzip which ] ++ baseTools;
+              ++ [ unzip which ] ++ baseTools else [ unzip which ] ++ baseTools;
             shellHook = ''
               export LC_ALL=C.UTF-8
               export LANG=C.UTF-8
-              export PATH=${swift}/bin:$PATH
-              echo "[swift-frontend-dev] Swift $(${swift}/bin/swift --version | head -n1)."
+              if [ "$(uname)" = "Darwin" ]; then
+                export PATH=${pkgs.swift}/bin:$PATH
+                echo "[swift-frontend-dev] Swift $(${pkgs.swift}/bin/swift --version | head -n1)."
+              else
+                echo "[swift-frontend-dev] Swift is only available on macOS."
+              fi
             '';
           };
 

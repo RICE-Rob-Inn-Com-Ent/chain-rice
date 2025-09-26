@@ -1,10 +1,44 @@
-# Ignite CLI and Blockchain
-*.ign
-release/
-*.log
-*.dot
+# Bazel
+bazel-*
+.bazelrc.local
+
+# Nix
+result
+.direnv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
 
 # Go
+vendor/
 *.exe
 *.exe~
 *.dll
@@ -14,47 +48,28 @@ release/
 *.out
 go.work
 
-# Build artifacts
-dist/
-build/
+# Rust
 target/
+Cargo.lock
 
-# Node.js (for frontend/web)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-.npm
-.yarn-integrity
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
 
-# Python (for backend)
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-.venv/
-ENV/
-env.bak/
-venv.bak/
-.pytest_cache/
-.coverage
-htmlcov/
-
-# IDE and Editor files
-.idea/
+# IDE
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
-.project
-.classpath
-.settings/
 
-# OS files
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -63,69 +78,35 @@ htmlcov/
 ehthumbs.db
 Thumbs.db
 
+# Logs
+*.log
+logs/
+
 # Temporary files
-tmp/
-temp/
-.tmp/
 *.tmp
 *.temp
+.tmp/
+.temp/
 
 # Environment files
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Database files
+# Database
 *.db
 *.sqlite
 *.sqlite3
 
-# Blockchain specific
-*.key
-*.pem
-*.crt
-*.csr
-config/gentx/
-config/priv_validator_key.json
-config/node_key.json
+# Cache
+.cache/
+.npm/
+.yarn/
+.pnpm-store/
 
-# Docker
-.dockerignore
-
-# Logs
-logs/
-*.log
-
-# Coverage reports
-coverage/
-.nyc_output/
-
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Local development
-.local/
-local/
-.clj-kondo/
-.lsp/
-bin/
-pkg/
-vengeance-69/
-
-.fake
-
-# 🧹 Кеші та інструменти розробки (видаляємо з кореня)
-.clj-kondo/
-.lsp/
-bin/
-pkg/
-
-# 📁 Стек-специфічні кеші (правильні місця)
-stacks/clojure/.clj-kondo/.cache/
-stacks/go/bin/
-stacks/go/pkg/
-stacks/go/.cache/
-stacks/.lsp/
-
-# 🔧 Тимчасові скрипти
-clean-root.sh
+# Build artifacts
+build/
+dist/
+out/

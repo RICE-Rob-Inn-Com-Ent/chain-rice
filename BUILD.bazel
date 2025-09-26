@@ -1,5 +1,9 @@
 load("@gazelle//:def.bzl", "gazelle")
 load("//rules:nix.bzl", "nix_shell", "nix_build", "nix_test")
+load("//rules:go_toolchain.bzl", "nix_go_toolchain")
+load("//rules:python_toolchain.bzl", "nix_python_toolchain")
+load("//rules:rust_toolchain.bzl", "nix_rust_toolchain")
+load("//rules:proto_toolchain.bzl", "nix_proto_toolchain")
 
 # This is the root BUILD file for the rice-dev Bazel module
 package(default_visibility = ["//visibility:public"])
@@ -130,6 +134,35 @@ nix_test(
     visibility = ["//visibility:public"],
 )
 
+# Nix toolchain targets
+nix_go_toolchain(
+    name = "nix_go_toolchain",
+    flake_path = ".",
+    shell_name = "go-backend",
+    visibility = ["//visibility:public"],
+)
+
+nix_python_toolchain(
+    name = "nix_python_toolchain",
+    flake_path = ".",
+    shell_name = "python-fastapi-bridge",
+    visibility = ["//visibility:public"],
+)
+
+nix_rust_toolchain(
+    name = "nix_rust_toolchain",
+    flake_path = ".",
+    shell_name = "rust-cosmos",
+    visibility = ["//visibility:public"],
+)
+
+nix_proto_toolchain(
+    name = "nix_proto_toolchain",
+    flake_path = ".",
+    shell_name = "proto-tools",
+    visibility = ["//visibility:public"],
+)
+
 # Convenience aliases for common operations
 alias(
     name = "dev",
@@ -146,5 +179,30 @@ alias(
 alias(
     name = "test",
     actual = ":nix_test_all",
+    visibility = ["//visibility:public"],
+)
+
+# Toolchain aliases
+alias(
+    name = "go_toolchain",
+    actual = ":nix_go_toolchain",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "python_toolchain",
+    actual = ":nix_python_toolchain",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "rust_toolchain",
+    actual = ":nix_rust_toolchain",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "proto_toolchain",
+    actual = ":nix_proto_toolchain",
     visibility = ["//visibility:public"],
 )
