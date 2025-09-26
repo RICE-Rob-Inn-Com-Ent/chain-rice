@@ -2,95 +2,95 @@
 
 **Unified Nix dev shells with Bazel integration for multi-language development**
 
-## 🎯 Швидкий старт
+## 🎯 Quick Start
 
-### 1. Встановлення Nix
+### 1. Install Nix
 
 ```bash
-# Встановити Nix (якщо ще не встановлено)
+# Install Nix (if not already installed)
 curl --proto '=https' --tlsv1.2 -sSf https://nixos.org/nix/install | sh
 
-# Перезавантажити shell або виконати:
+# Reload shell or run:
 source ~/.nix-profile/etc/profile.d/nix.sh
 ```
 
-### 2. Клонування проекту
+### 2. Clone the Project
 
 ```bash
 git clone <your-repo-url> rice-dev
 cd rice-dev
 ```
 
-### 3. Запуск режиму розробки
+### 3. Start Development Mode
 
 ```bash
-# Ввійти в default Nix shell
+# Enter default Nix shell
 nix develop
 
-# Або використовувати Bazel
+# Or use Bazel
 bazel run //:dev
 ```
 
-## 🛠️ Доступні середовища розробки
+## 🛠️ Available Development Environments
 
 ### 🤖 AI & Bot Development
 ```bash
-nix develop .#bot-core              # Мінімальне Python середовище для AI
-nix develop .#bot-integration       # Інтеграція з чат-платформами
-nix develop .#bot-julia-models      # Julia для моделювання
-nix develop .#bot-finance-reporting # Аналітика та звітність
+nix develop .#bot-core              # Minimal Python environment for AI
+nix develop .#bot-integration       # Chat platform integrations
+nix develop .#bot-julia-models      # Julia for mathematical modeling
+nix develop .#bot-finance-reporting # Analytics and reporting
 ```
 
 ### 🔧 Backend Development
 ```bash
-nix develop .#go-backend            # Go з Cosmos/Tendermint
-nix develop .#dotnet-bridge         # .NET міст
-nix develop .#beam-bridge           # Erlang/Elixir міст
-nix develop .#python-fastapi-bridge # Python FastAPI міст
-nix develop .#jvm-bridge            # Java міст
-nix develop .#php-bridge            # PHP міст
+nix develop .#go-backend            # Go with Cosmos/Tendermint
+nix develop .#dotnet-bridge         # .NET bridge services
+nix develop .#beam-bridge           # Erlang/Elixir bridge
+nix develop .#python-fastapi-bridge # Python FastAPI services
+nix develop .#jvm-bridge            # Java bridge services
+nix develop .#php-bridge            # PHP bridge services
 ```
 
 ### ⛓️ Blockchain & Smart Contracts
 ```bash
-nix develop .#rust-cosmos           # Rust для блокчейну
-nix develop .#solidity-evm          # Solidity для EVM
+nix develop .#rust-cosmos           # Rust for blockchain development
+nix develop .#solidity-evm          # Solidity for EVM-compatible chains
 ```
 
 ### 📱 Frontend Development
 ```bash
-nix develop .#flutter-dart          # Flutter/Dart
-nix develop .#kotlin-android        # Kotlin для Android
-nix develop .#swift-ios              # Swift для iOS (macOS only)
-nix develop .#angular-frontend      # Angular
-nix develop .#next-frontend         # Next.js
-nix develop .#nuxt-frontend         # Nuxt.js
-nix develop .#ts-shared             # TypeScript shared
+nix develop .#flutter-dart          # Flutter/Dart mobile development
+nix develop .#kotlin-android        # Kotlin for Android
+nix develop .#swift-ios              # Swift for iOS (macOS only)
+nix develop .#angular-frontend      # Angular web applications
+nix develop .#next-frontend          # Next.js applications
+nix develop .#nuxt-frontend         # Nuxt.js applications
+nix develop .#ts-shared             # TypeScript shared libraries
 ```
 
 ### 🚀 DevOps & Infrastructure
 ```bash
-nix develop .#ansible               # Ansible
-nix develop .#k8s                   # Kubernetes
-nix develop .#terraform             # Terraform
-nix develop .#bazel-dev             # Bazel development
+nix develop .#ansible               # Ansible automation
+nix develop .#k8s                   # Kubernetes management
+nix develop .#terraform             # Infrastructure as Code
+nix develop .#bazel-dev             # Bazel development tools
 ```
 
-## 🔨 Bazel команди
+## 🔨 Bazel Commands
 
-### Базові операції
+### Basic Operations
 ```bash
-# Ввійти в default Nix shell
+# Enter default Nix shell
 bazel run //:dev
 
-# Зібрати всі цілі з Nix
+# Build all targets with Nix
 bazel run //:build
 
-# Запустити тести з Nix
+# Run tests with Nix
 bazel run //:test
 ```
 
-### Toolchain команди
+### Toolchain Commands
 ```bash
 # Go toolchain
 bazel run //:go_toolchain
@@ -105,122 +105,123 @@ bazel run //:rust_toolchain
 bazel run //:proto_toolchain
 ```
 
-### Збірка конкретних цілей
+### Build Specific Targets
 ```bash
-# Зібрати Go backend
+# Build Go backend
 bazel run //:nix_build_go
 
-# Зібрати Python сервіси
+# Build Python services
 bazel run //:nix_build_python
 
-# Зібрати Rust контракти
+# Build Rust contracts
 bazel run //:nix_build_rust
 
-# Зібрати Protobuf файли
+# Build Protobuf files
 bazel run //:nix_build_proto
 ```
 
-## 🧪 Тестування інтеграції
+## 🧪 Testing Integration
 
 ```bash
-# Запустити повний тест інтеграції
+# Run full integration test
 ./test_nix_integration.sh
 ```
 
-Цей скрипт перевіряє:
-- ✅ Доступність Nix
-- ✅ Валідність flake.nix
-- ✅ Роботу Nix shells
-- ✅ Інтеграцію з Bazel
-- ✅ Доступність toolchains
+This script checks:
+- ✅ Nix availability
+- ✅ flake.nix validity
+- ✅ Nix shells functionality
+- ✅ Bazel integration
+- ✅ Toolchain availability
 
-## 📁 Структура проекту
+## 📁 Project Structure
 
 ```
 rice-dev/
-├── flake.nix              # Nix flake з усіма середовищами розробки
-├── .bazelrc               # Базова Bazel конфігурація
-├── .bazelrc.nix           # Nix-специфічна Bazel конфігурація
-├── rules/                 # Bazel правила для Nix інтеграції
-│   ├── nix.bzl           # Основні Nix правила
-│   ├── go_toolchain.bzl  # Go toolchain інтеграція
-│   ├── python_toolchain.bzl # Python toolchain інтеграція
-│   ├── rust_toolchain.bzl # Rust toolchain інтеграція
-│   ├── proto_toolchain.bzl # Protobuf toolchain інтеграція
-│   └── BUILD.bazel        # BUILD файл для rules
-├── libs/                  # Бібліотеки
-│   ├── backend/          # Backend сервіси
-│   ├── frontend/         # Frontend додатки
+├── flake.nix              # Nix flake with all development environments
+├── .bazelrc               # Base Bazel configuration
+├── .bazelrc.nix           # Nix-specific Bazel configuration
+├── rules/                 # Bazel rules for Nix integration
+│   ├── nix.bzl           # Core Nix rules
+│   ├── go_toolchain.bzl  # Go toolchain integration
+│   ├── python_toolchain.bzl # Python toolchain integration
+│   ├── rust_toolchain.bzl # Rust toolchain integration
+│   ├── proto_toolchain.bzl # Protobuf toolchain integration
+│   └── BUILD.bazel        # Rules BUILD file
+├── libs/                  # Shared libraries
+│   ├── backend/          # Backend services
+│   ├── frontend/         # Frontend applications
 │   ├── contract/         # Smart contracts
-│   └── proto/            # Protobuf визначення
-├── bots/                 # AI боти та моделі
-└── projects/             # Основні проекти
+│   └── proto/            # Protobuf definitions
+├── bots/                 # AI bots and models
+└── projects/             # Main projects
 ```
 
-## 🎯 Переваги
+## 🎯 Key Benefits
 
-1. **Консистентність** - Однакові залежності в Nix та Bazel
-2. **Ізоляція** - Кожен shell має свої залежності
-3. **Відтворюваність** - Точні версії пакетів
-4. **Швидкість** - Nix кешування + Bazel інкрементальна збірка
-5. **Гнучкість** - Легко додавати нові середовища
+1. **Consistency** - Same dependencies across Nix and Bazel
+2. **Isolation** - Each shell has its own dependencies
+3. **Reproducibility** - Exact package versions
+4. **Speed** - Nix caching + Bazel incremental builds
+5. **Flexibility** - Easy to add new environments
 
-## 🔧 Конфігурація
+## 🔧 Configuration
 
 ### .bazelrc.nix
-Містить Nix-специфічні налаштування для Bazel:
-- Експорт Nix змінних середовища
-- Налаштування toolchains для різних мов
-- Інтеграція з Nix store
-- Оптимізації для Nix середовища
+Contains Nix-specific settings for Bazel:
+- Export Nix environment variables
+- Configure toolchains for different languages
+- Integrate with Nix store
+- Optimize for Nix environment
 
 ### Bazel Rules
-- **nix_shell** - Вхід в Nix development shell
-- **nix_build** - Збірка цілей в Nix shell
-- **nix_test** - Тестування в Nix shell
-- **nix_toolchain** - Використання toolchain з Nix
+- **nix_shell** - Enter Nix development shell
+- **nix_build** - Build targets in Nix shell
+- **nix_test** - Test in Nix shell
+- **nix_toolchain** - Use toolchain from Nix
 
 ## 🚨 Troubleshooting
 
-### Проблеми з Nix
+### Nix Issues
 ```bash
-# Очистити Nix кеш
+# Clear Nix cache
 nix-collect-garbage -d
 
-# Перебудувати flake
+# Rebuild flake
 nix flake update
 ```
 
-### Проблеми з Bazel
+### Bazel Issues
 ```bash
-# Очистити Bazel кеш
+# Clear Bazel cache
 bazel clean --expunge
 
-# Перебудувати всі цілі
+# Rebuild all targets
 bazel build //...
 ```
 
-### Проблеми з інтеграцією
+### Integration Issues
 ```bash
-# Перевірити .bazelrc.nix
+# Check .bazelrc.nix
 bazel query //... --config=nix
 
-# Тестувати конкретний shell
+# Test specific shell
 nix develop .#shell-name --command bazel build //target
 ```
 
-## 📚 Додаткова документація
+## 📚 Additional Documentation
 
-- [NIX_BAZEL_INTEGRATION.md](./NIX_BAZEL_INTEGRATION.md) - Детальна документація інтеграції
-- [test_nix_integration.sh](./test_nix_integration.sh) - Скрипт тестування
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Detailed architecture overview
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - Development guidelines
+- [test_nix_integration.sh](./test_nix_integration.sh) - Integration testing script
 
-## 🎉 Готово до розробки!
+## 🎉 Ready for Development!
 
-Тепер ви можете:
-- ✅ Використовувати Nix пакети в Bazel
-- ✅ Мати ізольовані середовища розробки
-- ✅ Швидко переключатися між toolchains
-- ✅ Автоматично тестувати інтеграцію
-- ✅ Масштабувати проект з новими мовами/технологіями
+Now you can:
+- ✅ Use Nix packages in Bazel
+- ✅ Have isolated development environments
+- ✅ Quickly switch between toolchains
+- ✅ Automatically test integration
+- ✅ Scale project with new languages/technologies
 
-**Проект готовий до продуктивної розробки! 🚀**
+**Project ready for productive development! 🚀**
