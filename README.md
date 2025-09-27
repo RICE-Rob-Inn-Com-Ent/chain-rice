@@ -34,6 +34,7 @@ bazel run //:dev
 ## 🛠️ Available Development Environments
 
 ### 🤖 AI & Bot Development
+
 ```bash
 nix develop .#bot-core              # Minimal Python environment for AI
 nix develop .#bot-integration       # Chat platform integrations
@@ -42,6 +43,7 @@ nix develop .#bot-finance-reporting # Analytics and reporting
 ```
 
 ### 🔧 Backend Development
+
 ```bash
 nix develop .#go-backend            # Go with Cosmos/Tendermint
 nix develop .#dotnet-bridge         # .NET bridge services
@@ -52,12 +54,14 @@ nix develop .#php-bridge            # PHP bridge services
 ```
 
 ### ⛓️ Blockchain & Smart Contracts
+
 ```bash
 nix develop .#rust-cosmos           # Rust for blockchain development
 nix develop .#solidity-evm          # Solidity for EVM-compatible chains
 ```
 
 ### 📱 Frontend Development
+
 ```bash
 nix develop .#flutter-dart          # Flutter/Dart mobile development
 nix develop .#kotlin-android        # Kotlin for Android
@@ -69,6 +73,7 @@ nix develop .#ts-shared             # TypeScript shared libraries
 ```
 
 ### 🚀 DevOps & Infrastructure
+
 ```bash
 nix develop .#ansible               # Ansible automation
 nix develop .#k8s                   # Kubernetes management
@@ -79,6 +84,7 @@ nix develop .#bazel-dev             # Bazel development tools
 ## 🔨 Bazel Commands
 
 ### Basic Operations
+
 ```bash
 # Enter default Nix shell
 bazel run //:dev
@@ -91,6 +97,7 @@ bazel run //:test
 ```
 
 ### Toolchain Commands
+
 ```bash
 # Go toolchain
 bazel run //:go_toolchain
@@ -106,6 +113,7 @@ bazel run //:proto_toolchain
 ```
 
 ### Build Specific Targets
+
 ```bash
 # Build Go backend
 bazel run //:nix_build_go
@@ -128,6 +136,7 @@ bazel run //:nix_build_proto
 ```
 
 This script checks:
+
 - ✅ Nix availability
 - ✅ flake.nix validity
 - ✅ Nix shells functionality
@@ -168,13 +177,16 @@ rice-dev/
 ## 🔧 Configuration
 
 ### .bazelrc.nix
+
 Contains Nix-specific settings for Bazel:
+
 - Export Nix environment variables
 - Configure toolchains for different languages
 - Integrate with Nix store
 - Optimize for Nix environment
 
 ### Bazel Rules
+
 - **nix_shell** - Enter Nix development shell
 - **nix_build** - Build targets in Nix shell
 - **nix_test** - Test in Nix shell
@@ -183,6 +195,7 @@ Contains Nix-specific settings for Bazel:
 ## 🚨 Troubleshooting
 
 ### Nix Issues
+
 ```bash
 # Clear Nix cache
 nix-collect-garbage -d
@@ -192,6 +205,7 @@ nix flake update
 ```
 
 ### Bazel Issues
+
 ```bash
 # Clear Bazel cache
 bazel clean --expunge
@@ -201,6 +215,7 @@ bazel build //...
 ```
 
 ### Integration Issues
+
 ```bash
 # Check .bazelrc.nix
 bazel query //... --config=nix
@@ -218,6 +233,7 @@ nix develop .#shell-name --command bazel build //target
 ## 🎉 Ready for Development!
 
 Now you can:
+
 - ✅ Use Nix packages in Bazel
 - ✅ Have isolated development environments
 - ✅ Quickly switch between toolchains

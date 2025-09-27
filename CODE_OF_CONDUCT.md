@@ -47,9 +47,8 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 If you experience or witness unacceptable behavior, or have any other concerns, please report it by contacting the project maintainers:
 
-- **Email**: [maintainer-email]
+- **Email**: [infocoderice@gmail.com]
 - **GitHub Issues**: Create a private issue with the "conduct" label
-- **Discord/Slack**: Contact moderators directly
 
 ### What to Include
 
@@ -107,4 +106,4 @@ For answers to common questions about this code of conduct, see the FAQ at [http
 
 ---
 
-**Rice-Dev Community** - Building technology together with respect and collaboration. 🤝
+**Rice-Dev Community** - Building Open Source technology together with respect and collaboration. 🤝
