@@ -1,0 +1,28 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+# Angular dependencies
+npm_link_all_packages(name = "angular_deps")
+
+# Angular TypeScript library
+ts_project(
+    name = "angular_lib",
+    srcs = glob(["**/*.ts"]),
+    deps = [
+        ":angular_deps",
+        "@npm//@angular/core",
+        "@npm//@angular/common",
+        "@npm//@angular/router",
+        "@npm//@angular/forms",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Angular package
+npm_package(
+    name = "angular_package", 
+    srcs = glob(["**/*.ts", "**/*.html", "**/*.scss", "**/*.css"]),
+    deps = [":angular_lib"],
+    visibility = ["//visibility:public"],
+)

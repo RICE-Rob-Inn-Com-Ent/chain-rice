@@ -1,0 +1,25 @@
+{
+    "name": "rice-dev/connection-php",
+    "description": "PHP bridge for integration with Go, .NET, REST servers",
+    "type": "project",
+    "require": {
+      "php": "^8.2",
+      "guzzlehttp/guzzle": "^7.8",
+      "spiral/goridge": "^2.4",
+      "grpc/grpc": "^1.74",
+      "google/protobuf": "^4.24",
+      "symfony/http-client": "^6.4",
+      "php-amqplib/php-amqplib": "^3.4",
+      "ratchet/pawl": "^0.4"
+    },
+    "autoload": {
+      "psr-4": {
+        "ConnectionPHP\\": "src/"
+      }
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^10.3",
+      "friendsofphp/php-cs-fixer": "^3.15"
+    }
+  }
+  

@@ -1,0 +1,67 @@
+# AI Analytics Platform - Python Package Configuration
+[tool.poetry]
+name = "ai-analytics-platform"
+version = "1.0.0"
+description = "AI, financial analytics, AI API integrations, text, image and audio processing"
+authors = ["Code-Rice <infocoderice@gmail.com>"]
+license = "MIT"
+
+# Main package dependencies
+[tool.poetry.dependencies]
+python = ">=3.11,<3.14"
+
+# --- AI and Machine Learning ---
+torch = "^2.4.0"                 # PyTorch deep learning framework
+transformers = "^4.44.0"         # Hugging Face transformers library
+diffusers = "^0.30.0"            # Diffusion models for image generation
+accelerate = "^0.33.0"           # Training acceleration library
+openai = "^1.45.0"               # OpenAI API client
+langchain = "^0.3.4"             # LangChain framework for LLM applications
+llama-index = "^0.11.23"         # LlamaIndex for RAG applications
+sentence-transformers = "^3.2.0" # Sentence embeddings and similarity
+
+# --- RAG and Knowledge Bases ---
+faiss-cpu = "^1.9.0" # Facebook AI Similarity Search (CPU version)
+chromadb = "^0.5.0"  # Vector database for embeddings
+
+# --- Audio, Image, Video Processing ---
+pillow = "^10.4.0"        # Python Imaging Library
+opencv-python = "^4.10.0" # Computer vision library
+soundfile = "^0.12.1"     # Audio file I/O
+pydub = "^0.25.1"         # Audio manipulation
+tiktoken = "^0.7.0"       # Tokenization for LLMs
+
+# --- Finance and Analytics ---
+pandas = "^2.2.2"       # Data manipulation and analysis
+numpy = "^1.26.4"       # Numerical computing
+scipy = "^1.14.1"       # Scientific computing
+matplotlib = "^3.9.2"   # Plotting library
+plotly = "^5.24.1"      # Interactive plotting
+seaborn = "^0.13.2"     # Statistical data visualization
+statsmodels = "^0.14.3" # Statistical modeling
+scikit-learn = "^1.5.2" # Machine learning library
+
+# --- Integrations and APIs ---
+requests = "^2.32.3" # HTTP library
+httpx = "^0.27.2"    # Modern HTTP client
+fastapi = "^0.115.0" # Web framework for APIs
+uvicorn = "^0.30.6"  # ASGI server
+
+# --- Other Tools ---
+python-dotenv = "^1.0.1" # Environment variable management
+loguru = "^0.7.2"        # Logging library
+tqdm = "^4.66.5"         # Progress bars
+jinja2 = "^3.1.4"        # Template engine
+
+# Development dependencies
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"    # Code formatter
+ruff = "^0.6.9"       # Fast Python linter
+pytest = "^8.3.3"     # Testing framework
+ipykernel = "^6.29.5" # Jupyter kernel
+notebook = "^7.2.2"   # Jupyter notebook
+
+# Build system configuration
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

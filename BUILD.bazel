@@ -76,6 +76,13 @@ nix_shell(
     visibility = ["//visibility:public"],
 )
 
+nix_shell(
+    name = "nix_monorepo",
+    flake_path = ".",
+    shell_name = "monorepo",
+    visibility = ["//visibility:public"],
+)
+
 # Nix-based build targets
 nix_build(
     name = "nix_build_all",
@@ -97,7 +104,7 @@ nix_build(
     name = "nix_build_python",
     flake_path = ".",
     shell_name = "python-fastapi-bridge",
-    targets = ["//bots/core/...", "//libs/connection/FastAPI/..."],
+    targets = ["//bots/core/...", "//bots/integration/...", "//libs/connection/FastAPI/..."],
     visibility = ["//visibility:public"],
 )
 
@@ -117,6 +124,14 @@ nix_build(
     visibility = ["//visibility:public"],
 )
 
+nix_build(
+    name = "nix_build_frontend",
+    flake_path = ".",
+    shell_name = "ts-shared",
+    targets = ["//libs/frontend/ts/...", "//projects/chain-rice/...", "//projects/meowtopia/frontend/..."],
+    visibility = ["//visibility:public"],
+)
+
 # Nix-based test targets
 nix_test(
     name = "nix_test_all",
@@ -130,7 +145,15 @@ nix_test(
     name = "nix_test_python",
     flake_path = ".",
     shell_name = "python-fastapi-bridge",
-    targets = ["//bots/core/..."],
+    targets = ["//bots/core/...", "//bots/integration/..."],
+    visibility = ["//visibility:public"],
+)
+
+nix_test(
+    name = "nix_test_frontend",
+    flake_path = ".",
+    shell_name = "ts-shared",
+    targets = ["//libs/frontend/ts/...", "//projects/chain-rice/...", "//projects/meowtopia/frontend/..."],
     visibility = ["//visibility:public"],
 )
 
@@ -166,7 +189,13 @@ nix_proto_toolchain(
 # Convenience aliases for common operations
 alias(
     name = "dev",
-    actual = ":nix_default",
+    actual = ":nix_monorepo",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "monorepo",
+    actual = ":nix_monorepo",
     visibility = ["//visibility:public"],
 )
 

@@ -1,0 +1,28 @@
+{
+  "name": "rice-evm-smart-contract",
+  "version": "1.0.0",
+  "description": "Solidity smart contracts for rice-dev with zk-tools support",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:hardhat": "hardhat run scripts/deploy.js --network hardhat",
+    "node": "hardhat node",
+    "compile:circom": "circom circuits/mycircuit.circom --r1cs --wasm --sym",
+    "setup:snarkjs": "node scripts/zk-proof.js",
+    "zk:proof": "node scripts/zk-proof.js",
+    "zokrates:docker": "docker run -v $(pwd):/home/zokrates zokrates/zokrates:latest"
+  },
+  "dependencies": {
+    "snarkjs": "^0.6.11",
+    "circomlib": "^2.0.0",
+    "circomlibjs": "^0.1.7"
+  },
+  "devDependencies": {
+    "hardhat": "^2.18.0",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "ethers": "^6.8.0",
+    "chai": "^4.3.7",
+    "dotenv": "^16.3.1"
+  }
+}

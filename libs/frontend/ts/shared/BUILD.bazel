@@ -1,0 +1,27 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+# Shared TypeScript dependencies
+npm_link_all_packages(name = "shared_deps")
+
+# Shared TypeScript library
+ts_project(
+    name = "shared_lib",
+    srcs = glob(["**/*.ts"]),
+    deps = [
+        ":shared_deps",
+        "@npm//axios",
+        "@npm//lodash",
+        "@npm//date-fns",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Shared package
+npm_package(
+    name = "shared_package",
+    srcs = glob(["**/*.ts", "**/*.json"]),
+    deps = [":shared_lib"],
+    visibility = ["//visibility:public"],
+)

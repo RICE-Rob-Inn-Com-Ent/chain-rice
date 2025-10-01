@@ -1,0 +1,28 @@
+{
+  "name": "shared-lib",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared utilities and configurations for all frontend frameworks",
+  "dependencies": {
+    "three": "^0.157.0",
+    "chart.js": "^4.4.1",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "prettier": "^3.2.4",
+    "stylelint": "^15.10.0",
+    "stylelint-config-standard": "^34.0.0",
+    "stylelint-config-prettier": "^9.0.5",
+    "postcss-preset-env": "^9.3.0",
+    "cssnano": "^6.0.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

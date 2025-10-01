@@ -1,0 +1,21 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+# Meowtopia frontend dependencies
+npm_link_all_packages(name = "meowtopia_deps")
+
+# Meowtopia frontend package
+npm_package(
+    name = "meowtopia_package",
+    srcs = glob(["**/*.ts", "**/*.js", "**/*.html", "**/*.css", "**/*.json"]),
+    deps = [":meowtopia_deps"],
+    visibility = ["//visibility:public"],
+)
+
+# Meowtopia frontend binary
+nodejs_binary(
+    name = "meowtopia_frontend",
+    data = [":meowtopia_package"],
+    entry_point = "index.html",
+    visibility = ["//visibility:public"],
+)

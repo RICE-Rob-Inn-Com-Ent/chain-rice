@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package blockchain.tokens.messages;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "blockchain/tokens/enums/token_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/messages";
+
+// TokenTransfer represents a token transfer transaction
+message TokenTransfer {
+  // id is the unique identifier of the transfer
+  string id = 1;
+
+  // token_id is the ID of the token being transferred
+  string token_id = 2;
+
+  // from_address is the address sending the tokens
+  string from_address = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // to_address is the address receiving the tokens
+  string to_address = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // amount is the amount of tokens being transferred
+  string amount = 5
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // status is the status of the transfer
+  blockchain.tokens.enums.TokenStatus status = 6;
+
+  // fee is the fee paid for the transfer
+  cosmos.base.v1beta1.Coin fee = 7 [ (gogoproto.nullable) = false ];
+
+  // memo is an optional memo for the transfer
+  string memo = 8;
+
+  // created_at is the timestamp when the transfer was created
+  int64 created_at = 9;
+
+  // completed_at is the timestamp when the transfer was completed
+  int64 completed_at = 10;
+
+  // metadata is additional metadata for the transfer
+  string metadata = 11;
+}
+
+// MsgTransferToken defines a message to transfer tokens
+message MsgTransferToken {
+  option (cosmos.msg.v1.signer) = "from_address";
+
+  // from_address is the address sending the tokens
+  string from_address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // to_address is the address receiving the tokens
+  string to_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to transfer
+  string token_id = 3;
+
+  // amount is the amount of tokens to transfer
+  string amount = 4
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // memo is an optional memo for the transfer
+  string memo = 5;
+
+  // metadata is additional metadata for the transfer
+  string metadata = 6;
+}
+
+// MsgTransferTokenResponse defines the response for transferring tokens
+message MsgTransferTokenResponse {
+  // transfer_id is the ID of the created transfer
+  string transfer_id = 1;
+}
+
+// MsgApproveToken defines a message to approve token spending
+message MsgApproveToken {
+  option (cosmos.msg.v1.signer) = "owner";
+
+  // owner is the address of the token owner
+  string owner = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // spender is the address being approved to spend tokens
+  string spender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to approve
+  string token_id = 3;
+
+  // amount is the amount of tokens to approve
+  string amount = 4
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+}
+
+// MsgApproveTokenResponse defines the response for approving tokens
+message MsgApproveTokenResponse {}
+
+// MsgTransferFromToken defines a message to transfer tokens on behalf of
+// another address
+message MsgTransferFromToken {
+  option (cosmos.msg.v1.signer) = "spender";
+
+  // spender is the address spending the tokens
+  string spender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // from_address is the address the tokens are being transferred from
+  string from_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // to_address is the address receiving the tokens
+  string to_address = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to transfer
+  string token_id = 4;
+
+  // amount is the amount of tokens to transfer
+  string amount = 5
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // memo is an optional memo for the transfer
+  string memo = 6;
+}
+
+// MsgTransferFromTokenResponse defines the response for transferring tokens
+// from another address
+message MsgTransferFromTokenResponse {
+  // transfer_id is the ID of the created transfer
+  string transfer_id = 1;
+}

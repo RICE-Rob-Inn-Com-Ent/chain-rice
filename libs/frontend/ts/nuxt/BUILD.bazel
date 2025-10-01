@@ -1,0 +1,27 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+# Nuxt dependencies
+npm_link_all_packages(name = "nuxt_deps")
+
+# Nuxt TypeScript library
+ts_project(
+    name = "nuxt_lib",
+    srcs = glob(["**/*.ts", "**/*.vue"]),
+    deps = [
+        ":nuxt_deps",
+        "@npm//nuxt",
+        "@npm//vue",
+        "@npm//vue-router",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Nuxt package
+npm_package(
+    name = "nuxt_package",
+    srcs = glob(["**/*.ts", "**/*.vue", "**/*.js", "**/*.json"]),
+    deps = [":nuxt_lib"],
+    visibility = ["//visibility:public"],
+)

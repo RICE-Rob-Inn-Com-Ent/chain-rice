@@ -9,8 +9,20 @@
   outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        # Overlays to tweak packages
+        overlays = [
+          (final: prev: {
+            python311Packages = prev.python311Packages // {
+              # Avoid test failure in pytest-doctestplus (numpy ufunc __code__)
+              pytest-doctestplus = prev.python311Packages.pytest-doctestplus.overrideAttrs (old: {
+                doCheck = false;
+              });
+            };
+          })
+        ];
+
         pkgs = import nixpkgs { 
-          inherit system;
+          inherit system overlays;
           config = {
             allowUnfree = true;
             allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
@@ -21,6 +33,9 @@
             android_sdk.accept_license = true;
           };
         };
+
+        # Feature toggles from environment
+        androidEnabled = (builtins.getEnv "INCLUDE_ANDROID") == "1";
 
         # =============================================================================
         # COMMON PACKAGES (to avoid duplication)
@@ -133,6 +148,10 @@
         bazelisk = pkgs.bazelisk;
         buildifier = pkgs.buildifier;
         buildozer = pkgs.buildozer;
+
+        # Kafka toolchain
+        kafka = pkgs.apacheKafka;
+        zookeeper = pkgs.zookeeper;
 
         # Additional tools
         unzip = pkgs.unzip;
@@ -334,6 +353,9 @@
               pkgs.postgresql
               pkgs.redis
               pkgs.sqlite
+              # Kafka toolchain (includes Sarama via Go modules)
+              kafka
+              zookeeper
             ] ++ baseTools;
             shellHook = ''
               export LC_ALL=C.UTF-8
@@ -342,11 +364,16 @@
               export GOBIN=${"$GOPATH"}/bin
               export PATH=$GOBIN:$PATH
               export PATH=${pkgs.protoc-gen-go}/bin:${pkgs.protoc-gen-go-grpc}/bin:$PATH
+              # Kafka environment
+              export KAFKA_HOME=${kafka}
+              export PATH=${kafka}/bin:$PATH
               if [ -f go.mod ]; then
                 echo "[go-cosmos-backend-dev] Detected go.mod; running 'go mod download'..."
                 go mod download || true
               fi
               echo "[go-cosmos-backend-dev] Go $(${go}/bin/go version) ready. Protobuf: ${pkgs.protobuf}/bin/protoc, gRPC plugins installed."
+              echo "[go-cosmos-backend-dev] Kafka tools available: kafka-topics, kafka-console-producer, kafka-console-consumer"
+              echo "[go-cosmos-backend-dev] Note: Use 'go get github.com/IBM/sarama' to install Sarama Kafka client for Go"
             '';
           };
 
@@ -388,15 +415,43 @@
           python-fastapi-bridge = pkgs.mkShell {
             name = "python-bridge-fastapi-dev";
             packages = [
-              python
-              # Тільки Python без додаткових пакетів
+              (python.withPackages (ps: with ps; [
+                # FastAPI and web server
+                fastapi
+                uvicorn
+                # HTTP clients  
+                requests
+                httpx
+                # AI integrations
+                openai
+                huggingface-hub
+                # Data validation
+                pydantic
+                # Async support
+                aiohttp
+                websockets
+                # Logging
+                loguru
+                structlog
+                # Basic utilities
+                pyyaml
+                orjson
+                # Additional useful packages
+                python-multipart
+                python-jose
+                passlib
+                bcrypt
+                # Development tools
+                pip
+                setuptools
+                wheel
+              ]))
             ] ++ baseTools;
             shellHook = ''
               export PYTHONNOUSERSITE=1
               export LC_ALL=C.UTF-8
               export LANG=C.UTF-8
-              echo "[python-bridge-fastapi-dev] Python $(python --version) ready for API/middleware bridging."
-              echo "Note: FastAPI, Starlette, Uvicorn, Hypercorn, aiohttp, httpx, websockets, loguru, requests, pydantic available via pip install"
+              echo "[python-bridge-fastapi-dev] Python $(python --version) with all dependencies ready."
             '';
           };
 
@@ -618,6 +673,44 @@
           };
 
           # =============================================================================
+          # MESSAGING & STREAMING
+          # =============================================================================
+          
+          kafka-dev = pkgs.mkShell {
+            name = "kafka-messaging-dev";
+            packages = [
+              # Kafka toolchain
+              kafka
+              zookeeper
+              # Go for Sarama client development
+              go
+              pkgs.gopls
+              # Python for kafka-python client development
+              python
+              # Node.js for kafkajs client development
+              nodejs
+              npm
+            ] ++ baseTools;
+            shellHook = ''
+              export LC_ALL=C.UTF-8
+              export LANG=C.UTF-8
+              export KAFKA_HOME=${kafka}
+              export PATH=${kafka}/bin:$PATH
+              export GOPATH=${"$PWD"}/.gopath
+              export GOBIN=${"$GOPATH"}/bin
+              export PATH=$GOBIN:$PATH
+              export NPM_CONFIG_PREFIX="$PWD/.npm-global"
+              export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+              echo "[kafka-messaging-dev] Kafka development environment ready."
+              echo "[kafka-messaging-dev] Available clients:"
+              echo "  - Go: go get github.com/IBM/sarama"
+              echo "  - Python: pip install kafka-python"
+              echo "  - Node.js: npm install kafkajs"
+              echo "  - CLI tools: kafka-topics, kafka-console-producer, kafka-console-consumer"
+            '';
+          };
+
+          # =============================================================================
           # DEVELOPMENT TOOLS
           # =============================================================================
           
@@ -706,7 +799,282 @@
             shellHook = ''
               export LC_ALL=C.UTF-8
               export LANG=C.UTF-8
+              # Ensure Terraform data dir is always at the repo root
+              REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+              export TF_DATA_DIR="$REPO_ROOT/.terraform"
               echo "[terraform-dev] terraform $(terraform version | head -n1), tflint $(tflint --version | head -n1), terragrunt $(terragrunt --version | head -n1)."
+            '';
+          };
+
+          # =============================================================================
+          # MONOREPO DEVELOPMENT
+          # =============================================================================
+          
+          monorepo = pkgs.mkShell {
+            name = "rice-dev-monorepo";
+            packages = [
+              # Core development tools
+              pkgs.git
+              pkgs.curl
+              pkgs.jq
+              pkgs.openssl
+              pkgs.pkg-config
+              
+              # Python ecosystem (AI/Bots + FastAPI)
+              (python.withPackages (ps: with ps; [
+                # Core runtime (lean, reliable)
+                numpy
+                pandas
+                # Web / FastAPI
+                fastapi
+                uvicorn
+                requests
+                httpx
+                aiohttp
+                websockets
+                # AI Integrations
+                openai
+                huggingface-hub
+                python-telegram-bot
+                discordpy
+                slack-sdk
+                # Data & Validation
+                pydantic
+                pyyaml
+                orjson
+                # Dev essentials
+                pip
+                setuptools
+                wheel
+                # Logging & schedulers
+                loguru
+                structlog
+                apscheduler
+                # Auth & multipart
+                python-multipart
+                python-jose
+                passlib
+                bcrypt
+              ]))
+              
+              # Go ecosystem (Backend + Blockchain)
+              go
+              pkgs.gopls
+              pkgs.delve
+              pkgs.golangci-lint
+              pkgs.gotestsum
+              
+              # Java ecosystem (JVM Bridge)
+              jdk
+              maven
+              gradle
+              
+              # Node.js ecosystem (Frontend)
+              nodejs
+              npm
+              yarn
+              pnpm
+              
+              # Rust ecosystem (Blockchain contracts)
+              rust
+              cargo
+              
+              # BEAM ecosystem (Elixir/Erlang)
+              erlang
+              elixir
+              rebar3
+              
+              # .NET ecosystem
+              dotnet
+              
+              # PHP ecosystem
+              pkgs.php
+              pkgs.phpPackages.composer
+              
+              # Frontend frameworks
+              dart
+              flutter
+              kotlin
+            ] ++ (pkgs.lib.optionals androidEnabled [ androidSdk androidTools ])
+            ++ [
+              
+              # Blockchain tools
+              solc
+              foundry
+              
+              # DevOps & Infrastructure
+              terraform
+              terraformLs
+              tflint
+              terragrunt
+              kubectl
+              kustomize
+              helm
+              kubeseal
+              kubeval
+              kind
+              ansible
+              ansibleLint
+              yamllint
+              molecule
+              docker
+              
+              # Cloud CLIs
+              awscli
+              gcloud
+              azureCli
+              
+              # Protobuf/gRPC
+              pkgs.protobuf
+              pkgs.buf
+              pkgs.grpcurl
+              pkgs.protoc-gen-go
+              pkgs.protoc-gen-go-grpc
+              
+              # Bazel ecosystem
+              bazel
+              bazelisk
+              buildifier
+              buildozer
+              
+              # Messaging
+              kafka
+              zookeeper
+              
+              # Additional tools
+              pkgs.gcc
+              pkgs.cmake
+              pkgs.zlib
+              pkgs.ffmpeg
+              pkgs.libsndfile
+              pkgs.ncurses
+              pkgs.openblas
+              pkgs.unzip
+              pkgs.which
+              pkgs.yq
+              pkgs.yaml2json
+              pkgs.parallel
+              pkgs.nodePackages.concurrently
+              
+              # CUDA support
+              cudaPkgs.cudatoolkit
+              cudaPkgs.cudnn
+            ];
+            shellHook = ''
+              # Environment setup
+              export PYTHONNOUSERSITE=1
+              export LC_ALL=C.UTF-8
+              export LANG=C.UTF-8
+
+              # Git repo root and Terraform data dir
+              REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+              export TF_DATA_DIR="$REPO_ROOT/.terraform"
+              
+              # Go environment
+              export GOPATH="$PWD/.gopath"
+              export GOBIN="$GOPATH/bin"
+              export PATH="$GOBIN:$PATH"
+              export PATH="${pkgs.protoc-gen-go}/bin:${pkgs.protoc-gen-go-grpc}/bin:$PATH"
+              
+              # Java environment
+              export JAVA_HOME=${jdk}
+              export PATH=${jdk}/bin:$PATH
+              export MAVEN_OPTS="-Dfile.encoding=UTF-8 -Xms512m -Xmx2g"
+              export GRADLE_OPTS="-Dfile.encoding=UTF-8 -Dorg.gradle.jvmargs='-Xms512m -Xmx2g'"
+              
+              # Node.js environment
+              corepack enable >/dev/null 2>&1 || true
+              export NPM_CONFIG_PREFIX="$PWD/.npm-global"
+              mkdir -p "$NPM_CONFIG_PREFIX/bin"
+              export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+              
+              # Rust environment
+              export CARGO_HOME="$PWD/.cargo"
+              export RUSTUP_HOME="$PWD/.rustup"
+              export PATH="$CARGO_HOME/bin:$PATH"
+              
+              # BEAM environment
+              export MIX_HOME="$PWD/.mix"
+              export HEX_HOME="$PWD/.hex"
+              export REBAR_CACHE_DIR="$PWD/.cache/rebar3"
+              export PATH="$MIX_HOME/bin:$PATH"
+              
+              # .NET environment
+              export DOTNET_CLI_TELEMETRY_OPTOUT=1
+              
+              # PHP environment
+              export COMPOSER_HOME="$PWD/.composer"
+              
+              # Flutter/Dart environment
+              export PATH=${flutter}/bin:${dart}/bin:$PATH
+              export PUB_CACHE="$PWD/.pub-cache"
+              mkdir -p "$PUB_CACHE/bin"
+              export PATH="$PUB_CACHE/bin:$PATH"
+              export ANDROID_HOME=${androidSdk}/libexec/android-sdk
+              export ANDROID_SDK_ROOT=$ANDROID_HOME
+              export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+              
+              # CUDA environment
+              export CUDA_PATH=${cudaPkgs.cudatoolkit}
+              export XLA_FLAGS=--xla_gpu_cuda_data_dir=${cudaPkgs.cudatoolkit}
+              export TF_CUDA_PATHS=${cudaPkgs.cudatoolkit}:${cudaPkgs.cudnn}
+              export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ cudaPkgs.cudatoolkit cudaPkgs.cudnn ]}:$LD_LIBRARY_PATH
+              
+              # Kafka environment
+              export KAFKA_HOME=${kafka}
+              export PATH=${kafka}/bin:$PATH
+              
+              # Terraform environment
+              export TF_CLI_CONFIG_FILE="$PWD/.terraformrc"
+              
+              # Docker environment
+              export DOCKER_CONFIG="$PWD/.docker"
+              
+              # Bazel environment
+              export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
+              
+              # Create necessary directories
+              mkdir -p .gopath .npm-global .cargo .rustup .mix .hex .cache/rebar3 .composer .pub-cache .docker
+              
+              # Initialize Go modules if needed
+              if [ -f libs/backend/go.mod ]; then
+                echo "📦 Initializing Go modules..."
+                cd libs/backend && go mod download || true && cd ../..
+              fi
+              
+              # Initialize Python packages if needed
+              if [ -f bots/requirements.txt ]; then
+                echo "🐍 Installing Python requirements..."
+                pip install -r bots/requirements.txt || true
+              fi
+              
+              # Initialize Node.js packages if needed
+              if [ -f libs/frontend/ts/package.json ]; then
+                echo "📦 Installing Node.js dependencies..."
+                cd libs/frontend/ts && npm install || true && cd ../../..
+              fi
+              
+              # Display environment info
+              echo ""
+              echo "🚀 RICE-DEV MONOREPO ENVIRONMENT READY!"
+              echo "======================================"
+              echo "🐍 Python: $(python --version)"
+              echo "🐹 Go: $(${go}/bin/go version)"
+              echo "☕ Java: $(${jdk}/bin/java -version 2>&1 | head -n1)"
+              echo "📦 Node.js: $(node --version)"
+              echo "🦀 Rust: $(${rust}/bin/rustc --version)"
+              echo "🔧 Bazel: $(bazel --version | head -n1)"
+              echo "🐳 Docker: $(docker --version)"
+              echo "☸️  Kubernetes: $(kubectl version --client --short 2>/dev/null | head -n1)"
+              echo "🏗️  Terraform: $(terraform version | head -n1)"
+              echo ""
+              echo "Available commands:"
+              echo "  bazel run //:dev          - Enter development mode"
+              echo "  bazel run //:build        - Build all targets"
+              echo "  bazel run //:test         - Test all targets"
+              echo "  ./scripts/start-all.sh    - Start all services"
+              echo "  ./scripts/dev-watch.sh   - Start development with hot reload"
+              echo ""
             '';
           };
 

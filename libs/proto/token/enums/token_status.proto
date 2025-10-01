@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package blockchain.tokens.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/enums";
+
+// TokenStatus defines the status of a token
+enum TokenStatus {
+  // TOKEN_STATUS_UNSPECIFIED represents an unspecified token status
+  TOKEN_STATUS_UNSPECIFIED = 0;
+
+  // TOKEN_STATUS_ACTIVE represents an active token
+  TOKEN_STATUS_ACTIVE = 1;
+
+  // TOKEN_STATUS_PAUSED represents a paused token
+  TOKEN_STATUS_PAUSED = 2;
+
+  // TOKEN_STATUS_SUSPENDED represents a suspended token
+  TOKEN_STATUS_SUSPENDED = 3;
+
+  // TOKEN_STATUS_BURNED represents a burned token
+  TOKEN_STATUS_BURNED = 4;
+
+  // TOKEN_STATUS_LOCKED represents a locked token
+  TOKEN_STATUS_LOCKED = 5;
+
+  // TOKEN_STATUS_MINTED represents a newly minted token
+  TOKEN_STATUS_MINTED = 6;
+
+  // TOKEN_STATUS_TRANSFERRED represents a transferred token
+  TOKEN_STATUS_TRANSFERRED = 7;
+}

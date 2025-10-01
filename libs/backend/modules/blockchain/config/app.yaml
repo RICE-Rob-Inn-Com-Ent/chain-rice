@@ -1,0 +1,295 @@
+# This is a TOML config file.
+# For more information, see https://github.com/toml-lang/toml
+
+###############################################################################
+###                           Base Configuration                            ###
+###############################################################################
+
+# The minimum gas prices a validator is willing to accept for processing a
+# transaction. A transaction's fees must meet the minimum of any denomination
+# specified in this config (e.g. 0.25token1;0.0001token2).
+minimum-gas-prices = "0.0001urice"
+
+# HaltHeight contains a non-zero block height at which a node will gracefully
+# halt and shutdown that can be used to assist upgrades and testing.
+#
+# Note: Commitment of state will be attempted on the corresponding block.
+halt-height = 0
+
+# HaltTime contains a non-zero minimum block time (in Unix seconds) at which
+# a node will gracefully halt and shutdown that can be used to assist upgrades
+# and testing.
+#
+# Note: Commitment of state will be attempted on the corresponding block.
+halt-time = 0
+
+# InterBlockCache enables inter-block caching.
+inter-block-cache = true
+
+###############################################################################
+###                        Telemetry Configuration                         ###
+###############################################################################
+
+[telemetry]
+
+# Prefixed with keys to separate services
+service-name = "chainrice"
+
+# Enabled enables the application telemetry functionality. When enabled,
+# an in-memory sink is also enabled by default. Operators may also enabled
+# other sinks such as Prometheus.
+enabled = false
+
+# Enable prefixing gauge values with hostname
+enable-hostname = false
+
+# Enable adding hostname to labels
+enable-hostname-label = false
+
+# Enable adding service to labels
+enable-service-label = false
+
+# PrometheusRetentionTime, when positive, enables a Prometheus metrics sink.
+# The metrics sink will retain metrics for the given time.
+prometheus-retention-time = 0
+
+# GlobalLabels defines a global set of name/value label tuples applied to all
+# metrics emitted using the wrapper functions defined in telemetry package.
+#
+# Example:
+# global-labels = [
+#   ["chain_id", "chainrice-1"],
+#   ["chain_name", "chainrice"]
+# ]
+global-labels = [
+]
+
+###############################################################################
+###                           API Configuration                             ###
+###############################################################################
+
+[api]
+
+# Enable defines if the API server should be enabled.
+enable = true
+
+# Swagger defines if swagger documentation should automatically be registered.
+swagger = true
+
+# Address defines the API server to listen on.
+address = "tcp://0.0.0.0:1317"
+
+# MaxOpenConnections defines the number of maximum open connections.
+max-open-connections = 1000
+
+# RPCReadTimeout defines the Tendermint RPC read timeout (in seconds).
+rpc-read-timeout = 10
+
+# RPCWriteTimeout defines the Tendermint RPC write timeout (in seconds).
+rpc-write-timeout = 0
+
+# RPCMaxBodyBytes defines the Tendermint maximum response body (in bytes).
+rpc-max-body-bytes = 1000000
+
+# EnableUnsafeCORS defines if CORS should be enabled (unsafe - use it at your own risk).
+enabled-unsafe-cors = false
+
+###############################################################################
+###                           gRPC Configuration                            ###
+###############################################################################
+
+[grpc]
+
+# Enable defines if the gRPC server should be enabled.
+enable = true
+
+# Address defines the gRPC server address to bind to.
+address = "0.0.0.0:9090"
+
+###############################################################################
+###                        State Sync Configuration                         ###
+###############################################################################
+
+# State sync snapshots allow other nodes to rapidly join the network without replaying historical
+# blocks, instead downloading and applying a snapshot of the application state at a given height.
+[state-sync]
+
+# snapshot-interval specifies the block interval at which local state sync snapshots are
+# taken (0 to disable). Must be a multiple of pruning-keep-every.
+snapshot-interval = 0
+
+# snapshot-keep-recent specifies the number of recent snapshots to keep and serve (0 to keep all).
+snapshot-keep-recent = 2
+
+###############################################################################
+###                         Mempool Configuration                           ###
+###############################################################################
+
+[mempool]
+
+# Mempool version to use:
+#   1) "v0" - (default) FIFO mempool.
+#   2) "v1" - prioritized mempool (deprecated, will be removed in the next release).
+version = "v0"
+
+###############################################################################
+###                         P2P Configuration                               ###
+###############################################################################
+
+[p2p]
+
+# Address to listen for incoming connections
+laddr = "tcp://0.0.0.0:26656"
+
+# Address to advertise to peers for them to dial
+# If empty, will use the same port as the laddr,
+# and will introspect on the listener or use UPnP
+# to figure out the address.
+external_address = ""
+
+# Comma separated list of seed nodes to connect to
+seeds = ""
+
+# Comma separated list of nodes to keep persistent connections to
+persistent_peers = ""
+
+# UPNP port forwarding
+upnp = false
+
+# Maximum number of inbound peers
+max_num_inbound_peers = 40
+
+# Maximum number of outbound peers to connect to, excluding persistent peers
+max_num_outbound_peers = 10
+
+# Time to wait before flushing messages out on the connection
+flush_throttle_timeout = "100ms"
+
+# Maximum size of a message packet payload, in bytes
+max_packet_msg_payload_size = 1024
+
+# Rate at which packets can be sent, in bytes/second
+send_rate = 5120000
+
+# Rate at which packets can be received, in bytes/second
+recv_rate = 5120000
+
+# Set true to enable the peer-exchange reactor
+pex = true
+
+# Seed mode, in which node constantly crawls the network and looks for
+# peers. If another node asks it for addresses, it responds and disconnects.
+#
+# Does not work if the peer-exchange reactor is disabled.
+seed_mode = false
+
+# Private peer IDs to allow in incoming connections (comma-separated)
+private_peer_ids = ""
+
+# Toggle to disable guard against peers connecting from the same ip.
+allow_duplicate_ip = false
+
+# Peer connection configuration.
+handshake_timeout = "20s"
+dial_timeout = "3s"
+
+###############################################################################
+###                        Consensus Configuration                          ###
+###############################################################################
+
+[consensus]
+
+wal_file = "data/cs.wal/wal"
+
+# How long we wait for a proposal block before prevoting nil
+timeout_propose = "3s"
+# How much timeout_propose increases with each round
+timeout_propose_delta = "500ms"
+# How long we wait after receiving +2/3 prevotes for "anything" (ie. not a single block or nil)
+timeout_prevote = "1s"
+# How much the timeout_prevote increases with each round
+timeout_prevote_delta = "500ms"
+# How long we wait after receiving +2/3 precommits for "anything" (ie. not a single block or nil)
+timeout_precommit = "1s"
+# How much the timeout_precommit increases with each round
+timeout_precommit_delta = "500ms"
+# How long we wait after committing a block, before starting on the new
+# height (this gives us a chance to receive some more precommits, even
+# though we already have +2/3).
+timeout_commit = "1s"
+
+# How many blocks to look back to check existence of the node's consensus votes before joining consensus
+# During non-fast-sync, the node will not join consensus until a block in which it has a
+# precommit vote.
+# Disable by setting to 0
+double_sign_check_height = 0
+
+# Make progress as soon as we have all the precommits (as if TimeoutCommit = 0)
+skip_timeout_commit = false
+
+# EmptyBlocks mode and possible interval between empty blocks in seconds
+create_empty_blocks = true
+create_empty_blocks_interval = "0s"
+
+# Reactor sleep duration parameters
+peer_gossip_sleep_duration = "100ms"
+peer_query_maj23_sleep_duration = "2s"
+
+###############################################################################
+###                         Storage Configuration                           ###
+###############################################################################
+
+[storage]
+
+# Set to true to discard ABCI responses from the state store, which can save a
+# considerable amount of disk space. Set to false to ensure ABCI responses are
+# persisted. ABCI responses are required for `/block_results` RPC queries
+# and to reindex events in the command line tool.
+discard_abci_responses = false
+
+###############################################################################
+###                         Transaction Configuration                        ###
+###############################################################################
+
+[tx_index]
+
+# What indexer to use for transactions
+#
+# Options:
+#   1) "null" - no indexer
+#   2) "kv" (default) - the simplest possible indexer, backed by key-value storage (defaults to levelDB; see DBBackend).
+#     - When "kv" is chosen "tx.height" and "tx.hash" will always be indexed.
+indexer = "kv"
+
+# Comma-separated list of tags to index (by default the list of tags is ["tx.hash", "tx.height"]).
+# Note that "tx.hash" and "tx.height" are always indexed.
+# This is only applied when the indexer is "kv".
+index_tags = ""
+
+# When set to true, tells indexer to index all tags (predefined tags: "tx.hash", "tx.height", "tx.events").
+# Note that "tx.hash" and "tx.height" are always indexed.
+# This is only applied when the indexer is "kv".
+index_all_tags = false
+
+###############################################################################
+###                         Instrumentation Configuration                   ###
+###############################################################################
+
+[instrumentation]
+
+# When true, Prometheus metrics are served under /metrics on
+# PrometheusListenAddr.
+# Check out the documentation for the list of available metrics.
+prometheus = false
+
+# Address to listen for Prometheus collector(s) connections.
+prometheus_listen_addr = ":26660"
+
+# Maximum number of simultaneous connections.
+# If you want to accept a larger number than the default, make sure
+# you increase your OS limits.
+# 0 - unlimited.
+max_open_connections = 3
+
+# Instrumentation namespace.
+namespace = "tendermint"

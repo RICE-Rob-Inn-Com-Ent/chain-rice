@@ -158,15 +158,8 @@ bazel run //:go → nix_shell → nix develop → go build
 3. **Reproducibility**: Exact package versions
 4. **Speed**: Nix caching + Bazel incremental builds
 5. **Flexibility**: Easy to add new environments
-
-## Roadmap
-
-Detailed project development plan can be found in [TODO.md](./TODO.md) - there are described all 12 development phases, from basic architecture to global scaling.
-
-### Key Directions
-
-- **Security**: Zero Trust Architecture, GDPR compliance, SOC 2
-- **Blockchain**: Multi-chain support, Zero Knowledge Proofs, DeFi integration  
-- **Bridges**: Legacy systems, Cloud providers, Development tools
-- **Frontend**: Universal component library for all frameworks
-- **AI/ML**: MLOps pipeline, LLM integration, automated code generation
+6. **Security**: Zero Trust Architecture, GDPR compliance, SOC 2
+7. **Blockchain**: Multi-chain support, Zero Knowledge Proofs, DeFi integration  
+8. **Bridges**: Legacy systems, Cloud providers, Development tools
+9. **Frontend**: Universal component library for all frameworks
+10. **AI/ML**: MLOps pipeline, LLM integration, automated code generation

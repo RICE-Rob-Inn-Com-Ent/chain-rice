@@ -1,0 +1,21 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+# ChainRice dependencies
+npm_link_all_packages(name = "chainrice_deps")
+
+# ChainRice package
+npm_package(
+    name = "chainrice_package",
+    srcs = glob(["**/*.ts", "**/*.js", "**/*.html", "**/*.css", "**/*.json"]),
+    deps = [":chainrice_deps"],
+    visibility = ["//visibility:public"],
+)
+
+# ChainRice binary
+nodejs_binary(
+    name = "chainrice",
+    data = [":chainrice_package"],
+    entry_point = "index.html",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package blockchain.tokens.enums;
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/enums";
+
+// TokenType defines the type of token
+enum TokenType {
+  // TOKEN_TYPE_UNSPECIFIED represents an unspecified token type
+  TOKEN_TYPE_UNSPECIFIED = 0;
+
+  // TOKEN_TYPE_FUNGIBLE represents a fungible token (like ERC-20)
+  TOKEN_TYPE_FUNGIBLE = 1;
+
+  // TOKEN_TYPE_NON_FUNGIBLE represents a non-fungible token (like ERC-721)
+  TOKEN_TYPE_NON_FUNGIBLE = 2;
+
+  // TOKEN_TYPE_SEMI_FUNGIBLE represents a semi-fungible token (like ERC-1155)
+  TOKEN_TYPE_SEMI_FUNGIBLE = 3;
+
+  // TOKEN_TYPE_UTILITY represents a utility token
+  TOKEN_TYPE_UTILITY = 4;
+
+  // TOKEN_TYPE_GOVERNANCE represents a governance token
+  TOKEN_TYPE_GOVERNANCE = 5;
+
+  // TOKEN_TYPE_STAKING represents a staking token
+  TOKEN_TYPE_STAKING = 6;
+
+  // TOKEN_TYPE_REWARD represents a reward token
+  TOKEN_TYPE_REWARD = 7;
+
+  // TOKEN_TYPE_PAYMENT represents a payment token
+  TOKEN_TYPE_PAYMENT = 8;
+}

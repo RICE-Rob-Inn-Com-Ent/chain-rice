@@ -1,0 +1,121 @@
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2020: true,
+    node: true,
+    es6: true,
+  },
+  extends: [
+    'eslint:recommended',
+    '@typescript-eslint/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+    project: './tsconfig.json',
+  },
+  plugins: [
+    '@typescript-eslint',
+    'import',
+  ],
+  rules: {
+    // TypeScript specific rules
+    '@typescript-eslint/no-unused-vars': ['error', { 
+      argsIgnorePattern: '^_',
+      varsIgnorePattern: '^_',
+      caughtErrorsIgnorePattern: '^_',
+    }],
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/prefer-const': 'error',
+    '@typescript-eslint/no-var-requires': 'error',
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    
+    // General rules
+    'prefer-const': 'error',
+    'no-var': 'error',
+    'no-console': 'warn',
+    'no-debugger': 'warn',
+    'no-duplicate-imports': 'error',
+    'no-unused-expressions': 'error',
+    
+    // Import rules
+    'import/order': ['error', {
+      'groups': [
+        'builtin',
+        'external',
+        'internal',
+        'parent',
+        'sibling',
+        'index',
+      ],
+      'newlines-between': 'always',
+      'alphabetize': {
+        'order': 'asc',
+        'caseInsensitive': true,
+      },
+    }],
+    'import/no-unresolved': 'error',
+    'import/no-cycle': 'error',
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: './tsconfig.json',
+      },
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
+  ignorePatterns: [
+    'dist/',
+    'build/',
+    '.next/',
+    '.nuxt/',
+    '.svelte-kit/',
+    'node_modules/',
+    '*.js',
+    '*.d.ts',
+    'coverage/',
+    '*.min.js',
+  ],
+  overrides: [
+    {
+      files: ['*.vue'],
+      extends: [
+        'plugin:vue/vue3-recommended',
+        '@typescript-eslint/recommended',
+      ],
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+      rules: {
+        'vue/multi-word-component-names': 'off',
+        'vue/no-v-html': 'warn',
+      },
+    },
+    {
+      files: ['*.svelte'],
+      extends: [
+        'plugin:svelte/recommended',
+      ],
+      parser: 'svelte-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+      },
+    },
+  ],
+};

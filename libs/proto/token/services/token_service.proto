@@ -1,0 +1,257 @@
+syntax = "proto3";
+
+package blockchain.tokens.services;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "google/api/annotations.proto";
+import "blockchain/tokens/messages/token.proto";
+import "blockchain/tokens/messages/token_transfer.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/services";
+
+// TokenMsgService defines the message service for token operations
+service TokenMsgService {
+  // CreateToken creates a new token
+  rpc CreateToken(blockchain.tokens.messages.MsgCreateToken)
+      returns (blockchain.tokens.messages.MsgCreateTokenResponse);
+
+  // UpdateToken updates an existing token
+  rpc UpdateToken(blockchain.tokens.messages.MsgUpdateToken)
+      returns (blockchain.tokens.messages.MsgUpdateTokenResponse);
+
+  // DeleteToken deletes a token
+  rpc DeleteToken(blockchain.tokens.messages.MsgDeleteToken)
+      returns (blockchain.tokens.messages.MsgDeleteTokenResponse);
+
+  // MintToken mints new tokens
+  rpc MintToken(blockchain.tokens.messages.MsgMintToken)
+      returns (blockchain.tokens.messages.MsgMintTokenResponse);
+
+  // BurnToken burns tokens
+  rpc BurnToken(blockchain.tokens.messages.MsgBurnToken)
+      returns (blockchain.tokens.messages.MsgBurnTokenResponse);
+
+  // TransferToken transfers tokens
+  rpc TransferToken(blockchain.tokens.messages.MsgTransferToken)
+      returns (blockchain.tokens.messages.MsgTransferTokenResponse);
+
+  // ApproveToken approves token spending
+  rpc ApproveToken(blockchain.tokens.messages.MsgApproveToken)
+      returns (blockchain.tokens.messages.MsgApproveTokenResponse);
+
+  // TransferFromToken transfers tokens on behalf of another address
+  rpc TransferFromToken(blockchain.tokens.messages.MsgTransferFromToken)
+      returns (blockchain.tokens.messages.MsgTransferFromTokenResponse);
+}
+
+// TokenQueryService defines the query service for token operations
+service TokenQueryService {
+  // GetToken retrieves a token by ID
+  rpc GetToken(GetTokenRequest) returns (GetTokenResponse) {
+    option (google.api.http).get = "/chainrice/tokens/v1/tokens/{token_id}";
+  }
+
+  // ListTokens lists all tokens with pagination
+  rpc ListTokens(ListTokensRequest) returns (ListTokensResponse) {
+    option (google.api.http).get = "/chainrice/tokens/v1/tokens";
+  }
+
+  // GetTokenBalance retrieves the token balance for an address
+  rpc GetTokenBalance(GetTokenBalanceRequest)
+      returns (GetTokenBalanceResponse) {
+    option (google.api.http).get =
+        "/chainrice/tokens/v1/balances/{address}/{token_id}";
+  }
+
+  // ListTokenBalances lists all token balances for an address
+  rpc ListTokenBalances(ListTokenBalancesRequest)
+      returns (ListTokenBalancesResponse) {
+    option (google.api.http).get = "/chainrice/tokens/v1/balances/{address}";
+  }
+
+  // GetTokenTransfer retrieves a token transfer by ID
+  rpc GetTokenTransfer(GetTokenTransferRequest)
+      returns (GetTokenTransferResponse) {
+    option (google.api.http).get =
+        "/chainrice/tokens/v1/transfers/{transfer_id}";
+  }
+
+  // ListTokenTransfers lists token transfers with pagination
+  rpc ListTokenTransfers(ListTokenTransfersRequest)
+      returns (ListTokenTransfersResponse) {
+    option (google.api.http).get = "/chainrice/tokens/v1/transfers";
+  }
+
+  // GetTokenApproval retrieves token approval information
+  rpc GetTokenApproval(GetTokenApprovalRequest)
+      returns (GetTokenApprovalResponse) {
+    option (google.api.http).get =
+        "/chainrice/tokens/v1/approvals/{owner}/{spender}/{token_id}";
+  }
+
+  // ListTokenApprovals lists all token approvals for an address
+  rpc ListTokenApprovals(ListTokenApprovalsRequest)
+      returns (ListTokenApprovalsResponse) {
+    option (google.api.http).get = "/chainrice/tokens/v1/approvals/{owner}";
+  }
+}
+
+// GetTokenRequest defines the request for getting a token
+message GetTokenRequest {
+  // token_id is the ID of the token to retrieve
+  string token_id = 1;
+}
+
+// GetTokenResponse defines the response for getting a token
+message GetTokenResponse {
+  // token is the token information
+  blockchain.tokens.messages.Token token = 1;
+}
+
+// ListTokensRequest defines the request for listing tokens
+message ListTokensRequest {
+  // pagination defines the pagination parameters
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+
+  // creator filters tokens by creator address
+  string creator = 2;
+
+  // type filters tokens by type
+  string type = 3;
+
+  // status filters tokens by status
+  string status = 4;
+}
+
+// ListTokensResponse defines the response for listing tokens
+message ListTokensResponse {
+  // tokens is the list of tokens
+  repeated blockchain.tokens.messages.Token tokens = 1;
+
+  // pagination defines the pagination response
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// GetTokenBalanceRequest defines the request for getting a token balance
+message GetTokenBalanceRequest {
+  // address is the address to get the balance for
+  string address = 1;
+
+  // token_id is the ID of the token
+  string token_id = 2;
+}
+
+// GetTokenBalanceResponse defines the response for getting a token balance
+message GetTokenBalanceResponse {
+  // balance is the token balance
+  string balance = 1;
+
+  // token_id is the ID of the token
+  string token_id = 2;
+
+  // address is the address
+  string address = 3;
+}
+
+// ListTokenBalancesRequest defines the request for listing token balances
+message ListTokenBalancesRequest {
+  // address is the address to get balances for
+  string address = 1;
+
+  // pagination defines the pagination parameters
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// ListTokenBalancesResponse defines the response for listing token balances
+message ListTokenBalancesResponse {
+  // balances is the list of token balances
+  repeated GetTokenBalanceResponse balances = 1;
+
+  // pagination defines the pagination response
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// GetTokenTransferRequest defines the request for getting a token transfer
+message GetTokenTransferRequest {
+  // transfer_id is the ID of the transfer to retrieve
+  string transfer_id = 1;
+}
+
+// GetTokenTransferResponse defines the response for getting a token transfer
+message GetTokenTransferResponse {
+  // transfer is the transfer information
+  blockchain.tokens.messages.TokenTransfer transfer = 1;
+}
+
+// ListTokenTransfersRequest defines the request for listing token transfers
+message ListTokenTransfersRequest {
+  // pagination defines the pagination parameters
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+
+  // token_id filters transfers by token ID
+  string token_id = 2;
+
+  // from_address filters transfers by sender address
+  string from_address = 3;
+
+  // to_address filters transfers by recipient address
+  string to_address = 4;
+
+  // status filters transfers by status
+  string status = 5;
+}
+
+// ListTokenTransfersResponse defines the response for listing token transfers
+message ListTokenTransfersResponse {
+  // transfers is the list of transfers
+  repeated blockchain.tokens.messages.TokenTransfer transfers = 1;
+
+  // pagination defines the pagination response
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// GetTokenApprovalRequest defines the request for getting token approval
+message GetTokenApprovalRequest {
+  // owner is the address of the token owner
+  string owner = 1;
+
+  // spender is the address of the spender
+  string spender = 2;
+
+  // token_id is the ID of the token
+  string token_id = 3;
+}
+
+// GetTokenApprovalResponse defines the response for getting token approval
+message GetTokenApprovalResponse {
+  // approval is the approval amount
+  string approval = 1;
+
+  // owner is the address of the token owner
+  string owner = 2;
+
+  // spender is the address of the spender
+  string spender = 3;
+
+  // token_id is the ID of the token
+  string token_id = 4;
+}
+
+// ListTokenApprovalsRequest defines the request for listing token approvals
+message ListTokenApprovalsRequest {
+  // owner is the address of the token owner
+  string owner = 1;
+
+  // pagination defines the pagination parameters
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// ListTokenApprovalsResponse defines the response for listing token approvals
+message ListTokenApprovalsResponse {
+  // approvals is the list of approvals
+  repeated GetTokenApprovalResponse approvals = 1;
+
+  // pagination defines the pagination response
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

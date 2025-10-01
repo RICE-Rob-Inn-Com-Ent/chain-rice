@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package blockchain.tokens.messages;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "blockchain/tokens/enums/token_type.proto";
+import "blockchain/tokens/enums/token_status.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens/messages";
+
+// Token represents a token in the blockchain
+message Token {
+  // id is the unique identifier of the token
+  string id = 1;
+
+  // name is the name of the token
+  string name = 2;
+
+  // symbol is the symbol of the token
+  string symbol = 3;
+
+  // description is the description of the token
+  string description = 4;
+
+  // type is the type of the token
+  blockchain.tokens.enums.TokenType type = 5;
+
+  // status is the status of the token
+  blockchain.tokens.enums.TokenStatus status = 6;
+
+  // total_supply is the total supply of the token
+  string total_supply = 7
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // circulating_supply is the circulating supply of the token
+  string circulating_supply = 8
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // decimals is the number of decimals for the token
+  uint32 decimals = 9;
+
+  // creator is the address of the token creator
+  string creator = 10 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // owner is the current owner of the token
+  string owner = 11 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // metadata is additional metadata for the token
+  string metadata = 12;
+
+  // created_at is the timestamp when the token was created
+  int64 created_at = 13;
+
+  // updated_at is the timestamp when the token was last updated
+  int64 updated_at = 14;
+
+  // properties are additional properties of the token
+  map<string, string> properties = 15;
+}
+
+// MsgCreateToken defines a message to create a new token
+message MsgCreateToken {
+  option (cosmos.msg.v1.signer) = "creator";
+
+  // creator is the address of the token creator
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // name is the name of the token
+  string name = 2;
+
+  // symbol is the symbol of the token
+  string symbol = 3;
+
+  // description is the description of the token
+  string description = 4;
+
+  // type is the type of the token
+  blockchain.tokens.enums.TokenType type = 5;
+
+  // initial_supply is the initial supply of the token
+  string initial_supply = 6
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // decimals is the number of decimals for the token
+  uint32 decimals = 7;
+
+  // metadata is additional metadata for the token
+  string metadata = 8;
+
+  // properties are additional properties of the token
+  map<string, string> properties = 9;
+}
+
+// MsgCreateTokenResponse defines the response for creating a token
+message MsgCreateTokenResponse {
+  // token_id is the ID of the created token
+  string token_id = 1;
+}
+
+// MsgUpdateToken defines a message to update an existing token
+message MsgUpdateToken {
+  option (cosmos.msg.v1.signer) = "owner";
+
+  // owner is the address of the token owner
+  string owner = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to update
+  string token_id = 2;
+
+  // name is the new name of the token
+  string name = 3;
+
+  // description is the new description of the token
+  string description = 4;
+
+  // metadata is the new metadata for the token
+  string metadata = 5;
+
+  // properties are the new properties of the token
+  map<string, string> properties = 6;
+}
+
+// MsgUpdateTokenResponse defines the response for updating a token
+message MsgUpdateTokenResponse {}
+
+// MsgDeleteToken defines a message to delete a token
+message MsgDeleteToken {
+  option (cosmos.msg.v1.signer) = "owner";
+
+  // owner is the address of the token owner
+  string owner = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to delete
+  string token_id = 2;
+}
+
+// MsgDeleteTokenResponse defines the response for deleting a token
+message MsgDeleteTokenResponse {}
+
+// MsgMintToken defines a message to mint new tokens
+message MsgMintToken {
+  option (cosmos.msg.v1.signer) = "minter";
+
+  // minter is the address of the token minter
+  string minter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to mint
+  string token_id = 2;
+
+  // amount is the amount of tokens to mint
+  string amount = 3
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // recipient is the address to receive the minted tokens
+  string recipient = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgMintTokenResponse defines the response for minting tokens
+message MsgMintTokenResponse {}
+
+// MsgBurnToken defines a message to burn tokens
+message MsgBurnToken {
+  option (cosmos.msg.v1.signer) = "burner";
+
+  // burner is the address of the token burner
+  string burner = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // token_id is the ID of the token to burn
+  string token_id = 2;
+
+  // amount is the amount of tokens to burn
+  string amount = 3
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+}
+
+// MsgBurnTokenResponse defines the response for burning tokens
+message MsgBurnTokenResponse {}
