@@ -1,13 +1,15 @@
 package keeper
 
 import (
+	"encoding/json"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"cosmossdk.io/math"
 
 	"github.com/rice-dev/backend/blockchain/x/tokens/types"
 )
 
-// InitGenesis initializes the capability module's state from a provided genesis
-// state.
+// InitGenesis initializes the tokens module's genesis state
 func InitGenesis(ctx sdk.Context, k Keeper, genState types.GenesisState) {
 	// Set all the params
 	k.SetParams(ctx, genState.Params)
@@ -24,16 +26,16 @@ func InitGenesis(ctx sdk.Context, k Keeper, genState types.GenesisState) {
 
 	// Set all the token balances
 	for _, balance := range genState.TokenBalances {
-		k.SetTokenBalance(ctx, balance)
+		k.SetTokenBalance(ctx, balance.TokenId, balance.Address, balance.Amount)
 	}
 
 	// Set all the token approvals
 	for _, approval := range genState.TokenApprovals {
-		k.SetTokenApproval(ctx, approval)
+		k.SetTokenApproval(ctx, approval.TokenId, approval.Owner, approval.Spender, approval.Amount)
 	}
 }
 
-// ExportGenesis returns the capability module's exported genesis.
+// ExportGenesis returns the tokens module's exported genesis
 func ExportGenesis(ctx sdk.Context, k Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
@@ -56,7 +58,10 @@ func ExportGenesis(ctx sdk.Context, k Keeper) *types.GenesisState {
 // SetParams sets the params in the store
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&params)
+	bz, err := json.Marshal(&params)
+	if err != nil {
+		return
+	}
 	store.Set(types.ParamsKey, bz)
 }
 
@@ -69,150 +74,45 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	}
 
 	var params types.Params
-	k.cdc.MustUnmarshal(bz, &params)
+	err := json.Unmarshal(bz, &params)
+	if err != nil {
+		return types.DefaultParams()
+	}
 	return params
 }
 
 // SetToken sets a token in the store
 func (k Keeper) SetToken(ctx sdk.Context, token types.Token) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&token)
-	store.Set(types.TokenKey(token.Id), bz)
-}
-
-// GetToken gets a token from the store
-func (k Keeper) GetToken(ctx sdk.Context, tokenId string) (types.Token, bool) {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.TokenKey(tokenId))
-	if bz == nil {
-		return types.Token{}, false
+	bz, err := json.Marshal(&token)
+	if err != nil {
+		return
 	}
-
-	var token types.Token
-	k.cdc.MustUnmarshal(bz, &token)
-	return token, true
-}
-
-// GetAllTokens gets all tokens from the store
-func (k Keeper) GetAllTokens(ctx sdk.Context) []types.Token {
-	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, []byte("token/"))
-	defer iterator.Close()
-
-	var tokens []types.Token
-	for ; iterator.Valid(); iterator.Next() {
-		var token types.Token
-		k.cdc.MustUnmarshal(iterator.Value(), &token)
-		tokens = append(tokens, token)
-	}
-
-	return tokens
+	store.Set(types.GetTokenKey(token.Id), bz)
 }
 
 // SetTokenTransfer sets a token transfer in the store
 func (k Keeper) SetTokenTransfer(ctx sdk.Context, transfer types.TokenTransfer) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&transfer)
-	store.Set(types.TokenTransferKey(transfer.Id), bz)
-}
-
-// GetTokenTransfer gets a token transfer from the store
-func (k Keeper) GetTokenTransfer(ctx sdk.Context, transferId string) (types.TokenTransfer, bool) {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.TokenTransferKey(transferId))
-	if bz == nil {
-		return types.TokenTransfer{}, false
+	bz, err := json.Marshal(&transfer)
+	if err != nil {
+		return
 	}
-
-	var transfer types.TokenTransfer
-	k.cdc.MustUnmarshal(bz, &transfer)
-	return transfer, true
-}
-
-// GetAllTokenTransfers gets all token transfers from the store
-func (k Keeper) GetAllTokenTransfers(ctx sdk.Context) []types.TokenTransfer {
-	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, []byte("transfer/"))
-	defer iterator.Close()
-
-	var transfers []types.TokenTransfer
-	for ; iterator.Valid(); iterator.Next() {
-		var transfer types.TokenTransfer
-		k.cdc.MustUnmarshal(iterator.Value(), &transfer)
-		transfers = append(transfers, transfer)
-	}
-
-	return transfers
-}
-
-// SetTokenBalance sets a token balance in the store
-func (k Keeper) SetTokenBalance(ctx sdk.Context, balance types.TokenBalance) {
-	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&balance)
-	store.Set(types.TokenBalanceKey(balance.Address, balance.TokenId), bz)
-}
-
-// GetTokenBalance gets a token balance from the store
-func (k Keeper) GetTokenBalance(ctx sdk.Context, address, tokenId string) (types.TokenBalance, bool) {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.TokenBalanceKey(address, tokenId))
-	if bz == nil {
-		return types.TokenBalance{}, false
-	}
-
-	var balance types.TokenBalance
-	k.cdc.MustUnmarshal(bz, &balance)
-	return balance, true
-}
-
-// GetAllTokenBalances gets all token balances from the store
-func (k Keeper) GetAllTokenBalances(ctx sdk.Context) []types.TokenBalance {
-	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, []byte("balance/"))
-	defer iterator.Close()
-
-	var balances []types.TokenBalance
-	for ; iterator.Valid(); iterator.Next() {
-		var balance types.TokenBalance
-		k.cdc.MustUnmarshal(iterator.Value(), &balance)
-		balances = append(balances, balance)
-	}
-
-	return balances
+	store.Set(types.GetTokenTransferKey(transfer.Id), bz)
 }
 
 // SetTokenApproval sets a token approval in the store
-func (k Keeper) SetTokenApproval(ctx sdk.Context, approval types.TokenApproval) {
+func (k Keeper) SetTokenApproval(ctx sdk.Context, tokenId, owner, spender string, amount math.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&approval)
-	store.Set(types.TokenApprovalKey(approval.Owner, approval.Spender, approval.TokenId), bz)
-}
-
-// GetTokenApproval gets a token approval from the store
-func (k Keeper) GetTokenApproval(ctx sdk.Context, owner, spender, tokenId string) (types.TokenApproval, bool) {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.TokenApprovalKey(owner, spender, tokenId))
-	if bz == nil {
-		return types.TokenApproval{}, false
+	approval := types.TokenApproval{
+		TokenId: tokenId,
+		Owner:   owner,
+		Spender: spender,
+		Amount:  amount,
 	}
-
-	var approval types.TokenApproval
-	k.cdc.MustUnmarshal(bz, &approval)
-	return approval, true
-}
-
-// GetAllTokenApprovals gets all token approvals from the store
-func (k Keeper) GetAllTokenApprovals(ctx sdk.Context) []types.TokenApproval {
-	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, []byte("approval/"))
-	defer iterator.Close()
-
-	var approvals []types.TokenApproval
-	for ; iterator.Valid(); iterator.Next() {
-		var approval types.TokenApproval
-		k.cdc.MustUnmarshal(iterator.Value(), &approval)
-		approvals = append(approvals, approval)
+	bz, err := json.Marshal(&approval)
+	if err != nil {
+		return
 	}
-
-	return approvals
+	store.Set(types.GetTokenApprovalKey(tokenId, owner, spender), bz)
 }

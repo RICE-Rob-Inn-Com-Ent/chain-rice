@@ -22,7 +22,7 @@ func (k msgServer) CreateToken(goCtx context.Context, msg *types.MsgCreateToken)
 	_ = msg
 
 	return &types.MsgCreateTokenResponse{
-		TokenId: "token-1", // Placeholder
+		Id: "token-1", // Placeholder
 	}, nil
 }
 
@@ -108,9 +108,7 @@ func (k msgServer) TransferToken(goCtx context.Context, msg *types.MsgTransferTo
 	_ = ctx
 	_ = msg
 
-	return &types.MsgTransferTokenResponse{
-		TransferId: "transfer-1", // Placeholder
-	}, nil
+	return &types.MsgTransferTokenResponse{}, nil
 }
 
 // ApproveToken approves token spending
@@ -145,7 +143,5 @@ func (k msgServer) TransferFromToken(goCtx context.Context, msg *types.MsgTransf
 	_ = ctx
 	_ = msg
 
-	return &types.MsgTransferFromTokenResponse{
-		TransferId: "transfer-1", // Placeholder
-	}, nil
+	return &types.MsgTransferFromTokenResponse{}, nil
 }

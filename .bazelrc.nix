@@ -24,8 +24,8 @@ build --action_env=LC_ALL
 build --action_env=LANG
 
 # Java configuration for Nix
-build --java_runtime_version=17
-build --java_language_version=17
+build --java_runtime_version=21
+build --java_language_version=21
 build --action_env=JAVA_HOME
 build --action_env=MAVEN_OPTS
 build --action_env=GRADLE_OPTS
@@ -112,3 +112,23 @@ build --action_env=KUBE_CONFIG_PATH
 build --action_env=DOCKER_HOST
 build --action_env=DOCKER_CONFIG
 
+# CUDA configuration for Nix
+build --action_env=CUDA_PATH
+build --action_env=CUDA_HOME
+build --action_env=LD_LIBRARY_PATH
+
+# PHP configuration for Nix
+build --action_env=COMPOSER_HOME
+build --action_env=COMPOSER_CACHE_DIR
+
+# .NET configuration for Nix
+build --action_env=DOTNET_CLI_TELEMETRY_OPTOUT
+build --action_env=DOTNET_ROOT
+
+# Flutter/Dart configuration for Nix
+build --action_env=PUB_CACHE
+build --action_env=FLUTTER_ROOT
+
+# Julia configuration for Nix
+build --action_env=JULIA_PROJECT
+build --action_env=JULIA_DEPOT_PATH

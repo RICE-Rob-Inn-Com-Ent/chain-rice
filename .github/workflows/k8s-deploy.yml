@@ -1,0 +1,21 @@
+name: Kubernetes Test
+
+on:
+    push:
+        branches:
+            - main # or whichever branch you want
+
+jobs:
+    test-kubectl:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Set up kubeconfig
+              run: |
+                  mkdir -p $HOME/.kube
+                  echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+
+            - name: Test kubectl
+              run: kubectl get pods

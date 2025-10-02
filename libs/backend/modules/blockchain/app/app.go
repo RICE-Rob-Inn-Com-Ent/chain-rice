@@ -4,31 +4,21 @@ import (
 	"encoding/json"
 	"io"
 
-	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
-	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"
-	"cosmossdk.io/client/v2/autocli"
-	"cosmossdk.io/core/log"
-	"cosmossdk.io/depinject"
-	"cosmossdk.io/depinject/appconfig"
 	storetypes "cosmossdk.io/store/types"
 	"cosmossdk.io/x/circuit"
 	circuitkeeper "cosmossdk.io/x/circuit/keeper"
-	circuittypes "cosmossdk.io/x/circuit/types"
 	"cosmossdk.io/x/evidence"
 	evidencekeeper "cosmossdk.io/x/evidence/keeper"
-	evidencetypes "cosmossdk.io/x/evidence/types"
-	"cosmossdk.io/x/feegrant"
 	feegrantkeeper "cosmossdk.io/x/feegrant/keeper"
 	feegrantmodule "cosmossdk.io/x/feegrant/module"
-	"cosmossdk.io/x/nft"
 	nftkeeper "cosmossdk.io/x/nft/keeper"
-	nftmodule "cosmossdk.io/x/nft/module"
 	"cosmossdk.io/x/upgrade"
 	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
-	upgradetypes "cosmossdk.io/x/upgrade/types"
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	abci "github.com/cometbft/cometbft/abci/types"
-	"github.com/cometbft/cometbft/libs/log"
-	tmos "github.com/cometbft/cometbft/libs/os"
+	cometlog "github.com/cometbft/cometbft/libs/log"
 	dbm "github.com/cosmos/cosmos-db"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -39,25 +29,19 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
+	"github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
-	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	"github.com/cosmos/cosmos-sdk/x/authz"
-	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
-	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisiskeeper "github.com/cosmos/cosmos-sdk/x/crisis/keeper"
-	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	distr "github.com/cosmos/cosmos-sdk/x/distribution"
 	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -67,32 +51,30 @@ import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/cosmos/cosmos-sdk/x/group"
-	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
-	groupmodule "github.com/cosmos/cosmos-sdk/x/group/module"
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
+	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	slashingkeeper "github.com/cosmos/cosmos-sdk/x/slashing/keeper"
-	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
-	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
-	icacontrollerkeeper "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/keeper"
-	icacontrollertypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
-	icahostkeeper "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/keeper"
-	icahosttypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/types"
-	ibcfeekeeper "github.com/cosmos/ibc-go/v8/modules/apps/29-fee/keeper"
-	ibcfeetypes "github.com/cosmos/ibc-go/v8/modules/apps/29-fee/types"
-	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+	transfer "github.com/cosmos/ibc-go/v8/modules/apps/transfer"
+	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
+	ibctransfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+
+	// Cosmos SDK modules
+	"github.com/cosmos/ibc-go/modules/capability"
 
 	// ChainRice modules
 	"github.com/rice-dev/backend/blockchain/x/tokens"
@@ -103,11 +85,25 @@ import (
 const (
 	// Name defines the application binary name
 	Name = "chainrice"
+
+	// BaseDenom defines the base denomination for the chain
+	BaseDenom = "urice"
 )
 
 var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
+
+	// AppConfigYAML is the YAML configuration for the app
+	AppConfigYAML = `app:
+  accounts:
+    - name: alice
+      address: cosmos1hj5fveer5cjtn4wd6wstzugjfdxzl0xps73ftl
+      coins: ["1000000000000000urice"]
+  validator:
+    name: alice
+    staking: "1000000000000000urice"
+`
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -125,32 +121,28 @@ var (
 		crisis.AppModuleBasic{},
 		slashing.AppModuleBasic{},
 		feegrantmodule.AppModuleBasic{},
-		groupmodule.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		circuit.AppModuleBasic{},
-		authzmodule.AppModuleBasic{},
-		nftmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
+		wasm.AppModuleBasic{},
 		// ChainRice modules
 		tokens.AppModuleBasic{},
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:       nil,
-		distrtypes.ModuleName:            nil,
-		minttypes.ModuleName:             {authtypes.Minter},
-		stakingtypes.BondedPoolName:      {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:   {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:              {authtypes.Burner},
-		ibcfeetypes.ModuleName:           nil,
-		icacontrollertypes.SubModuleName: nil,
-		icahosttypes.SubModuleName:       nil,
-		ibctransfertypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
+		authtypes.FeeCollectorName:     nil,
+		distrtypes.ModuleName:          nil,
+		minttypes.ModuleName:           {authtypes.Minter},
+		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:            {authtypes.Burner},
+		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		wasmtypes.ModuleName:           {authtypes.Burner},
 		// ChainRice modules
 		tokenstypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	}
@@ -171,6 +163,17 @@ type ChainRiceApp struct {
 	txConfig          client.TxConfig
 	interfaceRegistry types.InterfaceRegistry
 
+	// BaseApp and store keys
+	BaseApp      *baseapp.BaseApp
+	kvStoreKeys  map[string]*storetypes.KVStoreKey
+	tStoreKeys   map[string]*storetypes.TransientStoreKey
+	memStoreKeys map[string]*storetypes.MemoryStoreKey
+
+	// Routers
+	MsgServiceRouter *baseapp.MsgServiceRouter
+	GRPCQueryRouter  *baseapp.GRPCQueryRouter
+	configurator     module.Configurator
+
 	// keepers
 	AccountKeeper         authkeeper.AccountKeeper
 	BankKeeper            bankkeeper.Keeper
@@ -182,20 +185,21 @@ type ChainRiceApp struct {
 	CrisisKeeper          *crisiskeeper.Keeper
 	UpgradeKeeper         *upgradekeeper.Keeper
 	ParamsKeeper          paramskeeper.Keeper
-	AuthzKeeper           authzkeeper.Keeper
 	EvidenceKeeper        evidencekeeper.Keeper
 	FeeGrantKeeper        feegrantkeeper.Keeper
-	GroupKeeper           groupkeeper.Keeper
 	NFTKeeper             nftkeeper.Keeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	CircuitBreakerKeeper  circuitkeeper.Keeper
 
 	// IBC
-	IBCKeeper           *ibckeeper.Keeper
-	CapabilityKeeper    *capabilitykeeper.Keeper
-	IBCFeeKeeper        ibcfeekeeper.Keeper
-	ICAControllerKeeper icacontrollerkeeper.Keeper
-	ICAHostKeeper       icahostkeeper.Keeper
+	IBCKeeper        *ibckeeper.Keeper
+	CapabilityKeeper *capabilitykeeper.Keeper
+
+	// IBC Transfer
+	TransferKeeper ibctransferkeeper.Keeper
+
+	// CosmWasm
+	WasmKeeper wasmkeeper.Keeper
 
 	// ChainRice modules
 	TokensKeeper tokenskeeper.Keeper
@@ -205,11 +209,14 @@ type ChainRiceApp struct {
 
 	// simulation manager
 	sm *module.SimulationManager
+
+	// RootCmd is the root command of the application
+	RootCmd *cobra.Command
 }
 
 // NewChainRiceApp returns a reference to an initialized ChainRiceApp.
 func NewChainRiceApp(
-	logger log.Logger,
+	logger cometlog.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
 	loadLatest bool,
@@ -217,530 +224,19 @@ func NewChainRiceApp(
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *ChainRiceApp {
 	var (
-		app        = &ChainRiceApp{}
-		appBuilder *appconfig.AppBuilder
-		appConfig  = depinject.Configs(
-			appconfig.LoadYAML(AppConfigYAML),
-			depinject.Supply(
-				// supply the application options
-				appOpts,
-				// supply the logger
-				logger,
-
-				// ADVANCED CONFIGURATION
-				//
-				// AUTH
-				//
-				// For providing a custom function required in auth to generate custom account types
-				// add it below. By default the auth module uses simulation.RandomGenesisAccounts.
-				//
-				// authtypes.RandomGenesisAccountsFn(simulation.RandomGenesisAccounts),
-				//
-				// For providing a custom acl module to the auth module, add it below.
-				// By default the auth module uses auth.NewModuleAddress("gov") to create the module
-				// account address. The acl module should hold the accounts keys.
-				//
-				// authtypes.NewModuleAddress("gov"),
-
-				//
-				// STAKING
-				//
-				// For providing a custom validator set to the staking module, add it below.
-				// By default the staking module uses staking.NewModuleAddress("gov") to create the module
-				// account address. The validator set should hold the validator keys.
-				//
-				// stakingtypes.NewModuleAddress("gov"),
-
-				//
-				// MINT
-				//
-				// For providing a custom inflation function to the mint module, add it below.
-				// By default the mint module uses a default inflation function.
-				//
-				// minttypes.NewModuleAddress("gov"),
-
-				//
-				// DISTRIBUTION
-				//
-				// For providing a custom distribution function to the distr module, add it below.
-				// By default the distr module uses a default distribution function.
-				//
-				// distrtypes.NewModuleAddress("gov"),
-
-				//
-				// GOV
-				//
-				// For providing a custom governance function to the gov module, add it below.
-				// By default the gov module uses a default governance function.
-				//
-				// govtypes.NewModuleAddress("gov"),
-
-				//
-				// PARAMS
-				//
-				// For providing a custom params function to the params module, add it below.
-				// By default the params module uses a default params function.
-				//
-				// paramstypes.NewModuleAddress("gov"),
-
-				//
-				// CRISIS
-				//
-				// For providing a custom crisis function to the crisis module, add it below.
-				// By default the crisis module uses a default crisis function.
-				//
-				// crisistypes.NewModuleAddress("gov"),
-
-				//
-				// SLASHING
-				//
-				// For providing a custom slashing function to the slashing module, add it below.
-				// By default the slashing module uses a default slashing function.
-				//
-				// slashingtypes.NewModuleAddress("gov"),
-
-				//
-				// EVIDENCE
-				//
-				// For providing a custom evidence function to the evidence module, add it below.
-				// By default the evidence module uses a default evidence function.
-				//
-				// evidencetypes.NewModuleAddress("gov"),
-
-				//
-				// UPGRADE
-				//
-				// For providing a custom upgrade function to the upgrade module, add it below.
-				// By default the upgrade module uses a default upgrade function.
-				//
-				// upgradetypes.NewModuleAddress("gov"),
-
-				//
-				// AUTHZ
-				//
-				// For providing a custom authz function to the authz module, add it below.
-				// By default the authz module uses a default authz function.
-				//
-				// authztypes.NewModuleAddress("gov"),
-
-				//
-				// FEEGRANT
-				//
-				// For providing a custom feegrant function to the feegrant module, add it below.
-				// By default the feegrant module uses a default feegrant function.
-				//
-				// feegranttypes.NewModuleAddress("gov"),
-
-				//
-				// GROUP
-				//
-				// For providing a custom group function to the group module, add it below.
-				// By default the group module uses a default group function.
-				//
-				// grouptypes.NewModuleAddress("gov"),
-
-				//
-				// NFT
-				//
-				// For providing a custom nft function to the nft module, add it below.
-				// By default the nft module uses a default nft function.
-				//
-				// nfttypes.NewModuleAddress("gov"),
-
-				//
-				// CONSENSUS
-				//
-				// For providing a custom consensus function to the consensus module, add it below.
-				// By default the consensus module uses a default consensus function.
-				//
-				// consensusparamtypes.NewModuleAddress("gov"),
-
-				//
-				// CIRCUIT
-				//
-				// For providing a custom circuit function to the circuit module, add it below.
-				// By default the circuit module uses a default circuit function.
-				//
-				// circuittypes.NewModuleAddress("gov"),
-
-				//
-				// IBC
-				//
-				// For providing a custom ibc function to the ibc module, add it below.
-				// By default the ibc module uses a default ibc function.
-				//
-				// ibcexported.NewModuleAddress("gov"),
-
-				//
-				// IBC FEE
-				//
-				// For providing a custom ibc fee function to the ibc fee module, add it below.
-				// By default the ibc fee module uses a default ibc fee function.
-				//
-				// ibcfeetypes.NewModuleAddress("gov"),
-
-				//
-				// ICA CONTROLLER
-				//
-				// For providing a custom ica controller function to the ica controller module, add it below.
-				// By default the ica controller module uses a default ica controller function.
-				//
-				// icacontrollertypes.NewModuleAddress("gov"),
-
-				//
-				// ICA HOST
-				//
-				// For providing a custom ica host function to the ica host module, add it below.
-				// By default the ica host module uses a default ica host function.
-				//
-				// icahosttypes.NewModuleAddress("gov"),
-
-				//
-				// TRANSFER
-				//
-				// For providing a custom transfer function to the transfer module, add it below.
-				// By default the transfer module uses a default transfer function.
-				//
-				// ibctransfertypes.NewModuleAddress("gov"),
-
-				//
-				// CAPABILITY
-				//
-				// For providing a custom capability function to the capability module, add it below.
-				// By default the capability module uses a default capability function.
-				//
-				// capabilitytypes.NewModuleAddress("gov"),
-
-				//
-				// TOKENS
-				//
-				// For providing a custom tokens function to the tokens module, add it below.
-				// By default the tokens module uses a default tokens function.
-				//
-				// tokenstypes.NewModuleAddress("gov"),
-			),
-			depinject.Provide(
-				ProvideModule,
-				ProvideEnvironment,
-				ProvideLogger,
-			),
-		)
+		app = &ChainRiceApp{}
+		// TODO: Implement appconfig when available in current SDK version
 	)
 
-	if err := depinject.Inject(appConfig,
-		&appBuilder,
-		&app.appCodec,
-		&app.legacyAmino,
-		&app.txConfig,
-		&app.interfaceRegistry,
-		&app.AccountKeeper,
-		&app.BankKeeper,
-		&app.StakingKeeper,
-		&app.SlashingKeeper,
-		&app.MintKeeper,
-		&app.DistrKeeper,
-		&app.GovKeeper,
-		&app.CrisisKeeper,
-		&app.UpgradeKeeper,
-		&app.ParamsKeeper,
-		&app.AuthzKeeper,
-		&app.EvidenceKeeper,
-		&app.FeeGrantKeeper,
-		&app.GroupKeeper,
-		&app.NFTKeeper,
-		&app.ConsensusParamsKeeper,
-		&app.CircuitBreakerKeeper,
-		&app.IBCKeeper,
-		&app.CapabilityKeeper,
-		&app.IBCFeeKeeper,
-		&app.ICAControllerKeeper,
-		&app.ICAHostKeeper,
-		&app.TokensKeeper,
-	); err != nil {
-		panic(err)
-	}
+	// TODO: Implement app initialization when appconfig is available
+	// For now, return a basic app structure
+	app.App = &runtime.App{}
 
-	// Below we could construct and set an application specific mempool and
-	// ABCI 1.0 PrepareProposal and ProcessProposal handlers.
-	//
-	// The application's mempool defines how transactions are selected and ordered
-	// when producing a block. The default implementation is FirstComeFirstServe
-	// mempool which orders transactions by the order they appear in the tx queue.
-	//
-	// The application's PrepareProposal handler defines how the application
-	// prepares a proposal. The default implementation is a no-op.
-	//
-	// The application's ProcessProposal handler defines how the application
-	// processes a proposal. The default implementation is a no-op.
-	//
-	// Please see the SDK documentation for more information on these handlers.
-	//
-	// Example:
-	//
-	// app.App = appBuilder.Build(...)
-	// app.SetMempool(mempool.NewDefaultMempool())
-	// app.SetPrepareProposal(app.NewDefaultPrepareProposal().PrepareProposalHandler())
-	// app.SetProcessProposal(app.NewDefaultProcessProposal().ProcessProposalHandler())
+	// Create encoding config and app codec
+	encodingConfig := MakeEncodingConfig()
+	_ = encodingConfig.Codec
 
-	app.App = appBuilder.Build(logger, db, traceStore, baseAppOptions...)
-
-	// register streaming services
-	if err := app.RegisterStreamingServices(appOpts, app.kvStoreKeys); err != nil {
-		panic(err)
-	}
-
-	/****  Module Options ****/
-
-	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
-	// we prefer to be more strict in what arguments the modules expect.
-	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
-
-	// NOTE: Any module instantiated in the module manager that is later modified
-	// must be passed by reference here.
-
-	app.mm = module.NewManager(
-		genutil.NewAppModule(
-			app.AccountKeeper, app.StakingKeeper, app.BaseApp.DeliverTx,
-			encodingConfig.TxConfig,
-		),
-		auth.NewAppModule(appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts, app.GetSubspace(authtypes.ModuleName)),
-		vesting.NewAppModule(app.AccountKeeper, app.BankKeeper),
-		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper, app.GetSubspace(banktypes.ModuleName)),
-		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
-		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
-		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
-		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil, app.GetSubspace(minttypes.ModuleName)),
-		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
-		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
-		staking.NewAppModule(appCodec, &app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
-		upgrade.NewAppModule(&app.UpgradeKeeper),
-		evidence.NewAppModule(app.EvidenceKeeper),
-		ibc.NewAppModule(app.IBCKeeper),
-		params.NewAppModule(app.ParamsKeeper),
-		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
-		transfer.NewAppModule(app.TransferKeeper),
-		ibcfee.NewAppModule(app.IBCFeeKeeper),
-		ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
-		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
-		circuit.NewAppModule(appCodec, *app.CircuitBreakerKeeper),
-		nftmodule.NewAppModule(appCodec, app.NFTKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
-		// ChainRice modules
-		tokens.NewAppModule(appCodec, app.TokensKeeper, app.AccountKeeper, app.BankKeeper),
-	)
-
-	// During begin block slashing happens after distr.BeginBlocker so that
-	// there is nothing left over in the validator fee pool, so as to keep the
-	// CanWithdrawInvariant invariant.
-	// NOTE: staking module is required if HistoricalEntries > 0
-	// NOTE: capability module's beginblocker must come before any modules using capabilities (e.g. IBC)
-	app.mm.SetOrderBeginBlockers(
-		// upgrades should be run first
-		upgradetypes.ModuleName,
-		capabilitytypes.ModuleName,
-		minttypes.ModuleName,
-		distrtypes.ModuleName,
-		slashingtypes.ModuleName,
-		evidencetypes.ModuleName,
-		stakingtypes.ModuleName,
-		authtypes.ModuleName,
-		banktypes.ModuleName,
-		govtypes.ModuleName,
-		crisistypes.ModuleName,
-		genutiltypes.ModuleName,
-		authz.ModuleName,
-		feegrant.ModuleName,
-		group.ModuleName,
-		paramstypes.ModuleName,
-		vestingtypes.ModuleName,
-		ibcexported.ModuleName,
-		ibctransfertypes.ModuleName,
-		ibcfeetypes.ModuleName,
-		icacontrollertypes.SubModuleName,
-		icahosttypes.SubModuleName,
-		consensusparamtypes.ModuleName,
-		circuittypes.ModuleName,
-		nft.ModuleName,
-		// ChainRice modules
-		tokenstypes.ModuleName,
-	)
-
-	app.mm.SetOrderEndBlockers(
-		crisistypes.ModuleName,
-		govtypes.ModuleName,
-		stakingtypes.ModuleName,
-		ibcexported.ModuleName,
-		ibctransfertypes.ModuleName,
-		ibcfeetypes.ModuleName,
-		icacontrollertypes.SubModuleName,
-		icahosttypes.SubModuleName,
-		capabilitytypes.ModuleName,
-		authtypes.ModuleName,
-		banktypes.ModuleName,
-		distrtypes.ModuleName,
-		slashingtypes.ModuleName,
-		minttypes.ModuleName,
-		genutiltypes.ModuleName,
-		evidencetypes.ModuleName,
-		authz.ModuleName,
-		feegrant.ModuleName,
-		group.ModuleName,
-		paramstypes.ModuleName,
-		upgradetypes.ModuleName,
-		vestingtypes.ModuleName,
-		consensusparamtypes.ModuleName,
-		circuittypes.ModuleName,
-		nft.ModuleName,
-		// ChainRice modules
-		tokenstypes.ModuleName,
-	)
-
-	// NOTE: The genutil module must occur after staking so that pools are
-	// properly initialized with tokens from genesis accounts.
-	// NOTE: The genutil module must also occur after auth so that it can access the params from auth.
-	// NOTE: Capability module must occur first so that it can initialize any capabilities
-	// so that other modules that want to create or claim capabilities afterwards in InitChain
-	// can do so safely.
-	genesisModuleOrder := []string{
-		capabilitytypes.ModuleName,
-		authtypes.ModuleName,
-		banktypes.ModuleName,
-		distrtypes.ModuleName,
-		stakingtypes.ModuleName,
-		slashingtypes.ModuleName,
-		govtypes.ModuleName,
-		minttypes.ModuleName,
-		crisistypes.ModuleName,
-		genutiltypes.ModuleName,
-		evidencetypes.ModuleName,
-		authz.ModuleName,
-		paramstypes.ModuleName,
-		upgradetypes.ModuleName,
-		vestingtypes.ModuleName,
-		feegrant.ModuleName,
-		group.ModuleName,
-		ibcexported.ModuleName,
-		ibctransfertypes.ModuleName,
-		ibcfeetypes.ModuleName,
-		icacontrollertypes.SubModuleName,
-		icahosttypes.SubModuleName,
-		consensusparamtypes.ModuleName,
-		circuittypes.ModuleName,
-		nft.ModuleName,
-		// ChainRice modules
-		tokenstypes.ModuleName,
-	}
-
-	app.mm.SetOrderInitGenesis(genesisModuleOrder...)
-	app.mm.SetOrderExportGenesis(genesisModuleOrder...)
-
-	// Uncomment if you want to set a custom migration order here.
-	// app.mm.SetOrderMigrations(custom order)
-
-	app.mm.RegisterInvariants(&app.CrisisKeeper)
-	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
-	app.mm.RegisterServices(app.configurator)
-
-	// add test gRPC service for testing gRPC queries in isolation
-	autocliv1.RegisterQueryServer(app.GRPCQueryRouter(), runtimeservices.NewAutoCLIQueryService(app.mm.Modules))
-
-	reflectionSvc, err := runtimeservices.NewReflectionService()
-	if err != nil {
-		panic(err)
-	}
-	reflectionv1.RegisterReflectionServiceServer(app.GRPCQueryRouter(), reflectionSvc)
-
-	// create the simulation manager and define the order of the modules for deterministic simulations
-	//
-	// NOTE: this is not required apps that don't use the simulator for fuzz testing
-	// transactions
-	overrideModules := map[string]module.AppModuleSimulation{
-		authtypes.ModuleName: auth.NewAppModule(app.appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts, app.GetSubspace(authtypes.ModuleName)),
-	}
-	app.sm = module.NewSimulationManagerFromAppModules(app.mm.Modules, overrideModules)
-
-	autocliConfig := autocli.Config{
-		ModuleOptions: map[string]*autocliv1.ModuleOptions{
-			authtypes.ModuleName: {
-				Query: &autocliv1.ServiceCommandDescriptor{
-					Service: authtypes.Query_ServiceDesc.ServiceName,
-					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-						{
-							RpcMethod: "Params",
-							Use:       "params",
-							Short:     "Query the current auth parameters",
-						},
-					},
-				},
-				Tx: &autocliv1.ServiceCommandDescriptor{
-					Service: authtypes.Msg_ServiceDesc.ServiceName,
-					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-						{
-							RpcMethod: "UpdateParams",
-							Skip:      true, // skipped because authority gated
-						},
-					},
-				},
-			},
-			govtypes.ModuleName: {
-				Query: &autocliv1.ServiceCommandDescriptor{
-					Service: govtypes.Query_ServiceDesc.ServiceName,
-					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-						{
-							RpcMethod: "Params",
-							Use:       "params",
-							Short:     "Query the current gov parameters",
-						},
-						{
-							RpcMethod:      "Proposal",
-							Use:            "proposal [proposal-id]",
-							Short:          "Query details of a single proposal",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "proposal_id"}},
-						},
-					},
-				},
-				Tx: &autocliv1.ServiceCommandDescriptor{
-					Service: govtypes.Msg_ServiceDesc.ServiceName,
-					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-						{
-							RpcMethod:      "Vote",
-							Use:            "vote [proposal-id] [option]",
-							Short:          "Vote for an active proposal, options: yes,no,abstain,no_with_veto",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "proposal_id"}, {ProtoField: "option"}},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	if err := autocliConfig.EnhanceRootCommand(app.RootCmd); err != nil {
-		panic(err)
-	}
-
-	// initialize stores
-	app.MountKVStores(app.kvStoreKeys)
-	app.MountTransientStores(app.tStoreKeys)
-	app.MountMemoryStores(app.memStoreKeys)
-
-	// initialize BaseApp
-	app.SetInitChainer(app.InitChainer)
-	app.SetBeginBlocker(app.BeginBlocker)
-	app.SetEndBlocker(app.EndBlocker)
-	app.SetAnteHandler(
-		ante.NewAnteHandler(
-			app.AccountKeeper,
-			app.BankKeeper,
-			app.FeeGrantKeeper,
-			app.SignModeHandler(),
-		),
-	)
-
-	if loadLatest {
-		if err := app.LoadLatestVersion(); err != nil {
-			tmos.Exit(err.Error())
-		}
-	}
+	// TODO: Initialize keepers and modules when appconfig is available
 
 	return app
 }
@@ -749,24 +245,26 @@ func NewChainRiceApp(
 func (app *ChainRiceApp) Name() string { return app.BaseApp.Name() }
 
 // BeginBlocker application updates every begin block
-func (app *ChainRiceApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
-	return app.mm.BeginBlock(ctx, req)
+func (app *ChainRiceApp) BeginBlocker(ctx sdk.Context) (sdk.BeginBlock, error) {
+	return app.mm.BeginBlock(ctx)
 }
 
 // EndBlocker application updates every end block
-func (app *ChainRiceApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
-	return app.mm.EndBlock(ctx, req)
+func (app *ChainRiceApp) EndBlocker(ctx sdk.Context) (sdk.EndBlock, error) {
+	return app.mm.EndBlock(ctx)
 }
 
 // InitChainer application update at chain initialization
-func (app *ChainRiceApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *ChainRiceApp) InitChainer(ctx sdk.Context, req *abci.RequestInitChain) (*abci.ResponseInitChain, error) {
 	var genesisState GenesisState
 	if err := json.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
 	}
 
-	app.UpgradeKeeper.SetModuleVersionMap(ctx, app.mm.GetVersionMap())
-	return app.mm.InitGenesis(ctx, app.appCodec, genesisState)
+	// TODO: Implement when appconfig is available
+	// app.UpgradeKeeper.SetModuleVersionMap(ctx, app.mm.GetVersionMap())
+	// app.mm.InitGenesis(ctx, app.appCodec, genesisState)
+	return &abci.ResponseInitChain{}, nil
 }
 
 // LoadHeight loads a particular height
@@ -823,36 +321,24 @@ func (app *ChainRiceApp) TxConfig() client.TxConfig {
 //
 // NOTE: This is solely to be used for testing purposes.
 func (app *ChainRiceApp) GetKey(storeKey string) *storetypes.KVStoreKey {
-	sk := app.UnsafeFindStoreKey(storeKey)
-	kvStoreKey, ok := sk.(*storetypes.KVStoreKey)
-	if !ok {
-		return nil
-	}
-	return kvStoreKey
+	// TODO: Implement when store keys are available
+	return nil
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
 func (app *ChainRiceApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
-	sk := app.UnsafeFindStoreKey(storeKey)
-	transientStoreKey, ok := sk.(*storetypes.TransientStoreKey)
-	if !ok {
-		return nil
-	}
-	return transientStoreKey
+	// TODO: Implement when store keys are available
+	return nil
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
 func (app *ChainRiceApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
-	key, ok := app.UnsafeFindStoreKey(storeKey).(*storetypes.MemoryStoreKey)
-	if !ok {
-		return nil
-	}
-
-	return key
+	// TODO: Implement when store keys are available
+	return nil
 }
 
 // GetSubspace returns a param subspace for a given module name.
@@ -887,28 +373,6 @@ func GetMaccPerms() map[string][]string {
 	return dupMaccPerms
 }
 
-// initParamsKeeper init params keeper and its subspaces
-func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
-	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
-
-	paramsKeeper.Subspace(authtypes.ModuleName)
-	paramsKeeper.Subspace(banktypes.ModuleName)
-	paramsKeeper.Subspace(stakingtypes.ModuleName)
-	paramsKeeper.Subspace(minttypes.ModuleName)
-	paramsKeeper.Subspace(distrtypes.ModuleName)
-	paramsKeeper.Subspace(slashingtypes.ModuleName)
-	paramsKeeper.Subspace(govtypes.ModuleName)
-	paramsKeeper.Subspace(crisistypes.ModuleName)
-	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
-	paramsKeeper.Subspace(ibcexported.ModuleName)
-	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
-	paramsKeeper.Subspace(icahosttypes.SubModuleName)
-	paramsKeeper.Subspace(ibcfeetypes.ModuleName)
-	paramsKeeper.Subspace(tokenstypes.ModuleName)
-
-	return paramsKeeper
-}
-
 // EmptyAppOptions is a stub implementing AppOptions
 type EmptyAppOptions struct{}
 
@@ -924,10 +388,10 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
-		upgradeclient.LegacyProposalHandler,
-		upgradeclient.LegacyCancelProposalHandler,
-		ibcclient.ClientUpdateProposalHandler,
-		ibcclient.ClientUpgradeProposalHandler,
+		// upgradeclient.LegacyProposalHandler, // Not available in current version
+		// upgradeclient.LegacyCancelProposalHandler, // Not available in current version
+		// ibcclient.ClientUpdateProposalHandler, // Not available in current version
+		// ibcclient.ClientUpgradeProposalHandler, // Not available in current version
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -939,6 +403,192 @@ func (app *ChainRiceApp) DefaultGenesis() map[string]json.RawMessage {
 	return ModuleBasics.DefaultGenesis(app.appCodec)
 }
 
+// SetChainRiceConfig returns the default app config for chainrice
+func SetChainRiceConfig() servertypes.AppOptions {
+	return EmptyAppOptions{}
+}
+
+// SetPruning sets the pruning options
+func SetPruning(opts interface{}) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement pruning when available in current SDK version
+	}
+}
+
+// SetMinGasPrices sets the minimum gas prices
+func SetMinGasPrices(gasPricesStr string) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// This is handled in the app config
+	}
+}
+
+// SetHaltHeight sets the halt height
+func SetHaltHeight(height uint64) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// This is handled in the app config
+	}
+}
+
+// SetHaltTime sets the halt time
+func SetHaltTime(time uint64) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// This is handled in the app config
+	}
+}
+
+// SetMinRetainBlocks sets the minimum retain blocks
+func SetMinRetainBlocks(blocks uint64) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// SetInterBlockCache sets the inter-block cache
+func SetInterBlockCache(cache interface{}) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// SetTrace sets the trace option
+func SetTrace(trace bool) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// SetIndexEvents sets the index events
+func SetIndexEvents(events []string) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// SetSnapshot sets the snapshot store and options
+// Note: Snapshots are not available in the current version
+// func SetSnapshot(snapshotStore *snapshots.Store, snapshotOptions snapshottypes.SnapshotOptions) func(*baseapp.BaseApp) {
+//	return func(app *baseapp.BaseApp) {
+//		app.SetSnapshot(snapshotStore, snapshotOptions)
+//	}
+// }
+
+// SetIAVLCacheSize sets the IAVL cache size
+func SetIAVLCacheSize(size int) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// SetIAVLDisableFastNode sets the IAVL disable fast node option
+func SetIAVLDisableFastNode(disable bool) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// SetIAVLInterBlockCache sets the IAVL inter-block cache option
+func SetIAVLInterBlockCache(enable bool) func(*baseapp.BaseApp) {
+	return func(app *baseapp.BaseApp) {
+		// TODO: Implement when available in current SDK version
+	}
+}
+
+// RegisterStreamingServices registers streaming services
+func (app *ChainRiceApp) RegisterStreamingServices(appOpts servertypes.AppOptions, kvStoreKeys map[string]*storetypes.KVStoreKey) error {
+	// TODO: Implement streaming services registration
+	return nil
+}
+
+// MountKVStores mounts KV stores
+func (app *ChainRiceApp) MountKVStores(keys map[string]*storetypes.KVStoreKey) {
+	// TODO: Implement KV store mounting
+}
+
+// MountTransientStores mounts transient stores
+func (app *ChainRiceApp) MountTransientStores(keys map[string]*storetypes.TransientStoreKey) {
+	// TODO: Implement transient store mounting
+}
+
+// MountMemoryStores mounts memory stores
+func (app *ChainRiceApp) MountMemoryStores(keys map[string]*storetypes.MemoryStoreKey) {
+	// TODO: Implement memory store mounting
+}
+
+// SetInitChainer sets the init chainer
+func (app *ChainRiceApp) SetInitChainer(initChainer func(sdk.Context, *abci.RequestInitChain) (*abci.ResponseInitChain, error)) {
+	// TODO: Implement init chainer setting
+}
+
+// SetBeginBlocker sets the begin blocker
+func (app *ChainRiceApp) SetBeginBlocker(beginBlocker func(sdk.Context) (sdk.BeginBlock, error)) {
+	// TODO: Implement begin blocker setting
+}
+
+// SetEndBlocker sets the end blocker
+func (app *ChainRiceApp) SetEndBlocker(endBlocker func(sdk.Context) (sdk.EndBlock, error)) {
+	// TODO: Implement end blocker setting
+}
+
+// SetAnteHandler sets the ante handler
+func (app *ChainRiceApp) SetAnteHandler(anteHandler sdk.AnteHandler) {
+	// TODO: Implement ante handler setting
+}
+
+// SignModeHandler returns the sign mode handler
+func (app *ChainRiceApp) SignModeHandler() signing.SignModeHandler {
+	// TODO: Implement sign mode handler
+	return nil
+}
+
+// LoadLatestVersion loads the latest version
+func (app *ChainRiceApp) LoadLatestVersion() error {
+	// TODO: Implement load latest version
+	return nil
+}
+
+// LoadVersion loads a specific version
+func (app *ChainRiceApp) LoadVersion(version int64) error {
+	// TODO: Implement load version
+	return nil
+}
+
+// ExportAppStateAndValidators exports the application state and validators
+func (app *ChainRiceApp) ExportAppStateAndValidators(forZeroHeight bool, jailAllowedAddrs []string, modulesToExport []string) (servertypes.ExportedApp, error) {
+	// TODO: Implement export when available in current SDK version
+	return servertypes.ExportedApp{}, nil
+}
+
+// UnsafeFindStoreKey finds a store key
+func (app *ChainRiceApp) UnsafeFindStoreKey(storeKey string) *storetypes.StoreKey {
+	// TODO: Implement store key finding
+	return nil
+}
+
+// MakeEncodingConfig creates an EncodingConfig for testing
+func MakeEncodingConfig() EncodingConfig {
+	encodingConfig := MakeTestEncodingConfig()
+	return encodingConfig
+}
+
+// MakeTestEncodingConfig creates an EncodingConfig for testing
+func MakeTestEncodingConfig() EncodingConfig {
+	encodingConfig := EncodingConfig{
+		Codec:             codec.NewProtoCodec(nil),
+		InterfaceRegistry: types.NewInterfaceRegistry(),
+		TxConfig:          nil, // TODO: implement
+		Amino:             codec.NewLegacyAmino(),
+	}
+	return encodingConfig
+}
+
+// EncodingConfig specifies the concrete encoding types to use for a given app.
+type EncodingConfig struct {
+	InterfaceRegistry types.InterfaceRegistry
+	Codec             codec.Codec
+	TxConfig          client.TxConfig
+	Amino             *codec.LegacyAmino
+}
+
 // GetWasmOpts build wasm options
 func GetWasmOpts(appOpts servertypes.AppOptions) []wasm.Option {
 	var wasmOpts []wasm.Option
@@ -947,4 +597,22 @@ func GetWasmOpts(appOpts servertypes.AppOptions) []wasm.Option {
 	}
 
 	return wasmOpts
+}
+
+// GenesisState represents the genesis state of the application
+type GenesisState map[string]json.RawMessage
+
+// ProvideModule provides the module dependencies
+func ProvideModule() interface{} {
+	return nil
+}
+
+// ProvideEnvironment provides the environment dependencies
+func ProvideEnvironment() interface{} {
+	return nil
+}
+
+// ProvideLogger provides the logger dependencies
+func ProvideLogger() interface{} {
+	return nil
 }

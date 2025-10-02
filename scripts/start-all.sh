@@ -1,162 +1,147 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+# Start All Services Script
+# Simple script to start all services without hot reload
 
-echo "🚀 Starting RICE-DEV Monorepo - All Services"
-echo "============================================="
+set -e
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_status() {
+    echo -e "${GREEN}[$(date +'%H:%M:%S')]${NC} $1"
+}
+
+print_info() {
+    echo -e "${BLUE}[$(date +'%H:%M:%S')] INFO:${NC} $1"
+}
+
+print_status "🚀 Starting All Rice-Dev Services"
+print_status "================================="
 
 # Check if we're in the right directory
 if [ ! -f "flake.nix" ]; then
-    echo "❌ Error: Please run this script from the rice-dev root directory"
+    echo "Please run this script from the rice-dev root directory"
     exit 1
 fi
 
-# Check if Nix is available
-if ! command -v nix >/dev/null 2>&1; then
-    echo "❌ Error: Nix is not installed. Please install Nix first."
-    exit 1
+# Start services in background
+print_info "Starting services..."
+
+# Python FastAPI Bot Core
+if [ -f "bots/core/main.py" ]; then
+    print_info "Starting Bot Core API..."
+    cd bots/core && uvicorn main:app --host 0.0.0.0 --port 8000 &
+    cd ../..
 fi
 
-echo "📦 Building all targets first..."
-nix develop .#monorepo --command bazel build //...
+# Python FastAPI Connection Service
+if [ -f "libs/connection/FastAPI/main.py" ]; then
+    print_info "Starting FastAPI Connection Service..."
+    cd libs/connection/FastAPI && uvicorn main:app --host 0.0.0.0 --port 8001 &
+    cd ../../..
+fi
 
-echo ""
-echo "🎯 Starting all services..."
+# Go Backend Service
+if [ -f "libs/backend/main.go" ]; then
+    print_info "Starting Go Backend Service..."
+    cd libs/backend && go run main.go &
+    cd ../..
+fi
 
-# Start services in background with proper logging
-echo "🌐 Starting Frontend Services..."
-nix develop .#monorepo --command bash -c "
-    echo 'Starting Next.js frontend on port 3000...'
-    bazel run //libs/frontend/ts/next:dev --watch > logs/nextjs.log 2>&1 &
-    NEXTJS_PID=\$!
-    
-    echo 'Starting Angular frontend on port 4200...'
-    bazel run //libs/frontend/ts/angular:dev --watch > logs/angular.log 2>&1 &
-    ANGULAR_PID=\$!
-    
-    echo 'Starting Nuxt frontend on port 3001...'
-    bazel run //libs/frontend/ts/nuxt:dev --watch > logs/nuxt.log 2>&1 &
-    NUXT_PID=\$!
-    
-    echo 'Frontend services started!'
-    echo \"NextJS PID: \$NEXTJS_PID\"
-    echo \"Angular PID: \$ANGULAR_PID\"
-    echo \"Nuxt PID: \$NUXT_PID\"
-    
-    # Wait for frontend services
-    wait \$NEXTJS_PID \$ANGULAR_PID \$NUXT_PID
-" &
+# Java/JVM Connection Service
+if [ -f "libs/connection/JVM/pom.xml" ]; then
+    print_info "Starting JVM Connection Service..."
+    cd libs/connection/JVM && mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8081' &
+    cd ../../..
+fi
 
-echo "🔧 Starting Backend Services..."
-nix develop .#monorepo --command bash -c "
-    echo 'Starting Go backend on port 8080...'
-    bazel run //libs/backend:dev --watch > logs/go-backend.log 2>&1 &
-    GO_PID=\$!
-    
-    echo 'Starting FastAPI backend on port 8000...'
-    bazel run //libs/connection/FastAPI:dev --watch > logs/fastapi.log 2>&1 &
-    FASTAPI_PID=\$!
-    
-    echo 'Starting BEAM/Elixir backend on port 4000...'
-    bazel run //libs/connection/BEAM:dev --watch > logs/beam.log 2>&1 &
-    BEAM_PID=\$!
-    
-    echo 'Backend services started!'
-    echo \"Go PID: \$GO_PID\"
-    echo \"FastAPI PID: \$FASTAPI_PID\"
-    echo \"BEAM PID: \$BEAM_PID\"
-    
-    # Wait for backend services
-    wait \$GO_PID \$FASTAPI_PID \$BEAM_PID
-" &
+# .NET Connection Service
+if [ -f "libs/connection/.NET/ConnectionDotNet.csproj" ]; then
+    print_info "Starting .NET Connection Service..."
+    cd libs/connection/.NET && dotnet run --urls http://0.0.0.0:8082 &
+    cd ../../..
+fi
 
-echo "🤖 Starting Bot Services..."
-nix develop .#monorepo --command bash -c "
-    echo 'Starting Core Bot service...'
-    bazel run //bots/core:dev --watch > logs/bot-core.log 2>&1 &
-    BOT_CORE_PID=\$!
-    
-    echo 'Starting Integration Bot service...'
-    bazel run //bots/integration:dev --watch > logs/bot-integration.log 2>&1 &
-    BOT_INTEGRATION_PID=\$!
-    
-    echo 'Bot services started!'
-    echo \"Bot Core PID: \$BOT_CORE_PID\"
-    echo \"Bot Integration PID: \$BOT_INTEGRATION_PID\"
-    
-    # Wait for bot services
-    wait \$BOT_CORE_PID \$BOT_INTEGRATION_PID
-" &
+# PHP Connection Service
+if [ -f "libs/connection/PHP/composer.json" ]; then
+    print_info "Starting PHP Connection Service..."
+    cd libs/connection/PHP && php -S 0.0.0.0:8083 &
+    cd ../../..
+fi
 
-echo "⛓️ Starting Blockchain Services..."
-nix develop .#monorepo --command bash -c "
-    echo 'Starting Rust blockchain service...'
-    bazel run //libs/contract/rust:dev --watch > logs/rust-blockchain.log 2>&1 &
-    RUST_PID=\$!
+# TypeScript Frontend Services
+if [ -f "libs/frontend/ts/package.json" ]; then
+    print_info "Starting TypeScript Frontend Services..."
+    cd libs/frontend/ts
     
-    echo 'Starting Solidity contracts...'
-    bazel run //libs/contract/solidity:dev --watch > logs/solidity.log 2>&1 &
-    SOLIDITY_PID=\$!
+    # Start Angular if available
+    if [ -d "angular" ]; then
+        cd angular && npm run start &
+        cd ..
+    fi
     
-    echo 'Blockchain services started!'
-    echo \"Rust PID: \$RUST_PID\"
-    echo \"Solidity PID: \$SOLIDITY_PID\"
+    # Start Next.js if available
+    if [ -d "next" ]; then
+        cd next && npm run dev &
+        cd ..
+    fi
     
-    # Wait for blockchain services
-    wait \$RUST_PID \$SOLIDITY_PID
-" &
+    # Start Nuxt if available
+    if [ -d "nuxt" ]; then
+        cd nuxt && npm run dev &
+        cd ..
+    fi
+    
+    # Start Svelte if available
+    if [ -d "svelte" ]; then
+        cd svelte && npm run dev &
+        cd ..
+    fi
+    
+    cd ../../..
+fi
 
-# Create logs directory
-mkdir -p logs
+# Flutter Frontend
+if [ -f "libs/frontend/dart/pubspec.yaml" ]; then
+    print_info "Starting Flutter Frontend..."
+    cd libs/frontend/dart && flutter run -d web-server --web-port 3003 &
+    cd ../../..
+fi
 
-echo ""
-echo "🎉 All services are starting up!"
-echo "================================"
-echo ""
-echo "📊 Service Status:"
-echo "  Frontend Services:"
-echo "    - Next.js:     http://localhost:3000"
-echo "    - Angular:     http://localhost:4200"
-echo "    - Nuxt:        http://localhost:3001"
-echo ""
-echo "  Backend Services:"
-echo "    - Go Backend:  http://localhost:8080"
-echo "    - FastAPI:     http://localhost:8000"
-echo "    - BEAM/Elixir: http://localhost:4000"
-echo ""
-echo "  Bot Services:"
-echo "    - Core Bot:    Running"
-echo "    - Integration: Running"
-echo ""
-echo "  Blockchain Services:"
-echo "    - Rust:        Running"
-echo "    - Solidity:    Running"
-echo ""
-echo "📝 Logs are available in:"
-echo "  - logs/nextjs.log"
-echo "  - logs/angular.log"
-echo "  - logs/nuxt.log"
-echo "  - logs/go-backend.log"
-echo "  - logs/fastapi.log"
-echo "  - logs/beam.log"
-echo "  - logs/bot-core.log"
-echo "  - logs/bot-integration.log"
-echo "  - logs/rust-blockchain.log"
-echo "  - logs/solidity.log"
-echo ""
-echo "🛑 To stop all services: Ctrl+C"
-echo ""
+# Julia Model Service
+if [ -f "bots/models/main.jl" ]; then
+    print_info "Starting Julia Model Service..."
+    cd bots/models && julia main.jl &
+    cd ../..
+fi
 
-# Function to cleanup on exit
-cleanup() {
-    echo ""
-    echo "🛑 Stopping all services..."
-    pkill -f "bazel run" || true
-    echo "✅ All services stopped."
-    exit 0
-}
+# Rust Contract Service
+if [ -f "libs/contract/rust/Cargo.toml" ]; then
+    print_info "Starting Rust Contract Service..."
+    cd libs/contract/rust && cargo run &
+    cd ../../..
+fi
 
-# Set up signal handlers
-trap cleanup SIGINT SIGTERM
+print_status "All services started!"
+print_info "Service URLs:"
+print_info "🤖 Bot Core API: http://localhost:8000"
+print_info "🔗 FastAPI Connection: http://localhost:8001"
+print_info "🐹 Go Backend: http://localhost:8080"
+print_info "☕ JVM Connection: http://localhost:8081"
+print_info "🔷 .NET Connection: http://localhost:8082"
+print_info "🐘 PHP Connection: http://localhost:8083"
+print_info "📱 Angular Frontend: http://localhost:4200"
+print_info "⚛️  Next.js Frontend: http://localhost:3000"
+print_info "🔥 Nuxt Frontend: http://localhost:3001"
+print_info "🎯 Svelte Frontend: http://localhost:3002"
+print_info "📱 Flutter Frontend: http://localhost:3003"
+print_info "🔬 Julia Models: http://localhost:8004"
+print_info "🦀 Rust Contracts: http://localhost:8005"
 
-# Wait for all background processes
+print_status "Press Ctrl+C to stop all services"
+
+# Wait for user interrupt
 wait
+

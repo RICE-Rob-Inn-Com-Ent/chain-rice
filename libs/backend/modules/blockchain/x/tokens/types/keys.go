@@ -18,76 +18,34 @@ const (
 )
 
 var (
-	ParamsKey = []byte("p_tokens")
+	ParamsKey               = []byte("p_tokens")
+	TokenKeyPrefix          = []byte("token/")
+	TokenTransferKeyPrefix  = []byte("transfer/")
+	TokenBalanceKeyPrefix   = []byte("balance/")
+	TokenApprovalKeyPrefix  = []byte("approval/")
+	TokenCountKey           = []byte("token_count")
 )
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
 
-// TokenKey returns the store key to retrieve a Token from the index fields
-func TokenKey(
-	tokenId string,
-) []byte {
-	var key []byte
-
-	tokenIdBytes := []byte(tokenId)
-	key = append(key, tokenIdBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+// GetTokenKey returns the store key to retrieve a Token from the index fields
+func GetTokenKey(id string) []byte {
+	return append(TokenKeyPrefix, []byte(id)...)
 }
 
-// TokenTransferKey returns the store key to retrieve a TokenTransfer from the index fields
-func TokenTransferKey(
-	transferId string,
-) []byte {
-	var key []byte
-
-	transferIdBytes := []byte(transferId)
-	key = append(key, transferIdBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+// GetTokenTransferKey returns the store key to retrieve a TokenTransfer from the index fields
+func GetTokenTransferKey(id string) []byte {
+	return append(TokenTransferKeyPrefix, []byte(id)...)
 }
 
-// TokenBalanceKey returns the store key to retrieve a TokenBalance from the index fields
-func TokenBalanceKey(
-	address string,
-	tokenId string,
-) []byte {
-	var key []byte
-
-	addressBytes := []byte(address)
-	key = append(key, addressBytes...)
-	key = append(key, []byte("/")...)
-
-	tokenIdBytes := []byte(tokenId)
-	key = append(key, tokenIdBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+// GetTokenBalanceKey returns the store key to retrieve a TokenBalance from the index fields
+func GetTokenBalanceKey(tokenId, address string) []byte {
+	return append(append(TokenBalanceKeyPrefix, []byte(tokenId)...), []byte(address)...)
 }
 
-// TokenApprovalKey returns the store key to retrieve a TokenApproval from the index fields
-func TokenApprovalKey(
-	owner string,
-	spender string,
-	tokenId string,
-) []byte {
-	var key []byte
-
-	ownerBytes := []byte(owner)
-	key = append(key, ownerBytes...)
-	key = append(key, []byte("/")...)
-
-	spenderBytes := []byte(spender)
-	key = append(key, spenderBytes...)
-	key = append(key, []byte("/")...)
-
-	tokenIdBytes := []byte(tokenId)
-	key = append(key, tokenIdBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+// GetTokenApprovalKey returns the store key to retrieve a TokenApproval from the index fields
+func GetTokenApprovalKey(tokenId, owner, spender string) []byte {
+	return append(append(append(TokenApprovalKeyPrefix, []byte(tokenId)...), []byte(owner)...), []byte(spender)...)
 }

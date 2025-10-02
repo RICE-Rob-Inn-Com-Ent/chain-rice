@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -12,190 +11,113 @@ import (
 	"github.com/rice-dev/backend/blockchain/x/tokens/types"
 )
 
-// GetToken retrieves a token by ID
-func (k Keeper) GetToken(goCtx context.Context, req *types.GetTokenRequest) (*types.GetTokenResponse, error) {
+// GetTokenQuery retrieves a token by ID
+func (k Keeper) GetTokenQuery(goCtx context.Context, req *types.GetTokenRequest) (*types.GetTokenResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Implement token retrieval logic
-	// 1. Get token from store
-	// 2. Return token
-
-	_ = ctx
-	_ = req
+	token, found := k.GetToken(ctx, req.Id)
+	if !found {
+		return nil, status.Error(codes.NotFound, "token not found")
+	}
 
 	return &types.GetTokenResponse{
-		Token: &types.Token{
-			Id:   req.TokenId,
-			Name: "Sample Token",
-		},
+		Token: &token,
 	}, nil
 }
 
-// ListTokens lists all tokens with pagination
-func (k Keeper) ListTokens(goCtx context.Context, req *types.ListTokensRequest) (*types.ListTokensResponse, error) {
+// GetAllTokensQuery retrieves all tokens
+func (k Keeper) GetAllTokensQuery(goCtx context.Context, req *types.GetAllTokensRequest) (*types.GetAllTokensResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Implement token listing logic
-	// 1. Get tokens from store with pagination
-	// 2. Apply filters
-	// 3. Return paginated results
+	tokens := k.GetAllTokens(ctx)
 
-	_ = ctx
-	_ = req
-
-	return &types.ListTokensResponse{
-		Tokens: []*types.Token{},
-		Pagination: &query.PageResponse{
-			NextKey: nil,
-			Total:   0,
+	return &types.GetAllTokensResponse{
+		Tokens: tokens,
+		Pagination: &types.PageResponse{
+			Total: uint64(len(tokens)),
 		},
 	}, nil
 }
 
-// GetTokenBalance retrieves the token balance for an address
-func (k Keeper) GetTokenBalance(goCtx context.Context, req *types.GetTokenBalanceRequest) (*types.GetTokenBalanceResponse, error) {
+// GetTokenBalanceQuery retrieves the balance of a token for a specific address
+func (k Keeper) GetTokenBalanceQuery(goCtx context.Context, req *types.GetTokenBalanceRequest) (*types.GetTokenBalanceResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Implement balance retrieval logic
-	// 1. Get balance from store
-	// 2. Return balance
-
-	_ = ctx
-	_ = req
+	balance := k.GetTokenBalance(ctx, req.TokenId, req.Address)
 
 	return &types.GetTokenBalanceResponse{
-		Balance: "1000000",
-		TokenId: req.TokenId,
-		Address: req.Address,
-	}, nil
-}
-
-// ListTokenBalances lists all token balances for an address
-func (k Keeper) ListTokenBalances(goCtx context.Context, req *types.ListTokenBalancesRequest) (*types.ListTokenBalancesResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid request")
-	}
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// TODO: Implement balance listing logic
-	// 1. Get balances from store with pagination
-	// 2. Return paginated results
-
-	_ = ctx
-	_ = req
-
-	return &types.ListTokenBalancesResponse{
-		Balances: []*types.GetTokenBalanceResponse{},
-		Pagination: &query.PageResponse{
-			NextKey: nil,
-			Total:   0,
+		Balance: &types.TokenBalance{
+			TokenId: req.TokenId,
+			Address: req.Address,
+			Amount:  balance,
 		},
 	}, nil
 }
 
-// GetTokenTransfer retrieves a token transfer by ID
-func (k Keeper) GetTokenTransfer(goCtx context.Context, req *types.GetTokenTransferRequest) (*types.GetTokenTransferResponse, error) {
+// GetAllTokenBalancesQuery retrieves all token balances
+func (k Keeper) GetAllTokenBalancesQuery(goCtx context.Context, req *types.GetAllTokenBalancesRequest) (*types.GetAllTokenBalancesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Implement transfer retrieval logic
-	// 1. Get transfer from store
-	// 2. Return transfer
+	balances := k.GetAllTokenBalances(ctx)
 
-	_ = ctx
-	_ = req
-
-	return &types.GetTokenTransferResponse{
-		Transfer: &types.TokenTransfer{
-			Id: req.TransferId,
+	return &types.GetAllTokenBalancesResponse{
+		Balances: balances,
+		Pagination: &types.PageResponse{
+			Total: uint64(len(balances)),
 		},
 	}, nil
 }
 
-// ListTokenTransfers lists token transfers with pagination
-func (k Keeper) ListTokenTransfers(goCtx context.Context, req *types.ListTokenTransfersRequest) (*types.ListTokenTransfersResponse, error) {
+// GetTokenApprovalQuery retrieves the approval amount for a spender
+func (k Keeper) GetTokenApprovalQuery(goCtx context.Context, req *types.GetTokenApprovalRequest) (*types.GetTokenApprovalResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Implement transfer listing logic
-	// 1. Get transfers from store with pagination
-	// 2. Apply filters
-	// 3. Return paginated results
-
-	_ = ctx
-	_ = req
-
-	return &types.ListTokenTransfersResponse{
-		Transfers: []*types.TokenTransfer{},
-		Pagination: &query.PageResponse{
-			NextKey: nil,
-			Total:   0,
-		},
-	}, nil
-}
-
-// GetTokenApproval retrieves token approval information
-func (k Keeper) GetTokenApproval(goCtx context.Context, req *types.GetTokenApprovalRequest) (*types.GetTokenApprovalResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid request")
-	}
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// TODO: Implement approval retrieval logic
-	// 1. Get approval from store
-	// 2. Return approval
-
-	_ = ctx
-	_ = req
+	approvalAmount := k.GetTokenApproval(ctx, req.TokenId, req.Owner, req.Spender)
 
 	return &types.GetTokenApprovalResponse{
-		Approval: "0",
-		Owner:    req.Owner,
-		Spender:  req.Spender,
-		TokenId:  req.TokenId,
+		Approval: &types.TokenApproval{
+			TokenId: req.TokenId,
+			Owner:   req.Owner,
+			Spender: req.Spender,
+			Amount:  approvalAmount,
+		},
 	}, nil
 }
 
-// ListTokenApprovals lists all token approvals for an address
-func (k Keeper) ListTokenApprovals(goCtx context.Context, req *types.ListTokenApprovalsRequest) (*types.ListTokenApprovalsResponse, error) {
+// GetAllTokenApprovalsQuery retrieves all token approvals
+func (k Keeper) GetAllTokenApprovalsQuery(goCtx context.Context, req *types.GetAllTokenApprovalsRequest) (*types.GetAllTokenApprovalsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Implement approval listing logic
-	// 1. Get approvals from store with pagination
-	// 2. Return paginated results
+	approvals := k.GetAllTokenApprovals(ctx)
 
-	_ = ctx
-	_ = req
-
-	return &types.ListTokenApprovalsResponse{
-		Approvals: []*types.GetTokenApprovalResponse{},
-		Pagination: &query.PageResponse{
-			NextKey: nil,
-			Total:   0,
+	return &types.GetAllTokenApprovalsResponse{
+		Approvals: approvals,
+		Pagination: &types.PageResponse{
+			Total: uint64(len(approvals)),
 		},
 	}, nil
 }

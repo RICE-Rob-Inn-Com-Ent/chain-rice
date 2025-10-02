@@ -1,28 +1,17 @@
 package tokens
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
 
-	"cosmossdk.io/core/appmodule"
-	"cosmossdk.io/depinject"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/rice-dev/backend/blockchain/x/tokens/client/cli"
 	"github.com/rice-dev/backend/blockchain/x/tokens/keeper"
 	"github.com/rice-dev/backend/blockchain/x/tokens/types"
-)
-
-var (
-	_ module.AppModule      = AppModule{}
-	_ module.AppModuleBasic = AppModuleBasic{}
-	_ appmodule.AppModule   = AppModule{}
 )
 
 // AppModuleBasic defines the basic application module used by the tokens module.
@@ -37,131 +26,116 @@ func (AppModuleBasic) Name() string {
 
 // RegisterLegacyAminoCodec registers the tokens module's types on the given LegacyAmino codec.
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	types.RegisterLegacyAminoCodec(cdc)
+	// TODO: Register types when protobuf is properly set up
 }
 
 // RegisterInterfaces registers the module's interface types
 func (a AppModuleBasic) RegisterInterfaces(reg codectypes.InterfaceRegistry) {
-	types.RegisterInterfaces(reg)
+	// TODO: Register interfaces when protobuf is properly set up
 }
 
 // DefaultGenesis returns default genesis state as raw bytes for the tokens
 // module.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(types.DefaultGenesis())
+	genesis := types.DefaultGenesis()
+	// Use JSON marshaling instead of protobuf
+	data, err := json.Marshal(genesis)
+	if err != nil {
+		panic(err)
+	}
+	return data
 }
 
 // ValidateGenesis performs genesis state validation for the tokens module.
 func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
 	var genState types.GenesisState
-	if err := cdc.UnmarshalJSON(bz, &genState); err != nil {
-		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
+	if err := json.Unmarshal(bz, &genState); err != nil {
+		return err
 	}
 	return genState.Validate()
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the tokens module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
-		panic(err)
-	}
+	// TODO: Register gRPC gateway routes
 }
 
 // GetTxCmd returns no root tx command for the tokens module.
-func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	return cli.GetTxCmd()
+func (a AppModuleBasic) GetTxCmd() *cobra.Command {
+	// TODO: Return tx command when messages are properly set up
+	return nil
 }
 
 // GetQueryCmd returns the root query command for the tokens module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.GetQueryCmd(types.StoreKey)
+	// TODO: Return query command when queries are properly set up
+	return nil
 }
 
 // AppModule implements an application module for the tokens module.
 type AppModule struct {
 	AppModuleBasic
 
-	keeper     keeper.Keeper
-	bankKeeper types.BankKeeper
+	keeper         keeper.Keeper
+	legacySubspace types.Params
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, bankKeeper types.BankKeeper) AppModule {
+func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, legacySubspace types.Params) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{cdc: cdc},
 		keeper:         keeper,
-		bankKeeper:     bankKeeper,
+		legacySubspace: legacySubspace,
 	}
 }
-
-// IsOnePerModuleType implements the depinject.OnePerModuleType interface.
-func (am AppModule) IsOnePerModuleType() {}
-
-// IsAppModule implements the appmodule.AppModule interface.
-func (am AppModule) IsAppModule() {}
 
 // Name returns the tokens module's name.
 func (am AppModule) Name() string {
 	return am.AppModuleBasic.Name()
 }
 
-// RegisterServices registers module services.
-func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
-	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
+// RegisterServices registers a gRPC query service to respond to the
+// module-specific gRPC queries.
+func (am AppModule) RegisterServices(cfg interface{}) {
+	// TODO: Register services when gRPC is properly set up
 }
 
-// InitGenesis performs genesis initialization for the tokens module. It returns
-// no validator updates.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) {
+// InitGenesis performs genesis initialization for the tokens module.
+func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []interface{} {
 	var genState types.GenesisState
-	// Initialize global index to index in genesis state
-	cdc.MustUnmarshalJSON(gs, &genState)
+	if err := json.Unmarshal(gs, &genState); err != nil {
+		panic(err)
+	}
 
-	InitGenesis(ctx, am.keeper, genState)
+	keeper.InitGenesis(ctx, am.keeper, genState)
+
+	return []interface{}{}
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the tokens
 // module.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	genState := ExportGenesis(ctx, am.keeper)
-	return cdc.MustMarshalJSON(genState)
+	genState := keeper.ExportGenesis(ctx, am.keeper)
+	data, err := json.Marshal(genState)
+	if err != nil {
+		panic(err)
+	}
+	return data
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.
 func (AppModule) ConsensusVersion() uint64 { return 1 }
 
+// IsAppModule implements AppModule/IsAppModule.
+func (AppModule) IsAppModule() {}
+
 // BeginBlock returns the begin blocker for the tokens module.
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
-
-// EndBlock returns the end blocker for the tokens module. It returns no validator
-// updates.
-func (am AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
-	return []abci.ValidatorUpdate{}
+func (am AppModule) BeginBlock(ctx sdk.Context, _ interface{}) {
+	// TODO: Implement begin block logic
 }
 
-// AppModuleProvider defines the interface for providing an AppModule.
-type AppModuleProvider interface {
-	GetAppModule() AppModule
-}
-
-// ProvideModule provides the tokens module.
-func ProvideModule(depinject.Config) (AppModuleProvider, error) {
-	return &appModuleProvider{}, nil
-}
-
-type appModuleProvider struct{}
-
-func (p *appModuleProvider) GetAppModule() AppModule {
-	return AppModule{}
-}
-
-// ProvideEnvironment provides the environment for the tokens module.
-func ProvideEnvironment(depinject.Config) (appmodule.Environment, error) {
-	return appmodule.Environment{}, nil
-}
-
-// ProvideLogger provides the logger for the tokens module.
-func ProvideLogger(depinject.Config) (log.Logger, error) {
-	return log.NewNopLogger(), nil
+// EndBlock returns the end blocker for the tokens module.
+func (am AppModule) EndBlock(ctx sdk.Context, _ interface{}) []interface{} {
+	// TODO: Implement end block logic
+	return []interface{}{}
 }

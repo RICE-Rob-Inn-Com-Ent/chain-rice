@@ -1,56 +1,34 @@
 [package]
-name = "chain_rice_smart_contract"
-version = "1.0.0"
+name = "mwt_token"
+version = "0.1.0"
 edition = "2021"
-authors = ["Code-Rice <infocoderice@gmail.com>"]
-description = "Chain Rice Smart Contract with full integration"
+authors = ["ChainRice Team <info@chainrice.com>"]
+description = "MWT Token Smart Contract for ChainRice blockchain"
 license = "MIT"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
-# === CosmWasm core ===
+# CosmWasm core dependencies
 cosmwasm-std = "1.5.0"
 cosmwasm-storage = "1.5.0"
 cosmwasm-schema = "1.5.0"
+
+# CosmWasm utilities
 cw2 = "0.11.0"
-cw0 = "0.10.3"
 cw-storage-plus = "0.11.1"
+cw-utils = "0.11.0"
 
-# === Async / HTTP / RPC / gRPC ===
-tokio = { version = "1.30", features = ["full"] }
-reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+# Serialization
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-protobuf = "4.32.1-release"
-tonic = { version = "0.9", features = ["transport"] }
+schemars = "0.8.12"
 
-# === Multi-chain bridges (essential) ===
-ethers = "2.0.14"       # Ethereum client
-web3 = "0.19.0"         # Ethereum alternative
-solana-client = "3.0.4" # Solana RPC
-cosmrs = "0.4"          # Cosmos SDK client
-tendermint-rpc = "0.25" # Tendermint RPC
-bitcoin = "0.29"        # Bitcoin core types
-
-# === Utilities ===
+# Error handling
 thiserror = "1.0"
-anyhow = "1.0"
-log = "0.4"
-env_logger = "0.10"
-hex = "0.4.3"
 
-ark-ff = "0"
-ark-serialize = "0"
-ark-relations = "0"
-ark-groth16 = "0"
-bellman = "0"
-curve25519-dalek = "0"
-merkle-light = "0"
-bulletproofs = "0"
-
-[build-dependencies]
-cc = "1.0"
+# Math and utilities
+uint = "0.9"
 
 [dev-dependencies]
-tokio-test = "0.4"
-proptest = "1.0"
-serde_json = "1.0"
+cosmwasm-schema-test-derive = "1.5.0"

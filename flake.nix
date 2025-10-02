@@ -1,16 +1,21 @@
 {
-  description = "rice-dev: Unified Nix dev shells with Bazel integration (2025)";
+  description = "rice-dev: Unified Nix dev shells with Bazel integration (2025) - Complete Monorepo";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    poetry2nix.url = "github:nix-community/poetry2nix";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    node2nix.url = "github:nix-community/node2nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix, rust-overlay, node2nix, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         # Overlays to tweak packages
         overlays = [
+          poetry2nix.overlays.default
+          rust-overlay.overlays.default
           (final: prev: {
             python311Packages = prev.python311Packages // {
               # Avoid test failure in pytest-doctestplus (numpy ufunc __code__)
@@ -29,6 +34,8 @@
               "android-sdk-cmdline-tools"
               "androidsdk"
               "terraform"
+              "cuda-toolkit"
+              "cudnn"
             ];
             android_sdk.accept_license = true;
           };
@@ -159,6 +166,15 @@
         yq = pkgs.yq;
         yaml2json = pkgs.yaml2json;
 
+        # PHP toolchain
+        php = pkgs.php;
+        composer = pkgs.phpPackages.composer;
+
+        # Development tools
+        concurrently = pkgs.nodePackages.concurrently;
+        nodemon = pkgs.nodePackages.nodemon;
+        pm2 = pkgs.nodePackages.pm2;
+
       in {
         devShells = {
           # =============================================================================
@@ -168,18 +184,58 @@
           bot-core = pkgs.mkShell {
             name = "ai-core-dev";
             packages = [
-              # Мінімальне Python середовище без проблемних пакетів
               (python.withPackages (ps: with ps; [
-                # Тільки базові пакети
                 numpy
                 pandas
-                # Без scipy, matplotlib, seaborn через tkinter проблеми
-                # Без transformers, diffusers через складні залежності
-                # Без torch через CUDA проблеми
-                # Без tensorflow через складні залежності
-                # Без jax через складні залежності
+                scipy
+                scikit-learn
+                matplotlib
+                seaborn
+                plotly
+                torch
+                torchvision
+                torchaudio
+                transformers
+                diffusers
+                accelerate
+                openai
+                huggingface-hub
+                sentence-transformers
+                langchain
+                llama-index
+                faiss-cpu
+                chromadb
+                pillow
+                opencv-python
+                soundfile
+                pydub
+                tiktoken
+                fastapi
+                uvicorn
+                requests
+                httpx
+                aiohttp
+                websockets
+                pydantic
+                pyyaml
+                orjson
+                loguru
+                structlog
+                apscheduler
+                python-multipart
+                python-jose
+                passlib
+                bcrypt
+                python-dotenv
+                tqdm
+                jinja2
+                black
+                ruff
+                pytest
+                ipykernel
+                notebook
+                jupyterlab
               ]))
-              # Native build tools
               pkgs.gcc
               pkgs.cmake
               pkgs.zlib
@@ -187,7 +243,6 @@
               pkgs.libsndfile
               pkgs.ncurses
               pkgs.openblas
-              # CUDA libs
               cudaPkgs.cudatoolkit
               cudaPkgs.cudnn
             ] ++ baseTools;
@@ -825,6 +880,11 @@
                 # Core runtime (lean, reliable)
                 numpy
                 pandas
+                scipy
+                scikit-learn
+                matplotlib
+                seaborn
+                plotly
                 # Web / FastAPI
                 fastapi
                 uvicorn
@@ -835,9 +895,28 @@
                 # AI Integrations
                 openai
                 huggingface-hub
+                transformers
+                diffusers
+                accelerate
+                torch
+                torchvision
+                torchaudio
+                sentence-transformers
+                langchain
+                llama-index
+                faiss-cpu
+                chromadb
                 python-telegram-bot
                 discordpy
                 slack-sdk
+                # Audio/Image processing
+                pillow
+                opencv-python
+                soundfile
+                pydub
+                tiktoken
+                # Finance & Analytics
+                statsmodels
                 # Data & Validation
                 pydantic
                 pyyaml
@@ -855,6 +934,17 @@
                 python-jose
                 passlib
                 bcrypt
+                # Development tools
+                black
+                ruff
+                pytest
+                ipykernel
+                notebook
+                jupyterlab
+                # Additional utilities
+                python-dotenv
+                tqdm
+                jinja2
               ]))
               
               # Go ecosystem (Backend + Blockchain)
@@ -874,6 +964,9 @@
               npm
               yarn
               pnpm
+              concurrently
+              nodemon
+              pm2
               
               # Rust ecosystem (Blockchain contracts)
               rust
@@ -888,8 +981,8 @@
               dotnet
               
               # PHP ecosystem
-              pkgs.php
-              pkgs.phpPackages.composer
+              php
+              composer
               
               # Frontend frameworks
               dart
@@ -954,7 +1047,9 @@
               pkgs.yq
               pkgs.yaml2json
               pkgs.parallel
-              pkgs.nodePackages.concurrently
+              pkgs.htop
+              pkgs.vim
+              pkgs.nano
               
               # CUDA support
               cudaPkgs.cudatoolkit
@@ -1043,15 +1138,51 @@
               fi
               
               # Initialize Python packages if needed
-              if [ -f bots/requirements.txt ]; then
+              if [ -f bots/pyproject.toml ]; then
                 echo "🐍 Installing Python requirements..."
-                pip install -r bots/requirements.txt || true
+                cd bots && poetry install || pip install -r requirements.txt || true && cd ..
               fi
               
               # Initialize Node.js packages if needed
               if [ -f libs/frontend/ts/package.json ]; then
                 echo "📦 Installing Node.js dependencies..."
-                cd libs/frontend/ts && npm install || true && cd ../../..
+                cd libs/frontend/ts && npm install || yarn install || pnpm install || true && cd ../../..
+              fi
+              
+              # Initialize Julia packages if needed
+              if [ -f bots/Project.toml ]; then
+                echo "🔬 Initializing Julia packages..."
+                cd bots && julia --project=. -e "using Pkg; Pkg.instantiate()" || true && cd ..
+              fi
+              
+              # Initialize Rust packages if needed
+              if [ -f libs/contract/rust/Cargo.toml ]; then
+                echo "🦀 Initializing Rust packages..."
+                cd libs/contract/rust && cargo fetch || true && cd ../../..
+              fi
+              
+              # Initialize .NET packages if needed
+              if [ -f libs/connection/.NET/ConnectionDotNet.csproj ]; then
+                echo "🔷 Initializing .NET packages..."
+                cd libs/connection/.NET && dotnet restore || true && cd ../../..
+              fi
+              
+              # Initialize PHP packages if needed
+              if [ -f libs/connection/PHP/composer.json ]; then
+                echo "🐘 Initializing PHP packages..."
+                cd libs/connection/PHP && composer install || true && cd ../../..
+              fi
+              
+              # Initialize Maven packages if needed
+              if [ -f libs/connection/JVM/pom.xml ]; then
+                echo "☕ Initializing Maven packages..."
+                cd libs/connection/JVM && mvn dependency:resolve || true && cd ../../..
+              fi
+              
+              # Initialize Flutter packages if needed
+              if [ -f libs/frontend/dart/pubspec.yaml ]; then
+                echo "📱 Initializing Flutter packages..."
+                cd libs/frontend/dart && flutter pub get || true && cd ../../..
               fi
               
               # Display environment info
@@ -1067,6 +1198,10 @@
               echo "🐳 Docker: $(docker --version)"
               echo "☸️  Kubernetes: $(kubectl version --client --short 2>/dev/null | head -n1)"
               echo "🏗️  Terraform: $(terraform version | head -n1)"
+              echo "🔷 .NET: $(dotnet --version)"
+              echo "🐘 PHP: $(php --version | head -n1)"
+              echo "📱 Flutter: $(flutter --version 2>/dev/null | head -n1)"
+              echo "🔬 Julia: $(julia --version | head -n1)"
               echo ""
               echo "Available commands:"
               echo "  bazel run //:dev          - Enter development mode"
@@ -1074,6 +1209,7 @@
               echo "  bazel run //:test         - Test all targets"
               echo "  ./scripts/start-all.sh    - Start all services"
               echo "  ./scripts/dev-watch.sh   - Start development with hot reload"
+              echo "  ./scripts/dev-services.sh - Start all services concurrently"
               echo ""
             '';
           };

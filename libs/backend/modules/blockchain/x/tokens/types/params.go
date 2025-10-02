@@ -11,6 +11,11 @@ var (
 	KeyMintDenom = []byte("MintDenom")
 )
 
+// Params defines the set of tokens module parameters.
+type Params struct {
+	MintDenom string `protobuf:"bytes,1,opt,name=mint_denom,json=mintDenom,proto3" json:"mint_denom,omitempty"`
+}
+
 // ParamTable for tokens module.
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})

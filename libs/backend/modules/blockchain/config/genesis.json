@@ -222,6 +222,19 @@
       }
     },
     "upgrade": {},
-    "vesting": {}
+    "vesting": {},
+    "wasm": {
+      "params": {
+        "code_upload_access": {
+          "permission": "Everybody"
+        },
+        "instantiate_default_permission": "Everybody",
+        "max_wasm_code_size": "819200"
+      },
+      "codes": [],
+      "contracts": [],
+      "sequences": [],
+      "gen_msgs": []
+    }
   }
 }

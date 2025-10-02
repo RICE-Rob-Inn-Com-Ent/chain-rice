@@ -1,12 +1,36 @@
-// This is a CosmWasm smart contract, not a standalone binary
-// The main entry points are defined in lib.rs as entry_point functions
-// This file exists for cargo compatibility but the contract is built as a library
+use nori_token::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, MigrateMsg};
+use cosmwasm_std::{
+    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
+};
 
-fn main() {
-    println!("Chain Rice CW20 Token Contract");
-    println!("This is a CosmWasm smart contract library.");
-    println!("Use 'cargo test' to run the contract tests.");
-    println!("Use 'cargo build --release' to build the contract.");
+#[entry_point]
+pub fn instantiate(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    msg: InstantiateMsg,
+) -> StdResult<Response> {
+    nori_token::instantiate(deps, env, info, msg)
+}
+
+#[entry_point]
+pub fn execute(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    msg: ExecuteMsg,
+) -> StdResult<Response> {
+    nori_token::execute(deps, env, info, msg)
+}
+
+#[entry_point]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    nori_token::query(deps, env, msg)
+}
+
+#[entry_point]
+pub fn migrate(deps: DepsMut, env: Env, msg: MigrateMsg) -> StdResult<Response> {
+    nori_token::migrate(deps, env, msg)
 }
 
 
