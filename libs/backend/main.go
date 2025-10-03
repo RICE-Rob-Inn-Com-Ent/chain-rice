@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cometbft/cometbft/libs/log"
@@ -24,11 +23,13 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	"github.com/spf13/cast"
+	genutiltypes 	"github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cobra"
+	"github.com/spf13/cast"
 	"github.com/spf13/viper"
+	"cosmossdk.io/store"
+	"github.com/cosmos/cosmos-sdk/server"
+	"path/filepath"
 
 	chainriceapp "github.com/rice-dev/backend/blockchain/app"
 	chainriceconfig "github.com/rice-dev/backend/blockchain/config"
@@ -95,12 +96,12 @@ func NewRootCmd() *cobra.Command {
 		},
 	}
 
-	initRootCmd(rootCmd, encodingConfig)
+	initRootCmd(rootCmd)
 
 	return rootCmd
 }
 
-func initRootCmd(rootCmd *cobra.Command, encodingConfig chainriceapp.EncodingConfig) {
+func initRootCmd(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(chainriceapp.ModuleBasics, chainriceapp.DefaultNodeHome),
 		genutilcli.MigrateGenesisCmd(genutiltypes.MigrationMap{}),
@@ -175,15 +176,14 @@ func txCommand() *cobra.Command {
 }
 
 type appCreator struct {
-	encCfg chainriceapp.EncodingConfig
 }
 
 func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts servertypes.AppOptions) servertypes.Application {
-	// TODO: Implement cache when available in current SDK version
-	// var cache store.CommitKVStoreCacheManager
-	// if cast.ToBool(appOpts.Get(server.FlagInterBlockCache)) {
-	//     cache = store.NewCommitKVStoreCacheManager()
-	// }
+	var cache store.CommitKVStoreCacheManager
+
+	if cast.ToBool(appOpts.Get(server.FlagInterBlockCache)) {
+		cache = store.NewCommitKVStoreCacheManager()
+	}
 
 	skipUpgradeHeights := make(map[int64]bool)
 	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
@@ -200,16 +200,6 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 	if err != nil {
 		panic(err)
 	}
-	// Note: Snapshot functionality is not available in current SDK version
-	// snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
-	// if err != nil {
-	//     panic(err)
-	// }
-
-	// snapshotOptions := snapshottypes.NewSnapshotOptions(
-	//     cast.ToUint64(appOpts.Get(server.FlagStateSyncSnapshotInterval)),
-	//     cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
-	// )
 
 	return chainriceapp.NewChainRiceApp(
 		logger, db, traceStore, true,
@@ -219,7 +209,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		chainriceapp.SetHaltHeight(cast.ToUint64(appOpts.Get(server.FlagHaltHeight))),
 		chainriceapp.SetHaltTime(cast.ToUint64(appOpts.Get(server.FlagHaltTime))),
 		chainriceapp.SetMinRetainBlocks(cast.ToUint64(appOpts.Get(server.FlagMinRetainBlocks))),
-		// chainriceapp.SetInterBlockCache(cache),
+		chainriceapp.SetInterBlockCache(cache),
 		chainriceapp.SetTrace(cast.ToBool(appOpts.Get(server.FlagTrace))),
 		chainriceapp.SetIndexEvents(cast.ToStringSlice(appOpts.Get(server.FlagIndexEvents))),
 		chainriceapp.SetIAVLCacheSize(cast.ToInt(appOpts.Get(server.FlagIAVLCacheSize))),
@@ -256,8 +246,7 @@ func (a appCreator) appExport(
 		chainRiceApp = chainriceapp.NewChainRiceApp(logger, db, traceStore, true, chainriceapp.SetChainRiceConfig())
 	}
 
-	// TODO: Implement ExportAppStateAndValidators when available in current SDK version
-	return servertypes.ExportedApp{}, nil
+	return chainRiceApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
 }
 
 // AddGenesisAccountCmd returns add-genesis-account cobra Command.

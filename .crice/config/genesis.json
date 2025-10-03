@@ -1,0 +1,59 @@
+{
+  "genesis_time": "2024-01-01T00:00:00Z",
+  "chain_id": "crice-1",
+  "initial_height": "1",
+  "consensus_params": {
+    "block": { "max_bytes": "22020096", "max_gas": "-1" },
+    "evidence": { "max_age_num_blocks": "100000" },
+    "validator": { "pub_key_types": ["ed25519"] }
+  },
+  "app_state": {
+    "auth": {
+      "accounts": [
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "crice1hj5fveer5cjtn4wd6wstzugjfdxzl0xps73ftl",
+          "account_number": "0",
+          "sequence": "0"
+        }
+      ]
+    },
+    "bank": {
+      "balances": [
+        {
+          "address": "crice1hj5fveer5cjtn4wd6wstzugjfdxzl0xps73ftl",
+          "coins": [
+            { "denom": "urice", "amount": "1000000000000000" },
+            { "denom": "unori", "amount": "500000000000000" }
+          ]
+        }
+      ],
+      "supply": [
+        { "denom": "urice", "amount": "1000000000000000" },
+        { "denom": "unori", "amount": "500000000000000" }
+      ]
+    },
+    "staking": {
+      "validators": [],
+      "delegations": []
+    },
+    "mint": {
+      "minter": { "inflation": "0.13" },
+      "params": { "mint_denom": "urice" }
+    },
+    "distribution": {
+      "fee_pool": { "community_pool": [] }
+    },
+    "slashing": { "signing_infos": [] },
+    "gov": { "deposits": [], "votes": [], "proposals": [] },
+    "crisis": {
+      "constant_fee": { "denom": "urice", "amount": "1000000000000000000" }
+    },
+    "wasm": {
+      "codes": [],
+      "contracts": [],
+      "sequences": [],
+      "gen_msgs": []
+    }
+  }
+}

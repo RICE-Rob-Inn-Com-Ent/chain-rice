@@ -1,0 +1,58 @@
+syntax = "proto3";
+package rice.tokens.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos/msg/v1/msg.proto";
+
+option go_package = "github.com/rice-dev/backend/blockchain/x/tokens/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  
+  // CreateToken creates a new token
+  rpc CreateToken(MsgCreateToken) returns (MsgCreateTokenResponse);
+  
+  // UpdateToken updates an existing token
+  rpc UpdateToken(MsgUpdateToken) returns (MsgUpdateTokenResponse);
+  
+  // DeleteToken deletes a token
+  rpc DeleteToken(MsgDeleteToken) returns (MsgDeleteTokenResponse);
+}
+
+message MsgCreateToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  
+  string creator = 1;
+  string name = 2;
+  string symbol = 3;
+  uint64 total_supply = 4;
+  uint32 decimals = 5;
+}
+
+message MsgCreateTokenResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  
+  uint64 id = 1;
+  string creator = 2;
+  string name = 3;
+  string symbol = 4;
+  uint64 total_supply = 5;
+  uint32 decimals = 6;
+}
+
+message MsgUpdateTokenResponse {}
+
+message MsgDeleteToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  
+  uint64 id = 1;
+  string creator = 2;
+}
+
+message MsgDeleteTokenResponse {}

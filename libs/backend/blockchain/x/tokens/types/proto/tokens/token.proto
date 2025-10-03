@@ -1,0 +1,22 @@
+syntax = "proto3";
+package rice.tokens.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/rice-dev/backend/blockchain/x/tokens/types";
+
+message Token {
+  uint64 id = 1;
+  string creator = 2;
+  string name = 3;
+  string symbol = 4;
+  uint64 total_supply = 5;
+  uint32 decimals = 6;
+}
+
+message Params {
+  option (gogoproto.equal) = true;
+  option (gogoproto.goproto_stringer) = false;
+  
+  string mint_denom = 1;
+}

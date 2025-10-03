@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: rice-dev-project
+  namespace: { { .Values.global.namespace | default "rice-dev" } }
+  labels:
+    app.kubernetes.io/name: rice-dev-project
+    app.kubernetes.io/instance: { { .Release.Name } }
+    app.kubernetes.io/version: { { .Chart.AppVersion } }
+    app.kubernetes.io/managed-by: { { .Release.Service } }
+spec:
+  description: "Rice Development Project"
+
+  sourceRepos:
+    - "https://github.com/argoproj/argocd-example-apps"
+    - "https://charts.bitnami.com/bitnami"
+    - "https://argoproj.github.io/argo-helm"
+
+  destinations:
+    - namespace: { { .Values.global.namespace | default "rice-dev" } }
+      server: https://kubernetes.default.svc
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: "apps"
+      kind: Deployment
+    - group: "apps"
+      kind: StatefulSet
+    - group: "apps"
+      kind: DaemonSet
+    - group: "apps"
+      kind: ReplicaSet
+
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: "*"
+    - group: "apps"
+      kind: "*"
+    - group: "extensions"
+      kind: "*"
+    - group: "networking.k8s.io"
+      kind: "*"
+    - group: "argoproj.io"
+      kind: "*"
+
+  roles:
+    - name: admin
+      description: "Admin role for rice-dev project"
+      policies:
+        - p, proj:rice-dev-project:admin, applications, *, rice-dev-project/*, allow
+        - p, proj:rice-dev-project:admin, repositories, *, *, allow
+      groups:
+        - rice-dev-admins
+
+    - name: developer
+      description: "Developer role for rice-dev project"
+      policies:
+        - p, proj:rice-dev-project:developer, applications, get, rice-dev-project/*, allow
+        - p, proj:rice-dev-project:developer, applications, sync, rice-dev-project/*, allow
+      groups:
+        - rice-dev-developers

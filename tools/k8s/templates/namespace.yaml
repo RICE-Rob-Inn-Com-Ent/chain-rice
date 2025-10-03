@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: { { .Values.global.namespace | default "rice-dev" } }
+  labels:
+    name: { { .Values.global.namespace | default "rice-dev" } }
+    app.kubernetes.io/name: rice-dev
+    app.kubernetes.io/instance: { { .Release.Name } }
+    app.kubernetes.io/version: { { .Chart.AppVersion } }
+    app.kubernetes.io/managed-by: { { .Release.Service } }

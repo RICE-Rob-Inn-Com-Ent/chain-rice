@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rice-dev-apps
+  namespace: { { .Values.global.namespace | default "rice-dev" } }
+  labels:
+    app.kubernetes.io/name: rice-dev-apps
+    app.kubernetes.io/instance: { { .Release.Name } }
+    app.kubernetes.io/version: { { .Chart.AppVersion } }
+    app.kubernetes.io/managed-by: { { .Release.Service } }
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps
+    targetRevision: HEAD
+    path: guestbook
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: { { .Values.global.namespace | default "rice-dev" } }
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true

@@ -1,147 +1,148 @@
 #!/bin/bash
-# Start All Services Script
-# Simple script to start all services without hot reload
+# Complete ChainRice Development Environment Startup
+# Starts blockchain, dashboard, and frontend with hot reload
 
 set -e
 
 # Colors for output
+RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 print_status() {
     echo -e "${GREEN}[$(date +'%H:%M:%S')]${NC} $1"
 }
 
+print_error() {
+    echo -e "${RED}[$(date +'%H:%M:%S')] ERROR:${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[$(date +'%H:%M:%S')] WARNING:${NC} $1"
+}
+
 print_info() {
     echo -e "${BLUE}[$(date +'%H:%M:%S')] INFO:${NC} $1"
 }
 
-print_status "🚀 Starting All Rice-Dev Services"
-print_status "================================="
+print_success() {
+    echo -e "${CYAN}[$(date +'%H:%M:%S')] SUCCESS:${NC} $1"
+}
+
+# Cleanup function
+cleanup() {
+    print_info "Shutting down all services..."
+    
+    for pid_file in /tmp/*.pid; do
+        if [ -f "$pid_file" ]; then
+            local pid=$(cat "$pid_file")
+            if kill -0 "$pid" 2>/dev/null; then
+                print_info "Stopping process $pid..."
+                kill "$pid" 2>/dev/null || true
+            fi
+            rm -f "$pid_file"
+        fi
+    done
+    
+    rm -f /tmp/*.log
+    print_status "All services stopped"
+    exit 0
+}
+
+# Set up signal handlers
+trap cleanup SIGINT SIGTERM
+
+# Main execution
+print_status "🌾 Starting Complete ChainRice Development Environment"
+print_status "====================================================="
 
 # Check if we're in the right directory
 if [ ! -f "flake.nix" ]; then
-    echo "Please run this script from the rice-dev root directory"
+    print_error "Please run this script from the rice-dev root directory"
     exit 1
 fi
 
-# Start services in background
-print_info "Starting services..."
+# Start blockchain
+print_status "⛓️  Starting blockchain..."
+bash scripts/start-blockchain-real.sh > /tmp/blockchain.log 2>&1 &
+echo $! > /tmp/blockchain.pid
+sleep 5
 
-# Python FastAPI Bot Core
-if [ -f "bots/core/main.py" ]; then
-    print_info "Starting Bot Core API..."
-    cd bots/core && uvicorn main:app --host 0.0.0.0 --port 8000 &
-    cd ../..
-fi
+# Start dashboard
+print_status "📊 Starting dashboard..."
+cd scripts/dashboard
+python3 -m http.server 8080 > /tmp/dashboard.log 2>&1 &
+echo $! > /tmp/dashboard.pid
+cd ../..
+sleep 3
 
-# Python FastAPI Connection Service
-if [ -f "libs/connection/FastAPI/main.py" ]; then
-    print_info "Starting FastAPI Connection Service..."
-    cd libs/connection/FastAPI && uvicorn main:app --host 0.0.0.0 --port 8001 &
-    cd ../../..
-fi
-
-# Go Backend Service
-if [ -f "libs/backend/main.go" ]; then
-    print_info "Starting Go Backend Service..."
-    cd libs/backend && go run main.go &
-    cd ../..
-fi
-
-# Java/JVM Connection Service
-if [ -f "libs/connection/JVM/pom.xml" ]; then
-    print_info "Starting JVM Connection Service..."
-    cd libs/connection/JVM && mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8081' &
-    cd ../../..
-fi
-
-# .NET Connection Service
-if [ -f "libs/connection/.NET/ConnectionDotNet.csproj" ]; then
-    print_info "Starting .NET Connection Service..."
-    cd libs/connection/.NET && dotnet run --urls http://0.0.0.0:8082 &
-    cd ../../..
-fi
-
-# PHP Connection Service
-if [ -f "libs/connection/PHP/composer.json" ]; then
-    print_info "Starting PHP Connection Service..."
-    cd libs/connection/PHP && php -S 0.0.0.0:8083 &
-    cd ../../..
-fi
-
-# TypeScript Frontend Services
-if [ -f "libs/frontend/ts/package.json" ]; then
-    print_info "Starting TypeScript Frontend Services..."
-    cd libs/frontend/ts
-    
-    # Start Angular if available
-    if [ -d "angular" ]; then
-        cd angular && npm run start &
-        cd ..
+# Start frontend if Node.js is available
+if command -v node &> /dev/null && command -v npm &> /dev/null; then
+    print_status "🌾 Starting ChainRice frontend..."
+    if [ -d "projects/chain-rice" ]; then
+        cd projects/chain-rice
+        
+        # Install dependencies if needed
+        if [ ! -d "node_modules" ]; then
+            print_info "Installing frontend dependencies..."
+            npm install --silent || true
+        fi
+        
+        # Start Vite dev server
+        npm run dev > /tmp/frontend.log 2>&1 &
+        echo $! > /tmp/frontend.pid
+        cd ../..
+        print_success "Frontend started on http://localhost:3000"
+    else
+        print_warning "ChainRice frontend not found"
     fi
-    
-    # Start Next.js if available
-    if [ -d "next" ]; then
-        cd next && npm run dev &
-        cd ..
+else
+    print_warning "Node.js/npm not found, skipping frontend"
+fi
+
+# Wait for services to start
+sleep 5
+
+# Open browser if possible
+if command -v xdg-open > /dev/null; then
+    xdg-open http://localhost:8080/index.html &
+    if [ -f /tmp/frontend.pid ]; then
+        xdg-open http://localhost:3000 &
     fi
-    
-    # Start Nuxt if available
-    if [ -d "nuxt" ]; then
-        cd nuxt && npm run dev &
-        cd ..
+elif command -v open > /dev/null; then
+    open http://localhost:8080/index.html &
+    if [ -f /tmp/frontend.pid ]; then
+        open http://localhost:3000 &
     fi
-    
-    # Start Svelte if available
-    if [ -d "svelte" ]; then
-        cd svelte && npm run dev &
-        cd ..
-    fi
-    
-    cd ../../..
 fi
 
-# Flutter Frontend
-if [ -f "libs/frontend/dart/pubspec.yaml" ]; then
-    print_info "Starting Flutter Frontend..."
-    cd libs/frontend/dart && flutter run -d web-server --web-port 3003 &
-    cd ../../..
-fi
-
-# Julia Model Service
-if [ -f "bots/models/main.jl" ]; then
-    print_info "Starting Julia Model Service..."
-    cd bots/models && julia main.jl &
-    cd ../..
-fi
-
-# Rust Contract Service
-if [ -f "libs/contract/rust/Cargo.toml" ]; then
-    print_info "Starting Rust Contract Service..."
-    cd libs/contract/rust && cargo run &
-    cd ../../..
-fi
-
-print_status "All services started!"
+# Display service status
+print_status "🎉 ChainRice Development Environment Started!"
 print_info "Service URLs:"
-print_info "🤖 Bot Core API: http://localhost:8000"
-print_info "🔗 FastAPI Connection: http://localhost:8001"
-print_info "🐹 Go Backend: http://localhost:8080"
-print_info "☕ JVM Connection: http://localhost:8081"
-print_info "🔷 .NET Connection: http://localhost:8082"
-print_info "🐘 PHP Connection: http://localhost:8083"
-print_info "📱 Angular Frontend: http://localhost:4200"
-print_info "⚛️  Next.js Frontend: http://localhost:3000"
-print_info "🔥 Nuxt Frontend: http://localhost:3001"
-print_info "🎯 Svelte Frontend: http://localhost:3002"
-print_info "📱 Flutter Frontend: http://localhost:3003"
-print_info "🔬 Julia Models: http://localhost:8004"
-print_info "🦀 Rust Contracts: http://localhost:8005"
-
+print_info "📊 Blockchain Dashboard: http://localhost:8080/index.html"
+if [ -f /tmp/frontend.pid ]; then
+    print_info "🌾 ChainRice Frontend: http://localhost:3000"
+fi
+print_info "⛓️  Blockchain RPC: http://localhost:26657"
+print_info "📊 Blockchain REST: http://localhost:1317"
+print_info ""
+print_info "Blockchain Features:"
+print_info "🔗 Chain ID: chainrice-1"
+print_info "💎 CRICE Token: urice (main token)"
+print_info "🪙 MWT Token: Ready for deployment"
+print_info "🔗 CosmWasm: Enabled for smart contracts"
+print_info ""
+print_info "Block Production:"
+print_info "📦 Blocks are being produced every 6 seconds"
+print_info "📊 Monitor blocks in real-time on the dashboard"
+print_info "🔍 Check blockchain status: http://localhost:1317/status"
+print_info ""
 print_status "Press Ctrl+C to stop all services"
 
-# Wait for user interrupt
-wait
-
+# Keep the script running
+while true; do
+    sleep 1
+done

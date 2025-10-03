@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package blockchain.tokens;
+
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "blockchain/tokens/messages/token.proto";
+import "blockchain/tokens/services/token_service.proto";
+
+option go_package = "github.com/chainrice/proto/blockchain/tokens";
+
+// Blockchain module for token operations
+// This proto defines the blockchain-level token operations
+
+// MsgCreateNoriToken creates a new NORI subtoken
+message MsgCreateNoriToken {
+  option (cosmos.msg.v1.signer) = "creator";
+
+  // creator is the address of the token creator
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // initial_supply is the initial supply of NORI tokens
+  string initial_supply = 2
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+
+  // recipient is the address to receive the initial NORI tokens
+  string recipient = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgCreateNoriTokenResponse defines the response for creating NORI token
+message MsgCreateNoriTokenResponse {
+  // nori_token_id is the ID of the created NORI token
+  string nori_token_id = 1;
+}
+
+// MsgTransferNori transfers NORI tokens
+message MsgTransferNori {
+  option (cosmos.msg.v1.signer) = "from";
+
+  // from is the sender address
+  string from = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // to is the recipient address
+  string to = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // amount is the amount of NORI tokens to transfer
+  string amount = 3
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+}
+
+// MsgTransferNoriResponse defines the response for transferring NORI tokens
+message MsgTransferNoriResponse {}
+
+// NoriTokenService defines the service for NORI token operations
+service NoriTokenService {
+  // CreateNoriToken creates a new NORI token
+  rpc CreateNoriToken(MsgCreateNoriToken) returns (MsgCreateNoriTokenResponse);
+
+  // TransferNori transfers NORI tokens
+  rpc TransferNori(MsgTransferNori) returns (MsgTransferNoriResponse);
+}

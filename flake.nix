@@ -6,10 +6,9 @@
     flake-utils.url = "github:numtide/flake-utils";
     poetry2nix.url = "github:nix-community/poetry2nix";
     rust-overlay.url = "github:oxalica/rust-overlay";
-    node2nix.url = "github:nix-community/node2nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils, poetry2nix, rust-overlay, node2nix, ... }:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix, rust-overlay, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         # Overlays to tweak packages
@@ -18,10 +17,8 @@
           rust-overlay.overlays.default
           (final: prev: {
             python311Packages = prev.python311Packages // {
-              # Avoid test failure in pytest-doctestplus (numpy ufunc __code__)
-              pytest-doctestplus = prev.python311Packages.pytest-doctestplus.overrideAttrs (old: {
-                doCheck = false;
-              });
+              # Remove problematic pytest-doctestplus entirely
+              pytest-doctestplus = null;
             };
           })
         ];
@@ -176,6 +173,26 @@
         pm2 = pkgs.nodePackages.pm2;
 
       in {
+        apps = {
+          dev = let
+            devLauncher = pkgs.writeShellApplication {
+              name = "rice-dev-runner";
+              runtimeInputs = [ pkgs.bash pkgs.coreutils pkgs.git pkgs.curl ];
+              text = ''
+                set -e
+                if [ ! -f scripts/start-all.sh ]; then
+                  echo "start-all.sh not found. Run from repo root." >&2
+                  exit 1
+                fi
+                # Ensure we execute within the full monorepo dev shell so all toolchains are available
+                nix --extra-experimental-features 'nix-command flakes' develop .#monorepo --impure -c bash ./scripts/start-all.sh
+              '';
+            };
+          in {
+            type = "app";
+            program = "${devLauncher}/bin/rice-dev-runner";
+          };
+        };
         devShells = {
           # =============================================================================
           # AI & BOT DEVELOPMENT
@@ -203,7 +220,7 @@
                 sentence-transformers
                 langchain
                 llama-index
-                faiss-cpu
+                faiss
                 chromadb
                 pillow
                 opencv-python
@@ -875,7 +892,7 @@
               pkgs.openssl
               pkgs.pkg-config
               
-              # Python ecosystem (AI/Bots + FastAPI)
+              # Python ecosystem (AI/Bots + FastAPI) - minimal set to avoid pytest-doctestplus issues
               (python.withPackages (ps: with ps; [
                 # Core runtime (lean, reliable)
                 numpy
@@ -884,7 +901,6 @@
                 scikit-learn
                 matplotlib
                 seaborn
-                plotly
                 # Web / FastAPI
                 fastapi
                 uvicorn
@@ -896,15 +912,13 @@
                 openai
                 huggingface-hub
                 transformers
-                diffusers
                 accelerate
                 torch
                 torchvision
                 torchaudio
                 sentence-transformers
                 langchain
-                llama-index
-                faiss-cpu
+                faiss
                 chromadb
                 python-telegram-bot
                 discordpy
@@ -915,8 +929,6 @@
                 soundfile
                 pydub
                 tiktoken
-                # Finance & Analytics
-                statsmodels
                 # Data & Validation
                 pydantic
                 pyyaml
@@ -1105,9 +1117,11 @@
               export PUB_CACHE="$PWD/.pub-cache"
               mkdir -p "$PUB_CACHE/bin"
               export PATH="$PUB_CACHE/bin:$PATH"
+              ${pkgs.lib.optionalString androidEnabled ''
               export ANDROID_HOME=${androidSdk}/libexec/android-sdk
               export ANDROID_SDK_ROOT=$ANDROID_HOME
               export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+              ''}
               
               # CUDA environment
               export CUDA_PATH=${cudaPkgs.cudatoolkit}

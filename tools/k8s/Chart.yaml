@@ -1,9 +1,12 @@
 apiVersion: v2
 name: k8s
-description: K8s Helm chart dependencies
-version: 1.0.0
+description: K8s Helm chart dependencies with ArgoCD
+version: 1.1.0
 
 dependencies:
   - name: nginx
     version: "15.0.0"
     repository: "https://charts.bitnami.com/bitnami"
+  - name: argo-cd
+    version: "7.6.6"
+    repository: "https://argoproj.github.io/argo-helm"
