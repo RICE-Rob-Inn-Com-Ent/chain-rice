@@ -7,12 +7,13 @@ Minimal FastAPI server for AI bot integrations.
 """
 
 import logging
-import sys
 import os
+import sys
 from typing import Dict
+
+import uvicorn  # noqa
 from fastapi import FastAPI, HTTPException  # noqa
 from fastapi.middleware.cors import CORSMiddleware  # noqa
-import uvicorn  # noqa
 
 # Add parent directory to path for imports
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -24,9 +25,7 @@ from integration.huggingface import HuggingFaceIntegration  # noqa: E402
 from integration.openai import OpenAIIntegration  # noqa: E402
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Initialize integrations
@@ -110,9 +109,7 @@ def main():
     parser = argparse.ArgumentParser(description="AI Bot Core Application")
     parser.add_argument("--host", default="0.0.0.0", help="Host to bind to")
     parser.add_argument("--port", type=int, default=8000, help="Port to bind to")
-    parser.add_argument(
-        "--reload", action="store_true", help="Enable auto-reload for development"
-    )
+    parser.add_argument("--reload", action="store_true", help="Enable auto-reload for development")
 
     args = parser.parse_args()
 

@@ -1,0 +1,85 @@
+# .pre-commit-config.yaml
+repos:
+  # =============================================================================
+  # BASIC HOOKS (Universal)
+  # =============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        description: "Remove trailing whitespace"
+      - id: end-of-file-fixer
+        description: "Ensure files end with newline"
+      - id: check-yaml
+        description: "Check YAML syntax"
+        files: \.(yaml|yml)$
+      - id: check-json
+        description: "Check JSON syntax"
+        files: \.(json|jsonc)$
+      - id: check-added-large-files
+        description: "Check for large files"
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+        description: "Check for merge conflict markers"
+      - id: check-case-conflict
+        description: "Check for case conflicts"
+      - id: mixed-line-ending
+        description: "Check for mixed line endings"
+        args: ['--fix=lf']
+
+  # =============================================================================
+  # PYTHON LINTING & FORMATTING
+  # =============================================================================
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        description: "Format Python code"
+        language_version: python3
+        files: \.py$
+        args: [--line-length=120]
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.1.8
+    hooks:
+      - id: ruff
+        description: "Fast Python linter"
+        args: [--fix, --exit-non-zero-on-fix]
+        files: \.py$
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        description: "Sort Python imports"
+        args: [--profile=black, --line-length=120]
+        files: \.py$
+
+  # =============================================================================
+  # MARKDOWN LINTING
+  # =============================================================================
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.37.0
+    hooks:
+      - id: markdownlint
+        description: "Lint Markdown files"
+        files: \.md$
+        args: [--fix]
+
+  # =============================================================================
+  # SECURITY SCANNING
+  # =============================================================================
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        description: "Detect secrets in code"
+        args: ['--baseline', '.secrets.baseline']
+        exclude: |
+          (?x)^(
+            \.secrets\.baseline|
+            \.git/.*|
+            .*\.lock|
+            .*\.min\.js|
+            .*\.min\.css
+          )$

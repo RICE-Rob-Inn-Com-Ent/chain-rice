@@ -1,101 +1,73 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  # ChainRice Blockchain Node
-  chainrice-node:
+  chain-rice-frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.blockchain
-    container_name: chainrice-blockchain
-    ports:
-      - "26657:26657" # RPC
-      - "26656:26656" # P2P
-      - "1317:1317" # REST API
-      - "9090:9090" # gRPC
-    volumes:
-      - chainrice_data:/root/.chainrice
-      - ./libs/backend/modules/blockchain/config:/root/.chainrice/config
-    environment:
-      - CHAINRICE_HOME=/root/.chainrice
-      - CHAINRICE_CHAIN_ID=chainrice-1
-      - CHAINRICE_NODE=tcp://localhost:26657
-    command: ["chainriced", "start", "--home", "/root/.chainrice"]
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:26657/status"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # Hardhat Node for Smart Contracts
-  hardhat-node:
-    build:
-      context: .
-      dockerfile: Dockerfile.hardhat
-    container_name: chainrice-hardhat
-    ports:
-      - "8545:8545"
-    volumes:
-      - ./libs/contract/solidity:/app
-      - hardhat_data:/app/artifacts
-    working_dir: /app
-    command:
-      ["npx", "hardhat", "node", "--hostname", "0.0.0.0", "--port", "8545"]
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-f",
-          "-X",
-          "POST",
-          "-H",
-          "Content-Type: application/json",
-          "--data",
-          '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}',
-          "http://localhost:8545",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # ChainRice Frontend
-  chainrice-frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    container_name: chainrice-frontend
+      context: ./projects/chain-rice
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
       - ./projects/chain-rice:/app
-      - /app/node_modules
-    working_dir: /app
-    environment:
-      - VITE_BLOCKCHAIN_RPC=http://localhost:26657
-      - VITE_BLOCKCHAIN_REST=http://localhost:1317
-      - VITE_HARDHAT_NODE=http://localhost:8545
-    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
-    depends_on:
-      - chainrice-node
-      - hardhat-node
-    restart: unless-stopped
+    command: ["npm", "run", "dev"]
 
-  # Development Dashboard
-  dashboard:
+  backend:
     build:
-      context: .
-      dockerfile: Dockerfile.dashboard
-    container_name: chainrice-dashboard
+      context: ./libs/backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     volumes:
-      - ./scripts/dashboard:/app
-    working_dir: /app
-    command: ["python3", "-m", "http.server", "8080"]
-    restart: unless-stopped
+      - ./libs/backend:/app
 
-volumes:
-  chainrice_data:
-  hardhat_data:
+  fastapi-bridge:
+    build:
+      context: ./libs/connection/FastAPI
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./libs/connection/FastAPI:/app
+
+  jvm-bridge:
+    build:
+      context: ./libs/connection/JVM
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./libs/connection/JVM:/app
+
+  php-bridge:
+    build:
+      context: ./libs/connection/PHP
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./libs/connection/PHP:/app
+
+  beam-bridge:
+    build:
+      context: ./libs/connection/BEAM
+    dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./libs/connection/BEAM:/app
+
+  bots-core:
+    build:
+      context: ./bots/core
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./bots/core:/app
+
+  bots-models:
+    build:
+      context: ./bots/models
+      dockerfile: Dockerfile
+    volumes:
+      - ./bots/models:/app
