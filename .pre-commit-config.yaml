@@ -1,8 +1,9 @@
 # ==============================================================================
-# RICE-MONO PRE-COMMIT CONFIGURATION
+# RICE-MONO PRE-COMMIT - MINIMAL & FAST
 # ==============================================================================
-# Enterprise-grade pre-commit hooks for polyglot monorepo
-# Supporting: Python, Go, Rust, Solidity, TypeScript, Dart, Protobuf, Terraform
+# Philosophy: VSCode extensions handle linting in real-time
+# Pre-commit: Only quick auto-fixes + critical checks (~2-5 seconds)
+# CI/CD: Heavy linting and validation
 # ==============================================================================
 
 # ==============================================================================
@@ -10,11 +11,6 @@
 # ==============================================================================
 exclude: |
   (?x)^(
-    # Vendor dependencies
-    .*connection/BEAM/deps/.*|
-    .*connection/.NET/obj/.*|
-    .*connection/PHP/composer\.phar$|
-
     # Build artifacts & caches
     .*\.frontend/flutter/.dart_tool/.*|
     .*\.frontend/android/.gradle/.*|
@@ -59,17 +55,10 @@ exclude: |
     .*\.chunk\.(js|css)$|
     .*\.phar$|
     .*\.wasm$|
-    .*\.so$|
-    .*\.dylib$|
-    .*\.dll$|
 
-    # IDE & system
+    # IDE
     .*\.vscode/.*|
-    .*\.idea/.*|
-    .*\.DS_Store$|
-
-    # Test snapshots
-    .*__snapshots__/.*
+    .*\.idea/.*
   )$
 
 # ==============================================================================
@@ -77,514 +66,171 @@ exclude: |
 # ==============================================================================
 repos:
   # =============================================================================
-  # 1. UNIVERSAL FILE CHECKS
+  # 1. FILE CLEANUP (Fast - always run)
   # =============================================================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
-        name: "✂️  Trim trailing whitespace"
+        name: "✂️  Trim whitespace"
 
       - id: end-of-file-fixer
-        name: "📄 Fix end of files"
+        name: "📄 Fix EOF"
 
-      - id: check-yaml
-        name: "✅ Check YAML syntax"
-        files: \.(yaml|yml)$
-        exclude: |
-          (?x)^(
-            .*\.dev/k8s/templates/.*|
-            .*helm/templates/.*
-          )$
-
-      - id: check-json
-        name: "✅ Check JSON syntax"
-        files: \.(json|jsonc)$
-        exclude: |
-          (?x)^(
-            .*tsconfig.*\.json$|
-            .*\.vscode/.*
-          )$
-
-      - id: check-toml
-        name: "✅ Check TOML syntax"
-        files: \.toml$
-
-      - id: check-xml
-        name: "✅ Check XML syntax"
-        files: \.xml$
-
-      - id: check-added-large-files
-        name: "🚫 Check large files"
-        args: ["--maxkb=2000"]
+      - id: mixed-line-ending
+        name: "🔧 Fix line endings"
+        args: [--fix=lf]
 
       - id: check-merge-conflict
         name: "⚠️  Check merge conflicts"
 
-      - id: check-case-conflict
-        name: "⚠️  Check case conflicts"
-
-      - id: mixed-line-ending
-        name: "🔧 Fix line endings"
-        args: ["--fix=lf"]
-
-      - id: check-executables-have-shebangs
-        name: "🔍 Check shebangs"
-
-      - id: check-shebang-scripts-are-executable
-        name: "🔍 Check script permissions"
+      - id: check-added-large-files
+        name: "🚫 Check large files"
+        args: [--maxkb=2000]
 
   # =============================================================================
-  # 2. PYTHON (.bot/)
+  # 2. SYNTAX VALIDATION (Fast - critical errors only)
+  # =============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+        name: "✅ YAML syntax"
+        files: \.(yaml|yml)$
+        exclude: .*\.dev/k8s/templates/.*
+
+      - id: check-json
+        name: "✅ JSON syntax"
+        files: \.(json|jsonc)$
+        exclude: .*tsconfig.*\.json$
+
+      - id: check-toml
+        name: "✅ TOML syntax"
+
+  # =============================================================================
+  # 3. PYTHON AUTO-FORMAT (Fast - only formatting, NO linting)
   # =============================================================================
   - repo: https://github.com/psf/black
     rev: 24.10.0
     hooks:
       - id: black
-        name: "🐍 Format Python (Black)"
+        name: "🐍 Format Python"
         language_version: python3
         files: ^\.bot/.*\.py$
         args: [--line-length=120, --target-version=py312]
-
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.0
-    hooks:
-      - id: ruff
-        name: "🐍 Lint Python (Ruff)"
-        files: ^\.bot/.*\.py$
-        args: [--fix, --exit-non-zero-on-fix, --config=.bot/ruff.toml]
-
-      - id: ruff-format
-        name: "🐍 Format Python (Ruff)"
-        files: ^\.bot/.*\.py$
-        args: [--config=.bot/ruff.toml]
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
-        name: "🐍 Sort Python imports"
+        name: "🐍 Sort imports"
         files: ^\.bot/.*\.py$
         args: [--profile=black, --line-length=120]
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.2
-    hooks:
-      - id: mypy
-        name: "🐍 Type check Python (mypy)"
-        files: ^\.bot/.*\.py$
-        args: [--config-file=.bot/pyproject.toml, --ignore-missing-imports]
-        additional_dependencies:
-          - types-requests
-          - types-python-dateutil
-
   # =============================================================================
-  # 3. GO (.backend/db/, .backend/token/)
+  # 4. GO AUTO-FORMAT (Fast - only formatting, NO linting)
   # =============================================================================
   - repo: https://github.com/dnephin/pre-commit-golang
     rev: v0.5.1
     hooks:
       - id: go-fmt
-        name: "🔵 Format Go code (gofmt)"
+        name: "🔵 Format Go"
         files: ^\.backend/.*\.go$
 
       - id: go-imports
-        name: "🔵 Organize Go imports (goimports)"
+        name: "🔵 Organize imports"
         files: ^\.backend/.*\.go$
-
-      - id: go-vet
-        name: "🔵 Vet Go code (go vet)"
-        files: ^\.backend/.*\.go$
-
-      - id: go-mod-tidy
-        name: "🔵 Tidy Go modules"
-        files: ^\.backend/.*(go\.mod)$
-
-  # NOTE: golangci-lint runs in CI/CD (too slow for pre-commit)
 
   # =============================================================================
-  # 4. RUST (.backend/contract/rust/)
+  # 5. RUST AUTO-FORMAT (Fast - only formatting, NO linting)
   # =============================================================================
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
       - id: fmt
-        name: "🦀 Format Rust (rustfmt)"
+        name: "🦀 Format Rust"
         files: ^\.backend/contract/rust/.*\.rs$
         args: [--manifest-path=.backend/contract/rust/Cargo.toml, --]
 
-      - id: clippy
-        name: "🦀 Lint Rust (clippy)"
-        files: ^\.backend/contract/rust/.*\.rs$
-        args:
-          - --manifest-path=.backend/contract/rust/Cargo.toml
-          - --
-          - -D
-          - warnings
-
   # =============================================================================
-  # 5. JAVASCRIPT / TYPESCRIPT (.frontend/web/)
+  # 6. JS/TS AUTO-FORMAT (Fast - only Prettier, NO ESLint)
   # =============================================================================
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        name: "✨ Format JS/TS (Prettier)"
-        files: ^\.frontend/web/.*\.(js|jsx|ts|tsx|json|css|scss|md)$
-        args:
-          - --write
-          - --print-width=120
-          - --single-quote
-          - --trailing-comma=es5
-          - --tab-width=2
-
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.12.0
-    hooks:
-      - id: eslint
-        name: "✨ Lint JS/TS (ESLint)"
-        files: ^\.frontend/web/.*\.(js|jsx|ts|tsx)$
-        args: [--fix, --max-warnings=0, --config=.frontend/web/.eslintrc.js]
-        additional_dependencies:
-          - eslint@9.12.0
-          - "@typescript-eslint/eslint-plugin@8.8.0"
-          - "@typescript-eslint/parser@8.8.0"
+        name: "✨ Format JS/TS"
+        files: ^\.frontend/web/.*\.(js|jsx|ts|tsx|json|css|scss)$
+        args: [--write, --print-width=120, --single-quote, --tab-width=2]
 
   # =============================================================================
-  # 6. SOLIDITY (.backend/contract/solidity/)
+  # 7. SHELL AUTO-FORMAT (Fast - only formatting)
   # =============================================================================
-  - repo: local
-    hooks:
-      - id: solhint
-        name: "⛓️  Lint Solidity (solhint)"
-        description: Lint Solidity smart contracts
-        entry: bash -c 'cd .backend/contract/solidity && npx solhint "contracts/**/*.sol"'
-        language: system
-        files: ^\.backend/contract/solidity/.*\.sol$
-        pass_filenames: false
-
-  # =============================================================================
-  # 7. DART / FLUTTER (.frontend/flutter/)
-  # =============================================================================
-  - repo: local
-    hooks:
-      - id: dart-format
-        name: "🎯 Format Dart (dart format)"
-        description: Format Dart/Flutter code
-        entry: bash -c 'cd .frontend/flutter && flutter format .'
-        language: system
-        files: ^\.frontend/flutter/.*\.dart$
-        pass_filenames: false
-
-      - id: dart-analyze
-        name: "🎯 Analyze Dart (flutter analyze)"
-        description: Analyze Dart/Flutter code
-        entry: bash -c 'cd .frontend/flutter && flutter analyze --no-fatal-infos --no-fatal-warnings'
-        language: system
-        files: ^\.frontend/flutter/.*\.dart$
-        pass_filenames: false
-
-  # =============================================================================
-  # 8. TERRAFORM (.dev/terraform/)
-  # =============================================================================
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.96.1
-    hooks:
-      - id: terraform_fmt
-        name: "🏗️  Format Terraform"
-        files: ^\.dev/terraform/.*\.tf$
-
-      - id: terraform_validate
-        name: "🏗️  Validate Terraform"
-        files: ^\.dev/terraform/.*\.tf$
-        args:
-          - --hook-config=--retry-once-with-cleanup=true
-          - --tf-init-args=-backend=false
-
-      - id: terraform_tflint
-        name: "🏗️  Lint Terraform (tflint)"
-        files: ^\.dev/terraform/.*\.tf$
-
-  # =============================================================================
-  # 9. SHELL SCRIPTS
-  # =============================================================================
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
-    hooks:
-      - id: shellcheck
-        name: "🐚 Lint shell scripts (ShellCheck)"
-        files: \.(sh|bash|ksh)$
-        args: [--severity=warning, --shell=bash, --exclude=SC1091]
-
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.8.0-1
     hooks:
       - id: shfmt
-        name: "🐚 Format shell scripts (shfmt)"
+        name: "🐚 Format shell"
         files: \.(sh|bash)$
-        args: [-w, -i, "2", -ci, -bn, -sr]
+        args: [-w, -i, "2", -ci]
 
   # =============================================================================
-  # 10. PROTOCOL BUFFERS (.schema/)
-  # =============================================================================
-  - repo: https://github.com/bufbuild/buf
-    rev: v1.40.1
-    hooks:
-      - id: buf-format
-        name: "📦 Format Protobuf (buf)"
-        files: ^\.schema/.*\.proto$
-        exclude: ^\.schema/token/third_party/.*
-        args: [-w]
-
-      - id: buf-lint
-        name: "📦 Lint Protobuf (buf)"
-        files: ^\.schema/.*\.proto$
-        exclude: ^\.schema/token/third_party/.*
-
-  # =============================================================================
-  # 11. MARKDOWN
-  # =============================================================================
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.42.0
-    hooks:
-      - id: markdownlint-fix
-        name: "📝 Lint & Fix Markdown"
-        files: \.(md|markdown)$
-        exclude: |
-          (?x)^(
-            .*CHANGELOG\.md$|
-            .*\.doc/docs/LICENSE\.md$|
-            .*connection/.*
-          )$
-        args:
-          - --fix
-          - --config=.markdownlint.json
-
-  # =============================================================================
-  # 12. DOCKER
-  # =============================================================================
-  - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.0
-    hooks:
-      - id: hadolint-docker
-        name: "🐳 Lint Dockerfiles (hadolint)"
-        files: (Dockerfile.*|.*\.dockerfile)$
-
-  # =============================================================================
-  # 13. YAML LINTING
-  # =============================================================================
-  - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
-    hooks:
-      - id: yamllint
-        name: "📋 Lint YAML (yamllint)"
-        files: \.(yaml|yml)$
-        exclude: |
-          (?x)^(
-            .*\.dev/k8s/templates/.*|
-            .*helm/templates/.*|
-            .*\.github/workflows/.*
-          )$
-        args: [-c=.yamllint, -f, parsable]
-
-  # =============================================================================
-  # 14. KUBERNETES / HELM (.dev/k8s/)
-  # =============================================================================
-  - repo: local
-    hooks:
-      - id: helm-lint
-        name: "☸️  Lint Helm charts"
-        description: Lint Helm charts with helm lint
-        entry: bash -c 'cd .dev/k8s && helm lint . --strict || true'
-        language: system
-        files: ^\.dev/k8s/.*\.(yaml|yml|tpl)$
-        pass_filenames: false
-
-  # =============================================================================
-  # 15. BAZEL
+  # 8. BAZEL FORMAT (Fast)
   # =============================================================================
   - repo: https://github.com/keith/pre-commit-buildifier
     rev: 7.3.1
     hooks:
       - id: buildifier
-        name: "🏗️  Format Bazel files (buildifier)"
+        name: "🏗️  Format Bazel"
         files: (BUILD\.bazel|WORKSPACE|MODULE\.bazel|\.bzl)$
-        args: [-mode=fix, -lint=fix]
-
-      - id: buildifier-lint
-        name: "🏗️  Lint Bazel files"
-        files: (BUILD\.bazel|WORKSPACE|MODULE\.bazel|\.bzl)$
-        args: [-mode=check, -lint=warn]
+        args: [-mode=fix]
 
   # =============================================================================
-  # 16. ANSIBLE (.dev/ansible/)
-  # NOTE: ansible-lint has Python 3.13 compatibility issues - runs in CI/CD instead
-  # =============================================================================
-
-  # =============================================================================
-  # 17. COMMIT MESSAGE
-  # =============================================================================
-  - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.4.0
-    hooks:
-      - id: conventional-pre-commit
-        name: "💬 Check commit message format"
-        stages: [commit-msg]
-
-  # =============================================================================
-  # 18. SECURITY SCANNING
+  # 9. SECURITY (Fast - must have)
   # =============================================================================
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:
       - id: detect-secrets
         name: "🔒 Detect secrets"
-        args:
-          - --baseline
-          - .secrets.baseline
-          - --exclude-files
-          - ".*test.*"
-          - --exclude-files
-          - ".*mock.*"
-          - --exclude-files
-          - ".*example.*"
+        args: [--baseline, .secrets.baseline]
         exclude: |
           (?x)^(
             \.secrets\.baseline|
             .*README\.md$|
-            .*CHANGELOG\.md$|
-            .*LICENSE.*|
             .*test.*|
-            .*_test\..*|
-            .*\.spec\..*|
-            .*\.test\..*|
             .*mock.*|
-            .*example.*|
             \.devcontainer/.*|
             \.doc/.*|
             \.github/.*
           )$
 
   # =============================================================================
-  # 19. GIT CHECKS
+  # 10. COMMIT MESSAGE (Fast - must have)
+  # =============================================================================
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.4.0
+    hooks:
+      - id: conventional-pre-commit
+        name: "💬 Commit format"
+        stages: [commit-msg]
+
+  # =============================================================================
+  # 11. GIT SAFETY (Fast - must have)
   # =============================================================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-      - id: check-vcs-permalinks
-        name: "🔗 Check VCS permalinks"
-
-      - id: forbid-new-submodules
-        name: "🚫 Forbid new submodules"
-
       - id: no-commit-to-branch
-        name: "🛡️  Protect main branches"
+        name: "🛡️  Protect main"
         args: [--branch=main, --branch=master, --branch=production]
-
-  # =============================================================================
-  # 20. CODE QUALITY (EDITORCONFIG)
-  # =============================================================================
-  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.0.3
-    hooks:
-      - id: editorconfig-checker
-        name: "⚙️  Check EditorConfig compliance"
-        alias: ec
-        args: [-config, .editorconfig]
-
-  # =============================================================================
-  # 21. SPELL CHECKING
-  # =============================================================================
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
-    hooks:
-      - id: codespell
-        name: "📖 Check spelling (codespell)"
-        args:
-          - --ignore-words-list=ba,te,nd,unexpect,aci,ser,ist,infos,ue,fo,dur
-          - --skip="*.lock,*.sum,*.min.js,*.min.css,*.pb.go,*_pb2.py"
-          - --quiet-level=2
-        exclude: |
-          (?x)^(
-            .*\.lock$|
-            .*\.sum$|
-            .*connection/.*|
-            .*proto/.*|
-            .*\.schema/.*
-          )$
-
-  # =============================================================================
-  # 22. FILE PERMISSIONS
-  # =============================================================================
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: check-executables-have-shebangs
-        name: "🔑 Executables have shebangs"
-
-      - id: check-shebang-scripts-are-executable
-        name: "🔑 Scripts are executable"
-
-  # =============================================================================
-  # 23. TOML FORMATTING
-  # =============================================================================
-  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.14.0
-    hooks:
-      - id: pretty-format-toml
-        name: "📄 Format TOML files"
-        args: [--autofix]
-        files: \.toml$
-        exclude: |
-          (?x)^(
-            .*\.lock$|
-            .*poetry\.lock$|
-            .*Cargo\.lock$
-          )$
-
-  # =============================================================================
-  # 24. CUSTOM MONOREPO CHECKS
-  # =============================================================================
-  - repo: local
-    hooks:
-      - id: check-package-json-sync
-        name: "📦 Check package.json sync"
-        description: Ensure package.json files are consistent
-        entry: bash -c 'echo "✓ Package.json files checked" && exit 0'
-        language: system
-        files: package\.json$
-        pass_filenames: false
-
-      - id: check-proto-dependencies
-        name: "🔍 Check proto dependencies"
-        description: Verify proto file dependencies
-        entry: bash -c 'echo "✓ Proto dependencies checked" && exit 0'
-        language: system
-        files: \.proto$
-        pass_filenames: false
 
 # ==============================================================================
 # CI CONFIGURATION (pre-commit.ci)
 # ==============================================================================
 ci:
-  autofix_commit_msg: |
-    [pre-commit.ci] auto fixes from pre-commit hooks
-
-    for more information, see https://pre-commit.ci
+  autofix_commit_msg: "[pre-commit.ci] auto fixes"
   autofix_prs: true
-  autoupdate_branch: ""
-  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: monthly
-  skip:
-    # Skip hooks that require local tools/environment
-    - go-mod-tidy
-    - terraform_validate
-    - terraform_tflint
-    - ansible-lint
-    - helm-lint
-    - dart-format
-    - dart-analyze
-    - solhint
-    - check-package-json-sync
-    - check-proto-dependencies
+  skip: []
   submodules: false

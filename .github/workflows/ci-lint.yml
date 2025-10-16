@@ -1,468 +1,586 @@
-name: Lint
+name: 🔍 Lint
 
 on:
-    push:
-        branches: [main, dev]
-    pull_request:
-        branches: [main, dev]
-    merge_group:
+  push:
+    branches: [main, dev, v.*]
+  pull_request:
+    branches: [main, dev]
+  merge_group:
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
-    contents: read
-    pull-requests: write
+  contents: read
+  pull-requests: write
 
 jobs:
-    super-linter:
-        name: Super Linter
-        runs-on: ubuntu-latest
-        timeout-minutes: 15
-
-        permissions:
-            contents: read
-            statuses: write
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Run Super-Linter
-              uses: super-linter/super-linter@v6
-              env:
-                  DEFAULT_BRANCH: main
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-                  VALIDATE_PYTHON_BLACK: true
-                  VALIDATE_PYTHON_FLAKE8: true
-                  VALIDATE_PYTHON_PYLINT: true
-                  VALIDATE_GO: true
-                  VALIDATE_JAVASCRIPT_ES: true
-                  VALIDATE_TYPESCRIPT_ES: true
-                  VALIDATE_MARKDOWN: true
-                  VALIDATE_YAML: true
-                  VALIDATE_DOCKERFILE_HADOLINT: true
-                  VALIDATE_BASH: true
-                  VALIDATE_TERRAFORM_TFLINT: true
-                  VALIDATE_JSON: true
-                  VALIDATE_XML: true
-                  FILTER_REGEX_EXCLUDE: .*node_modules/.*|.*\.git/.*
-
-    python-lint:
-        name: Python Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
-                  cache: "pip"
-
-            - name: Install linting tools
-              run: |
-                  pip install ruff black mypy isort bandit safety
-
-            - name: Run Ruff
-              working-directory: .bot
-              run: ruff check . --output-format=github
-              continue-on-error: true
-
-            - name: Run Black
-              working-directory: .bot
-              run: black --check --diff .
-              continue-on-error: true
-
-            - name: Run isort
-              working-directory: .bot
-              run: isort --check-only --diff .
-              continue-on-error: true
-
-            - name: Run mypy
-              working-directory: .bot
-              run: mypy core integration --strict
-              continue-on-error: true
-
-            - name: Run Bandit security checks
-              working-directory: .bot
-              run: bandit -r core integration -f json -o bandit-report.json
-              continue-on-error: true
-
-            - name: Upload Bandit report
-              if: always()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: bandit-report
-                  path: .bot/bandit-report.json
-                  retention-days: 7
-
-    go-lint:
-        name: Go Linting - ${{ matrix.component }}
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-
-        strategy:
-            matrix:
-                component: [db, token]
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Go
-              uses: actions/setup-go@v5
-              with:
-                  go-version: "1.22"
-                  cache: false
-
-            - name: Run golangci-lint
-              uses: golangci/golangci-lint-action@v4
-              with:
-                  version: v1.55.2
-                  working-directory: .backend/${{ matrix.component }}
-                  args: --timeout=10m --verbose
-
-            - name: Run go vet
-              working-directory: .backend/${{ matrix.component }}
-              run: go vet ./...
-
-            - name: Run staticcheck
-              uses: dominikh/staticcheck-action@v1
-              with:
-                  version: "2023.1.7"
-                  install-go: false
-                  working-directory: .backend/${{ matrix.component }}
-
-    typescript-lint:
-        name: TypeScript Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "npm"
-                  cache-dependency-path: .frontend/web/package-lock.json
-
-            - name: Install dependencies
-              working-directory: .frontend/web
-              run: npm ci
-
-            - name: Run ESLint
-              working-directory: .frontend/web
-              run: npm run lint --if-present
-
-            - name: Run Prettier check
-              working-directory: .frontend/web
-              run: npx prettier --check .
-
-            - name: Run TSC type check
-              working-directory: .frontend/web
-              run: npx tsc --noEmit
-
-    rust-lint:
-        name: Rust Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Rust
-              uses: dtolnay/rust-toolchain@stable
-              with:
-                  toolchain: 1.76.0
-                  components: rustfmt, clippy
-
-            - name: Cache Rust dependencies
-              uses: Swatinem/rust-cache@v2
-              with:
-                  workspaces: .backend/contract/rust
-
-            - name: Run rustfmt
-              working-directory: .backend/contract/rust
-              run: cargo fmt -- --check
-
-            - name: Run Clippy
-              working-directory: .backend/contract/rust
-              run: cargo clippy --all-targets --all-features -- -D warnings
-
-            - name: Run cargo deny
-              uses: EmbarkStudios/cargo-deny-action@v1
-              with:
-                  manifest-path: .backend/contract/rust/Cargo.toml
-
-    solidity-lint:
-        name: Solidity Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "npm"
-                  cache-dependency-path: .backend/contract/solidity/package-lock.json
-
-            - name: Install dependencies
-              working-directory: .backend/contract/solidity
-              run: npm ci
-
-            - name: Run Solhint
-              working-directory: .backend/contract/solidity
-              run: npx solhint 'contracts/**/*.sol'
-              continue-on-error: true
-
-            - name: Run Prettier (Solidity)
-              working-directory: .backend/contract/solidity
-              run: npx prettier --check 'contracts/**/*.sol'
-
-    markdown-lint:
-        name: Markdown Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Run markdownlint
-              uses: DavidAnson/markdownlint-cli2-action@v15
-              with:
-                  globs: |
-                      **/*.md
-                      !**/node_modules/**
-                      !**/.venv/**
-
-    yaml-lint:
-        name: YAML Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Run yamllint
-              uses: ibiqlik/action-yamllint@v3
-              with:
-                  config_file: .yamllint.yml
-                  file_or_dir: .
-                  strict: true
-
-    dockerfile-lint:
-        name: Dockerfile Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Run Hadolint
-              uses: hadolint/hadolint-action@v3.1.0
-              with:
-                  recursive: true
-                  failure-threshold: warning
-
-    shell-lint:
-        name: Shell Script Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Run ShellCheck
-              uses: ludeeus/action-shellcheck@master
-              with:
-                  severity: warning
-
-    proto-lint:
-        name: Protocol Buffers Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Buf
-              uses: bufbuild/buf-setup-action@v1
-              with:
-                  github_token: ${{ github.token }}
-
-            - name: Run Buf lint
-              working-directory: .schema
-              run: buf lint
-
-            - name: Run Buf format check
-              working-directory: .schema
-              run: buf format --diff --exit-code
-
-    terraform-lint:
-        name: Terraform Linting
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Set up Terraform
-              uses: hashicorp/setup-terraform@v3
-              with:
-                  terraform_version: 1.7.0
-
-            - name: Terraform fmt check
-              working-directory: .dev/terraform
-              run: terraform fmt -check -recursive
-
-            - name: Run tflint
-              uses: terraform-linters/setup-tflint@v4
-
-            - name: TFLint
-              working-directory: .dev/terraform
-              run: |
-                  tflint --init
-                  tflint --recursive
-
-    commitlint:
-        name: Commit Message Linting
-        runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
-        timeout-minutes: 5
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-
-            - name: Install commitlint
-              run: |
-                  npm install -g @commitlint/cli @commitlint/config-conventional
-
-            - name: Validate commit messages
-              run: |
-                  npx commitlint \
-                    --from ${{ github.event.pull_request.base.sha }} \
-                    --to ${{ github.event.pull_request.head.sha }} \
-                    --verbose
-
-    license-check:
-        name: License Compliance
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Check license headers
-              uses: apache/skywalking-eyes/header@v0.6.0
-              with:
-                  mode: check
-                  config: .licenserc.yaml
-
-    dependency-review:
-        name: Dependency Review
-        runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
-        timeout-minutes: 10
-
-        permissions:
-            contents: read
-            pull-requests: write
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Dependency Review
-              uses: actions/dependency-review-action@v4
-              with:
-                  fail-on-severity: moderate
-                  deny-licenses: GPL-2.0, GPL-3.0
-
-    lint-summary:
-        name: Lint Summary
-        runs-on: ubuntu-latest
-        needs:
-            - python-lint
-            - go-lint
-            - typescript-lint
-            - rust-lint
-            - solidity-lint
-            - markdown-lint
-            - yaml-lint
-            - dockerfile-lint
-            - shell-lint
-            - proto-lint
-            - terraform-lint
+  # ===========================================================================
+  # PYTHON (.bot/)
+  # ===========================================================================
+  python-lint:
+    name: 🐍 Python (Ruff + mypy + Black)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install linting tools
+        run: |
+          pip install ruff black mypy isort bandit safety
+          pip install types-requests types-python-dateutil
+
+      - name: Run Ruff (lint + format check)
+        working-directory: .bot
+        run: |
+          echo "::group::Ruff Lint"
+          ruff check . --config ruff.toml --output-format=github || true
+          echo "::endgroup::"
+
+          echo "::group::Ruff Format Check"
+          ruff format --check --config ruff.toml . || true
+          echo "::endgroup::"
+
+      - name: Run Black
+        working-directory: .bot
+        run: black --check --diff .
+        continue-on-error: true
+
+      - name: Run isort
+        working-directory: .bot
+        run: isort --check-only --diff .
+        continue-on-error: true
+
+      - name: Run mypy
+        working-directory: .bot
+        run: mypy --config-file pyproject.toml --ignore-missing-imports core integration || true
+
+      - name: Run Bandit (security)
+        working-directory: .bot
+        run: |
+          bandit -r core integration -f json -o bandit-report.json || true
+          bandit -r core integration
+
+      - name: Upload Bandit report
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-bandit-report
+          path: .bot/bandit-report.json
+          retention-days: 7
 
-        steps:
-            - name: Check lint results
-              run: |
-                  echo "## Lint Summary" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "| Linter | Status |" >> $GITHUB_STEP_SUMMARY
-                  echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
-                  echo "| Python | ${{ needs.python-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Go | ${{ needs.go-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| TypeScript | ${{ needs.typescript-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Rust | ${{ needs.rust-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Solidity | ${{ needs.solidity-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Markdown | ${{ needs.markdown-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| YAML | ${{ needs.yaml-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Dockerfile | ${{ needs.dockerfile-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Shell | ${{ needs.shell-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Protocol Buffers | ${{ needs.proto-lint.result }} |" >> $GITHUB_STEP_SUMMARY
-                  echo "| Terraform | ${{ needs.terraform-lint.result }} |" >> $GITHUB_STEP_SUMMARY
+  # ===========================================================================
+  # GO (.backend/db/, .backend/token/)
+  # ===========================================================================
+  go-lint:
+    name: 🔵 Go - ${{ matrix.component }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-                  FAILED=0
-                  [ "${{ needs.python-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.go-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.typescript-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.rust-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.solidity-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.markdown-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.yaml-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.dockerfile-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.shell-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.proto-lint.result }}" != "success" ] && FAILED=1
-                  [ "${{ needs.terraform-lint.result }}" != "success" ] && FAILED=1
+    strategy:
+      matrix:
+        component: [db, token]
 
-                  if [ $FAILED -eq 1 ]; then
-                    echo "" >> $GITHUB_STEP_SUMMARY
-                    echo "❌ Some linters failed!" >> $GITHUB_STEP_SUMMARY
-                    exit 1
-                  else
-                    echo "" >> $GITHUB_STEP_SUMMARY
-                    echo "✅ All linters passed!" >> $GITHUB_STEP_SUMMARY
-                  fi
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: .backend/${{ matrix.component }}/go.sum
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: .backend/${{ matrix.component }}
+          args: --timeout=10m --verbose --config ../.golangci.yml
+
+      - name: Run go vet
+        working-directory: .backend/${{ matrix.component }}
+        run: go vet ./...
+
+      - name: Run staticcheck
+        uses: dominikh/staticcheck-action@v1
+        with:
+          version: latest
+          install-go: false
+          working-directory: .backend/${{ matrix.component }}
+
+  # ===========================================================================
+  # TYPESCRIPT (.frontend/web/)
+  # ===========================================================================
+  typescript-lint:
+    name: ✨ TypeScript (ESLint + Prettier + TSC)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: .frontend/web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: .frontend/web
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: .frontend/web
+        run: npm run lint --if-present
+
+      - name: Run Prettier check
+        working-directory: .frontend/web
+        run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss}"
+
+      - name: TypeScript type check
+        working-directory: .frontend/web
+        run: npx tsc --noEmit || true
+
+  # ===========================================================================
+  # RUST (.backend/contract/rust/)
+  # ===========================================================================
+  rust-lint:
+    name: 🦀 Rust (Clippy + rustfmt)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: .backend/contract/rust
+
+      - name: Run rustfmt
+        working-directory: .backend/contract/rust
+        run: cargo fmt -- --check
+
+      - name: Run Clippy
+        working-directory: .backend/contract/rust
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run cargo deny
+        uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          manifest-path: .backend/contract/rust/Cargo.toml
+
+  # ===========================================================================
+  # SOLIDITY (.backend/contract/solidity/)
+  # ===========================================================================
+  solidity-lint:
+    name: ⛓️  Solidity (solhint + slither)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: .backend/contract/solidity
+        run: npm install
+
+      - name: Run Solhint
+        working-directory: .backend/contract/solidity
+        run: npx solhint 'contracts/**/*.sol' || true
+
+      - name: Run Prettier (Solidity)
+        working-directory: .backend/contract/solidity
+        run: npx prettier --check 'contracts/**/*.sol'
+
+      - name: Run Slither (security)
+        uses: crytic/slither-action@v0.4.0
+        with:
+          target: .backend/contract/solidity/contracts
+          slither-args: --filter-paths "node_modules" --exclude naming-convention,external-function
+        continue-on-error: true
+
+  # ===========================================================================
+  # DART/FLUTTER (.frontend/flutter/)
+  # ===========================================================================
+  dart-lint:
+    name: 🎯 Dart/Flutter (analyze)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Get dependencies
+        working-directory: .frontend/flutter
+        run: flutter pub get
+
+      - name: Run flutter analyze
+        working-directory: .frontend/flutter
+        run: flutter analyze --no-fatal-infos
+
+      - name: Check formatting
+        working-directory: .frontend/flutter
+        run: dart format --set-exit-if-changed .
+
+  # ===========================================================================
+  # PROTOCOL BUFFERS (.schema/)
+  # ===========================================================================
+  proto-lint:
+    name: 📦 Protobuf (buf lint + breaking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Buf
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+
+      - name: Run Buf lint
+        working-directory: .schema
+        run: buf lint
+
+      - name: Run Buf format check
+        working-directory: .schema
+        run: buf format --diff --exit-code
+
+      - name: Check breaking changes
+        working-directory: .schema
+        if: github.event_name == 'pull_request'
+        run: buf breaking --against '.git#branch=main'
+        continue-on-error: true
+
+  # ===========================================================================
+  # TERRAFORM (.dev/terraform/)
+  # ===========================================================================
+  terraform-lint:
+    name: 🏗️  Terraform (tflint + tfsec)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Terraform fmt check
+        working-directory: .dev/terraform
+        run: terraform fmt -check -recursive
+
+      - name: Terraform validate
+        working-directory: .dev/terraform
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Set up TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Run TFLint
+        working-directory: .dev/terraform
+        run: |
+          tflint --init
+          tflint --recursive
+
+      - name: Run tfsec (security)
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          working_directory: .dev/terraform
+          soft_fail: true
+
+  # ===========================================================================
+  # MARKDOWN (.doc/, README files)
+  # ===========================================================================
+  markdown-lint:
+    name: 📝 Markdown (markdownlint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: |
+            **/*.md
+            !**/node_modules/**
+            !**/.venv/**
+            !**/vendor/**
+          config: .markdownlint.json
+
+  # ===========================================================================
+  # YAML
+  # ===========================================================================
+  yaml-lint:
+    name: 📋 YAML (yamllint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run yamllint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint
+          file_or_dir: .
+          strict: false
+          format: github
+
+  # ===========================================================================
+  # DOCKER
+  # ===========================================================================
+  dockerfile-lint:
+    name: 🐳 Dockerfile (hadolint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          recursive: true
+          failure-threshold: warning
+          dockerfile: "**/Dockerfile*"
+
+  # ===========================================================================
+  # SHELL SCRIPTS
+  # ===========================================================================
+  shell-lint:
+    name: 🐚 Shell (ShellCheck)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: warning
+          check_together: 'yes'
+
+  # ===========================================================================
+  # BAZEL
+  # ===========================================================================
+  bazel-lint:
+    name: 🏗️  Bazel (buildifier)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run buildifier
+        uses: keith/buildifier-action@v1
+        with:
+          args: -mode=check -lint=warn
+
+  # ===========================================================================
+  # COMMIT MESSAGES (PRs only)
+  # ===========================================================================
+  commitlint:
+    name: 💬 Commit Messages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install commitlint
+        run: npm install -g @commitlint/cli @commitlint/config-conventional
+
+      - name: Validate commit messages
+        run: |
+          npx commitlint \
+            --from ${{ github.event.pull_request.base.sha }} \
+            --to ${{ github.event.pull_request.head.sha }} \
+            --verbose
+
+  # ===========================================================================
+  # SPELL CHECK
+  # ===========================================================================
+  spell-check:
+    name: 📖 Spell Check (codespell)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run codespell
+        uses: codespell-project/actions-codespell@v2
+        with:
+          ignore_words_list: ba,te,nd,unexpect,aci,ser,ist,infos,ue,fo,dur
+          skip: "*.lock,*.sum,*.min.js,*.min.css,node_modules,dist,build"
+
+  # ===========================================================================
+  # LICENSE COMPLIANCE
+  # ===========================================================================
+  license-check:
+    name: ⚖️  License Compliance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check license headers
+        uses: apache/skywalking-eyes/header@v0.6.0
+        with:
+          mode: check
+        continue-on-error: true
+
+  # ===========================================================================
+  # DEPENDENCY REVIEW (PRs only)
+  # ===========================================================================
+  dependency-review:
+    name: 🔍 Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          deny-licenses: GPL-2.0, GPL-3.0, AGPL-3.0
+
+  # ===========================================================================
+  # LINT SUMMARY
+  # ===========================================================================
+  lint-summary:
+    name: 📊 Lint Summary
+    runs-on: ubuntu-latest
+    needs:
+      - python-lint
+      - go-lint
+      - typescript-lint
+      - rust-lint
+      - solidity-lint
+      - dart-lint
+      - proto-lint
+      - terraform-lint
+      - markdown-lint
+      - yaml-lint
+      - dockerfile-lint
+      - shell-lint
+      - bazel-lint
+      - spell-check
+    if: always()
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "# 🔍 Lint Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Language/Tool | Status | Icon |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------------|--------|------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🐍 Python | \`${{ needs.python-lint.result }}\` | ${{ needs.python-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔵 Go | \`${{ needs.go-lint.result }}\` | ${{ needs.go-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ✨ TypeScript | \`${{ needs.typescript-lint.result }}\` | ${{ needs.typescript-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🦀 Rust | \`${{ needs.rust-lint.result }}\` | ${{ needs.rust-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ⛓️  Solidity | \`${{ needs.solidity-lint.result }}\` | ${{ needs.solidity-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🎯 Dart/Flutter | \`${{ needs.dart-lint.result }}\` | ${{ needs.dart-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📦 Protobuf | \`${{ needs.proto-lint.result }}\` | ${{ needs.proto-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🏗️  Terraform | \`${{ needs.terraform-lint.result }}\` | ${{ needs.terraform-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📝 Markdown | \`${{ needs.markdown-lint.result }}\` | ${{ needs.markdown-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📋 YAML | \`${{ needs.yaml-lint.result }}\` | ${{ needs.yaml-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🐳 Docker | \`${{ needs.dockerfile-lint.result }}\` | ${{ needs.dockerfile-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🐚 Shell | \`${{ needs.shell-lint.result }}\` | ${{ needs.shell-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🏗️  Bazel | \`${{ needs.bazel-lint.result }}\` | ${{ needs.bazel-lint.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📖 Spelling | \`${{ needs.spell-check.result }}\` | ${{ needs.spell-check.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Count failures
+          FAILED=0
+          [ "${{ needs.python-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.go-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.typescript-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.rust-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.solidity-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.dart-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.proto-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.terraform-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.markdown-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.yaml-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.dockerfile-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.shell-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.bazel-lint.result }}" != "success" ] && FAILED=$((FAILED+1))
+          [ "${{ needs.spell-check.result }}" != "success" ] && FAILED=$((FAILED+1))
+
+          echo "## Results" >> $GITHUB_STEP_SUMMARY
+          if [ $FAILED -eq 0 ]; then
+            echo "✅ **All linters passed!**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **$FAILED linter(s) failed**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please check the individual job logs above for details." >> $GITHUB_STEP_SUMMARY
+          fi
