@@ -251,6 +251,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 1. 🐍 Python Lint (.bot/)
 
 **Tools & Checks**:
+
 - **Ruff**: Lint + format check → [Docs](https://docs.astral.sh/ruff/)
 - **Black**: Format verification → [Docs](https://black.readthedocs.io/)
 - **isort**: Import sorting check → [Docs](https://pycqa.github.io/isort/)
@@ -266,6 +267,7 @@ Config: .github/workflows/ci-lint.yml
 **Matrix Strategy**: Separate jobs for each component (parallel)
 
 **Tools**:
+
 - **golangci-lint**: 50+ linters in one → [Docs](https://golangci-lint.run/)
 - **go vet**: Official Go analyzer
 - **staticcheck**: Advanced analysis → [Docs](https://staticcheck.io/)
@@ -277,6 +279,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 3. ✨ TypeScript Lint (.frontend/web/)
 
 **Tools**:
+
 - **ESLint**: Linting with TypeScript support → [Docs](https://eslint.org/)
 - **Prettier**: Format verification → [Docs](https://prettier.io/)
 - **TSC**: Type checking (`tsc --noEmit`) → [Docs](https://www.typescriptlang.org/)
@@ -288,6 +291,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 4. 🦀 Rust Lint (.backend/contract/rust/)
 
 **Tools**:
+
 - **Clippy**: Linter with `-D warnings` → [Docs](https://github.com/rust-lang/rust-clippy)
 - **rustfmt**: Format check → [Docs](https://rust-lang.github.io/rustfmt/)
 - **cargo-deny**: License/security audit → [Docs](https://embarkstudios.github.io/cargo-deny/)
@@ -299,6 +303,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 5. ⛓️ Solidity Lint (.backend/contract/solidity/)
 
 **Tools**:
+
 - **solhint**: Smart contract linter → [Docs](https://protofire.github.io/solhint/)
 - **Prettier**: Format check with solidity plugin
 - **Slither**: Security analyzer → [Docs](https://github.com/crytic/slither)
@@ -312,6 +317,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 6. 🎯 Dart/Flutter Lint (.frontend/flutter/)
 
 **Tools**:
+
 - **flutter analyze**: Static analysis → [Docs](https://docs.flutter.dev/testing/debugging)
 - **dart format**: Format verification → [Docs](https://dart.dev/tools/dart-format)
 
@@ -322,6 +328,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 7. 📦 Protobuf Lint (.schema/)
 
 **Tools**:
+
 - **buf lint**: Style & best practices → [Docs](https://buf.build/docs/lint/overview)
 - **buf format**: Format check
 - **buf breaking**: API breaking change detection → [Docs](https://buf.build/docs/breaking/overview)
@@ -335,6 +342,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 8. 🏗️ Terraform Lint (.dev/terraform/)
 
 **Tools**:
+
 - **terraform fmt**: Format check
 - **terraform validate**: Config validation
 - **tflint**: Linter for best practices → [Docs](https://github.com/terraform-linters/tflint)
@@ -342,9 +350,10 @@ Config: .github/workflows/ci-lint.yml
 
 ---
 
-##### 9. 📝 Markdown Lint (*.md files)
+##### 9. 📝 Markdown Lint (\*.md files)
 
 **Tools**:
+
 - **markdownlint-cli2**: Style enforcer → [Docs](https://github.com/DavidAnson/markdownlint)
 
 **Config**: `.markdownlint.json`
@@ -353,9 +362,10 @@ Config: .github/workflows/ci-lint.yml
 
 ---
 
-##### 10. 📋 YAML Lint (*.yaml, *.yml files)
+##### 10. 📋 YAML Lint (_.yaml, _.yml files)
 
 **Tools**:
+
 - **yamllint**: Syntax & style → [Docs](https://yamllint.readthedocs.io/)
 
 **Config**: `.yamllint`
@@ -367,6 +377,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 11. 🐳 Dockerfile Lint
 
 **Tools**:
+
 - **hadolint**: Best practices & security → [Docs](https://github.com/hadolint/hadolint)
 
 **Scans**: All `Dockerfile*` files recursively
@@ -376,6 +387,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 12. 🐚 Shell Script Lint
 
 **Tools**:
+
 - **ShellCheck**: Static analysis → [Docs](https://www.shellcheck.net/)
 
 **Files**: `*.sh`, `*.bash` files
@@ -385,6 +397,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 13. 🏗️ Bazel Lint
 
 **Tools**:
+
 - **buildifier**: Format & lint → [Docs](https://github.com/bazelbuild/buildtools)
 
 **Files**: `BUILD.bazel`, `WORKSPACE`, `MODULE.bazel`, `*.bzl`
@@ -394,6 +407,7 @@ Config: .github/workflows/ci-lint.yml
 ##### 14. 📖 Spell Check
 
 **Tools**:
+
 - **codespell**: Common misspellings → [Docs](https://github.com/codespell-project/codespell)
 
 **Scope**: All text files (code, docs, comments)
@@ -435,12 +449,14 @@ At the end of the workflow, a beautiful summary table is generated:
 #### Running Linters Locally
 
 **Pre-commit (fast, ~1-2s)**:
+
 ```bash
 make pre-commit-run          # On staged files
 make pre-commit-run-all      # On all files
 ```
 
 **Individual linters (same as CI/CD)**:
+
 ```bash
 # Python
 cd .bot && ruff check . && mypy core integration
@@ -480,6 +496,7 @@ buildifier -mode=check -lint=warn -r .
 ```
 
 **Full CI/CD simulation** (requires [act](https://github.com/nektos/act)):
+
 ```bash
 act -j python-lint       # Run Python lint job
 act -j go-lint          # Run Go lint job
@@ -490,12 +507,12 @@ act pull_request        # Run all PR jobs
 
 #### Performance Metrics
 
-| Metric | Pre-Commit | CI/CD | Total DX |
-|--------|-----------|-------|----------|
-| Execution time | ~1-2s ⚡ | ~3-5min 🔍 | **Fast + Thorough** |
-| Scope | Format only | Full lint | **Best of both** |
-| When runs | Every commit | Push/PR | **Optimal timing** |
-| Developer impact | Minimal | Zero (async) | **Great UX** 🚀 |
+| Metric           | Pre-Commit   | CI/CD        | Total DX            |
+| ---------------- | ------------ | ------------ | ------------------- |
+| Execution time   | ~1-2s ⚡     | ~3-5min 🔍   | **Fast + Thorough** |
+| Scope            | Format only  | Full lint    | **Best of both**    |
+| When runs        | Every commit | Push/PR      | **Optimal timing**  |
+| Developer impact | Minimal      | Zero (async) | **Great UX** 🚀     |
 
 **Result**: Developers get instant feedback (VSCode) + fast commits (pre-commit) + thorough validation (CI/CD)
 

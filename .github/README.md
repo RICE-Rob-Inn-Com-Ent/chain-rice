@@ -1,7 +1,6 @@
 # 🚀 CI/CD Documentation - Rice Monorepo
 
-> **Million Dollar Per Hour Development Environment**
-> 100% Open Source | Zero Corporate Dependencies | Production-Ready
+> **Million Dollar Per Hour Development Environment** 100% Open Source | Zero Corporate Dependencies | Production-Ready
 
 [![Build](https://github.com/mrDinkelman/rice-mono/workflows/Build/badge.svg)](https://github.com/mrDinkelman/rice-mono/actions/workflows/ci-build.yml)
 [![Test](https://github.com/mrDinkelman/rice-mono/workflows/Test/badge.svg)](https://github.com/mrDinkelman/rice-mono/actions/workflows/ci-test.yml)
@@ -12,22 +11,22 @@
 
 ## 📑 Table of Contents
 
-- [Overview](#overview)
-- [Quick Start](#quick-start)
-- [Directory Structure](#directory-structure)
-- [Workflows](#workflows)
+- [Overview](#-overview)
+- [Quick Start](#-quick-start)
+- [Directory Structure](#-directory-structure)
+- [Workflows](#-workflows)
   - [Continuous Integration (CI)](#continuous-integration-ci)
   - [Continuous Deployment (CD)](#continuous-deployment-cd)
   - [Security & Compliance](#security--compliance)
   - [Repository Management](#repository-management)
-- [Issue Templates](#issue-templates)
-- [Pull Request Process](#pull-request-process)
-- [Code Ownership](#code-ownership)
-- [Sponsorship & Funding](#sponsorship--funding)
-- [Configuration Files](#configuration-files)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
-- [Resources](#resources)
+- [Issue Templates](#-issue-templates)
+- [Pull Request Process](#-pull-request-process)
+- [Code Ownership](#-code-ownership)
+- [Sponsorship & Funding](#-sponsorship--funding)
+- [Configuration Files](#-configuration-files)
+- [Best Practices](#-best-practices)
+- [Troubleshooting](#-troubleshooting)
+- [Resources](#-resources)
 
 ---
 
@@ -99,7 +98,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 ## 📁 Directory Structure
 
-```
+```text
 .github/
 ├── README.md                      # This file - CI/CD overview
 ├── CODEOWNERS                     # Code ownership and review assignments
@@ -148,8 +147,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🏗️ [Build Workflow](workflows/ci-build.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Verify that all code compiles successfully
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Verify that all code compiles successfully
 
 **What it does**:
 
@@ -164,8 +162,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### ✅ [Test Workflow](workflows/ci-test.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Run all test suites across languages
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Run all test suites across languages
 
 **Test Coverage**:
 
@@ -183,8 +180,8 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🎨 [Lint Workflow](workflows/ci-lint.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Comprehensive code quality enforcement across 14 parallel jobs
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Comprehensive code quality enforcement across 14 parallel
+jobs
 
 **Architecture**: 3-layer quality assurance (VSCode + Pre-commit + CI/CD)
 
@@ -213,8 +210,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🧠 [SonarCloud Workflow](workflows/sonarcloud.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Comprehensive code quality and security analysis
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Comprehensive code quality and security analysis
 
 **What it analyzes**:
 
@@ -238,8 +234,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 📊 [Codecov Workflow](workflows/codecov.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Track and report test coverage
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Track and report test coverage
 
 **Coverage by Language**:
 
@@ -263,8 +258,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🔤 [Type Check Workflow](workflows/ci-typecheck.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Verify type safety across typed languages
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Verify type safety across typed languages
 
 **Type Checkers**:
 
@@ -277,8 +271,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 📐 [Format Check Workflow](workflows/ci-format.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Ensure consistent code formatting
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Ensure consistent code formatting
 
 **Formatters**:
 
@@ -296,8 +289,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 📦 [Release Workflow](workflows/cd-release.yml)
 
-**Trigger**: Git tags `v*.*.*`, Manual dispatch
-**Purpose**: Automate the release process
+**Trigger**: Git tags `v*.*.*`, Manual dispatch **Purpose**: Automate the release process
 
 **Release Process**:
 
@@ -323,8 +315,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🔄 [Subrepo Sync Workflow](workflows/cd-sync-subrepos.yml)
 
-**Trigger**: Push to `main`, Manual dispatch
-**Purpose**: Keep standalone repositories synchronized with monorepo
+**Trigger**: Push to `main`, Manual dispatch **Purpose**: Keep standalone repositories synchronized with monorepo
 
 **Synchronized Repos**:
 
@@ -343,8 +334,8 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🔒 [Security Audit Workflow](workflows/sec-audit.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests, Weekly schedule
-**Purpose**: Scan dependencies for known vulnerabilities
+**Trigger**: Push to `main`/`dev`, Pull Requests, Weekly schedule **Purpose**: Scan dependencies for known
+vulnerabilities
 
 **Audits by Ecosystem**:
 
@@ -363,8 +354,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🛡️ [CodeQL Security Scan](workflows/sec-codeql.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests, Weekly
-**Purpose**: Static application security testing (SAST)
+**Trigger**: Push to `main`/`dev`, Pull Requests, Weekly **Purpose**: Static application security testing (SAST)
 
 **Languages Analyzed**:
 
@@ -389,8 +379,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🐳 [Trivy Container Scan](workflows/sec-trivy.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests, Daily
-**Purpose**: Scan Docker images for vulnerabilities
+**Trigger**: Push to `main`/`dev`, Pull Requests, Daily **Purpose**: Scan Docker images for vulnerabilities
 
 **Scans**:
 
@@ -405,8 +394,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🔑 [GitLeaks Secret Detection](workflows/sec-gitleaks.yml)
 
-**Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Prevent secrets from being committed
+**Trigger**: Push to `main`/`dev`, Pull Requests **Purpose**: Prevent secrets from being committed
 
 **Detects**:
 
@@ -426,8 +414,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🏷️ [Stale Issues/PRs](workflows/meta-stale.yml)
 
-**Trigger**: Daily at midnight UTC
-**Purpose**: Keep issue tracker organized
+**Trigger**: Daily at midnight UTC **Purpose**: Keep issue tracker organized
 
 **Configuration**:
 
@@ -442,8 +429,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 🎯 [Label Sync](workflows/meta-label-sync.yml)
 
-**Trigger**: Push to `main`, Manual dispatch
-**Purpose**: Synchronize repository labels
+**Trigger**: Push to `main`, Manual dispatch **Purpose**: Synchronize repository labels
 
 **Label Categories**:
 
@@ -456,8 +442,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 #### 📚 [Docs Deploy](workflows/docs-deploy.yml)
 
-**Trigger**: Push to `main`, Manual dispatch
-**Purpose**: Deploy documentation to GitHub Pages
+**Trigger**: Push to `main`, Manual dispatch **Purpose**: Deploy documentation to GitHub Pages
 
 **Deploys**:
 
@@ -598,7 +583,7 @@ This repository uses **Renovate** (better than Dependabot!) for automated depend
 
 ### Root Configuration Files
 
-```
+```text
 .codecov.yml               - Codecov coverage configuration
 renovate.json              - Renovate Bot dependency update rules
 sonar-project.properties   - SonarCloud quality analysis settings
@@ -663,7 +648,7 @@ Required secrets (set in repository settings):
 
 1. **Conventional Commits**: Use semantic commit messages
 
-   ```
+   ```text
    feat: add new feature
    fix: resolve bug
    docs: update documentation
@@ -688,8 +673,7 @@ Required secrets (set in repository settings):
 
 ### Build Failures
 
-**Problem**: `bazel build //...` fails
-**Solution**:
+**Problem**: `bazel build //...` fails **Solution**:
 
 ```bash
 # Clean build cache
@@ -700,8 +684,7 @@ bazel build //...
 
 ### Test Failures
 
-**Problem**: Tests fail in CI but pass locally
-**Solution**:
+**Problem**: Tests fail in CI but pass locally **Solution**:
 
 - Check environment differences (Python version, Go version, etc.)
 - Verify dependencies are locked (poetry.lock, go.sum, package-lock.json)
@@ -709,8 +692,7 @@ bazel build //...
 
 ### Lint Failures
 
-**Problem**: Linter finds issues
-**Solution**:
+**Problem**: Linter finds issues **Solution**:
 
 ```bash
 # Auto-fix most issues
@@ -723,8 +705,7 @@ prettier --write .
 
 ### Permission Errors
 
-**Problem**: Workflow fails with permission error
-**Solution**:
+**Problem**: Workflow fails with permission error **Solution**:
 
 - Check workflow permissions configuration
 - Verify GitHub token has required scopes
@@ -732,8 +713,7 @@ prettier --write .
 
 ### Workflow Not Triggering
 
-**Problem**: Push doesn't trigger workflow
-**Solution**:
+**Problem**: Push doesn't trigger workflow **Solution**:
 
 - Check workflow `on` conditions
 - Verify branch names match
@@ -795,14 +775,14 @@ prettier --write .
 
 For complete mastery of CI/CD in this repository, read these detailed guides:
 
-| Topic               | Guide                                                                                                            | What You'll Learn                                                  |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| **Workflows**       | [`../.doc/helpers/github/WORKFLOWS.md`](../.doc/helpers/github/WORKFLOWS.md)                                     | Every workflow explained, configuration patterns, troubleshooting  |
-| **Pre-Commit & Linting** | [`../.doc/helpers/PRE_COMMIT_GUIDE.md`](../.doc/helpers/PRE_COMMIT_GUIDE.md)                              | 3-layer architecture, performance optimization, local development  |
-| **Issue Templates** | [`../.doc/helpers/github/ISSUE_TEMPLATE.md`](../.doc/helpers/github/ISSUE_TEMPLATE.md)                           | How to use templates, best practices for reporters and maintainers |
-| **Code Ownership**  | [`../.doc/helpers/github/CODEOWNERS.md`](../.doc/helpers/github/CODEOWNERS.md)                                   | Review process, ownership patterns, becoming a code owner          |
-| **Funding**         | [`../.doc/helpers/github/FUNDING.md`](../.doc/helpers/github/FUNDING.md)                                         | Sponsorship options, benefits, transparency                        |
-| **Pull Requests**   | [`../.doc/helpers/github/PULL_REQUEST_TEMPLATE_GUIDE.md`](../.doc/helpers/github/PULL_REQUEST_TEMPLATE_GUIDE.md) | Section-by-section PR guide, examples, best practices              |
+| Topic                    | Guide                                                                                                            | What You'll Learn                                                  |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| **Workflows**            | [`../.doc/helpers/github/WORKFLOWS.md`](../.doc/helpers/github/WORKFLOWS.md)                                     | Every workflow explained, configuration patterns, troubleshooting  |
+| **Pre-Commit & Linting** | [`../.doc/helpers/PRE_COMMIT_GUIDE.md`](../.doc/helpers/PRE_COMMIT_GUIDE.md)                                     | 3-layer architecture, performance optimization, local development  |
+| **Issue Templates**      | [`../.doc/helpers/github/ISSUE_TEMPLATE.md`](../.doc/helpers/github/ISSUE_TEMPLATE.md)                           | How to use templates, best practices for reporters and maintainers |
+| **Code Ownership**       | [`../.doc/helpers/github/CODEOWNERS.md`](../.doc/helpers/github/CODEOWNERS.md)                                   | Review process, ownership patterns, becoming a code owner          |
+| **Funding**              | [`../.doc/helpers/github/FUNDING.md`](../.doc/helpers/github/FUNDING.md)                                         | Sponsorship options, benefits, transparency                        |
+| **Pull Requests**        | [`../.doc/helpers/github/PULL_REQUEST_TEMPLATE_GUIDE.md`](../.doc/helpers/github/PULL_REQUEST_TEMPLATE_GUIDE.md) | Section-by-section PR guide, examples, best practices              |
 
 ---
 
@@ -886,14 +866,12 @@ See [LICENSE.md](../doc/docs/LICENSE.md) for license information.
 
 ---
 
-<div align="center">
+## 🤝 Get Involved
 
-**Made with ❤️ by the Rice Monorepo Team**
+Made with ❤️ by the Rice Monorepo Team
 
-**100% Open Source | Zero Corporate Dependencies**
+100% Open Source | Zero Corporate Dependencies
 
 [Report Bug](../../issues/new?template=bug-report.yml) ·
 [Request Feature](../../issues/new?template=feature-request.yml) ·
 [Ask Question](../../issues/new?template=question.yml)
-
-</div>

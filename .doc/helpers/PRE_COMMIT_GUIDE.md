@@ -43,6 +43,7 @@ Rice Monorepo uses a **three-layer quality assurance** strategy for optimal deve
 ### What Runs Locally (~1-2 seconds)
 
 ✅ **File Cleanup**
+
 - Trim trailing whitespace
 - Fix end-of-file newlines
 - Fix line endings (LF)
@@ -50,6 +51,7 @@ Rice Monorepo uses a **three-layer quality assurance** strategy for optimal deve
 - Check large files
 
 ✅ **Formatting Only** (NO linting)
+
 - 🐍 Python: `black`, `isort`
 - 🔵 Go: `gofmt`, `goimports`
 - 🦀 Rust: `rustfmt`
@@ -58,10 +60,12 @@ Rice Monorepo uses a **three-layer quality assurance** strategy for optimal deve
 - 🏗️ Bazel: `buildifier`
 
 ✅ **Basic Syntax Validation**
+
 - YAML, JSON, TOML syntax
 - No deep validation
 
 ✅ **Security & Git**
+
 - Secret detection (detect-secrets)
 - Conventional commits
 - Branch protection
@@ -69,14 +73,17 @@ Rice Monorepo uses a **three-layer quality assurance** strategy for optimal deve
 ### What Does NOT Run (Runs in CI/CD)
 
 ❌ **Heavy Linters** (too slow)
+
 - Ruff, ESLint, Clippy, golangci-lint, solhint
 - mypy, TSC type checking
 - Markdown, YAML deep linting
 
 ❌ **Security Scanners** (too slow)
+
 - Bandit, Slither, tfsec, cargo-deny
 
 ❌ **Breaking Change Detection**
+
 - buf breaking, dependency-review
 
 ## CI/CD Linting (Comprehensive Layer)
@@ -85,22 +92,22 @@ Rice Monorepo uses a **three-layer quality assurance** strategy for optimal deve
 
 All linters run in GitHub Actions on `push` and `pull_request`:
 
-| Job | Tools | Target |
-|-----|-------|--------|
-| 🐍 Python | Ruff, Black, isort, mypy, Bandit | `.bot/**/*.py` |
-| 🔵 Go | golangci-lint, go vet, staticcheck | `.backend/**/*.go` |
-| ✨ TypeScript | ESLint, Prettier, TSC | `.frontend/web/**/*.ts` |
-| 🦀 Rust | Clippy, rustfmt, cargo-deny | `.backend/contract/rust/**/*.rs` |
-| ⛓️ Solidity | solhint, Prettier, Slither | `.backend/contract/solidity/**/*.sol` |
-| 🎯 Dart/Flutter | flutter analyze, dart format | `.frontend/flutter/**/*.dart` |
-| 📦 Protobuf | buf lint, buf format, buf breaking | `.schema/**/*.proto` |
-| 🏗️ Terraform | tflint, tfsec, terraform validate | `.dev/terraform/**/*.tf` |
-| 📝 Markdown | markdownlint | `**/*.md` |
-| 📋 YAML | yamllint | `**/*.{yaml,yml}` |
-| 🐳 Docker | hadolint | `**/Dockerfile*` |
-| 🐚 Shell | ShellCheck | `**/*.sh` |
-| 🏗️ Bazel | buildifier | `**/*.{bazel,bzl}` |
-| 📖 Spelling | codespell | All text files |
+| Job             | Tools                              | Target                                |
+| --------------- | ---------------------------------- | ------------------------------------- |
+| 🐍 Python       | Ruff, Black, isort, mypy, Bandit   | `.bot/**/*.py`                        |
+| 🔵 Go           | golangci-lint, go vet, staticcheck | `.backend/**/*.go`                    |
+| ✨ TypeScript   | ESLint, Prettier, TSC              | `.frontend/web/**/*.ts`               |
+| 🦀 Rust         | Clippy, rustfmt, cargo-deny        | `.backend/contract/rust/**/*.rs`      |
+| ⛓️ Solidity     | solhint, Prettier, Slither         | `.backend/contract/solidity/**/*.sol` |
+| 🎯 Dart/Flutter | flutter analyze, dart format       | `.frontend/flutter/**/*.dart`         |
+| 📦 Protobuf     | buf lint, buf format, buf breaking | `.schema/**/*.proto`                  |
+| 🏗️ Terraform    | tflint, tfsec, terraform validate  | `.dev/terraform/**/*.tf`              |
+| 📝 Markdown     | markdownlint                       | `**/*.md`                             |
+| 📋 YAML         | yamllint                           | `**/*.{yaml,yml}`                     |
+| 🐳 Docker       | hadolint                           | `**/Dockerfile*`                      |
+| 🐚 Shell        | ShellCheck                         | `**/*.sh`                             |
+| 🏗️ Bazel        | buildifier                         | `**/*.{bazel,bzl}`                    |
+| 📖 Spelling     | codespell                          | All text files                        |
 
 ### Additional Checks
 
@@ -152,6 +159,7 @@ pre-commit run black --all-files
 ### When to Skip
 
 Use `--no-verify` for:
+
 - 🔄 Mass refactors (1000+ files)
 - 📦 Vendor/dependency updates
 - 🤖 Generated code commits
@@ -179,6 +187,7 @@ SKIP=all git commit -m "message"
 Format: `<type>(<scope>): <subject>`
 
 **Types:**
+
 - `feat` - New feature ✨
 - `fix` - Bug fix 🐛
 - `docs` - Documentation 📚
@@ -192,12 +201,14 @@ Format: `<type>(<scope>): <subject>`
 - `security` - Security 🔒
 
 **Scopes (examples):**
+
 - `backend/db`, `backend/token`, `backend/contract/rust`
 - `bot/core`, `bot/integration`
 - `frontend/flutter`, `frontend/web/angular`
 - `schema/token`, `dev/terraform`, `dev/k8s`
 
 **Examples:**
+
 ```bash
 git commit -m "feat(backend/token): add token transfer endpoint"
 git commit -m "fix(bot/core): resolve import error in main.py"
@@ -380,15 +391,10 @@ make pre-commit-uninstall    # Remove hooks
 
 ## What Makes This Setup Special?
 
-✅ **Ultra-fast pre-commit** (~1-2s, not 30-60s)
-✅ **Comprehensive CI/CD** (14 parallel jobs)
-✅ **Real-time VSCode feedback**
-✅ **Smart excludes** (vendor, deps, generated)
-✅ **Auto-fix enabled** (most issues fixed automatically)
-✅ **Security-first** (secrets, dependencies, licenses)
-✅ **Conventional commits** (clean git history)
-✅ **Beautiful output** (emojis, colors, summaries)
-✅ **Developer-friendly** (rarely need --no-verify)
+✅ **Ultra-fast pre-commit** (~1-2s, not 30-60s) ✅ **Comprehensive CI/CD** (14 parallel jobs) ✅ **Real-time VSCode
+feedback** ✅ **Smart excludes** (vendor, deps, generated) ✅ **Auto-fix enabled** (most issues fixed automatically) ✅
+**Security-first** (secrets, dependencies, licenses) ✅ **Conventional commits** (clean git history) ✅ **Beautiful
+output** (emojis, colors, summaries) ✅ **Developer-friendly** (rarely need --no-verify)
 
 ## Support
 
@@ -398,6 +404,4 @@ make pre-commit-uninstall    # Remove hooks
 
 ---
 
-**Made with 💎 for Rice Monorepo**
-**Developer Experience First** | **Speed Meets Quality**
-Last updated: October 2025
+**Made with 💎 for Rice Monorepo** **Developer Experience First** | **Speed Meets Quality** Last updated: October 2025

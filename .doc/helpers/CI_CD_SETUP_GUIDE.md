@@ -56,38 +56,38 @@ You should see workflows running!
 
 ### Continuous Integration
 
-| Workflow | Trigger | Duration | Purpose |
-|----------|---------|----------|---------|
-| `ci-build.yml` | Push, PR | ~5-10min | Build verification |
-| `ci-test.yml` | Push, PR | ~10-15min | Test execution |
-| `ci-lint.yml` | Push, PR | ~3-5min | Code quality (14 jobs) |
-| `ci-typecheck.yml` | Push, PR | ~5min | Type safety |
-| `ci-format.yml` | Push, PR | ~2min | Format verification |
+| Workflow           | Trigger  | Duration  | Purpose                |
+| ------------------ | -------- | --------- | ---------------------- |
+| `ci-build.yml`     | Push, PR | ~5-10min  | Build verification     |
+| `ci-test.yml`      | Push, PR | ~10-15min | Test execution         |
+| `ci-lint.yml`      | Push, PR | ~3-5min   | Code quality (14 jobs) |
+| `ci-typecheck.yml` | Push, PR | ~5min     | Type safety            |
+| `ci-format.yml`    | Push, PR | ~2min     | Format verification    |
 
 ### Continuous Deployment
 
-| Workflow | Trigger | Duration | Purpose |
-|----------|---------|----------|---------|
-| `cd-release.yml` | Tag `v*.*.*` | ~15-20min | Release automation |
-| `cd-sync-subrepos.yml` | Push to main | ~5min | Subrepo sync |
+| Workflow               | Trigger      | Duration  | Purpose            |
+| ---------------------- | ------------ | --------- | ------------------ |
+| `cd-release.yml`       | Tag `v*.*.*` | ~15-20min | Release automation |
+| `cd-sync-subrepos.yml` | Push to main | ~5min     | Subrepo sync       |
 
 ### Security
 
-| Workflow | Trigger | Duration | Purpose |
-|----------|---------|----------|---------|
-| `sec-audit.yml` | Push, PR, Weekly | ~5-10min | Dependency audit |
-| `sec-codeql.yml` | Push, PR, Weekly | ~10-15min | Code scanning (SAST) |
-| `sec-trivy.yml` | Push, PR, Daily | ~5min | Container scanning |
-| `sec-gitleaks.yml` | Push, PR | ~2min | Secret detection |
+| Workflow           | Trigger          | Duration  | Purpose              |
+| ------------------ | ---------------- | --------- | -------------------- |
+| `sec-audit.yml`    | Push, PR, Weekly | ~5-10min  | Dependency audit     |
+| `sec-codeql.yml`   | Push, PR, Weekly | ~10-15min | Code scanning (SAST) |
+| `sec-trivy.yml`    | Push, PR, Daily  | ~5min     | Container scanning   |
+| `sec-gitleaks.yml` | Push, PR         | ~2min     | Secret detection     |
 
 ### Utilities
 
-| Workflow | Trigger | Duration | Purpose |
-|----------|---------|----------|---------|
-| `meta-stale.yml` | Daily | ~1min | Close stale issues |
-| `docs-deploy.yml` | Push to main | ~3min | Deploy docs |
-| `codecov.yml` | Push, PR | ~2min | Coverage reporting |
-| `sonarcloud.yml` | Push, PR | ~5-10min | Quality analysis |
+| Workflow          | Trigger      | Duration | Purpose            |
+| ----------------- | ------------ | -------- | ------------------ |
+| `meta-stale.yml`  | Daily        | ~1min    | Close stale issues |
+| `docs-deploy.yml` | Push to main | ~3min    | Deploy docs        |
+| `codecov.yml`     | Push, PR     | ~2min    | Coverage reporting |
+| `sonarcloud.yml`  | Push, PR     | ~5-10min | Quality analysis   |
 
 ## Configuration Files
 
@@ -174,7 +174,7 @@ Run same job with different parameters:
 strategy:
   matrix:
     component: [db, token]
-    go-version: ['1.21', '1.22']
+    go-version: ["1.21", "1.22"]
 
 steps:
   - name: Build
@@ -273,5 +273,4 @@ permissions:
 
 ---
 
-**Made with ❤️ for Rice Monorepo**
-Last updated: October 2025
+**Made with ❤️ for Rice Monorepo** Last updated: October 2025

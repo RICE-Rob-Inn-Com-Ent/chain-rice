@@ -8,31 +8,31 @@
 
 ### 🔧 Development & Tooling
 
-| Guide | Description | Topics Covered |
-|-------|-------------|----------------|
-| [**PRE_COMMIT_GUIDE.md**](PRE_COMMIT_GUIDE.md) | Pre-commit hooks & linting architecture | 3-layer architecture, VSCode extensions, CI/CD integration, performance optimization |
-| [**CI_CD_SETUP_GUIDE.md**](CI_CD_SETUP_GUIDE.md) | CI/CD pipeline setup | GitHub Actions, secrets, workflows, deployment |
-| [**ROOT_FILES.md**](ROOT_FILES.md) | Root configuration files | Purpose of each root file, when to modify |
-| [**ROOT_FOLDERS.md**](ROOT_FOLDERS.md) | Monorepo structure | Directory organization, naming conventions |
+| Guide                                            | Description                             | Topics Covered                                                                       |
+| ------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------ |
+| [**PRE_COMMIT_GUIDE.md**](PRE_COMMIT_GUIDE.md)   | Pre-commit hooks & linting architecture | 3-layer architecture, VSCode extensions, CI/CD integration, performance optimization |
+| [**CI_CD_SETUP_GUIDE.md**](CI_CD_SETUP_GUIDE.md) | CI/CD pipeline setup                    | GitHub Actions, secrets, workflows, deployment                                       |
+| [**ROOT_FILES.md**](ROOT_FILES.md)               | Root configuration files                | Purpose of each root file, when to modify                                            |
+| [**ROOT_FOLDERS.md**](ROOT_FOLDERS.md)           | Monorepo structure                      | Directory organization, naming conventions                                           |
 
 ### 🐙 GitHub & Workflows
 
-| Guide | Description | Topics Covered |
-|-------|-------------|----------------|
-| [**github/WORKFLOWS.md**](github/WORKFLOWS.md) | Complete workflow guide | All 15 workflows, triggers, configuration |
-| [**github/ISSUE_TEMPLATE.md**](github/ISSUE_TEMPLATE.md) | Issue templates guide | Bug reports, feature requests, best practices |
-| [**github/PULL_REQUEST_TEMPLATE_GUIDE.md**](github/PULL_REQUEST_TEMPLATE_GUIDE.md) | PR template guide | PR sections, examples, review process |
-| [**github/CODEOWNERS.md**](github/CODEOWNERS.md) | Code ownership guide | Review assignments, ownership patterns |
-| [**github/FUNDING.md**](github/FUNDING.md) | Sponsorship guide | Funding platforms, benefits, transparency |
+| Guide                                                                              | Description             | Topics Covered                                |
+| ---------------------------------------------------------------------------------- | ----------------------- | --------------------------------------------- |
+| [**github/WORKFLOWS.md**](github/WORKFLOWS.md)                                     | Complete workflow guide | All 15 workflows, triggers, configuration     |
+| [**github/ISSUE_TEMPLATE.md**](github/ISSUE_TEMPLATE.md)                           | Issue templates guide   | Bug reports, feature requests, best practices |
+| [**github/PULL_REQUEST_TEMPLATE_GUIDE.md**](github/PULL_REQUEST_TEMPLATE_GUIDE.md) | PR template guide       | PR sections, examples, review process         |
+| [**github/CODEOWNERS.md**](github/CODEOWNERS.md)                                   | Code ownership guide    | Review assignments, ownership patterns        |
+| [**github/FUNDING.md**](github/FUNDING.md)                                         | Sponsorship guide       | Funding platforms, benefits, transparency     |
 
 ### 🛠️ VSCode
 
-| Guide | Description | Topics Covered |
-|-------|-------------|----------------|
-| [**vscode/EXTENSIONS.md**](vscode/EXTENSIONS.md) | Recommended extensions | 50+ extensions by category |
-| [**vscode/SETTINGS.md**](vscode/SETTINGS.md) | VSCode settings | Per-language configuration |
-| [**vscode/LAUNCH.md**](vscode/LAUNCH.md) | Debug configurations | Launch configs for all languages |
-| [**vscode/TASKS.md**](vscode/TASKS.md) | VSCode tasks | Build, test, lint tasks |
+| Guide                                            | Description            | Topics Covered                   |
+| ------------------------------------------------ | ---------------------- | -------------------------------- |
+| [**vscode/EXTENSIONS.md**](vscode/EXTENSIONS.md) | Recommended extensions | 50+ extensions by category       |
+| [**vscode/SETTINGS.md**](vscode/SETTINGS.md)     | VSCode settings        | Per-language configuration       |
+| [**vscode/LAUNCH.md**](vscode/LAUNCH.md)         | Debug configurations   | Launch configs for all languages |
+| [**vscode/TASKS.md**](vscode/TASKS.md)           | VSCode tasks           | Build, test, lint tasks          |
 
 ---
 
@@ -65,9 +65,11 @@
 ## 📖 Guide Purposes
 
 ### PRE_COMMIT_GUIDE.md
+
 **When to read**: Setting up development environment, understanding linting architecture
 
 **Key topics**:
+
 - 3-layer quality assurance (VSCode + Pre-commit + CI/CD)
 - Performance optimization (1-2s pre-commit)
 - 26+ integrated tools
@@ -77,9 +79,11 @@
 ---
 
 ### CI_CD_SETUP_GUIDE.md
+
 **When to read**: Setting up CI/CD for first time, adding new workflows
 
 **Key topics**:
+
 - GitHub Actions setup
 - Secrets management
 - Workflow configuration
@@ -89,9 +93,11 @@
 ---
 
 ### ROOT_FILES.md
+
 **When to read**: Wondering what a root config file does
 
 **Key topics**:
+
 - Purpose of each file (.codecov.yml, renovate.json, etc.)
 - When to modify them
 - Configuration examples
@@ -99,9 +105,11 @@
 ---
 
 ### ROOT_FOLDERS.md
+
 **When to read**: Understanding monorepo organization
 
 **Key topics**:
+
 - Directory structure
 - Naming conventions
 - Where to add new code
@@ -110,9 +118,11 @@
 ---
 
 ### github/WORKFLOWS.md
+
 **When to read**: Understanding CI/CD pipelines, adding new workflows
 
 **Key topics**:
+
 - All 15 workflows explained
 - Trigger patterns
 - Job configuration
@@ -122,9 +132,11 @@
 ---
 
 ### github/ISSUE_TEMPLATE.md
+
 **When to read**: Reporting bugs, requesting features
 
 **Key topics**:
+
 - Using issue templates
 - Required information
 - Best practices for reporters
@@ -133,9 +145,11 @@
 ---
 
 ### github/PULL_REQUEST_TEMPLATE_GUIDE.md
+
 **When to read**: Before submitting your first PR
 
 **Key topics**:
+
 - PR template sections
 - Writing good descriptions
 - Review process
@@ -145,9 +159,11 @@
 ---
 
 ### github/CODEOWNERS.md
+
 **When to read**: Understanding review process, becoming a code owner
 
 **Key topics**:
+
 - How CODEOWNERS works
 - Review requirements
 - Ownership patterns
@@ -156,9 +172,11 @@
 ---
 
 ### github/FUNDING.md
+
 **When to read**: Supporting the project, setting up sponsorship
 
 **Key topics**:
+
 - Sponsorship platforms
 - Benefits for sponsors
 - Transparency
@@ -170,35 +188,39 @@
 
 ### By Topic
 
-| Topic | Start Here |
-|-------|-----------|
-| **Setting up dev environment** | [PRE_COMMIT_GUIDE.md](PRE_COMMIT_GUIDE.md) |
-| **Understanding CI/CD** | [github/WORKFLOWS.md](github/WORKFLOWS.md) |
-| **Submitting PRs** | [github/PULL_REQUEST_TEMPLATE_GUIDE.md](github/PULL_REQUEST_TEMPLATE_GUIDE.md) |
-| **Reporting issues** | [github/ISSUE_TEMPLATE.md](github/ISSUE_TEMPLATE.md) |
-| **Monorepo structure** | [ROOT_FOLDERS.md](ROOT_FOLDERS.md) |
-| **Configuration files** | [ROOT_FILES.md](ROOT_FILES.md) |
-| **VSCode setup** | [vscode/SETTINGS.md](vscode/SETTINGS.md) |
-| **Debugging** | [vscode/LAUNCH.md](vscode/LAUNCH.md) |
+| Topic                          | Start Here                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| **Setting up dev environment** | [PRE_COMMIT_GUIDE.md](PRE_COMMIT_GUIDE.md)                                     |
+| **Understanding CI/CD**        | [github/WORKFLOWS.md](github/WORKFLOWS.md)                                     |
+| **Submitting PRs**             | [github/PULL_REQUEST_TEMPLATE_GUIDE.md](github/PULL_REQUEST_TEMPLATE_GUIDE.md) |
+| **Reporting issues**           | [github/ISSUE_TEMPLATE.md](github/ISSUE_TEMPLATE.md)                           |
+| **Monorepo structure**         | [ROOT_FOLDERS.md](ROOT_FOLDERS.md)                                             |
+| **Configuration files**        | [ROOT_FILES.md](ROOT_FILES.md)                                                 |
+| **VSCode setup**               | [vscode/SETTINGS.md](vscode/SETTINGS.md)                                       |
+| **Debugging**                  | [vscode/LAUNCH.md](vscode/LAUNCH.md)                                           |
 
 ### By Role
 
 **👨‍💻 Developer**:
+
 1. [ROOT_FOLDERS.md](ROOT_FOLDERS.md) - Understand structure
 2. [PRE_COMMIT_GUIDE.md](PRE_COMMIT_GUIDE.md) - Setup tools
 3. [vscode/SETTINGS.md](vscode/SETTINGS.md) - Configure editor
 
 **🤝 Contributor**:
+
 1. [github/ISSUE_TEMPLATE.md](github/ISSUE_TEMPLATE.md) - Report issues
 2. [github/PULL_REQUEST_TEMPLATE_GUIDE.md](github/PULL_REQUEST_TEMPLATE_GUIDE.md) - Submit PRs
 3. [github/WORKFLOWS.md](github/WORKFLOWS.md) - Understand CI/CD
 
 **👑 Maintainer**:
+
 1. [github/CODEOWNERS.md](github/CODEOWNERS.md) - Manage reviews
 2. [CI_CD_SETUP_GUIDE.md](CI_CD_SETUP_GUIDE.md) - Configure CI/CD
 3. [github/WORKFLOWS.md](github/WORKFLOWS.md) - Manage pipelines
 
 **💰 Sponsor**:
+
 1. [github/FUNDING.md](github/FUNDING.md) - Support project
 
 ---
