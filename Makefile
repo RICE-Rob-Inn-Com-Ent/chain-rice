@@ -276,3 +276,39 @@ blockchain-reset: ## Reset blockchain data (WARNING: deletes all chain data)
 .PHONY: blockchain-install blockchain-build blockchain-start blockchain-proto \
         blockchain-test blockchain-test-race blockchain-test-cover \
         blockchain-lint blockchain-lint-fix blockchain-clean blockchain-reset
+
+# ==============================================================================
+# PRE-COMMIT HOOKS
+# ==============================================================================
+
+.PHONY: pre-commit-install pre-commit-uninstall pre-commit-run pre-commit-run-all \
+        pre-commit-update pre-commit-clean
+
+pre-commit-install: ## Install pre-commit hooks
+	@echo "$(BLUE)📦 Installing pre-commit hooks...$(NC)"
+	@pre-commit install --install-hooks --hook-type pre-commit --hook-type commit-msg
+	@echo "$(GREEN)✅ Pre-commit hooks installed$(NC)"
+
+pre-commit-uninstall: ## Uninstall pre-commit hooks
+	@echo "$(BLUE)🗑️  Uninstalling pre-commit hooks...$(NC)"
+	@pre-commit uninstall --hook-type pre-commit --hook-type commit-msg
+	@echo "$(GREEN)✅ Pre-commit hooks uninstalled$(NC)"
+
+pre-commit-run: ## Run pre-commit on staged files
+	@echo "$(BLUE)🔍 Running pre-commit on staged files...$(NC)"
+	@pre-commit run
+
+pre-commit-run-all: ## Run pre-commit on all files
+	@echo "$(BLUE)🔍 Running pre-commit on ALL files...$(NC)"
+	@pre-commit run --all-files
+
+pre-commit-update: ## Update pre-commit hook versions
+	@echo "$(BLUE)⬆️  Updating pre-commit hooks...$(NC)"
+	@pre-commit autoupdate
+	@echo "$(GREEN)✅ Pre-commit hooks updated$(NC)"
+
+pre-commit-clean: ## Clean pre-commit cache
+	@echo "$(BLUE)🧹 Cleaning pre-commit cache...$(NC)"
+	@pre-commit clean
+	@rm -rf ~/.cache/pre-commit
+	@echo "$(GREEN)✅ Pre-commit cache cleaned$(NC)"
