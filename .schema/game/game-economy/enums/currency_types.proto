@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.game_economy.enums;
+
+option go_package = "github.com/rice-dev/gaming/game_economy/enums";
+
+// Типи валют у ігровій економіці
+enum CurrencyType {
+  CURRENCY_TYPE_UNSPECIFIED = 0;
+
+  // Ігрові токени
+  CURRENCY_TYPE_GAME_TOKENS = 1;
+
+  // Золото
+  CURRENCY_TYPE_GOLD = 2;
+
+  // Срібло
+  CURRENCY_TYPE_SILVER = 3;
+
+  // Мідь
+  CURRENCY_TYPE_COPPER = 4;
+
+  // Платина
+  CURRENCY_TYPE_PLATINUM = 5;
+
+  // Кришталь
+  CURRENCY_TYPE_CRYSTAL = 6;
+
+  // Діаманти
+  CURRENCY_TYPE_DIAMONDS = 7;
+
+  // Рубіни
+  CURRENCY_TYPE_RUBIES = 8;
+
+  // Сапфіри
+  CURRENCY_TYPE_SAPPHIRES = 9;
+
+  // Ізумруди
+  CURRENCY_TYPE_EMERALDS = 10;
+
+  // Аметисти
+  CURRENCY_TYPE_AMETHYSTS = 11;
+
+  // Топази
+  CURRENCY_TYPE_TOPAZES = 12;
+
+  // Опали
+  CURRENCY_TYPE_OPALS = 13;
+
+  // Жадеїти
+  CURRENCY_TYPE_JADEITES = 14;
+
+  // Агати
+  CURRENCY_TYPE_AGATES = 15;
+
+  // Онікси
+  CURRENCY_TYPE_ONYXES = 16;
+
+  // Турмаліни
+  CURRENCY_TYPE_TOURMALINES = 17;
+
+  // Цирконії
+  CURRENCY_TYPE_ZIRCONIAS = 18;
+
+  // Гранати
+  CURRENCY_TYPE_GARNETS = 19;
+
+  // Перли
+  CURRENCY_TYPE_PEARLS = 20;
+
+  // Корали
+  CURRENCY_TYPE_CORALS = 21;
+
+  // Янтарі
+  CURRENCY_TYPE_AMBERS = 22;
+
+  // Бурштини
+  CURRENCY_TYPE_BERNSTEINS = 23;
+
+  // Лазурити
+  CURRENCY_TYPE_LAPIS_LAZULIS = 24;
+
+  // Малахіти
+  CURRENCY_TYPE_MALACHITES = 25;
+
+  // Азурити
+  CURRENCY_TYPE_AZURITES = 26;
+
+  // Хризоколи
+  CURRENCY_TYPE_CHRYSOCOLLAS = 27;
+
+  // Хризопрази
+  CURRENCY_TYPE_CHRYSOPRASES = 28;
+
+  // Хризоберили
+  CURRENCY_TYPE_CHRYSOBERYLS = 29;
+
+  // Хризоліти
+  CURRENCY_TYPE_CHRYSOLITES = 30;
+
+  // NFT токени
+  CURRENCY_TYPE_NFT_TOKENS = 31;
+
+  // Криптовалюта
+  CURRENCY_TYPE_CRYPTO = 32;
+
+  // Біткоїн
+  CURRENCY_TYPE_BITCOIN = 33;
+
+  // Ефіріум
+  CURRENCY_TYPE_ETHEREUM = 34;
+
+  // Бінанс коїн
+  CURRENCY_TYPE_BINANCE_COIN = 35;
+
+  // Кардано
+  CURRENCY_TYPE_CARDANO = 36;
+
+  // Солана
+  CURRENCY_TYPE_SOLANA = 37;
+
+  // Полігон
+  CURRENCY_TYPE_POLYGON = 38;
+
+  // Аваланч
+  CURRENCY_TYPE_AVALANCHE = 39;
+
+  // Фантом
+  CURRENCY_TYPE_FANTOM = 40;
+
+  // Арбітрум
+  CURRENCY_TYPE_ARBITRUM = 41;
+
+  // Оптимізм
+  CURRENCY_TYPE_OPTIMISM = 42;
+
+  // Базовий
+  CURRENCY_TYPE_BASE = 43;
+
+  // Мантійний
+  CURRENCY_TYPE_MANTLE = 44;
+
+  // Лінеа
+  CURRENCY_TYPE_LINEA = 45;
+
+  // Скрел
+  CURRENCY_TYPE_SCROLL = 46;
+
+  // ЗкСинк
+  CURRENCY_TYPE_ZKSYNC = 47;
+
+  // Старкнет
+  CURRENCY_TYPE_STARKNET = 48;
+
+  // Іммукс
+  CURRENCY_TYPE_IMMUTABLE = 49;
+
+  // Суі
+  CURRENCY_TYPE_SUI = 50;
+
+  // Апт
+  CURRENCY_TYPE_APT = 51;
+
+  // Ніар
+  CURRENCY_TYPE_NEAR = 52;
+
+  // Флоу
+  CURRENCY_TYPE_FLOW = 53;
+
+  // Тезос
+  CURRENCY_TYPE_TEZOS = 54;
+
+  // Альгоренд
+  CURRENCY_TYPE_ALGORAND = 55;
+
+  // Хедера
+  CURRENCY_TYPE_HEDERA = 56;
+
+  // Стеллар
+  CURRENCY_TYPE_STELLAR = 57;
+
+  // Ріппл
+  CURRENCY_TYPE_RIPPLE = 58;
+
+  // Лайткоїн
+  CURRENCY_TYPE_LITECOIN = 59;
+
+  // Догкоїн
+  CURRENCY_TYPE_DOGECOIN = 60;
+
+  // Шіба іну
+  CURRENCY_TYPE_SHIB = 61;
+
+  // Пепе
+  CURRENCY_TYPE_PEPE = 62;
+
+  // Бонк
+  CURRENCY_TYPE_BONK = 63;
+
+  // Віф
+  CURRENCY_TYPE_WIF = 64;
+
+  // Попкет
+  CURRENCY_TYPE_POPCAT = 65;
+
+  // Мімі
+  CURRENCY_TYPE_MEME = 66;
+
+  // Кайбер
+  CURRENCY_TYPE_KAIBER = 67;
+
+  // Рендер
+  CURRENCY_TYPE_RENDER = 68;
+
+  // Філекоїн
+  CURRENCY_TYPE_FILECOIN = 69;
+
+  // Ар
+  CURRENCY_TYPE_AR = 70;
+
+  // Іпфс
+  CURRENCY_TYPE_IPFS = 71;
+
+  // Чейнлінк
+  CURRENCY_TYPE_CHAINLINK = 72;
+
+  // Унісвап
+  CURRENCY_TYPE_UNISWAP = 73;
+
+  // Панкейксвап
+  CURRENCY_TYPE_PANCAKESWAP = 74;
+
+  // Сушісвап
+  CURRENCY_TYPE_SUSHISWAP = 75;
+
+  // Керв
+  CURRENCY_TYPE_CURVE = 76;
+
+  // Аав
+  CURRENCY_TYPE_AAVE = 77;
+
+  // Компаунд
+  CURRENCY_TYPE_COMPOUND = 78;
+
+  // Мейкер
+  CURRENCY_TYPE_MAKER = 79;
+
+  // Юні
+  CURRENCY_TYPE_UNI = 80;
+
+  // Кейк
+  CURRENCY_TYPE_CAKE = 81;
+
+  // Суші
+  CURRENCY_TYPE_SUSHI = 82;
+
+  // Крв
+  CURRENCY_TYPE_CRV = 83;
+
+  // Аав
+  CURRENCY_TYPE_AAVE_TOKEN = 84;
+
+  // Комп
+  CURRENCY_TYPE_COMP = 85;
+
+  // Мкр
+  CURRENCY_TYPE_MKR = 86;
+
+  // Лінк
+  CURRENCY_TYPE_LINK = 87;
+
+  // Філ
+  CURRENCY_TYPE_FIL = 88;
+
+  // Ар
+  CURRENCY_TYPE_AR_TOKEN = 89;
+
+  // Рендер
+  CURRENCY_TYPE_RNDR = 90;
+
+  // Кайбер
+  CURRENCY_TYPE_KAI = 91;
+
+  // Мімі
+  CURRENCY_TYPE_MEME_TOKEN = 92;
+
+  // Попкет
+  CURRENCY_TYPE_POP = 93;
+
+  // Віф
+  CURRENCY_TYPE_WIF_TOKEN = 94;
+
+  // Бонк
+  CURRENCY_TYPE_BONK_TOKEN = 95;
+
+  // Пепе
+  CURRENCY_TYPE_PEPE_TOKEN = 96;
+
+  // Шіба
+  CURRENCY_TYPE_SHIB_TOKEN = 97;
+
+  // Доге
+  CURRENCY_TYPE_DOGE = 98;
+
+  // Лайткоїн
+  CURRENCY_TYPE_LTC = 99;
+
+  // Ріппл
+  CURRENCY_TYPE_XRP = 100;
+}

@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package healthcare.pharmacy.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/drug_models.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/pharmacy/services";
+
+// Pharmacy service for CRUD operations on drugs
+service PharmacyService {
+  // Create a new drug
+  rpc CreateDrug(DrugRequest) returns (DrugResponse);
+
+  // Get drug by ID
+  rpc GetDrug(GetDrugRequest) returns (DrugResponse);
+
+  // Update an existing drug
+  rpc UpdateDrug(UpdateDrugRequest) returns (DrugResponse);
+
+  // Delete a drug
+  rpc DeleteDrug(DeleteDrugRequest) returns (google.protobuf.Empty);
+
+  // List drugs with filtering
+  rpc ListDrugs(ListDrugsRequest) returns (ListDrugsResponse);
+
+  // Search drugs
+  rpc SearchDrugs(DrugSearchRequest) returns (ListDrugsResponse);
+
+  // Get drug by NDC number
+  rpc GetDrugByNDC(GetDrugByNDCRequest) returns (DrugResponse);
+
+  // Get drug by UPC code
+  rpc GetDrugByUPC(GetDrugByUPCRequest) returns (DrugResponse);
+
+  // Get drug summary
+  rpc GetDrugSummary(GetDrugSummaryRequest) returns (DrugSummary);
+
+  // Update drug inventory
+  rpc UpdateDrugInventory(DrugInventoryUpdateRequest) returns (DrugInventoryUpdateResponse);
+
+  // Get low stock drugs
+  rpc GetLowStockDrugs(GetLowStockDrugsRequest) returns (ListDrugsResponse);
+
+  // Get out of stock drugs
+  rpc GetOutOfStockDrugs(GetOutOfStockDrugsRequest) returns (ListDrugsResponse);
+
+  // Get expired drugs
+  rpc GetExpiredDrugs(GetExpiredDrugsRequest) returns (ListDrugsResponse);
+
+  // Get drugs expiring soon
+  rpc GetDrugsExpiringSoon(GetDrugsExpiringSoonRequest) returns (ListDrugsResponse);
+}
+
+// Get drug request
+message GetDrugRequest {
+  string drug_id = 1;
+}
+
+// Update drug request
+message UpdateDrugRequest {
+  string drug_id = 1;
+  DrugRequest drug = 2;
+}
+
+// Delete drug request
+message DeleteDrugRequest {
+  string drug_id = 1;
+  string reason = 2;
+}
+
+// Get drug by NDC request
+message GetDrugByNDCRequest {
+  string ndc_number = 1;
+}
+
+// Get drug by UPC request
+message GetDrugByUPCRequest {
+  string upc_code = 1;
+}
+
+// Get drug summary request
+message GetDrugSummaryRequest {
+  string drug_id = 1;
+}
+
+// Get low stock drugs request
+message GetLowStockDrugsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+// Get out of stock drugs request
+message GetOutOfStockDrugsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+// Get expired drugs request
+message GetExpiredDrugsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+// Get drugs expiring soon request
+message GetDrugsExpiringSoonRequest {
+  int32 days_ahead = 1; // Number of days to look ahead
+  int32 page_size = 2;
+  string page_token = 3;
+}

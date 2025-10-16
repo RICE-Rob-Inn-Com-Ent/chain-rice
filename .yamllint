@@ -1,0 +1,151 @@
+# ============================================================================
+# YAMLLINT CONFIGURATION - Rice Monorepo
+# ============================================================================
+# Enterprise-grade YAML linting for Kubernetes, CI/CD, and config files
+# ============================================================================
+
+extends: default
+
+rules:
+  # ============================================================================
+  # BRACKETS
+  # ============================================================================
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
+
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 0
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
+
+  # ============================================================================
+  # COLONS
+  # ============================================================================
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: 1
+
+  # ============================================================================
+  # COMMAS
+  # ============================================================================
+  commas:
+    max-spaces-before: 0
+    min-spaces-after: 1
+    max-spaces-after: 1
+
+  # ============================================================================
+  # COMMENTS
+  # ============================================================================
+  comments:
+    level: warning
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 2
+
+  comments-indentation:
+    level: warning
+
+  # ============================================================================
+  # DOCUMENT
+  # ============================================================================
+  document-end: disable
+
+  document-start:
+    level: warning
+    present: false
+
+  # ============================================================================
+  # EMPTY VALUES
+  # ============================================================================
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 0
+
+  empty-values:
+    forbid-in-block-mappings: false
+    forbid-in-flow-mappings: true
+
+  # ============================================================================
+  # INDENTATION
+  # ============================================================================
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # ============================================================================
+  # KEY DUPLICATES
+  # ============================================================================
+  key-duplicates: enable
+
+  key-ordering: disable
+
+  # ============================================================================
+  # LINE LENGTH
+  # ============================================================================
+  line-length:
+    max: 120
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+    level: warning
+
+  # ============================================================================
+  # NEW LINES
+  # ============================================================================
+  new-line-at-end-of-file: enable
+
+  new-lines:
+    type: unix
+
+  # ============================================================================
+  # TRAILING SPACES
+  # ============================================================================
+  trailing-spaces: enable
+
+  # ============================================================================
+  # TRUTHY VALUES
+  # ============================================================================
+  truthy:
+    allowed-values: ["true", "false", "yes", "no", "on", "off"]
+    check-keys: false
+    level: warning
+
+  # ============================================================================
+  # QUOTED STRINGS
+  # ============================================================================
+  quoted-strings:
+    quote-type: double
+    required: false
+    extra-required: []
+    extra-allowed: []
+    allow-quoted-quotes: false
+
+# ============================================================================
+# FILE IGNORE PATTERNS
+# ============================================================================
+ignore: |
+  node_modules/
+  .venv/
+  venv/
+  vendor/
+  dist/
+  build/
+  target/
+  .terraform/
+  .ansible/
+  charts/
+  *.min.yaml
+  *.generated.yaml
+
+# ============================================================================
+# YAML EXTENSIONS
+# ============================================================================
+yaml-files:
+  - "*.yaml"
+  - "*.yml"
+  - ".yamllint"

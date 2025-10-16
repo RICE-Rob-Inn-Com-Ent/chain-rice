@@ -1,0 +1,591 @@
+{
+  "name": "Rice-Mono Development Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+
+  "overrideCommand": false,
+  "updateRemoteUserUID": true,
+  "remoteUser": "vscode",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "editorconfig.editorconfig",
+        "gruntfuggly.todo-tree",
+        "streetsidesoftware.code-spell-checker",
+        "wayou.vscode-todo-highlight",
+        "aaron-bond.better-comments",
+        "usernamehw.errorlens",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "github.vscode-pull-request-github",
+        "github.copilot",
+        "github.copilot-chat",
+        "visualstudioexptteam.vscodeintellicode",
+        "visualstudioexptteam.intellicode-api-usage-examples",
+
+        // ========================================
+        // Bazel Build System
+        // ========================================
+        "bazelbuild.vscode-bazel",
+        "stackbuild.bazel-stack-vscode",
+
+        // ========================================
+        // Python Development
+        // ========================================
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "charliermarsh.ruff",
+        "ms-python.isort",
+        "ms-python.mypy-type-checker",
+        "ms-python.pylint",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers",
+        "ms-toolsai.vscode-jupyter-cell-tags",
+        "ms-toolsai.vscode-jupyter-slideshow",
+        "kevinrose.vsc-python-indent",
+        "njpwerner.autodocstring",
+        "littlefoxteam.vscode-python-test-adapter",
+
+        // ========================================
+        // Rust Development
+        // ========================================
+        "rust-lang.rust-analyzer",
+        "vadimcn.vscode-lldb",
+        "serayuzgur.crates",
+        "tamasfe.even-better-toml",
+        "bungcip.better-toml",
+        "dustypomerleau.rust-syntax",
+
+        // ========================================
+        // JavaScript/TypeScript Development
+        // ========================================
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "eg2.vscode-npm-script",
+        "ms-vscode.vscode-typescript-next",
+        "yoavbls.pretty-ts-errors",
+        "styled-components.vscode-styled-components",
+
+        // ========================================
+        // Angular
+        // ========================================
+        "angular.ng-template",
+        "johnpapa.angular2",
+        "cyrilletuzi.angular-schematics",
+        "nrwl.angular-console",
+
+        // ========================================
+        // React/Next.js
+        // ========================================
+        "dsznajder.es7-react-js-snippets",
+        "burkeholland.simple-react-snippets",
+        "msjsdiag.vscode-react-native",
+
+        // ========================================
+        // Vue/Nuxt
+        // ========================================
+        "vue.volar",
+        "vue.vscode-typescript-vue-plugin",
+        "antfu.iconify",
+
+        // ========================================
+        // Svelte
+        // ========================================
+        "svelte.svelte-vscode",
+
+        // ========================================
+        // Solidity & Blockchain
+        // ========================================
+        "juanblanco.solidity",
+        "tintinweb.solidity-visual-auditor",
+        "tintinweb.vscode-solidity-language",
+        "nomic-foundation.hardhat-solidity",
+
+        // ========================================
+        // Go Development
+        // ========================================
+        "golang.go",
+        "golang.go-nightly",
+
+        // ========================================
+        // Java/Kotlin Development
+        // ========================================
+        "redhat.java",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-java-test",
+        "vscjava.vscode-maven",
+        "vscjava.vscode-gradle",
+        "fwcd.kotlin",
+        "mathiasfrohlich.kotlin",
+
+        // ========================================
+        // Android Development
+        // ========================================
+        "vscjava.vscode-gradle",
+        "redhat.vscode-xml",
+
+        // ========================================
+        // Flutter/Dart Development
+        // ========================================
+        "dart-code.dart-code",
+        "dart-code.flutter",
+        "nash.awesome-flutter-snippets",
+        "alexisvt.flutter-snippets",
+
+        // ========================================
+        // Swift/iOS Development
+        // ========================================
+        "sswg.swift-lang",
+
+        // ========================================
+        // Protocol Buffers & gRPC
+        // ========================================
+        "zxh404.vscode-proto3",
+        "pbkit.vscode-pbkit",
+        "bufbuild.vscode-buf",
+
+        // ========================================
+        // Docker & Containers
+        // ========================================
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+        "p1c2u.docker-compose",
+
+        // ========================================
+        // Kubernetes
+        // ========================================
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-yaml",
+        "ipedrazas.kubernetes-snippets",
+
+        // ========================================
+        // Terraform & IaC
+        // ========================================
+        "hashicorp.terraform",
+        "hashicorp.hcl",
+        "run-at-scale.terraform-doc-snippets",
+
+        // ========================================
+        // Ansible
+        // ========================================
+        "redhat.ansible",
+
+        // ========================================
+        // YAML & JSON
+        // ========================================
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "zainchen.json",
+
+        // ========================================
+        // Markdown & Documentation
+        // ========================================
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "shd101wyy.markdown-preview-enhanced",
+        "bierner.markdown-mermaid",
+        "jebbs.markdown-extended",
+
+        // ========================================
+        // REST & API Development
+        // ========================================
+        "humao.rest-client",
+        "rangav.vscode-thunder-client",
+        "42crunch.vscode-openapi",
+
+        // ========================================
+        // Database Tools
+        // ========================================
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "mtxr.sqltools-driver-mysql",
+        "cweijan.vscode-database-client2",
+
+        // ========================================
+        // Testing
+        // ========================================
+        "hbenl.vscode-test-explorer",
+        "kavod-io.vscode-jest-test-adapter",
+        "ryanluker.vscode-coverage-gutters",
+
+        // ========================================
+        // Security & Linting
+        // ========================================
+        "timonwong.shellcheck",
+        "foxundermoon.shell-format",
+        "exiasr.hadolint",
+        "snyk-security.snyk-vulnerability-scanner",
+
+        // ========================================
+        // Cloud Providers
+        // ========================================
+        "amazonwebservices.aws-toolkit-vscode",
+        "googlecloudtools.cloudcode",
+        "ms-azuretools.vscode-azureresourcegroups",
+
+        // ========================================
+        // Productivity & UI
+        // ========================================
+        "pkief.material-icon-theme",
+        "zhuangtongfa.material-theme",
+        "github.github-vscode-theme",
+        "vscodevim.vim",
+        "formulahendry.code-runner",
+        "alefragnani.bookmarks",
+        "alefragnani.project-manager",
+        "waderyan.gitblame",
+        "IBM.output-colorizer",
+        "oderwat.indent-rainbow",
+        "naumovs.color-highlight",
+        "kisstkondoros.vscode-gutter-preview",
+
+        // ========================================
+        // Misc Tools
+        // ========================================
+        "tomoki1207.pdf",
+        "hediet.vscode-drawio",
+        "bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+        "vscode-org-mode.org-mode",
+        "ms-vscode.live-server"
+      ],
+
+      // ========================================
+      // VS Code Settings
+      // ========================================
+      "settings": {
+        // Editor
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit",
+          "source.fixAll": "explicit"
+        },
+        "editor.rulers": [80, 100, 120],
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": true,
+        "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": true,
+        "editor.minimap.enabled": true,
+        "editor.stickyScroll.enabled": true,
+        "editor.inlineSuggest.enabled": true,
+        "editor.suggestSelection": "first",
+        "editor.wordWrap": "on",
+
+        // Files
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.exclude": {
+          "**/.git": true,
+          "**/.svn": true,
+          "**/.hg": true,
+          "**/CVS": true,
+          "**/.DS_Store": true,
+          "**/Thumbs.db": true,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "**/node_modules": true,
+          "**/.next": true,
+          "**/.nuxt": true,
+          "**/target": true,
+          "**/.bazel-*": true,
+          "**/bazel-out": true
+        },
+
+        // Terminal
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.fontSize": 14,
+        "terminal.integrated.scrollback": 10000,
+        "terminal.integrated.copyOnSelection": true,
+
+        // Git
+        "git.autofetch": true,
+        "git.confirmSync": false,
+        "git.enableSmartCommit": true,
+        "git.pruneOnFetch": true,
+        "gitlens.codeLens.enabled": true,
+
+        // Python
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.linting.ruffEnabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": ["--line-length", "100"],
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": ["-v"],
+        "python.analysis.typeCheckingMode": "basic",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+
+        // Rust
+        "rust-analyzer.check.command": "clippy",
+        "rust-analyzer.cargo.features": "all",
+        "rust-analyzer.procMacro.enable": true,
+        "[rust]": {
+          "editor.defaultFormatter": "rust-lang.rust-analyzer",
+          "editor.formatOnSave": true
+        },
+
+        // JavaScript/TypeScript
+        "javascript.updateImportsOnFileMove.enabled": "always",
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "eslint.enable": true,
+        "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[javascriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+
+        // JSON
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+
+        // YAML
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        "yaml.schemas": {
+          "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml",
+          "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "**/docker-compose*.yml"
+        },
+
+        // TOML
+        "[toml]": {
+          "editor.defaultFormatter": "tamasfe.even-better-toml"
+        },
+
+        // Markdown
+        "[markdown]": {
+          "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+          "editor.wordWrap": "on"
+        },
+
+        // Solidity
+        "[solidity]": {
+          "editor.defaultFormatter": "juanblanco.solidity"
+        },
+        "solidity.formatter": "prettier",
+        "solidity.compileUsingRemoteVersion": "latest",
+
+        // Go
+        "go.useLanguageServer": true,
+        "go.lintTool": "golangci-lint",
+        "go.formatTool": "goimports",
+        "[go]": {
+          "editor.defaultFormatter": "golang.go",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+
+        // Kotlin
+        "[kotlin]": {
+          "editor.tabSize": 4
+        },
+
+        // Dart/Flutter
+        "dart.debugExternalPackageLibraries": true,
+        "dart.debugSdkLibraries": false,
+        "[dart]": {
+          "editor.formatOnSave": true,
+          "editor.rulers": [80]
+        },
+
+        // Docker
+        "docker.dockerComposeBuild": true,
+        "docker.dockerComposeDetached": true,
+
+        // Terraform
+        "[terraform]": {
+          "editor.defaultFormatter": "hashicorp.terraform",
+          "editor.formatOnSave": true
+        },
+        "terraform.languageServer.enable": true,
+
+        // Prettier
+        "prettier.semi": true,
+        "prettier.singleQuote": true,
+        "prettier.trailingComma": "es5",
+        "prettier.printWidth": 100,
+        "prettier.tabWidth": 2,
+
+        // Search
+        "search.exclude": {
+          "**/node_modules": true,
+          "**/bower_components": true,
+          "**/*.code-search": true,
+          "**/target": true,
+          "**/.bazel-*": true,
+          "**/bazel-out": true,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true
+        },
+
+        // Workbench
+        "workbench.colorTheme": "GitHub Dark",
+        "workbench.iconTheme": "material-icon-theme",
+        "workbench.startupEditor": "readme",
+
+        // Extensions
+        "extensions.autoUpdate": true,
+        "extensions.ignoreRecommendations": false
+      }
+    }
+  },
+
+  // ============================================================================
+  // Features & Dev Tools
+  // ============================================================================
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "configureZshAsDefaultShell": false,
+      "username": "vscode",
+      "userUid": 1000,
+      "userGid": 1000
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest",
+      "ppa": true
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+
+  // ============================================================================
+  // Port Forwarding
+  // ============================================================================
+  "forwardPorts": [
+    3000, // Grafana / Frontend dev servers
+    5432, // PostgreSQL
+    6379, // Redis
+    8080, // Traefik Dashboard / Backend
+    9000, // MinIO
+    9001, // MinIO Console
+    9090, // Prometheus
+    9092, // Kafka
+    9200, // Elasticsearch
+    15672, // RabbitMQ Management
+    29092 // Kafka (host)
+  ],
+
+  "portsAttributes": {
+    "3000": {
+      "label": "Grafana / Dev Server",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "silent"
+    },
+    "8080": {
+      "label": "Traefik / Backend",
+      "onAutoForward": "notify"
+    },
+    "9090": {
+      "label": "Prometheus",
+      "onAutoForward": "silent"
+    }
+  },
+
+  // ============================================================================
+  // Environment Variables
+  // ============================================================================
+  "containerEnv": {
+    "TZ": "UTC",
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "EDITOR": "vim",
+    "VISUAL": "vim",
+    // Database
+    "DATABASE_URL": "postgresql://rice_user:rice_password@postgres:5432/rice_db",
+    "REDIS_URL": "redis://redis:6379",
+    // Kafka
+    "KAFKA_BOOTSTRAP_SERVERS": "kafka:9092",
+    // MinIO
+    "MINIO_ENDPOINT": "minio:9000",
+    "MINIO_ACCESS_KEY": "rice_admin",
+    "MINIO_SECRET_KEY": "rice_password_123",
+    // Paths
+    "CARGO_HOME": "/usr/local/cargo",
+    "RUSTUP_HOME": "/usr/local/rustup",
+    "GOPATH": "/go",
+    "FLUTTER_HOME": "/opt/flutter",
+    "ANDROID_HOME": "/opt/android-sdk",
+    // Bazel
+    "BAZEL_CXXOPTS": "-std=c++17"
+  },
+
+  // ============================================================================
+  // Mounts
+  // ============================================================================
+  "mounts": [
+    // Mount Docker socket for Docker-in-Docker
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    // Bazel cache
+    "source=rice-bazel-cache,target=/home/vscode/.cache/bazel,type=volume",
+    // Cargo cache
+    "source=rice-cargo-registry,target=/usr/local/cargo/registry,type=volume",
+    // npm cache
+    "source=rice-npm-cache,target=/home/vscode/.npm,type=volume",
+    // Go module cache
+    "source=rice-go-cache,target=/go/pkg,type=volume"
+  ],
+
+  // ============================================================================
+  // Post-Create Commands
+  // ============================================================================
+  "postCreateCommand": "bash -c 'echo \"🚀 Rice-Mono Dev Container Ready!\" && bazel version && python3 --version && node --version && cargo --version && go version && echo \"✅ All tools installed successfully!\"'",
+
+  // ============================================================================
+  // Post-Start Commands
+  // ============================================================================
+  "postStartCommand": "git config --global --add safe.directory /workspace",
+
+  // ============================================================================
+  // Lifecycle Scripts
+  // ============================================================================
+  "initializeCommand": "echo '🔧 Initializing Rice-Mono development environment...'",
+  "onCreateCommand": "echo '📦 Installing dependencies...'",
+  "updateContentCommand": "echo '🔄 Updating development environment...'",
+  "postAttachCommand": "echo '👋 Welcome to Rice-Mono!'"
+}

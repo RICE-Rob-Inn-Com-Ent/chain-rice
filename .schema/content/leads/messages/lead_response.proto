@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package marketing.leads.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/leads/enums/lead_status.proto";
+
+// Lead data transfer object
+message Lead {
+  // Lead ID
+  string id = 1;
+
+  // Lead first name
+  string first_name = 2;
+
+  // Lead last name
+  string last_name = 3;
+
+  // Lead email
+  string email = 4;
+
+  // Lead phone
+  string phone = 5;
+
+  // Lead company
+  string company = 6;
+
+  // Lead job title
+  string job_title = 7;
+
+  // Lead source
+  string source = 8;
+
+  // Lead status
+  marketing.leads.enums.LeadStatus status = 9;
+
+  // Lead score
+  int32 score = 10;
+
+  // Lead notes
+  string notes = 11;
+
+  // Campaign ID (if applicable)
+  string campaign_id = 12;
+
+  // Lead tags
+  repeated string tags = 13;
+
+  // Lead location
+  string location = 14;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 15;
+
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 16;
+
+  // Lead activity metrics
+  LeadMetrics metrics = 17;
+}
+
+// Lead activity metrics
+message LeadMetrics {
+  // Number of interactions
+  int32 interaction_count = 1;
+
+  // Last interaction date
+  google.protobuf.Timestamp last_interaction = 2;
+
+  // Number of emails sent
+  int32 emails_sent = 3;
+
+  // Number of emails opened
+  int32 emails_opened = 4;
+
+  // Number of emails clicked
+  int32 emails_clicked = 5;
+
+  // Number of calls made
+  int32 calls_made = 6;
+
+  // Number of meetings scheduled
+  int32 meetings_scheduled = 7;
+
+  // Time to conversion (in days)
+  int32 time_to_conversion = 8;
+
+  // Conversion probability
+  double conversion_probability = 9;
+}
+
+// Response message for creating a lead
+message CreateLeadResponse {
+  // Created lead
+  Lead lead = 1;
+
+  // Success message
+  string message = 2;
+}
+
+// Response message for getting a lead
+message GetLeadResponse {
+  // Lead data
+  Lead lead = 1;
+}
+
+// Response message for listing leads
+message ListLeadResponse {
+  // List of leads
+  repeated Lead leads = 1;
+
+  // Total count of leads
+  int32 total_count = 2;
+
+  // Current page number
+  int32 page = 3;
+
+  // Number of items per page
+  int32 page_size = 4;
+}
+
+// Response message for updating a lead
+message UpdateLeadResponse {
+  // Updated lead
+  Lead lead = 1;
+
+  // Success message
+  string message = 2;
+}
+
+// Response message for deleting a lead
+message DeleteLeadResponse {
+  // Success message
+  string message = 1;
+}

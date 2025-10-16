@@ -1,0 +1,157 @@
+# ============================================================================
+# SWIFTLINT CONFIGURATION - Rice Monorepo
+# ============================================================================
+# Swift style and conventions linter
+# https://realm.github.io/SwiftLint/
+# ============================================================================
+
+# ============================================================================
+# DISABLED RULES
+# ============================================================================
+disabled_rules:
+  - trailing_whitespace # Handled by EditorConfig
+  - todo # TODOs are okay
+  - orphaned_doc_comment # Sometimes needed
+
+# ============================================================================
+# OPT-IN RULES
+# ============================================================================
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - explicit_init
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - overridden_super_call
+  - private_outlet
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - sorted_first_last
+  - toggle_bool
+  - unused_import
+  - vertical_parameter_alignment_on_call
+
+# ============================================================================
+# INCLUDED/EXCLUDED PATHS
+# ============================================================================
+included:
+  - frontend/ios
+
+excluded:
+  - Pods
+  - .build
+  - build
+  - DerivedData
+  - frontend/ios/**/generated
+
+# ============================================================================
+# ANALYZER RULES
+# ============================================================================
+analyzer_rules:
+  - unused_declaration
+  - unused_import
+
+# ============================================================================
+# RULE CONFIGURATIONS
+# ============================================================================
+
+# Line length
+line_length:
+  warning: 120
+  error: 150
+  ignores_comments: true
+  ignores_urls: true
+
+# Function body length
+function_body_length:
+  warning: 50
+  error: 100
+
+# Function parameter count
+function_parameter_count:
+  warning: 5
+  error: 8
+
+# Type body length
+type_body_length:
+  warning: 250
+  error: 400
+
+# File length
+file_length:
+  warning: 500
+  error: 1000
+  ignore_comment_only_lines: true
+
+# Cyclomatic complexity
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+  ignores_case_statements: false
+
+# Nesting depth
+nesting:
+  type_level:
+    warning: 2
+  statement_level:
+    warning: 5
+
+# Identifier name length
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 50
+    error: 60
+  excluded:
+    - id
+    - URL
+    - GlobalAPIKey
+
+# Type name
+type_name:
+  min_length: 3
+  max_length: 50
+
+# Force unwrapping
+force_unwrapping:
+  severity: warning
+
+# Implicitly unwrapped optional
+implicitly_unwrapped_optional:
+  mode: all_except_iboutlets
+
+# Large tuple
+large_tuple:
+  warning: 3
+  error: 4
+
+# Vertical whitespace
+vertical_whitespace:
+  max_empty_lines: 2
+
+# ============================================================================
+# CUSTOM RULES
+# ============================================================================
+custom_rules:
+  # No print statements in production
+  no_print:
+    name: "Print Usage"
+    regex: "print\\("
+    message: "Use logger instead of print()"
+    severity: warning
+
+  # Require self for accessing properties
+  explicit_self:
+    name: "Explicit Self"
+    regex: "(?<!self\\.)(?<![\\w])([a-z][a-zA-Z0-9]*(?:\\.[a-z][a-zA-Z0-9]*)*)\\s*="
+    message: "Use explicit 'self.' for property access"
+    severity: warning
+
+# ============================================================================
+# REPORTER
+# ============================================================================
+reporter: "xcode"

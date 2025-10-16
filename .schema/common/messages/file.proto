@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package core.files.messages;
+
+import "core/files/messages/file_metadata.proto";
+import "core/common/messages/timestamp.proto";
+
+// File aggregates metadata and access URLs.
+message File {
+  core.files.messages.FileMetadata metadata = 1; // File metadata.
+  // Pre-signed or authenticated URL for downloading.
+  string download_url = 2;
+  // Pre-signed URL for direct uploads (client-to-storage), if applicable.
+  string upload_url = 3;
+  // URL for thumbnail/preview if generated.
+  string preview_url = 4;
+  // Expiration for URLs when time-limited.
+  core.common.messages.Timestamp urls_expire_at = 5;
+}

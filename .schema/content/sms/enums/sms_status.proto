@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package marketing.sms.enums;
+
+// Enumeration for SMS status
+enum SmsStatus {
+  // Default status - not specified
+  SMS_STATUS_UNSPECIFIED = 0;
+
+  // SMS is being drafted
+  SMS_STATUS_DRAFT = 1;
+
+  // SMS is scheduled for sending
+  SMS_STATUS_SCHEDULED = 2;
+
+  // SMS is being sent
+  SMS_STATUS_SENDING = 3;
+
+  // SMS has been sent successfully
+  SMS_STATUS_SENT = 4;
+
+  // SMS delivery failed
+  SMS_STATUS_FAILED = 5;
+
+  // SMS was delivered
+  SMS_STATUS_DELIVERED = 6;
+
+  // SMS was read by recipient
+  SMS_STATUS_READ = 7;
+
+  // SMS link was clicked
+  SMS_STATUS_CLICKED = 8;
+
+  // SMS recipient opted out
+  SMS_STATUS_OPTED_OUT = 9;
+
+  // SMS was blocked
+  SMS_STATUS_BLOCKED = 10;
+}

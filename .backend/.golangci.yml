@@ -1,0 +1,288 @@
+# ============================================================================
+# GOLANGCI-LINT CONFIGURATION - Rice Monorepo
+# ============================================================================
+# Fast linters runner for Go
+# https://golangci-lint.run/usage/configuration/
+# ============================================================================
+
+# ============================================================================
+# RUN CONFIGURATION
+# ============================================================================
+run:
+  # Timeout for analysis
+  timeout: 5m
+
+  # Exit code when issues are found
+  issues-exit-code: 1
+
+  # Include test files
+  tests: true
+
+  # Directories to skip
+  skip-dirs:
+    - vendor
+    - third_party
+    - bazel-*
+    - .bazel
+
+  # Files to skip
+  skip-files:
+    - ".*\\.pb\\.go$"
+    - ".*_generated\\.go$"
+
+  # Allow multiple parallel golangci-lint instances
+  allow-parallel-runners: true
+
+  # Go version to target
+  go: "1.21"
+
+# ============================================================================
+# OUTPUT CONFIGURATION
+# ============================================================================
+output:
+  # Format: colored-line-number, line-number, json, tab, checkstyle, code-climate
+  format: colored-line-number
+
+  # Print lines of code with issue
+  print-issued-lines: true
+
+  # Print linter name in the end of issue text
+  print-linter-name: true
+
+  # Make issues output unique by line
+  uniq-by-line: true
+
+  # Sort results by: filepath, line, column
+  sort-results: true
+
+# ============================================================================
+# LINTERS SETTINGS
+# ============================================================================
+linters-settings:
+  # Errcheck - Check unchecked errors
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  # Govet - Go vet
+  govet:
+    check-shadowing: true
+    enable-all: true
+
+  # Gofmt - Format checker
+  gofmt:
+    simplify: true
+
+  # Goimports - Import formatter
+  goimports:
+    local-prefixes: github.com/mrDinkelman/rice-mono
+
+  # Goconst - Find repeated strings
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+  # Cyclop - Cyclomatic complexity
+  cyclop:
+    max-complexity: 15
+    skip-tests: true
+
+  # Dupl - Code duplication
+  dupl:
+    threshold: 100
+
+  # Funlen - Function length
+  funlen:
+    lines: 100
+    statements: 50
+
+  # Gocognit - Cognitive complexity
+  gocognit:
+    min-complexity: 20
+
+  # Nestif - Nested if depth
+  nestif:
+    min-complexity: 4
+
+  # Gocritic - Go critic checks
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+      - style
+    disabled-checks:
+      - commentedOutCode
+      - whyNoLint
+
+  # Gosec - Security checker
+  gosec:
+    severity: medium
+    confidence: medium
+    excludes:
+      - G104 # Audit errors not checked (too noisy)
+
+  # Lll - Line length
+  lll:
+    line-length: 120
+    tab-width: 4
+
+  # Misspell - Spell checker
+  misspell:
+    locale: US
+
+  # Nakedret - Naked returns checker
+  nakedret:
+    max-func-lines: 30
+
+  # Unparam - Unused parameters
+  unparam:
+    check-exported: true
+
+  # Revive - Fast, configurable, extensible, flexible linter
+  revive:
+    ignore-generated-header: true
+    severity: warning
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+# ============================================================================
+# LINTERS
+# ============================================================================
+linters:
+  # Disable all linters by default
+  disable-all: true
+
+  # Enable specific linters
+  enable:
+    # Bugs
+    - errcheck # Check unchecked errors
+    - gosimple # Simplify code
+    - govet # Go vet
+    - ineffassign # Detect ineffectual assignments
+    - staticcheck # Advanced Go linter
+    - typecheck # Type checking
+    - unused # Unused code
+
+    # Style
+    - gofmt # Format checker
+    - goimports # Import formatter
+    - misspell # Spell checker
+    - revive # Fast linter
+
+    # Complexity
+    - cyclop # Cyclomatic complexity
+    - gocognit # Cognitive complexity
+    - nestif # Nested if depth
+
+    # Performance
+    - gocritic # Performance checks
+    - prealloc # Preallocate slices
+
+    # Security
+    - gosec # Security checker
+
+    # Other
+    - bodyclose # Check HTTP response body is closed
+    - dupl # Code duplication
+    - funlen # Function length
+    - goconst # Repeated strings
+    - goprintffuncname # Printf-like function naming
+    - nakedret # Naked returns
+    - noctx # HTTP request context
+    - nolintlint # Nolint directive checker
+    - rowserrcheck # SQL rows.Err check
+    - sqlclosecheck # SQL Close check
+    - unconvert # Unnecessary type conversions
+    - unparam # Unused parameters
+    - whitespace # Whitespace checker
+
+# ============================================================================
+# ISSUES CONFIGURATION
+# ============================================================================
+issues:
+  # Maximum issues count per one linter
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text
+  max-same-issues: 0
+
+  # Show only new issues
+  new: false
+
+  # Fix found issues (if supported by linter)
+  fix: false
+
+  # Exclude rules
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - funlen
+
+    # Exclude specific text
+    - text: "should have a package comment"
+      linters:
+        - revive
+
+    # Exclude issues in auto-generated files
+    - path: ".*\\.pb\\.go$"
+      linters:
+        - all
+
+    - path: ".*_generated\\.go$"
+      linters:
+        - all
+
+  # Exclude standard Go directories
+  exclude-dirs:
+    - vendor
+    - third_party
+    - bazel-*
+
+# ============================================================================
+# SEVERITY CONFIGURATION
+# ============================================================================
+severity:
+  # Default severity for issues
+  default-severity: error
+
+  # Severity rules
+  rules:
+    - linters:
+        - dupl
+      severity: info
+
+    - linters:
+        - gocritic
+      severity: warning
+# ============================================================================
+# CUSTOM CONFIGURATION
+# ============================================================================
+# Specific to Rice-Mono backend services

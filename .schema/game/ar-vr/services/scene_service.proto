@@ -1,0 +1,527 @@
+syntax = "proto3";
+
+package gaming.ar_vr.services;
+
+import "gaming/ar_vr/messages/scene_models.proto";
+import "gaming/ar_vr/messages/ar_vr_events.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/services";
+
+// Сервіс управління сценами AR/VR
+service SceneService {
+  // Створити нову сцену
+  rpc CreateScene(CreateSceneRequest) returns (CreateSceneResponse);
+
+  // Отримати сцену за ID
+  rpc GetScene(GetSceneRequest) returns (GetSceneResponse);
+
+  // Оновити сцену
+  rpc UpdateScene(UpdateSceneRequest) returns (UpdateSceneResponse);
+
+  // Видалити сцену
+  rpc DeleteScene(DeleteSceneRequest) returns (google.protobuf.Empty);
+
+  // Отримати список сцен
+  rpc ListScenes(ListScenesRequest) returns (ListScenesResponse);
+
+  // Завантажити сцену
+  rpc LoadScene(LoadSceneRequest) returns (LoadSceneResponse);
+
+  // Вивантажити сцену
+  rpc UnloadScene(UnloadSceneRequest) returns (UnloadSceneResponse);
+
+  // Отримати активні сцени
+  rpc GetActiveScenes(GetActiveScenesRequest) returns (GetActiveScenesResponse);
+
+  // Отримати статистику сцен
+  rpc GetSceneStats(GetSceneStatsRequest) returns (GetSceneStatsResponse);
+
+  // Пошук сцен
+  rpc SearchScenes(SearchScenesRequest) returns (SearchScenesResponse);
+
+  // Отримати рекомендації сцен
+  rpc GetSceneRecommendations(GetSceneRecommendationsRequest) returns (GetSceneRecommendationsResponse);
+
+  // Оцінити сцену
+  rpc RateScene(RateSceneRequest) returns (RateSceneResponse);
+
+  // Додати об'єкт до сцени
+  rpc AddObjectToScene(AddObjectToSceneRequest) returns (AddObjectToSceneResponse);
+
+  // Видалити об'єкт з сцени
+  rpc RemoveObjectFromScene(RemoveObjectFromSceneRequest) returns (RemoveObjectFromSceneResponse);
+
+  // Оновити об'єкт в сцені
+  rpc UpdateObjectInScene(UpdateObjectInSceneRequest) returns (UpdateObjectInSceneResponse);
+}
+
+// Запит створення сцени
+message CreateSceneRequest {
+  // Дані сцени
+  gaming.ar_vr.messages.Scene scene = 1;
+
+  // Автор сцени
+  string author_id = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь створення сцени
+message CreateSceneResponse {
+  // Створена сцена
+  gaming.ar_vr.messages.Scene scene = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання сцени
+message GetSceneRequest {
+  // Ідентифікатор сцени
+  string scene_id = 1;
+
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 2;
+}
+
+// Відповідь отримання сцени
+message GetSceneResponse {
+  // Сцена
+  gaming.ar_vr.messages.Scene scene = 1;
+
+  // Додаткові дані гравця (якщо вказано player_id)
+  map<string, string> player_data = 2;
+}
+
+// Запит оновлення сцени
+message UpdateSceneRequest {
+  // Ідентифікатор сцени
+  string scene_id = 1;
+
+  // Дані для оновлення
+  gaming.ar_vr.messages.Scene scene = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення сцени
+message UpdateSceneResponse {
+  // Оновлена сцена
+  gaming.ar_vr.messages.Scene scene = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення сцени
+message DeleteSceneRequest {
+  // Ідентифікатор сцени
+  string scene_id = 1;
+
+  // Причина видалення
+  string reason = 2;
+}
+
+// Запит списку сцен
+message ListScenesRequest {
+  // Фільтри
+  SceneFilters filters = 1;
+
+  // Пагінація
+  Pagination pagination = 2;
+
+  // Сортування
+  Sorting sorting = 3;
+}
+
+// Відповідь списку сцен
+message ListScenesResponse {
+  // Список сцен
+  repeated gaming.ar_vr.messages.Scene scenes = 1;
+
+  // Загальна кількість
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит завантаження сцени
+message LoadSceneRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Ідентифікатор сцени
+  string scene_id = 2;
+
+  // Додаткові параметри завантаження
+  map<string, string> load_parameters = 3;
+}
+
+// Відповідь завантаження сцени
+message LoadSceneResponse {
+  // Завантажена сцена
+  gaming.ar_vr.messages.Scene scene = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час завантаження (в мілісекундах)
+  int64 load_time_ms = 4;
+}
+
+// Запит вивантаження сцени
+message UnloadSceneRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Ідентифікатор сцени
+  string scene_id = 2;
+
+  // Причина вивантаження
+  string reason = 3;
+}
+
+// Відповідь вивантаження сцени
+message UnloadSceneResponse {
+  // Статус операції
+  string status = 1;
+
+  // Повідомлення
+  string message = 2;
+
+  // Час вивантаження (в мілісекундах)
+  int64 unload_time_ms = 3;
+}
+
+// Запит активних сцен
+message GetActiveScenesRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Фільтри
+  SceneFilters filters = 2;
+}
+
+// Відповідь активних сцен
+message GetActiveScenesResponse {
+  // Список активних сцен
+  repeated gaming.ar_vr.messages.Scene active_scenes = 1;
+
+  // Загальна кількість активних сцен
+  int64 total_count = 2;
+}
+
+// Запит статистики сцен
+message GetSceneStatsRequest {
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 1;
+
+  // Фільтри
+  SceneStatsFilters filters = 2;
+}
+
+// Відповідь статистики сцен
+message GetSceneStatsResponse {
+  // Статистика сцен
+  SceneStats stats = 1;
+
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Запит пошуку сцен
+message SearchScenesRequest {
+  // Пошуковий запит
+  string query = 1;
+
+  // Фільтри
+  SceneFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+
+  // Сортування
+  Sorting sorting = 4;
+}
+
+// Відповідь пошуку сцен
+message SearchScenesResponse {
+  // Список знайдених сцен
+  repeated gaming.ar_vr.messages.Scene scenes = 1;
+
+  // Загальна кількість результатів
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+
+  // Час пошуку (в мілісекундах)
+  int64 search_time_ms = 4;
+}
+
+// Запит рекомендацій сцен
+message GetSceneRecommendationsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Кількість рекомендацій
+  int32 limit = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь рекомендацій сцен
+message GetSceneRecommendationsResponse {
+  // Список рекомендованих сцен
+  repeated gaming.ar_vr.messages.Scene recommended_scenes = 1;
+
+  // Загальна кількість рекомендацій
+  int64 total_count = 2;
+
+  // Додаткові дані рекомендацій
+  map<string, string> recommendation_data = 3;
+}
+
+// Запит оцінки сцени
+message RateSceneRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Ідентифікатор сцени
+  string scene_id = 2;
+
+  // Оцінка (1-5)
+  int32 rating = 3;
+
+  // Коментар (опціонально)
+  string comment = 4;
+}
+
+// Відповідь оцінки сцени
+message RateSceneResponse {
+  // Статус операції
+  string status = 1;
+
+  // Повідомлення
+  string message = 2;
+
+  // Нова середня оцінка сцени
+  double new_average_rating = 3;
+}
+
+// Запит додавання об'єкта до сцени
+message AddObjectToSceneRequest {
+  // Ідентифікатор сцени
+  string scene_id = 1;
+
+  // Дані об'єкта
+  gaming.ar_vr.messages.SceneObject object = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь додавання об'єкта до сцени
+message AddObjectToSceneResponse {
+  // Доданий об'єкт
+  gaming.ar_vr.messages.SceneObject object = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення об'єкта з сцени
+message RemoveObjectFromSceneRequest {
+  // Ідентифікатор сцени
+  string scene_id = 1;
+
+  // Ідентифікатор об'єкта
+  string object_id = 2;
+
+  // Причина видалення
+  string reason = 3;
+}
+
+// Відповідь видалення об'єкта з сцени
+message RemoveObjectFromSceneResponse {
+  // Статус операції
+  string status = 1;
+
+  // Повідомлення
+  string message = 2;
+}
+
+// Запит оновлення об'єкта в сцені
+message UpdateObjectInSceneRequest {
+  // Ідентифікатор сцени
+  string scene_id = 1;
+
+  // Ідентифікатор об'єкта
+  string object_id = 2;
+
+  // Дані для оновлення
+  gaming.ar_vr.messages.SceneObject object = 3;
+
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь оновлення об'єкта в сцені
+message UpdateObjectInSceneResponse {
+  // Оновлений об'єкт
+  gaming.ar_vr.messages.SceneObject object = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Фільтри сцен
+message SceneFilters {
+  // Тип сцени
+  repeated string types = 1;
+
+  // Категорія сцени
+  repeated string categories = 2;
+
+  // Автор сцени
+  string author = 3;
+
+  // Теги сцени
+  repeated string tags = 4;
+
+  // Мова сцени
+  string language = 5;
+
+  // Мінімальний рейтинг
+  double min_rating = 6;
+
+  // Максимальний рейтинг
+  double max_rating = 7;
+
+  // Час створення (від)
+  google.protobuf.Timestamp created_from = 8;
+
+  // Час створення (до)
+  google.protobuf.Timestamp created_to = 9;
+
+  // Розмір файлу (від)
+  int64 file_size_from = 10;
+
+  // Розмір файлу (до)
+  int64 file_size_to = 11;
+}
+
+// Фільтри статистики сцен
+message SceneStatsFilters {
+  // Період часу (від)
+  google.protobuf.Timestamp period_from = 1;
+
+  // Період часу (до)
+  google.protobuf.Timestamp period_to = 2;
+
+  // Тип сцени
+  repeated string types = 3;
+
+  // Категорія сцени
+  repeated string categories = 4;
+
+  // Автор сцени
+  string author = 5;
+}
+
+// Статистика сцен
+message SceneStats {
+  // Загальна кількість сцен
+  int64 total_scenes = 1;
+
+  // Кількість сцен по типах
+  map<string, int64> scenes_by_type = 2;
+
+  // Кількість сцен по категоріях
+  map<string, int64> scenes_by_category = 3;
+
+  // Середній рейтинг сцен
+  double average_rating = 4;
+
+  // Найпопулярніша сцена
+  string most_popular_scene_id = 5;
+
+  // Найвищий рейтинг сцени
+  string highest_rated_scene_id = 6;
+
+  // Статистика по днях
+  map<string, int64> daily_stats = 7;
+
+  // Статистика по тижнях
+  map<string, int64> weekly_stats = 8;
+
+  // Статистика по місяцях
+  map<string, int64> monthly_stats = 9;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+
+  // Чи є наступна сторінка
+  bool has_next = 5;
+
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}
+
+// Сортування
+message Sorting {
+  // Поле для сортування
+  string field = 1;
+
+  // Напрямок сортування
+  SortDirection direction = 2;
+}
+
+// Напрямок сортування
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

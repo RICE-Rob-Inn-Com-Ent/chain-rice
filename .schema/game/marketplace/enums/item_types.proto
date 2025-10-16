@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.marketplace.enums;
+
+option go_package = "github.com/rice-dev/gaming/marketplace/enums";
+
+// Типи предметів
+enum ItemType {
+  ITEM_TYPE_UNSPECIFIED = 0;
+
+  // Зброя
+  ITEM_TYPE_WEAPON = 1;
+
+  // Броня
+  ITEM_TYPE_ARMOR = 2;
+
+  // Аксесуари
+  ITEM_TYPE_ACCESSORY = 3;
+
+  // Зілля
+  ITEM_TYPE_POTION = 4;
+
+  // Їжа
+  ITEM_TYPE_FOOD = 5;
+
+  // Матеріали
+  ITEM_TYPE_MATERIAL = 6;
+
+  // Ресурси
+  ITEM_TYPE_RESOURCE = 7;
+
+  // Валюта
+  ITEM_TYPE_CURRENCY = 8;
+
+  // NFT
+  ITEM_TYPE_NFT = 9;
+
+  // Колекційні предмети
+  ITEM_TYPE_COLLECTIBLE = 10;
+
+  // Рідкісні предмети
+  ITEM_TYPE_RARE = 11;
+
+  // Епічні предмети
+  ITEM_TYPE_EPIC = 12;
+
+  // Легендарні предмети
+  ITEM_TYPE_LEGENDARY = 13;
+
+  // Міфічні предмети
+  ITEM_TYPE_MYTHIC = 14;
+
+  // Унікальні предмети
+  ITEM_TYPE_UNIQUE = 15;
+
+  // Обмежені предмети
+  ITEM_TYPE_LIMITED = 16;
+
+  // Сезонні предмети
+  ITEM_TYPE_SEASONAL = 17;
+
+  // Подієві предмети
+  ITEM_TYPE_EVENT = 18;
+
+  // Подарункові предмети
+  ITEM_TYPE_GIFT = 19;
+
+  // Торгові предмети
+  ITEM_TYPE_TRADEABLE = 20;
+
+  // Неторгові предмети
+  ITEM_TYPE_NON_TRADEABLE = 21;
+
+  // Обмежено торгові предмети
+  ITEM_TYPE_LIMITED_TRADEABLE = 22;
+
+  // Предмети з обмеженим часом
+  ITEM_TYPE_TIME_LIMITED = 23;
+
+  // Предмети з обмеженою кількістю
+  ITEM_TYPE_QUANTITY_LIMITED = 24;
+
+  // Предмети з обмеженим рівнем
+  ITEM_TYPE_LEVEL_LIMITED = 25;
+
+  // Предмети з обмеженим класом
+  ITEM_TYPE_CLASS_LIMITED = 26;
+
+  // Предмети з обмеженою расою
+  ITEM_TYPE_RACE_LIMITED = 27;
+
+  // Предмети з обмеженою фракцією
+  ITEM_TYPE_FACTION_LIMITED = 28;
+
+  // Предмети з обмеженою гільдією
+  ITEM_TYPE_GUILD_LIMITED = 29;
+
+  // Предмети з обмеженою командою
+  ITEM_TYPE_TEAM_LIMITED = 30;
+
+  // Предмети з обмеженою альянсом
+  ITEM_TYPE_ALLIANCE_LIMITED = 31;
+
+  // Предмети з обмеженою коаліцією
+  ITEM_TYPE_COALITION_LIMITED = 32;
+
+  // Предмети з обмеженою лігою
+  ITEM_TYPE_LEAGUE_LIMITED = 33;
+
+  // Предмети з обмеженою асоціацією
+  ITEM_TYPE_ASSOCIATION_LIMITED = 34;
+
+  // Предмети з обмеженою організацією
+  ITEM_TYPE_ORGANIZATION_LIMITED = 35;
+
+  // Предмети з обмеженою корпорацією
+  ITEM_TYPE_CORPORATION_LIMITED = 36;
+
+  // Предмети з обмеженою компанією
+  ITEM_TYPE_COMPANY_LIMITED = 37;
+
+  // Предмети з обмеженою фірмою
+  ITEM_TYPE_FIRM_LIMITED = 38;
+
+  // Предмети з обмеженою установою
+  ITEM_TYPE_INSTITUTION_LIMITED = 39;
+
+  // Предмети з обмеженою організацією
+  ITEM_TYPE_ESTABLISHMENT_LIMITED = 40;
+
+  // Предмети з обмеженою закладом
+  ITEM_TYPE_FACILITY_LIMITED = 41;
+
+  // Предмети з обмеженою будівлею
+  ITEM_TYPE_BUILDING_LIMITED = 42;
+
+  // Предмети з обмеженою спорудою
+  ITEM_TYPE_STRUCTURE_LIMITED = 43;
+
+  // Предмети з обмеженою конструкцією
+  ITEM_TYPE_CONSTRUCTION_LIMITED = 44;
+
+  // Предмети з обмеженою архітектурою
+  ITEM_TYPE_ARCHITECTURE_LIMITED = 45;
+
+  // Предмети з обмеженою дизайном
+  ITEM_TYPE_DESIGN_LIMITED = 46;
+
+  // Предмети з обмеженою моделлю
+  ITEM_TYPE_MODEL_LIMITED = 47;
+
+  // Предмети з обмеженою версією
+  ITEM_TYPE_VERSION_LIMITED = 48;
+
+  // Предмети з обмеженою редакцією
+  ITEM_TYPE_EDITION_LIMITED = 49;
+
+  // Предмети з обмеженою серією
+  ITEM_TYPE_SERIES_LIMITED = 50;
+
+  // Предмети з обмеженою колекцією
+  ITEM_TYPE_COLLECTION_LIMITED = 51;
+
+  // Предмети з обмеженою серією
+  ITEM_TYPE_SET_LIMITED = 52;
+
+  // Предмети з обмеженою групою
+  ITEM_TYPE_GROUP_LIMITED = 53;
+
+  // Предмети з обмеженою категорією
+  ITEM_TYPE_CATEGORY_LIMITED = 54;
+
+  // Предмети з обмеженою класом
+  ITEM_TYPE_CLASS_LIMITED = 55;
+
+  // Предмети з обмеженою типом
+  ITEM_TYPE_TYPE_LIMITED = 56;
+
+  // Предмети з обмеженою видом
+  ITEM_TYPE_KIND_LIMITED = 57;
+
+  // Предмети з обмеженою сортом
+  ITEM_TYPE_SORT_LIMITED = 58;
+
+  // Предмети з обмеженою різновидом
+  ITEM_TYPE_VARIETY_LIMITED = 59;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_FORM_LIMITED = 60;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_SHAPE_LIMITED = 61;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_FIGURE_LIMITED = 62;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_PATTERN_LIMITED = 63;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_STYLE_LIMITED = 64;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_FASHION_LIMITED = 65;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_TREND_LIMITED = 66;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_MODE_LIMITED = 67;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_MANNER_LIMITED = 68;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_WAY_LIMITED = 69;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_METHOD_LIMITED = 70;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_TECHNIQUE_LIMITED = 71;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_APPROACH_LIMITED = 72;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_STRATEGY_LIMITED = 73;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_TACTIC_LIMITED = 74;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_PLAN_LIMITED = 75;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_SCHEME_LIMITED = 76;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_SYSTEM_LIMITED = 77;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_PROCESS_LIMITED = 78;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_PROCEDURE_LIMITED = 79;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_PROTOCOL_LIMITED = 80;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_STANDARD_LIMITED = 81;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_RULE_LIMITED = 82;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_REGULATION_LIMITED = 83;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_LAW_LIMITED = 84;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_ACT_LIMITED = 85;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_STATUTE_LIMITED = 86;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_ORDINANCE_LIMITED = 87;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_DECREE_LIMITED = 88;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_EDICT_LIMITED = 89;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_MANDATE_LIMITED = 90;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_ORDER_LIMITED = 91;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_COMMAND_LIMITED = 92;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_INSTRUCTION_LIMITED = 93;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_DIRECTION_LIMITED = 94;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_GUIDANCE_LIMITED = 95;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_ADVICE_LIMITED = 96;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_SUGGESTION_LIMITED = 97;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_RECOMMENDATION_LIMITED = 98;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_PROPOSAL_LIMITED = 99;
+
+  // Предмети з обмеженою формою
+  ITEM_TYPE_OFFER_LIMITED = 100;
+}

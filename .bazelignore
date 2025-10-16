@@ -1,0 +1,53 @@
+# Bazel Ignore File - Exclude directories from Bazel's workspace scanning
+# This improves build performance by reducing the analysis phase workload
+
+# Node.js dependencies
+.frontend/node/node_modules
+.frontend/dart/.dart_tool
+
+# Python virtual environments
+.bot/venv
+.bot/.venv
+.bot/__pycache__
+
+# Rust build artifacts
+.backend/contract/rust/target
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Version control
+.git
+.github
+
+# CI/CD artifacts
+bazel-*
+build/
+dist/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Development containers
+.devcontainer
+
+# Documentation (if not part of build)
+.doc
+
+# Terraform state
+.dev/terraform/.terraform
+.dev/terraform/*.tfstate
+.dev/terraform/*.tfstate.backup
+
+# Kubernetes local state
+.dev/k8s/charts/*.tgz

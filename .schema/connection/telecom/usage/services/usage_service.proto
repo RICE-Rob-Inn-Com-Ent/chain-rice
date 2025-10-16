@@ -1,0 +1,478 @@
+syntax = "proto3";
+
+package telecom.usage.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+import "google/protobuf/string_value.proto";
+import "telecom/usage/messages/usage_request.proto";
+import "telecom/usage/messages/usage_response.proto";
+import "telecom/usage/enums/usage_type.proto";
+import "telecom/usage/enums/usage_status.proto";
+
+// UsageService provides comprehensive usage tracking and management functionality
+service UsageService {
+  // Create a new usage record
+  rpc CreateUsage(CreateUsageRequest) returns (CreateUsageResponse);
+
+  // Retrieve a specific usage record by ID
+  rpc GetUsage(GetUsageRequest) returns (GetUsageResponse);
+
+  // List usage records with optional filtering and pagination
+  rpc ListUsage(ListUsageRequest) returns (ListUsageResponse);
+
+  // Update an existing usage record
+  rpc UpdateUsage(UpdateUsageRequest) returns (UpdateUsageResponse);
+
+  // Delete a usage record
+  rpc DeleteUsage(DeleteUsageRequest) returns (DeleteUsageResponse);
+
+  // Adjust usage (for corrections or disputes)
+  rpc AdjustUsage(AdjustUsageRequest) returns (AdjustUsageResponse);
+
+  // Create multiple usage records in bulk
+  rpc BulkCreateUsage(BulkUsageRequest) returns (BulkUsageResponse);
+
+  // Get usage summary for a customer
+  rpc GetUsageSummary(GetUsageSummaryRequest) returns (GetUsageSummaryResponse);
+
+  // Get usage alerts for a customer
+  rpc GetUsageAlerts(GetUsageAlertsRequest) returns (GetUsageAlertsResponse);
+
+  // Validate usage data
+  rpc ValidateUsage(ValidateUsageRequest) returns (ValidateUsageResponse);
+
+  // Export usage data
+  rpc ExportUsage(ExportUsageRequest) returns (ExportUsageResponse);
+
+  // Get usage analytics and insights
+  rpc GetUsageAnalytics(GetUsageAnalyticsRequest) returns (GetUsageAnalyticsResponse);
+
+  // Set usage limits and thresholds
+  rpc SetUsageLimits(SetUsageLimitsRequest) returns (SetUsageLimitsResponse);
+
+  // Get usage projections and forecasts
+  rpc GetUsageProjections(GetUsageProjectionsRequest) returns (GetUsageProjectionsResponse);
+
+  // Process usage for billing
+  rpc ProcessUsageForBilling(ProcessUsageForBillingRequest) returns (ProcessUsageForBillingResponse);
+}
+
+// ValidateUsageRequest represents a request to validate usage data
+message ValidateUsageRequest {
+  // Usage ID to validate (optional)
+  google.protobuf.StringValue usage_id = 1;
+
+  // Customer ID to validate usage for
+  string customer_id = 2;
+
+  // Subscription ID to validate against
+  string subscription_id = 3;
+
+  // Date range for validation
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+
+  // Validation rules to apply
+  repeated string validation_rules = 6;
+}
+
+// ValidateUsageResponse represents the usage validation response
+message ValidateUsageResponse {
+  // Whether validation passed
+  bool is_valid = 1;
+
+  // Validation message
+  string message = 2;
+
+  // List of validation errors
+  repeated ValidationError validation_errors = 3;
+
+  // Number of records validated
+  int32 records_validated = 4;
+
+  // Number of records that failed validation
+  int32 records_failed = 5;
+}
+
+// ValidationError represents a validation error
+message ValidationError {
+  // Error code
+  string error_code = 1;
+
+  // Error message
+  string error_message = 2;
+
+  // Usage ID that failed validation (if applicable)
+  google.protobuf.StringValue usage_id = 3;
+
+  // Field that failed validation
+  google.protobuf.StringValue field_name = 4;
+
+  // Error severity (warning, error, critical)
+  string severity = 5;
+}
+
+// ExportUsageRequest represents a request to export usage data
+message ExportUsageRequest {
+  // Customer ID to export usage for
+  string customer_id = 1;
+
+  // Subscription ID to filter by (optional)
+  google.protobuf.StringValue subscription_id = 2;
+
+  // Date range for export
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+
+  // Export format (csv, json, xml, excel)
+  string format = 5;
+
+  // Fields to include in export
+  repeated string fields = 6;
+
+  // Usage types to include
+  repeated telecom.usage.enums.UsageType usage_types = 7;
+
+  // Whether to include metadata
+  bool include_metadata = 8;
+}
+
+// ExportUsageResponse represents the export response
+message ExportUsageResponse {
+  // Export file content or URL
+  string export_content = 1;
+
+  // File name
+  string file_name = 2;
+
+  // File size in bytes
+  int64 file_size = 3;
+
+  // MIME type
+  string mime_type = 4;
+
+  // Number of records exported
+  int32 record_count = 5;
+
+  // Export timestamp
+  google.protobuf.Timestamp exported_at = 6;
+}
+
+// GetUsageAnalyticsRequest represents a request to get usage analytics
+message GetUsageAnalyticsRequest {
+  // Customer ID to get analytics for
+  string customer_id = 1;
+
+  // Subscription ID to filter by (optional)
+  google.protobuf.StringValue subscription_id = 2;
+
+  // Date range for analytics
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+
+  // Analytics type (trends, patterns, anomalies, comparisons)
+  string analytics_type = 5;
+
+  // Granularity (hourly, daily, weekly, monthly)
+  string granularity = 6;
+
+  // Usage types to analyze
+  repeated telecom.usage.enums.UsageType usage_types = 7;
+}
+
+// GetUsageAnalyticsResponse represents the usage analytics response
+message GetUsageAnalyticsResponse {
+  // Customer ID
+  string customer_id = 1;
+
+  // Analytics period
+  google.protobuf.Timestamp period_start = 2;
+  google.protobuf.Timestamp period_end = 3;
+
+  // Analytics data points
+  repeated AnalyticsDataPoint data_points = 4;
+
+  // Key insights
+  repeated string insights = 5;
+
+  // Usage trends
+  UsageTrends trends = 6;
+
+  // Anomalies detected
+  repeated UsageAnomaly anomalies = 7;
+
+  // Generated at timestamp
+  google.protobuf.Timestamp generated_at = 8;
+}
+
+// AnalyticsDataPoint represents a single analytics data point
+message AnalyticsDataPoint {
+  // Timestamp for this data point
+  google.protobuf.Timestamp timestamp = 1;
+
+  // Usage type
+  telecom.usage.enums.UsageType usage_type = 2;
+
+  // Quantity value
+  double quantity = 3;
+
+  // Cost value
+  google.protobuf.DoubleValue cost = 4;
+
+  // Additional metrics
+  google.protobuf.StringValue metrics = 5;
+}
+
+// UsageTrends represents usage trend analysis
+message UsageTrends {
+  // Overall trend direction (increasing, decreasing, stable)
+  string overall_trend = 1;
+
+  // Trend percentage change
+  google.protobuf.DoubleValue trend_percentage = 2;
+
+  // Peak usage times
+  repeated string peak_times = 3;
+
+  // Usage patterns
+  repeated string patterns = 4;
+
+  // Seasonal variations
+  google.protobuf.StringValue seasonal_variations = 5;
+}
+
+// UsageAnomaly represents a detected usage anomaly
+message UsageAnomaly {
+  // Anomaly ID
+  string anomaly_id = 1;
+
+  // Anomaly type
+  string anomaly_type = 2;
+
+  // Anomaly severity
+  string severity = 3;
+
+  // Anomaly description
+  string description = 4;
+
+  // Timestamp when anomaly occurred
+  google.protobuf.Timestamp detected_at = 5;
+
+  // Expected vs actual values
+  google.protobuf.StringValue details = 6;
+
+  // Whether anomaly has been reviewed
+  bool reviewed = 7;
+}
+
+// SetUsageLimitsRequest represents a request to set usage limits
+message SetUsageLimitsRequest {
+  // Customer ID to set limits for
+  string customer_id = 1;
+
+  // Subscription ID to set limits for
+  string subscription_id = 2;
+
+  // Usage limits to set
+  repeated UsageLimit limits = 3;
+
+  // Whether to send alerts when limits are reached
+  bool send_alerts = 4;
+
+  // Alert threshold percentage (e.g., 80 for 80% of limit)
+  google.protobuf.DoubleValue alert_threshold = 5;
+}
+
+// UsageLimit represents a usage limit configuration
+message UsageLimit {
+  // Usage type for the limit
+  telecom.usage.enums.UsageType usage_type = 1;
+
+  // Limit quantity
+  double limit_quantity = 2;
+
+  // Limit unit
+  string limit_unit = 3;
+
+  // Limit period (daily, weekly, monthly)
+  string limit_period = 4;
+
+  // Limit type (hard, soft, warning)
+  string limit_type = 5;
+
+  // Whether limit is active
+  bool is_active = 6;
+}
+
+// SetUsageLimitsResponse represents the response after setting usage limits
+message SetUsageLimitsResponse {
+  // Success message
+  string message = 1;
+
+  // Number of limits set
+  int32 limits_set = 2;
+
+  // Effective date for limits
+  google.protobuf.Timestamp effective_date = 3;
+}
+
+// GetUsageProjectionsRequest represents a request to get usage projections
+message GetUsageProjectionsRequest {
+  // Customer ID to get projections for
+  string customer_id = 1;
+
+  // Subscription ID to filter by (optional)
+  google.protobuf.StringValue subscription_id = 2;
+
+  // Historical period for projection calculation
+  google.protobuf.Timestamp historical_start = 3;
+  google.protobuf.Timestamp historical_end = 4;
+
+  // Projection period
+  google.protobuf.Timestamp projection_start = 5;
+  google.protobuf.Timestamp projection_end = 6;
+
+  // Usage types to project
+  repeated telecom.usage.enums.UsageType usage_types = 7;
+
+  // Projection method (linear, seasonal, exponential)
+  string projection_method = 8;
+}
+
+// GetUsageProjectionsResponse represents the usage projections response
+message GetUsageProjectionsResponse {
+  // Customer ID
+  string customer_id = 1;
+
+  // Projection period
+  google.protobuf.Timestamp projection_start = 2;
+  google.protobuf.Timestamp projection_end = 3;
+
+  // Projected usage by type
+  repeated UsageProjection projections = 4;
+
+  // Confidence level (0-100)
+  google.protobuf.DoubleValue confidence_level = 5;
+
+  // Projection methodology used
+  string methodology = 6;
+
+  // Generated at timestamp
+  google.protobuf.Timestamp generated_at = 7;
+}
+
+// UsageProjection represents a usage projection for a specific type
+message UsageProjection {
+  // Usage type
+  telecom.usage.enums.UsageType usage_type = 1;
+
+  // Projected total quantity
+  double projected_quantity = 2;
+
+  // Projected total cost
+  google.protobuf.DoubleValue projected_cost = 3;
+
+  // Unit of measurement
+  string unit = 4;
+
+  // Projection confidence
+  google.protobuf.DoubleValue confidence = 5;
+
+  // Monthly breakdown
+  repeated MonthlyProjection monthly_breakdown = 6;
+}
+
+// MonthlyProjection represents monthly projection data
+message MonthlyProjection {
+  // Month (YYYY-MM format)
+  string month = 1;
+
+  // Projected quantity for the month
+  double projected_quantity = 2;
+
+  // Projected cost for the month
+  google.protobuf.DoubleValue projected_cost = 3;
+}
+
+// ProcessUsageForBillingRequest represents a request to process usage for billing
+message ProcessUsageForBillingRequest {
+  // Customer ID to process usage for
+  string customer_id = 1;
+
+  // Subscription ID to process (optional)
+  google.protobuf.StringValue subscription_id = 2;
+
+  // Billing period start date
+  google.protobuf.Timestamp billing_period_start = 3;
+
+  // Billing period end date
+  google.protobuf.Timestamp billing_period_end = 4;
+
+  // Whether to create invoice
+  bool create_invoice = 5;
+
+  // Billing processing options
+  BillingProcessingOptions billing_options = 6;
+}
+
+// BillingProcessingOptions represents options for billing processing
+message BillingProcessingOptions {
+  // Whether to include roaming charges
+  bool include_roaming = 1;
+
+  // Whether to apply promotional discounts
+  bool apply_discounts = 2;
+
+  // Currency for billing
+  string currency = 3;
+
+  // Whether to generate detailed usage report
+  bool generate_usage_report = 4;
+}
+
+// ProcessUsageForBillingResponse represents the billing processing response
+message ProcessUsageForBillingResponse {
+  // Billing ID
+  string billing_id = 1;
+
+  // Invoice ID (if created)
+  google.protobuf.StringValue invoice_id = 2;
+
+  // Total usage cost
+  int64 total_usage_cost = 3;
+
+  // Currency
+  string currency = 4;
+
+  // Number of usage records processed
+  int32 records_processed = 5;
+
+  // Billing breakdown by usage type
+  repeated UsageBillingBreakdown billing_breakdown = 6;
+
+  // Success message
+  string message = 7;
+
+  // Processing timestamp
+  google.protobuf.Timestamp processed_at = 8;
+}
+
+// UsageBillingBreakdown represents billing breakdown by usage type
+message UsageBillingBreakdown {
+  // Usage type
+  telecom.usage.enums.UsageType usage_type = 1;
+
+  // Total quantity
+  double total_quantity = 2;
+
+  // Total cost
+  int64 total_cost = 3;
+
+  // Unit of measurement
+  string unit = 4;
+
+  // Number of usage records
+  int32 record_count = 5;
+}

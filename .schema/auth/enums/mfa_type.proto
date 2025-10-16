@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.auth.enums;
+
+// MFAType enumerates supported multi-factor authentication methods.
+enum MFAType {
+  UNSPECIFIED = 0;  // Unspecified MFA method
+  SMS = 1;  // SMS-based verification
+  EMAIL = 2;    // Email-based verification
+  AUTHENTICATOR_APP = 3;    // Authenticator app (TOTP)
+  HARDWARE_KEY = 4; // Hardware security key (U2F/WebAuthn)
+}

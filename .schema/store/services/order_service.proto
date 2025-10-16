@@ -1,0 +1,319 @@
+syntax = "proto3";
+
+package commerce.orders.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/order.proto";
+import "../messages/order_item.proto";
+import "../messages/payment.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/orders/services";
+
+// Order service for managing orders, order items, and payments
+service OrderService {
+  // Order Management
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse);
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse);
+  rpc DeleteOrder(DeleteOrderRequest) returns (google.protobuf.Empty);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+
+  // Order Item Management
+  rpc CreateOrderItem(CreateOrderItemRequest) returns (CreateOrderItemResponse);
+  rpc GetOrderItem(GetOrderItemRequest) returns (GetOrderItemResponse);
+  rpc UpdateOrderItem(UpdateOrderItemRequest) returns (UpdateOrderItemResponse);
+  rpc DeleteOrderItem(DeleteOrderItemRequest) returns (google.protobuf.Empty);
+  rpc ListOrderItems(ListOrderItemsRequest) returns (ListOrderItemsResponse);
+
+  // Payment Management
+  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+  rpc UpdatePayment(UpdatePaymentRequest) returns (UpdatePaymentResponse);
+  rpc DeletePayment(DeletePaymentRequest) returns (google.protobuf.Empty);
+  rpc ListPayments(ListPaymentsRequest) returns (ListPaymentsResponse);
+
+  // Order Operations
+  rpc ProcessOrder(ProcessOrderRequest) returns (ProcessOrderResponse);
+  rpc CancelOrder(CancelOrderRequest) returns (CancelOrderResponse);
+  rpc RefundOrder(RefundOrderRequest) returns (RefundOrderResponse);
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (UpdateOrderStatusResponse);
+  rpc CalculateOrderTotal(CalculateOrderTotalRequest) returns (CalculateOrderTotalResponse);
+
+  // Payment Operations
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc CapturePayment(CapturePaymentRequest) returns (CapturePaymentResponse);
+  rpc RefundPayment(RefundPaymentRequest) returns (RefundPaymentResponse);
+  rpc VoidPayment(VoidPaymentRequest) returns (VoidPaymentResponse);
+}
+
+// Order Request/Response Messages
+message CreateOrderRequest {
+  commerce.orders.messages.Order order = 1;
+}
+
+message CreateOrderResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetOrderRequest {
+  string id = 1;
+}
+
+message GetOrderResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdateOrderRequest {
+  string id = 1;
+  commerce.orders.messages.Order order = 2;
+}
+
+message UpdateOrderResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DeleteOrderRequest {
+  string id = 1;
+}
+
+message ListOrdersRequest {
+  string customer_id = 1;
+  string seller_id = 2;
+  string status = 3;
+  string type = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message ListOrdersResponse {
+  repeated commerce.orders.messages.Order orders = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Order Item Request/Response Messages
+message CreateOrderItemRequest {
+  commerce.orders.messages.OrderItem order_item = 1;
+}
+
+message CreateOrderItemResponse {
+  commerce.orders.messages.OrderItem order_item = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetOrderItemRequest {
+  string id = 1;
+}
+
+message GetOrderItemResponse {
+  commerce.orders.messages.OrderItem order_item = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdateOrderItemRequest {
+  string id = 1;
+  commerce.orders.messages.OrderItem order_item = 2;
+}
+
+message UpdateOrderItemResponse {
+  commerce.orders.messages.OrderItem order_item = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DeleteOrderItemRequest {
+  string id = 1;
+}
+
+message ListOrderItemsRequest {
+  string order_id = 1;
+  string product_id = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListOrderItemsResponse {
+  repeated commerce.orders.messages.OrderItem order_items = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Payment Request/Response Messages
+message CreatePaymentRequest {
+  commerce.orders.messages.Payment payment = 1;
+}
+
+message CreatePaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetPaymentRequest {
+  string id = 1;
+}
+
+message GetPaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdatePaymentRequest {
+  string id = 1;
+  commerce.orders.messages.Payment payment = 2;
+}
+
+message UpdatePaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DeletePaymentRequest {
+  string id = 1;
+}
+
+message ListPaymentsRequest {
+  string order_id = 1;
+  string status = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListPaymentsResponse {
+  repeated commerce.orders.messages.Payment payments = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Order Operations Request/Response Messages
+message ProcessOrderRequest {
+  string order_id = 1;
+  string action = 2; // process, prepare, ship, deliver
+  string notes = 3;
+}
+
+message ProcessOrderResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message CancelOrderRequest {
+  string order_id = 1;
+  string reason = 2;
+  string notes = 3;
+}
+
+message CancelOrderResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message RefundOrderRequest {
+  string order_id = 1;
+  double refund_amount = 2;
+  string reason = 3;
+  string notes = 4;
+}
+
+message RefundOrderResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdateOrderStatusRequest {
+  string order_id = 1;
+  string status = 2;
+  string notes = 3;
+}
+
+message UpdateOrderStatusResponse {
+  commerce.orders.messages.Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message CalculateOrderTotalRequest {
+  string order_id = 1;
+  bool include_taxes = 2;
+  bool include_shipping = 3;
+}
+
+message CalculateOrderTotalResponse {
+  OrderTotalCalculation calculation = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message OrderTotalCalculation {
+  double subtotal = 1;
+  double tax_amount = 2;
+  double shipping_cost = 3;
+  double discount_amount = 4;
+  double total = 5;
+  string currency = 6;
+}
+
+// Payment Operations Request/Response Messages
+message ProcessPaymentRequest {
+  string order_id = 1;
+  string payment_method = 2;
+  double amount = 3;
+  string currency = 4;
+  commerce.orders.messages.PaymentDetails payment_details = 5;
+}
+
+message ProcessPaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message CapturePaymentRequest {
+  string payment_id = 1;
+  double amount = 2;
+  string notes = 3;
+}
+
+message CapturePaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message RefundPaymentRequest {
+  string payment_id = 1;
+  double refund_amount = 2;
+  string reason = 3;
+  string notes = 4;
+}
+
+message RefundPaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message VoidPaymentRequest {
+  string payment_id = 1;
+  string reason = 2;
+  string notes = 3;
+}
+
+message VoidPaymentResponse {
+  commerce.orders.messages.Payment payment = 1;
+  bool success = 2;
+  string error_message = 3;
+}

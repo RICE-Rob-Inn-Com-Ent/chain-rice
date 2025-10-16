@@ -1,0 +1,448 @@
+syntax = "proto3";
+
+package integrations.webhooks.messages;
+
+import "google/protobuf/timestamp.proto";
+import "integrations/webhooks/enums/webhook_status.proto";
+
+option go_package = "github.com/rice-dev/integrations/webhooks/messages";
+
+// Webhook Delivery Log represents a log entry for webhook delivery attempts
+message WebhookDeliveryLog {
+  // Unique log entry identifier
+  string log_id = 1;
+
+  // Associated event and subscription identifiers
+  string event_id = 2;
+  string subscription_id = 3;
+  string delivery_id = 4;
+
+  // Delivery attempt information
+  WebhookDeliveryAttempt attempt = 5;
+
+  // Delivery status
+  integrations.webhooks.enums.WebhookStatus status = 6;
+
+  // Delivery result
+  WebhookDeliveryResult result = 7;
+
+  // Error information
+  WebhookDeliveryError error = 8;
+
+  // Performance metrics
+  WebhookDeliveryPerformance performance = 9;
+
+  // Timestamps
+  google.protobuf.Timestamp timestamp = 10;
+  google.protobuf.Timestamp created_at = 11;
+}
+
+// Webhook Delivery Attempt
+message WebhookDeliveryAttempt {
+  string attempt_id = 1;
+  int32 attempt_number = 2;
+  string attempt_type = 3; // INITIAL, RETRY, MANUAL, SCHEDULED
+
+  // Target endpoint
+  string endpoint_url = 4;
+  string endpoint_method = 5;
+  string endpoint_protocol = 6;
+
+  // Request details
+  WebhookDeliveryRequest request = 7;
+
+  // Response details
+  WebhookDeliveryResponse response = 8;
+
+  // Attempt metadata
+  string attempt_reason = 9;
+  string attempt_context = 10;
+  map<string, string> attempt_metadata = 11;
+
+  // Attempt timing
+  google.protobuf.Timestamp started_at = 12;
+  google.protobuf.Timestamp completed_at = 13;
+  int64 duration_ms = 14;
+}
+
+// Webhook Delivery Request
+message WebhookDeliveryRequest {
+  // Request configuration
+  string method = 1; // POST, PUT, PATCH, GET
+  string url = 2;
+  string protocol = 3; // HTTP, HTTPS, GRPC
+
+  // Request headers
+  repeated WebhookDeliveryHeader headers = 4;
+
+  // Request body
+  string body = 5;
+  bytes binary_body = 6;
+  int64 body_size_bytes = 7;
+
+  // Request parameters
+  repeated WebhookDeliveryParameter parameters = 8;
+
+  // Request authentication
+  WebhookDeliveryAuth auth = 9;
+
+  // Request configuration
+  int32 timeout_seconds = 10;
+  int32 connection_timeout_seconds = 11;
+  int32 read_timeout_seconds = 12;
+  bool follow_redirects = 13;
+  int32 max_redirects = 14;
+
+  // Request metadata
+  string user_agent = 15;
+  string content_type = 16;
+  string content_encoding = 17;
+  string accept = 18;
+  map<string, string> custom_fields = 19;
+}
+
+// Webhook Delivery Response
+message WebhookDeliveryResponse {
+  // Response status
+  int32 status_code = 1;
+  string status_text = 2;
+  string status_category = 3; // SUCCESS, CLIENT_ERROR, SERVER_ERROR, REDIRECT
+
+  // Response headers
+  repeated WebhookDeliveryHeader headers = 4;
+
+  // Response body
+  string body = 5;
+  bytes binary_body = 6;
+  int64 body_size_bytes = 7;
+
+  // Response metadata
+  string content_type = 8;
+  string content_encoding = 9;
+  string content_length = 10;
+  string server = 11;
+  string date = 12;
+
+  // Response timing
+  int64 response_time_ms = 13;
+  int64 connection_time_ms = 14;
+  int64 dns_lookup_time_ms = 15;
+  int64 tls_handshake_time_ms = 16;
+
+  // Response validation
+  bool is_valid = 17;
+  repeated string validation_errors = 18;
+  repeated string validation_warnings = 19;
+
+  // Response processing
+  bool is_processed = 20;
+  string processing_status = 21;
+  map<string, string> processing_results = 22;
+}
+
+// Webhook Delivery Header
+message WebhookDeliveryHeader {
+  string name = 1;
+  string value = 2;
+  bool is_sensitive = 3; // For logging purposes
+  string description = 4;
+}
+
+// Webhook Delivery Parameter
+message WebhookDeliveryParameter {
+  string name = 1;
+  string value = 2;
+  string type = 3; // STRING, INTEGER, BOOLEAN, ARRAY, OBJECT
+  bool is_sensitive = 4; // For logging purposes
+  string description = 5;
+}
+
+// Webhook Delivery Authentication
+message WebhookDeliveryAuth {
+  string auth_type = 1; // NONE, BASIC, BEARER, API_KEY, OAUTH2, HMAC, CUSTOM
+  string username = 2;
+  string password = 3; // Usually hashed/encrypted
+  string bearer_token = 4; // Usually hashed/encrypted
+  string api_key = 5; // Usually hashed/encrypted
+  string api_key_header = 6;
+  string api_key_query_param = 7;
+  string hmac_secret = 8; // Usually hashed/encrypted
+  string hmac_algorithm = 9;
+  string custom_auth_header = 10;
+  string custom_auth_value = 11;
+  map<string, string> oauth2_config = 12;
+}
+
+// Webhook Delivery Result
+message WebhookDeliveryResult {
+  string result_id = 1;
+  string result_type = 2; // SUCCESS, FAILED, TIMEOUT, CANCELLED, RETRY
+  string result_message = 3;
+
+  // Delivery outcome
+  bool delivery_success = 4;
+  bool acknowledgment_received = 5;
+  string acknowledgment_message = 6;
+
+  // Delivery details
+  string delivery_method = 7;
+  string delivery_protocol = 8;
+  string delivery_endpoint = 9;
+  int32 delivery_attempts = 10;
+
+  // Delivery timing
+  google.protobuf.Timestamp delivery_started_at = 11;
+  google.protobuf.Timestamp delivery_completed_at = 12;
+  int64 total_delivery_time_ms = 13;
+
+  // Delivery metadata
+  map<string, string> delivery_metadata = 14;
+  map<string, string> delivery_context = 15;
+}
+
+// Webhook Delivery Error
+message WebhookDeliveryError {
+  // Error classification
+  string error_type = 1; // NETWORK, HTTP, AUTHENTICATION, AUTHORIZATION, VALIDATION, TIMEOUT, SERVER
+  string error_category = 2; // CLIENT_ERROR, SERVER_ERROR, NETWORK_ERROR, TIMEOUT_ERROR
+  string error_code = 3;
+  string error_message = 4;
+  string error_description = 5;
+
+  // Error details
+  string error_source = 6; // CLIENT, SERVER, NETWORK, GATEWAY, PROXY
+  string error_context = 7;
+  string error_stack_trace = 8;
+  map<string, string> error_context_data = 9;
+
+  // Error handling
+  bool is_retryable = 10;
+  bool is_recoverable = 11;
+  int32 retry_count = 12;
+  int32 max_retries = 13;
+  google.protobuf.Timestamp next_retry_at = 14;
+  string retry_strategy = 15;
+
+  // Error resolution
+  repeated string possible_causes = 16;
+  repeated string suggested_solutions = 17;
+  string resolution_status = 18; // UNRESOLVED, IN_PROGRESS, RESOLVED, ESCALATED
+  string resolution_notes = 19;
+
+  // Error impact
+  string impact_level = 20; // LOW, MEDIUM, HIGH, CRITICAL
+  bool affects_other_deliveries = 21;
+  repeated string affected_subscriptions = 22;
+
+  // Error tracking
+  string error_id = 23;
+  string parent_error_id = 24;
+  repeated string related_error_ids = 25;
+  google.protobuf.Timestamp first_occurred_at = 26;
+  google.protobuf.Timestamp last_occurred_at = 27;
+  int32 occurrence_count = 28;
+}
+
+// Webhook Delivery Performance
+message WebhookDeliveryPerformance {
+  // Timing metrics
+  int64 total_duration_ms = 1;
+  int64 connection_time_ms = 2;
+  int64 dns_lookup_time_ms = 3;
+  int64 tls_handshake_time_ms = 4;
+  int64 request_time_ms = 5;
+  int64 response_time_ms = 6;
+  int64 processing_time_ms = 7;
+
+  // Network metrics
+  int64 bytes_sent = 8;
+  int64 bytes_received = 9;
+  int64 request_size_bytes = 10;
+  int64 response_size_bytes = 11;
+  double compression_ratio = 12;
+
+  // Performance indicators
+  bool is_slow_delivery = 13;
+  bool is_timeout = 14;
+  bool is_retry = 15;
+  int32 retry_count = 16;
+  double delivery_rate = 17; // deliveries per second
+
+  // Resource usage
+  double cpu_usage_percent = 18;
+  int64 memory_usage_bytes = 19;
+  int64 disk_usage_bytes = 20;
+  int32 network_connections = 21;
+
+  // Custom performance metrics
+  map<string, int64> custom_metrics = 22;
+}
+
+// Webhook Delivery Log Search/Filter
+message WebhookDeliveryLogFilter {
+  repeated string log_ids = 1;
+  repeated string event_ids = 2;
+  repeated string subscription_ids = 3;
+  repeated string delivery_ids = 4;
+  repeated string attempt_ids = 5;
+  repeated integrations.webhooks.enums.WebhookStatus statuses = 6;
+  repeated string result_types = 7;
+  repeated string error_types = 8;
+  repeated string error_categories = 9;
+  repeated string error_codes = 10;
+  repeated string endpoint_urls = 11;
+  repeated string endpoint_methods = 12;
+  repeated string endpoint_protocols = 13;
+  bool has_errors = 14;
+  bool has_warnings = 15;
+  bool is_retryable = 16;
+  bool is_successful = 17;
+  bool is_timeout = 18;
+  bool is_retry = 19;
+  google.protobuf.Timestamp timestamp_from = 20;
+  google.protobuf.Timestamp timestamp_to = 21;
+  google.protobuf.Timestamp started_from = 22;
+  google.protobuf.Timestamp started_to = 23;
+  google.protobuf.Timestamp completed_from = 24;
+  google.protobuf.Timestamp completed_to = 25;
+  int64 min_duration_ms = 26;
+  int64 max_duration_ms = 27;
+  int64 min_response_time_ms = 28;
+  int64 max_response_time_ms = 29;
+  int32 min_status_code = 30;
+  int32 max_status_code = 31;
+  string search_text = 32;
+  int32 limit = 33;
+  int32 offset = 34;
+  string sort_by = 35;
+  string sort_order = 36; // ASC, DESC
+}
+
+// Webhook Delivery Log List
+message WebhookDeliveryLogList {
+  repeated WebhookDeliveryLog logs = 1;
+  int32 total_count = 2;
+  int32 page_size = 3;
+  int32 page_number = 4;
+  bool has_next_page = 5;
+  bool has_previous_page = 6;
+}
+
+// Webhook Delivery Statistics
+message WebhookDeliveryStatistics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Count statistics
+  int32 total_deliveries = 3;
+  int32 successful_deliveries = 4;
+  int32 failed_deliveries = 5;
+  int32 timeout_deliveries = 6;
+  int32 retry_deliveries = 7;
+  int32 cancelled_deliveries = 8;
+
+  // Rate statistics
+  double delivery_success_rate = 9;
+  double delivery_failure_rate = 10;
+  double delivery_timeout_rate = 11;
+  double delivery_retry_rate = 12;
+
+  // Performance statistics
+  int64 average_delivery_time_ms = 13;
+  int64 min_delivery_time_ms = 14;
+  int64 max_delivery_time_ms = 15;
+  int64 p50_delivery_time_ms = 16;
+  int64 p90_delivery_time_ms = 17;
+  int64 p95_delivery_time_ms = 18;
+  int64 p99_delivery_time_ms = 19;
+
+  // Response time statistics
+  int64 average_response_time_ms = 20;
+  int64 min_response_time_ms = 21;
+  int64 max_response_time_ms = 22;
+  int64 p50_response_time_ms = 23;
+  int64 p90_response_time_ms = 24;
+  int64 p95_response_time_ms = 25;
+  int64 p99_response_time_ms = 26;
+
+  // Error statistics
+  map<string, int32> error_type_counts = 27;
+  map<string, int32> error_category_counts = 28;
+  map<string, int32> status_code_counts = 29;
+  repeated string top_errors = 30;
+
+  // Endpoint statistics
+  map<string, int32> endpoint_counts = 31;
+  map<string, int32> protocol_counts = 32;
+  map<string, int32> method_counts = 33;
+
+  // Subscription statistics
+  map<string, int32> subscription_counts = 34;
+
+  // Time-based statistics
+  repeated WebhookDeliveryTimeSeries time_series = 35;
+}
+
+// Webhook Delivery Time Series
+message WebhookDeliveryTimeSeries {
+  google.protobuf.Timestamp timestamp = 1;
+  int32 delivery_count = 2;
+  int32 success_count = 3;
+  int32 error_count = 4;
+  int32 timeout_count = 5;
+  int32 retry_count = 6;
+  int64 average_delivery_time_ms = 7;
+  int64 average_response_time_ms = 8;
+  double delivery_success_rate = 9;
+  string granularity = 10; // MINUTE, HOUR, DAY
+}
+
+// Webhook Delivery Summary
+message WebhookDeliverySummary {
+  string delivery_id = 1;
+  string event_id = 2;
+  string subscription_id = 3;
+  string endpoint_url = 4;
+  int32 status_code = 5;
+  string status_text = 6;
+  bool is_successful = 7;
+  bool has_error = 8;
+  bool has_warning = 9;
+  bool is_retryable = 10;
+  int32 retry_count = 11;
+  int64 delivery_time_ms = 12;
+  int64 response_time_ms = 13;
+  google.protobuf.Timestamp started_at = 14;
+  google.protobuf.Timestamp completed_at = 15;
+}
+
+// Webhook Delivery Alert
+message WebhookDeliveryAlert {
+  string alert_id = 1;
+  string delivery_id = 2;
+  string subscription_id = 3;
+  string alert_type = 4; // DELIVERY_FAILED, DELIVERY_TIMEOUT, HIGH_ERROR_RATE, SLOW_DELIVERY
+  string alert_severity = 5; // LOW, MEDIUM, HIGH, CRITICAL
+  string alert_message = 6;
+  string alert_description = 7;
+
+  // Alert conditions
+  map<string, string> alert_conditions = 8;
+  map<string, string> alert_metrics = 9;
+
+  // Alert status
+  string alert_status = 10; // TRIGGERED, ACKNOWLEDGED, RESOLVED, SUPPRESSED
+  bool is_active = 11;
+  google.protobuf.Timestamp triggered_at = 12;
+  google.protobuf.Timestamp acknowledged_at = 13;
+  google.protobuf.Timestamp resolved_at = 14;
+
+  // Alert recipients
+  repeated string alert_recipients = 15;
+  repeated string alert_webhooks = 16;
+  repeated string alert_channels = 17; // EMAIL, SMS, SLACK, WEBHOOK
+
+  // Alert context
+  map<string, string> alert_context = 18;
+  map<string, string> alert_metadata = 19;
+}

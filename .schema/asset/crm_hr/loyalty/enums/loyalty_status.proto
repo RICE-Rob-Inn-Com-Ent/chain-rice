@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package crm_hr.loyalty.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/loyalty/enums";
+
+// LoyaltyStatus represents the status of a loyalty program or membership
+enum LoyaltyStatus {
+  // Unspecified status - should not be used in production
+  LOYALTY_STATUS_UNSPECIFIED = 0;
+
+  // Active statuses
+  ACTIVE = 1;
+  PREMIUM = 2;
+  VIP = 3;
+  ELITE = 4;
+
+  // Inactive statuses
+  INACTIVE = 5;
+  SUSPENDED = 6;
+  CANCELLED = 7;
+  TERMINATED = 8;
+
+  // Pending statuses
+  PENDING_ACTIVATION = 9;
+  PENDING_APPROVAL = 10;
+  PENDING_VERIFICATION = 11;
+
+  // Special statuses
+  GRACE_PERIOD = 12;
+  FROZEN = 13;
+  EXPIRED = 14;
+  RENEWED = 15;
+
+  // Lifecycle statuses
+  NEW = 16;
+  UPGRADED = 17;
+  DOWNGRADED = 18;
+  REACTIVATED = 19;
+
+  // Error statuses
+  ERROR = 20;
+  FAILED = 21;
+  INVALID = 22;
+  DUPLICATE = 23;
+}

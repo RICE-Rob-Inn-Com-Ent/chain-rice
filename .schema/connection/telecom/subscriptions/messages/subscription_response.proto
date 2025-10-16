@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+package telecom.subscriptions.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/string_value.proto";
+import "google/protobuf/double_value.proto";
+import "telecom/subscriptions/enums/subscription_plan.proto";
+import "telecom/subscriptions/enums/subscription_status.proto";
+
+// Subscription represents a subscription entity
+message Subscription {
+  // Unique identifier for the subscription
+  string subscription_id = 1;
+
+  // Customer ID for whom the subscription belongs
+  string customer_id = 2;
+
+  // Subscription plan type
+  telecom.subscriptions.enums.SubscriptionPlan plan = 3;
+
+  // Current subscription status
+  telecom.subscriptions.enums.SubscriptionStatus status = 4;
+
+  // Start date of the subscription
+  google.protobuf.Timestamp start_date = 5;
+
+  // End date of the subscription (if applicable)
+  google.protobuf.Timestamp end_date = 6;
+
+  // Billing cycle (monthly, quarterly, annually)
+  string billing_cycle = 7;
+
+  // Subscription price (in the smallest currency unit)
+  int64 price = 8;
+
+  // Currency code (ISO 4217 format)
+  string currency = 9;
+
+  // Auto-renewal enabled
+  bool auto_renewal = 10;
+
+  // Subscription features and limits
+  SubscriptionFeatures features = 11;
+
+  // Notes about the subscription
+  google.protobuf.StringValue notes = 12;
+
+  // Promotional code used (if any)
+  google.protobuf.StringValue promotional_code = 13;
+
+  // Trial period in days (if applicable)
+  google.protobuf.DoubleValue trial_period_days = 14;
+
+  // Date when the subscription was created
+  google.protobuf.Timestamp created_at = 15;
+
+  // Date when the subscription was last updated
+  google.protobuf.Timestamp updated_at = 16;
+
+  // Next billing date
+  google.protobuf.Timestamp next_billing_date = 17;
+
+  // Last renewal date
+  google.protobuf.Timestamp last_renewal_date = 18;
+
+  // Cancellation date (if applicable)
+  google.protobuf.Timestamp cancellation_date = 19;
+
+  // Cancellation reason (if applicable)
+  google.protobuf.StringValue cancellation_reason = 20;
+}
+
+// CreateSubscriptionResponse represents the response after creating a subscription
+message CreateSubscriptionResponse {
+  // The created subscription
+  Subscription subscription = 1;
+
+  // Success message
+  string message = 2;
+}
+
+// UpdateSubscriptionResponse represents the response after updating a subscription
+message UpdateSubscriptionResponse {
+  // The updated subscription
+  Subscription subscription = 1;
+
+  // Success message
+  string message = 2;
+}
+
+// GetSubscriptionResponse represents the response after retrieving a subscription
+message GetSubscriptionResponse {
+  // The retrieved subscription
+  Subscription subscription = 1;
+}
+
+// ListSubscriptionsResponse represents the response after listing subscriptions
+message ListSubscriptionsResponse {
+  // List of subscriptions matching the criteria
+  repeated Subscription subscriptions = 1;
+
+  // Total count of subscriptions matching the criteria
+  int32 total_count = 2;
+
+  // Current page number
+  int32 page = 3;
+
+  // Page size used
+  int32 page_size = 4;
+
+  // Total number of pages available
+  int32 total_pages = 5;
+}
+
+// DeleteSubscriptionResponse represents the response after deleting a subscription
+message DeleteSubscriptionResponse {
+  // Success message
+  string message = 1;
+
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}
+
+// CancelSubscriptionResponse represents the response after cancelling a subscription
+message CancelSubscriptionResponse {
+  // The cancelled subscription
+  Subscription subscription = 1;
+
+  // Success message
+  string message = 2;
+
+  // Cancellation effective date
+  google.protobuf.Timestamp effective_date = 3;
+}
+
+// RenewSubscriptionResponse represents the response after renewing a subscription
+message RenewSubscriptionResponse {
+  // The renewed subscription
+  Subscription subscription = 1;
+
+  // Success message
+  string message = 2;
+
+  // New end date
+  google.protobuf.Timestamp new_end_date = 3;
+}
+
+// SuspendSubscriptionResponse represents the response after suspending a subscription
+message SuspendSubscriptionResponse {
+  // The suspended subscription
+  Subscription subscription = 1;
+
+  // Success message
+  string message = 2;
+
+  // Suspension effective date
+  google.protobuf.Timestamp effective_date = 3;
+}
+
+// ResumeSubscriptionResponse represents the response after resuming a subscription
+message ResumeSubscriptionResponse {
+  // The resumed subscription
+  Subscription subscription = 1;
+
+  // Success message
+  string message = 2;
+
+  // Resumption effective date
+  google.protobuf.Timestamp effective_date = 3;
+}
+
+// SubscriptionFeatures represents the features and limits of a subscription
+message SubscriptionFeatures {
+  // Data allowance in GB (for data plans)
+  google.protobuf.DoubleValue data_allowance_gb = 1;
+
+  // Voice minutes allowance (for voice plans)
+  google.protobuf.DoubleValue voice_minutes = 2;
+
+  // SMS allowance (for SMS plans)
+  google.protobuf.DoubleValue sms_allowance = 3;
+
+  // Number of devices allowed
+  google.protobuf.DoubleValue device_limit = 4;
+
+  // Whether international roaming is included
+  bool international_roaming = 5;
+
+  // Whether hotspot/tethering is allowed
+  bool hotspot_allowed = 6;
+
+  // Whether premium features are included
+  bool premium_features = 7;
+
+  // Maximum number of users (for family/business plans)
+  google.protobuf.DoubleValue user_limit = 8;
+
+  // Additional feature flags
+  repeated string additional_features = 9;
+}
+
+// SubscriptionSummary represents a summary view of subscription information
+message SubscriptionSummary {
+  // Subscription ID
+  string subscription_id = 1;
+
+  // Customer ID
+  string customer_id = 2;
+
+  // Plan name
+  telecom.subscriptions.enums.SubscriptionPlan plan = 3;
+
+  // Current status
+  telecom.subscriptions.enums.SubscriptionStatus status = 4;
+
+  // Monthly price
+  int64 monthly_price = 5;
+
+  // Currency
+  string currency = 6;
+
+  // Days until next billing
+  int32 days_until_billing = 7;
+
+  // Data usage percentage (if applicable)
+  google.protobuf.DoubleValue data_usage_percentage = 8;
+
+  // Voice usage percentage (if applicable)
+  google.protobuf.DoubleValue voice_usage_percentage = 9;
+
+  // SMS usage percentage (if applicable)
+  google.protobuf.DoubleValue sms_usage_percentage = 10;
+
+  // Auto-renewal status
+  bool auto_renewal = 11;
+
+  // Next billing date
+  google.protobuf.Timestamp next_billing_date = 12;
+}

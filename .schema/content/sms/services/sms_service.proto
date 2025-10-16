@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.sms.services;
+
+import "marketing/sms/messages/sms_request.proto";
+import "marketing/sms/messages/sms_response.proto";
+
+// SMS service for managing SMS marketing campaigns
+service SmsService {
+  // Create a new SMS
+  rpc CreateSms(marketing.sms.messages.CreateSmsRequest) returns (marketing.sms.messages.CreateSmsResponse);
+
+  // Get an SMS by ID
+  rpc GetSms(marketing.sms.messages.GetSmsRequest) returns (marketing.sms.messages.GetSmsResponse);
+
+  // List SMS messages with pagination and filtering
+  rpc ListSms(marketing.sms.messages.ListSmsRequest) returns (marketing.sms.messages.ListSmsResponse);
+
+  // Update an existing SMS
+  rpc UpdateSms(marketing.sms.messages.UpdateSmsRequest) returns (marketing.sms.messages.UpdateSmsResponse);
+
+  // Delete an SMS
+  rpc DeleteSms(marketing.sms.messages.DeleteSmsRequest) returns (marketing.sms.messages.DeleteSmsResponse);
+}

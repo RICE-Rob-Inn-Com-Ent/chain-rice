@@ -1,0 +1,475 @@
+syntax = "proto3";
+
+package gaming.ar_vr.messages;
+
+import "gaming/ar_vr/enums/interaction_modes.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/ar_vr/messages";
+
+// Модель аватара AR/VR
+message Avatar {
+  // Унікальний ідентифікатор аватара
+  string id = 1;
+
+  // Назва аватара
+  string name = 2;
+
+  // Опис аватара
+  string description = 3;
+
+  // Тип аватара
+  AvatarType type = 4;
+
+  // Зовнішність аватара
+  AvatarAppearance appearance = 5;
+
+  // Анімації аватара
+  repeated AvatarAnimation animations = 6;
+
+  // Звуки аватара
+  repeated AvatarAudio audio = 7;
+
+  // Ефекти аватара
+  repeated AvatarEffect effects = 8;
+
+  // Налаштування аватара
+  AvatarSettings settings = 9;
+
+  // Метадані аватара
+  AvatarMetadata metadata = 10;
+
+  // Час створення
+  google.protobuf.Timestamp created_at = 11;
+
+  // Час оновлення
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+// Тип аватара
+enum AvatarType {
+  AVATAR_TYPE_UNSPECIFIED = 0;
+
+  // Людський аватар
+  AVATAR_TYPE_HUMAN = 1;
+
+  // Тваринний аватар
+  AVATAR_TYPE_ANIMAL = 2;
+
+  // Робот
+  AVATAR_TYPE_ROBOT = 3;
+
+  // Фантастична істота
+  AVATAR_TYPE_FANTASY = 4;
+
+  // Абстрактний аватар
+  AVATAR_TYPE_ABSTRACT = 5;
+
+  // Мінімалістичний аватар
+  AVATAR_TYPE_MINIMALIST = 6;
+
+  // Кастомний аватар
+  AVATAR_TYPE_CUSTOM = 7;
+}
+
+// Зовнішність аватара
+message AvatarAppearance {
+  // Стать аватара
+  AvatarGender gender = 1;
+
+  // Вік аватара
+  int32 age = 2;
+
+  // Зріст аватара (в см)
+  double height = 3;
+
+  // Вага аватара (в кг)
+  double weight = 4;
+
+  // Колір шкіри
+  string skin_color = 5;
+
+  // Колір волосся
+  string hair_color = 6;
+
+  // Стиль волосся
+  string hair_style = 7;
+
+  // Колір очей
+  string eye_color = 8;
+
+  // Форма обличчя
+  string face_shape = 9;
+
+  // Тип тіла
+  string body_type = 10;
+
+  // Одяг аватара
+  repeated AvatarClothing clothing = 11;
+
+  // Аксесуари аватара
+  repeated AvatarAccessory accessories = 12;
+
+  // Татуювання
+  repeated AvatarTattoo tattoos = 13;
+
+  // Шрами
+  repeated AvatarScar scars = 14;
+
+  // Додаткові особливості
+  map<string, string> features = 15;
+}
+
+// Стать аватара
+enum AvatarGender {
+  AVATAR_GENDER_UNSPECIFIED = 0;
+  AVATAR_GENDER_MALE = 1;
+  AVATAR_GENDER_FEMALE = 2;
+  AVATAR_GENDER_NON_BINARY = 3;
+  AVATAR_GENDER_OTHER = 4;
+}
+
+// Одяг аватара
+message AvatarClothing {
+  // Ідентифікатор одягу
+  string id = 1;
+
+  // Назва одягу
+  string name = 2;
+
+  // Тип одягу
+  string type = 3;
+
+  // Категорія одягу
+  string category = 4;
+
+  // Колір одягу
+  string color = 5;
+
+  // Текстура одягу
+  string texture = 6;
+
+  // Матеріал одягу
+  string material = 7;
+
+  // Розмір одягу
+  string size = 8;
+
+  // Стиль одягу
+  string style = 9;
+
+  // Бренд одягу
+  string brand = 10;
+
+  // Рідкість одягу
+  string rarity = 11;
+
+  // Додаткові параметри одягу
+  map<string, string> parameters = 12;
+}
+
+// Аксесуар аватара
+message AvatarAccessory {
+  // Ідентифікатор аксесуару
+  string id = 1;
+
+  // Назва аксесуару
+  string name = 2;
+
+  // Тип аксесуару
+  string type = 3;
+
+  // Категорія аксесуару
+  string category = 4;
+
+  // Позиція аксесуару
+  string position = 5;
+
+  // Колір аксесуару
+  string color = 6;
+
+  // Текстура аксесуару
+  string texture = 7;
+
+  // Матеріал аксесуару
+  string material = 8;
+
+  // Розмір аксесуару
+  string size = 9;
+
+  // Стиль аксесуару
+  string style = 10;
+
+  // Бренд аксесуару
+  string brand = 11;
+
+  // Рідкість аксесуару
+  string rarity = 12;
+
+  // Додаткові параметри аксесуару
+  map<string, string> parameters = 13;
+}
+
+// Татуювання аватара
+message AvatarTattoo {
+  // Ідентифікатор татуювання
+  string id = 1;
+
+  // Назва татуювання
+  string name = 2;
+
+  // Тип татуювання
+  string type = 3;
+
+  // Позиція татуювання
+  string position = 4;
+
+  // Розмір татуювання
+  string size = 5;
+
+  // Колір татуювання
+  string color = 6;
+
+  // Стиль татуювання
+  string style = 7;
+
+  // Додаткові параметри татуювання
+  map<string, string> parameters = 8;
+}
+
+// Шрам аватара
+message AvatarScar {
+  // Ідентифікатор шраму
+  string id = 1;
+
+  // Назва шраму
+  string name = 2;
+
+  // Тип шраму
+  string type = 3;
+
+  // Позиція шраму
+  string position = 4;
+
+  // Розмір шраму
+  string size = 5;
+
+  // Колір шраму
+  string color = 6;
+
+  // Стиль шраму
+  string style = 7;
+
+  // Додаткові параметри шраму
+  map<string, string> parameters = 8;
+}
+
+// Анімація аватара
+message AvatarAnimation {
+  // Ідентифікатор анімації
+  string id = 1;
+
+  // Назва анімації
+  string name = 2;
+
+  // Тип анімації
+  string type = 3;
+
+  // Категорія анімації
+  string category = 4;
+
+  // URL файлу анімації
+  string animation_url = 5;
+
+  // Тривалість анімації
+  int64 duration = 6;
+
+  // Швидкість анімації
+  double speed = 7;
+
+  // Циклічність анімації
+  bool looping = 8;
+
+  // Напрямок анімації
+  string direction = 9;
+
+  // Додаткові параметри анімації
+  map<string, string> parameters = 10;
+}
+
+// Звук аватара
+message AvatarAudio {
+  // Ідентифікатор звуку
+  string id = 1;
+
+  // Назва звуку
+  string name = 2;
+
+  // Тип звуку
+  string type = 3;
+
+  // Категорія звуку
+  string category = 4;
+
+  // URL звукового файлу
+  string audio_url = 5;
+
+  // Гучність звуку
+  double volume = 6;
+
+  // Висота звуку
+  double pitch = 7;
+
+  // Тривалість звуку
+  int64 duration = 8;
+
+  // Циклічність звуку
+  bool looping = 9;
+
+  // Просторовий звук
+  bool spatial_audio = 10;
+
+  // Додаткові параметри звуку
+  map<string, string> parameters = 11;
+}
+
+// Ефект аватара
+message AvatarEffect {
+  // Ідентифікатор ефекту
+  string id = 1;
+
+  // Назва ефекту
+  string name = 2;
+
+  // Тип ефекту
+  string type = 3;
+
+  // Категорія ефекту
+  string category = 4;
+
+  // Інтенсивність ефекту
+  double intensity = 5;
+
+  // Тривалість ефекту
+  int64 duration = 6;
+
+  // Циклічність ефекту
+  bool looping = 7;
+
+  // Колір ефекту
+  string color = 8;
+
+  // Додаткові параметри ефекту
+  map<string, string> parameters = 9;
+}
+
+// Налаштування аватара
+message AvatarSettings {
+  // Режими взаємодії
+  repeated gaming.ar_vr.enums.InteractionMode interaction_modes = 1;
+
+  // Чутливість до взаємодії
+  double sensitivity = 2;
+
+  // Затримка реакції
+  int64 response_delay = 3;
+
+  // Тривалість реакції
+  int64 response_duration = 4;
+
+  // Автоматичні анімації
+  bool auto_animations = 5;
+
+  // Автоматичні звуки
+  bool auto_audio = 6;
+
+  // Автоматичні ефекти
+  bool auto_effects = 7;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 8;
+}
+
+// Метадані аватара
+message AvatarMetadata {
+  // Версія аватара
+  string version = 1;
+
+  // Автор аватара
+  string author = 2;
+
+  // Теги аватара
+  repeated string tags = 3;
+
+  // Мова аватара
+  string language = 4;
+
+  // Категорія аватара
+  string category = 5;
+
+  // Рейтинг аватара
+  double rating = 6;
+
+  // Кількість використань
+  int64 usage_count = 7;
+
+  // Розмір файлу аватара
+  int64 file_size = 8;
+
+  // Формат файлу аватара
+  string file_format = 9;
+
+  // Додаткові метадані
+  map<string, string> additional_data = 10;
+}
+
+// Аватар гравця
+message PlayerAvatar {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Аватар
+  Avatar avatar = 2;
+
+  // Час створення
+  google.protobuf.Timestamp created_at = 3;
+
+  // Час останнього використання
+  google.protobuf.Timestamp last_used_at = 4;
+
+  // Кількість використань
+  int64 usage_count = 5;
+
+  // Додаткові дані гравця
+  map<string, string> player_data = 6;
+}
+
+// Статистика аватара
+message AvatarStats {
+  // Загальна кількість аватарів
+  int64 total_avatars = 1;
+
+  // Кількість аватарів по типах
+  map<string, int64> avatars_by_type = 2;
+
+  // Кількість аватарів по категоріях
+  map<string, int64> avatars_by_category = 3;
+
+  // Середній рейтинг аватарів
+  double average_rating = 4;
+
+  // Найпопулярніший аватар
+  string most_popular_avatar_id = 5;
+
+  // Найвищий рейтинг аватара
+  string highest_rated_avatar_id = 6;
+
+  // Статистика по днях
+  map<string, int64> daily_stats = 7;
+
+  // Статистика по тижнях
+  map<string, int64> weekly_stats = 8;
+
+  // Статистика по місяцях
+  map<string, int64> monthly_stats = 9;
+}

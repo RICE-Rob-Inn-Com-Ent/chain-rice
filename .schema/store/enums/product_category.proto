@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package commerce.products.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/products/enums";
+
+// Product category enumeration
+enum ProductCategory {
+  // Unknown or unspecified product category
+  PRODUCT_CATEGORY_UNSPECIFIED = 0;
+
+  // Electronics and Technology
+  PRODUCT_CATEGORY_ELECTRONICS = 1;
+
+  // Clothing and Fashion
+  PRODUCT_CATEGORY_CLOTHING = 2;
+
+  // Home and Garden
+  PRODUCT_CATEGORY_HOME_GARDEN = 3;
+
+  // Sports and Outdoors
+  PRODUCT_CATEGORY_SPORTS_OUTDOORS = 4;
+
+  // Health and Beauty
+  PRODUCT_CATEGORY_HEALTH_BEAUTY = 5;
+
+  // Automotive
+  PRODUCT_CATEGORY_AUTOMOTIVE = 6;
+
+  // Books and Media
+  PRODUCT_CATEGORY_BOOKS_MEDIA = 7;
+
+  // Toys and Games
+  PRODUCT_CATEGORY_TOYS_GAMES = 8;
+
+  // Food and Beverages
+  PRODUCT_CATEGORY_FOOD_BEVERAGES = 9;
+
+  // Jewelry and Watches
+  PRODUCT_CATEGORY_JEWELRY_WATCHES = 10;
+
+  // Pet Supplies
+  PRODUCT_CATEGORY_PET_SUPPLIES = 11;
+
+  // Office Supplies
+  PRODUCT_CATEGORY_OFFICE_SUPPLIES = 12;
+
+  // Baby and Kids
+  PRODUCT_CATEGORY_BABY_KIDS = 13;
+
+  // Industrial and Scientific
+  PRODUCT_CATEGORY_INDUSTRIAL_SCIENTIFIC = 14;
+
+  // Musical Instruments
+  PRODUCT_CATEGORY_MUSICAL_INSTRUMENTS = 15;
+
+  // Art and Crafts
+  PRODUCT_CATEGORY_ART_CRAFTS = 16;
+
+  // Luggage and Travel
+  PRODUCT_CATEGORY_LUGGAGE_TRAVEL = 17;
+
+  // Computer and Software
+  PRODUCT_CATEGORY_COMPUTER_SOFTWARE = 18;
+
+  // Cell Phones and Accessories
+  PRODUCT_CATEGORY_CELL_PHONES_ACCESSORIES = 19;
+
+  // Video Games and Consoles
+  PRODUCT_CATEGORY_VIDEO_GAMES_CONSOLES = 20;
+
+  // Digital Services
+  PRODUCT_CATEGORY_DIGITAL_SERVICES = 21;
+
+  // Subscription Services
+  PRODUCT_CATEGORY_SUBSCRIPTION_SERVICES = 22;
+
+  // Custom Products
+  PRODUCT_CATEGORY_CUSTOM_PRODUCTS = 23;
+
+  // Wholesale Products
+  PRODUCT_CATEGORY_WHOLESALE_PRODUCTS = 24;
+
+  // Raw Materials
+  PRODUCT_CATEGORY_RAW_MATERIALS = 25;
+
+  // Machinery and Equipment
+  PRODUCT_CATEGORY_MACHINERY_EQUIPMENT = 26;
+
+  // Chemicals and Materials
+  PRODUCT_CATEGORY_CHEMICALS_MATERIALS = 27;
+
+  // Textiles and Fabrics
+  PRODUCT_CATEGORY_TEXTILES_FABRICS = 28;
+
+  // Packaging and Containers
+  PRODUCT_CATEGORY_PACKAGING_CONTAINERS = 29;
+
+  // Safety and Security
+  PRODUCT_CATEGORY_SAFETY_SECURITY = 30;
+}

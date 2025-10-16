@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package com.agriculture.animals.messages;
+
+import "agriculture/animals/messages/animal_unit.proto";
+import "google/protobuf/timestamp.proto";
+
+message AnimalHerd {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string herd_type = 4;
+  repeated string animal_ids = 5;
+  int32 total_count = 6;
+  int32 male_count = 7;
+  int32 female_count = 8;
+  int32 young_count = 9;
+  int32 adult_count = 10;
+  map<string, int32> animal_types = 11;
+  map<string, int32> breeds = 12;
+  string primary_pasture = 13;
+  string secondary_pasture = 14;
+  string facility_id = 15;
+  double total_area = 16;
+  string area_unit = 17;
+  string manager = 18;
+  string veterinarian = 19;
+  string feeding_program = 20;
+  string health_protocol = 21;
+  int32 healthy_count = 22;
+  int32 sick_count = 23;
+  int32 injured_count = 24;
+  int32 pregnant_count = 25;
+  double average_health_score = 26;
+  double total_milk_production = 27;
+  double total_egg_production = 28;
+  double total_wool_production = 29;
+  double average_weight = 30;
+  int32 breeding_males = 31;
+  int32 breeding_females = 32;
+  int32 expected_births = 33;
+  google.protobuf.Timestamp breeding_season_start = 34;
+  google.protobuf.Timestamp breeding_season_end = 35;
+  string primary_feed = 36;
+  string secondary_feed = 37;
+  double daily_feed_requirement = 38;
+  double daily_water_requirement = 39;
+  double feed_cost_per_day = 40;
+  double total_value = 41;
+  double total_costs = 42;
+  double total_revenue = 43;
+  double profit_loss = 44;
+  double growth_rate = 45;
+  double feed_efficiency = 46;
+  double mortality_rate = 47;
+  double birth_rate = 48;
+  double average_temperature = 49;
+  double average_humidity = 50;
+  string weather_conditions = 51;
+  string shelter_quality = 52;
+  bool is_active = 53;
+  bool is_quarantined = 54;
+  bool requires_attention = 55;
+  bool is_for_sale = 56;
+  string notes = 57;
+  repeated string observations = 58;
+  repeated string issues = 59;
+  google.protobuf.Timestamp created_at = 60;
+  google.protobuf.Timestamp updated_at = 61;
+  string created_by = 62;
+  string updated_by = 63;
+}
+
+message CreateAnimalHerdRequest {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+}
+
+message CreateAnimalHerdResponse {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetAnimalHerdRequest {
+  string herd_id = 1;
+}
+
+message GetAnimalHerdResponse {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListAnimalHerdRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string facility_id = 3;
+  string herd_type = 4;
+  bool is_active = 5;
+  string search_query = 6;
+}
+
+message ListAnimalHerdResponse {
+  repeated com.agriculture.animals.messages.AnimalHerd herds = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateAnimalHerdRequest {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  repeated string update_mask = 2;
+}
+
+message UpdateAnimalHerdResponse {
+  com.agriculture.animals.messages.AnimalHerd herd = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteAnimalHerdRequest {
+  string herd_id = 1;
+}

@@ -1,0 +1,171 @@
+syntax = "proto3";
+
+package crm_hr.customers.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/customers/messages";
+
+// Interaction represents an interaction or touchpoint with a customer
+message Interaction {
+  // Unique identifier for the interaction
+  string id = 1;
+
+  // Associated customer ID
+  string customer_id = 2;
+
+  // Associated contact ID (if specific contact was involved)
+  string contact_id = 3;
+
+  // Interaction details
+  string interaction_type = 4; // call, email, meeting, chat, support_ticket, etc.
+  string channel = 5; // phone, email, web, mobile, social, etc.
+  string direction = 6; // inbound, outbound
+
+  // Subject and description
+  string subject = 7;
+  string description = 8;
+  string outcome = 9;
+
+  // Participants
+  string initiated_by = 10; // user ID who initiated the interaction
+  repeated string participants = 11; // list of user IDs involved
+  string assigned_to = 12; // user ID responsible for follow-up
+
+  // Timing information
+  google.protobuf.Timestamp started_at = 13;
+  google.protobuf.Timestamp ended_at = 14;
+  google.protobuf.Duration duration = 15;
+
+  // Interaction metadata
+  string status = 16; // completed, in_progress, cancelled, failed
+  string priority = 17; // low, medium, high, urgent
+  repeated string tags = 18;
+  map<string, string> custom_fields = 19;
+
+  // Related entities
+  string related_deal_id = 20;
+  string related_ticket_id = 21;
+  string related_campaign_id = 22;
+
+  // Follow-up information
+  bool requires_follow_up = 23;
+  google.protobuf.Timestamp follow_up_date = 24;
+  string follow_up_notes = 25;
+
+  // Quality and satisfaction
+  int32 satisfaction_rating = 26; // 1-5 scale
+  string satisfaction_feedback = 27;
+  int32 quality_score = 28; // 1-10 scale
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 29;
+  google.protobuf.Timestamp updated_at = 30;
+}
+
+// InteractionSummary represents aggregated interaction data for a customer
+message InteractionSummary {
+  // Associated customer ID
+  string customer_id = 1;
+
+  // Interaction counts by type
+  map<string, int32> interaction_counts = 2;
+
+  // Interaction counts by channel
+  map<string, int32> channel_counts = 3;
+
+  // Recent activity
+  google.protobuf.Timestamp last_interaction_at = 4;
+  string last_interaction_type = 5;
+  string last_interaction_channel = 6;
+
+  // Engagement metrics
+  int32 total_interactions = 7;
+  double average_interactions_per_month = 8;
+  int32 days_since_last_interaction = 9;
+
+  // Quality metrics
+  double average_satisfaction_rating = 10;
+  double average_quality_score = 11;
+
+  // Response metrics
+  double response_rate = 12; // percentage of interactions that received responses
+  double average_response_time_hours = 13;
+
+  // Calculated at timestamp
+  google.protobuf.Timestamp calculated_at = 14;
+}
+
+// InteractionTemplate represents a reusable template for interactions
+message InteractionTemplate {
+  // Unique identifier for the template
+  string id = 1;
+
+  // Template information
+  string name = 2;
+  string description = 3;
+  string interaction_type = 4;
+  string channel = 5;
+
+  // Template content
+  string subject_template = 6;
+  string description_template = 7;
+  string outcome_template = 8;
+
+  // Template metadata
+  bool is_active = 9;
+  string created_by = 10;
+  string team_id = 11;
+  repeated string tags = 12;
+
+  // Usage statistics
+  int32 usage_count = 13;
+  google.protobuf.Timestamp last_used_at = 14;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+// InteractionCampaign represents a campaign of interactions
+message InteractionCampaign {
+  // Unique identifier for the campaign
+  string id = 1;
+
+  // Campaign information
+  string name = 2;
+  string description = 3;
+  string campaign_type = 4; // email, call, sms, etc.
+  string status = 5; // draft, active, paused, completed, cancelled
+
+  // Campaign details
+  string target_audience = 6; // customer segment or list
+  string message_template = 7;
+  google.protobuf.Timestamp scheduled_start = 8;
+  google.protobuf.Timestamp scheduled_end = 9;
+
+  // Campaign metrics
+  int32 target_count = 10;
+  int32 sent_count = 11;
+  int32 delivered_count = 12;
+  int32 opened_count = 13;
+  int32 clicked_count = 14;
+  int32 responded_count = 15;
+
+  // Response rates
+  double delivery_rate = 16;
+  double open_rate = 17;
+  double click_rate = 18;
+  double response_rate = 19;
+
+  // Campaign metadata
+  string created_by = 20;
+  string team_id = 21;
+  repeated string tags = 22;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+  google.protobuf.Timestamp completed_at = 25;
+}

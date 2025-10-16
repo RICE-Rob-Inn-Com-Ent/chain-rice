@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package integrations;
+
+option go_package = "github.com/rice-dev/integrations";
+
+// Main integrations module that imports all integration services
+// This file serves as the central entry point for all integration functionality
+
+// EDI Services
+import "integrations/edi/services/edi_processing_service.proto";
+import "integrations/edi/services/edi_partner_service.proto";
+import "integrations/edi/services/edi_reporting_service.proto";
+
+// External API Services
+import "integrations/external_apis/services/api_gateway_service.proto";
+
+// Webhook Services
+import "integrations/webhooks/services/webhook_subscription_service.proto";
+import "integrations/webhooks/services/webhook_delivery_service.proto";
+import "integrations/webhooks/services/webhook_monitoring_service.proto";
+
+// Re-export commonly used types for easier access
+import "integrations/edi/enums/edi_document_type.proto";
+import "integrations/edi/enums/edi_status.proto";
+import "integrations/edi/enums/edi_partner_type.proto";
+import "integrations/external_apis/enums/api_provider_type.proto";
+import "integrations/external_apis/enums/api_auth_method.proto";
+import "integrations/external_apis/enums/api_status.proto";
+import "integrations/webhooks/enums/webhook_event_type.proto";
+import "integrations/webhooks/enums/webhook_status.proto";
+import "integrations/webhooks/enums/webhook_retry_policy.proto";
+
+// Integration Services Summary
+//
+// EDI Integration Services:
+// - EdiProcessingService: Document processing, validation, transformation, delivery
+// - EdiPartnerService: Partner management, configuration, onboarding, health monitoring
+// - EdiReportingService: Analytics, KPIs, SLA monitoring, compliance reporting
+//
+// External API Integration Services:
+// - ApiGatewayService: Request routing, retries, caching, rate limiting, circuit breaking
+//
+// Webhook Integration Services:
+// - WebhookSubscriptionService: Manage webhook subscriptions, endpoints, security, and filtering
+// - WebhookDeliveryService: Event delivery, retries, queue management, and validation
+// - WebhookMonitoringService: Real-time monitoring, failure detection, SLA tracking, and reporting
+//
+// This module provides comprehensive integration capabilities for:
+// - EDI document exchange with trading partners
+// - External API integrations with various service providers
+// - Webhook event handling and delivery
+// - Real-time monitoring and reporting
+// - Partner onboarding and management
+// - Compliance and audit capabilities

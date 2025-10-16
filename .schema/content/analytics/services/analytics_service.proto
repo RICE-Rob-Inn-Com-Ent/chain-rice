@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.analytics.services;
+
+import "marketing/analytics/messages/analytics_request.proto";
+import "marketing/analytics/messages/analytics_response.proto";
+
+// Analytics service for managing marketing analytics data
+service AnalyticsService {
+  // Create new analytics data
+  rpc CreateAnalytics(marketing.analytics.messages.CreateAnalyticsRequest) returns (marketing.analytics.messages.CreateAnalyticsResponse);
+
+  // Get analytics data by ID
+  rpc GetAnalytics(marketing.analytics.messages.GetAnalyticsRequest) returns (marketing.analytics.messages.GetAnalyticsResponse);
+
+  // List analytics data with pagination and filtering
+  rpc ListAnalytics(marketing.analytics.messages.ListAnalyticsRequest) returns (marketing.analytics.messages.ListAnalyticsResponse);
+
+  // Update existing analytics data
+  rpc UpdateAnalytics(marketing.analytics.messages.UpdateAnalyticsRequest) returns (marketing.analytics.messages.UpdateAnalyticsResponse);
+
+  // Delete analytics data
+  rpc DeleteAnalytics(marketing.analytics.messages.DeleteAnalyticsRequest) returns (marketing.analytics.messages.DeleteAnalyticsResponse);
+}

@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package com.agriculture.animals.enums;
-
-enum AnimalSex {
-  UNSPECIFIED = 0;
-  MALE = 1;
-  FEMALE = 2;
-}

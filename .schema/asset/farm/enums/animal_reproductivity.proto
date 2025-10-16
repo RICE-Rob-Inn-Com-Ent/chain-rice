@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.agriculture.animals.enums;
+
+enum AnimalReproductivity {
+  UNSPECIFIED = 0;
+  IN_HEAT = 1;
+  PREGNANT = 2;
+  LACTATING = 3;
+  BREEDING_READY = 4;
+  CASTRATED = 5;
+  POST_PARTUM = 6;
+}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package crm_hr.hr.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/hr/enums";
+
+// PayrollStatus represents the status of payroll processing
+enum PayrollStatus {
+  // Unspecified status - should not be used in production
+  PAYROLL_STATUS_UNSPECIFIED = 0;
+
+  // Processing states
+  DRAFT = 1;
+  PENDING_APPROVAL = 2;
+  APPROVED = 3;
+  PROCESSING = 4;
+  PROCESSED = 5;
+
+  // Completion states
+  COMPLETED = 6;
+  DISTRIBUTED = 7;
+  CONFIRMED = 8;
+
+  // Error states
+  FAILED = 9;
+  CANCELLED = 10;
+  REJECTED = 11;
+  REVERSED = 12;
+
+  // Special states
+  ON_HOLD = 13;
+  PENDING_REVIEW = 14;
+  UNDER_INVESTIGATION = 15;
+
+  // Correction states
+  CORRECTED = 16;
+  ADJUSTED = 17;
+  REPROCESSING = 18;
+}

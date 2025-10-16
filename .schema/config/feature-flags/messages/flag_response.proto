@@ -1,0 +1,376 @@
+syntax = "proto3";
+
+package settings.feature_flags.messages;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "settings/feature-flags/enums/flag_status.proto";
+
+// Feature flag data structure
+message FeatureFlag {
+  // Unique identifier for the feature flag
+  string id = 1;
+
+  // The feature flag name identifier
+  string name = 2;
+
+  // The feature flag display name
+  string display_name = 3;
+
+  // The current status of the feature flag
+  settings.feature_flags.enums.FlagStatus status = 4;
+
+  // The rollout percentage (0-100) for gradual rollout
+  double rollout_percentage = 5;
+
+  // Optional description of what this feature flag controls
+  string description = 6;
+
+  // Optional tags for categorization and search
+  repeated string tags = 7;
+
+  // Optional category for organizing feature flags
+  string category = 8;
+
+  // Optional metadata about the feature flag
+  map<string, string> metadata = 9;
+
+  // Optional default value when flag is not explicitly set
+  google.protobuf.Value default_value = 10;
+
+  // Optional JSON schema for flag value validation
+  google.protobuf.Struct value_schema = 11;
+
+  // Whether this flag affects critical functionality
+  bool is_critical = 12;
+
+  // Whether this flag requires immediate deployment
+  bool requires_immediate_deployment = 13;
+
+  // Optional owner/team responsible for this flag
+  string owner = 14;
+
+  // Optional contact information for flag issues
+  string contact = 15;
+
+  // Optional documentation URL
+  string documentation_url = 16;
+
+  // Optional JIRA ticket or issue reference
+  string issue_reference = 17;
+
+  // Whether this flag is user-facing
+  bool is_user_facing = 18;
+
+  // Whether this flag affects performance
+  bool affects_performance = 19;
+
+  // Whether this flag affects security
+  bool affects_security = 20;
+
+  // Whether this flag affects compliance
+  bool affects_compliance = 21;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 22;
+
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 23;
+
+  // Version number for optimistic concurrency control
+  int32 version = 24;
+
+  // Whether this flag is active
+  bool is_active = 25;
+
+  // User who created the flag
+  string created_by = 26;
+
+  // User who last updated the flag
+  string updated_by = 27;
+
+  // Usage statistics
+  FlagUsageStats usage_stats = 28;
+}
+
+// Feature flag usage statistics
+message FlagUsageStats {
+  // Total number of evaluations
+  int64 total_evaluations = 1;
+
+  // Number of positive evaluations (enabled)
+  int64 positive_evaluations = 2;
+
+  // Number of negative evaluations (disabled)
+  int64 negative_evaluations = 3;
+
+  // Last evaluation timestamp
+  google.protobuf.Timestamp last_evaluated = 4;
+
+  // Unique users who have evaluated this flag
+  int64 unique_users = 5;
+
+  // Unique sessions that have evaluated this flag
+  int64 unique_sessions = 6;
+
+  // Evaluation rate per hour
+  double evaluations_per_hour = 7;
+
+  // Success rate (positive evaluations / total evaluations)
+  double success_rate = 8;
+}
+
+// Response message for creating a feature flag
+message CreateFlagResponse {
+  // The created feature flag
+  FeatureFlag flag = 1;
+
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for retrieving a feature flag
+message GetFlagResponse {
+  // The requested feature flag
+  FeatureFlag flag = 1;
+}
+
+// Response message for retrieving a feature flag by name
+message GetFlagByNameResponse {
+  // The requested feature flag
+  FeatureFlag flag = 1;
+}
+
+// Response message for listing feature flags
+message ListFlagsResponse {
+  // List of feature flags
+  repeated FeatureFlag flags = 1;
+
+  // Next page token for pagination
+  string next_page_token = 2;
+
+  // Total count of flags matching the filter
+  int32 total_count = 3;
+
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Response message for updating a feature flag
+message UpdateFlagResponse {
+  // The updated feature flag
+  FeatureFlag flag = 1;
+
+  // Operation status message
+  string message = 2;
+}
+
+// Response message for deleting a feature flag
+message DeleteFlagResponse {
+  // Whether the deletion was successful
+  bool success = 1;
+
+  // Operation status message
+  string message = 2;
+
+  // ID of the deleted flag
+  string deleted_id = 3;
+}
+
+// Response message for bulk operations on feature flags
+message BulkFlagsResponse {
+  // List of created/updated feature flags
+  repeated FeatureFlag flags = 1;
+
+  // Number of flags processed successfully
+  int32 success_count = 2;
+
+  // Number of flags that failed processing
+  int32 failure_count = 3;
+
+  // List of error messages for failed flags
+  repeated string errors = 4;
+
+  // Overall operation status message
+  string message = 5;
+}
+
+// Response message for searching feature flags
+message SearchFlagsResponse {
+  // List of matching feature flags
+  repeated FeatureFlag flags = 1;
+
+  // Next page token for pagination
+  string next_page_token = 2;
+
+  // Total count of matching flags
+  int32 total_count = 3;
+
+  // Whether there are more pages available
+  bool has_more = 4;
+
+  // Search query that was executed
+  string query = 5;
+
+  // Search execution time in milliseconds
+  int64 execution_time_ms = 6;
+}
+
+// Flag evaluation result
+message FlagEvaluation {
+  // The flag name
+  string flag_name = 1;
+
+  // The evaluated value
+  google.protobuf.Value value = 2;
+
+  // Whether the flag is enabled
+  bool enabled = 3;
+
+  // The reason for the evaluation result
+  string reason = 4;
+
+  // The variant returned (if applicable)
+  string variant = 5;
+
+  // The evaluation timestamp
+  google.protobuf.Timestamp evaluated_at = 6;
+
+  // Additional evaluation metadata
+  map<string, string> metadata = 7;
+}
+
+// Response message for evaluating a feature flag
+message EvaluateFlagResponse {
+  // The flag evaluation result
+  FlagEvaluation evaluation = 1;
+
+  // Whether the evaluation was successful
+  bool success = 2;
+
+  // Error message if evaluation failed
+  string error_message = 3;
+}
+
+// Response message for bulk flag evaluation
+message BulkEvaluateFlagsResponse {
+  // List of flag evaluation results
+  repeated FlagEvaluation evaluations = 1;
+
+  // Number of flags evaluated successfully
+  int32 success_count = 2;
+
+  // Number of flags that failed evaluation
+  int32 failure_count = 3;
+
+  // List of error messages for failed evaluations
+  repeated string errors = 4;
+
+  // Overall evaluation status message
+  string message = 5;
+
+  // Evaluation execution time in milliseconds
+  int64 execution_time_ms = 6;
+}
+
+// Response message for setting flag value
+message SetFlagValueResponse {
+  // Whether the value was set successfully
+  bool success = 1;
+
+  // Operation status message
+  string message = 2;
+
+  // The set flag value
+  google.protobuf.Value value = 3;
+
+  // When the value expires (if applicable)
+  string expires_at = 4;
+}
+
+// Feature flags statistics for analytics
+message FeatureFlagsStats {
+  // Total number of feature flags
+  int32 total_flags = 1;
+
+  // Number of flags by status
+  map<string, int32> flags_by_status = 2;
+
+  // Number of flags by category
+  map<string, int32> flags_by_category = 3;
+
+  // Number of critical flags
+  int32 critical_flags = 4;
+
+  // Number of user-facing flags
+  int32 user_facing_flags = 5;
+
+  // Number of flags requiring immediate deployment
+  int32 immediate_deployment_flags = 6;
+
+  // Most active flags by evaluation count
+  repeated ActiveFlag active_flags = 7;
+
+  // Last updated timestamp
+  google.protobuf.Timestamp last_updated = 8;
+}
+
+// Active flag information
+message ActiveFlag {
+  // Flag ID
+  string flag_id = 1;
+
+  // Flag name
+  string flag_name = 2;
+
+  // Flag display name
+  string flag_display_name = 3;
+
+  // Evaluation count
+  int64 evaluation_count = 4;
+
+  // Success rate
+  double success_rate = 5;
+
+  // Last evaluated timestamp
+  google.protobuf.Timestamp last_evaluated = 6;
+}
+
+// Flag audit log entry
+message FlagAuditLog {
+  // Unique identifier for the audit log entry
+  string id = 1;
+
+  // Flag ID that was modified
+  string flag_id = 2;
+
+  // Flag name
+  string flag_name = 3;
+
+  // Action performed: "create", "update", "delete", "evaluate", "set_value"
+  string action = 4;
+
+  // Previous value (for updates and value changes)
+  google.protobuf.Value old_value = 5;
+
+  // New value (for creates, updates, and value changes)
+  google.protobuf.Value new_value = 6;
+
+  // User who performed the action
+  string user_id = 7;
+
+  // User's IP address
+  string user_ip = 8;
+
+  // User agent string
+  string user_agent = 9;
+
+  // Action timestamp
+  google.protobuf.Timestamp timestamp = 10;
+
+  // Additional metadata about the action
+  map<string, string> metadata = 11;
+
+  // Reason for the action
+  string reason = 12;
+}

@@ -1,0 +1,566 @@
+syntax = "proto3";
+
+package gaming.marketplace.services;
+
+import "gaming/marketplace/messages/item_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/marketplace/services";
+
+// Сервіс управління предметами
+service ItemService {
+  // Створити предмет
+  rpc CreateItem(CreateItemRequest) returns (CreateItemResponse);
+
+  // Отримати предмет
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
+
+  // Оновити предмет
+  rpc UpdateItem(UpdateItemRequest) returns (UpdateItemResponse);
+
+  // Видалити предмет
+  rpc DeleteItem(DeleteItemRequest) returns (DeleteItemResponse);
+
+  // Отримати список предметів
+  rpc ListItems(ListItemsRequest) returns (ListItemsResponse);
+
+  // Пошук предметів
+  rpc SearchItems(SearchItemsRequest) returns (SearchItemsResponse);
+
+  // Отримати статистику предмета
+  rpc GetItemStats(GetItemStatsRequest) returns (GetItemStatsResponse);
+
+  // Отримати атрибути предмета
+  rpc GetItemAttributes(GetItemAttributesRequest) returns (GetItemAttributesResponse);
+
+  // Оновити атрибути предмета
+  rpc UpdateItemAttributes(UpdateItemAttributesRequest) returns (UpdateItemAttributesResponse);
+
+  // Отримати категорії предметів
+  rpc GetItemCategories(GetItemCategoriesRequest) returns (GetItemCategoriesResponse);
+
+  // Отримати підкатегорії предметів
+  rpc GetItemSubcategories(GetItemSubcategoriesRequest) returns (GetItemSubcategoriesResponse);
+}
+
+// Запит створення предмета
+message CreateItemRequest {
+  string name = 1;
+  string description = 2;
+  gaming.marketplace.enums.ItemType type = 3;
+  string category = 4;
+  string subcategory = 5;
+  int64 price = 6;
+  string currency = 7;
+  int32 quantity = 8;
+  int32 max_quantity = 9;
+  bool is_tradeable = 10;
+  bool is_sellable = 11;
+  bool is_buyable = 12;
+  bool is_auctionable = 13;
+  bool is_giftable = 14;
+  string rarity = 15;
+  int32 level_requirement = 16;
+  string class_requirement = 17;
+  string race_requirement = 18;
+  string faction_requirement = 19;
+  string guild_requirement = 20;
+  string team_requirement = 21;
+  string alliance_requirement = 22;
+  string coalition_requirement = 23;
+  string league_requirement = 24;
+  string association_requirement = 25;
+  string organization_requirement = 26;
+  string corporation_requirement = 27;
+  string company_requirement = 28;
+  string firm_requirement = 29;
+  string institution_requirement = 30;
+  string establishment_requirement = 31;
+  string facility_requirement = 32;
+  string building_requirement = 33;
+  string structure_requirement = 34;
+  string construction_requirement = 35;
+  string architecture_requirement = 36;
+  string design_requirement = 37;
+  string model_requirement = 38;
+  string version_requirement = 39;
+  string edition_requirement = 40;
+  string series_requirement = 41;
+  string collection_requirement = 42;
+  string set_requirement = 43;
+  string group_requirement = 44;
+  string category_requirement = 45;
+  string class_requirement = 46;
+  string type_requirement = 47;
+  string kind_requirement = 48;
+  string sort_requirement = 49;
+  string variety_requirement = 50;
+  string form_requirement = 51;
+  string shape_requirement = 52;
+  string figure_requirement = 53;
+  string pattern_requirement = 54;
+  string style_requirement = 55;
+  string fashion_requirement = 56;
+  string trend_requirement = 57;
+  string mode_requirement = 58;
+  string manner_requirement = 59;
+  string way_requirement = 60;
+  string method_requirement = 61;
+  string technique_requirement = 62;
+  string approach_requirement = 63;
+  string strategy_requirement = 64;
+  string tactic_requirement = 65;
+  string plan_requirement = 66;
+  string scheme_requirement = 67;
+  string system_requirement = 68;
+  string process_requirement = 69;
+  string procedure_requirement = 70;
+  string protocol_requirement = 71;
+  string standard_requirement = 72;
+  string rule_requirement = 73;
+  string regulation_requirement = 74;
+  string law_requirement = 75;
+  string act_requirement = 76;
+  string statute_requirement = 77;
+  string ordinance_requirement = 78;
+  string decree_requirement = 79;
+  string edict_requirement = 80;
+  string mandate_requirement = 81;
+  string order_requirement = 82;
+  string command_requirement = 83;
+  string instruction_requirement = 84;
+  string direction_requirement = 85;
+  string guidance_requirement = 86;
+  string advice_requirement = 87;
+  string suggestion_requirement = 88;
+  string recommendation_requirement = 89;
+  string proposal_requirement = 90;
+  string offer_requirement = 91;
+  string bid_requirement = 92;
+  string auction_requirement = 93;
+  string sale_requirement = 94;
+  string purchase_requirement = 95;
+  string trade_requirement = 96;
+  string exchange_requirement = 97;
+  string swap_requirement = 98;
+  string barter_requirement = 99;
+  map<string, string> metadata = 100;
+}
+
+// Відповідь створення предмета
+message CreateItemResponse {
+  bool success = 1;
+  string item_id = 2;
+  string message = 3;
+  gaming.marketplace.messages.Item item = 4;
+}
+
+// Запит отримання предмета
+message GetItemRequest {
+  string item_id = 1;
+}
+
+// Відповідь отримання предмета
+message GetItemResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.Item item = 3;
+}
+
+// Запит оновлення предмета
+message UpdateItemRequest {
+  string item_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.marketplace.enums.ItemType type = 4;
+  string category = 5;
+  string subcategory = 6;
+  int64 price = 7;
+  string currency = 8;
+  int32 quantity = 9;
+  int32 max_quantity = 10;
+  bool is_tradeable = 11;
+  bool is_sellable = 12;
+  bool is_buyable = 13;
+  bool is_auctionable = 14;
+  bool is_giftable = 15;
+  string rarity = 16;
+  int32 level_requirement = 17;
+  string class_requirement = 18;
+  string race_requirement = 19;
+  string faction_requirement = 20;
+  string guild_requirement = 21;
+  string team_requirement = 22;
+  string alliance_requirement = 23;
+  string coalition_requirement = 24;
+  string league_requirement = 25;
+  string association_requirement = 26;
+  string organization_requirement = 27;
+  string corporation_requirement = 28;
+  string company_requirement = 29;
+  string firm_requirement = 30;
+  string institution_requirement = 31;
+  string establishment_requirement = 32;
+  string facility_requirement = 33;
+  string building_requirement = 34;
+  string structure_requirement = 35;
+  string construction_requirement = 36;
+  string architecture_requirement = 37;
+  string design_requirement = 38;
+  string model_requirement = 39;
+  string version_requirement = 40;
+  string edition_requirement = 41;
+  string series_requirement = 42;
+  string collection_requirement = 43;
+  string set_requirement = 44;
+  string group_requirement = 45;
+  string category_requirement = 46;
+  string class_requirement = 47;
+  string type_requirement = 48;
+  string kind_requirement = 49;
+  string sort_requirement = 50;
+  string variety_requirement = 51;
+  string form_requirement = 52;
+  string shape_requirement = 53;
+  string figure_requirement = 54;
+  string pattern_requirement = 55;
+  string style_requirement = 56;
+  string fashion_requirement = 57;
+  string trend_requirement = 58;
+  string mode_requirement = 59;
+  string manner_requirement = 60;
+  string way_requirement = 61;
+  string method_requirement = 62;
+  string technique_requirement = 63;
+  string approach_requirement = 64;
+  string strategy_requirement = 65;
+  string tactic_requirement = 66;
+  string plan_requirement = 67;
+  string scheme_requirement = 68;
+  string system_requirement = 69;
+  string process_requirement = 70;
+  string procedure_requirement = 71;
+  string protocol_requirement = 72;
+  string standard_requirement = 73;
+  string rule_requirement = 74;
+  string regulation_requirement = 75;
+  string law_requirement = 76;
+  string act_requirement = 77;
+  string statute_requirement = 78;
+  string ordinance_requirement = 79;
+  string decree_requirement = 80;
+  string edict_requirement = 81;
+  string mandate_requirement = 82;
+  string order_requirement = 83;
+  string command_requirement = 84;
+  string instruction_requirement = 85;
+  string direction_requirement = 86;
+  string guidance_requirement = 87;
+  string advice_requirement = 88;
+  string suggestion_requirement = 89;
+  string recommendation_requirement = 90;
+  string proposal_requirement = 91;
+  string offer_requirement = 92;
+  string bid_requirement = 93;
+  string auction_requirement = 94;
+  string sale_requirement = 95;
+  string purchase_requirement = 96;
+  string trade_requirement = 97;
+  string exchange_requirement = 98;
+  string swap_requirement = 99;
+  string barter_requirement = 100;
+  map<string, string> metadata = 101;
+}
+
+// Відповідь оновлення предмета
+message UpdateItemResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.Item item = 3;
+}
+
+// Запит видалення предмета
+message DeleteItemRequest {
+  string item_id = 1;
+}
+
+// Відповідь видалення предмета
+message DeleteItemResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку предметів
+message ListItemsRequest {
+  string category = 1;
+  string subcategory = 2;
+  gaming.marketplace.enums.ItemType type = 3;
+  string rarity = 4;
+  int32 level_requirement = 5;
+  string class_requirement = 6;
+  string race_requirement = 7;
+  string faction_requirement = 8;
+  string guild_requirement = 9;
+  string team_requirement = 10;
+  string alliance_requirement = 11;
+  string coalition_requirement = 12;
+  string league_requirement = 13;
+  string association_requirement = 14;
+  string organization_requirement = 15;
+  string corporation_requirement = 16;
+  string company_requirement = 17;
+  string firm_requirement = 18;
+  string institution_requirement = 19;
+  string establishment_requirement = 20;
+  string facility_requirement = 21;
+  string building_requirement = 22;
+  string structure_requirement = 23;
+  string construction_requirement = 24;
+  string architecture_requirement = 25;
+  string design_requirement = 26;
+  string model_requirement = 27;
+  string version_requirement = 28;
+  string edition_requirement = 29;
+  string series_requirement = 30;
+  string collection_requirement = 31;
+  string set_requirement = 32;
+  string group_requirement = 33;
+  string category_requirement = 34;
+  string class_requirement = 35;
+  string type_requirement = 36;
+  string kind_requirement = 37;
+  string sort_requirement = 38;
+  string variety_requirement = 39;
+  string form_requirement = 40;
+  string shape_requirement = 41;
+  string figure_requirement = 42;
+  string pattern_requirement = 43;
+  string style_requirement = 44;
+  string fashion_requirement = 45;
+  string trend_requirement = 46;
+  string mode_requirement = 47;
+  string manner_requirement = 48;
+  string way_requirement = 49;
+  string method_requirement = 50;
+  string technique_requirement = 51;
+  string approach_requirement = 52;
+  string strategy_requirement = 53;
+  string tactic_requirement = 54;
+  string plan_requirement = 55;
+  string scheme_requirement = 56;
+  string system_requirement = 57;
+  string process_requirement = 58;
+  string procedure_requirement = 59;
+  string protocol_requirement = 60;
+  string standard_requirement = 61;
+  string rule_requirement = 62;
+  string regulation_requirement = 63;
+  string law_requirement = 64;
+  string act_requirement = 65;
+  string statute_requirement = 66;
+  string ordinance_requirement = 67;
+  string decree_requirement = 68;
+  string edict_requirement = 69;
+  string mandate_requirement = 70;
+  string order_requirement = 71;
+  string command_requirement = 72;
+  string instruction_requirement = 73;
+  string direction_requirement = 74;
+  string guidance_requirement = 75;
+  string advice_requirement = 76;
+  string suggestion_requirement = 77;
+  string recommendation_requirement = 78;
+  string proposal_requirement = 79;
+  string offer_requirement = 80;
+  string bid_requirement = 81;
+  string auction_requirement = 82;
+  string sale_requirement = 83;
+  string purchase_requirement = 84;
+  string trade_requirement = 85;
+  string exchange_requirement = 86;
+  string swap_requirement = 87;
+  string barter_requirement = 88;
+  int32 limit = 89;
+  int32 offset = 90;
+  string sort_by = 91;
+  bool ascending = 92;
+  map<string, string> metadata_filters = 93;
+}
+
+// Відповідь списку предметів
+message ListItemsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Item items = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит пошуку предметів
+message SearchItemsRequest {
+  string query = 1;
+  string category = 2;
+  string subcategory = 3;
+  gaming.marketplace.enums.ItemType type = 4;
+  string rarity = 5;
+  int32 level_requirement = 6;
+  string class_requirement = 7;
+  string race_requirement = 8;
+  string faction_requirement = 9;
+  string guild_requirement = 10;
+  string team_requirement = 11;
+  string alliance_requirement = 12;
+  string coalition_requirement = 13;
+  string league_requirement = 14;
+  string association_requirement = 15;
+  string organization_requirement = 16;
+  string corporation_requirement = 17;
+  string company_requirement = 18;
+  string firm_requirement = 19;
+  string institution_requirement = 20;
+  string establishment_requirement = 21;
+  string facility_requirement = 22;
+  string building_requirement = 23;
+  string structure_requirement = 24;
+  string construction_requirement = 25;
+  string architecture_requirement = 26;
+  string design_requirement = 27;
+  string model_requirement = 28;
+  string version_requirement = 29;
+  string edition_requirement = 30;
+  string series_requirement = 31;
+  string collection_requirement = 32;
+  string set_requirement = 33;
+  string group_requirement = 34;
+  string category_requirement = 35;
+  string class_requirement = 36;
+  string type_requirement = 37;
+  string kind_requirement = 38;
+  string sort_requirement = 39;
+  string variety_requirement = 40;
+  string form_requirement = 41;
+  string shape_requirement = 42;
+  string figure_requirement = 43;
+  string pattern_requirement = 44;
+  string style_requirement = 45;
+  string fashion_requirement = 46;
+  string trend_requirement = 47;
+  string mode_requirement = 48;
+  string manner_requirement = 49;
+  string way_requirement = 50;
+  string method_requirement = 51;
+  string technique_requirement = 52;
+  string approach_requirement = 53;
+  string strategy_requirement = 54;
+  string tactic_requirement = 55;
+  string plan_requirement = 56;
+  string scheme_requirement = 57;
+  string system_requirement = 58;
+  string process_requirement = 59;
+  string procedure_requirement = 60;
+  string protocol_requirement = 61;
+  string standard_requirement = 62;
+  string rule_requirement = 63;
+  string regulation_requirement = 64;
+  string law_requirement = 65;
+  string act_requirement = 66;
+  string statute_requirement = 67;
+  string ordinance_requirement = 68;
+  string decree_requirement = 69;
+  string edict_requirement = 70;
+  string mandate_requirement = 71;
+  string order_requirement = 72;
+  string command_requirement = 73;
+  string instruction_requirement = 74;
+  string direction_requirement = 75;
+  string guidance_requirement = 76;
+  string advice_requirement = 77;
+  string suggestion_requirement = 78;
+  string recommendation_requirement = 79;
+  string proposal_requirement = 80;
+  string offer_requirement = 81;
+  string bid_requirement = 82;
+  string auction_requirement = 83;
+  string sale_requirement = 84;
+  string purchase_requirement = 85;
+  string trade_requirement = 86;
+  string exchange_requirement = 87;
+  string swap_requirement = 88;
+  string barter_requirement = 89;
+  int32 limit = 90;
+  int32 offset = 91;
+  string sort_by = 92;
+  bool ascending = 93;
+  map<string, string> metadata_filters = 94;
+}
+
+// Відповідь пошуку предметів
+message SearchItemsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Item items = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит статистики предмета
+message GetItemStatsRequest {
+  string item_id = 1;
+}
+
+// Відповідь статистики предмета
+message GetItemStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.ItemStats stats = 3;
+}
+
+// Запит атрибутів предмета
+message GetItemAttributesRequest {
+  string item_id = 1;
+}
+
+// Відповідь атрибутів предмета
+message GetItemAttributesResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.ItemAttributes attributes = 3;
+}
+
+// Запит оновлення атрибутів предмета
+message UpdateItemAttributesRequest {
+  string item_id = 1;
+  gaming.marketplace.messages.ItemAttributes attributes = 2;
+}
+
+// Відповідь оновлення атрибутів предмета
+message UpdateItemAttributesResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.ItemAttributes attributes = 3;
+}
+
+// Запит категорій предметів
+message GetItemCategoriesRequest {
+  string parent_category = 1;
+}
+
+// Відповідь категорій предметів
+message GetItemCategoriesResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string categories = 3;
+}
+
+// Запит підкатегорій предметів
+message GetItemSubcategoriesRequest {
+  string category = 1;
+}
+
+// Відповідь підкатегорій предметів
+message GetItemSubcategoriesResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string subcategories = 3;
+}

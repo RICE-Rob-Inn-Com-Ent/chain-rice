@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package core.common.enums;
+
+// LanguageCode includes a representative subset of ISO-639-1 codes.
+enum LanguageCode {
+  LANGUAGE_CODE_UNSPECIFIED = 0; // Unspecified
+  LANGUAGE_CODE_EN = 1; // English
+  LANGUAGE_CODE_PL = 2; // Polish
+  LANGUAGE_CODE_ES = 3; // Spanish
+  LANGUAGE_CODE_FR = 4; // French
+  LANGUAGE_CODE_DE = 5; // German
+  LANGUAGE_CODE_IT = 6; // Italian
+  LANGUAGE_CODE_PT = 7; // Portuguese
+  LANGUAGE_CODE_RU = 8; // Russian
+  LANGUAGE_CODE_JA = 9; // Japanese
+  LANGUAGE_CODE_KO = 10; // Korean
+  LANGUAGE_CODE_ZH = 11; // Chinese
+}

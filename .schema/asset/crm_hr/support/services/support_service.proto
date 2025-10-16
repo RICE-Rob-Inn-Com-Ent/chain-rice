@@ -1,0 +1,917 @@
+syntax = "proto3";
+
+package crm_hr.support.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "crm_hr/support/messages/support_ticket.proto";
+import "crm_hr/support/messages/support_reply.proto";
+import "crm_hr/support/messages/support_sla.proto";
+import "crm_hr/support/enums/ticket_status.proto";
+import "crm_hr/support/enums/ticket_priority.proto";
+import "crm_hr/support/enums/support_channel.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/support/services";
+
+// SupportService provides comprehensive support ticket management functionality
+service SupportService {
+  // Support Ticket Management
+  rpc CreateSupportTicket(CreateSupportTicketRequest) returns (SupportTicket);
+  rpc GetSupportTicket(GetSupportTicketRequest) returns (SupportTicket);
+  rpc UpdateSupportTicket(UpdateSupportTicketRequest) returns (SupportTicket);
+  rpc DeleteSupportTicket(DeleteSupportTicketRequest) returns (google.protobuf.Empty);
+  rpc ListSupportTickets(ListSupportTicketsRequest) returns (ListSupportTicketsResponse);
+
+  // Support Ticket Business Operations
+  rpc AssignTicket(AssignTicketRequest) returns (SupportTicket);
+  rpc EscalateTicket(EscalateTicketRequest) returns (SupportTicket);
+  rpc ResolveTicket(ResolveTicketRequest) returns (SupportTicket);
+  rpc CloseTicket(CloseTicketRequest) returns (SupportTicket);
+  rpc ReopenTicket(ReopenTicketRequest) returns (SupportTicket);
+  rpc SearchTickets(SearchTicketsRequest) returns (SearchTicketsResponse);
+  rpc GetTicketMetrics(GetTicketMetricsRequest) returns (SupportTicketMetrics);
+
+  // Support Reply Management
+  rpc CreateSupportReply(CreateSupportReplyRequest) returns (SupportReply);
+  rpc GetSupportReply(GetSupportReplyRequest) returns (SupportReply);
+  rpc UpdateSupportReply(UpdateSupportReplyRequest) returns (SupportReply);
+  rpc DeleteSupportReply(DeleteSupportReplyRequest) returns (google.protobuf.Empty);
+  rpc ListSupportReplies(ListSupportRepliesRequest) returns (ListSupportRepliesResponse);
+
+  // Support Reply Business Operations
+  rpc SendReply(SendReplyRequest) returns (SupportReply);
+  rpc MarkReplyAsRead(MarkReplyAsReadRequest) returns (SupportReply);
+  rpc SearchReplies(SearchRepliesRequest) returns (SearchRepliesResponse);
+  rpc GetReplyAnalytics(GetReplyAnalyticsRequest) returns (SupportReplyAnalytics);
+
+  // Support Conversation Management
+  rpc CreateSupportConversation(CreateSupportConversationRequest) returns (SupportConversation);
+  rpc GetSupportConversation(GetSupportConversationRequest) returns (SupportConversation);
+  rpc UpdateSupportConversation(UpdateSupportConversationRequest) returns (SupportConversation);
+  rpc DeleteSupportConversation(DeleteSupportConversationRequest) returns (google.protobuf.Empty);
+  rpc ListSupportConversations(ListSupportConversationsRequest) returns (ListSupportConversationsResponse);
+
+  // Support SLA Management
+  rpc CreateSupportSLA(CreateSupportSLARequest) returns (SupportSLA);
+  rpc GetSupportSLA(GetSupportSLARequest) returns (SupportSLA);
+  rpc UpdateSupportSLA(UpdateSupportSLARequest) returns (SupportSLA);
+  rpc DeleteSupportSLA(DeleteSupportSLARequest) returns (google.protobuf.Empty);
+  rpc ListSupportSLAs(ListSupportSLAsRequest) returns (ListSupportSLAsResponse);
+
+  // Support SLA Business Operations
+  rpc CheckSLACompliance(CheckSLAComplianceRequest) returns (SLAComplianceResponse);
+  rpc GetSLAMetrics(GetSLAMetricsRequest) returns (SupportSLAMetrics);
+  rpc GetSLAViolations(GetSLAViolationsRequest) returns (GetSLAViolationsResponse);
+  rpc GenerateSLAReport(GenerateSLAReportRequest) returns (SupportSLAReport);
+
+  // Support Template Management
+  rpc CreateTicketTemplate(CreateTicketTemplateRequest) returns (SupportTicketTemplate);
+  rpc GetTicketTemplate(GetTicketTemplateRequest) returns (SupportTicketTemplate);
+  rpc UpdateTicketTemplate(UpdateTicketTemplateRequest) returns (SupportTicketTemplate);
+  rpc DeleteTicketTemplate(DeleteTicketTemplateRequest) returns (google.protobuf.Empty);
+  rpc ListTicketTemplates(ListTicketTemplatesRequest) returns (ListTicketTemplatesResponse);
+
+  rpc CreateReplyTemplate(CreateReplyTemplateRequest) returns (SupportReplyTemplate);
+  rpc GetReplyTemplate(GetReplyTemplateRequest) returns (SupportReplyTemplate);
+  rpc UpdateReplyTemplate(UpdateReplyTemplateRequest) returns (SupportReplyTemplate);
+  rpc DeleteReplyTemplate(DeleteReplyTemplateRequest) returns (google.protobuf.Empty);
+  rpc ListReplyTemplates(ListReplyTemplatesRequest) returns (ListReplyTemplatesResponse);
+
+  // Analytics and Reporting
+  rpc GetSupportAnalytics(GetSupportAnalyticsRequest) returns (SupportAnalyticsResponse);
+  rpc GetSupportReport(GetSupportReportRequest) returns (SupportReportResponse);
+  rpc GetSupportDashboard(GetSupportDashboardRequest) returns (SupportDashboardResponse);
+  rpc GetSupportKPIs(GetSupportKPIsRequest) returns (SupportKPIsResponse);
+}
+
+// Support Ticket Management Requests/Responses
+message CreateSupportTicketRequest {
+  string subject = 1;
+  string description = 2;
+  string summary = 3;
+  crm_hr.support.enums.TicketPriority priority = 4;
+  crm_hr.support.enums.SupportChannel channel = 5;
+  string category = 6;
+  string subcategory = 7;
+  string type = 8;
+  string customer_id = 9;
+  string customer_name = 10;
+  string customer_email = 11;
+  string customer_phone = 12;
+  string customer_company = 13;
+  string source = 14;
+  string origin = 15;
+  string impact = 16;
+  string urgency = 17;
+  string product_id = 18;
+  string product_name = 19;
+  string version = 20;
+  string environment = 21;
+  repeated string tags = 22;
+  repeated string attachments = 23;
+  map<string, string> custom_fields = 24;
+  string notes = 25;
+}
+
+message GetSupportTicketRequest {
+  string id = 1;
+}
+
+message UpdateSupportTicketRequest {
+  string id = 1;
+  string subject = 2;
+  string description = 3;
+  string summary = 4;
+  crm_hr.support.enums.TicketStatus status = 5;
+  crm_hr.support.enums.TicketPriority priority = 6;
+  string category = 7;
+  string subcategory = 8;
+  string type = 9;
+  string assigned_to = 10;
+  string assigned_team = 11;
+  string assigned_group = 12;
+  string assigned_department = 13;
+  string impact = 14;
+  string urgency = 15;
+  string resolution = 16;
+  string resolution_notes = 17;
+  repeated string tags = 18;
+  repeated string attachments = 19;
+  map<string, string> custom_fields = 20;
+  string notes = 21;
+  string internal_notes = 22;
+}
+
+message DeleteSupportTicketRequest {
+  string id = 1;
+}
+
+message ListSupportTicketsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  crm_hr.support.enums.TicketStatus status = 4;
+  crm_hr.support.enums.TicketPriority priority = 5;
+  crm_hr.support.enums.SupportChannel channel = 6;
+  string category = 7;
+  string subcategory = 8;
+  string type = 9;
+  string customer_id = 10;
+  string assigned_to = 11;
+  string assigned_team = 12;
+  string assigned_group = 13;
+  string assigned_department = 14;
+  string product_id = 15;
+  string product_name = 16;
+  string version = 17;
+  string environment = 18;
+  bool sla_breached = 19;
+  google.protobuf.Timestamp created_after = 20;
+  google.protobuf.Timestamp created_before = 21;
+  google.protobuf.Timestamp updated_after = 22;
+  google.protobuf.Timestamp updated_before = 23;
+  google.protobuf.Timestamp due_after = 24;
+  google.protobuf.Timestamp due_before = 25;
+  repeated string tags = 26;
+  string order_by = 27;
+  string sort_direction = 28;
+}
+
+message ListSupportTicketsResponse {
+  repeated SupportTicket tickets = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Support Ticket Business Operations
+message AssignTicketRequest {
+  string ticket_id = 1;
+  string assigned_to = 2;
+  string assigned_team = 3;
+  string assigned_group = 4;
+  string assigned_department = 5;
+  string reason = 6;
+  string assigned_by = 7;
+  google.protobuf.Timestamp assigned_at = 8;
+}
+
+message EscalateTicketRequest {
+  string ticket_id = 1;
+  string escalation_reason = 2;
+  string escalated_to = 3;
+  string escalated_by = 4;
+  google.protobuf.Timestamp escalated_at = 5;
+  string escalation_notes = 6;
+}
+
+message ResolveTicketRequest {
+  string ticket_id = 1;
+  string resolution = 2;
+  string resolution_notes = 3;
+  string resolved_by = 4;
+  google.protobuf.Timestamp resolved_at = 5;
+  string resolution_type = 6;
+  string resolution_category = 7;
+}
+
+message CloseTicketRequest {
+  string ticket_id = 1;
+  string closure_reason = 2;
+  string closed_by = 3;
+  google.protobuf.Timestamp closed_at = 4;
+  string closure_notes = 5;
+  string closure_category = 6;
+}
+
+message ReopenTicketRequest {
+  string ticket_id = 1;
+  string reopen_reason = 2;
+  string reopened_by = 3;
+  google.protobuf.Timestamp reopened_at = 4;
+  string reopen_notes = 5;
+  crm_hr.support.enums.TicketStatus new_status = 6;
+}
+
+message SearchTicketsRequest {
+  SupportTicketSearch search_criteria = 1;
+}
+
+message SearchTicketsResponse {
+  repeated SupportTicket tickets = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetTicketMetricsRequest {
+  string ticket_id = 1;
+}
+
+// Support Reply Management
+message CreateSupportReplyRequest {
+  string ticket_id = 1;
+  string content = 2;
+  string content_type = 3;
+  string reply_type = 4;
+  string direction = 5;
+  string author_id = 6;
+  string author_name = 7;
+  string author_email = 8;
+  string author_type = 9;
+  string author_role = 10;
+  crm_hr.support.enums.SupportChannel channel = 11;
+  string source = 12;
+  bool is_public = 13;
+  bool is_internal = 14;
+  bool is_automated = 15;
+  string subject = 16;
+  string summary = 17;
+  repeated string attachments = 18;
+  repeated string mentions = 19;
+  repeated string tags = 20;
+  bool requires_response = 21;
+  bool is_escalation = 22;
+  bool is_resolution = 23;
+  bool is_solution = 24;
+  bool is_feedback = 25;
+  string notes = 26;
+  string internal_notes = 27;
+  map<string, string> custom_fields = 28;
+}
+
+message GetSupportReplyRequest {
+  string id = 1;
+}
+
+message UpdateSupportReplyRequest {
+  string id = 1;
+  string content = 2;
+  string content_type = 3;
+  string reply_type = 4;
+  string direction = 5;
+  string status = 6;
+  bool is_public = 7;
+  bool is_internal = 8;
+  bool is_automated = 9;
+  string subject = 10;
+  string summary = 11;
+  repeated string attachments = 12;
+  repeated string mentions = 13;
+  repeated string tags = 14;
+  bool requires_response = 15;
+  bool is_escalation = 16;
+  bool is_resolution = 17;
+  bool is_solution = 18;
+  bool is_feedback = 19;
+  string notes = 20;
+  string internal_notes = 21;
+  map<string, string> custom_fields = 22;
+}
+
+message DeleteSupportReplyRequest {
+  string id = 1;
+}
+
+message ListSupportRepliesRequest {
+  string ticket_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string reply_type = 5;
+  string direction = 6;
+  crm_hr.support.enums.SupportChannel channel = 7;
+  string author_type = 8;
+  string author_role = 9;
+  string status = 10;
+  bool is_public = 11;
+  bool is_internal = 12;
+  bool is_automated = 13;
+  bool requires_response = 14;
+  bool is_escalation = 15;
+  bool is_resolution = 16;
+  bool is_solution = 17;
+  bool is_feedback = 18;
+  google.protobuf.Timestamp created_after = 19;
+  google.protobuf.Timestamp created_before = 20;
+  google.protobuf.Timestamp sent_after = 21;
+  google.protobuf.Timestamp sent_before = 22;
+  google.protobuf.Timestamp read_after = 23;
+  google.protobuf.Timestamp read_before = 24;
+  repeated string tags = 25;
+  string order_by = 26;
+  string sort_direction = 27;
+}
+
+message ListSupportRepliesResponse {
+  repeated SupportReply replies = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Support Reply Business Operations
+message SendReplyRequest {
+  string ticket_id = 1;
+  string content = 2;
+  string content_type = 3;
+  string reply_type = 4;
+  string direction = 5;
+  string author_id = 6;
+  string author_name = 7;
+  string author_email = 8;
+  string author_type = 9;
+  string author_role = 10;
+  crm_hr.support.enums.SupportChannel channel = 11;
+  string source = 12;
+  bool is_public = 13;
+  bool is_internal = 14;
+  bool is_automated = 15;
+  string subject = 16;
+  string summary = 17;
+  repeated string attachments = 18;
+  repeated string mentions = 19;
+  repeated string tags = 20;
+  bool requires_response = 21;
+  bool is_escalation = 22;
+  bool is_resolution = 23;
+  bool is_solution = 24;
+  bool is_feedback = 25;
+  string notes = 26;
+  string internal_notes = 27;
+  map<string, string> custom_fields = 28;
+}
+
+message MarkReplyAsReadRequest {
+  string reply_id = 1;
+  string read_by = 2;
+  google.protobuf.Timestamp read_at = 3;
+}
+
+message SearchRepliesRequest {
+  SupportReplySearch search_criteria = 1;
+}
+
+message SearchRepliesResponse {
+  repeated SupportReply replies = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetReplyAnalyticsRequest {
+  string reply_id = 1;
+}
+
+// Support Conversation Management
+message CreateSupportConversationRequest {
+  string ticket_id = 1;
+  string title = 2;
+  string description = 3;
+  string type = 4;
+  crm_hr.support.enums.SupportChannel channel = 5;
+  string source = 6;
+  string priority = 7;
+  string category = 8;
+  repeated string participant_ids = 9;
+  repeated string participant_names = 10;
+  repeated string participant_emails = 11;
+  repeated string participant_roles = 12;
+  repeated string tags = 13;
+  map<string, string> custom_fields = 14;
+}
+
+message GetSupportConversationRequest {
+  string id = 1;
+}
+
+message UpdateSupportConversationRequest {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string status = 4;
+  string priority = 5;
+  string category = 6;
+  repeated string participant_ids = 7;
+  repeated string participant_names = 8;
+  repeated string participant_emails = 9;
+  repeated string participant_roles = 10;
+  repeated string tags = 11;
+  map<string, string> custom_fields = 12;
+}
+
+message DeleteSupportConversationRequest {
+  string id = 1;
+}
+
+message ListSupportConversationsRequest {
+  string ticket_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string status = 5;
+  string type = 6;
+  crm_hr.support.enums.SupportChannel channel = 7;
+  string priority = 8;
+  string category = 9;
+  repeated string participant_ids = 10;
+  repeated string tags = 11;
+  google.protobuf.Timestamp started_after = 12;
+  google.protobuf.Timestamp started_before = 13;
+  google.protobuf.Timestamp last_activity_after = 14;
+  google.protobuf.Timestamp last_activity_before = 15;
+  string order_by = 16;
+  string sort_direction = 17;
+}
+
+message ListSupportConversationsResponse {
+  repeated SupportConversation conversations = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Support SLA Management
+message CreateSupportSLARequest {
+  string name = 1;
+  string description = 2;
+  string sla_type = 3;
+  string category = 4;
+  string subcategory = 5;
+  string type = 6;
+  crm_hr.support.enums.TicketPriority priority = 7;
+  crm_hr.support.enums.SupportChannel channel = 8;
+  string customer_tier = 9;
+  string product_id = 10;
+  string product_name = 11;
+  string version = 12;
+  string environment = 13;
+  int32 response_time_minutes = 14;
+  int32 resolution_time_hours = 15;
+  int32 availability_percentage = 16;
+  int32 uptime_percentage = 17;
+  repeated string business_hours = 18;
+  repeated string holidays = 19;
+  string timezone = 20;
+  bool include_weekends = 21;
+  bool include_holidays = 22;
+  int32 escalation_time_minutes = 23;
+  string escalation_team = 24;
+  string escalation_manager = 25;
+  string escalation_process = 26;
+  double penalty_percentage = 27;
+  google.protobuf.Money penalty_amount = 28;
+  string penalty_type = 29;
+  string created_by = 30;
+  string team_id = 31;
+  google.protobuf.Timestamp effective_start_date = 32;
+  google.protobuf.Timestamp effective_end_date = 33;
+  repeated string tags = 34;
+  map<string, string> custom_fields = 35;
+}
+
+message GetSupportSLARequest {
+  string id = 1;
+}
+
+message UpdateSupportSLARequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string sla_type = 4;
+  string category = 5;
+  string subcategory = 6;
+  string type = 7;
+  crm_hr.support.enums.TicketPriority priority = 8;
+  crm_hr.support.enums.SupportChannel channel = 9;
+  string customer_tier = 10;
+  string product_id = 11;
+  string product_name = 12;
+  string version = 13;
+  string environment = 14;
+  int32 response_time_minutes = 15;
+  int32 resolution_time_hours = 16;
+  int32 availability_percentage = 17;
+  int32 uptime_percentage = 18;
+  repeated string business_hours = 19;
+  repeated string holidays = 20;
+  string timezone = 21;
+  bool include_weekends = 22;
+  bool include_holidays = 23;
+  int32 escalation_time_minutes = 24;
+  string escalation_team = 25;
+  string escalation_manager = 26;
+  string escalation_process = 27;
+  double penalty_percentage = 28;
+  google.protobuf.Money penalty_amount = 29;
+  string penalty_type = 30;
+  google.protobuf.Timestamp effective_start_date = 31;
+  google.protobuf.Timestamp effective_end_date = 32;
+  repeated string tags = 33;
+  map<string, string> custom_fields = 34;
+}
+
+message DeleteSupportSLARequest {
+  string id = 1;
+}
+
+message ListSupportSLAsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  string sla_type = 4;
+  string category = 5;
+  string subcategory = 6;
+  string type = 7;
+  crm_hr.support.enums.TicketPriority priority = 8;
+  crm_hr.support.enums.SupportChannel channel = 9;
+  string customer_tier = 10;
+  string product_id = 11;
+  string product_name = 12;
+  string version = 13;
+  string environment = 14;
+  string team_id = 15;
+  bool is_active = 16;
+  repeated string tags = 17;
+  string order_by = 18;
+  string sort_direction = 19;
+}
+
+message ListSupportSLAsResponse {
+  repeated SupportSLA slas = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Support SLA Business Operations
+message CheckSLAComplianceRequest {
+  string ticket_id = 1;
+  string sla_id = 2;
+  google.protobuf.Timestamp check_time = 3;
+}
+
+message SLAComplianceResponse {
+  string ticket_id = 1;
+  string sla_id = 2;
+  bool is_compliant = 3;
+  bool is_breached = 4;
+  int32 response_time_minutes = 5;
+  int32 resolution_time_hours = 6;
+  int32 remaining_time_minutes = 7;
+  int32 breach_time_minutes = 8;
+  double compliance_percentage = 9;
+  string compliance_status = 10;
+  google.protobuf.Timestamp next_check_time = 11;
+  google.protobuf.Timestamp calculated_at = 12;
+}
+
+message GetSLAMetricsRequest {
+  string sla_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message GetSLAViolationsRequest {
+  string sla_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string violation_type = 4;
+  string severity = 5;
+  string status = 6;
+  google.protobuf.Timestamp violation_after = 7;
+  google.protobuf.Timestamp violation_before = 8;
+  google.protobuf.Timestamp detected_after = 9;
+  google.protobuf.Timestamp detected_before = 10;
+  repeated string tags = 11;
+  string order_by = 12;
+  string sort_direction = 13;
+}
+
+message GetSLAViolationsResponse {
+  repeated SupportSLAViolation violations = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GenerateSLAReportRequest {
+  string title = 1;
+  string description = 2;
+  string report_type = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  repeated string sla_ids = 6;
+  repeated string team_ids = 7;
+  repeated string product_ids = 8;
+  repeated string customer_tiers = 9;
+  string format = 10;
+  string generated_by = 11;
+  string notes = 12;
+  map<string, string> custom_fields = 13;
+}
+
+// Support Template Management
+message CreateTicketTemplateRequest {
+  string name = 1;
+  string description = 2;
+  string category = 3;
+  string subcategory = 4;
+  string type = 5;
+  string subject_template = 6;
+  string description_template = 7;
+  string resolution_template = 8;
+  crm_hr.support.enums.TicketPriority default_priority = 9;
+  crm_hr.support.enums.SupportChannel default_channel = 10;
+  string default_assigned_team = 11;
+  string default_assigned_group = 12;
+  string default_sla_category = 13;
+  bool is_active = 14;
+  bool is_public = 15;
+  string created_by = 16;
+  string team_id = 17;
+  repeated string tags = 18;
+  map<string, string> custom_fields = 19;
+}
+
+message GetTicketTemplateRequest {
+  string id = 1;
+}
+
+message UpdateTicketTemplateRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  string subcategory = 5;
+  string type = 6;
+  string subject_template = 7;
+  string description_template = 8;
+  string resolution_template = 9;
+  crm_hr.support.enums.TicketPriority default_priority = 10;
+  crm_hr.support.enums.SupportChannel default_channel = 11;
+  string default_assigned_team = 12;
+  string default_assigned_group = 13;
+  string default_sla_category = 14;
+  bool is_active = 15;
+  bool is_public = 16;
+  repeated string tags = 17;
+  map<string, string> custom_fields = 18;
+}
+
+message DeleteTicketTemplateRequest {
+  string id = 1;
+}
+
+message ListTicketTemplatesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  string category = 4;
+  string subcategory = 5;
+  string type = 6;
+  bool is_active = 7;
+  bool is_public = 8;
+  string team_id = 9;
+  repeated string tags = 10;
+  string order_by = 11;
+  string sort_direction = 12;
+}
+
+message ListTicketTemplatesResponse {
+  repeated SupportTicketTemplate templates = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message CreateReplyTemplateRequest {
+  string name = 1;
+  string description = 2;
+  string category = 3;
+  string subcategory = 4;
+  string type = 5;
+  string subject_template = 6;
+  string content_template = 7;
+  string content_type = 8;
+  crm_hr.support.enums.SupportChannel channel = 9;
+  string reply_type = 10;
+  string direction = 11;
+  bool is_public = 12;
+  bool is_internal = 13;
+  bool is_automated = 14;
+  bool is_active = 15;
+  bool is_public = 16;
+  string created_by = 17;
+  string team_id = 18;
+  repeated string tags = 19;
+  map<string, string> custom_fields = 20;
+}
+
+message GetReplyTemplateRequest {
+  string id = 1;
+}
+
+message UpdateReplyTemplateRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  string subcategory = 5;
+  string type = 6;
+  string subject_template = 7;
+  string content_template = 8;
+  string content_type = 9;
+  crm_hr.support.enums.SupportChannel channel = 10;
+  string reply_type = 11;
+  string direction = 12;
+  bool is_public = 13;
+  bool is_internal = 14;
+  bool is_automated = 15;
+  bool is_active = 16;
+  bool is_public = 17;
+  repeated string tags = 18;
+  map<string, string> custom_fields = 19;
+}
+
+message DeleteReplyTemplateRequest {
+  string id = 1;
+}
+
+message ListReplyTemplatesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  string category = 4;
+  string subcategory = 5;
+  string type = 6;
+  crm_hr.support.enums.SupportChannel channel = 7;
+  string reply_type = 8;
+  string direction = 9;
+  bool is_public = 10;
+  bool is_internal = 11;
+  bool is_automated = 12;
+  bool is_active = 13;
+  bool is_public = 14;
+  string team_id = 15;
+  repeated string tags = 16;
+  string order_by = 17;
+  string sort_direction = 18;
+}
+
+message ListReplyTemplatesResponse {
+  repeated SupportReplyTemplate templates = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Analytics and Reporting
+message GetSupportAnalyticsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string team_id = 3;
+  string department = 4;
+  string product_id = 5;
+  string customer_tier = 6;
+  crm_hr.support.enums.TicketPriority priority = 7;
+  crm_hr.support.enums.SupportChannel channel = 8;
+  string category = 9;
+  string subcategory = 10;
+  string type = 11;
+}
+
+message SupportAnalyticsResponse {
+  int32 total_tickets = 1;
+  int32 open_tickets = 2;
+  int32 closed_tickets = 3;
+  int32 resolved_tickets = 4;
+  double resolution_rate = 5;
+  double average_resolution_time_hours = 6;
+  double average_response_time_minutes = 7;
+  double customer_satisfaction_score = 8;
+  double first_call_resolution_rate = 9;
+  double escalation_rate = 10;
+  map<string, int32> tickets_by_status = 11;
+  map<string, int32> tickets_by_priority = 12;
+  map<string, int32> tickets_by_channel = 13;
+  map<string, int32> tickets_by_category = 14;
+  map<string, int32> tickets_by_team = 15;
+  map<string, double> resolution_time_by_priority = 16;
+  map<string, double> response_time_by_channel = 17;
+  google.protobuf.Timestamp calculated_at = 18;
+}
+
+message GetSupportReportRequest {
+  string report_type = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string team_id = 4;
+  string department = 5;
+  string product_id = 6;
+  string customer_tier = 7;
+  string format = 8;
+  string generated_by = 9;
+  repeated string filters = 10;
+  map<string, string> custom_fields = 11;
+}
+
+message SupportReportResponse {
+  string report_id = 1;
+  string report_type = 2;
+  string report_url = 3;
+  string format = 4;
+  int64 file_size = 5;
+  string generated_by = 6;
+  google.protobuf.Timestamp generated_at = 7;
+  map<string, string> report_data = 8;
+}
+
+message GetSupportDashboardRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string team_id = 3;
+  string department = 4;
+  string product_id = 5;
+  string customer_tier = 6;
+}
+
+message SupportDashboardResponse {
+  int32 total_tickets = 1;
+  int32 open_tickets = 2;
+  int32 closed_tickets = 3;
+  int32 resolved_tickets = 4;
+  double resolution_rate = 5;
+  double average_resolution_time_hours = 6;
+  double average_response_time_minutes = 7;
+  double customer_satisfaction_score = 8;
+  double first_call_resolution_rate = 9;
+  double escalation_rate = 10;
+  int32 sla_breaches = 11;
+  double sla_compliance_rate = 12;
+  map<string, int32> tickets_by_status = 13;
+  map<string, int32> tickets_by_priority = 14;
+  map<string, int32> tickets_by_channel = 15;
+  map<string, int32> tickets_by_category = 16;
+  map<string, int32> tickets_by_team = 17;
+  map<string, double> resolution_time_by_priority = 18;
+  map<string, double> response_time_by_channel = 19;
+  repeated SupportTicket recent_tickets = 20;
+  repeated SupportSLAViolation recent_violations = 21;
+  google.protobuf.Timestamp calculated_at = 22;
+}
+
+message GetSupportKPIsRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string team_id = 3;
+  string department = 4;
+  string product_id = 5;
+  string customer_tier = 6;
+}
+
+message SupportKPIsResponse {
+  double resolution_rate = 1;
+  double average_resolution_time_hours = 2;
+  double average_response_time_minutes = 3;
+  double customer_satisfaction_score = 4;
+  double first_call_resolution_rate = 5;
+  double escalation_rate = 6;
+  double sla_compliance_rate = 7;
+  double agent_productivity_score = 8;
+  double ticket_volume_trend = 9;
+  double resolution_time_trend = 10;
+  double customer_satisfaction_trend = 11;
+  google.protobuf.Timestamp calculated_at = 12;
+}

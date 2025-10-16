@@ -1,0 +1,95 @@
+{
+  "projectName": "rice-mono",
+  "projectOwner": "mrDinkelman",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "conventionalcommits",
+  "contributors": [],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "contributorsSortAlphabetically": true,
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/github/all-contributors/<%= options.projectOwner %>/<%= options.projectName %>?color=ee8449&style=flat-square)](#contributors)",
+  "contributorTemplate": "<a href=\"<%= contributor.profile %>\"><img src=\"<%= contributor.avatar_url %>\" width=\"<%= options.imageSize %>px;\" alt=\"<%= contributor.name %>\"/><br /><sub><b><%= contributor.name %></b></sub></a>",
+  "types": {
+    "code": {
+      "symbol": "💻",
+      "description": "Code",
+      "link": "[💻](<%= options.repoHost %>/<%= options.projectOwner %>/<%= options.projectName %>/commits?author=<%= contributor.login %> \"Code\")"
+    },
+    "plugin": {
+      "symbol": "🔌",
+      "description": "Plugin/utility libraries",
+      "link": "[🔌](#plugin-<%= contributor.login %> \"Plugin/utility libraries\")"
+    },
+    "tool": {
+      "symbol": "🔧",
+      "description": "Tools",
+      "link": "[🔧](#tool-<%= contributor.login %> \"Tools\")"
+    },
+    "doc": {
+      "symbol": "📖",
+      "description": "Documentation",
+      "link": "[📖](<%= options.repoHost %>/<%= options.projectOwner %>/<%= options.projectName %>/commits?author=<%= contributor.login %> \"Documentation\")"
+    },
+    "test": {
+      "symbol": "⚠️",
+      "description": "Tests",
+      "link": "[⚠️](<%= options.repoHost %>/<%= options.projectOwner %>/<%= options.projectName %>/commits?author=<%= contributor.login %> \"Tests\")"
+    },
+    "bug": {
+      "symbol": "🐛",
+      "description": "Bug reports",
+      "link": "[🐛](<%= options.repoHost %>/<%= options.projectOwner %>/<%= options.projectName %>/issues?q=author%3A<%= contributor.login %> \"Bug reports\")"
+    },
+    "example": {
+      "symbol": "💡",
+      "description": "Examples",
+      "link": "[💡](#example-<%= contributor.login %> \"Examples\")"
+    },
+    "blog": {
+      "symbol": "📝",
+      "description": "Blogposts",
+      "link": "[📝](#blog-<%= contributor.login %> \"Blogposts\")"
+    },
+    "tutorial": {
+      "symbol": "✅",
+      "description": "Tutorials",
+      "link": "[✅](#tutorial-<%= contributor.login %> \"Tutorials\")"
+    },
+    "video": {
+      "symbol": "📹",
+      "description": "Videos",
+      "link": "[📹](#video-<%= contributor.login %> \"Videos\")"
+    },
+    "talk": {
+      "symbol": "📢",
+      "description": "Talks",
+      "link": "[📢](#talk-<%= contributor.login %> \"Talks\")"
+    },
+    "question": {
+      "symbol": "💬",
+      "description": "Answering Questions",
+      "link": "[💬](#question-<%= contributor.login %> \"Answering Questions\")"
+    },
+    "infra": {
+      "symbol": "🚇",
+      "description": "Infrastructure (Hosting, Build-Tools, etc)",
+      "link": "[🚇](#infra-<%= contributor.login %> \"Infrastructure (Hosting, Build-Tools, etc)\")"
+    },
+    "platform": {
+      "symbol": "📦",
+      "description": "Packaging/porting to new platform",
+      "link": "[📦](#platform-<%= contributor.login %> \"Packaging/porting to new platform\")"
+    },
+    "security": {
+      "symbol": "🛡️",
+      "description": "Security",
+      "link": "[🛡️](#security-<%= contributor.login %> \"Security\")"
+    }
+  }
+}

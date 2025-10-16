@@ -1,0 +1,263 @@
+syntax = "proto3";
+
+package settings.settings.services;
+
+import "google/protobuf/empty.proto";
+import "settings/settings/messages/setting_request.proto";
+import "settings/settings/messages/setting_response.proto";
+
+// SettingService provides CRUD operations for managing application settings
+// with support for different scopes (global, organization, user, etc.) and types.
+service SettingService {
+  // Create a new setting with key, value, scope, and type
+  rpc Create(CreateSettingRequest) returns (CreateSettingResponse);
+
+  // Retrieve a specific setting by its unique identifier
+  rpc Get(GetSettingRequest) returns (GetSettingResponse);
+
+  // Retrieve a setting by its key and scope
+  rpc GetByKey(GetSettingByKeyRequest) returns (GetSettingByKeyResponse);
+
+  // List settings with optional filtering and pagination
+  rpc List(ListSettingsRequest) returns (ListSettingsResponse);
+
+  // Update an existing setting with new value or metadata
+  rpc Update(UpdateSettingRequest) returns (UpdateSettingResponse);
+
+  // Delete a setting by its unique identifier
+  rpc Delete(DeleteSettingRequest) returns (DeleteSettingResponse);
+
+  // Bulk create, update, or upsert multiple settings
+  rpc Bulk(BulkSettingsRequest) returns (BulkSettingsResponse);
+
+  // Search settings by key, description, category, or tags
+  rpc Search(SearchSettingsRequest) returns (SearchSettingsResponse);
+
+  // Validate a setting value against its schema and rules
+  rpc Validate(ValidateSettingRequest) returns (ValidateSettingResponse);
+
+  // Get the schema/definition for a setting
+  rpc GetSchema(GetSettingSchemaRequest) returns (GetSettingSchemaResponse);
+
+  // Get settings statistics and analytics
+  rpc GetStats(google.protobuf.Empty) returns (SettingsStats);
+
+  // Get audit log for setting changes
+  rpc GetAuditLog(GetAuditLogRequest) returns (GetAuditLogResponse);
+
+  // Export settings in various formats
+  rpc Export(ExportSettingsRequest) returns (ExportSettingsResponse);
+
+  // Import settings from various formats
+  rpc Import(ImportSettingsRequest) returns (ImportSettingsResponse);
+
+  // Reset setting to its default value
+  rpc ResetToDefault(ResetSettingRequest) returns (ResetSettingResponse);
+
+  // Copy settings from one scope to another
+  rpc CopySettings(CopySettingsRequest) returns (CopySettingsResponse);
+}
+
+// Request message for getting audit log
+message GetAuditLogRequest {
+  // Optional setting ID filter
+  string setting_id = 1;
+
+  // Optional setting key filter
+  string setting_key = 2;
+
+  // Optional user ID filter
+  string user_id = 3;
+
+  // Optional action filter: "create", "update", "delete"
+  string action = 4;
+
+  // Start date for filtering (inclusive)
+  string start_date = 5;
+
+  // End date for filtering (exclusive)
+  string end_date = 6;
+
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 7;
+
+  // Page token for pagination
+  string page_token = 8;
+}
+
+// Response message for audit log
+message GetAuditLogResponse {
+  // List of audit log entries
+  repeated SettingAuditLog entries = 1;
+
+  // Next page token for pagination
+  string next_page_token = 2;
+
+  // Total count of audit log entries
+  int32 total_count = 3;
+
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Request message for exporting settings
+message ExportSettingsRequest {
+  // Export format: "json", "csv", "yaml", "xml", "properties"
+  string format = 1;
+
+  // Optional scope filter for export
+  repeated string scopes = 2;
+
+  // Optional type filter for export
+  repeated string types = 3;
+
+  // Optional category filter for export
+  repeated string categories = 4;
+
+  // Whether to include sensitive settings in export
+  bool include_sensitive = 5;
+
+  // Whether to include metadata in export
+  bool include_metadata = 6;
+
+  // Whether to include inactive settings
+  bool include_inactive = 7;
+
+  // Optional scope-specific identifier filter
+  string scope_id = 8;
+}
+
+// Response message for exporting settings
+message ExportSettingsResponse {
+  // Export data in the requested format
+  bytes export_data = 1;
+
+  // Content type of the export data
+  string content_type = 2;
+
+  // Filename suggestion for the export
+  string filename = 3;
+
+  // Number of settings exported
+  int32 exported_count = 4;
+
+  // Export completion timestamp
+  string exported_at = 5;
+}
+
+// Request message for importing settings
+message ImportSettingsRequest {
+  // Import data in various formats
+  bytes import_data = 1;
+
+  // Content type of the import data
+  string content_type = 2;
+
+  // Import mode: "create_only", "update_only", "upsert", "replace"
+  string import_mode = 3;
+
+  // Whether to validate settings before import
+  bool validate_before_import = 4;
+
+  // Whether to skip duplicate settings
+  bool skip_duplicates = 5;
+
+  // Whether to preserve sensitive settings during import
+  bool preserve_sensitive = 6;
+
+  // Optional target scope for import
+  string target_scope = 7;
+
+  // Optional target scope ID for import
+  string target_scope_id = 8;
+}
+
+// Response message for importing settings
+message ImportSettingsResponse {
+  // Number of settings imported successfully
+  int32 imported_count = 1;
+
+  // Number of settings skipped (duplicates or validation failures)
+  int32 skipped_count = 2;
+
+  // Number of settings that failed import
+  int32 failed_count = 3;
+
+  // List of error messages for failed imports
+  repeated string errors = 4;
+
+  // Import completion timestamp
+  string imported_at = 5;
+
+  // Summary of import operation
+  string summary = 6;
+}
+
+// Request message for resetting a setting to default
+message ResetSettingRequest {
+  // The unique identifier of the setting to reset
+  string id = 1;
+
+  // Optional: reset to a specific default value
+  string custom_default_value = 2;
+}
+
+// Response message for resetting a setting
+message ResetSettingResponse {
+  // The reset setting with its default value
+  Setting setting = 1;
+
+  // Operation status message
+  string message = 2;
+}
+
+// Request message for copying settings between scopes
+message CopySettingsRequest {
+  // Source scope to copy from
+  string source_scope = 1;
+
+  // Source scope ID
+  string source_scope_id = 2;
+
+  // Target scope to copy to
+  string target_scope = 3;
+
+  // Target scope ID
+  string target_scope_id = 4;
+
+  // Optional filter by setting keys
+  repeated string setting_keys = 5;
+
+  // Optional filter by categories
+  repeated string categories = 6;
+
+  // Whether to overwrite existing settings in target scope
+  bool overwrite_existing = 7;
+
+  // Whether to copy sensitive settings
+  bool copy_sensitive = 8;
+}
+
+// Response message for copying settings
+message CopySettingsResponse {
+  // Number of settings copied successfully
+  int32 copied_count = 1;
+
+  // Number of settings skipped (already exist and not overwriting)
+  int32 skipped_count = 2;
+
+  // Number of settings that failed to copy
+  int32 failed_count = 3;
+
+  // List of error messages for failed copies
+  repeated string errors = 4;
+
+  // List of copied settings
+  repeated Setting copied_settings = 5;
+
+  // Operation completion timestamp
+  string completed_at = 6;
+
+  // Summary of copy operation
+  string summary = 7;
+}

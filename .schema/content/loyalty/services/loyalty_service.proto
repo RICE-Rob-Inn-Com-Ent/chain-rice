@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.loyalty.services;
+
+import "marketing/loyalty/messages/loyalty_request.proto";
+import "marketing/loyalty/messages/loyalty_response.proto";
+
+// Loyalty service for managing customer loyalty programs
+service LoyaltyService {
+  // Create a new loyalty program
+  rpc CreateLoyalty(marketing.loyalty.messages.CreateLoyaltyRequest) returns (marketing.loyalty.messages.CreateLoyaltyResponse);
+
+  // Get a loyalty program by ID
+  rpc GetLoyalty(marketing.loyalty.messages.GetLoyaltyRequest) returns (marketing.loyalty.messages.GetLoyaltyResponse);
+
+  // List loyalty programs with pagination and filtering
+  rpc ListLoyalty(marketing.loyalty.messages.ListLoyaltyRequest) returns (marketing.loyalty.messages.ListLoyaltyResponse);
+
+  // Update an existing loyalty program
+  rpc UpdateLoyalty(marketing.loyalty.messages.UpdateLoyaltyRequest) returns (marketing.loyalty.messages.UpdateLoyaltyResponse);
+
+  // Delete a loyalty program
+  rpc DeleteLoyalty(marketing.loyalty.messages.DeleteLoyaltyRequest) returns (marketing.loyalty.messages.DeleteLoyaltyResponse);
+}

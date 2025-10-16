@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package crm_hr.loyalty.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/loyalty/enums";
+
+// LoyaltyTier represents the tier level in a loyalty program
+enum LoyaltyTier {
+  // Unspecified tier - should not be used in production
+  LOYALTY_TIER_UNSPECIFIED = 0;
+
+  // Basic tiers
+  BRONZE = 1;
+  SILVER = 2;
+  GOLD = 3;
+  PLATINUM = 4;
+  DIAMOND = 5;
+
+  // Special tiers
+  VIP = 6;
+  PREMIUM = 7;
+  ELITE = 8;
+  EXECUTIVE = 9;
+  FOUNDER = 10;
+
+  // Status tiers
+  NEW_MEMBER = 11;
+  ACTIVE = 12;
+  INACTIVE = 13;
+  SUSPENDED = 14;
+  TERMINATED = 15;
+
+  // Custom tiers
+  CUSTOM_1 = 16;
+  CUSTOM_2 = 17;
+  CUSTOM_3 = 18;
+  CUSTOM_4 = 19;
+  CUSTOM_5 = 20;
+}

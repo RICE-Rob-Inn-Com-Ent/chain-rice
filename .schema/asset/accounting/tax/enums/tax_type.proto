@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package finance.tax.enums;
+
+// Types of taxes
+enum TaxType {
+  // Default value
+  TAX_TYPE_UNSPECIFIED = 0;
+
+  // Value Added Tax (VAT)
+  TAX_TYPE_VAT = 1;
+
+  // Goods and Services Tax (GST)
+  TAX_TYPE_GST = 2;
+
+  // Sales Tax
+  TAX_TYPE_SALES_TAX = 3;
+
+  // Income Tax
+  TAX_TYPE_INCOME_TAX = 4;
+
+  // Corporate Tax
+  TAX_TYPE_CORPORATE_TAX = 5;
+
+  // Payroll Tax
+  TAX_TYPE_PAYROLL_TAX = 6;
+
+  // Property Tax
+  TAX_TYPE_PROPERTY_TAX = 7;
+
+  // Excise Tax
+  TAX_TYPE_EXCISE_TAX = 8;
+
+  // Import Tax
+  TAX_TYPE_IMPORT_TAX = 9;
+
+  // Export Tax
+  TAX_TYPE_EXPORT_TAX = 10;
+
+  // Customs Duty
+  TAX_TYPE_CUSTOMS_DUTY = 11;
+
+  // Stamp Duty
+  TAX_TYPE_STAMP_DUTY = 12;
+
+  // Capital Gains Tax
+  TAX_TYPE_CAPITAL_GAINS_TAX = 13;
+
+  // Dividend Tax
+  TAX_TYPE_DIVIDEND_TAX = 14;
+
+  // Interest Tax
+  TAX_TYPE_INTEREST_TAX = 15;
+
+  // Royalty Tax
+  TAX_TYPE_ROYALTY_TAX = 16;
+
+  // Service Tax
+  TAX_TYPE_SERVICE_TAX = 17;
+
+  // Entertainment Tax
+  TAX_TYPE_ENTERTAINMENT_TAX = 18;
+
+  // Luxury Tax
+  TAX_TYPE_LUXURY_TAX = 19;
+
+  // Environmental Tax
+  TAX_TYPE_ENVIRONMENTAL_TAX = 20;
+
+  // Carbon Tax
+  TAX_TYPE_CARBON_TAX = 21;
+
+  // Digital Tax
+  TAX_TYPE_DIGITAL_TAX = 22;
+
+  // Withholding Tax
+  TAX_TYPE_WITHHOLDING_TAX = 23;
+
+  // Other Tax
+  TAX_TYPE_OTHER = 24;
+}

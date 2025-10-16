@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package finance.accounting.enums;
+
+// Status of accounting operations and records
+enum AccountingStatus {
+  // Default value
+  ACCOUNTING_STATUS_UNSPECIFIED = 0;
+
+  // Active status
+  ACCOUNTING_STATUS_ACTIVE = 1;
+
+  // Inactive status
+  ACCOUNTING_STATUS_INACTIVE = 2;
+
+  // Pending status
+  ACCOUNTING_STATUS_PENDING = 3;
+
+  // Approved status
+  ACCOUNTING_STATUS_APPROVED = 4;
+
+  // Rejected status
+  ACCOUNTING_STATUS_REJECTED = 5;
+
+  // Draft status
+  ACCOUNTING_STATUS_DRAFT = 6;
+
+  // Finalized status
+  ACCOUNTING_STATUS_FINALIZED = 7;
+
+  // Locked status (no further modifications allowed)
+  ACCOUNTING_STATUS_LOCKED = 8;
+
+  // Archived status
+  ACCOUNTING_STATUS_ARCHIVED = 9;
+
+  // Suspended status
+  ACCOUNTING_STATUS_SUSPENDED = 10;
+
+  // Under review status
+  ACCOUNTING_STATUS_UNDER_REVIEW = 11;
+
+  // Reconciled status
+  ACCOUNTING_STATUS_RECONCILED = 12;
+
+  // Unreconciled status
+  ACCOUNTING_STATUS_UNRECONCILED = 13;
+
+  // Closed status
+  ACCOUNTING_STATUS_CLOSED = 14;
+
+  // Cancelled status
+  ACCOUNTING_STATUS_CANCELLED = 15;
+
+  // Void status
+  ACCOUNTING_STATUS_VOID = 16;
+}

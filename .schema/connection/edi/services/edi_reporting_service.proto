@@ -1,0 +1,1049 @@
+syntax = "proto3";
+
+package integrations.edi.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "integrations/edi/messages/edi_document_models.proto";
+import "integrations/edi/messages/edi_transaction_log.proto";
+import "integrations/edi/messages/edi_partner_models.proto";
+
+option go_package = "github.com/rice-dev/integrations/edi/services";
+
+// EDI Reporting Service for analytics, KPIs, and SLA monitoring
+service EdiReportingService {
+  // Document Reports
+  rpc GetDocumentReport(GetDocumentReportRequest) returns (GetDocumentReportResponse);
+  rpc GetDocumentVolumeReport(GetDocumentVolumeReportRequest) returns (GetDocumentVolumeReportResponse);
+  rpc GetDocumentStatusReport(GetDocumentStatusReportRequest) returns (GetDocumentStatusReportResponse);
+  rpc GetDocumentErrorReport(GetDocumentErrorReportRequest) returns (GetDocumentErrorReportResponse);
+
+  // Partner Reports
+  rpc GetPartnerReport(GetPartnerReportRequest) returns (GetPartnerReportResponse);
+  rpc GetPartnerPerformanceReport(GetPartnerPerformanceReportRequest) returns (GetPartnerPerformanceReportResponse);
+  rpc GetPartnerSlaReport(GetPartnerSlaReportRequest) returns (GetPartnerSlaReportResponse);
+  rpc GetPartnerVolumeReport(GetPartnerVolumeReportRequest) returns (GetPartnerVolumeReportResponse);
+
+  // Processing Reports
+  rpc GetProcessingReport(GetProcessingReportRequest) returns (GetProcessingReportResponse);
+  rpc GetProcessingPerformanceReport(GetProcessingPerformanceReportRequest) returns (GetProcessingPerformanceReportResponse);
+  rpc GetProcessingErrorReport(GetProcessingErrorReportRequest) returns (GetProcessingErrorReportResponse);
+  rpc GetProcessingQueueReport(GetProcessingQueueReportRequest) returns (GetProcessingQueueReportResponse);
+
+  // System Reports
+  rpc GetSystemHealthReport(GetSystemHealthReportRequest) returns (GetSystemHealthReportResponse);
+  rpc GetSystemPerformanceReport(GetSystemPerformanceReportRequest) returns (GetSystemPerformanceReportResponse);
+  rpc GetSystemCapacityReport(GetSystemCapacityReportRequest) returns (GetSystemCapacityReportResponse);
+
+  // SLA and Compliance Reports
+  rpc GetSlaComplianceReport(GetSlaComplianceReportRequest) returns (GetSlaComplianceReportResponse);
+  rpc GetComplianceReport(GetComplianceReportRequest) returns (GetComplianceReportResponse);
+  rpc GetAuditReport(GetAuditReportRequest) returns (GetAuditReportResponse);
+
+  // Real-time Dashboards
+  rpc GetRealTimeDashboard(GetRealTimeDashboardRequest) returns (GetRealTimeDashboardResponse);
+  rpc GetPartnerDashboard(GetPartnerDashboardRequest) returns (GetPartnerDashboardResponse);
+  rpc GetProcessingDashboard(GetProcessingDashboardRequest) returns (GetProcessingDashboardResponse);
+
+  // Custom Reports
+  rpc GenerateCustomReport(GenerateCustomReportRequest) returns (GenerateCustomReportResponse);
+  rpc GetReportTemplates(GetReportTemplatesRequest) returns (GetReportTemplatesResponse);
+  rpc SaveReportTemplate(SaveReportTemplateRequest) returns (SaveReportTemplateResponse);
+
+  // Export and Scheduling
+  rpc ExportReport(ExportReportRequest) returns (ExportReportResponse);
+  rpc ScheduleReport(ScheduleReportRequest) returns (ScheduleReportResponse);
+  rpc GetScheduledReports(GetScheduledReportsRequest) returns (GetScheduledReportsResponse);
+}
+
+// Get Document Report Request
+message GetDocumentReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  repeated integrations.edi.enums.EdiDocumentType document_types = 4;
+  repeated integrations.edi.enums.EdiStatus statuses = 5;
+  string granularity = 6; // HOUR, DAY, WEEK, MONTH
+  string format = 7; // JSON, CSV, PDF, EXCEL
+}
+
+// Get Document Report Response
+message GetDocumentReportResponse {
+  EdiDocumentReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+  string report_id = 3;
+}
+
+// Get Document Volume Report Request
+message GetDocumentVolumeReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  repeated integrations.edi.enums.EdiDocumentType document_types = 4;
+  string granularity = 5;
+  bool include_trends = 6;
+}
+
+// Get Document Volume Report Response
+message GetDocumentVolumeReportResponse {
+  EdiDocumentVolumeReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Document Status Report Request
+message GetDocumentStatusReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  repeated integrations.edi.enums.EdiDocumentType document_types = 4;
+  string granularity = 5;
+}
+
+// Get Document Status Report Response
+message GetDocumentStatusReportResponse {
+  EdiDocumentStatusReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Document Error Report Request
+message GetDocumentErrorReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  repeated integrations.edi.enums.EdiDocumentType document_types = 4;
+  repeated string error_codes = 5;
+  string granularity = 6;
+}
+
+// Get Document Error Report Response
+message GetDocumentErrorReportResponse {
+  EdiDocumentErrorReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Partner Report Request
+message GetPartnerReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  repeated integrations.edi.enums.EdiPartnerType partner_types = 4;
+  string granularity = 5;
+}
+
+// Get Partner Report Response
+message GetPartnerReportResponse {
+  EdiPartnerReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Partner Performance Report Request
+message GetPartnerPerformanceReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  string granularity = 4;
+  bool include_benchmarks = 5;
+}
+
+// Get Partner Performance Report Response
+message GetPartnerPerformanceReportResponse {
+  EdiPartnerPerformanceReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Partner SLA Report Request
+message GetPartnerSlaReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  string granularity = 4;
+}
+
+// Get Partner SLA Report Response
+message GetPartnerSlaReportResponse {
+  EdiPartnerSlaReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Partner Volume Report Request
+message GetPartnerVolumeReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  string granularity = 4;
+  bool include_forecasting = 5;
+}
+
+// Get Partner Volume Report Response
+message GetPartnerVolumeReportResponse {
+  EdiPartnerVolumeReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Processing Report Request
+message GetProcessingReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string processor_ids = 3;
+  string granularity = 4;
+}
+
+// Get Processing Report Response
+message GetProcessingReportResponse {
+  EdiProcessingReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Processing Performance Report Request
+message GetProcessingPerformanceReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string processor_ids = 3;
+  string granularity = 4;
+  bool include_resource_usage = 5;
+}
+
+// Get Processing Performance Report Response
+message GetProcessingPerformanceReportResponse {
+  EdiProcessingPerformanceReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Processing Error Report Request
+message GetProcessingErrorReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string processor_ids = 3;
+  repeated string error_codes = 4;
+  string granularity = 5;
+}
+
+// Get Processing Error Report Response
+message GetProcessingErrorReportResponse {
+  EdiProcessingErrorReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Processing Queue Report Request
+message GetProcessingQueueReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string processor_ids = 3;
+  string granularity = 4;
+}
+
+// Get Processing Queue Report Response
+message GetProcessingQueueReportResponse {
+  EdiProcessingQueueReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get System Health Report Request
+message GetSystemHealthReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  string granularity = 3;
+  bool include_components = 4;
+}
+
+// Get System Health Report Response
+message GetSystemHealthReportResponse {
+  EdiSystemHealthReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get System Performance Report Request
+message GetSystemPerformanceReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  string granularity = 3;
+  bool include_resource_metrics = 4;
+}
+
+// Get System Performance Report Response
+message GetSystemPerformanceReportResponse {
+  EdiSystemPerformanceReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get System Capacity Report Request
+message GetSystemCapacityReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  string granularity = 3;
+  bool include_forecasting = 4;
+}
+
+// Get System Capacity Report Response
+message GetSystemCapacityReportResponse {
+  EdiSystemCapacityReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get SLA Compliance Report Request
+message GetSlaComplianceReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string partner_ids = 3;
+  repeated string sla_types = 4;
+  string granularity = 5;
+}
+
+// Get SLA Compliance Report Response
+message GetSlaComplianceReportResponse {
+  EdiSlaComplianceReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Compliance Report Request
+message GetComplianceReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string compliance_standards = 3;
+  repeated string partner_ids = 4;
+  string granularity = 5;
+}
+
+// Get Compliance Report Response
+message GetComplianceReportResponse {
+  EdiComplianceReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Audit Report Request
+message GetAuditReportRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string audit_types = 3;
+  repeated string user_ids = 4;
+  repeated string partner_ids = 5;
+  string granularity = 6;
+}
+
+// Get Audit Report Response
+message GetAuditReportResponse {
+  EdiAuditReport report = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Real-time Dashboard Request
+message GetRealTimeDashboardRequest {
+  repeated string dashboard_widgets = 1;
+  bool include_alerts = 2;
+}
+
+// Get Real-time Dashboard Response
+message GetRealTimeDashboardResponse {
+  EdiRealTimeDashboard dashboard = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Partner Dashboard Request
+message GetPartnerDashboardRequest {
+  string partner_id = 1;
+  repeated string dashboard_widgets = 2;
+  bool include_historical_data = 3;
+}
+
+// Get Partner Dashboard Response
+message GetPartnerDashboardResponse {
+  EdiPartnerDashboard dashboard = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Processing Dashboard Request
+message GetProcessingDashboardRequest {
+  repeated string processor_ids = 1;
+  repeated string dashboard_widgets = 2;
+  bool include_queue_status = 3;
+}
+
+// Get Processing Dashboard Response
+message GetProcessingDashboardResponse {
+  EdiProcessingDashboard dashboard = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Generate Custom Report Request
+message GenerateCustomReportRequest {
+  string report_template_id = 1;
+  map<string, string> parameters = 2;
+  google.protobuf.Timestamp from = 3;
+  google.protobuf.Timestamp to = 4;
+  string format = 5;
+}
+
+// Generate Custom Report Response
+message GenerateCustomReportResponse {
+  string report_id = 1;
+  string report_url = 2;
+  google.protobuf.Timestamp generated_at = 3;
+  string status = 4;
+}
+
+// Get Report Templates Request
+message GetReportTemplatesRequest {
+  repeated string template_types = 1;
+  bool include_system_templates = 2;
+}
+
+// Get Report Templates Response
+message GetReportTemplatesResponse {
+  repeated EdiReportTemplate templates = 1;
+}
+
+// Save Report Template Request
+message SaveReportTemplateRequest {
+  EdiReportTemplate template = 1;
+  bool is_public = 2;
+}
+
+// Save Report Template Response
+message SaveReportTemplateResponse {
+  string template_id = 1;
+  bool saved = 2;
+  google.protobuf.Timestamp saved_at = 3;
+}
+
+// Export Report Request
+message ExportReportRequest {
+  string report_id = 1;
+  string format = 2; // PDF, CSV, EXCEL, JSON
+  map<string, string> export_options = 3;
+}
+
+// Export Report Response
+message ExportReportResponse {
+  string export_id = 1;
+  string download_url = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  string status = 4;
+}
+
+// Schedule Report Request
+message ScheduleReportRequest {
+  string report_template_id = 1;
+  string schedule_cron = 2;
+  repeated string recipients = 3;
+  string format = 4;
+  map<string, string> parameters = 5;
+}
+
+// Schedule Report Response
+message ScheduleReportResponse {
+  string schedule_id = 1;
+  bool scheduled = 2;
+  google.protobuf.Timestamp next_run_at = 3;
+}
+
+// Get Scheduled Reports Request
+message GetScheduledReportsRequest {
+  repeated string schedule_ids = 1;
+  bool include_inactive = 2;
+}
+
+// Get Scheduled Reports Response
+message GetScheduledReportsResponse {
+  repeated EdiScheduledReport scheduled_reports = 1;
+}
+
+// Document Report
+message EdiDocumentReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_documents = 3;
+  int32 successful_documents = 4;
+  int32 failed_documents = 5;
+  double success_rate = 6;
+  map<string, int32> document_type_counts = 7;
+  map<string, int32> status_counts = 8;
+  map<string, int32> partner_counts = 9;
+  repeated EdiDocumentTrend trends = 10;
+}
+
+// Document Volume Report
+message EdiDocumentVolumeReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiVolumeDataPoint volume_data = 3;
+  EdiVolumeStatistics statistics = 4;
+  repeated EdiVolumeForecast forecasts = 5;
+}
+
+// Document Status Report
+message EdiDocumentStatusReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  map<string, int32> status_distribution = 3;
+  repeated EdiStatusTrend status_trends = 4;
+  repeated EdiStatusBreakdown status_breakdowns = 5;
+}
+
+// Document Error Report
+message EdiDocumentErrorReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_errors = 3;
+  repeated EdiErrorSummary error_summaries = 4;
+  repeated EdiErrorTrend error_trends = 5;
+  repeated EdiErrorBreakdown error_breakdowns = 6;
+}
+
+// Partner Report
+message EdiPartnerReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_partners = 3;
+  int32 active_partners = 4;
+  int32 inactive_partners = 5;
+  repeated EdiPartnerSummary partner_summaries = 6;
+  map<string, int32> partner_type_counts = 7;
+}
+
+// Partner Performance Report
+message EdiPartnerPerformanceReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiPartnerPerformance partner_performances = 3;
+  EdiPartnerBenchmarks benchmarks = 4;
+  repeated EdiPartnerRanking partner_rankings = 5;
+}
+
+// Partner SLA Report
+message EdiPartnerSlaReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiPartnerSla partner_slas = 3;
+  double overall_sla_compliance = 4;
+  repeated EdiSlaViolation sla_violations = 5;
+}
+
+// Partner Volume Report
+message EdiPartnerVolumeReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiPartnerVolume partner_volumes = 3;
+  EdiVolumeStatistics total_volume = 4;
+  repeated EdiVolumeForecast volume_forecasts = 5;
+}
+
+// Processing Report
+message EdiProcessingReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_processed = 3;
+  int32 successful_processed = 4;
+  int32 failed_processed = 5;
+  double success_rate = 6;
+  repeated EdiProcessorSummary processor_summaries = 7;
+}
+
+// Processing Performance Report
+message EdiProcessingPerformanceReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiProcessorPerformance processor_performances = 3;
+  EdiProcessingBenchmarks benchmarks = 4;
+  repeated EdiResourceUsage resource_usage = 5;
+}
+
+// Processing Error Report
+message EdiProcessingErrorReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_errors = 3;
+  repeated EdiProcessorErrorSummary processor_errors = 4;
+  repeated EdiErrorTrend error_trends = 5;
+}
+
+// Processing Queue Report
+message EdiProcessingQueueReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiQueueStatus queue_statuses = 3;
+  EdiQueueStatistics queue_statistics = 4;
+  repeated EdiQueueTrend queue_trends = 5;
+}
+
+// System Health Report
+message EdiSystemHealthReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  string overall_health = 3;
+  repeated EdiComponentHealth component_healths = 4;
+  repeated EdiHealthAlert health_alerts = 5;
+  EdiSystemUptime uptime = 6;
+}
+
+// System Performance Report
+message EdiSystemPerformanceReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  EdiSystemMetrics system_metrics = 3;
+  repeated EdiComponentPerformance component_performances = 4;
+  EdiPerformanceBenchmarks benchmarks = 5;
+}
+
+// System Capacity Report
+message EdiSystemCapacityReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  EdiCapacityMetrics capacity_metrics = 3;
+  repeated EdiCapacityForecast capacity_forecasts = 4;
+  repeated EdiCapacityAlert capacity_alerts = 5;
+}
+
+// SLA Compliance Report
+message EdiSlaComplianceReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  double overall_compliance = 3;
+  repeated EdiSlaCompliance sla_compliances = 4;
+  repeated EdiSlaViolation sla_violations = 5;
+}
+
+// Compliance Report
+message EdiComplianceReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiComplianceStandard compliance_standards = 3;
+  repeated EdiComplianceViolation compliance_violations = 4;
+  EdiComplianceScore compliance_score = 5;
+}
+
+// Audit Report
+message EdiAuditReport {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  repeated EdiAuditEntry audit_entries = 3;
+  EdiAuditStatistics audit_statistics = 4;
+  repeated EdiAuditTrend audit_trends = 5;
+}
+
+// Real-time Dashboard
+message EdiRealTimeDashboard {
+  google.protobuf.Timestamp generated_at = 1;
+  repeated EdiDashboardWidget widgets = 2;
+  repeated EdiAlert alerts = 3;
+  EdiSystemStatus system_status = 4;
+}
+
+// Partner Dashboard
+message EdiPartnerDashboard {
+  string partner_id = 1;
+  google.protobuf.Timestamp generated_at = 2;
+  repeated EdiDashboardWidget widgets = 3;
+  EdiPartnerStatus partner_status = 4;
+  repeated EdiPartnerAlert partner_alerts = 5;
+}
+
+// Processing Dashboard
+message EdiProcessingDashboard {
+  google.protobuf.Timestamp generated_at = 1;
+  repeated EdiDashboardWidget widgets = 2;
+  repeated EdiProcessorStatus processor_statuses = 3;
+  EdiQueueStatus queue_status = 4;
+}
+
+// Report Template
+message EdiReportTemplate {
+  string template_id = 1;
+  string template_name = 2;
+  string template_description = 3;
+  string template_type = 4;
+  string template_config = 5;
+  bool is_public = 6;
+  string created_by = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// Scheduled Report
+message EdiScheduledReport {
+  string schedule_id = 1;
+  string report_template_id = 2;
+  string schedule_cron = 3;
+  repeated string recipients = 4;
+  string format = 5;
+  bool is_active = 6;
+  google.protobuf.Timestamp next_run_at = 7;
+  google.protobuf.Timestamp last_run_at = 8;
+  string last_run_status = 9;
+  google.protobuf.Timestamp created_at = 10;
+}
+
+// Supporting message types for reports
+message EdiDocumentTrend {
+  string trend_type = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  double value = 3;
+  string label = 4;
+}
+
+message EdiVolumeDataPoint {
+  google.protobuf.Timestamp timestamp = 1;
+  int32 volume = 2;
+  string label = 3;
+}
+
+message EdiVolumeStatistics {
+  int32 total_volume = 1;
+  int32 average_volume = 2;
+  int32 min_volume = 3;
+  int32 max_volume = 4;
+  double growth_rate = 5;
+}
+
+message EdiVolumeForecast {
+  google.protobuf.Timestamp forecast_date = 1;
+  int32 predicted_volume = 2;
+  double confidence = 3;
+  string method = 4;
+}
+
+message EdiStatusTrend {
+  string status = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  int32 count = 3;
+}
+
+message EdiStatusBreakdown {
+  string status = 1;
+  int32 count = 2;
+  double percentage = 3;
+  string trend = 4;
+}
+
+message EdiErrorSummary {
+  string error_code = 1;
+  string error_message = 2;
+  int32 count = 3;
+  double percentage = 4;
+  string trend = 5;
+}
+
+message EdiErrorTrend {
+  string error_code = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  int32 count = 3;
+}
+
+message EdiErrorBreakdown {
+  string error_category = 1;
+  int32 count = 2;
+  double percentage = 3;
+  repeated string error_codes = 4;
+}
+
+message EdiPartnerSummary {
+  string partner_id = 1;
+  string partner_name = 2;
+  int32 total_documents = 3;
+  int32 successful_documents = 4;
+  int32 failed_documents = 5;
+  double success_rate = 6;
+  string status = 7;
+}
+
+message EdiPartnerPerformance {
+  string partner_id = 1;
+  string partner_name = 2;
+  double success_rate = 3;
+  int64 average_response_time_ms = 4;
+  int32 total_transactions = 5;
+  double uptime_percentage = 6;
+  int32 ranking = 7;
+}
+
+message EdiPartnerBenchmarks {
+  double average_success_rate = 1;
+  int64 average_response_time_ms = 2;
+  double average_uptime_percentage = 3;
+  int32 total_partners = 4;
+}
+
+message EdiPartnerRanking {
+  string partner_id = 1;
+  string partner_name = 2;
+  int32 ranking = 3;
+  double score = 4;
+  string category = 5;
+}
+
+message EdiPartnerSla {
+  string partner_id = 1;
+  string partner_name = 2;
+  string sla_type = 3;
+  double sla_target = 4;
+  double sla_actual = 5;
+  bool sla_met = 6;
+  int32 violations = 7;
+}
+
+message EdiSlaViolation {
+  string partner_id = 1;
+  string partner_name = 2;
+  string sla_type = 3;
+  google.protobuf.Timestamp violation_time = 4;
+  string violation_reason = 5;
+  double sla_target = 6;
+  double sla_actual = 7;
+}
+
+message EdiPartnerVolume {
+  string partner_id = 1;
+  string partner_name = 2;
+  int32 total_volume = 3;
+  int32 successful_volume = 4;
+  int32 failed_volume = 5;
+  double growth_rate = 6;
+}
+
+message EdiProcessorSummary {
+  string processor_id = 1;
+  string processor_name = 2;
+  int32 total_processed = 3;
+  int32 successful_processed = 4;
+  int32 failed_processed = 5;
+  double success_rate = 6;
+  string status = 7;
+}
+
+message EdiProcessorPerformance {
+  string processor_id = 1;
+  string processor_name = 2;
+  double success_rate = 3;
+  int64 average_processing_time_ms = 4;
+  int32 throughput_per_hour = 5;
+  double cpu_usage_percent = 6;
+  int64 memory_usage_bytes = 7;
+}
+
+message EdiProcessingBenchmarks {
+  double average_success_rate = 1;
+  int64 average_processing_time_ms = 2;
+  int32 average_throughput_per_hour = 3;
+  double average_cpu_usage_percent = 4;
+}
+
+message EdiResourceUsage {
+  string resource_type = 1;
+  double usage_percent = 2;
+  int64 usage_value = 3;
+  int64 capacity_value = 4;
+  google.protobuf.Timestamp timestamp = 5;
+}
+
+message EdiProcessorErrorSummary {
+  string processor_id = 1;
+  string processor_name = 2;
+  int32 total_errors = 3;
+  repeated EdiErrorSummary error_summaries = 4;
+  double error_rate = 5;
+}
+
+message EdiQueueStatus {
+  string queue_name = 1;
+  int32 queue_size = 2;
+  int32 processing_rate = 3;
+  int64 average_wait_time_ms = 4;
+  string status = 5;
+}
+
+message EdiQueueStatistics {
+  int32 total_queues = 1;
+  int32 total_queue_size = 2;
+  int32 average_queue_size = 3;
+  int64 average_wait_time_ms = 4;
+}
+
+message EdiQueueTrend {
+  string queue_name = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  int32 queue_size = 3;
+}
+
+message EdiComponentHealth {
+  string component_name = 1;
+  string health_status = 2;
+  double uptime_percentage = 3;
+  int32 error_count = 4;
+  google.protobuf.Timestamp last_check = 5;
+}
+
+message EdiHealthAlert {
+  string alert_id = 1;
+  string component_name = 2;
+  string alert_type = 3;
+  string alert_message = 4;
+  string severity = 5;
+  google.protobuf.Timestamp triggered_at = 6;
+  bool acknowledged = 7;
+}
+
+message EdiSystemUptime {
+  double uptime_percentage = 1;
+  google.protobuf.Timestamp last_downtime = 2;
+  int32 total_downtime_minutes = 3;
+  int32 downtime_incidents = 4;
+}
+
+message EdiSystemMetrics {
+  double cpu_usage_percent = 1;
+  double memory_usage_percent = 2;
+  double disk_usage_percent = 3;
+  int64 network_throughput_bytes = 4;
+  int32 active_connections = 5;
+}
+
+message EdiComponentPerformance {
+  string component_name = 1;
+  double response_time_ms = 2;
+  int32 throughput_per_second = 3;
+  double error_rate = 4;
+  double availability_percent = 5;
+}
+
+message EdiPerformanceBenchmarks {
+  double average_response_time_ms = 1;
+  int32 average_throughput_per_second = 2;
+  double average_error_rate = 3;
+  double average_availability_percent = 4;
+}
+
+message EdiCapacityMetrics {
+  int32 current_capacity = 1;
+  int32 max_capacity = 2;
+  double capacity_utilization = 3;
+  int32 projected_capacity = 4;
+  google.protobuf.Timestamp capacity_forecast_date = 5;
+}
+
+message EdiCapacityForecast {
+  google.protobuf.Timestamp forecast_date = 1;
+  int32 predicted_capacity = 2;
+  double confidence = 3;
+  string method = 4;
+}
+
+message EdiCapacityAlert {
+  string alert_id = 1;
+  string alert_type = 2;
+  string alert_message = 3;
+  string severity = 4;
+  google.protobuf.Timestamp triggered_at = 5;
+  double current_utilization = 6;
+  double threshold = 7;
+}
+
+message EdiSlaCompliance {
+  string sla_type = 1;
+  double sla_target = 2;
+  double sla_actual = 3;
+  bool sla_met = 4;
+  int32 violations = 5;
+  double compliance_percentage = 6;
+}
+
+message EdiComplianceStandard {
+  string standard_name = 1;
+  string standard_version = 2;
+  bool is_compliant = 3;
+  double compliance_percentage = 4;
+  repeated string compliance_requirements = 5;
+}
+
+message EdiComplianceViolation {
+  string standard_name = 1;
+  string requirement = 2;
+  string violation_description = 3;
+  string severity = 4;
+  google.protobuf.Timestamp detected_at = 5;
+  string remediation_plan = 6;
+}
+
+message EdiComplianceScore {
+  double overall_score = 1;
+  map<string, double> standard_scores = 2;
+  int32 total_requirements = 3;
+  int32 met_requirements = 4;
+  int32 failed_requirements = 5;
+}
+
+message EdiAuditEntry {
+  string audit_id = 1;
+  string user_id = 2;
+  string action = 3;
+  string resource_type = 4;
+  string resource_id = 5;
+  string details = 6;
+  google.protobuf.Timestamp timestamp = 7;
+  string ip_address = 8;
+  string user_agent = 9;
+}
+
+message EdiAuditStatistics {
+  int32 total_audit_entries = 1;
+  int32 unique_users = 2;
+  map<string, int32> action_counts = 3;
+  map<string, int32> resource_type_counts = 4;
+}
+
+message EdiAuditTrend {
+  google.protobuf.Timestamp timestamp = 1;
+  int32 audit_count = 2;
+  string trend_type = 3;
+}
+
+message EdiDashboardWidget {
+  string widget_id = 1;
+  string widget_type = 2;
+  string widget_title = 3;
+  string widget_data = 4;
+  map<string, string> widget_config = 5;
+}
+
+message EdiAlert {
+  string alert_id = 1;
+  string alert_type = 2;
+  string alert_title = 3;
+  string alert_message = 4;
+  string severity = 5;
+  google.protobuf.Timestamp triggered_at = 6;
+  bool acknowledged = 7;
+}
+
+message EdiSystemStatus {
+  string overall_status = 1;
+  int32 active_processors = 2;
+  int32 total_queued_documents = 3;
+  int32 active_partners = 4;
+  double system_load = 5;
+}
+
+message EdiPartnerStatus {
+  string partner_id = 1;
+  string status = 2;
+  string health_status = 3;
+  int32 active_documents = 4;
+  int32 queued_documents = 5;
+  double success_rate = 6;
+}
+
+message EdiPartnerAlert {
+  string alert_id = 1;
+  string partner_id = 2;
+  string alert_type = 3;
+  string alert_message = 4;
+  string severity = 5;
+  google.protobuf.Timestamp triggered_at = 6;
+}
+
+message EdiProcessorStatus {
+  string processor_id = 1;
+  string status = 2;
+  int32 active_documents = 3;
+  int32 queued_documents = 4;
+  double success_rate = 5;
+  int64 average_processing_time_ms = 6;
+}

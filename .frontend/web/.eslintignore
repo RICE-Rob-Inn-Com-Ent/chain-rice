@@ -1,0 +1,44 @@
+# ============================================================================
+# ESLINT IGNORE - Files to exclude from linting
+# ============================================================================
+
+# Dependencies
+node_modules/
+vendor/
+.venv/
+venv/
+
+# Build outputs
+dist/
+build/
+out/
+target/
+bazel-*
+.next/
+.nuxt/
+.angular/
+.svelte-kit/
+
+# Generated files
+**/*.generated.ts
+**/*.generated.js
+**/*_pb.js
+**/*_pb.ts
+**/*.min.js
+**/*.bundle.js
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.eslintcache
+
+# Specific files
+*.config.js

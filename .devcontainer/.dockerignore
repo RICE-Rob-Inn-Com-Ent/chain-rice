@@ -1,0 +1,66 @@
+# ==============================================================================
+# DOCKER IGNORE - Exclude from build context
+# ==============================================================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Build outputs
+**/node_modules
+**/dist
+**/build
+**/target
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/bazel-*
+**/.next
+**/.nuxt
+
+# Logs
+**/*.log
+**/logs
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs
+**/*.md
+!README.md
+
+# Tests
+**/*test*
+**/*spec*
+
+# Cache directories
+**/.cache
+**/.npm
+**/.yarn
+**/.pnpm-store
+**/.cargo/registry
+**/.cargo/git
+**/.gradle
+**/.m2
+
+# Virtual environments
+**/.venv
+**/venv
+**/env
+
+# Temporary files
+**/tmp
+**/temp
+**/*.tmp

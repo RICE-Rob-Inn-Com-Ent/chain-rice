@@ -1,0 +1,55 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "npm_package", "npm_install")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+# Install npm dependencies
+npm_install(
+    name = "npm",
+    package_json = "package.json",
+    package_lock_json = "package-lock.json",
+    visibility = ["//visibility:public"],
+)
+
+# Link all npm packages
+npm_link_all_packages(name = "npm_link_all")
+
+# TypeScript configuration
+ts_project(
+    name = "ts_shared",
+    srcs = glob([
+        "**/*.ts",
+        "**/*.tsx",
+        "!**/*.test.ts",
+        "!**/*.spec.ts",
+        "!node_modules/**",
+    ]),
+    deps = [
+        ":npm_link_all",
+        "//libs/frontend/ts/angular:angular_lib",
+        "//libs/frontend/ts/next:next_lib",
+        "//libs/frontend/ts/nuxt:nuxt_lib",
+        "//libs/frontend/ts/shared:shared_lib",
+    ],
+    tsconfig = "tsconfig.json",
+    visibility = ["//visibility:public"],
+)
+
+# Main TypeScript binary
+nodejs_binary(
+    name = "ts_main",
+    data = [":ts_shared"],
+    entry_point = "main.ts",
+    visibility = ["//visibility:public"],
+)
+
+# NPM package for all TypeScript projects
+npm_package(
+    name = "ts_package",
+    srcs = [
+        "//libs/frontend/ts/angular:angular_package",
+        "//libs/frontend/ts/next:next_package",
+        "//libs/frontend/ts/nuxt:nuxt_package",
+        "//libs/frontend/ts/shared:shared_package",
+    ],
+    visibility = ["//visibility:public"],
+)

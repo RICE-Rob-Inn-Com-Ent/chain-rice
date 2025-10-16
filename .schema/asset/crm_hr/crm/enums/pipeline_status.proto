@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package crm_hr.crm.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/crm/enums";
+
+// PipelineStatus represents the current status of a sales pipeline
+enum PipelineStatus {
+  // Unspecified status - should not be used in production
+  PIPELINE_STATUS_UNSPECIFIED = 0;
+
+  // Active pipeline states
+  ACTIVE = 1;
+  PAUSED = 2;
+  ARCHIVED = 3;
+
+  // Pipeline lifecycle states
+  DRAFT = 4;
+  PUBLISHED = 5;
+  DEPRECATED = 6;
+
+  // Pipeline performance states
+  EXCEEDING_TARGET = 7;
+  ON_TRACK = 8;
+  AT_RISK = 9;
+  UNDERPERFORMING = 10;
+}

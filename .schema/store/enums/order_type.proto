@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package commerce.orders.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/orders/enums";
+
+// Order type enumeration
+enum OrderType {
+  // Unknown or unspecified order type
+  ORDER_TYPE_UNSPECIFIED = 0;
+
+  // Standard retail order
+  ORDER_TYPE_RETAIL = 1;
+
+  // Wholesale order
+  ORDER_TYPE_WHOLESALE = 2;
+
+  // Subscription order
+  ORDER_TYPE_SUBSCRIPTION = 3;
+
+  // Recurring order
+  ORDER_TYPE_RECURRING = 4;
+
+  // Rush order with expedited processing
+  ORDER_TYPE_RUSH = 5;
+
+  // Pre-order for future release
+  ORDER_TYPE_PRE_ORDER = 6;
+
+  // Backorder for out-of-stock items
+  ORDER_TYPE_BACKORDER = 7;
+
+  // Custom order with special requirements
+  ORDER_TYPE_CUSTOM = 8;
+
+  // Sample order
+  ORDER_TYPE_SAMPLE = 9;
+
+  // Replacement order
+  ORDER_TYPE_REPLACEMENT = 10;
+
+  // Refund order
+  ORDER_TYPE_REFUND = 11;
+
+  // Return order
+  ORDER_TYPE_RETURN = 12;
+
+  // Exchange order
+  ORDER_TYPE_EXCHANGE = 13;
+
+  // Gift order
+  ORDER_TYPE_GIFT = 14;
+
+  // Corporate order
+  ORDER_TYPE_CORPORATE = 15;
+
+  // Bulk order
+  ORDER_TYPE_BULK = 16;
+}

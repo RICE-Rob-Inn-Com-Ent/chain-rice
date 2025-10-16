@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package crm_hr.loyalty.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/loyalty/enums";
+
+// RewardType represents the type of reward in a loyalty program
+enum RewardType {
+  // Unspecified type - should not be used in production
+  REWARD_TYPE_UNSPECIFIED = 0;
+
+  // Points-based rewards
+  POINTS = 1;
+  BONUS_POINTS = 2;
+  MULTIPLIER_POINTS = 3;
+  BONUS_MULTIPLIER = 4;
+
+  // Monetary rewards
+  CASHBACK = 5;
+  DISCOUNT = 6;
+  CREDIT = 7;
+  REFUND = 8;
+
+  // Product rewards
+  FREE_PRODUCT = 9;
+  UPGRADE = 10;
+  SAMPLE = 11;
+  GIFT = 12;
+
+  // Service rewards
+  FREE_SHIPPING = 13;
+  PRIORITY_SERVICE = 14;
+  EXTENDED_WARRANTY = 15;
+  FREE_INSTALLATION = 16;
+
+  // Experience rewards
+  EARLY_ACCESS = 17;
+  EXCLUSIVE_EVENT = 18;
+  VIP_TREATMENT = 19;
+  PERSONAL_CONCIERGE = 20;
+
+  // Digital rewards
+  DIGITAL_COUPON = 21;
+  DIGITAL_GIFT_CARD = 22;
+  DIGITAL_CONTENT = 23;
+  SOFTWARE_LICENSE = 24;
+
+  // Travel rewards
+  AIRLINE_MILES = 25;
+  HOTEL_POINTS = 26;
+  CAR_RENTAL_CREDIT = 27;
+  TRAVEL_INSURANCE = 28;
+
+  // Lifestyle rewards
+  DINING_CREDIT = 29;
+  ENTERTAINMENT_TICKETS = 30;
+  FITNESS_MEMBERSHIP = 31;
+  BEAUTY_SERVICES = 32;
+
+  // Charitable rewards
+  DONATION_MATCH = 33;
+  CHARITY_POINTS = 34;
+  VOLUNTEER_HOURS = 35;
+  SOCIAL_IMPACT = 36;
+}

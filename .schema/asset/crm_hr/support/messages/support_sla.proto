@@ -1,0 +1,309 @@
+syntax = "proto3";
+
+package crm_hr.support.messages;
+
+import "google/protobuf/timestamp.proto";
+import "crm_hr/support/enums/ticket_priority.proto";
+import "crm_hr/support/enums/support_channel.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/support/messages";
+
+// SupportSLA represents a Service Level Agreement for support
+message SupportSLA {
+  // Unique identifier for the SLA
+  string id = 1;
+
+  // SLA information
+  string name = 2;
+  string description = 3;
+  string sla_type = 4; // response, resolution, availability, etc.
+  bool is_active = 5;
+
+  // SLA criteria
+  string category = 6;
+  string subcategory = 7;
+  string type = 8;
+  crm_hr.support.enums.TicketPriority priority = 9;
+  crm_hr.support.enums.SupportChannel channel = 10;
+  string customer_tier = 11;
+  string product_id = 12;
+  string product_name = 13;
+  string version = 14;
+  string environment = 15;
+
+  // SLA targets
+  int32 response_time_minutes = 16;
+  int32 resolution_time_hours = 17;
+  int32 availability_percentage = 18;
+  int32 uptime_percentage = 19;
+
+  // SLA conditions
+  repeated string business_hours = 20; // JSON array of business hours
+  repeated string holidays = 21; // JSON array of holidays
+  string timezone = 22;
+  bool include_weekends = 23;
+  bool include_holidays = 24;
+
+  // SLA escalation
+  int32 escalation_time_minutes = 25;
+  string escalation_team = 26;
+  string escalation_manager = 27;
+  string escalation_process = 28;
+
+  // SLA penalties
+  double penalty_percentage = 29;
+  google.protobuf.Money penalty_amount = 30;
+  string penalty_type = 31; // percentage, fixed_amount, credit, etc.
+
+  // SLA metadata
+  string created_by = 32;
+  string team_id = 33;
+  google.protobuf.Timestamp effective_start_date = 34;
+  google.protobuf.Timestamp effective_end_date = 35;
+  repeated string tags = 36;
+  map<string, string> custom_fields = 37;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 38;
+  google.protobuf.Timestamp updated_at = 39;
+
+  // Version for optimistic concurrency control
+  int32 version = 40;
+}
+
+// SupportSLAMetrics represents metrics for SLA compliance
+message SupportSLAMetrics {
+  // Associated SLA ID
+  string sla_id = 1;
+
+  // Time period
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+
+  // SLA compliance metrics
+  int32 total_tickets = 4;
+  int32 compliant_tickets = 5;
+  int32 non_compliant_tickets = 6;
+  double compliance_rate = 7;
+
+  // Response time metrics
+  double average_response_time_minutes = 8;
+  double median_response_time_minutes = 9;
+  double p95_response_time_minutes = 10;
+  double p99_response_time_minutes = 11;
+  int32 response_time_breaches = 12;
+  double response_time_breach_rate = 13;
+
+  // Resolution time metrics
+  double average_resolution_time_hours = 14;
+  double median_resolution_time_hours = 15;
+  double p95_resolution_time_hours = 16;
+  double p99_resolution_time_hours = 17;
+  int32 resolution_time_breaches = 18;
+  double resolution_time_breach_rate = 19;
+
+  // Availability metrics
+  double availability_percentage = 20;
+  double uptime_percentage = 21;
+  int32 downtime_minutes = 22;
+  int32 downtime_incidents = 23;
+
+  // Escalation metrics
+  int32 total_escalations = 24;
+  int32 escalated_tickets = 25;
+  double escalation_rate = 26;
+  double average_escalation_time_minutes = 27;
+
+  // Penalty metrics
+  double total_penalty_amount = 28;
+  int32 penalty_incidents = 29;
+  double penalty_rate = 30;
+
+  // Calculated at timestamp
+  google.protobuf.Timestamp calculated_at = 31;
+}
+
+// SupportSLAViolation represents a violation of SLA terms
+message SupportSLAViolation {
+  // Unique identifier for the violation
+  string id = 1;
+
+  // Associated IDs
+  string sla_id = 2;
+  string ticket_id = 3;
+
+  // Violation information
+  string violation_type = 4; // response_time, resolution_time, availability, etc.
+  string description = 5;
+  string severity = 6; // low, medium, high, critical
+  string status = 7; // open, acknowledged, resolved, closed
+
+  // Violation details
+  int32 target_time_minutes = 8;
+  int32 actual_time_minutes = 9;
+  int32 breach_time_minutes = 10;
+  double breach_percentage = 11;
+
+  // Violation timing
+  google.protobuf.Timestamp violation_time = 12;
+  google.protobuf.Timestamp detected_at = 13;
+  google.protobuf.Timestamp acknowledged_at = 14;
+  google.protobuf.Timestamp resolved_at = 15;
+
+  // Violation impact
+  string impact_description = 16;
+  string customer_impact = 17;
+  string business_impact = 18;
+  double financial_impact = 19;
+
+  // Violation response
+  string response_actions = 20;
+  string prevention_measures = 21;
+  string root_cause = 22;
+  string corrective_actions = 23;
+
+  // Violation metadata
+  string detected_by = 24;
+  string acknowledged_by = 25;
+  string resolved_by = 26;
+  repeated string tags = 27;
+  map<string, string> custom_fields = 28;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 29;
+  google.protobuf.Timestamp updated_at = 30;
+}
+
+// SupportSLATemplate represents a reusable template for SLAs
+message SupportSLATemplate {
+  // Unique identifier for the template
+  string id = 1;
+
+  // Template information
+  string name = 2;
+  string description = 3;
+  string sla_type = 4;
+  string category = 5;
+  string subcategory = 6;
+
+  // Template settings
+  crm_hr.support.enums.TicketPriority priority = 7;
+  crm_hr.support.enums.SupportChannel channel = 8;
+  int32 response_time_minutes = 9;
+  int32 resolution_time_hours = 10;
+  int32 availability_percentage = 11;
+  int32 uptime_percentage = 12;
+
+  // Template conditions
+  repeated string business_hours = 13;
+  repeated string holidays = 14;
+  string timezone = 15;
+  bool include_weekends = 16;
+  bool include_holidays = 17;
+
+  // Template escalation
+  int32 escalation_time_minutes = 18;
+  string escalation_team = 19;
+  string escalation_manager = 20;
+  string escalation_process = 21;
+
+  // Template penalties
+  double penalty_percentage = 22;
+  google.protobuf.Money penalty_amount = 23;
+  string penalty_type = 24;
+
+  // Template metadata
+  bool is_active = 25;
+  bool is_public = 26;
+  string created_by = 27;
+  string team_id = 28;
+  repeated string tags = 29;
+  map<string, string> custom_fields = 30;
+
+  // Usage statistics
+  int32 usage_count = 31;
+  google.protobuf.Timestamp last_used_at = 32;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 33;
+  google.protobuf.Timestamp updated_at = 34;
+}
+
+// SupportSLAReport represents a report on SLA performance
+message SupportSLAReport {
+  // Unique identifier for the report
+  string id = 1;
+
+  // Report information
+  string title = 2;
+  string description = 3;
+  string report_type = 4; // compliance, performance, violation, etc.
+  string status = 5; // draft, generated, published, archived
+
+  // Report period
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  google.protobuf.Timestamp generated_at = 8;
+
+  // Report scope
+  repeated string sla_ids = 9;
+  repeated string team_ids = 10;
+  repeated string product_ids = 11;
+  repeated string customer_tiers = 12;
+
+  // Report data
+  repeated SupportSLAMetrics sla_metrics = 13;
+  repeated SupportSLAViolation violations = 14;
+  SupportSLAReportSummary summary = 15;
+
+  // Report metadata
+  string generated_by = 16;
+  string format = 17; // pdf, excel, csv, json
+  string file_url = 18;
+  int64 file_size = 19;
+  bool is_encrypted = 20;
+
+  // Additional information
+  string notes = 21;
+  map<string, string> custom_fields = 22;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+  google.protobuf.Timestamp published_at = 25;
+}
+
+// SupportSLAReportSummary represents a summary of SLA report data
+message SupportSLAReportSummary {
+  // Associated report ID
+  string report_id = 1;
+
+  // Overall metrics
+  int32 total_slas = 2;
+  int32 total_tickets = 3;
+  int32 total_violations = 4;
+  double overall_compliance_rate = 5;
+  double overall_response_time_minutes = 6;
+  double overall_resolution_time_hours = 7;
+
+  // Compliance breakdown
+  map<string, double> compliance_by_priority = 8;
+  map<string, double> compliance_by_channel = 9;
+  map<string, double> compliance_by_category = 10;
+  map<string, double> compliance_by_team = 11;
+
+  // Performance breakdown
+  map<string, double> response_time_by_priority = 12;
+  map<string, double> resolution_time_by_priority = 13;
+  map<string, double> response_time_by_channel = 14;
+  map<string, double> resolution_time_by_channel = 15;
+
+  // Violation breakdown
+  map<string, int32> violations_by_type = 16;
+  map<string, int32> violations_by_priority = 17;
+  map<string, int32> violations_by_team = 18;
+  map<string, double> violation_rate_by_team = 19;
+
+  // Calculated at timestamp
+  google.protobuf.Timestamp calculated_at = 20;
+}

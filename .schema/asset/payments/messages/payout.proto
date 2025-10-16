@@ -1,0 +1,340 @@
+syntax = "proto3";
+
+package finance.payments.messages;
+
+import "finance/payments/enums/payment_status.proto";
+import "finance/payments/enums/settlement_type.proto";
+
+// Payout representation
+message Payout {
+  // Unique payout identifier
+  string payout_id = 1;
+
+  // Payout amount
+  double amount = 2;
+
+  // Currency code
+  string currency = 3;
+
+  // Payout status
+  finance.payments.enums.PaymentStatus status = 4;
+
+  // Payout date
+  int64 payout_date = 5;
+
+  // Settlement date
+  int64 settlement_date = 6;
+
+  // Settlement type
+  finance.payments.enums.SettlementType settlement_type = 7;
+
+  // Transaction ID
+  string transaction_id = 8;
+
+  // External transaction ID
+  string external_transaction_id = 9;
+
+  // Payment gateway
+  string payment_gateway = 10;
+
+  // Payout method
+  string payout_method = 11;
+
+  // Payout type
+  string payout_type = 12;
+
+  // Recipient information
+  PayoutRecipient recipient = 13;
+
+  // Payout fees
+  PayoutFee fees = 14;
+
+  // Payout notes
+  string notes = 15;
+
+  // Payout tags
+  repeated string tags = 16;
+
+  // Custom fields
+  map<string, string> custom_fields = 17;
+
+  // Creation timestamp
+  int64 created_at = 18;
+
+  // Last update timestamp
+  int64 updated_at = 19;
+
+  // Created by user ID
+  string created_by = 20;
+
+  // Updated by user ID
+  string updated_by = 21;
+
+  // Processed timestamp
+  int64 processed_at = 22;
+
+  // Failed timestamp
+  int64 failed_at = 23;
+
+  // Failure reason
+  string failure_reason = 24;
+}
+
+// Payout recipient information
+message PayoutRecipient {
+  // Recipient ID
+  string recipient_id = 1;
+
+  // Recipient name
+  string name = 2;
+
+  // Recipient email
+  string email = 3;
+
+  // Recipient phone
+  string phone = 4;
+
+  // Recipient type
+  string recipient_type = 5;
+
+  // Bank account information
+  BankAccountDetails bank_account = 6;
+
+  // Digital wallet information
+  DigitalWalletDetails digital_wallet = 7;
+
+  // Cryptocurrency information
+  CryptoDetails crypto = 8;
+
+  // Address information
+  Address address = 9;
+}
+
+// Bank account details
+message BankAccountDetails {
+  // Account number (masked)
+  string account_number = 1;
+
+  // Routing number
+  string routing_number = 2;
+
+  // Bank name
+  string bank_name = 3;
+
+  // Account holder name
+  string account_holder_name = 4;
+
+  // Account type
+  string account_type = 5;
+
+  // SWIFT code
+  string swift_code = 6;
+
+  // IBAN
+  string iban = 7;
+}
+
+// Digital wallet details
+message DigitalWalletDetails {
+  // Wallet type
+  string wallet_type = 1;
+
+  // Wallet ID
+  string wallet_id = 2;
+
+  // Wallet email
+  string wallet_email = 3;
+
+  // Wallet address
+  string wallet_address = 4;
+}
+
+// Cryptocurrency details
+message CryptoDetails {
+  // Cryptocurrency type
+  string crypto_type = 1;
+
+  // Wallet address
+  string wallet_address = 2;
+
+  // Transaction hash
+  string transaction_hash = 3;
+
+  // Block number
+  int64 block_number = 4;
+}
+
+// Address information
+message Address {
+  // Street address
+  string street = 1;
+
+  // City
+  string city = 2;
+
+  // State/Province
+  string state = 3;
+
+  // Postal code
+  string postal_code = 4;
+
+  // Country
+  string country = 5;
+
+  // Country code
+  string country_code = 6;
+}
+
+// Payout fee information
+message PayoutFee {
+  // Processing fee
+  double processing_fee = 1;
+
+  // Gateway fee
+  double gateway_fee = 2;
+
+  // Transaction fee
+  double transaction_fee = 3;
+
+  // Currency conversion fee
+  double conversion_fee = 4;
+
+  // Total fees
+  double total_fees = 5;
+
+  // Fee currency
+  string fee_currency = 6;
+
+  // Net payout amount
+  double net_amount = 7;
+}
+
+// Payout creation request
+message CreatePayoutRequest {
+  // Payout amount
+  double amount = 1;
+
+  // Currency code
+  string currency = 2;
+
+  // Payout date
+  int64 payout_date = 3;
+
+  // Settlement type
+  finance.payments.enums.SettlementType settlement_type = 4;
+
+  // Payment gateway
+  string payment_gateway = 5;
+
+  // Payout method
+  string payout_method = 6;
+
+  // Payout type
+  string payout_type = 7;
+
+  // Recipient information
+  PayoutRecipient recipient = 8;
+
+  // Payout notes
+  string notes = 9;
+
+  // Payout tags
+  repeated string tags = 10;
+
+  // Custom fields
+  map<string, string> custom_fields = 11;
+}
+
+// Payout creation response
+message CreatePayoutResponse {
+  // Created payout
+  Payout payout = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Payout update request
+message UpdatePayoutRequest {
+  // Payout ID
+  string payout_id = 1;
+
+  // Updated payout status
+  finance.payments.enums.PaymentStatus status = 2;
+
+  // Updated notes
+  string notes = 3;
+
+  // Updated tags
+  repeated string tags = 4;
+
+  // Updated custom fields
+  map<string, string> custom_fields = 5;
+}
+
+// Payout update response
+message UpdatePayoutResponse {
+  // Updated payout
+  Payout payout = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Payout list request
+message ListPayoutsRequest {
+  // Filter by payout status
+  finance.payments.enums.PaymentStatus status = 1;
+
+  // Filter by recipient ID
+  string recipient_id = 2;
+
+  // Filter by date range
+  int64 start_date = 3;
+  int64 end_date = 4;
+
+  // Filter by currency
+  string currency = 5;
+
+  // Filter by payout method
+  string payout_method = 6;
+
+  // Filter by payout type
+  string payout_type = 7;
+
+  // Search term
+  string search_term = 8;
+
+  // Page number
+  int32 page = 9;
+
+  // Page size
+  int32 page_size = 10;
+}
+
+// Payout list response
+message ListPayoutsResponse {
+  // List of payouts
+  repeated Payout payouts = 1;
+
+  // Total count
+  int64 total_count = 2;
+
+  // Page number
+  int32 page = 3;
+
+  // Page size
+  int32 page_size = 4;
+
+  // Success status
+  bool success = 5;
+
+  // Error message if any
+  string error_message = 6;
+}

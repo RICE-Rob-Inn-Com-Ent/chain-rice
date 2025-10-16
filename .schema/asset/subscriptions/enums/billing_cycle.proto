@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package finance.subscriptions.enums;
+
+// Billing cycles for subscriptions
+enum BillingCycle {
+  // Default value
+  BILLING_CYCLE_UNSPECIFIED = 0;
+
+  // Daily billing
+  BILLING_CYCLE_DAILY = 1;
+
+  // Weekly billing
+  BILLING_CYCLE_WEEKLY = 2;
+
+  // Bi-weekly billing
+  BILLING_CYCLE_BI_WEEKLY = 3;
+
+  // Monthly billing
+  BILLING_CYCLE_MONTHLY = 4;
+
+  // Bi-monthly billing
+  BILLING_CYCLE_BI_MONTHLY = 5;
+
+  // Quarterly billing
+  BILLING_CYCLE_QUARTERLY = 6;
+
+  // Semi-annual billing
+  BILLING_CYCLE_SEMI_ANNUAL = 7;
+
+  // Annual billing
+  BILLING_CYCLE_ANNUAL = 8;
+
+  // Bi-annual billing
+  BILLING_CYCLE_BI_ANNUAL = 9;
+
+  // Custom billing cycle
+  BILLING_CYCLE_CUSTOM = 10;
+
+  // One-time billing
+  BILLING_CYCLE_ONE_TIME = 11;
+
+  // Usage-based billing
+  BILLING_CYCLE_USAGE_BASED = 12;
+
+  // Per-event billing
+  BILLING_CYCLE_PER_EVENT = 13;
+
+  // Per-transaction billing
+  BILLING_CYCLE_PER_TRANSACTION = 14;
+
+  // Per-user billing
+  BILLING_CYCLE_PER_USER = 15;
+
+  // Per-seat billing
+  BILLING_CYCLE_PER_SEAT = 16;
+
+  // Per-project billing
+  BILLING_CYCLE_PER_PROJECT = 17;
+
+  // Per-storage billing
+  BILLING_CYCLE_PER_STORAGE = 18;
+
+  // Per-bandwidth billing
+  BILLING_CYCLE_PER_BANDWIDTH = 19;
+
+  // Tiered billing
+  BILLING_CYCLE_TIERED = 20;
+
+  // Volume billing
+  BILLING_CYCLE_VOLUME = 21;
+}

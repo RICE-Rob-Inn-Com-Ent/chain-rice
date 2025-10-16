@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package marketing.influencer.services;
+
+import "marketing/influencer/messages/influencer_request.proto";
+import "marketing/influencer/messages/influencer_response.proto";
+
+// Influencer service for managing influencer relationships
+service InfluencerService {
+  // Create a new influencer
+  rpc CreateInfluencer(marketing.influencer.messages.CreateInfluencerRequest) returns (marketing.influencer.messages.CreateInfluencerResponse);
+
+  // Get an influencer by ID
+  rpc GetInfluencer(marketing.influencer.messages.GetInfluencerRequest) returns (marketing.influencer.messages.GetInfluencerResponse);
+
+  // List influencers with pagination and filtering
+  rpc ListInfluencer(marketing.influencer.messages.ListInfluencerRequest) returns (marketing.influencer.messages.ListInfluencerResponse);
+
+  // Update an existing influencer
+  rpc UpdateInfluencer(marketing.influencer.messages.UpdateInfluencerRequest) returns (marketing.influencer.messages.UpdateInfluencerResponse);
+
+  // Delete an influencer
+  rpc DeleteInfluencer(marketing.influencer.messages.DeleteInfluencerRequest) returns (marketing.influencer.messages.DeleteInfluencerResponse);
+}

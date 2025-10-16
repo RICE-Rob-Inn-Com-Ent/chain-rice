@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package gaming;
+
+option go_package = "github.com/rice-dev/gaming";
+
+// Gaming module index - comprehensive Protobuf definitions for gaming operations
+// This module provides complete gRPC services for gaming management including
+// games, players, achievements, tournaments, and analytics.
+
+// Import all enums from submodules
+import "gaming/games/enums/game_status.proto";
+import "gaming/games/enums/game_genre.proto";
+import "gaming/games/enums/game_rating.proto";
+import "gaming/players/enums/player_status.proto";
+import "gaming/players/enums/player_level.proto";
+import "gaming/players/enums/player_rank.proto";
+import "gaming/achievements/enums/achievement_type.proto";
+import "gaming/achievements/enums/achievement_rarity.proto";
+import "gaming/achievements/enums/achievement_status.proto";
+import "gaming/tournaments/enums/tournament_type.proto";
+import "gaming/tournaments/enums/tournament_status.proto";
+import "gaming/tournaments/enums/tournament_format.proto";
+import "gaming/analytics/enums/metric_type.proto";
+import "gaming/analytics/enums/event_type.proto";
+import "gaming/analytics/enums/analytics_granularity.proto";
+
+// Import all messages from submodules
+import "gaming/games/messages/game.proto";
+import "gaming/games/messages/game_session.proto";
+import "gaming/games/messages/game_stats.proto";
+import "gaming/players/messages/player.proto";
+import "gaming/players/messages/player_profile.proto";
+import "gaming/players/messages/player_stats.proto";
+import "gaming/achievements/messages/achievement.proto";
+import "gaming/achievements/messages/achievement_progress.proto";
+import "gaming/achievements/messages/achievement_reward.proto";
+import "gaming/tournaments/messages/tournament.proto";
+import "gaming/tournaments/messages/tournament_match.proto";
+import "gaming/tournaments/messages/tournament_bracket.proto";
+import "gaming/analytics/messages/gaming_event.proto";
+import "gaming/analytics/messages/player_analytics.proto";
+import "gaming/analytics/messages/game_analytics.proto";
+
+// Import all services from submodules
+import "gaming/games/services/game_service.proto";
+import "gaming/games/services/game_session_service.proto";
+import "gaming/players/services/player_service.proto";
+import "gaming/players/services/player_profile_service.proto";
+import "gaming/achievements/services/achievement_service.proto";
+import "gaming/tournaments/services/tournament_service.proto";
+import "gaming/tournaments/services/match_service.proto";
+import "gaming/analytics/services/gaming_analytics_service.proto";
+
+// Gaming module summary
+message GamingModuleSummary {
+  // Module version
+  string version = 1;
+
+  // Module description
+  string description = 2;
+
+  // Available services
+  repeated string available_services = 3;
+
+  // Available enums
+  repeated string available_enums = 4;
+
+  // Available messages
+  repeated string available_messages = 5;
+
+  // Module capabilities
+  repeated string capabilities = 6;
+
+  // Last updated timestamp
+  int64 last_updated = 7;
+}
+
+// Main service aggregator - provides access to all gaming services
+service GamingService {
+  // Game operations
+  rpc CreateGame(gaming.games.services.CreateGameRequest) returns (gaming.games.services.CreateGameResponse);
+  rpc GetGame(gaming.games.services.GetGameRequest) returns (gaming.games.services.GetGameResponse);
+  rpc UpdateGame(gaming.games.services.UpdateGameRequest) returns (gaming.games.services.UpdateGameResponse);
+  rpc DeleteGame(gaming.games.services.DeleteGameRequest) returns (gaming.games.services.DeleteGameResponse);
+
+  // Player operations
+  rpc CreatePlayer(gaming.players.services.CreatePlayerRequest) returns (gaming.players.services.CreatePlayerResponse);
+  rpc GetPlayer(gaming.players.services.GetPlayerRequest) returns (gaming.players.services.GetPlayerResponse);
+  rpc UpdatePlayer(gaming.players.services.UpdatePlayerRequest) returns (gaming.players.services.UpdatePlayerResponse);
+  rpc DeletePlayer(gaming.players.services.DeletePlayerRequest) returns (gaming.players.services.DeletePlayerResponse);
+
+  // Achievement operations
+  rpc CreateAchievement(gaming.achievements.services.CreateAchievementRequest) returns (gaming.achievements.services.CreateAchievementResponse);
+  rpc GetAchievement(gaming.achievements.services.GetAchievementRequest) returns (gaming.achievements.services.GetAchievementResponse);
+  rpc AwardAchievement(gaming.achievements.services.AwardAchievementRequest) returns (gaming.achievements.services.AwardAchievementResponse);
+
+  // Tournament operations
+  rpc CreateTournament(gaming.tournaments.services.CreateTournamentRequest) returns (gaming.tournaments.services.CreateTournamentResponse);
+  rpc GetTournament(gaming.tournaments.services.GetTournamentRequest) returns (gaming.tournaments.services.GetTournamentResponse);
+  rpc JoinTournament(gaming.tournaments.services.JoinTournamentRequest) returns (gaming.tournaments.services.JoinTournamentResponse);
+
+  // Analytics operations
+  rpc GetPlayerAnalytics(gaming.analytics.services.GetPlayerAnalyticsRequest) returns (gaming.analytics.services.GetPlayerAnalyticsResponse);
+  rpc GetGameAnalytics(gaming.analytics.services.GetGameAnalyticsRequest) returns (gaming.analytics.services.GetGameAnalyticsResponse);
+  rpc GetTournamentAnalytics(gaming.analytics.services.GetTournamentAnalyticsRequest) returns (gaming.analytics.services.GetTournamentAnalyticsResponse);
+}

@@ -1,0 +1,677 @@
+syntax = "proto3";
+
+package gaming.game_core.services;
+
+import "gaming/game_core/messages/game_session_models.proto";
+import "gaming/game_core/messages/game_events.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/game_core/services";
+
+// Сервіс управління ігровими сесіями
+service GameSessionService {
+  // Створити нову ігрову сесію
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+
+  // Отримати сесію за ID
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+
+  // Оновити сесію
+  rpc UpdateSession(UpdateSessionRequest) returns (UpdateSessionResponse);
+
+  // Видалити сесію
+  rpc DeleteSession(DeleteSessionRequest) returns (google.protobuf.Empty);
+
+  // Отримати список сесій
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+
+  // Розпочати сесію
+  rpc StartSession(StartSessionRequest) returns (StartSessionResponse);
+
+  // Завершити сесію
+  rpc EndSession(EndSessionRequest) returns (EndSessionResponse);
+
+  // Призупинити сесію
+  rpc PauseSession(PauseSessionRequest) returns (PauseSessionResponse);
+
+  // Відновити сесію
+  rpc ResumeSession(ResumeSessionRequest) returns (ResumeSessionResponse);
+
+  // Додати гравця до сесії
+  rpc AddPlayerToSession(AddPlayerToSessionRequest) returns (AddPlayerToSessionResponse);
+
+  // Видалити гравця з сесії
+  rpc RemovePlayerFromSession(RemovePlayerFromSessionRequest) returns (RemovePlayerFromSessionResponse);
+
+  // Оновити статус гравця в сесії
+  rpc UpdatePlayerSessionStatus(UpdatePlayerSessionStatusRequest) returns (UpdatePlayerSessionStatusResponse);
+
+  // Отримати активні сесії
+  rpc GetActiveSessions(GetActiveSessionsRequest) returns (GetActiveSessionsResponse);
+
+  // Отримати статистику сесій
+  rpc GetSessionStats(GetSessionStatsRequest) returns (GetSessionStatsResponse);
+
+  // Пошук сесій
+  rpc SearchSessions(SearchSessionsRequest) returns (SearchSessionsResponse);
+
+  // Отримати рекомендації сесій
+  rpc GetSessionRecommendations(GetSessionRecommendationsRequest) returns (GetSessionRecommendationsResponse);
+
+  // Зберегти сесію
+  rpc SaveSession(SaveSessionRequest) returns (SaveSessionResponse);
+
+  // Завантажити сесію
+  rpc LoadSession(LoadSessionRequest) returns (LoadSessionResponse);
+
+  // Отримати історію сесій
+  rpc GetSessionHistory(GetSessionHistoryRequest) returns (GetSessionHistoryResponse);
+}
+
+// Запит створення сесії
+message CreateSessionRequest {
+  // Дані сесії
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Автор сесії
+  string author_id = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь створення сесії
+message CreateSessionResponse {
+  // Створена сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання сесії
+message GetSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 2;
+}
+
+// Відповідь отримання сесії
+message GetSessionResponse {
+  // Сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Додаткові дані гравця (якщо вказано player_id)
+  map<string, string> player_data = 2;
+}
+
+// Запит оновлення сесії
+message UpdateSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Дані для оновлення
+  gaming.game_core.messages.GameSession session = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення сесії
+message UpdateSessionResponse {
+  // Оновлена сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення сесії
+message DeleteSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Причина видалення
+  string reason = 2;
+}
+
+// Запит списку сесій
+message ListSessionsRequest {
+  // Фільтри
+  SessionFilters filters = 1;
+
+  // Пагінація
+  Pagination pagination = 2;
+
+  // Сортування
+  Sorting sorting = 3;
+}
+
+// Відповідь списку сесій
+message ListSessionsResponse {
+  // Список сесій
+  repeated gaming.game_core.messages.GameSession sessions = 1;
+
+  // Загальна кількість
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит розпочаття сесії
+message StartSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь розпочаття сесії
+message StartSessionResponse {
+  // Розпочата сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час розпочаття
+  google.protobuf.Timestamp start_time = 4;
+}
+
+// Запит завершення сесії
+message EndSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Причина завершення
+  string reason = 3;
+
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь завершення сесії
+message EndSessionResponse {
+  // Завершена сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час завершення
+  google.protobuf.Timestamp end_time = 4;
+
+  // Тривалість сесії (в секундах)
+  int64 duration_seconds = 5;
+}
+
+// Запит призупинення сесії
+message PauseSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Причина призупинення
+  string reason = 3;
+}
+
+// Відповідь призупинення сесії
+message PauseSessionResponse {
+  // Призупинена сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час призупинення
+  google.protobuf.Timestamp pause_time = 4;
+}
+
+// Запит відновлення сесії
+message ResumeSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Причина відновлення
+  string reason = 3;
+}
+
+// Відповідь відновлення сесії
+message ResumeSessionResponse {
+  // Відновлена сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час відновлення
+  google.protobuf.Timestamp resume_time = 4;
+}
+
+// Запит додавання гравця до сесії
+message AddPlayerToSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Роль гравця
+  gaming.game_core.enums.PlayerRole role = 3;
+
+  // Команда гравця
+  gaming.game_core.enums.TeamType team = 4;
+
+  // Додаткові параметри
+  map<string, string> parameters = 5;
+}
+
+// Відповідь додавання гравця до сесії
+message AddPlayerToSessionResponse {
+  // Сесія гравця
+  gaming.game_core.messages.PlayerSession player_session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення гравця з сесії
+message RemovePlayerFromSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Причина видалення
+  string reason = 3;
+}
+
+// Відповідь видалення гравця з сесії
+message RemovePlayerFromSessionResponse {
+  // Статус операції
+  string status = 1;
+
+  // Повідомлення
+  string message = 2;
+}
+
+// Запит оновлення статусу гравця в сесії
+message UpdatePlayerSessionStatusRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Новий статус
+  gaming.game_core.enums.PlayerSessionStatus status = 3;
+
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь оновлення статусу гравця в сесії
+message UpdatePlayerSessionStatusResponse {
+  // Оновлена сесія гравця
+  gaming.game_core.messages.PlayerSession player_session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит активних сесій
+message GetActiveSessionsRequest {
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 1;
+
+  // Фільтри
+  SessionFilters filters = 2;
+}
+
+// Відповідь активних сесій
+message GetActiveSessionsResponse {
+  // Список активних сесій
+  repeated gaming.game_core.messages.GameSession active_sessions = 1;
+
+  // Загальна кількість активних сесій
+  int64 total_count = 2;
+}
+
+// Запит статистики сесій
+message GetSessionStatsRequest {
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 1;
+
+  // Фільтри
+  SessionStatsFilters filters = 2;
+}
+
+// Відповідь статистики сесій
+message GetSessionStatsResponse {
+  // Статистика сесій
+  gaming.game_core.messages.SessionStats stats = 1;
+
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Запит пошуку сесій
+message SearchSessionsRequest {
+  // Пошуковий запит
+  string query = 1;
+
+  // Фільтри
+  SessionFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+
+  // Сортування
+  Sorting sorting = 4;
+}
+
+// Відповідь пошуку сесій
+message SearchSessionsResponse {
+  // Список знайдених сесій
+  repeated gaming.game_core.messages.GameSession sessions = 1;
+
+  // Загальна кількість результатів
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+
+  // Час пошуку (в мілісекундах)
+  int64 search_time_ms = 4;
+}
+
+// Запит рекомендацій сесій
+message GetSessionRecommendationsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Кількість рекомендацій
+  int32 limit = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь рекомендацій сесій
+message GetSessionRecommendationsResponse {
+  // Список рекомендованих сесій
+  repeated gaming.game_core.messages.GameSession recommended_sessions = 1;
+
+  // Загальна кількість рекомендацій
+  int64 total_count = 2;
+
+  // Додаткові дані рекомендацій
+  map<string, string> recommendation_data = 3;
+}
+
+// Запит збереження сесії
+message SaveSessionRequest {
+  // Ідентифікатор сесії
+  string session_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Назва збереження
+  string save_name = 3;
+
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь збереження сесії
+message SaveSessionResponse {
+  // Статус операції
+  string status = 1;
+
+  // Повідомлення
+  string message = 2;
+
+  // Ідентифікатор збереження
+  string save_id = 3;
+
+  // Час збереження
+  google.protobuf.Timestamp save_time = 4;
+}
+
+// Запит завантаження сесії
+message LoadSessionRequest {
+  // Ідентифікатор збереження
+  string save_id = 1;
+
+  // Ідентифікатор гравця
+  string player_id = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь завантаження сесії
+message LoadSessionResponse {
+  // Завантажена сесія
+  gaming.game_core.messages.GameSession session = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час завантаження
+  google.protobuf.Timestamp load_time = 4;
+}
+
+// Запит історії сесій
+message GetSessionHistoryRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Фільтри
+  SessionHistoryFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь історії сесій
+message GetSessionHistoryResponse {
+  // Список записів історії
+  repeated gaming.game_core.messages.GameSession history_sessions = 1;
+
+  // Загальна кількість записів
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Фільтри сесій
+message SessionFilters {
+  // Режим гри
+  repeated gaming.game_core.enums.GameMode game_modes = 1;
+
+  // Тип сесії
+  repeated gaming.game_core.enums.SessionType session_types = 2;
+
+  // Статус сесії
+  repeated gaming.game_core.enums.SessionStatus statuses = 3;
+
+  // Рівень складності
+  repeated gaming.game_core.enums.DifficultyLevel difficulties = 4;
+
+  // Автор сесії
+  string author = 5;
+
+  // Теги сесії
+  repeated string tags = 6;
+
+  // Мова сесії
+  string language = 7;
+
+  // Мінімальний рейтинг
+  double min_rating = 8;
+
+  // Максимальний рейтинг
+  double max_rating = 9;
+
+  // Час створення (від)
+  google.protobuf.Timestamp created_from = 10;
+
+  // Час створення (до)
+  google.protobuf.Timestamp created_to = 11;
+
+  // Час розпочаття (від)
+  google.protobuf.Timestamp started_from = 12;
+
+  // Час розпочаття (до)
+  google.protobuf.Timestamp started_to = 13;
+
+  // Час закінчення (від)
+  google.protobuf.Timestamp ended_from = 14;
+
+  // Час закінчення (до)
+  google.protobuf.Timestamp ended_to = 15;
+}
+
+// Фільтри статистики сесій
+message SessionStatsFilters {
+  // Період часу (від)
+  google.protobuf.Timestamp period_from = 1;
+
+  // Період часу (до)
+  google.protobuf.Timestamp period_to = 2;
+
+  // Режим гри
+  repeated gaming.game_core.enums.GameMode game_modes = 3;
+
+  // Тип сесії
+  repeated gaming.game_core.enums.SessionType session_types = 4;
+
+  // Рівень складності
+  repeated gaming.game_core.enums.DifficultyLevel difficulties = 5;
+
+  // Автор сесії
+  string author = 6;
+}
+
+// Фільтри історії сесій
+message SessionHistoryFilters {
+  // Режим гри
+  repeated gaming.game_core.enums.GameMode game_modes = 1;
+
+  // Тип сесії
+  repeated gaming.game_core.enums.SessionType session_types = 2;
+
+  // Статус сесії
+  repeated gaming.game_core.enums.SessionStatus statuses = 3;
+
+  // Час створення (від)
+  google.protobuf.Timestamp created_from = 4;
+
+  // Час створення (до)
+  google.protobuf.Timestamp created_to = 5;
+
+  // Час розпочаття (від)
+  google.protobuf.Timestamp started_from = 6;
+
+  // Час розпочаття (до)
+  google.protobuf.Timestamp started_to = 7;
+
+  // Час закінчення (від)
+  google.protobuf.Timestamp ended_from = 8;
+
+  // Час закінчення (до)
+  google.protobuf.Timestamp ended_to = 9;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+
+  // Чи є наступна сторінка
+  bool has_next = 5;
+
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}
+
+// Сортування
+message Sorting {
+  // Поле для сортування
+  string field = 1;
+
+  // Напрямок сортування
+  SortDirection direction = 2;
+}
+
+// Напрямок сортування
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

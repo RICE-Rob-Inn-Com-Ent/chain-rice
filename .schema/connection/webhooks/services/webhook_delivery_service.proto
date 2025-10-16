@@ -1,0 +1,767 @@
+syntax = "proto3";
+
+package integrations.webhooks.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "integrations/webhooks/messages/webhook_event_models.proto";
+import "integrations/webhooks/messages/webhook_delivery_log.proto";
+import "integrations/webhooks/messages/webhook_subscription_models.proto";
+
+option go_package = "github.com/rice-dev/integrations/webhooks/services";
+
+// Webhook Delivery Service for event delivery and retries
+service WebhookDeliveryService {
+  // Event Delivery
+  rpc DeliverEvent(DeliverEventRequest) returns (DeliverEventResponse);
+  rpc DeliverBatch(DeliverBatchRequest) returns (DeliverBatchResponse);
+  rpc DeliverAsync(DeliverAsyncRequest) returns (DeliverAsyncResponse);
+
+  // Delivery Management
+  rpc GetDelivery(GetDeliveryRequest) returns (GetDeliveryResponse);
+  rpc ListDeliveries(ListDeliveriesRequest) returns (ListDeliveriesResponse);
+  rpc CancelDelivery(CancelDeliveryRequest) returns (CancelDeliveryResponse);
+  rpc RetryDelivery(RetryDeliveryRequest) returns (RetryDeliveryResponse);
+
+  // Delivery Status
+  rpc GetDeliveryStatus(GetDeliveryStatusRequest) returns (GetDeliveryStatusResponse);
+  rpc UpdateDeliveryStatus(UpdateDeliveryStatusRequest) returns (UpdateDeliveryStatusResponse);
+  rpc GetDeliveryHistory(GetDeliveryHistoryRequest) returns (GetDeliveryHistoryResponse);
+
+  // Retry Management
+  rpc ScheduleRetry(ScheduleRetryRequest) returns (ScheduleRetryResponse);
+  rpc ProcessRetries(ProcessRetriesRequest) returns (ProcessRetriesResponse);
+  rpc CancelRetry(CancelRetryRequest) returns (CancelRetryResponse);
+  rpc GetRetryQueue(GetRetryQueueRequest) returns (GetRetryQueueResponse);
+
+  // Delivery Logging
+  rpc LogDelivery(LogDeliveryRequest) returns (LogDeliveryResponse);
+  rpc GetDeliveryLog(GetDeliveryLogRequest) returns (GetDeliveryLogResponse);
+  rpc ListDeliveryLogs(ListDeliveryLogsRequest) returns (ListDeliveryLogsResponse);
+  rpc GetDeliveryStatistics(GetDeliveryStatisticsRequest) returns (GetDeliveryStatisticsResponse);
+
+  // Delivery Validation
+  rpc ValidateDelivery(ValidateDeliveryRequest) returns (ValidateDeliveryResponse);
+  rpc TestDelivery(TestDeliveryRequest) returns (TestDeliveryResponse);
+  rpc SimulateDelivery(SimulateDeliveryRequest) returns (SimulateDeliveryResponse);
+
+  // Delivery Monitoring
+  rpc MonitorDelivery(MonitorDeliveryRequest) returns (MonitorDeliveryResponse);
+  rpc GetDeliveryMetrics(GetDeliveryMetricsRequest) returns (GetDeliveryMetricsResponse);
+  rpc GetDeliveryHealth(GetDeliveryHealthRequest) returns (GetDeliveryHealthResponse);
+
+  // Delivery Configuration
+  rpc ConfigureDelivery(ConfigureDeliveryRequest) returns (ConfigureDeliveryResponse);
+  rpc GetDeliveryConfiguration(GetDeliveryConfigurationRequest) returns (GetDeliveryConfigurationResponse);
+  rpc UpdateDeliveryConfiguration(UpdateDeliveryConfigurationRequest) returns (UpdateDeliveryConfigurationResponse);
+
+  // Delivery Queue Management
+  rpc GetDeliveryQueue(GetDeliveryQueueRequest) returns (GetDeliveryQueueResponse);
+  rpc PauseDeliveryQueue(PauseDeliveryQueueRequest) returns (PauseDeliveryQueueResponse);
+  rpc ResumeDeliveryQueue(ResumeDeliveryQueueRequest) returns (ResumeDeliveryQueueResponse);
+  rpc ClearDeliveryQueue(ClearDeliveryQueueRequest) returns (ClearDeliveryQueueResponse);
+
+  // Health Check
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+}
+
+// Deliver Event Request
+message DeliverEventRequest {
+  integrations.webhooks.messages.WebhookEvent event = 1;
+  string subscription_id = 2;
+  WebhookDeliveryOptions options = 3;
+  string correlation_id = 4;
+}
+
+// Deliver Event Response
+message DeliverEventResponse {
+  string delivery_id = 1;
+  string event_id = 2;
+  string subscription_id = 3;
+  WebhookDeliveryResult result = 4;
+  google.protobuf.Timestamp delivered_at = 5;
+}
+
+// Deliver Batch Request
+message DeliverBatchRequest {
+  integrations.webhooks.messages.WebhookEventBatch batch = 1;
+  string subscription_id = 2;
+  WebhookDeliveryOptions options = 3;
+  string correlation_id = 4;
+}
+
+// Deliver Batch Response
+message DeliverBatchResponse {
+  string batch_id = 1;
+  string subscription_id = 2;
+  WebhookBatchDeliveryResult result = 3;
+  repeated string delivery_ids = 4;
+  google.protobuf.Timestamp delivered_at = 5;
+}
+
+// Deliver Async Request
+message DeliverAsyncRequest {
+  integrations.webhooks.messages.WebhookEvent event = 1;
+  string subscription_id = 2;
+  WebhookDeliveryOptions options = 3;
+  string callback_url = 4;
+  string correlation_id = 5;
+}
+
+// Deliver Async Response
+message DeliverAsyncResponse {
+  string delivery_id = 1;
+  string job_id = 2;
+  string status = 3;
+  string callback_url = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// Get Delivery Request
+message GetDeliveryRequest {
+  string delivery_id = 1;
+  bool include_logs = 2;
+  bool include_metrics = 3;
+}
+
+// Get Delivery Response
+message GetDeliveryResponse {
+  integrations.webhooks.messages.WebhookDeliveryLog delivery = 1;
+}
+
+// List Deliveries Request
+message ListDeliveriesRequest {
+  integrations.webhooks.messages.WebhookDeliveryLogFilter filter = 1;
+}
+
+// List Deliveries Response
+message ListDeliveriesResponse {
+  integrations.webhooks.messages.WebhookDeliveryLogList deliveries = 1;
+}
+
+// Cancel Delivery Request
+message CancelDeliveryRequest {
+  string delivery_id = 1;
+  string reason = 2;
+}
+
+// Cancel Delivery Response
+message CancelDeliveryResponse {
+  string delivery_id = 1;
+  bool cancelled = 2;
+  google.protobuf.Timestamp cancelled_at = 3;
+}
+
+// Retry Delivery Request
+message RetryDeliveryRequest {
+  string delivery_id = 1;
+  bool force_retry = 2;
+  WebhookDeliveryOptions options = 3;
+}
+
+// Retry Delivery Response
+message RetryDeliveryResponse {
+  string delivery_id = 1;
+  string retry_id = 2;
+  string status = 3;
+  google.protobuf.Timestamp retry_at = 4;
+}
+
+// Get Delivery Status Request
+message GetDeliveryStatusRequest {
+  string delivery_id = 1;
+}
+
+// Get Delivery Status Response
+message GetDeliveryStatusResponse {
+  integrations.webhooks.enums.WebhookStatus status = 1;
+  string status_message = 2;
+  google.protobuf.Timestamp last_updated = 3;
+  int32 retry_count = 4;
+  google.protobuf.Timestamp next_retry_at = 5;
+}
+
+// Update Delivery Status Request
+message UpdateDeliveryStatusRequest {
+  string delivery_id = 1;
+  integrations.webhooks.enums.WebhookStatus new_status = 2;
+  string reason = 3;
+  string updated_by = 4;
+}
+
+// Update Delivery Status Response
+message UpdateDeliveryStatusResponse {
+  string delivery_id = 1;
+  integrations.webhooks.enums.WebhookStatus old_status = 2;
+  integrations.webhooks.enums.WebhookStatus new_status = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// Get Delivery History Request
+message GetDeliveryHistoryRequest {
+  string delivery_id = 1;
+  bool include_attempts = 2;
+  bool include_errors = 3;
+}
+
+// Get Delivery History Response
+message GetDeliveryHistoryResponse {
+  string delivery_id = 1;
+  repeated integrations.webhooks.messages.WebhookDeliveryLog history = 2;
+  int32 total_attempts = 3;
+  int32 successful_attempts = 4;
+  int32 failed_attempts = 5;
+}
+
+// Schedule Retry Request
+message ScheduleRetryRequest {
+  string delivery_id = 1;
+  int32 retry_delay_seconds = 2;
+  string retry_reason = 3;
+  WebhookDeliveryOptions options = 4;
+}
+
+// Schedule Retry Response
+message ScheduleRetryResponse {
+  string delivery_id = 1;
+  string retry_id = 2;
+  google.protobuf.Timestamp scheduled_at = 3;
+  google.protobuf.Timestamp retry_at = 4;
+}
+
+// Process Retries Request
+message ProcessRetriesRequest {
+  string subscription_id = 1;
+  int32 max_retries = 2;
+  bool process_all = 3;
+}
+
+// Process Retries Response
+message ProcessRetriesResponse {
+  string subscription_id = 1;
+  int32 retries_processed = 2;
+  int32 retries_successful = 3;
+  int32 retries_failed = 4;
+  google.protobuf.Timestamp processed_at = 5;
+}
+
+// Cancel Retry Request
+message CancelRetryRequest {
+  string delivery_id = 1;
+  string retry_id = 2;
+  string reason = 3;
+}
+
+// Cancel Retry Response
+message CancelRetryResponse {
+  string delivery_id = 1;
+  string retry_id = 2;
+  bool cancelled = 3;
+  google.protobuf.Timestamp cancelled_at = 4;
+}
+
+// Get Retry Queue Request
+message GetRetryQueueRequest {
+  string subscription_id = 1;
+  bool include_scheduled = 2;
+  bool include_failed = 3;
+}
+
+// Get Retry Queue Response
+message GetRetryQueueResponse {
+  string subscription_id = 1;
+  repeated WebhookRetryQueueItem retry_queue = 2;
+  int32 total_retries = 3;
+  int32 scheduled_retries = 4;
+  int32 failed_retries = 5;
+}
+
+// Log Delivery Request
+message LogDeliveryRequest {
+  integrations.webhooks.messages.WebhookDeliveryLog delivery_log = 1;
+  bool include_sensitive_data = 2;
+}
+
+// Log Delivery Response
+message LogDeliveryResponse {
+  string log_id = 1;
+  bool logged = 2;
+  google.protobuf.Timestamp logged_at = 3;
+}
+
+// Get Delivery Log Request
+message GetDeliveryLogRequest {
+  string log_id = 1;
+  bool include_sensitive_data = 2;
+}
+
+// Get Delivery Log Response
+message GetDeliveryLogResponse {
+  integrations.webhooks.messages.WebhookDeliveryLog delivery_log = 1;
+}
+
+// List Delivery Logs Request
+message ListDeliveryLogsRequest {
+  integrations.webhooks.messages.WebhookDeliveryLogFilter filter = 1;
+}
+
+// List Delivery Logs Response
+message ListDeliveryLogsResponse {
+  integrations.webhooks.messages.WebhookDeliveryLogList delivery_logs = 1;
+}
+
+// Get Delivery Statistics Request
+message GetDeliveryStatisticsRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string subscription_ids = 3;
+  repeated string endpoint_ids = 4;
+  string granularity = 5; // HOUR, DAY, WEEK, MONTH
+}
+
+// Get Delivery Statistics Response
+message GetDeliveryStatisticsResponse {
+  integrations.webhooks.messages.WebhookDeliveryStatistics statistics = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Validate Delivery Request
+message ValidateDeliveryRequest {
+  integrations.webhooks.messages.WebhookEvent event = 1;
+  string subscription_id = 2;
+  bool validate_endpoint = 3;
+  bool validate_payload = 4;
+}
+
+// Validate Delivery Response
+message ValidateDeliveryResponse {
+  bool is_valid = 1;
+  repeated WebhookDeliveryValidationResult validation_results = 2;
+  repeated string errors = 3;
+  repeated string warnings = 4;
+  google.protobuf.Timestamp validated_at = 5;
+}
+
+// Test Delivery Request
+message TestDeliveryRequest {
+  integrations.webhooks.messages.WebhookEvent test_event = 1;
+  string subscription_id = 2;
+  string test_endpoint_url = 3;
+  bool dry_run = 4;
+}
+
+// Test Delivery Response
+message TestDeliveryResponse {
+  bool test_passed = 1;
+  repeated WebhookDeliveryTestResult test_results = 2;
+  repeated string errors = 3;
+  repeated string warnings = 4;
+  google.protobuf.Timestamp tested_at = 5;
+}
+
+// Simulate Delivery Request
+message SimulateDeliveryRequest {
+  integrations.webhooks.messages.WebhookEvent event = 1;
+  string subscription_id = 2;
+  string simulation_scenario = 3; // SUCCESS, FAILURE, TIMEOUT, RETRY
+  map<string, string> simulation_parameters = 4;
+}
+
+// Simulate Delivery Response
+message SimulateDeliveryResponse {
+  string simulation_id = 1;
+  WebhookDeliverySimulationResult simulation_result = 2;
+  google.protobuf.Timestamp simulated_at = 3;
+}
+
+// Monitor Delivery Request
+message MonitorDeliveryRequest {
+  string delivery_id = 1;
+  bool enable_real_time_monitoring = 2;
+  repeated string monitoring_channels = 3;
+}
+
+// Monitor Delivery Response
+message MonitorDeliveryResponse {
+  string delivery_id = 1;
+  bool monitoring_enabled = 2;
+  repeated string active_monitors = 3;
+  google.protobuf.Timestamp monitoring_started_at = 4;
+}
+
+// Get Delivery Metrics Request
+message GetDeliveryMetricsRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string subscription_ids = 3;
+  string granularity = 3; // MINUTE, HOUR, DAY
+}
+
+// Get Delivery Metrics Response
+message GetDeliveryMetricsResponse {
+  WebhookDeliveryMetrics metrics = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Delivery Health Request
+message GetDeliveryHealthRequest {
+  string subscription_id = 1;
+  bool include_endpoints = 2;
+}
+
+// Get Delivery Health Response
+message GetDeliveryHealthResponse {
+  string subscription_id = 1;
+  string health_status = 2;
+  repeated WebhookDeliveryHealthCheck health_checks = 3;
+  google.protobuf.Timestamp checked_at = 4;
+}
+
+// Configure Delivery Request
+message ConfigureDeliveryRequest {
+  string subscription_id = 1;
+  WebhookDeliveryConfiguration configuration = 2;
+  bool validate_configuration = 3;
+}
+
+// Configure Delivery Response
+message ConfigureDeliveryResponse {
+  string subscription_id = 1;
+  bool configured = 2;
+  repeated string configuration_errors = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Get Delivery Configuration Request
+message GetDeliveryConfigurationRequest {
+  string subscription_id = 1;
+}
+
+// Get Delivery Configuration Response
+message GetDeliveryConfigurationResponse {
+  WebhookDeliveryConfiguration configuration = 1;
+}
+
+// Update Delivery Configuration Request
+message UpdateDeliveryConfigurationRequest {
+  string subscription_id = 1;
+  WebhookDeliveryConfiguration configuration = 2;
+  bool validate_configuration = 3;
+}
+
+// Update Delivery Configuration Response
+message UpdateDeliveryConfigurationResponse {
+  string subscription_id = 1;
+  bool updated = 2;
+  repeated string configuration_errors = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Get Delivery Queue Request
+message GetDeliveryQueueRequest {
+  string subscription_id = 1;
+  bool include_metrics = 2;
+}
+
+// Get Delivery Queue Response
+message GetDeliveryQueueResponse {
+  string subscription_id = 1;
+  WebhookDeliveryQueue queue = 2;
+  WebhookDeliveryQueueMetrics metrics = 3;
+}
+
+// Pause Delivery Queue Request
+message PauseDeliveryQueueRequest {
+  string subscription_id = 1;
+  string reason = 2;
+}
+
+// Pause Delivery Queue Response
+message PauseDeliveryQueueResponse {
+  string subscription_id = 1;
+  bool paused = 2;
+  google.protobuf.Timestamp paused_at = 3;
+}
+
+// Resume Delivery Queue Request
+message ResumeDeliveryQueueRequest {
+  string subscription_id = 1;
+  string reason = 2;
+}
+
+// Resume Delivery Queue Response
+message ResumeDeliveryQueueResponse {
+  string subscription_id = 1;
+  bool resumed = 2;
+  google.protobuf.Timestamp resumed_at = 3;
+}
+
+// Clear Delivery Queue Request
+message ClearDeliveryQueueRequest {
+  string subscription_id = 1;
+  string reason = 2;
+  bool clear_all = 3;
+  bool clear_failed_only = 4;
+}
+
+// Clear Delivery Queue Response
+message ClearDeliveryQueueResponse {
+  string subscription_id = 1;
+  bool cleared = 2;
+  int32 cleared_count = 3;
+  google.protobuf.Timestamp cleared_at = 4;
+}
+
+// Health Check Response
+message HealthCheckResponse {
+  string status = 1; // HEALTHY, DEGRADED, UNHEALTHY
+  string version = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  map<string, string> details = 4;
+}
+
+// Supporting message types
+message WebhookDeliveryOptions {
+  // Delivery configuration
+  bool enable_retries = 1;
+  int32 max_retries = 2;
+  int32 retry_delay_seconds = 3;
+  string retry_strategy = 4; // FIXED, EXPONENTIAL, LINEAR
+
+  // Timeout configuration
+  int32 delivery_timeout_seconds = 5;
+  int32 connection_timeout_seconds = 6;
+  int32 read_timeout_seconds = 7;
+
+  // Delivery behavior
+  bool require_acknowledgment = 8;
+  int32 acknowledgment_timeout_seconds = 9;
+  bool enable_compression = 10;
+  bool enable_encryption = 11;
+
+  // Monitoring
+  bool enable_monitoring = 12;
+  bool enable_logging = 13;
+  string log_level = 14; // DEBUG, INFO, WARN, ERROR
+
+  // Custom options
+  map<string, string> custom_options = 15;
+}
+
+message WebhookDeliveryResult {
+  string result_id = 1;
+  string result_type = 2; // SUCCESS, FAILED, TIMEOUT, CANCELLED, RETRY
+  string result_message = 3;
+  bool delivery_success = 4;
+  bool acknowledgment_received = 5;
+  int32 status_code = 6;
+  string response_message = 7;
+  google.protobuf.Timestamp completed_at = 8;
+  int64 delivery_time_ms = 9;
+}
+
+message WebhookBatchDeliveryResult {
+  string batch_id = 1;
+  string status = 2; // PENDING, PROCESSING, COMPLETED, FAILED, PARTIAL
+  int32 total_deliveries = 3;
+  int32 successful_deliveries = 4;
+  int32 failed_deliveries = 5;
+  double success_rate = 6;
+  google.protobuf.Timestamp started_at = 7;
+  google.protobuf.Timestamp completed_at = 8;
+  repeated string failed_delivery_ids = 9;
+}
+
+message WebhookRetryQueueItem {
+  string delivery_id = 1;
+  string retry_id = 2;
+  int32 retry_attempt = 3;
+  google.protobuf.Timestamp scheduled_at = 4;
+  google.protobuf.Timestamp retry_at = 5;
+  string retry_reason = 6;
+  string retry_status = 7; // SCHEDULED, PROCESSING, COMPLETED, FAILED, CANCELLED
+}
+
+message WebhookDeliveryValidationResult {
+  string validation_type = 1;
+  string validation_name = 2;
+  bool validation_passed = 3;
+  string validation_message = 4;
+  repeated string validation_errors = 5;
+  google.protobuf.Timestamp validated_at = 6;
+}
+
+message WebhookDeliveryTestResult {
+  string test_type = 1;
+  string test_name = 2;
+  bool test_passed = 3;
+  string test_message = 4;
+  int32 response_time_ms = 5;
+  int32 status_code = 6;
+  string response_data = 7;
+  repeated string test_errors = 8;
+  google.protobuf.Timestamp tested_at = 9;
+}
+
+message WebhookDeliverySimulationResult {
+  string simulation_id = 1;
+  string simulation_scenario = 2;
+  bool simulation_success = 3;
+  string simulation_message = 4;
+  map<string, string> simulation_results = 5;
+  int64 simulation_duration_ms = 6;
+  google.protobuf.Timestamp simulated_at = 7;
+}
+
+message WebhookDeliveryMetrics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Delivery metrics
+  int32 total_deliveries = 3;
+  int32 successful_deliveries = 4;
+  int32 failed_deliveries = 5;
+  int32 timeout_deliveries = 6;
+  int32 retry_deliveries = 7;
+  double delivery_success_rate = 8;
+
+  // Performance metrics
+  int64 average_delivery_time_ms = 9;
+  int64 min_delivery_time_ms = 10;
+  int64 max_delivery_time_ms = 11;
+  int64 p50_delivery_time_ms = 12;
+  int64 p90_delivery_time_ms = 13;
+  int64 p95_delivery_time_ms = 14;
+  int64 p99_delivery_time_ms = 15;
+
+  // Throughput metrics
+  double deliveries_per_second = 16;
+  double deliveries_per_minute = 17;
+  double deliveries_per_hour = 18;
+
+  // Error metrics
+  map<string, int32> error_type_counts = 19;
+  map<string, int32> status_code_counts = 20;
+  repeated string top_errors = 21;
+
+  // Time series data
+  repeated WebhookDeliveryTimeSeries time_series = 22;
+}
+
+message WebhookDeliveryTimeSeries {
+  google.protobuf.Timestamp timestamp = 1;
+  int32 delivery_count = 2;
+  int32 success_count = 3;
+  int32 error_count = 4;
+  int64 average_delivery_time_ms = 5;
+  double delivery_success_rate = 6;
+  string granularity = 7; // MINUTE, HOUR, DAY
+}
+
+message WebhookDeliveryHealthCheck {
+  string check_type = 1;
+  string check_name = 2;
+  bool check_passed = 3;
+  string check_message = 4;
+  int32 response_time_ms = 5;
+  google.protobuf.Timestamp checked_at = 6;
+}
+
+message WebhookDeliveryConfiguration {
+  // Delivery settings
+  bool enable_delivery = 1;
+  string delivery_strategy = 2; // IMMEDIATE, SCHEDULED, BATCH, STREAMING
+  int32 delivery_timeout_seconds = 3;
+  int32 connection_timeout_seconds = 4;
+  int32 read_timeout_seconds = 5;
+
+  // Retry settings
+  bool enable_retries = 6;
+  int32 max_retries = 7;
+  int32 retry_delay_seconds = 8;
+  string retry_strategy = 9; // FIXED, EXPONENTIAL, LINEAR
+
+  // Queue settings
+  int32 queue_size = 10;
+  int32 max_concurrent_deliveries = 11;
+  int32 queue_timeout_seconds = 12;
+
+  // Monitoring settings
+  bool enable_monitoring = 13;
+  bool enable_logging = 14;
+  bool enable_alerting = 15;
+  string log_level = 16; // DEBUG, INFO, WARN, ERROR
+
+  // Custom configuration
+  map<string, string> custom_config = 17;
+}
+
+message WebhookDeliveryQueue {
+  string subscription_id = 1;
+  string queue_name = 2;
+  string queue_status = 3; // ACTIVE, PAUSED, STOPPED, ERROR
+
+  // Queue metrics
+  int32 queue_size = 4;
+  int32 processing_rate = 5;
+  int64 average_wait_time_ms = 6;
+  int64 average_processing_time_ms = 7;
+
+  // Queue items
+  repeated WebhookDeliveryQueueItem queue_items = 8;
+
+  // Queue configuration
+  int32 max_queue_size = 9;
+  int32 max_concurrent_processing = 10;
+  int32 queue_timeout_seconds = 11;
+
+  // Queue metadata
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp last_updated = 13;
+  string queue_version = 14;
+}
+
+message WebhookDeliveryQueueItem {
+  string item_id = 1;
+  string delivery_id = 2;
+  string event_id = 3;
+  string subscription_id = 4;
+  string item_status = 5; // QUEUED, PROCESSING, COMPLETED, FAILED, CANCELLED
+  int32 priority = 6;
+  google.protobuf.Timestamp queued_at = 7;
+  google.protobuf.Timestamp started_at = 8;
+  google.protobuf.Timestamp completed_at = 9;
+  int64 wait_time_ms = 10;
+  int64 processing_time_ms = 11;
+}
+
+message WebhookDeliveryQueueMetrics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Queue metrics
+  int32 total_items_processed = 3;
+  int32 successful_items = 4;
+  int32 failed_items = 5;
+  int32 cancelled_items = 6;
+  double success_rate = 7;
+
+  // Performance metrics
+  int64 average_wait_time_ms = 8;
+  int64 average_processing_time_ms = 9;
+  int64 min_processing_time_ms = 10;
+  int64 max_processing_time_ms = 11;
+
+  // Throughput metrics
+  double items_per_second = 12;
+  double items_per_minute = 13;
+  double items_per_hour = 14;
+
+  // Queue health
+  int32 current_queue_size = 15;
+  int32 max_queue_size_reached = 16;
+  double queue_utilization = 17;
+  int32 queue_overflows = 18;
+}

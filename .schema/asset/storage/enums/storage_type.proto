@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package agriculture.storage.enums;
+
+// StorageType enum defines different categories of agricultural storage facilities
+enum StorageType {
+  // Grain storage
+  STORAGE_TYPE_UNSPECIFIED = 0;
+  STORAGE_TYPE_GRAIN_SILO = 1;       // Vertical grain silos
+  STORAGE_TYPE_GRAIN_BIN = 2;        // Horizontal grain bins
+  STORAGE_TYPE_GRAIN_ELEVATOR = 3;   // Grain elevators
+  STORAGE_TYPE_GRAIN_WAREHOUSE = 4;  // Grain warehouses
+  STORAGE_TYPE_GRAIN_BAG = 5;        // Grain bag storage
+
+  // Silage storage
+  STORAGE_TYPE_SILO = 6;             // Silage silos
+  STORAGE_TYPE_BUNKER_SILO = 7;      // Bunker silos
+  STORAGE_TYPE_PILE_SILO = 8;        // Pile silos
+  STORAGE_TYPE_BAG_SILO = 9;         // Bag silos
+  STORAGE_TYPE_TOWER_SILO = 10;      // Tower silos
+
+  // Hay storage
+  STORAGE_TYPE_HAY_BARN = 11;        // Hay barns
+  STORAGE_TYPE_HAY_MOW = 12;         // Hay mows
+  STORAGE_TYPE_HAY_SHED = 13;        // Hay sheds
+  STORAGE_TYPE_HAY_STACK = 14;       // Hay stacks
+  STORAGE_TYPE_HAY_BALE = 15;        // Hay bale storage
+
+  // Cold storage
+  STORAGE_TYPE_COLD_STORAGE = 16;    // Cold storage facilities
+  STORAGE_TYPE_REFRIGERATED = 17;    // Refrigerated storage
+  STORAGE_TYPE_FREEZER = 18;         // Freezer storage
+  STORAGE_TYPE_CONTROLLED_ATMOSPHERE = 19; // Controlled atmosphere storage
+
+  // Liquid storage
+  STORAGE_TYPE_FUEL_TANK = 20;       // Fuel storage tanks
+  STORAGE_TYPE_WATER_TANK = 21;      // Water storage tanks
+  STORAGE_TYPE_MILK_TANK = 22;       // Milk storage tanks
+  STORAGE_TYPE_FERTILIZER_TANK = 23; // Fertilizer storage tanks
+  STORAGE_TYPE_CHEMICAL_TANK = 24;   // Chemical storage tanks
+
+  // Equipment storage
+  STORAGE_TYPE_MACHINERY_SHED = 25;  // Machinery storage sheds
+  STORAGE_TYPE_EQUIPMENT_BARN = 26;  // Equipment barns
+  STORAGE_TYPE_IMPLEMENT_SHED = 27;  // Implement storage sheds
+  STORAGE_TYPE_VEHICLE_GARAGE = 28;  // Vehicle garages
+
+  // Livestock storage
+  STORAGE_TYPE_LIVESTOCK_BARN = 29;  // Livestock barns
+  STORAGE_TYPE_FEED_BARN = 30;       // Feed storage barns
+  STORAGE_TYPE_BEDDING_STORAGE = 31; // Bedding storage
+  STORAGE_TYPE_MANURE_STORAGE = 32;  // Manure storage facilities
+
+  // Seed storage
+  STORAGE_TYPE_SEED_WAREHOUSE = 33;  // Seed warehouses
+  STORAGE_TYPE_SEED_VAULT = 34;      // Seed vaults
+  STORAGE_TYPE_SEED_BANK = 35;       // Seed banks
+
+  // Chemical storage
+  STORAGE_TYPE_CHEMICAL_WAREHOUSE = 36; // Chemical warehouses
+  STORAGE_TYPE_PESTICIDE_STORAGE = 37;  // Pesticide storage
+  STORAGE_TYPE_FERTILIZER_WAREHOUSE = 38; // Fertilizer warehouses
+
+  // Temporary storage
+  STORAGE_TYPE_TEMPORARY_SHELTER = 39; // Temporary storage shelters
+  STORAGE_TYPE_PORTABLE_STORAGE = 40;   // Portable storage units
+  STORAGE_TYPE_FIELD_STORAGE = 41;      // Field storage
+
+  // Specialized storage
+  STORAGE_TYPE_WINE_CELLAR = 42;        // Wine cellars
+  STORAGE_TYPE_CHEESE_CAVE = 43;        // Cheese caves
+  STORAGE_TYPE_POTATO_STORAGE = 44;     // Potato storage facilities
+  STORAGE_TYPE_ONION_STORAGE = 45;      // Onion storage facilities
+  STORAGE_TYPE_APPLE_STORAGE = 46;      // Apple storage facilities
+
+  // Underground storage
+  STORAGE_TYPE_UNDERGROUND_SILO = 47;   // Underground silos
+  STORAGE_TYPE_UNDERGROUND_VAULT = 48;  // Underground vaults
+  STORAGE_TYPE_UNDERGROUND_BUNKER = 49; // Underground bunkers
+
+  // Open storage
+  STORAGE_TYPE_OPEN_YARD = 50;          // Open storage yards
+  STORAGE_TYPE_PADDOCK = 51;            // Paddocks
+  STORAGE_TYPE_CORRAL = 52;             // Corrals
+}

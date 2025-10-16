@@ -1,0 +1,199 @@
+syntax = "proto3";
+
+package crm_hr.customers.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/customers/enums/customer_type.proto";
+import "crm_hr/customers/enums/customer_status.proto";
+import "crm_hr/customers/enums/contact_preference.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/customers/messages";
+
+// Customer represents a customer in the CRM system
+message Customer {
+  // Unique identifier for the customer
+  string id = 1;
+
+  // Customer type (individual, business, etc.)
+  crm_hr.customers.enums.CustomerType type = 2;
+
+  // Current status of the customer
+  crm_hr.customers.enums.CustomerStatus status = 3;
+
+  // Basic information
+  string first_name = 4;
+  string last_name = 5;
+  string company_name = 6;
+  string display_name = 7;
+
+  // Contact information
+  repeated Contact contacts = 8;
+  Address primary_address = 9;
+  repeated Address addresses = 10;
+
+  // Business information
+  string industry = 11;
+  string company_size = 12;
+  string website = 13;
+  string tax_id = 14;
+
+  // Customer preferences
+  repeated crm_hr.customers.enums.ContactPreference contact_preferences = 15;
+  string timezone = 16;
+  string language = 17;
+  string currency = 18;
+
+  // Financial information
+  google.protobuf.Money lifetime_value = 19;
+  google.protobuf.Money annual_revenue = 20;
+  google.protobuf.Money credit_limit = 21;
+  string payment_terms = 22;
+
+  // Customer lifecycle
+  google.protobuf.Timestamp first_contact_date = 23;
+  google.protobuf.Timestamp last_contact_date = 24;
+  google.protobuf.Timestamp last_purchase_date = 25;
+  google.protobuf.Timestamp last_activity_date = 26;
+
+  // Source and attribution
+  string source = 27;
+  string referral_source = 28;
+  string assigned_representative = 29;
+  string assigned_team = 30;
+
+  // Customer segmentation
+  repeated string tags = 31;
+  string segment = 32;
+  int32 priority_score = 33;
+
+  // Custom fields for additional data
+  map<string, string> custom_fields = 34;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 35;
+  google.protobuf.Timestamp updated_at = 36;
+  google.protobuf.Timestamp deleted_at = 37;
+
+  // Version for optimistic concurrency control
+  int32 version = 38;
+}
+
+// Contact represents contact information for a customer
+message Contact {
+  // Unique identifier for the contact
+  string id = 1;
+
+  // Associated customer ID
+  string customer_id = 2;
+
+  // Contact type (primary, billing, technical, etc.)
+  string contact_type = 3;
+
+  // Contact details
+  string first_name = 4;
+  string last_name = 5;
+  string title = 6;
+  string department = 7;
+
+  // Communication methods
+  repeated string email_addresses = 8;
+  repeated string phone_numbers = 9;
+  repeated string social_media = 10;
+
+  // Contact preferences
+  repeated crm_hr.customers.enums.ContactPreference preferences = 11;
+  string preferred_contact_method = 12;
+  string timezone = 13;
+
+  // Additional information
+  string notes = 14;
+  bool is_primary = 15;
+  bool is_active = 16;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+// Address represents a physical address
+message Address {
+  // Unique identifier for the address
+  string id = 1;
+
+  // Associated customer ID
+  string customer_id = 2;
+
+  // Address type (primary, billing, shipping, etc.)
+  string address_type = 3;
+
+  // Address components
+  string line1 = 4;
+  string line2 = 5;
+  string city = 6;
+  string state_province = 7;
+  string postal_code = 8;
+  string country = 9;
+
+  // Geographic information
+  double latitude = 10;
+  double longitude = 11;
+  string timezone = 12;
+
+  // Address metadata
+  bool is_primary = 13;
+  bool is_verified = 14;
+  string verification_status = 15;
+  string notes = 16;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+// CustomerSegment represents a customer segmentation rule
+message CustomerSegment {
+  // Unique identifier for the segment
+  string id = 1;
+
+  // Segment information
+  string name = 2;
+  string description = 3;
+  string criteria = 4; // JSON string with segmentation rules
+
+  // Segment metadata
+  int32 customer_count = 5;
+  bool is_active = 6;
+  string created_by = 7;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// CustomerLifetimeValue represents calculated lifetime value metrics
+message CustomerLifetimeValue {
+  // Associated customer ID
+  string customer_id = 1;
+
+  // Financial metrics
+  google.protobuf.Money total_revenue = 2;
+  google.protobuf.Money total_profit = 3;
+  google.protobuf.Money average_order_value = 4;
+  int32 total_orders = 5;
+
+  // Time-based metrics
+  double customer_lifespan_days = 6;
+  double purchase_frequency = 7;
+  double retention_rate = 8;
+
+  // Predictive metrics
+  google.protobuf.Money predicted_lifetime_value = 9;
+  double churn_probability = 10;
+  int32 days_since_last_purchase = 11;
+
+  // Calculation metadata
+  google.protobuf.Timestamp calculated_at = 12;
+  string calculation_method = 13;
+  double confidence_score = 14;
+}

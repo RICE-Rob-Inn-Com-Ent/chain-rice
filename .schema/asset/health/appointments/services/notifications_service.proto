@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package healthcare.appointments.services;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/appointments/services";
+
+// Notifications service for reminders, updates, and alerts
+service NotificationsService {
+  // Send appointment reminder
+  rpc SendAppointmentReminder(SendReminderRequest) returns (NotificationResponse);
+
+  // Send appointment confirmation
+  rpc SendAppointmentConfirmation(SendConfirmationRequest) returns (NotificationResponse);
+
+  // Send appointment cancellation notice
+  rpc SendCancellationNotice(SendCancellationRequest) returns (NotificationResponse);
+
+  // Send reschedule notification
+  rpc SendRescheduleNotification(SendRescheduleRequest) returns (NotificationResponse);
+
+  // Send no-show alert
+  rpc SendNoShowAlert(SendNoShowRequest) returns (NotificationResponse);
+
+  // Schedule automatic reminders
+  rpc ScheduleReminders(ScheduleRemindersRequest) returns (ScheduleRemindersResponse);
+
+  // Cancel scheduled reminders
+  rpc CancelScheduledReminders(CancelRemindersRequest) returns (google.protobuf.Empty);
+
+  // Get notification history
+  rpc GetNotificationHistory(GetNotificationHistoryRequest) returns (GetNotificationHistoryResponse);
+}
+
+// Notification types
+enum NotificationType {
+  NOTIFICATION_TYPE_UNSPECIFIED = 0;
+  NOTIFICATION_TYPE_REMINDER = 1;
+  NOTIFICATION_TYPE_CONFIRMATION = 2;
+  NOTIFICATION_TYPE_CANCELLATION = 3;
+  NOTIFICATION_TYPE_RESCHEDULE = 4;
+  NOTIFICATION_TYPE_NO_SHOW = 5;
+  NOTIFICATION_TYPE_APPOINTMENT_APPROACHING = 6;
+}
+
+// Notification channels
+enum NotificationChannel {
+  NOTIFICATION_CHANNEL_UNSPECIFIED = 0;
+  NOTIFICATION_CHANNEL_EMAIL = 1;
+  NOTIFICATION_CHANNEL_SMS = 2;
+  NOTIFICATION_CHANNEL_PUSH = 3;
+  NOTIFICATION_CHANNEL_PHONE = 4;
+  NOTIFICATION_CHANNEL_IN_APP = 5;
+}
+
+// Send reminder request
+message SendReminderRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  NotificationChannel channel = 3;
+  google.protobuf.Timestamp reminder_time = 4;
+  string custom_message = 5;
+}
+
+// Send confirmation request
+message SendConfirmationRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  NotificationChannel channel = 3;
+  string custom_message = 4;
+}
+
+// Send cancellation request
+message SendCancellationRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  NotificationChannel channel = 3;
+  string cancellation_reason = 4;
+  string custom_message = 5;
+}
+
+// Send reschedule request
+message SendRescheduleRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  NotificationChannel channel = 3;
+  google.protobuf.Timestamp old_time = 4;
+  google.protobuf.Timestamp new_time = 5;
+  string custom_message = 6;
+}
+
+// Send no-show request
+message SendNoShowRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  string doctor_id = 3;
+  NotificationChannel channel = 4;
+  string custom_message = 5;
+}
+
+// Notification response
+message NotificationResponse {
+  bool success = 1;
+  string message = 2;
+  string notification_id = 3;
+  google.protobuf.Timestamp sent_at = 4;
+}
+
+// Schedule reminders request
+message ScheduleRemindersRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  repeated ReminderSchedule reminder_schedules = 3;
+}
+
+// Reminder schedule
+message ReminderSchedule {
+  google.protobuf.Timestamp reminder_time = 1;
+  NotificationChannel channel = 2;
+  string message_template = 3;
+}
+
+// Schedule reminders response
+message ScheduleRemindersResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string scheduled_reminder_ids = 3;
+}
+
+// Cancel reminders request
+message CancelRemindersRequest {
+  string appointment_id = 1;
+  repeated string reminder_ids = 2;
+}
+
+// Get notification history request
+message GetNotificationHistoryRequest {
+  string appointment_id = 1;
+  string patient_id = 2;
+  NotificationType notification_type = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  int32 page_size = 6;
+  string page_token = 7;
+}
+
+// Notification record
+message NotificationRecord {
+  string notification_id = 1;
+  string appointment_id = 2;
+  string patient_id = 3;
+  NotificationType notification_type = 4;
+  NotificationChannel channel = 5;
+  string message = 6;
+  google.protobuf.Timestamp sent_at = 7;
+  bool delivered = 8;
+  string delivery_status = 9;
+  string error_message = 10;
+}
+
+// Get notification history response
+message GetNotificationHistoryResponse {
+  repeated NotificationRecord notifications = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}

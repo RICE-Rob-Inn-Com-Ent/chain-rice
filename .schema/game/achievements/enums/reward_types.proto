@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package gaming.achievements.enums;
+
+option go_package = "github.com/rice-dev/gaming/achievements/enums";
+
+// Типи нагород за досягнення
+enum RewardType {
+  REWARD_TYPE_UNSPECIFIED = 0;
+
+  // NFT нагороди
+  REWARD_TYPE_NFT = 1;
+
+  // Досвід (XP)
+  REWARD_TYPE_EXPERIENCE = 2;
+
+  // Ігрові токени
+  REWARD_TYPE_TOKENS = 3;
+
+  // Ігрова валюта
+  REWARD_TYPE_CURRENCY = 4;
+
+  // Предмети/ресурси
+  REWARD_TYPE_ITEMS = 5;
+
+  // Зброя та обладнання
+  REWARD_TYPE_EQUIPMENT = 6;
+
+  // Косметичні предмети
+  REWARD_TYPE_COSMETICS = 7;
+
+  // Доступ до контенту
+  REWARD_TYPE_ACCESS = 8;
+
+  // Звання та титули
+  REWARD_TYPE_TITLES = 9;
+
+  // Бонуси до статистики
+  REWARD_TYPE_STAT_BOOSTS = 10;
+
+  // Спеціальні можливості
+  REWARD_TYPE_SPECIAL_ABILITIES = 11;
+}
+
+// Рідкість нагород
+enum RewardRarity {
+  REWARD_RARITY_UNSPECIFIED = 0;
+
+  // Звичайна
+  REWARD_RARITY_COMMON = 1;
+
+  // Рідкісна
+  REWARD_RARITY_RARE = 2;
+
+  // Епічна
+  REWARD_RARITY_EPIC = 3;
+
+  // Легендарна
+  REWARD_RARITY_LEGENDARY = 4;
+
+  // Міфічна
+  REWARD_RARITY_MYTHIC = 5;
+
+  // Унікальна
+  REWARD_RARITY_UNIQUE = 6;
+}
+
+// Типи розподілу нагород
+enum RewardDistributionType {
+  REWARD_DISTRIBUTION_TYPE_UNSPECIFIED = 0;
+
+  // Миттєва видача
+  REWARD_DISTRIBUTION_TYPE_INSTANT = 1;
+
+  // Відкладена видача
+  REWARD_DISTRIBUTION_TYPE_DELAYED = 2;
+
+  // Поступова видача
+  REWARD_DISTRIBUTION_TYPE_GRADUAL = 3;
+
+  // Видача за умовою
+  REWARD_DISTRIBUTION_TYPE_CONDITIONAL = 4;
+
+  // Видача за часом
+  REWARD_DISTRIBUTION_TYPE_TIME_BASED = 5;
+}
+
+// Статуси нагород
+enum RewardStatus {
+  REWARD_STATUS_UNSPECIFIED = 0;
+
+  // Доступна для отримання
+  REWARD_STATUS_AVAILABLE = 1;
+
+  // В процесі видачі
+  REWARD_STATUS_PROCESSING = 2;
+
+  // Видана
+  REWARD_STATUS_DISTRIBUTED = 3;
+
+  // Просрочена
+  REWARD_STATUS_EXPIRED = 4;
+
+  // Скасована
+  REWARD_STATUS_CANCELLED = 5;
+
+  // Заблокована
+  REWARD_STATUS_LOCKED = 6;
+}

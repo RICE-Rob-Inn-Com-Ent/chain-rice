@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package telecom.usage.enums;
+
+// UsageStatus represents the current state of usage tracking or billing
+enum UsageStatus {
+  // Unspecified status - should not be used in production
+  USAGE_STATUS_UNSPECIFIED = 0;
+
+  // Usage is being tracked and recorded
+  TRACKING = 1;
+
+  // Usage has been recorded and processed
+  RECORDED = 2;
+
+  // Usage is pending billing calculation
+  PENDING_BILLING = 3;
+
+  // Usage has been billed
+  BILLED = 4;
+
+  // Usage is disputed by customer
+  DISPUTED = 5;
+
+  // Usage has been adjusted or corrected
+  ADJUSTED = 6;
+
+  // Usage is being investigated
+  UNDER_INVESTIGATION = 7;
+
+  // Usage has been voided or cancelled
+  VOIDED = 8;
+
+  // Usage is exempt from billing
+  EXEMPT = 9;
+
+  // Usage is in grace period
+  GRACE_PERIOD = 10;
+
+  // Usage is being validated
+  VALIDATING = 11;
+
+  // Usage validation failed
+  VALIDATION_FAILED = 12;
+
+  // Usage is archived
+  ARCHIVED = 13;
+}

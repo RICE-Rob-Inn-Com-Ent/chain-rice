@@ -1,0 +1,9 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AI Analytics API",
+    "version": "1.0.0",
+    "description": "AI and ML analytics endpoints"
+  },
+  "paths": {}
+}

@@ -1,0 +1,227 @@
+syntax = "proto3";
+
+package settings.themes.services;
+
+import "google/protobuf/empty.proto";
+import "settings/themes/messages/theme_request.proto";
+import "settings/themes/messages/theme_response.proto";
+
+// ThemeService provides CRUD operations for managing application themes
+// with support for custom colors, fonts, and visual styling options.
+service ThemeService {
+  // Create a new theme with colors, fonts, and styling options
+  rpc Create(CreateThemeRequest) returns (CreateThemeResponse);
+
+  // Retrieve a specific theme by its unique identifier
+  rpc Get(GetThemeRequest) returns (GetThemeResponse);
+
+  // Retrieve a theme by its name
+  rpc GetByName(GetThemeByNameRequest) returns (GetThemeByNameResponse);
+
+  // List themes with optional filtering and pagination
+  rpc List(ListThemesRequest) returns (ListThemesResponse);
+
+  // Update an existing theme with new colors, fonts, or styling
+  rpc Update(UpdateThemeRequest) returns (UpdateThemeResponse);
+
+  // Delete a theme by its unique identifier
+  rpc Delete(DeleteThemeRequest) returns (DeleteThemeResponse);
+
+  // Duplicate an existing theme with a new name
+  rpc Duplicate(DuplicateThemeRequest) returns (DuplicateThemeResponse);
+
+  // Apply a theme to a specific scope (user, organization, etc.)
+  rpc Apply(ApplyThemeRequest) returns (ApplyThemeResponse);
+
+  // Preview a theme with optional modifications
+  rpc Preview(PreviewThemeRequest) returns (PreviewThemeResponse);
+
+  // Get theme statistics and analytics
+  rpc GetStats(google.protobuf.Empty) returns (ThemeStats);
+
+  // Validate theme accessibility and color contrast
+  rpc Validate(ValidateThemeRequest) returns (ValidateThemeResponse);
+
+  // Get theme usage information
+  rpc GetUsage(GetThemeUsageRequest) returns (GetThemeUsageResponse);
+
+  // Export theme as CSS or other formats
+  rpc Export(ExportThemeRequest) returns (ExportThemeResponse);
+
+  // Import theme from CSS or other formats
+  rpc Import(ImportThemeRequest) returns (ImportThemeResponse);
+
+  // Reset theme to default values
+  rpc ResetToDefault(ResetThemeRequest) returns (ResetThemeResponse);
+}
+
+// Request message for validating a theme
+message ValidateThemeRequest {
+  // The unique identifier of the theme to validate
+  string theme_id = 1;
+
+  // Optional: validate with specific modifications
+  map<string, string> modifications = 2;
+
+  // Whether to perform accessibility validation
+  bool check_accessibility = 3;
+
+  // Whether to perform color contrast validation
+  bool check_contrast = 4;
+}
+
+// Response message for theme validation
+message ValidateThemeResponse {
+  // Theme validation result
+  ThemeValidation validation = 1;
+
+  // Operation status message
+  string message = 2;
+}
+
+// Request message for getting theme usage
+message GetThemeUsageRequest {
+  // Optional theme ID filter
+  string theme_id = 1;
+
+  // Optional scope filter
+  string scope = 2;
+
+  // Optional scope ID filter
+  string scope_id = 3;
+
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 4;
+
+  // Page token for pagination
+  string page_token = 5;
+}
+
+// Response message for theme usage
+message GetThemeUsageResponse {
+  // List of theme usage entries
+  repeated ThemeUsage usage_entries = 1;
+
+  // Next page token for pagination
+  string next_page_token = 2;
+
+  // Total count of usage entries
+  int32 total_count = 3;
+
+  // Whether there are more pages available
+  bool has_more = 4;
+}
+
+// Request message for exporting a theme
+message ExportThemeRequest {
+  // The unique identifier of the theme to export
+  string theme_id = 1;
+
+  // Export format: "css", "json", "yaml", "xml", "scss", "less"
+  string format = 2;
+
+  // Whether to include CSS variables
+  bool include_css_variables = 3;
+
+  // Whether to include metadata
+  bool include_metadata = 4;
+
+  // Whether to include usage statistics
+  bool include_usage_stats = 5;
+
+  // CSS output format: "variables", "classes", "both"
+  string css_format = 6;
+}
+
+// Response message for exporting a theme
+message ExportThemeResponse {
+  // Export data in the requested format
+  bytes export_data = 1;
+
+  // Content type of the export data
+  string content_type = 2;
+
+  // Filename suggestion for the export
+  string filename = 3;
+
+  // Export completion timestamp
+  string exported_at = 4;
+
+  // The exported theme
+  Theme theme = 5;
+}
+
+// Request message for importing a theme
+message ImportThemeRequest {
+  // Import data in various formats
+  bytes import_data = 1;
+
+  // Content type of the import data
+  string content_type = 2;
+
+  // New name for the imported theme
+  string new_name = 3;
+
+  // New display name for the imported theme
+  string new_display_name = 4;
+
+  // Whether to validate the theme before import
+  bool validate_before_import = 5;
+
+  // Whether to make the imported theme public
+  bool is_public = 6;
+
+  // Import mode: "create_new", "update_existing", "merge"
+  string import_mode = 7;
+}
+
+// Response message for importing a theme
+message ImportThemeResponse {
+  // The imported theme
+  Theme theme = 1;
+
+  // Number of CSS variables imported
+  int32 css_variables_imported = 2;
+
+  // Number of validation errors encountered
+  int32 validation_errors = 3;
+
+  // List of validation error messages
+  repeated string errors = 4;
+
+  // Import completion timestamp
+  string imported_at = 5;
+
+  // Operation status message
+  string message = 6;
+}
+
+// Request message for resetting a theme to default
+message ResetThemeRequest {
+  // The unique identifier of the theme to reset
+  string theme_id = 1;
+
+  // Whether to reset colors to default
+  bool reset_colors = 2;
+
+  // Whether to reset fonts to default
+  bool reset_fonts = 3;
+
+  // Whether to reset visual settings to default
+  bool reset_visual_settings = 4;
+
+  // Whether to reset CSS variables to default
+  bool reset_css_variables = 5;
+}
+
+// Response message for resetting a theme
+message ResetThemeResponse {
+  // The reset theme
+  Theme theme = 1;
+
+  // Operation status message
+  string message = 2;
+
+  // List of fields that were reset
+  repeated string reset_fields = 3;
+}

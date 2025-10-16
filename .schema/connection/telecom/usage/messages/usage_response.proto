@@ -1,0 +1,291 @@
+syntax = "proto3";
+
+package telecom.usage.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/string_value.proto";
+import "google/protobuf/double_value.proto";
+import "telecom/usage/enums/usage_type.proto";
+import "telecom/usage/enums/usage_status.proto";
+
+// Usage represents a usage record entity
+message Usage {
+  // Unique identifier for the usage record
+  string usage_id = 1;
+
+  // Customer ID for whom the usage belongs
+  string customer_id = 2;
+
+  // Subscription ID associated with the usage
+  string subscription_id = 3;
+
+  // Type of usage
+  telecom.usage.enums.UsageType type = 4;
+
+  // Quantity of usage
+  double quantity = 5;
+
+  // Unit of measurement
+  string unit = 6;
+
+  // Start time of the usage
+  google.protobuf.Timestamp start_time = 7;
+
+  // End time of the usage
+  google.protobuf.Timestamp end_time = 8;
+
+  // Current status of the usage record
+  telecom.usage.enums.UsageStatus status = 9;
+
+  // Cost associated with this usage
+  google.protobuf.DoubleValue cost = 10;
+
+  // Currency code
+  google.protobuf.StringValue currency = 11;
+
+  // Device or phone number associated with usage
+  google.protobuf.StringValue device_id = 12;
+
+  // Location where usage occurred
+  google.protobuf.StringValue location = 13;
+
+  // Network type
+  google.protobuf.StringValue network_type = 14;
+
+  // Additional metadata
+  google.protobuf.StringValue metadata = 15;
+
+  // Whether this is roaming usage
+  bool is_roaming = 16;
+
+  // Whether this is peak hours usage
+  bool is_peak_hours = 17;
+
+  // Date when the usage record was created
+  google.protobuf.Timestamp created_at = 18;
+
+  // Date when the usage record was last updated
+  google.protobuf.Timestamp updated_at = 19;
+
+  // Date when the usage was billed (if applicable)
+  google.protobuf.Timestamp billed_at = 20;
+}
+
+// CreateUsageResponse represents the response after creating a usage record
+message CreateUsageResponse {
+  // The created usage record
+  Usage usage = 1;
+
+  // Success message
+  string message = 2;
+}
+
+// UpdateUsageResponse represents the response after updating a usage record
+message UpdateUsageResponse {
+  // The updated usage record
+  Usage usage = 1;
+
+  // Success message
+  string message = 2;
+}
+
+// GetUsageResponse represents the response after retrieving a usage record
+message GetUsageResponse {
+  // The retrieved usage record
+  Usage usage = 1;
+}
+
+// ListUsageResponse represents the response after listing usage records
+message ListUsageResponse {
+  // List of usage records matching the criteria
+  repeated Usage usage_records = 1;
+
+  // Total count of usage records matching the criteria
+  int32 total_count = 2;
+
+  // Current page number
+  int32 page = 3;
+
+  // Page size used
+  int32 page_size = 4;
+
+  // Total number of pages available
+  int32 total_pages = 5;
+}
+
+// DeleteUsageResponse represents the response after deleting a usage record
+message DeleteUsageResponse {
+  // Success message
+  string message = 1;
+
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}
+
+// AdjustUsageResponse represents the response after adjusting usage
+message AdjustUsageResponse {
+  // The adjusted usage record
+  Usage usage = 1;
+
+  // Adjustment amount
+  double adjustment_quantity = 2;
+
+  // Success message
+  string message = 3;
+
+  // Adjustment timestamp
+  google.protobuf.Timestamp adjusted_at = 4;
+}
+
+// BulkUsageResponse represents the response after bulk usage creation
+message BulkUsageResponse {
+  // List of created usage records
+  repeated Usage created_usage_records = 1;
+
+  // List of failed records with errors
+  repeated FailedUsageRecord failed_records = 2;
+
+  // Total number of records processed
+  int32 total_processed = 3;
+
+  // Number of successful records
+  int32 successful_count = 4;
+
+  // Number of failed records
+  int32 failed_count = 5;
+
+  // Success message
+  string message = 6;
+
+  // Processing timestamp
+  google.protobuf.Timestamp processed_at = 7;
+}
+
+// FailedUsageRecord represents a failed usage record creation
+message FailedUsageRecord {
+  // Original request that failed
+  CreateUsageRequest original_request = 1;
+
+  // Error message
+  string error_message = 2;
+
+  // Error code
+  string error_code = 3;
+
+  // Line number in the batch (if applicable)
+  google.protobuf.DoubleValue line_number = 4;
+}
+
+// GetUsageSummaryResponse represents the usage summary response
+message GetUsageSummaryResponse {
+  // Customer ID
+  string customer_id = 1;
+
+  // Subscription ID (if filtered)
+  google.protobuf.StringValue subscription_id = 2;
+
+  // Summary period start date
+  google.protobuf.Timestamp period_start = 3;
+
+  // Summary period end date
+  google.protobuf.Timestamp period_end = 4;
+
+  // Usage summary by type
+  repeated UsageTypeSummary usage_by_type = 5;
+
+  // Total usage cost
+  int64 total_cost = 6;
+
+  // Currency code
+  string currency = 7;
+
+  // Total data usage in GB
+  google.protobuf.DoubleValue total_data_gb = 8;
+
+  // Total voice usage in minutes
+  google.protobuf.DoubleValue total_voice_minutes = 9;
+
+  // Total SMS usage count
+  google.protobuf.DoubleValue total_sms_count = 10;
+
+  // Number of usage records
+  int32 total_records = 11;
+
+  // Roaming usage summary
+  google.protobuf.StringValue roaming_summary = 12;
+}
+
+// UsageTypeSummary represents usage summary for a specific type
+message UsageTypeSummary {
+  // Usage type
+  telecom.usage.enums.UsageType type = 1;
+
+  // Total quantity used
+  double total_quantity = 2;
+
+  // Unit of measurement
+  string unit = 3;
+
+  // Total cost for this usage type
+  int64 total_cost = 4;
+
+  // Number of usage records
+  int32 record_count = 5;
+
+  // Average usage per record
+  google.protobuf.DoubleValue average_per_record = 6;
+}
+
+// GetUsageAlertsResponse represents the usage alerts response
+message GetUsageAlertsResponse {
+  // List of usage alerts
+  repeated UsageAlert alerts = 1;
+
+  // Total count of alerts
+  int32 total_count = 2;
+
+  // Current page number
+  int32 page = 3;
+
+  // Page size used
+  int32 page_size = 4;
+
+  // Total number of pages
+  int32 total_pages = 5;
+}
+
+// UsageAlert represents a usage alert
+message UsageAlert {
+  // Alert ID
+  string alert_id = 1;
+
+  // Customer ID
+  string customer_id = 2;
+
+  // Subscription ID
+  string subscription_id = 3;
+
+  // Alert type (threshold_exceeded, unusual_usage, etc.)
+  string alert_type = 4;
+
+  // Alert severity (low, medium, high, critical)
+  string severity = 5;
+
+  // Alert message
+  string message = 6;
+
+  // Alert timestamp
+  google.protobuf.Timestamp alert_time = 7;
+
+  // Whether the alert has been acknowledged
+  bool acknowledged = 8;
+
+  // Acknowledgment timestamp
+  google.protobuf.Timestamp acknowledged_at = 9;
+
+  // User who acknowledged the alert
+  google.protobuf.StringValue acknowledged_by = 10;
+
+  // Alert details and metadata
+  google.protobuf.StringValue details = 11;
+}

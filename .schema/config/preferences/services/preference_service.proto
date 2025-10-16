@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package settings.preferences.services;
+
+import "google/protobuf/empty.proto";
+import "settings/preferences/messages/preference_request.proto";
+import "settings/preferences/messages/preference_response.proto";
+
+// PreferenceService provides CRUD operations for managing user preferences
+// with support for inheritance, validation, and bulk operations.
+service PreferenceService {
+  // Create a new preference for a user
+  rpc Create(CreatePreferenceRequest) returns (CreatePreferenceResponse);
+
+  // Retrieve a specific preference by its unique identifier
+  rpc Get(GetPreferenceRequest) returns (GetPreferenceResponse);
+
+  // Retrieve a preference by user ID and key
+  rpc GetByUserAndKey(GetPreferenceByUserAndKeyRequest) returns (GetPreferenceByUserAndKeyResponse);
+
+  // List preferences for a user with optional filtering and pagination
+  rpc ListUserPreferences(ListUserPreferencesRequest) returns (ListUserPreferencesResponse);
+
+  // Update an existing preference with new value or metadata
+  rpc Update(UpdatePreferenceRequest) returns (UpdatePreferenceResponse);
+
+  // Delete a preference by its unique identifier
+  rpc Delete(DeletePreferenceRequest) returns (DeletePreferenceResponse);
+
+  // Bulk create, update, or upsert multiple preferences
+  rpc Bulk(BulkPreferencesRequest) returns (BulkPreferencesResponse);
+
+  // Search preferences by key, description, category, or tags
+  rpc Search(SearchPreferencesRequest) returns (SearchPreferencesResponse);
+
+  // Validate a preference value against its schema and rules
+  rpc Validate(ValidatePreferenceRequest) returns (ValidatePreferenceResponse);
+
+  // Get the schema/definition for a preference
+  rpc GetSchema(GetPreferenceSchemaRequest) returns (GetPreferenceSchemaResponse);
+
+  // Get preferences statistics and analytics
+  rpc GetStats(google.protobuf.Empty) returns (PreferencesStats);
+
+  // Copy preferences from one user to another
+  rpc CopyPreferences(CopyPreferencesRequest) returns (CopyPreferencesResponse);
+
+  // Reset preferences to their default values
+  rpc ResetToDefaults(ResetPreferencesRequest) returns (ResetPreferencesResponse);
+
+  // Get user preference summary
+  rpc GetUserSummary(GetUserPreferenceSummaryRequest) returns (GetUserPreferenceSummaryResponse);
+
+  // Get preference inheritance chain for a user
+  rpc GetInheritanceChain(GetPreferenceInheritanceRequest) returns (GetPreferenceInheritanceResponse);
+
+  // Export user preferences
+  rpc ExportUserPreferences(ExportUserPreferencesRequest) returns (ExportUserPreferencesResponse);
+
+  // Import user preferences
+  rpc ImportUserPreferences(ImportUserPreferencesRequest) returns (ImportUserPreferencesResponse);
+}
+
+// Request message for getting user preference summary
+message GetUserPreferenceSummaryRequest {
+  // The user ID to get summary for
+  string user_id = 1;
+
+  // Whether to include statistics
+  bool include_stats = 2;
+
+  // Whether to include recent activity
+  bool include_recent_activity = 3;
+}
+
+// Response message for user preference summary
+message GetUserPreferenceSummaryResponse {
+  // User preference summary
+  UserPreferenceSummary summary = 1;
+
+  // Recent preference changes (if requested)
+  repeated Preference recent_changes = 2;
+
+  // Preference statistics (if requested)
+  PreferencesStats stats = 3;
+}
+
+// Request message for getting preference inheritance
+message GetPreferenceInheritanceRequest {
+  // The user ID
+  string user_id = 1;
+
+  // Optional preference key filter
+  string preference_key = 2;
+
+  // Whether to include all inheritance levels
+  bool include_all_levels = 3;
+}
+
+// Response message for preference inheritance
+message GetPreferenceInheritanceResponse {
+  // List of preference inheritance information
+  repeated PreferenceInheritance inheritance_info = 1;
+
+  // Total count of preferences
+  int32 total_count = 2;
+}
+
+// Request message for exporting user preferences
+message ExportUserPreferencesRequest {
+  // The user ID to export preferences for
+  string user_id = 1;
+
+  // Export format: "json", "csv", "yaml", "xml"
+  string format = 2;
+
+  // Optional filter by preference keys
+  repeated string preference_keys = 3;
+
+  // Optional filter by categories
+  repeated string categories = 4;
+
+  // Whether to include sensitive preferences in export
+  bool include_sensitive = 5;
+
+  // Whether to include metadata in export
+  bool include_metadata = 6;
+
+  // Whether to include inherited preferences
+  bool include_inherited = 7;
+}
+
+// Response message for exporting user preferences
+message ExportUserPreferencesResponse {
+  // Export data in the requested format
+  bytes export_data = 1;
+
+  // Content type of the export data
+  string content_type = 2;
+
+  // Filename suggestion for the export
+  string filename = 3;
+
+  // Number of preferences exported
+  int32 exported_count = 4;
+
+  // Export completion timestamp
+  string exported_at = 5;
+}
+
+// Request message for importing user preferences
+message ImportUserPreferencesRequest {
+  // The user ID to import preferences for
+  string user_id = 1;
+
+  // Import data in various formats
+  bytes import_data = 2;
+
+  // Content type of the import data
+  string content_type = 3;
+
+  // Import mode: "create_only", "update_only", "upsert", "replace"
+  string import_mode = 4;
+
+  // Whether to validate preferences before import
+  bool validate_before_import = 5;
+
+  // Whether to skip duplicate preferences
+  bool skip_duplicates = 6;
+
+  // Whether to preserve sensitive preferences during import
+  bool preserve_sensitive = 7;
+
+  // Whether to import inherited preferences
+  bool import_inherited = 8;
+}
+
+// Response message for importing user preferences
+message ImportUserPreferencesResponse {
+  // Number of preferences imported successfully
+  int32 imported_count = 1;
+
+  // Number of preferences skipped (duplicates or validation failures)
+  int32 skipped_count = 2;
+
+  // Number of preferences that failed import
+  int32 failed_count = 3;
+
+  // List of error messages for failed imports
+  repeated string errors = 4;
+
+  // Import completion timestamp
+  string imported_at = 5;
+
+  // Summary of import operation
+  string summary = 6;
+}

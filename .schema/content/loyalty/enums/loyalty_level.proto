@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package marketing.loyalty.enums;
+
+// Enumeration for loyalty program levels
+enum LoyaltyLevel {
+  // Default level - not specified
+  LOYALTY_LEVEL_UNSPECIFIED = 0;
+
+  // Bronze level
+  LOYALTY_LEVEL_BRONZE = 1;
+
+  // Silver level
+  LOYALTY_LEVEL_SILVER = 2;
+
+  // Gold level
+  LOYALTY_LEVEL_GOLD = 3;
+
+  // Platinum level
+  LOYALTY_LEVEL_PLATINUM = 4;
+
+  // Diamond level
+  LOYALTY_LEVEL_DIAMOND = 5;
+
+  // VIP level
+  LOYALTY_LEVEL_VIP = 6;
+
+  // Premium level
+  LOYALTY_LEVEL_PREMIUM = 7;
+
+  // Elite level
+  LOYALTY_LEVEL_ELITE = 8;
+
+  // Ambassador level
+  LOYALTY_LEVEL_AMBASSADOR = 9;
+
+  // Founder level
+  LOYALTY_LEVEL_FOUNDER = 10;
+}

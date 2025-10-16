@@ -1,0 +1,285 @@
+syntax = "proto3";
+
+package crm_hr.hr.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/hr/enums/payroll_status.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/hr/messages";
+
+// Payroll represents a payroll record for an employee
+message Payroll {
+  // Unique identifier for the payroll record
+  string id = 1;
+
+  // Associated employee ID
+  string employee_id = 2;
+
+  // Payroll period
+  google.protobuf.Timestamp pay_period_start = 3;
+  google.protobuf.Timestamp pay_period_end = 4;
+  google.protobuf.Timestamp pay_date = 5;
+  string pay_frequency = 6; // weekly, bi_weekly, monthly, quarterly, annual
+
+  // Payroll status
+  crm_hr.hr.enums.PayrollStatus status = 7;
+  string processing_status = 8; // draft, processing, completed, failed
+
+  // Compensation details
+  google.protobuf.Money gross_pay = 9;
+  google.protobuf.Money net_pay = 10;
+  google.protobuf.Money regular_pay = 11;
+  google.protobuf.Money overtime_pay = 12;
+  google.protobuf.Money bonus_pay = 13;
+  google.protobuf.Money commission_pay = 14;
+  google.protobuf.Money holiday_pay = 15;
+  google.protobuf.Money vacation_pay = 16;
+  google.protobuf.Money sick_pay = 17;
+
+  // Hours worked
+  double regular_hours = 18;
+  double overtime_hours = 19;
+  double holiday_hours = 20;
+  double vacation_hours = 21;
+  double sick_hours = 22;
+  double total_hours = 23;
+
+  // Deductions
+  repeated PayrollDeduction deductions = 24;
+  google.protobuf.Money total_deductions = 25;
+
+  // Taxes
+  repeated PayrollTax taxes = 26;
+  google.protobuf.Money total_taxes = 27;
+
+  // Benefits
+  repeated PayrollBenefit benefits = 28;
+  google.protobuf.Money total_benefits = 29;
+
+  // Year-to-date totals
+  google.protobuf.Money ytd_gross_pay = 30;
+  google.protobuf.Money ytd_net_pay = 31;
+  google.protobuf.Money ytd_deductions = 32;
+  google.protobuf.Money ytd_taxes = 33;
+  google.protobuf.Money ytd_benefits = 34;
+
+  // Processing information
+  string processed_by = 35;
+  google.protobuf.Timestamp processed_at = 36;
+  string approved_by = 37;
+  google.protobuf.Timestamp approved_at = 38;
+  string payment_method = 39; // direct_deposit, check, cash, etc.
+  string bank_account = 40;
+  string check_number = 41;
+
+  // Additional information
+  string notes = 42;
+  repeated string attachments = 43;
+  map<string, string> custom_fields = 44;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 45;
+  google.protobuf.Timestamp updated_at = 46;
+
+  // Version for optimistic concurrency control
+  int32 version = 47;
+}
+
+// PayrollDeduction represents a deduction from payroll
+message PayrollDeduction {
+  // Unique identifier for the deduction
+  string id = 1;
+
+  // Associated payroll ID
+  string payroll_id = 2;
+
+  // Deduction details
+  string deduction_type = 3; // health_insurance, retirement, loan, garnishment, etc.
+  string description = 4;
+  google.protobuf.Money amount = 5;
+  double percentage = 6;
+  string calculation_method = 7; // fixed, percentage, formula
+
+  // Deduction period
+  google.protobuf.Timestamp effective_start_date = 8;
+  google.protobuf.Timestamp effective_end_date = 9;
+  bool is_active = 10;
+
+  // Additional information
+  string provider = 11;
+  string account_number = 12;
+  string reference_number = 13;
+  string notes = 14;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+// PayrollTax represents a tax deduction from payroll
+message PayrollTax {
+  // Unique identifier for the tax
+  string id = 1;
+
+  // Associated payroll ID
+  string payroll_id = 2;
+
+  // Tax details
+  string tax_type = 3; // federal_income, state_income, social_security, medicare, etc.
+  string description = 4;
+  google.protobuf.Money amount = 5;
+  double percentage = 6;
+  string calculation_method = 7; // fixed, percentage, formula
+
+  // Tax period
+  google.protobuf.Timestamp effective_start_date = 8;
+  google.protobuf.Timestamp effective_end_date = 9;
+  bool is_active = 10;
+
+  // Additional information
+  string tax_authority = 11;
+  string tax_id = 12;
+  string reference_number = 13;
+  string notes = 14;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+// PayrollBenefit represents a benefit contribution in payroll
+message PayrollBenefit {
+  // Unique identifier for the benefit
+  string id = 1;
+
+  // Associated payroll ID
+  string payroll_id = 2;
+
+  // Benefit details
+  string benefit_type = 3; // health_insurance, dental, vision, retirement, etc.
+  string description = 4;
+  google.protobuf.Money employee_contribution = 5;
+  google.protobuf.Money employer_contribution = 6;
+  google.protobuf.Money total_contribution = 7;
+  double percentage = 8;
+  string calculation_method = 9; // fixed, percentage, formula
+
+  // Benefit period
+  google.protobuf.Timestamp effective_start_date = 10;
+  google.protobuf.Timestamp effective_end_date = 11;
+  bool is_active = 12;
+
+  // Additional information
+  string provider = 13;
+  string plan_name = 14;
+  string account_number = 15;
+  string reference_number = 16;
+  string notes = 17;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// PayrollReport represents a payroll report for a specific period
+message PayrollReport {
+  // Unique identifier for the report
+  string id = 1;
+
+  // Report period
+  google.protobuf.Timestamp report_period_start = 2;
+  google.protobuf.Timestamp report_period_end = 3;
+  google.protobuf.Timestamp generated_at = 4;
+
+  // Report details
+  string report_type = 5; // summary, detailed, tax, benefits, etc.
+  string title = 6;
+  string description = 7;
+
+  // Report data
+  repeated PayrollReportEntry entries = 8;
+  PayrollReportSummary summary = 9;
+
+  // Report metadata
+  string generated_by = 10;
+  string format = 11; // pdf, excel, csv, json
+  string file_url = 12;
+  int64 file_size = 13;
+  bool is_encrypted = 14;
+
+  // Additional information
+  string notes = 15;
+  map<string, string> custom_fields = 16;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 17;
+  google.protobuf.Timestamp updated_at = 18;
+}
+
+// PayrollReportEntry represents an entry in a payroll report
+message PayrollReportEntry {
+  // Unique identifier for the entry
+  string id = 1;
+
+  // Associated report ID
+  string report_id = 2;
+
+  // Entry details
+  string employee_id = 3;
+  string employee_name = 4;
+  string department = 5;
+  string position = 6;
+
+  // Payroll information
+  google.protobuf.Money gross_pay = 7;
+  google.protobuf.Money net_pay = 8;
+  google.protobuf.Money total_deductions = 9;
+  google.protobuf.Money total_taxes = 10;
+  google.protobuf.Money total_benefits = 11;
+
+  // Hours information
+  double regular_hours = 12;
+  double overtime_hours = 13;
+  double total_hours = 14;
+
+  // Additional information
+  string pay_frequency = 15;
+  google.protobuf.Timestamp pay_date = 16;
+  string payment_method = 17;
+  map<string, string> custom_fields = 18;
+}
+
+// PayrollReportSummary represents a summary of a payroll report
+message PayrollReportSummary {
+  // Associated report ID
+  string report_id = 1;
+
+  // Summary totals
+  int32 total_employees = 2;
+  google.protobuf.Money total_gross_pay = 3;
+  google.protobuf.Money total_net_pay = 4;
+  google.protobuf.Money total_deductions = 5;
+  google.protobuf.Money total_taxes = 6;
+  google.protobuf.Money total_benefits = 7;
+
+  // Hours summary
+  double total_regular_hours = 8;
+  double total_overtime_hours = 9;
+  double total_hours = 10;
+
+  // Department breakdown
+  map<string, int32> employees_by_department = 11;
+  map<string, google.protobuf.Money> gross_pay_by_department = 12;
+  map<string, google.protobuf.Money> net_pay_by_department = 13;
+
+  // Payment method breakdown
+  map<string, int32> employees_by_payment_method = 14;
+  map<string, google.protobuf.Money> pay_by_payment_method = 15;
+
+  // Additional summary information
+  google.protobuf.Money average_gross_pay = 16;
+  google.protobuf.Money average_net_pay = 17;
+  double average_hours = 18;
+  google.protobuf.Timestamp calculated_at = 19;
+}

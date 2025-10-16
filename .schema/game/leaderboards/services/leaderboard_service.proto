@@ -1,0 +1,194 @@
+syntax = "proto3";
+
+package gaming.leaderboards.services;
+
+import "gaming/leaderboards/messages/leaderboard_models.proto";
+import "gaming/leaderboards/messages/leaderboard_events.proto";
+
+option go_package = "github.com/rice-dev/gaming/leaderboards/services";
+
+// Сервіс управління лідербордами
+service LeaderboardService {
+  // Створити лідерборд
+  rpc CreateLeaderboard(CreateLeaderboardRequest) returns (CreateLeaderboardResponse);
+
+  // Отримати лідерборд
+  rpc GetLeaderboard(GetLeaderboardRequest) returns (GetLeaderboardResponse);
+
+  // Оновити лідерборд
+  rpc UpdateLeaderboard(UpdateLeaderboardRequest) returns (UpdateLeaderboardResponse);
+
+  // Видалити лідерборд
+  rpc DeleteLeaderboard(DeleteLeaderboardRequest) returns (DeleteLeaderboardResponse);
+
+  // Отримати список лідербордів
+  rpc ListLeaderboards(ListLeaderboardsRequest) returns (ListLeaderboardsResponse);
+
+  // Пошук лідербордів
+  rpc SearchLeaderboards(SearchLeaderboardsRequest) returns (SearchLeaderboardsResponse);
+
+  // Отримати статистику лідерборду
+  rpc GetLeaderboardStats(GetLeaderboardStatsRequest) returns (GetLeaderboardStatsResponse);
+
+  // Скинути лідерборд
+  rpc ResetLeaderboard(ResetLeaderboardRequest) returns (ResetLeaderboardResponse);
+
+  // Отримати налаштування лідерборду
+  rpc GetLeaderboardSettings(GetLeaderboardSettingsRequest) returns (GetLeaderboardSettingsResponse);
+
+  // Оновити налаштування лідерборду
+  rpc UpdateLeaderboardSettings(UpdateLeaderboardSettingsRequest) returns (UpdateLeaderboardSettingsResponse);
+}
+
+// Запит створення лідерборду
+message CreateLeaderboardRequest {
+  string name = 1;
+  string description = 2;
+  gaming.leaderboards.enums.LeaderboardType type = 3;
+  gaming.leaderboards.enums.RankingType ranking_type = 4;
+  gaming.leaderboards.enums.ScoreType score_type = 5;
+  int64 max_entries = 6;
+  int64 min_score = 7;
+  int64 max_score = 8;
+  bool is_active = 9;
+  bool is_public = 10;
+  string game_id = 11;
+  string category_id = 12;
+  string season_id = 13;
+  int64 expires_at = 14;
+  map<string, string> metadata = 15;
+}
+
+// Відповідь створення лідерборду
+message CreateLeaderboardResponse {
+  bool success = 1;
+  string leaderboard_id = 2;
+  string message = 3;
+  gaming.leaderboards.messages.Leaderboard leaderboard = 4;
+}
+
+// Запит отримання лідерборду
+message GetLeaderboardRequest {
+  string leaderboard_id = 1;
+}
+
+// Відповідь отримання лідерборду
+message GetLeaderboardResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.Leaderboard leaderboard = 3;
+}
+
+// Запит оновлення лідерборду
+message UpdateLeaderboardRequest {
+  string leaderboard_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.leaderboards.enums.LeaderboardType type = 4;
+  gaming.leaderboards.enums.RankingType ranking_type = 5;
+  gaming.leaderboards.enums.ScoreType score_type = 6;
+  int64 max_entries = 7;
+  int64 min_score = 8;
+  int64 max_score = 9;
+  bool is_active = 10;
+  bool is_public = 11;
+  int64 expires_at = 12;
+  map<string, string> metadata = 13;
+}
+
+// Відповідь оновлення лідерборду
+message UpdateLeaderboardResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.Leaderboard leaderboard = 3;
+}
+
+// Запит видалення лідерборду
+message DeleteLeaderboardRequest {
+  string leaderboard_id = 1;
+}
+
+// Відповідь видалення лідерборду
+message DeleteLeaderboardResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку лідербордів
+message ListLeaderboardsRequest {
+  gaming.leaderboards.messages.LeaderboardFilters filters = 1;
+  gaming.leaderboards.messages.LeaderboardSorting sorting = 2;
+  gaming.leaderboards.messages.LeaderboardPagination pagination = 3;
+}
+
+// Відповідь списку лідербордів
+message ListLeaderboardsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Leaderboard leaderboards = 3;
+  gaming.leaderboards.messages.LeaderboardPagination pagination = 4;
+}
+
+// Запит пошуку лідербордів
+message SearchLeaderboardsRequest {
+  gaming.leaderboards.messages.LeaderboardSearch search = 1;
+  gaming.leaderboards.messages.LeaderboardSorting sorting = 2;
+  gaming.leaderboards.messages.LeaderboardPagination pagination = 3;
+}
+
+// Відповідь пошуку лідербордів
+message SearchLeaderboardsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Leaderboard leaderboards = 3;
+  gaming.leaderboards.messages.LeaderboardPagination pagination = 4;
+}
+
+// Запит статистики лідерборду
+message GetLeaderboardStatsRequest {
+  string leaderboard_id = 1;
+}
+
+// Відповідь статистики лідерборду
+message GetLeaderboardStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.LeaderboardStats stats = 3;
+}
+
+// Запит скидання лідерборду
+message ResetLeaderboardRequest {
+  string leaderboard_id = 1;
+  bool keep_history = 2;
+}
+
+// Відповідь скидання лідерборду
+message ResetLeaderboardResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит налаштувань лідерборду
+message GetLeaderboardSettingsRequest {
+  string leaderboard_id = 1;
+}
+
+// Відповідь налаштувань лідерборду
+message GetLeaderboardSettingsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.LeaderboardSettings settings = 3;
+}
+
+// Запит оновлення налаштувань лідерборду
+message UpdateLeaderboardSettingsRequest {
+  string leaderboard_id = 1;
+  gaming.leaderboards.messages.LeaderboardSettings settings = 2;
+}
+
+// Відповідь оновлення налаштувань лідерборду
+message UpdateLeaderboardSettingsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.LeaderboardSettings settings = 3;
+}

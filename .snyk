@@ -1,0 +1,84 @@
+# ============================================================================
+# SNYK SECURITY CONFIGURATION - Rice Monorepo
+# ============================================================================
+# Security vulnerability scanning and policy configuration
+# ============================================================================
+
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+
+# ============================================================================
+# LANGUAGE SETTINGS
+# ============================================================================
+language-settings:
+  # Python settings
+  python: '3.11'
+
+# ============================================================================
+# EXCLUSIONS
+# ============================================================================
+# Exclude specific paths from testing
+exclude:
+  # Development and test directories
+  - 'test/**'
+  - 'tests/**'
+  - '**/__tests__/**'
+  - '**/*.test.*'
+  - '**/*.spec.*'
+
+  # Build outputs
+  - 'dist/**'
+  - 'build/**'
+  - 'target/**'
+  - 'out/**'
+  - '.next/**'
+  - '.nuxt/**'
+
+  # Dependencies
+  - 'node_modules/**'
+  - 'vendor/**'
+  - '.venv/**'
+  - 'venv/**'
+
+  # Generated files
+  - 'bazel-*/**'
+  - '**/*_pb.js'
+  - '**/*_pb.ts'
+  - '**/*.generated.*'
+
+  # Documentation
+  - 'docs/**'
+  - 'documentation/**'
+
+# ============================================================================
+# IGNORE SPECIFIC VULNERABILITIES
+# ============================================================================
+# Use this section to ignore specific vulnerabilities
+# Format:
+# ignore:
+#   SNYK-<ECOSYSTEM>-<PACKAGE>-<ID>:
+#     - '*':
+#         reason: <explanation>
+#         expires: <YYYY-MM-DD>
+#         created: <YYYY-MM-DD>
+
+ignore: {}
+
+# ============================================================================
+# PATCH SETTINGS
+# ============================================================================
+# Automatically apply patches for vulnerabilities
+patch: {}
+
+# ============================================================================
+# FAIL ON
+# ============================================================================
+# Configure what severity level should cause the test to fail
+# Options: all | upgradable | patchable
+# failOn: all
+
+# ============================================================================
+# ORGANIZATION SETTINGS
+# ============================================================================
+# Optional: Link to your Snyk organization
+# org: your-org-name

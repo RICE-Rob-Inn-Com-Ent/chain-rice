@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package telecom.billing.enums;
+
+// PaymentMethod represents the various payment options available for billing
+enum PaymentMethod {
+  // Unspecified payment method - should not be used in production
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+
+  // Credit card payment
+  CREDIT_CARD = 1;
+
+  // Debit card payment
+  DEBIT_CARD = 2;
+
+  // Bank transfer (ACH)
+  BANK_TRANSFER = 3;
+
+  // Wire transfer
+  WIRE_TRANSFER = 4;
+
+  // PayPal payment
+  PAYPAL = 5;
+
+  // Apple Pay payment
+  APPLE_PAY = 6;
+
+  // Google Pay payment
+  GOOGLE_PAY = 7;
+
+  // Cryptocurrency payment
+  CRYPTOCURRENCY = 8;
+
+  // Check payment
+  CHECK = 9;
+
+  // Cash payment
+  CASH = 10;
+
+  // Mobile money payment
+  MOBILE_MONEY = 11;
+
+  // Direct debit from bank account
+  DIRECT_DEBIT = 12;
+}

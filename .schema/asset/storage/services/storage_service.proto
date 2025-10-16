@@ -1,0 +1,610 @@
+syntax = "proto3";
+
+package agriculture.storage.services;
+
+import "agriculture/storage/messages/storage.proto";
+import "google/protobuf/empty.proto";
+
+// StorageService provides CRUD operations and business logic for storage management
+service StorageService {
+  // Storage management
+  rpc CreateStorage(CreateStorageRequest) returns (CreateStorageResponse);
+  rpc GetStorage(GetStorageRequest) returns (GetStorageResponse);
+  rpc ListStorages(ListStoragesRequest) returns (ListStoragesResponse);
+  rpc UpdateStorage(UpdateStorageRequest) returns (UpdateStorageResponse);
+  rpc DeleteStorage(DeleteStorageRequest) returns (google.protobuf.Empty);
+
+  // Storage operations
+  rpc StoreItem(StoreItemRequest) returns (StoreItemResponse);
+  rpc RetrieveItem(RetrieveItemRequest) returns (RetrieveItemResponse);
+  rpc TransferItem(TransferItemRequest) returns (TransferItemResponse);
+  rpc EmptyStorage(EmptyStorageRequest) returns (EmptyStorageResponse);
+
+  // Capacity management
+  rpc GetStorageCapacity(GetStorageCapacityRequest) returns (GetStorageCapacityResponse);
+  rpc UpdateStorageCapacity(UpdateStorageCapacityRequest) returns (UpdateStorageCapacityResponse);
+  rpc GetAvailableStorage(GetAvailableStorageRequest) returns (GetAvailableStorageResponse);
+  rpc GetStorageUtilization(GetStorageUtilizationRequest) returns (GetStorageUtilizationResponse);
+
+  // Environmental control
+  rpc SetTemperature(SetTemperatureRequest) returns (SetTemperatureResponse);
+  rpc SetHumidity(SetHumidityRequest) returns (SetHumidityResponse);
+  rpc GetEnvironmentalConditions(GetEnvironmentalConditionsRequest) returns (GetEnvironmentalConditionsResponse);
+  rpc MonitorEnvironmentalConditions(MonitorEnvironmentalConditionsRequest) returns (MonitorEnvironmentalConditionsResponse);
+
+  // Maintenance management
+  rpc ScheduleMaintenance(ScheduleMaintenanceRequest) returns (ScheduleMaintenanceResponse);
+  rpc CompleteMaintenance(CompleteMaintenanceRequest) returns (CompleteMaintenanceResponse);
+  rpc GetMaintenanceHistory(GetMaintenanceHistoryRequest) returns (GetMaintenanceHistoryResponse);
+  rpc GetUpcomingMaintenance(GetUpcomingMaintenanceRequest) returns (GetUpcomingMaintenanceResponse);
+
+  // Quality control
+  rpc InspectStorage(InspectStorageRequest) returns (InspectStorageResponse);
+  rpc GetQualityReport(GetQualityReportRequest) returns (GetQualityReportResponse);
+  rpc UpdateQualityStandards(UpdateQualityStandardsRequest) returns (UpdateQualityStandardsResponse);
+  rpc GetQualityHistory(GetQualityHistoryRequest) returns (GetQualityHistoryResponse);
+
+  // Inventory management
+  rpc GetStoredItems(GetStoredItemsRequest) returns (GetStoredItemsResponse);
+  rpc GetItemHistory(GetItemHistoryRequest) returns (GetItemHistoryResponse);
+  rpc GetStorageByType(GetStorageByTypeRequest) returns (GetStorageByTypeResponse);
+  rpc GetStorageByStatus(GetStorageByStatusRequest) returns (GetStorageByStatusResponse);
+
+  // Analytics and reporting
+  rpc GetStorageAnalytics(GetStorageAnalyticsRequest) returns (GetStorageAnalyticsResponse);
+  rpc GetUtilizationReport(GetUtilizationReportRequest) returns (GetUtilizationReportResponse);
+  rpc GetCostAnalysis(GetCostAnalysisRequest) returns (GetCostAnalysisResponse);
+  rpc GetPerformanceReport(GetPerformanceReportRequest) returns (GetPerformanceReportResponse);
+}
+
+// Storage management messages
+message CreateStorageRequest {
+  agriculture.storage.messages.Storage storage = 1;
+}
+
+message CreateStorageResponse {
+  agriculture.storage.messages.Storage storage = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message GetStorageRequest {
+  string storage_id = 1;
+}
+
+message GetStorageResponse {
+  agriculture.storage.messages.Storage storage = 1;
+  bool found = 2;
+  string message = 3;
+}
+
+message ListStoragesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string storage_type = 3;       // Filter by storage type
+  string status = 4;             // Filter by status
+  string location = 5;           // Filter by location
+  bool is_available = 6;         // Filter by availability
+  bool requires_attention = 7;   // Filter by attention requirement
+  string search_query = 8;       // Search in names and descriptions
+}
+
+message ListStoragesResponse {
+  repeated agriculture.storage.messages.Storage storages = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateStorageRequest {
+  agriculture.storage.messages.Storage storage = 1;
+  repeated string update_mask = 2; // Fields to update
+}
+
+message UpdateStorageResponse {
+  agriculture.storage.messages.Storage storage = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message DeleteStorageRequest {
+  string storage_id = 1;
+}
+
+// Storage operation messages
+message StoreItemRequest {
+  string storage_id = 1;
+  string item_type = 2;          // Type of item being stored
+  double quantity = 3;
+  string unit = 4;
+  string quality_grade = 5;
+  string source = 6;             // Source of the item
+  string notes = 7;
+}
+
+message StoreItemResponse {
+  bool success = 1;
+  string message = 2;
+  string storage_transaction_id = 3;
+}
+
+message RetrieveItemRequest {
+  string storage_id = 1;
+  string item_type = 2;          // Type of item to retrieve
+  double quantity = 3;
+  string unit = 4;
+  string destination = 5;        // Destination of the item
+  string notes = 6;
+}
+
+message RetrieveItemResponse {
+  bool success = 1;
+  string message = 2;
+  string storage_transaction_id = 3;
+}
+
+message TransferItemRequest {
+  string from_storage_id = 1;
+  string to_storage_id = 2;
+  string item_type = 3;
+  double quantity = 4;
+  string unit = 5;
+  string notes = 6;
+}
+
+message TransferItemResponse {
+  bool success = 1;
+  string message = 2;
+  string transfer_id = 3;
+}
+
+message EmptyStorageRequest {
+  string storage_id = 1;
+  string reason = 2;             // Reason for emptying
+  string destination = 3;        // Where contents are going
+  string notes = 4;
+}
+
+message EmptyStorageResponse {
+  bool success = 1;
+  string message = 2;
+  string emptying_id = 3;
+}
+
+// Capacity management messages
+message GetStorageCapacityRequest {
+  string storage_id = 1;
+}
+
+message GetStorageCapacityResponse {
+  string storage_id = 1;
+  double max_capacity = 2;
+  double current_capacity = 3;
+  double available_capacity = 4;
+  string capacity_unit = 5;
+  double utilization_rate = 6;
+}
+
+message UpdateStorageCapacityRequest {
+  string storage_id = 1;
+  double new_capacity = 2;
+  string capacity_unit = 3;
+  string reason = 4;
+}
+
+message UpdateStorageCapacityResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetAvailableStorageRequest {
+  string storage_type = 1;       // Optional type filter
+  double required_capacity = 2;  // Required capacity
+  string capacity_unit = 3;      // Unit for capacity
+  string location = 4;           // Optional location filter
+}
+
+message GetAvailableStorageResponse {
+  repeated StorageAvailability available_storages = 1;
+  int32 total_count = 2;
+}
+
+message StorageAvailability {
+  string storage_id = 1;
+  string storage_name = 2;
+  string storage_type = 3;
+  double available_capacity = 4;
+  string capacity_unit = 5;
+  string location = 6;
+  double utilization_rate = 7;
+}
+
+message GetStorageUtilizationRequest {
+  string storage_id = 1;
+  string period = 2;             // daily, weekly, monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetStorageUtilizationResponse {
+  string storage_id = 1;
+  string period = 2;
+  double average_utilization = 3;
+  double peak_utilization = 4;
+  double minimum_utilization = 5;
+  repeated UtilizationDataPoint utilization_data = 6;
+}
+
+message UtilizationDataPoint {
+  string date = 1;
+  double utilization_rate = 2;
+  double capacity_used = 3;
+  double capacity_available = 4;
+}
+
+// Environmental control messages
+message SetTemperatureRequest {
+  string storage_id = 1;
+  double temperature = 2;
+  string unit = 3;               // Celsius or Fahrenheit
+  string reason = 4;
+}
+
+message SetTemperatureResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message SetHumidityRequest {
+  string storage_id = 1;
+  double humidity = 2;
+  string reason = 3;
+}
+
+message SetHumidityResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetEnvironmentalConditionsRequest {
+  string storage_id = 1;
+}
+
+message GetEnvironmentalConditionsResponse {
+  string storage_id = 1;
+  double temperature = 2;
+  double humidity = 3;
+  double air_quality = 4;
+  string conditions_status = 5;  // optimal, warning, critical
+  repeated string alerts = 6;
+}
+
+message MonitorEnvironmentalConditionsRequest {
+  string storage_id = 1;
+  int32 hours_back = 2;          // Number of hours to look back
+}
+
+message MonitorEnvironmentalConditionsResponse {
+  string storage_id = 1;
+  repeated EnvironmentalDataPoint environmental_data = 2;
+  string overall_status = 3;
+  repeated string recommendations = 4;
+}
+
+message EnvironmentalDataPoint {
+  string timestamp = 1;
+  double temperature = 2;
+  double humidity = 3;
+  double air_quality = 4;
+  string status = 5;
+}
+
+// Maintenance management messages
+message ScheduleMaintenanceRequest {
+  string storage_id = 1;
+  string maintenance_type = 2;   // routine, repair, inspection, cleaning
+  string scheduled_date = 3;
+  string technician = 4;
+  string description = 5;
+  double estimated_hours = 6;
+  double estimated_cost = 7;
+  string priority = 8;           // high, medium, low
+}
+
+message ScheduleMaintenanceResponse {
+  bool success = 1;
+  string message = 2;
+  string maintenance_id = 3;
+}
+
+message CompleteMaintenanceRequest {
+  string maintenance_id = 1;
+  string technician = 2;
+  string completion_date = 3;
+  double actual_hours = 4;
+  double actual_cost = 5;
+  string work_performed = 6;
+  repeated string parts_replaced = 7;
+  string notes = 8;
+}
+
+message CompleteMaintenanceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetMaintenanceHistoryRequest {
+  string storage_id = 1;
+  int32 months_back = 2;         // Number of months to look back
+}
+
+message GetMaintenanceHistoryResponse {
+  string storage_id = 1;
+  repeated MaintenanceRecord maintenance_records = 2;
+}
+
+message MaintenanceRecord {
+  string maintenance_id = 1;
+  string maintenance_type = 2;
+  string scheduled_date = 3;
+  string completion_date = 4;
+  string technician = 5;
+  double estimated_hours = 6;
+  double actual_hours = 7;
+  double estimated_cost = 8;
+  double actual_cost = 9;
+  string work_performed = 10;
+  repeated string parts_replaced = 11;
+  string status = 12;             // scheduled, in_progress, completed, cancelled
+  string notes = 13;
+}
+
+message GetUpcomingMaintenanceRequest {
+  string storage_id = 1;
+  int32 days_ahead = 2;          // Number of days to look ahead
+}
+
+message GetUpcomingMaintenanceResponse {
+  string storage_id = 1;
+  repeated MaintenanceRecord upcoming_maintenance = 2;
+}
+
+// Quality control messages
+message InspectStorageRequest {
+  string storage_id = 1;
+  string inspector = 2;
+  string inspection_type = 3;    // routine, quality, safety, compliance
+  string notes = 4;
+}
+
+message InspectStorageResponse {
+  bool success = 1;
+  string message = 2;
+  string inspection_id = 3;
+  string quality_rating = 4;
+  repeated string issues_found = 5;
+  repeated string recommendations = 6;
+}
+
+message GetQualityReportRequest {
+  string storage_id = 1;
+  string period = 2;             // daily, weekly, monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetQualityReportResponse {
+  string storage_id = 1;
+  string period = 2;
+  double average_quality_rating = 3;
+  int32 total_inspections = 4;
+  int32 issues_found = 5;
+  int32 issues_resolved = 6;
+  repeated QualityMetric quality_metrics = 7;
+  string overall_quality_status = 8;
+}
+
+message QualityMetric {
+  string metric_name = 1;
+  double current_value = 2;
+  double target_value = 3;
+  string unit = 4;
+  string status = 5;             // good, warning, critical
+}
+
+message UpdateQualityStandardsRequest {
+  string storage_id = 1;
+  string quality_standards = 2;
+  string effective_date = 3;
+  string notes = 4;
+}
+
+message UpdateQualityStandardsResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetQualityHistoryRequest {
+  string storage_id = 1;
+  int32 months_back = 2;         // Number of months to look back
+}
+
+message GetQualityHistoryResponse {
+  string storage_id = 1;
+  repeated QualityRecord quality_records = 2;
+}
+
+message QualityRecord {
+  string inspection_id = 1;
+  string inspection_date = 2;
+  string inspector = 3;
+  string inspection_type = 4;
+  double quality_rating = 5;
+  repeated string issues_found = 6;
+  repeated string recommendations = 7;
+  string status = 8;
+}
+
+// Inventory management messages
+message GetStoredItemsRequest {
+  string storage_id = 1;
+  string item_type = 2;          // Optional type filter
+}
+
+message GetStoredItemsResponse {
+  string storage_id = 1;
+  repeated StoredItem stored_items = 2;
+  int32 total_count = 3;
+}
+
+message StoredItem {
+  string item_id = 1;
+  string item_type = 2;
+  double quantity = 3;
+  string unit = 4;
+  string quality_grade = 5;
+  string storage_date = 6;
+  string source = 7;
+  string notes = 8;
+}
+
+message GetItemHistoryRequest {
+  string storage_id = 1;
+  string item_type = 2;          // Optional type filter
+  int32 months_back = 3;         // Number of months to look back
+}
+
+message GetItemHistoryResponse {
+  string storage_id = 1;
+  repeated ItemHistoryRecord item_history = 2;
+}
+
+message ItemHistoryRecord {
+  string transaction_id = 1;
+  string transaction_type = 2;   // store, retrieve, transfer
+  string item_type = 3;
+  double quantity = 4;
+  string unit = 5;
+  string transaction_date = 6;
+  string operator = 7;
+  string notes = 8;
+}
+
+message GetStorageByTypeRequest {
+  string storage_type = 1;
+  string status = 2;             // Optional status filter
+}
+
+message GetStorageByTypeResponse {
+  string storage_type = 1;
+  repeated agriculture.storage.messages.Storage storages = 2;
+  int32 total_count = 3;
+}
+
+message GetStorageByStatusRequest {
+  string status = 1;
+  string storage_type = 2;       // Optional type filter
+}
+
+message GetStorageByStatusResponse {
+  string status = 1;
+  repeated agriculture.storage.messages.Storage storages = 2;
+  int32 total_count = 3;
+}
+
+// Analytics and reporting messages
+message GetStorageAnalyticsRequest {
+  string storage_id = 1;
+  string period = 2;             // daily, weekly, monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetStorageAnalyticsResponse {
+  string storage_id = 1;
+  string period = 2;
+  double average_utilization = 3;
+  double peak_utilization = 4;
+  double average_quality_rating = 5;
+  double total_throughput = 6;
+  double total_costs = 7;
+  double total_revenue = 8;
+  double net_profit = 9;
+  repeated AnalyticsMetric metrics = 10;
+}
+
+message AnalyticsMetric {
+  string metric_name = 1;
+  double current_value = 2;
+  double previous_value = 3;
+  double change_percentage = 4;
+  string trend = 5;              // improving, stable, declining
+  string unit = 6;
+}
+
+message GetUtilizationReportRequest {
+  string storage_id = 1;
+  string period = 2;             // daily, weekly, monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetUtilizationReportResponse {
+  string storage_id = 1;
+  string period = 2;
+  double overall_utilization = 3;
+  double peak_utilization = 4;
+  double minimum_utilization = 5;
+  double average_utilization = 6;
+  repeated UtilizationDataPoint utilization_data = 7;
+  string utilization_trend = 8;
+}
+
+message GetCostAnalysisRequest {
+  string storage_id = 1;
+  string period = 2;             // monthly, yearly, lifetime
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetCostAnalysisResponse {
+  string storage_id = 1;
+  string period = 2;
+  double total_ownership_cost = 3;
+  double total_operating_cost = 4;
+  double total_maintenance_cost = 5;
+  double total_energy_cost = 6;
+  double cost_per_unit_stored = 7;
+  double cost_per_unit_throughput = 8;
+  map<string, double> cost_breakdown = 9;
+}
+
+message GetPerformanceReportRequest {
+  string storage_id = 1;
+  string period = 2;             // daily, weekly, monthly, yearly
+  string start_date = 3;
+  string end_date = 4;
+}
+
+message GetPerformanceReportResponse {
+  string storage_id = 1;
+  string period = 2;
+  double efficiency_rating = 3;
+  double utilization_efficiency = 4;
+  double energy_efficiency = 5;
+  double cost_efficiency = 6;
+  double quality_rating = 7;
+  double reliability_score = 8;
+  repeated PerformanceMetric performance_metrics = 9;
+  string overall_performance = 10;
+  repeated string recommendations = 11;
+}
+
+message PerformanceMetric {
+  string metric_name = 1;
+  double current_value = 2;
+  double target_value = 3;
+  double benchmark_value = 4;
+  string unit = 5;
+  string status = 6;             // excellent, good, fair, poor
+  string trend = 7;              // improving, stable, declining
+}

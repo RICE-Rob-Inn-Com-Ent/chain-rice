@@ -1,0 +1,702 @@
+syntax = "proto3";
+
+package automation.ai.messages;
+
+import "automation/ai/enums/ai_task_status.proto";
+import "automation/ai/enums/ai_priority.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// Training Job message
+// Represents a machine learning model training job
+message TrainingJob {
+  // Unique identifier for the training job
+  string id = 1;
+
+  // Human-readable name of the training job
+  string name = 2;
+
+  // Description of the training job
+  string description = 3;
+
+  // Version of the training job
+  string version = 4;
+
+  // Model ID being trained
+  string model_id = 5;
+
+  // Dataset ID used for training
+  string dataset_id = 6;
+
+  // Training algorithm
+  string algorithm = 7;
+
+  // Training status
+  automation.ai.enums.AITaskStatus status = 8;
+
+  // Training priority
+  automation.ai.enums.AIPriority priority = 9;
+
+  // Training configuration
+  TrainingConfig config = 10;
+
+  // Training hyperparameters
+  google.protobuf.Struct hyperparameters = 11;
+
+  // Training progress
+  TrainingProgress progress = 12;
+
+  // Training results
+  TrainingResults results = 13;
+
+  // Training metrics
+  TrainingMetrics metrics = 14;
+
+  // Training logs
+  repeated TrainingLog logs = 15;
+
+  // Training resources
+  TrainingResources resources = 16;
+
+  // Training schedule
+  TrainingSchedule schedule = 17;
+
+  // Training notifications
+  repeated TrainingNotification notifications = 18;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 19;
+
+  // Start timestamp
+  google.protobuf.Timestamp started_at = 20;
+
+  // Completion timestamp
+  google.protobuf.Timestamp completed_at = 21;
+
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 22;
+
+  // Training job owner/creator
+  string owner = 23;
+
+  // Training job tags
+  repeated string tags = 24;
+
+  // Training job metadata
+  map<string, string> metadata = 25;
+}
+
+// Training configuration
+message TrainingConfig {
+  // Training type
+  string training_type = 1;
+
+  // Training mode
+  string training_mode = 2;
+
+  // Data preprocessing configuration
+  DataPreprocessingConfig preprocessing = 3;
+
+  // Model architecture configuration
+  ModelArchitectureConfig architecture = 4;
+
+  // Training optimization configuration
+  TrainingOptimizationConfig optimization = 5;
+
+  // Validation configuration
+  ValidationConfig validation = 6;
+
+  // Early stopping configuration
+  EarlyStoppingConfig early_stopping = 7;
+
+  // Checkpointing configuration
+  CheckpointingConfig checkpointing = 8;
+
+  // Monitoring configuration
+  TrainingMonitoringConfig monitoring = 9;
+}
+
+// Data preprocessing configuration
+message DataPreprocessingConfig {
+  // Enable data preprocessing
+  bool enabled = 1;
+
+  // Preprocessing steps
+  repeated PreprocessingStep steps = 2;
+
+  // Data augmentation configuration
+  DataAugmentationConfig augmentation = 3;
+
+  // Feature scaling configuration
+  FeatureScalingConfig scaling = 4;
+
+  // Feature selection configuration
+  FeatureSelectionConfig selection = 5;
+}
+
+// Preprocessing step
+message PreprocessingStep {
+  // Step name
+  string name = 1;
+
+  // Step type
+  string type = 2;
+
+  // Step parameters
+  google.protobuf.Struct parameters = 3;
+
+  // Step order
+  int32 order = 4;
+
+  // Step enabled
+  bool enabled = 5;
+}
+
+// Data augmentation configuration
+message DataAugmentationConfig {
+  // Enable data augmentation
+  bool enabled = 1;
+
+  // Augmentation techniques
+  repeated string techniques = 2;
+
+  // Augmentation parameters
+  google.protobuf.Struct parameters = 3;
+
+  // Augmentation probability
+  double probability = 4;
+}
+
+// Feature scaling configuration
+message FeatureScalingConfig {
+  // Scaling method
+  string method = 1;
+
+  // Scaling parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Feature range
+  FeatureRange range = 3;
+}
+
+// Feature range
+message FeatureRange {
+  // Minimum value
+  double min_value = 1;
+
+  // Maximum value
+  double max_value = 2;
+}
+
+// Feature selection configuration
+message FeatureSelectionConfig {
+  // Selection method
+  string method = 1;
+
+  // Selection parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Number of features to select
+  int32 num_features = 3;
+
+  // Feature importance threshold
+  double importance_threshold = 4;
+}
+
+// Model architecture configuration
+message ModelArchitectureConfig {
+  // Architecture type
+  string architecture_type = 1;
+
+  // Architecture parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Layer configuration
+  repeated LayerConfig layers = 3;
+
+  // Activation functions
+  repeated string activations = 4;
+
+  // Regularization configuration
+  RegularizationConfig regularization = 5;
+}
+
+// Layer configuration
+message LayerConfig {
+  // Layer type
+  string type = 1;
+
+  // Layer parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Layer order
+  int32 order = 3;
+}
+
+// Regularization configuration
+message RegularizationConfig {
+  // L1 regularization
+  double l1_regularization = 1;
+
+  // L2 regularization
+  double l2_regularization = 2;
+
+  // Dropout rate
+  double dropout_rate = 3;
+
+  // Batch normalization
+  bool batch_normalization = 4;
+}
+
+// Training optimization configuration
+message TrainingOptimizationConfig {
+  // Optimizer type
+  string optimizer = 1;
+
+  // Learning rate
+  double learning_rate = 2;
+
+  // Learning rate schedule
+  LearningRateSchedule learning_rate_schedule = 3;
+
+  // Batch size
+  int32 batch_size = 4;
+
+  // Number of epochs
+  int32 epochs = 5;
+
+  // Gradient clipping
+  GradientClippingConfig gradient_clipping = 6;
+
+  // Momentum
+  double momentum = 7;
+
+  // Weight decay
+  double weight_decay = 8;
+}
+
+// Learning rate schedule
+message LearningRateSchedule {
+  // Schedule type
+  string type = 1;
+
+  // Schedule parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Schedule milestones
+  repeated int32 milestones = 3;
+}
+
+// Gradient clipping configuration
+message GradientClippingConfig {
+  // Enable gradient clipping
+  bool enabled = 1;
+
+  // Clipping method
+  string method = 2;
+
+  // Clipping value
+  double value = 3;
+}
+
+// Validation configuration
+message ValidationConfig {
+  // Validation split ratio
+  double validation_split = 1;
+
+  // Validation frequency
+  int32 validation_frequency = 2;
+
+  // Validation metrics
+  repeated string metrics = 3;
+
+  // Cross-validation configuration
+  CrossValidationConfig cross_validation = 4;
+}
+
+// Cross-validation configuration
+message CrossValidationConfig {
+  // Enable cross-validation
+  bool enabled = 1;
+
+  // Number of folds
+  int32 num_folds = 2;
+
+  // Cross-validation strategy
+  string strategy = 3;
+}
+
+// Early stopping configuration
+message EarlyStoppingConfig {
+  // Enable early stopping
+  bool enabled = 1;
+
+  // Patience (number of epochs to wait)
+  int32 patience = 2;
+
+  // Minimum improvement
+  double min_improvement = 3;
+
+  // Monitor metric
+  string monitor_metric = 4;
+
+  // Monitor mode
+  string monitor_mode = 5;
+}
+
+// Checkpointing configuration
+message CheckpointingConfig {
+  // Enable checkpointing
+  bool enabled = 1;
+
+  // Checkpoint frequency
+  int32 frequency = 2;
+
+  // Checkpoint directory
+  string directory = 3;
+
+  // Save best model only
+  bool save_best_only = 4;
+
+  // Monitor metric
+  string monitor_metric = 5;
+}
+
+// Training monitoring configuration
+message TrainingMonitoringConfig {
+  // Enable monitoring
+  bool enabled = 1;
+
+  // Monitoring metrics
+  repeated string metrics = 2;
+
+  // Monitoring frequency
+  int32 frequency = 3;
+
+  // Monitoring dashboard
+  string dashboard_url = 4;
+
+  // Monitoring alerts
+  repeated TrainingAlert alerts = 5;
+}
+
+// Training alert
+message TrainingAlert {
+  // Alert name
+  string name = 1;
+
+  // Alert condition
+  string condition = 2;
+
+  // Alert threshold
+  double threshold = 3;
+
+  // Alert severity
+  string severity = 4;
+
+  // Alert notification channels
+  repeated string notification_channels = 5;
+}
+
+// Training progress
+message TrainingProgress {
+  // Current epoch
+  int32 current_epoch = 1;
+
+  // Total epochs
+  int32 total_epochs = 2;
+
+  // Progress percentage
+  double progress_percentage = 3;
+
+  // Current batch
+  int32 current_batch = 4;
+
+  // Total batches
+  int32 total_batches = 5;
+
+  // Estimated time remaining
+  int64 estimated_time_remaining_seconds = 6;
+
+  // Training speed (samples per second)
+  double training_speed = 7;
+
+  // Current loss
+  double current_loss = 8;
+
+  // Current validation loss
+  double current_validation_loss = 9;
+
+  // Best validation loss
+  double best_validation_loss = 10;
+
+  // Training time elapsed
+  int64 training_time_elapsed_seconds = 11;
+}
+
+// Training results
+message TrainingResults {
+  // Training success
+  bool success = 1;
+
+  // Final model ID
+  string final_model_id = 2;
+
+  // Final model version
+  string final_model_version = 3;
+
+  // Training completion reason
+  string completion_reason = 4;
+
+  // Training error message
+  string error_message = 5;
+
+  // Training warnings
+  repeated string warnings = 6;
+
+  // Model performance metrics
+  ModelPerformanceMetrics performance = 7;
+
+  // Training summary
+  TrainingSummary summary = 8;
+}
+
+// Model performance metrics
+message ModelPerformanceMetrics {
+  // Training accuracy
+  double training_accuracy = 1;
+
+  // Validation accuracy
+  double validation_accuracy = 2;
+
+  // Test accuracy
+  double test_accuracy = 3;
+
+  // Training loss
+  double training_loss = 4;
+
+  // Validation loss
+  double validation_loss = 5;
+
+  // Test loss
+  double test_loss = 6;
+
+  // Additional metrics
+  map<string, double> additional_metrics = 7;
+}
+
+// Training summary
+message TrainingSummary {
+  // Total training time
+  int64 total_training_time_seconds = 1;
+
+  // Total samples processed
+  int64 total_samples_processed = 2;
+
+  // Final epoch
+  int32 final_epoch = 3;
+
+  // Best epoch
+  int32 best_epoch = 4;
+
+  // Training efficiency
+  double training_efficiency = 5;
+
+  // Resource utilization
+  ResourceUtilization resource_utilization = 6;
+}
+
+// Resource utilization
+message ResourceUtilization {
+  // CPU utilization percentage
+  double cpu_utilization = 1;
+
+  // Memory utilization percentage
+  double memory_utilization = 2;
+
+  // GPU utilization percentage
+  double gpu_utilization = 3;
+
+  // Disk utilization percentage
+  double disk_utilization = 4;
+
+  // Network utilization percentage
+  double network_utilization = 5;
+}
+
+// Training metrics
+message TrainingMetrics {
+  // Training loss history
+  repeated double training_loss_history = 1;
+
+  // Validation loss history
+  repeated double validation_loss_history = 2;
+
+  // Training accuracy history
+  repeated double training_accuracy_history = 3;
+
+  // Validation accuracy history
+  repeated double validation_accuracy_history = 4;
+
+  // Learning rate history
+  repeated double learning_rate_history = 5;
+
+  // Gradient norm history
+  repeated double gradient_norm_history = 6;
+
+  // Epoch times
+  repeated double epoch_times = 7;
+
+  // Batch times
+  repeated double batch_times = 8;
+}
+
+// Training log
+message TrainingLog {
+  // Log timestamp
+  google.protobuf.Timestamp timestamp = 1;
+
+  // Log level
+  string level = 2;
+
+  // Log message
+  string message = 3;
+
+  // Log source
+  string source = 4;
+
+  // Log context
+  google.protobuf.Struct context = 5;
+
+  // Log metadata
+  map<string, string> metadata = 6;
+}
+
+// Training resources
+message TrainingResources {
+  // Resource requirements
+  ResourceRequirements requirements = 1;
+
+  // Resource allocation
+  ResourceAllocation allocation = 2;
+
+  // Resource usage
+  ResourceUsage usage = 3;
+
+  // Resource limits
+  ResourceLimits limits = 4;
+}
+
+// Resource requirements
+message ResourceRequirements {
+  // CPU requirements
+  string cpu = 1;
+
+  // Memory requirements
+  string memory = 2;
+
+  // GPU requirements
+  string gpu = 3;
+
+  // Storage requirements
+  string storage = 4;
+
+  // Network requirements
+  string network = 5;
+}
+
+// Resource allocation
+message ResourceAllocation {
+  // Allocated CPU
+  string allocated_cpu = 1;
+
+  // Allocated memory
+  string allocated_memory = 2;
+
+  // Allocated GPU
+  string allocated_gpu = 3;
+
+  // Allocated storage
+  string allocated_storage = 4;
+
+  // Allocated network
+  string allocated_network = 5;
+}
+
+// Resource usage
+message ResourceUsage {
+  // Used CPU
+  string used_cpu = 1;
+
+  // Used memory
+  string used_memory = 2;
+
+  // Used GPU
+  string used_gpu = 3;
+
+  // Used storage
+  string used_storage = 4;
+
+  // Used network
+  string used_network = 5;
+}
+
+// Resource limits
+message ResourceLimits {
+  // CPU limit
+  string cpu_limit = 1;
+
+  // Memory limit
+  string memory_limit = 2;
+
+  // GPU limit
+  string gpu_limit = 3;
+
+  // Storage limit
+  string storage_limit = 4;
+
+  // Network limit
+  string network_limit = 5;
+}
+
+// Training schedule
+message TrainingSchedule {
+  // Schedule type
+  string schedule_type = 1;
+
+  // Schedule parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Start time
+  google.protobuf.Timestamp start_time = 3;
+
+  // End time
+  google.protobuf.Timestamp end_time = 4;
+
+  // Recurrence pattern
+  string recurrence_pattern = 5;
+
+  // Timezone
+  string timezone = 6;
+}
+
+// Training notification
+message TrainingNotification {
+  // Notification type
+  string type = 1;
+
+  // Notification message
+  string message = 2;
+
+  // Notification timestamp
+  google.protobuf.Timestamp timestamp = 3;
+
+  // Notification severity
+  string severity = 4;
+
+  // Notification channels
+  repeated string channels = 5;
+
+  // Notification metadata
+  map<string, string> metadata = 6;
+}

@@ -1,0 +1,459 @@
+name: Test
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  python-tests:
+    name: Python Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            .bot/.venv
+          key: ${{ runner.os }}-poetry-${{ matrix.python-version }}-${{ hashFiles('.bot/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-${{ matrix.python-version }}-
+
+      - name: Install dependencies
+        working-directory: .bot
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction --with dev
+
+      - name: Run pytest with coverage
+        working-directory: .bot
+        run: |
+          poetry run pytest \
+            --cov=core \
+            --cov=integration \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-report=term-missing \
+            --junit-xml=pytest-results.xml \
+            --verbose \
+            --color=yes
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: .bot/coverage.xml
+          flags: python
+          name: python-${{ matrix.python-version }}
+          fail_ci_if_error: false
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
+          path: |
+            .bot/pytest-results.xml
+            .bot/htmlcov/
+          retention-days: 7
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always() && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        with:
+          files: .bot/pytest-results.xml
+          check_name: Python Test Results
+
+  go-tests:
+    name: Go Tests - ${{ matrix.component }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        go-version: ["1.22", "1.23"]
+        component: [db, token]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache-dependency-path: .backend/${{ matrix.component }}/go.sum
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('.backend/${{ matrix.component }}/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.go-version }}-
+
+      - name: Run tests with race detector
+        working-directory: .backend/${{ matrix.component }}
+        run: |
+          go test \
+            -v \
+            -race \
+            -coverprofile=coverage.out \
+            -covermode=atomic \
+            -timeout=10m \
+            ./...
+
+      - name: Run benchmarks
+        working-directory: .backend/${{ matrix.component }}
+        run: |
+          go test -bench=. -benchmem -run=^$ ./... | tee benchmark-results.txt
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: .backend/${{ matrix.component }}/coverage.out
+          flags: go-${{ matrix.component }}
+          name: go-${{ matrix.component }}-${{ matrix.go-version }}
+          fail_ci_if_error: false
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-benchmark-${{ matrix.component }}-${{ matrix.go-version }}
+          path: .backend/${{ matrix.component }}/benchmark-results.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+  typescript-tests:
+    name: TypeScript/Node.js Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ["20", "22"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: .frontend/web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: .frontend/web
+        run: npm ci
+
+      - name: Run tests
+        working-directory: .frontend/web
+        run: npm test -- --coverage --watchAll=false
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: .frontend/web/coverage
+          flags: typescript
+          name: typescript-${{ matrix.node-version }}
+          fail_ci_if_error: false
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: typescript-test-results-${{ matrix.node-version }}
+          path: .frontend/web/coverage/
+          retention-days: 7
+
+  rust-tests:
+    name: Rust Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        rust-version: [stable, "1.76.0"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rust-version }}
+          components: llvm-tools-preview
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: .backend/contract/rust
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Run tests with coverage
+        working-directory: .backend/contract/rust
+        run: |
+          cargo llvm-cov test \
+            --all-features \
+            --workspace \
+            --lcov \
+            --output-path lcov.info
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: .backend/contract/rust/lcov.info
+          flags: rust
+          name: rust-${{ matrix.rust-version }}
+          fail_ci_if_error: false
+
+      - name: Run doc tests
+        working-directory: .backend/contract/rust
+        run: cargo test --doc
+
+  solidity-tests:
+    name: Solidity Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: .backend/contract/solidity/package-lock.json
+
+      - name: Install dependencies
+        working-directory: .backend/contract/solidity
+        run: npm ci
+
+      - name: Run Hardhat tests
+        working-directory: .backend/contract/solidity
+        run: npx hardhat test
+
+      - name: Run Hardhat coverage
+        working-directory: .backend/contract/solidity
+        run: npx hardhat coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: .backend/contract/solidity/coverage
+          flags: solidity
+          name: solidity
+          fail_ci_if_error: false
+
+  flutter-tests:
+    name: Flutter Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        flutter-channel: [stable]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ matrix.flutter-channel }}
+          cache: true
+
+      - name: Install dependencies
+        working-directory: .frontend/flutter
+        run: flutter pub get
+
+      - name: Run tests
+        working-directory: .frontend/flutter
+        run: flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: .frontend/flutter/coverage/lcov.info
+          flags: flutter
+          name: flutter-${{ matrix.os }}
+          fail_ci_if_error: false
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rice_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Run integration tests
+        working-directory: .backend
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/rice_test?sslmode=disable
+          REDIS_URL: redis://localhost:6379
+        run: |
+          go test -v -tags=integration ./...
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright
+        working-directory: .frontend/web
+        run: |
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Run E2E tests
+        working-directory: .frontend/web
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: .frontend/web/playwright-report/
+          retention-days: 7
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs:
+      [
+        python-tests,
+        go-tests,
+        typescript-tests,
+        rust-tests,
+        solidity-tests,
+        flutter-tests,
+        integration-tests,
+        e2e-tests,
+      ]
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Tests | ${{ needs.python-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Go Tests | ${{ needs.go-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript Tests | ${{ needs.typescript-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Rust Tests | ${{ needs.rust-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Solidity Tests | ${{ needs.solidity-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Flutter Tests | ${{ needs.flutter-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Integration Tests | ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.python-tests.result }}" != "success" ] || \
+             [ "${{ needs.go-tests.result }}" != "success" ] || \
+             [ "${{ needs.typescript-tests.result }}" != "success" ] || \
+             [ "${{ needs.rust-tests.result }}" != "success" ] || \
+             [ "${{ needs.solidity-tests.result }}" != "success" ] || \
+             [ "${{ needs.flutter-tests.result }}" != "success" ] || \
+             [ "${{ needs.integration-tests.result }}" != "success" ] || \
+             [ "${{ needs.e2e-tests.result }}" != "success" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Some tests failed!" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
+          fi

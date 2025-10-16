@@ -1,0 +1,664 @@
+syntax = "proto3";
+
+package automation.ai.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// Dataset message
+// Represents a dataset used for AI model training and validation
+message Dataset {
+  // Unique identifier for the dataset
+  string id = 1;
+
+  // Human-readable name of the dataset
+  string name = 2;
+
+  // Description of the dataset
+  string description = 3;
+
+  // Version of the dataset
+  string version = 4;
+
+  // Dataset type (training, validation, test, etc.)
+  string type = 5;
+
+  // Dataset format (CSV, JSON, Parquet, etc.)
+  string format = 6;
+
+  // Dataset size information
+  DatasetSize size = 7;
+
+  // Dataset schema information
+  DatasetSchema schema = 8;
+
+  // Dataset statistics
+  DatasetStatistics statistics = 9;
+
+  // Dataset quality metrics
+  DatasetQuality quality = 10;
+
+  // Dataset source information
+  DatasetSource source = 11;
+
+  // Dataset storage information
+  DatasetStorage storage = 12;
+
+  // Dataset access information
+  DatasetAccess access = 13;
+
+  // Dataset metadata
+  map<string, string> metadata = 14;
+
+  // Dataset tags
+  repeated string tags = 15;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 16;
+
+  // Last update timestamp
+  google.protobuf.Timestamp updated_at = 17;
+
+  // Dataset owner/creator
+  string owner = 18;
+
+  // Dataset status
+  string status = 19;
+
+  // Dataset validation status
+  string validation_status = 20;
+
+  // Dataset dependencies
+  repeated string dependencies = 21;
+}
+
+// Dataset size information
+message DatasetSize {
+  // Total number of records
+  int64 total_records = 1;
+
+  // Number of features/columns
+  int32 feature_count = 2;
+
+  // Number of target variables
+  int32 target_count = 3;
+
+  // Dataset size in bytes
+  int64 size_bytes = 4;
+
+  // Compressed size in bytes
+  int64 compressed_size_bytes = 5;
+
+  // Number of files
+  int32 file_count = 6;
+
+  // Average record size in bytes
+  double avg_record_size_bytes = 7;
+}
+
+// Dataset schema information
+message DatasetSchema {
+  // Schema version
+  string version = 1;
+
+  // Feature definitions
+  repeated FeatureDefinition features = 2;
+
+  // Target variable definitions
+  repeated TargetDefinition targets = 3;
+
+  // Schema constraints
+  repeated SchemaConstraint constraints = 4;
+
+  // Schema validation rules
+  repeated ValidationRule validation_rules = 5;
+}
+
+// Feature definition
+message FeatureDefinition {
+  // Feature name
+  string name = 1;
+
+  // Feature data type
+  string data_type = 2;
+
+  // Feature description
+  string description = 3;
+
+  // Feature category
+  string category = 4;
+
+  // Feature constraints
+  FeatureConstraints constraints = 5;
+
+  // Feature encoding information
+  FeatureEncoding encoding = 6;
+
+  // Feature importance score
+  double importance_score = 7;
+
+  // Feature metadata
+  map<string, string> metadata = 8;
+}
+
+// Target variable definition
+message TargetDefinition {
+  // Target name
+  string name = 1;
+
+  // Target data type
+  string data_type = 2;
+
+  // Target description
+  string description = 3;
+
+  // Target category
+  string category = 4;
+
+  // Target constraints
+  TargetConstraints constraints = 5;
+
+  // Target encoding information
+  TargetEncoding encoding = 6;
+
+  // Target metadata
+  map<string, string> metadata = 7;
+}
+
+// Feature constraints
+message FeatureConstraints {
+  // Minimum value
+  double min_value = 1;
+
+  // Maximum value
+  double max_value = 2;
+
+  // Allowed values
+  repeated string allowed_values = 3;
+
+  // Required field
+  bool required = 4;
+
+  // Unique values
+  bool unique = 5;
+
+  // Nullable field
+  bool nullable = 6;
+
+  // Pattern constraint (regex)
+  string pattern = 7;
+
+  // Length constraints
+  LengthConstraint length_constraint = 8;
+}
+
+// Target constraints
+message TargetConstraints {
+  // Minimum value
+  double min_value = 1;
+
+  // Maximum value
+  double max_value = 2;
+
+  // Allowed values
+  repeated string allowed_values = 3;
+
+  // Required field
+  bool required = 4;
+
+  // Unique values
+  bool unique = 5;
+
+  // Nullable field
+  bool nullable = 6;
+
+  // Pattern constraint (regex)
+  string pattern = 7;
+}
+
+// Length constraint
+message LengthConstraint {
+  // Minimum length
+  int32 min_length = 1;
+
+  // Maximum length
+  int32 max_length = 2;
+
+  // Exact length
+  int32 exact_length = 3;
+}
+
+// Feature encoding information
+message FeatureEncoding {
+  // Encoding type
+  string encoding_type = 1;
+
+  // Encoding parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Encoded feature name
+  string encoded_name = 3;
+
+  // Encoding metadata
+  map<string, string> metadata = 4;
+}
+
+// Target encoding information
+message TargetEncoding {
+  // Encoding type
+  string encoding_type = 1;
+
+  // Encoding parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Encoded target name
+  string encoded_name = 3;
+
+  // Encoding metadata
+  map<string, string> metadata = 4;
+}
+
+// Schema constraint
+message SchemaConstraint {
+  // Constraint name
+  string name = 1;
+
+  // Constraint type
+  string type = 2;
+
+  // Constraint expression
+  string expression = 3;
+
+  // Constraint description
+  string description = 4;
+
+  // Constraint severity
+  string severity = 5;
+}
+
+// Validation rule
+message ValidationRule {
+  // Rule name
+  string name = 1;
+
+  // Rule type
+  string type = 2;
+
+  // Rule expression
+  string expression = 3;
+
+  // Rule description
+  string description = 4;
+
+  // Rule parameters
+  google.protobuf.Struct parameters = 5;
+}
+
+// Dataset statistics
+message DatasetStatistics {
+  // Basic statistics
+  BasicStatistics basic = 1;
+
+  // Feature statistics
+  repeated FeatureStatistics feature_stats = 2;
+
+  // Target statistics
+  repeated TargetStatistics target_stats = 3;
+
+  // Correlation matrix
+  repeated CorrelationEntry correlations = 4;
+
+  // Missing value statistics
+  MissingValueStatistics missing_values = 5;
+
+  // Outlier statistics
+  OutlierStatistics outliers = 6;
+}
+
+// Basic statistics
+message BasicStatistics {
+  // Total records
+  int64 total_records = 1;
+
+  // Valid records
+  int64 valid_records = 2;
+
+  // Invalid records
+  int64 invalid_records = 3;
+
+  // Duplicate records
+  int64 duplicate_records = 4;
+
+  // Unique records
+  int64 unique_records = 5;
+}
+
+// Feature statistics
+message FeatureStatistics {
+  // Feature name
+  string feature_name = 1;
+
+  // Data type
+  string data_type = 2;
+
+  // Count of non-null values
+  int64 count = 3;
+
+  // Count of null values
+  int64 null_count = 4;
+
+  // Count of unique values
+  int64 unique_count = 5;
+
+  // Count of duplicate values
+  int64 duplicate_count = 6;
+
+  // Mean value
+  double mean = 7;
+
+  // Median value
+  double median = 8;
+
+  // Mode value
+  string mode = 9;
+
+  // Standard deviation
+  double std_dev = 10;
+
+  // Variance
+  double variance = 11;
+
+  // Minimum value
+  double min_value = 12;
+
+  // Maximum value
+  double max_value = 13;
+
+  // Quartile values
+  Quartiles quartiles = 14;
+
+  // Skewness
+  double skewness = 15;
+
+  // Kurtosis
+  double kurtosis = 16;
+}
+
+// Target statistics
+message TargetStatistics {
+  // Target name
+  string target_name = 1;
+
+  // Data type
+  string data_type = 2;
+
+  // Count of non-null values
+  int64 count = 3;
+
+  // Count of null values
+  int64 null_count = 4;
+
+  // Count of unique values
+  int64 unique_count = 5;
+
+  // Count of duplicate values
+  int64 duplicate_count = 6;
+
+  // Mean value
+  double mean = 7;
+
+  // Median value
+  double median = 8;
+
+  // Mode value
+  string mode = 9;
+
+  // Standard deviation
+  double std_dev = 10;
+
+  // Variance
+  double variance = 11;
+
+  // Minimum value
+  double min_value = 12;
+
+  // Maximum value
+  double max_value = 13;
+
+  // Quartile values
+  Quartiles quartiles = 14;
+
+  // Skewness
+  double skewness = 15;
+
+  // Kurtosis
+  double kurtosis = 16;
+
+  // Class distribution (for classification)
+  map<string, int64> class_distribution = 17;
+}
+
+// Quartile values
+message Quartiles {
+  // First quartile (25th percentile)
+  double q1 = 1;
+
+  // Second quartile (50th percentile/median)
+  double q2 = 2;
+
+  // Third quartile (75th percentile)
+  double q3 = 3;
+
+  // Interquartile range
+  double iqr = 4;
+}
+
+// Correlation entry
+message CorrelationEntry {
+  // First feature name
+  string feature1 = 1;
+
+  // Second feature name
+  string feature2 = 2;
+
+  // Correlation coefficient
+  double correlation = 3;
+
+  // Correlation type
+  string correlation_type = 4;
+}
+
+// Missing value statistics
+message MissingValueStatistics {
+  // Total missing values
+  int64 total_missing = 1;
+
+  // Missing value percentage
+  double missing_percentage = 2;
+
+  // Features with missing values
+  repeated MissingValueFeature missing_features = 3;
+
+  // Missing value patterns
+  repeated MissingValuePattern patterns = 4;
+}
+
+// Missing value feature
+message MissingValueFeature {
+  // Feature name
+  string feature_name = 1;
+
+  // Missing count
+  int64 missing_count = 2;
+
+  // Missing percentage
+  double missing_percentage = 3;
+
+  // Missing value type
+  string missing_type = 4;
+}
+
+// Missing value pattern
+message MissingValuePattern {
+  // Pattern description
+  string description = 1;
+
+  // Pattern frequency
+  int64 frequency = 2;
+
+  // Pattern percentage
+  double percentage = 3;
+
+  // Affected features
+  repeated string affected_features = 4;
+}
+
+// Outlier statistics
+message OutlierStatistics {
+  // Total outliers
+  int64 total_outliers = 1;
+
+  // Outlier percentage
+  double outlier_percentage = 2;
+
+  // Features with outliers
+  repeated OutlierFeature outlier_features = 3;
+
+  // Outlier detection method
+  string detection_method = 4;
+}
+
+// Outlier feature
+message OutlierFeature {
+  // Feature name
+  string feature_name = 1;
+
+  // Outlier count
+  int64 outlier_count = 2;
+
+  // Outlier percentage
+  double outlier_percentage = 3;
+
+  // Outlier detection method
+  string detection_method = 4;
+}
+
+// Dataset quality metrics
+message DatasetQuality {
+  // Overall quality score (0.0 to 1.0)
+  double overall_score = 1;
+
+  // Completeness score (0.0 to 1.0)
+  double completeness_score = 2;
+
+  // Consistency score (0.0 to 1.0)
+  double consistency_score = 3;
+
+  // Accuracy score (0.0 to 1.0)
+  double accuracy_score = 4;
+
+  // Validity score (0.0 to 1.0)
+  double validity_score = 5;
+
+  // Uniqueness score (0.0 to 1.0)
+  double uniqueness_score = 6;
+
+  // Timeliness score (0.0 to 1.0)
+  double timeliness_score = 7;
+
+  // Quality issues
+  repeated QualityIssue issues = 8;
+
+  // Quality recommendations
+  repeated string recommendations = 9;
+}
+
+// Quality issue
+message QualityIssue {
+  // Issue type
+  string type = 1;
+
+  // Issue severity
+  string severity = 2;
+
+  // Issue description
+  string description = 3;
+
+  // Affected features
+  repeated string affected_features = 4;
+
+  // Issue count
+  int64 count = 5;
+
+  // Issue percentage
+  double percentage = 6;
+}
+
+// Dataset source information
+message DatasetSource {
+  // Source type
+  string source_type = 1;
+
+  // Source location
+  string source_location = 2;
+
+  // Source format
+  string source_format = 3;
+
+  // Source connection details
+  google.protobuf.Struct connection_details = 4;
+
+  // Source authentication
+  google.protobuf.Struct authentication = 5;
+
+  // Source metadata
+  map<string, string> metadata = 6;
+
+  // Last sync timestamp
+  google.protobuf.Timestamp last_sync = 7;
+
+  // Sync frequency
+  string sync_frequency = 8;
+}
+
+// Dataset storage information
+message DatasetStorage {
+  // Storage type
+  string storage_type = 1;
+
+  // Storage location
+  string storage_location = 2;
+
+  // Storage format
+  string storage_format = 3;
+
+  // Storage compression
+  string compression = 4;
+
+  // Storage encryption
+  string encryption = 5;
+
+  // Storage access permissions
+  repeated string permissions = 6;
+
+  // Storage metadata
+  map<string, string> metadata = 7;
+}
+
+// Dataset access information
+message DatasetAccess {
+  // Access level
+  string access_level = 1;
+
+  // Access permissions
+  repeated string permissions = 2;
+
+  // Access restrictions
+  repeated string restrictions = 3;
+
+  // Access authentication
+  google.protobuf.Struct authentication = 4;
+
+  // Access metadata
+  map<string, string> metadata = 5;
+}

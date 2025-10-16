@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+package commerce.products.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/products/messages";
+
+// Product attribute message representing a product attribute
+message ProductAttribute {
+  // Unique identifier for the attribute
+  string id = 1;
+
+  // Product identifier
+  string product_id = 2;
+
+  // Attribute name
+  string name = 3;
+
+  // Attribute value
+  string value = 4;
+
+  // Attribute display name
+  string display_name = 5;
+
+  // Attribute description
+  string description = 6;
+
+  // Attribute type
+  string type = 7;
+
+  // Attribute data type
+  string data_type = 8;
+
+  // Attribute unit
+  string unit = 9;
+
+  // Attribute group
+  string group = 10;
+
+  // Attribute order
+  int32 order = 11;
+
+  // Whether this attribute is required
+  bool is_required = 12;
+
+  // Whether this attribute is searchable
+  bool is_searchable = 13;
+
+  // Whether this attribute is filterable
+  bool is_filterable = 14;
+
+  // Whether this attribute is visible
+  bool is_visible = 15;
+
+  // Whether this attribute is comparable
+  bool is_comparable = 16;
+
+  // Attribute options (for select, multi-select, etc.)
+  repeated AttributeOption options = 17;
+
+  // Attribute validation rules
+  AttributeValidation validation = 18;
+
+  // Date when attribute was created
+  google.protobuf.Timestamp created_at = 19;
+
+  // Date when attribute was last updated
+  google.protobuf.Timestamp updated_at = 20;
+
+  // Additional metadata
+  map<string, string> metadata = 21;
+}
+
+// Attribute option for select-type attributes
+message AttributeOption {
+  // Option identifier
+  string id = 1;
+
+  // Option value
+  string value = 2;
+
+  // Option label
+  string label = 3;
+
+  // Option description
+  string description = 4;
+
+  // Option order
+  int32 order = 5;
+
+  // Whether this option is default
+  bool is_default = 6;
+
+  // Whether this option is active
+  bool is_active = 7;
+}
+
+// Attribute validation rules
+message AttributeValidation {
+  // Minimum value (for numeric attributes)
+  double min_value = 1;
+
+  // Maximum value (for numeric attributes)
+  double max_value = 2;
+
+  // Minimum length (for text attributes)
+  int32 min_length = 3;
+
+  // Maximum length (for text attributes)
+  int32 max_length = 4;
+
+  // Regular expression pattern
+  string pattern = 5;
+
+  // Whether value is required
+  bool required = 6;
+
+  // Custom validation message
+  string validation_message = 7;
+
+  // Allowed values
+  repeated string allowed_values = 8;
+
+  // Disallowed values
+  repeated string disallowed_values = 9;
+}
+
+// Request message for creating a product attribute
+message CreateProductAttributeRequest {
+  // Product identifier
+  string product_id = 1;
+
+  // Attribute name
+  string name = 2;
+
+  // Attribute value
+  string value = 3;
+
+  // Attribute display name
+  string display_name = 4;
+
+  // Attribute description
+  string description = 5;
+
+  // Attribute type
+  string type = 6;
+
+  // Attribute data type
+  string data_type = 7;
+
+  // Attribute unit
+  string unit = 8;
+
+  // Attribute group
+  string group = 9;
+
+  // Attribute order
+  int32 order = 10;
+
+  // Whether this attribute is required
+  bool is_required = 11;
+
+  // Whether this attribute is searchable
+  bool is_searchable = 12;
+
+  // Whether this attribute is filterable
+  bool is_filterable = 13;
+
+  // Whether this attribute is visible
+  bool is_visible = 14;
+
+  // Whether this attribute is comparable
+  bool is_comparable = 15;
+
+  // Attribute options
+  repeated AttributeOption options = 16;
+
+  // Attribute validation rules
+  AttributeValidation validation = 17;
+}
+
+// Response message for product attribute creation
+message CreateProductAttributeResponse {
+  // Created product attribute
+  ProductAttribute attribute = 1;
+
+  // Success indicator
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Request message for updating a product attribute
+message UpdateProductAttributeRequest {
+  // Attribute identifier
+  string id = 1;
+
+  // Updated attribute information
+  ProductAttribute attribute = 2;
+}
+
+// Response message for product attribute update
+message UpdateProductAttributeResponse {
+  // Updated product attribute
+  ProductAttribute attribute = 1;
+
+  // Success indicator
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}

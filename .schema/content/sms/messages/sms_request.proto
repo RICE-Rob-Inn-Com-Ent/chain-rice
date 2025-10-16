@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package marketing.sms.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/sms/enums/sms_status.proto";
+
+// Request message for creating a new SMS
+message CreateSmsRequest {
+  // SMS message content
+  string message = 1;
+
+  // Recipient phone numbers
+  repeated string recipients = 2;
+
+  // Sender phone number
+  string sender_number = 3;
+
+  // SMS template ID (if using template)
+  string template_id = 4;
+
+  // Campaign ID (if applicable)
+  string campaign_id = 5;
+
+  // Scheduled send time
+  google.protobuf.Timestamp scheduled_time = 6;
+
+  // SMS priority
+  int32 priority = 7;
+
+  // SMS tags
+  repeated string tags = 8;
+
+  // Include opt-out link
+  bool include_opt_out = 9;
+}
+
+// Request message for getting an SMS by ID
+message GetSmsRequest {
+  // SMS ID
+  string id = 1;
+}
+
+// Request message for listing SMS messages
+message ListSmsRequest {
+  // Page number for pagination
+  int32 page = 1;
+
+  // Number of items per page
+  int32 page_size = 2;
+
+  // Filter by status
+  marketing.sms.enums.SmsStatus status = 3;
+
+  // Filter by campaign ID
+  string campaign_id = 4;
+
+  // Filter by sender number
+  string sender_number = 5;
+
+  // Filter by tags
+  repeated string tags = 6;
+
+  // Filter by date range - start
+  google.protobuf.Timestamp start_date = 7;
+
+  // Filter by date range - end
+  google.protobuf.Timestamp end_date = 8;
+}
+
+// Request message for updating an SMS
+message UpdateSmsRequest {
+  // SMS ID
+  string id = 1;
+
+  // SMS message content
+  string message = 2;
+
+  // Recipient phone numbers
+  repeated string recipients = 3;
+
+  // Sender phone number
+  string sender_number = 4;
+
+  // SMS template ID (if using template)
+  string template_id = 5;
+
+  // Scheduled send time
+  google.protobuf.Timestamp scheduled_time = 6;
+
+  // SMS priority
+  int32 priority = 7;
+
+  // SMS status
+  marketing.sms.enums.SmsStatus status = 8;
+
+  // SMS tags
+  repeated string tags = 9;
+
+  // Include opt-out link
+  bool include_opt_out = 10;
+}
+
+// Request message for deleting an SMS
+message DeleteSmsRequest {
+  // SMS ID
+  string id = 1;
+}

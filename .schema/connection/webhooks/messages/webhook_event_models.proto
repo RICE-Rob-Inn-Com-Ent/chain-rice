@@ -1,0 +1,434 @@
+syntax = "proto3";
+
+package integrations.webhooks.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "integrations/webhooks/enums/webhook_event_type.proto";
+import "integrations/webhooks/enums/webhook_status.proto";
+
+option go_package = "github.com/rice-dev/integrations/webhooks/messages";
+
+// Webhook Event represents a webhook event that needs to be delivered
+message WebhookEvent {
+  // Unique event identifier
+  string event_id = 1;
+
+  // Event basic information
+  WebhookEventBasicInfo basic_info = 2;
+
+  // Event type and classification
+  integrations.webhooks.enums.WebhookEventType event_type = 3;
+  string custom_event_type = 4;
+
+  // Event payload
+  WebhookEventPayload payload = 5;
+
+  // Event metadata
+  WebhookEventMetadata metadata = 6;
+
+  // Event context
+  WebhookEventContext context = 7;
+
+  // Event status
+  integrations.webhooks.enums.WebhookStatus status = 8;
+
+  // Event processing
+  WebhookEventProcessing processing = 9;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp scheduled_at = 11;
+  google.protobuf.Timestamp processed_at = 12;
+  google.protobuf.Timestamp expires_at = 13;
+}
+
+// Event basic information
+message WebhookEventBasicInfo {
+  string event_name = 1;
+  string event_description = 2;
+  string event_version = 3;
+  string event_source = 4;
+  string event_category = 5;
+  string event_priority = 6; // LOW, NORMAL, HIGH, CRITICAL, URGENT
+
+  // Event classification
+  string business_context = 7;
+  string technical_context = 8;
+  string data_classification = 9; // PUBLIC, INTERNAL, CONFIDENTIAL, RESTRICTED
+
+  // Event lifecycle
+  string event_stage = 10; // CREATED, QUEUED, PROCESSING, DELIVERED, FAILED, EXPIRED
+  string event_status = 11; // PENDING, IN_PROGRESS, SUCCESS, FAILED, CANCELLED
+
+  // Event tags
+  repeated string tags = 12;
+  map<string, string> custom_fields = 13;
+}
+
+// Event payload
+message WebhookEventPayload {
+  // Payload content
+  string content = 1;
+  bytes binary_content = 2;
+  google.protobuf.Any structured_content = 3;
+
+  // Payload format
+  string format = 4; // JSON, XML, FORM, BINARY, CUSTOM
+  string encoding = 5; // UTF-8, ASCII, BASE64, GZIP
+  string content_type = 6;
+
+  // Payload information
+  int64 content_length = 7;
+  string content_hash = 8;
+  string content_signature = 9;
+
+  // Payload validation
+  bool is_valid = 10;
+  string validation_schema = 11;
+  repeated string validation_errors = 12;
+  repeated string validation_warnings = 13;
+
+  // Payload processing
+  bool is_processed = 14;
+  string processing_status = 15;
+  map<string, string> processing_metadata = 16;
+
+  // Payload security
+  bool is_encrypted = 17;
+  string encryption_algorithm = 18;
+  string encryption_key_id = 19;
+  bool is_signed = 20;
+  string signature_algorithm = 21;
+  string signature_key_id = 22;
+}
+
+// Event metadata
+message WebhookEventMetadata {
+  // Event tracking
+  string trace_id = 1;
+  string span_id = 2;
+  string correlation_id = 3;
+  string session_id = 4;
+  string user_id = 5;
+
+  // Event source
+  string source_system = 6;
+  string source_component = 7;
+  string source_version = 8;
+  string source_environment = 9;
+  string source_ip = 10;
+  string source_user_agent = 11;
+
+  // Event context
+  string business_process = 12;
+  string business_entity = 13;
+  string business_operation = 14;
+  string business_transaction_id = 15;
+
+  // Event relationships
+  string parent_event_id = 16;
+  repeated string child_event_ids = 17;
+  repeated string related_event_ids = 18;
+  string event_chain_id = 19;
+
+  // Event compliance
+  bool requires_audit = 20;
+  string audit_category = 21;
+  repeated string compliance_tags = 22;
+  string retention_policy = 23;
+  google.protobuf.Timestamp retention_expires_at = 24;
+
+  // Custom metadata
+  map<string, string> custom_metadata = 25;
+  map<string, google.protobuf.Any> custom_objects = 26;
+}
+
+// Event context
+message WebhookEventContext {
+  // Temporal context
+  google.protobuf.Timestamp event_time = 1;
+  google.protobuf.Timestamp business_time = 2;
+  string timezone = 3;
+  int64 sequence_number = 4;
+
+  // Geographic context
+  string country = 5;
+  string region = 6;
+  string city = 7;
+  double latitude = 8;
+  double longitude = 9;
+
+  // User context
+  string user_id = 10;
+  string user_role = 11;
+  string user_department = 12;
+  string user_organization = 13;
+  repeated string user_permissions = 14;
+
+  // Device context
+  string device_id = 15;
+  string device_type = 16;
+  string device_os = 17;
+  string device_browser = 18;
+  string device_version = 19;
+
+  // Network context
+  string network_type = 20;
+  string network_provider = 21;
+  string ip_address = 22;
+  string user_agent = 23;
+  string referer = 24;
+
+  // Application context
+  string application_id = 25;
+  string application_version = 26;
+  string application_environment = 27;
+  string application_instance = 28;
+
+  // Custom context
+  map<string, string> custom_context = 29;
+}
+
+// Event processing
+message WebhookEventProcessing {
+  // Processing configuration
+  string processing_strategy = 1; // IMMEDIATE, SCHEDULED, BATCH, STREAMING
+  string processing_priority = 2; // LOW, NORMAL, HIGH, CRITICAL
+  int32 processing_timeout_seconds = 3;
+
+  // Processing status
+  string processing_status = 4; // PENDING, PROCESSING, COMPLETED, FAILED, CANCELLED
+  string processing_stage = 5; // VALIDATION, ROUTING, DELIVERY, ACKNOWLEDGMENT
+
+  // Processing metrics
+  int64 processing_start_time_ms = 6;
+  int64 processing_end_time_ms = 7;
+  int64 processing_duration_ms = 8;
+  int32 processing_attempts = 9;
+  int32 max_processing_attempts = 10;
+
+  // Processing results
+  bool processing_success = 11;
+  repeated string processing_errors = 12;
+  repeated string processing_warnings = 13;
+  map<string, string> processing_results = 14;
+
+  // Processing dependencies
+  repeated string dependent_events = 15;
+  repeated string prerequisite_events = 16;
+  bool wait_for_dependencies = 17;
+
+  // Processing retry
+  bool enable_retry = 18;
+  int32 retry_count = 19;
+  int32 max_retries = 20;
+  int32 retry_delay_seconds = 21;
+  google.protobuf.Timestamp next_retry_at = 22;
+
+  // Processing monitoring
+  bool enable_monitoring = 23;
+  bool enable_alerting = 24;
+  repeated string alert_recipients = 25;
+  repeated string alert_webhooks = 26;
+}
+
+// Webhook Event Batch
+message WebhookEventBatch {
+  string batch_id = 1;
+  string batch_name = 2;
+  string batch_description = 3;
+  repeated WebhookEvent events = 4;
+
+  // Batch configuration
+  string batch_strategy = 5; // SEQUENTIAL, PARALLEL, BATCH_SIZE, TIME_WINDOW
+  int32 batch_size = 6;
+  int32 max_concurrent_events = 7;
+  int32 batch_timeout_seconds = 8;
+
+  // Batch processing
+  string processing_status = 9; // PENDING, PROCESSING, COMPLETED, FAILED, PARTIAL
+  int32 total_events = 10;
+  int32 processed_events = 11;
+  int32 failed_events = 12;
+  int32 pending_events = 13;
+  double success_rate = 14;
+
+  // Batch metadata
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp started_at = 16;
+  google.protobuf.Timestamp completed_at = 17;
+  string created_by = 18;
+  string batch_context = 19;
+  map<string, string> custom_fields = 20;
+}
+
+// Webhook Event Template
+message WebhookEventTemplate {
+  string template_id = 1;
+  string template_name = 2;
+  string template_description = 3;
+  string template_category = 4;
+
+  // Template configuration
+  integrations.webhooks.enums.WebhookEventType event_type = 5;
+  string custom_event_type = 6;
+  WebhookEventPayload payload_template = 7;
+  WebhookEventMetadata metadata_template = 8;
+  WebhookEventContext context_template = 9;
+
+  // Template processing
+  WebhookEventProcessing processing_template = 10;
+
+  // Template metadata
+  string created_by = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+  string version = 14;
+  bool is_active = 15;
+  bool is_public = 16;
+  repeated string tags = 17;
+  map<string, string> custom_fields = 18;
+}
+
+// Webhook Event Search/Filter
+message WebhookEventFilter {
+  repeated string event_ids = 1;
+  repeated integrations.webhooks.enums.WebhookEventType event_types = 2;
+  repeated string custom_event_types = 3;
+  repeated string event_sources = 4;
+  repeated string event_categories = 5;
+  repeated string event_priorities = 6;
+  repeated integrations.webhooks.enums.WebhookStatus statuses = 7;
+  repeated string processing_statuses = 8;
+  repeated string source_systems = 9;
+  repeated string source_components = 10;
+  repeated string user_ids = 11;
+  repeated string correlation_ids = 12;
+  repeated string trace_ids = 13;
+  google.protobuf.Timestamp created_from = 14;
+  google.protobuf.Timestamp created_to = 15;
+  google.protobuf.Timestamp scheduled_from = 16;
+  google.protobuf.Timestamp scheduled_to = 17;
+  google.protobuf.Timestamp processed_from = 18;
+  google.protobuf.Timestamp processed_to = 19;
+  bool has_errors = 20;
+  bool has_warnings = 21;
+  bool has_retries = 22;
+  bool requires_audit = 23;
+  string search_text = 24;
+  int32 limit = 25;
+  int32 offset = 26;
+  string sort_by = 27;
+  string sort_order = 28; // ASC, DESC
+}
+
+// Webhook Event List
+message WebhookEventList {
+  repeated WebhookEvent events = 1;
+  int32 total_count = 2;
+  int32 page_size = 3;
+  int32 page_number = 4;
+  bool has_next_page = 5;
+  bool has_previous_page = 6;
+}
+
+// Webhook Event Statistics
+message WebhookEventStatistics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Count statistics
+  int32 total_events = 3;
+  int32 processed_events = 4;
+  int32 failed_events = 5;
+  int32 pending_events = 6;
+  int32 expired_events = 7;
+  int32 cancelled_events = 8;
+
+  // Rate statistics
+  double processing_success_rate = 9;
+  double processing_failure_rate = 10;
+  double processing_pending_rate = 11;
+
+  // Performance statistics
+  int64 average_processing_time_ms = 12;
+  int64 min_processing_time_ms = 13;
+  int64 max_processing_time_ms = 14;
+  int64 p50_processing_time_ms = 15;
+  int64 p90_processing_time_ms = 16;
+  int64 p95_processing_time_ms = 17;
+  int64 p99_processing_time_ms = 18;
+
+  // Event type statistics
+  map<string, int32> event_type_counts = 19;
+  map<string, int32> event_source_counts = 20;
+  map<string, int32> event_category_counts = 21;
+  map<string, int32> event_priority_counts = 22;
+
+  // Processing statistics
+  map<string, int32> processing_status_counts = 23;
+  map<string, int32> processing_stage_counts = 24;
+  repeated string top_processing_errors = 25;
+
+  // Time-based statistics
+  repeated WebhookEventTimeSeries time_series = 26;
+}
+
+// Webhook Event Time Series
+message WebhookEventTimeSeries {
+  google.protobuf.Timestamp timestamp = 1;
+  int32 event_count = 2;
+  int32 processed_count = 3;
+  int32 failed_count = 4;
+  int32 pending_count = 5;
+  int64 average_processing_time_ms = 6;
+  double processing_success_rate = 7;
+  string granularity = 8; // MINUTE, HOUR, DAY
+}
+
+// Webhook Event Validation
+message WebhookEventValidation {
+  string validation_id = 1;
+  string event_id = 2;
+  string validation_type = 3; // SCHEMA, BUSINESS_RULES, COMPLIANCE, SECURITY
+
+  // Validation configuration
+  string schema = 4;
+  repeated string validation_rules = 5;
+  map<string, string> custom_validations = 6;
+
+  // Validation results
+  bool is_valid = 7;
+  repeated WebhookEventValidationError validation_errors = 8;
+  repeated WebhookEventValidationWarning validation_warnings = 9;
+  double validation_score = 10;
+
+  // Validation metadata
+  google.protobuf.Timestamp validated_at = 11;
+  string validated_by = 12;
+  int64 validation_duration_ms = 13;
+  map<string, string> validation_context = 14;
+}
+
+// Webhook Event Validation Error
+message WebhookEventValidationError {
+  string error_code = 1;
+  string error_message = 2;
+  string field_path = 3;
+  string expected_value = 4;
+  string actual_value = 5;
+  string error_type = 6; // SCHEMA, REQUIRED, FORMAT, RANGE, CUSTOM
+  string severity = 7; // LOW, MEDIUM, HIGH, CRITICAL
+  map<string, string> error_context = 8;
+}
+
+// Webhook Event Validation Warning
+message WebhookEventValidationWarning {
+  string warning_code = 1;
+  string warning_message = 2;
+  string field_path = 3;
+  string warning_type = 4;
+  string severity = 5; // LOW, MEDIUM, HIGH
+  map<string, string> warning_context = 6;
+}

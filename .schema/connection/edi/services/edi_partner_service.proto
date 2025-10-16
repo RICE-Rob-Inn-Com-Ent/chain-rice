@@ -1,0 +1,511 @@
+syntax = "proto3";
+
+package integrations.edi.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "integrations/edi/messages/edi_partner_models.proto";
+
+option go_package = "github.com/rice-dev/integrations/edi/services";
+
+// EDI Partner Service for managing trading partners
+service EdiPartnerService {
+  // Partner Management
+  rpc CreatePartner(CreatePartnerRequest) returns (CreatePartnerResponse);
+  rpc GetPartner(GetPartnerRequest) returns (GetPartnerResponse);
+  rpc UpdatePartner(UpdatePartnerRequest) returns (UpdatePartnerResponse);
+  rpc DeletePartner(DeletePartnerRequest) returns (DeletePartnerResponse);
+  rpc ListPartners(ListPartnersRequest) returns (ListPartnersResponse);
+
+  // Partner Configuration
+  rpc ConfigurePartner(ConfigurePartnerRequest) returns (ConfigurePartnerResponse);
+  rpc GetPartnerConfiguration(GetPartnerConfigurationRequest) returns (GetPartnerConfigurationResponse);
+  rpc UpdatePartnerConfiguration(UpdatePartnerConfigurationRequest) returns (UpdatePartnerConfigurationResponse);
+
+  // Partner Security
+  rpc SetupPartnerSecurity(SetupPartnerSecurityRequest) returns (SetupPartnerSecurityResponse);
+  rpc RotateApiKey(RotateApiKeyRequest) returns (RotateApiKeyResponse);
+  rpc UpdateCertificate(UpdateCertificateRequest) returns (UpdateCertificateResponse);
+  rpc RevokeAccess(RevokeAccessRequest) returns (RevokeAccessResponse);
+
+  // Partner Communication
+  rpc SetupPartnerCommunication(SetupPartnerCommunicationRequest) returns (SetupPartnerCommunicationResponse);
+  rpc TestConnection(TestConnectionRequest) returns (TestConnectionResponse);
+  rpc UpdateEndpoints(UpdateEndpointsRequest) returns (UpdateEndpointsResponse);
+
+  // Partner Status and Health
+  rpc GetPartnerStatus(GetPartnerStatusRequest) returns (GetPartnerStatusResponse);
+  rpc HealthCheckPartner(HealthCheckPartnerRequest) returns (HealthCheckPartnerResponse);
+  rpc GetPartnerMetrics(GetPartnerMetricsRequest) returns (GetPartnerMetricsResponse);
+
+  // Partner Onboarding
+  rpc StartOnboarding(StartOnboardingRequest) returns (StartOnboardingResponse);
+  rpc CompleteOnboarding(CompleteOnboardingRequest) returns (CompleteOnboardingResponse);
+  rpc GetOnboardingStatus(GetOnboardingStatusRequest) returns (GetOnboardingStatusResponse);
+
+  // Partner Validation
+  rpc ValidatePartner(ValidatePartnerRequest) returns (ValidatePartnerResponse);
+  rpc TestPartnerIntegration(TestPartnerIntegrationRequest) returns (TestPartnerIntegrationResponse);
+}
+
+// Create Partner Request
+message CreatePartnerRequest {
+  integrations.edi.messages.EdiPartnerBasicInfo basic_info = 1;
+  integrations.edi.enums.EdiPartnerType partner_type = 2;
+  integrations.edi.messages.EdiPartnerConfiguration edi_config = 3;
+  integrations.edi.messages.EdiPartnerSecurity security = 4;
+  integrations.edi.messages.EdiPartnerCommunication communication = 5;
+  integrations.edi.messages.EdiPartnerBusinessRules business_rules = 6;
+  bool auto_configure = 7;
+}
+
+// Create Partner Response
+message CreatePartnerResponse {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartner partner = 2;
+  google.protobuf.Timestamp created_at = 3;
+  repeated string configuration_steps = 4;
+  repeated string next_steps = 5;
+}
+
+// Get Partner Request
+message GetPartnerRequest {
+  string partner_id = 1;
+  bool include_sensitive_data = 2;
+}
+
+// Get Partner Response
+message GetPartnerResponse {
+  integrations.edi.messages.EdiPartner partner = 1;
+}
+
+// Update Partner Request
+message UpdatePartnerRequest {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartnerBasicInfo basic_info = 2;
+  integrations.edi.messages.EdiPartnerConfiguration edi_config = 3;
+  integrations.edi.messages.EdiPartnerSecurity security = 4;
+  integrations.edi.messages.EdiPartnerCommunication communication = 5;
+  integrations.edi.messages.EdiPartnerBusinessRules business_rules = 6;
+  bool update_configuration = 7;
+}
+
+// Update Partner Response
+message UpdatePartnerResponse {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartner partner = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  repeated string changes = 4;
+}
+
+// Delete Partner Request
+message DeletePartnerRequest {
+  string partner_id = 1;
+  bool force_delete = 2;
+  string reason = 3;
+}
+
+// Delete Partner Response
+message DeletePartnerResponse {
+  string partner_id = 1;
+  bool deleted = 2;
+  google.protobuf.Timestamp deleted_at = 3;
+  repeated string cleanup_steps = 4;
+}
+
+// List Partners Request
+message ListPartnersRequest {
+  integrations.edi.messages.EdiPartnerFilter filter = 1;
+}
+
+// List Partners Response
+message ListPartnersResponse {
+  integrations.edi.messages.EdiPartnerList partners = 1;
+}
+
+// Configure Partner Request
+message ConfigurePartnerRequest {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartnerConfiguration configuration = 2;
+  bool validate_configuration = 3;
+}
+
+// Configure Partner Response
+message ConfigurePartnerResponse {
+  string partner_id = 1;
+  bool configured = 2;
+  repeated string configuration_errors = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Get Partner Configuration Request
+message GetPartnerConfigurationRequest {
+  string partner_id = 1;
+  bool include_sensitive_data = 2;
+}
+
+// Get Partner Configuration Response
+message GetPartnerConfigurationResponse {
+  integrations.edi.messages.EdiPartnerConfiguration configuration = 1;
+}
+
+// Update Partner Configuration Request
+message UpdatePartnerConfigurationRequest {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartnerConfiguration configuration = 2;
+  bool validate_configuration = 3;
+}
+
+// Update Partner Configuration Response
+message UpdatePartnerConfigurationResponse {
+  string partner_id = 1;
+  bool updated = 2;
+  repeated string configuration_errors = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Setup Partner Security Request
+message SetupPartnerSecurityRequest {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartnerSecurity security = 2;
+  bool generate_certificates = 3;
+  bool generate_api_keys = 4;
+}
+
+// Setup Partner Security Response
+message SetupPartnerSecurityResponse {
+  string partner_id = 1;
+  bool security_configured = 2;
+  repeated string generated_certificates = 3;
+  repeated string generated_api_keys = 4;
+  repeated string security_warnings = 5;
+  google.protobuf.Timestamp configured_at = 6;
+}
+
+// Rotate API Key Request
+message RotateApiKeyRequest {
+  string partner_id = 1;
+  string key_id = 2;
+  bool invalidate_old_key = 3;
+  google.protobuf.Timestamp new_key_expires_at = 4;
+}
+
+// Rotate API Key Response
+message RotateApiKeyResponse {
+  string partner_id = 1;
+  string old_key_id = 2;
+  string new_key_id = 3;
+  google.protobuf.Timestamp rotated_at = 4;
+  google.protobuf.Timestamp old_key_expires_at = 5;
+}
+
+// Update Certificate Request
+message UpdateCertificateRequest {
+  string partner_id = 1;
+  string certificate_id = 2;
+  integrations.edi.messages.EdiCertificateInfo certificate = 3;
+  bool replace_existing = 4;
+}
+
+// Update Certificate Response
+message UpdateCertificateResponse {
+  string partner_id = 1;
+  string certificate_id = 2;
+  bool updated = 3;
+  google.protobuf.Timestamp updated_at = 4;
+  repeated string validation_errors = 5;
+}
+
+// Revoke Access Request
+message RevokeAccessRequest {
+  string partner_id = 1;
+  string access_type = 2; // API_KEY, CERTIFICATE, OAUTH, ALL
+  string reason = 3;
+  google.protobuf.Timestamp revoke_at = 4;
+}
+
+// Revoke Access Response
+message RevokeAccessResponse {
+  string partner_id = 1;
+  bool access_revoked = 2;
+  repeated string revoked_items = 3;
+  google.protobuf.Timestamp revoked_at = 4;
+}
+
+// Setup Partner Communication Request
+message SetupPartnerCommunicationRequest {
+  string partner_id = 1;
+  integrations.edi.messages.EdiPartnerCommunication communication = 2;
+  bool test_connection = 3;
+}
+
+// Setup Partner Communication Response
+message SetupPartnerCommunicationResponse {
+  string partner_id = 1;
+  bool communication_configured = 2;
+  repeated string connection_test_results = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Test Connection Request
+message TestConnectionRequest {
+  string partner_id = 1;
+  string endpoint_id = 2;
+  bool test_all_endpoints = 3;
+}
+
+// Test Connection Response
+message TestConnectionResponse {
+  string partner_id = 1;
+  repeated EdiConnectionTestResult test_results = 2;
+  bool all_tests_passed = 3;
+  google.protobuf.Timestamp tested_at = 4;
+}
+
+// Update Endpoints Request
+message UpdateEndpointsRequest {
+  string partner_id = 1;
+  repeated integrations.edi.messages.EdiEndpoint endpoints = 2;
+  bool validate_endpoints = 3;
+}
+
+// Update Endpoints Response
+message UpdateEndpointsResponse {
+  string partner_id = 1;
+  bool endpoints_updated = 2;
+  repeated string validation_errors = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// Get Partner Status Request
+message GetPartnerStatusRequest {
+  string partner_id = 1;
+}
+
+// Get Partner Status Response
+message GetPartnerStatusResponse {
+  integrations.edi.messages.EdiPartnerStatus status = 1;
+}
+
+// Health Check Partner Request
+message HealthCheckPartnerRequest {
+  string partner_id = 1;
+  bool check_all_endpoints = 2;
+}
+
+// Health Check Partner Response
+message HealthCheckPartnerResponse {
+  string partner_id = 1;
+  string health_status = 2;
+  repeated EdiHealthCheckResult health_checks = 3;
+  google.protobuf.Timestamp checked_at = 4;
+}
+
+// Get Partner Metrics Request
+message GetPartnerMetricsRequest {
+  string partner_id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+  string granularity = 4; // HOUR, DAY, WEEK, MONTH
+}
+
+// Get Partner Metrics Response
+message GetPartnerMetricsResponse {
+  string partner_id = 1;
+  EdiPartnerMetrics metrics = 2;
+  google.protobuf.Timestamp generated_at = 3;
+}
+
+// Start Onboarding Request
+message StartOnboardingRequest {
+  integrations.edi.messages.EdiPartnerBasicInfo basic_info = 1;
+  integrations.edi.enums.EdiPartnerType partner_type = 2;
+  string onboarding_template = 3;
+  repeated string required_steps = 4;
+}
+
+// Start Onboarding Response
+message StartOnboardingResponse {
+  string partner_id = 1;
+  string onboarding_id = 2;
+  EdiOnboardingStatus status = 3;
+  repeated string onboarding_steps = 4;
+  google.protobuf.Timestamp started_at = 5;
+}
+
+// Complete Onboarding Request
+message CompleteOnboardingRequest {
+  string partner_id = 1;
+  string onboarding_id = 2;
+  repeated string completed_steps = 3;
+  map<string, string> step_results = 4;
+}
+
+// Complete Onboarding Response
+message CompleteOnboardingResponse {
+  string partner_id = 1;
+  string onboarding_id = 2;
+  bool onboarding_completed = 3;
+  repeated string remaining_steps = 4;
+  google.protobuf.Timestamp completed_at = 5;
+}
+
+// Get Onboarding Status Request
+message GetOnboardingStatusRequest {
+  string partner_id = 1;
+  string onboarding_id = 2;
+}
+
+// Get Onboarding Status Response
+message GetOnboardingStatusResponse {
+  string partner_id = 1;
+  string onboarding_id = 2;
+  EdiOnboardingStatus status = 3;
+  repeated EdiOnboardingStep steps = 4;
+  google.protobuf.Timestamp started_at = 5;
+  google.protobuf.Timestamp last_updated_at = 6;
+}
+
+// Validate Partner Request
+message ValidatePartnerRequest {
+  string partner_id = 1;
+  bool validate_configuration = 2;
+  bool validate_security = 3;
+  bool validate_communication = 4;
+}
+
+// Validate Partner Response
+message ValidatePartnerResponse {
+  string partner_id = 1;
+  bool is_valid = 2;
+  repeated EdiValidationResult validation_results = 3;
+  repeated string errors = 4;
+  repeated string warnings = 5;
+  google.protobuf.Timestamp validated_at = 6;
+}
+
+// Test Partner Integration Request
+message TestPartnerIntegrationRequest {
+  string partner_id = 1;
+  string test_document_type = 2;
+  string test_payload = 3;
+  bool end_to_end_test = 4;
+}
+
+// Test Partner Integration Response
+message TestPartnerIntegrationResponse {
+  string partner_id = 1;
+  bool test_passed = 2;
+  repeated EdiIntegrationTestResult test_results = 3;
+  repeated string errors = 4;
+  repeated string warnings = 5;
+  google.protobuf.Timestamp tested_at = 6;
+}
+
+// Connection Test Result
+message EdiConnectionTestResult {
+  string endpoint_id = 1;
+  string endpoint_name = 2;
+  bool connection_successful = 3;
+  int32 response_time_ms = 4;
+  int32 http_status_code = 5;
+  string response_message = 6;
+  repeated string errors = 7;
+  google.protobuf.Timestamp tested_at = 8;
+}
+
+// Health Check Result
+message EdiHealthCheckResult {
+  string check_type = 1;
+  string check_name = 2;
+  bool check_passed = 3;
+  string check_message = 4;
+  int32 response_time_ms = 5;
+  google.protobuf.Timestamp checked_at = 6;
+}
+
+// Partner Metrics
+message EdiPartnerMetrics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_transactions = 3;
+  int32 successful_transactions = 4;
+  int32 failed_transactions = 5;
+  double success_rate = 6;
+  int64 average_response_time_ms = 7;
+  int64 min_response_time_ms = 8;
+  int64 max_response_time_ms = 9;
+  int32 uptime_percentage = 10;
+  repeated EdiPartnerEndpointMetrics endpoint_metrics = 11;
+}
+
+// Partner Endpoint Metrics
+message EdiPartnerEndpointMetrics {
+  string endpoint_id = 1;
+  string endpoint_name = 2;
+  int32 total_requests = 3;
+  int32 successful_requests = 4;
+  int32 failed_requests = 5;
+  double success_rate = 6;
+  int64 average_response_time_ms = 7;
+  int32 uptime_percentage = 8;
+}
+
+// Onboarding Status
+enum EdiOnboardingStatus {
+  EDI_ONBOARDING_STATUS_UNSPECIFIED = 0;
+  EDI_ONBOARDING_STATUS_NOT_STARTED = 1;
+  EDI_ONBOARDING_STATUS_IN_PROGRESS = 2;
+  EDI_ONBOARDING_STATUS_PENDING_APPROVAL = 3;
+  EDI_ONBOARDING_STATUS_COMPLETED = 4;
+  EDI_ONBOARDING_STATUS_FAILED = 5;
+  EDI_ONBOARDING_STATUS_CANCELLED = 6;
+}
+
+// Onboarding Step
+message EdiOnboardingStep {
+  string step_id = 1;
+  string step_name = 2;
+  string step_description = 3;
+  EdiOnboardingStepStatus status = 4;
+  google.protobuf.Timestamp started_at = 5;
+  google.protobuf.Timestamp completed_at = 6;
+  repeated string step_errors = 7;
+  map<string, string> step_data = 8;
+}
+
+// Onboarding Step Status
+enum EdiOnboardingStepStatus {
+  EDI_ONBOARDING_STEP_STATUS_UNSPECIFIED = 0;
+  EDI_ONBOARDING_STEP_STATUS_PENDING = 1;
+  EDI_ONBOARDING_STEP_STATUS_IN_PROGRESS = 2;
+  EDI_ONBOARDING_STEP_STATUS_COMPLETED = 3;
+  EDI_ONBOARDING_STEP_STATUS_FAILED = 4;
+  EDI_ONBOARDING_STEP_STATUS_SKIPPED = 5;
+}
+
+// Validation Result
+message EdiValidationResult {
+  string validation_type = 1;
+  string validation_name = 2;
+  bool validation_passed = 3;
+  string validation_message = 4;
+  repeated string validation_errors = 5;
+  repeated string validation_warnings = 6;
+  google.protobuf.Timestamp validated_at = 7;
+}
+
+// Integration Test Result
+message EdiIntegrationTestResult {
+  string test_type = 1;
+  string test_name = 2;
+  bool test_passed = 3;
+  string test_message = 4;
+  int32 response_time_ms = 5;
+  string response_data = 6;
+  repeated string test_errors = 7;
+  google.protobuf.Timestamp tested_at = 8;
+}

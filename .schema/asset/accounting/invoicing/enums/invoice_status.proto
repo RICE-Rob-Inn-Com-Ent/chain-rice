@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package finance.invoicing.enums;
+
+// Status of invoices in the invoicing process
+enum InvoiceStatus {
+  // Default value
+  INVOICE_STATUS_UNSPECIFIED = 0;
+
+  // Draft status - invoice is being prepared
+  INVOICE_STATUS_DRAFT = 1;
+
+  // Pending status - invoice is ready but not sent
+  INVOICE_STATUS_PENDING = 2;
+
+  // Sent status - invoice has been sent to customer
+  INVOICE_STATUS_SENT = 3;
+
+  // Delivered status - invoice has been delivered
+  INVOICE_STATUS_DELIVERED = 4;
+
+  // Viewed status - customer has viewed the invoice
+  INVOICE_STATUS_VIEWED = 5;
+
+  // Paid status - invoice has been fully paid
+  INVOICE_STATUS_PAID = 6;
+
+  // Partially paid status - invoice has been partially paid
+  INVOICE_STATUS_PARTIALLY_PAID = 7;
+
+  // Overdue status - invoice is past due date
+  INVOICE_STATUS_OVERDUE = 8;
+
+  // Cancelled status - invoice has been cancelled
+  INVOICE_STATUS_CANCELLED = 9;
+
+  // Void status - invoice has been voided
+  INVOICE_STATUS_VOID = 10;
+
+  // Disputed status - invoice is under dispute
+  INVOICE_STATUS_DISPUTED = 11;
+
+  // Refunded status - invoice has been refunded
+  INVOICE_STATUS_REFUNDED = 12;
+
+  // Write-off status - invoice has been written off
+  INVOICE_STATUS_WRITE_OFF = 13;
+
+  // Collection status - invoice is in collection
+  INVOICE_STATUS_COLLECTION = 14;
+
+  // Settled status - invoice has been settled
+  INVOICE_STATUS_SETTLED = 15;
+
+  // Archived status - invoice has been archived
+  INVOICE_STATUS_ARCHIVED = 16;
+}

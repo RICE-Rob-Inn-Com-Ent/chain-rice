@@ -1,0 +1,367 @@
+syntax = "proto3";
+
+package commerce.products.messages;
+
+import "google/protobuf/timestamp.proto";
+import "../enums/product_category.proto";
+import "../enums/product_status.proto";
+import "product_attribute.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/products/messages";
+
+// Product message representing a product
+message Product {
+  // Unique identifier for the product
+  string id = 1;
+
+  // Product SKU (Stock Keeping Unit)
+  string sku = 2;
+
+  // Product name
+  string name = 3;
+
+  // Product description
+  string description = 4;
+
+  // Short description
+  string short_description = 5;
+
+  // Product status
+  commerce.products.enums.ProductStatus status = 6;
+
+  // Product category
+  commerce.products.enums.ProductCategory category = 7;
+
+  // Product brand
+  string brand = 8;
+
+  // Product manufacturer
+  string manufacturer = 9;
+
+  // Product model
+  string model = 10;
+
+  // Product type
+  string product_type = 11;
+
+  // Product variants
+  repeated ProductVariant variants = 12;
+
+  // Product attributes
+  repeated ProductAttribute attributes = 13;
+
+  // Product images
+  repeated ProductImage images = 14;
+
+  // Product dimensions
+  ProductDimensions dimensions = 15;
+
+  // Product weight
+  ProductWeight weight = 16;
+
+  // Product tags
+  repeated string tags = 17;
+
+  // Product keywords for search
+  repeated string keywords = 18;
+
+  // Product barcode
+  string barcode = 19;
+
+  // Product UPC
+  string upc = 20;
+
+  // Product ISBN
+  string isbn = 21;
+
+  // Product EAN
+  string ean = 22;
+
+  // Product GTIN
+  string gtin = 23;
+
+  // Product ASIN
+  string asin = 24;
+
+  // Product URL
+  string product_url = 25;
+
+  // Product specifications
+  repeated ProductSpecification specifications = 26;
+
+  // Product features
+  repeated string features = 27;
+
+  // Product benefits
+  repeated string benefits = 28;
+
+  // Product warranty information
+  ProductWarranty warranty = 29;
+
+  // Product shipping information
+  ProductShipping shipping = 30;
+
+  // Product SEO information
+  ProductSEO seo = 31;
+
+  // Product pricing information
+  ProductPricing pricing = 32;
+
+  // Product inventory information
+  ProductInventory inventory = 33;
+
+  // Date when product was created
+  google.protobuf.Timestamp created_at = 34;
+
+  // Date when product was last updated
+  google.protobuf.Timestamp updated_at = 35;
+
+  // Date when product was published
+  google.protobuf.Timestamp published_at = 36;
+
+  // Date when product was discontinued
+  google.protobuf.Timestamp discontinued_at = 37;
+
+  // Product creator
+  string created_by = 38;
+
+  // Product modifier
+  string modified_by = 39;
+
+  // Product version
+  string version = 40;
+
+  // Additional metadata
+  map<string, string> metadata = 41;
+
+  // Product notes
+  string notes = 42;
+
+  // Internal notes
+  string internal_notes = 43;
+}
+
+// Product variant information
+message ProductVariant {
+  // Variant identifier
+  string id = 1;
+
+  // Variant name
+  string name = 2;
+
+  // Variant SKU
+  string sku = 3;
+
+  // Variant attributes
+  repeated ProductAttribute attributes = 4;
+
+  // Variant price
+  double price = 5;
+
+  // Variant cost
+  double cost = 6;
+
+  // Variant weight
+  ProductWeight weight = 7;
+
+  // Variant dimensions
+  ProductDimensions dimensions = 8;
+
+  // Variant images
+  repeated ProductImage images = 9;
+
+  // Variant inventory
+  ProductInventory inventory = 10;
+
+  // Variant status
+  string status = 11;
+}
+
+// Product image information
+message ProductImage {
+  // Image identifier
+  string id = 1;
+
+  // Image URL
+  string url = 2;
+
+  // Image alt text
+  string alt_text = 3;
+
+  // Image caption
+  string caption = 4;
+
+  // Image type (main, thumbnail, gallery, etc.)
+  string image_type = 5;
+
+  // Image order
+  int32 order = 6;
+
+  // Image dimensions
+  ImageDimensions dimensions = 7;
+
+  // Image file size
+  int64 file_size = 8;
+
+  // Image format
+  string format = 9;
+}
+
+// Image dimensions
+message ImageDimensions {
+  // Image width
+  int32 width = 1;
+
+  // Image height
+  int32 height = 2;
+}
+
+// Product dimensions
+message ProductDimensions {
+  // Length
+  double length = 1;
+
+  // Width
+  double width = 2;
+
+  // Height
+  double height = 3;
+
+  // Unit of measurement
+  string unit = 4;
+
+  // Volume
+  double volume = 5;
+
+  // Volume unit
+  string volume_unit = 6;
+}
+
+// Product weight
+message ProductWeight {
+  // Weight value
+  double value = 1;
+
+  // Weight unit
+  string unit = 2;
+}
+
+// Product specification
+message ProductSpecification {
+  // Specification name
+  string name = 1;
+
+  // Specification value
+  string value = 2;
+
+  // Specification unit
+  string unit = 3;
+
+  // Specification type
+  string type = 4;
+
+  // Specification group
+  string group = 5;
+}
+
+// Product warranty information
+message ProductWarranty {
+  // Warranty type
+  string warranty_type = 1;
+
+  // Warranty duration
+  int32 warranty_duration = 2;
+
+  // Warranty duration unit
+  string warranty_duration_unit = 3;
+
+  // Warranty description
+  string warranty_description = 4;
+
+  // Warranty terms
+  string warranty_terms = 5;
+
+  // Warranty coverage
+  string warranty_coverage = 6;
+}
+
+// Product shipping information
+message ProductShipping {
+  // Shipping class
+  string shipping_class = 1;
+
+  // Shipping weight
+  ProductWeight shipping_weight = 2;
+
+  // Shipping dimensions
+  ProductDimensions shipping_dimensions = 3;
+
+  // Free shipping eligible
+  bool free_shipping_eligible = 4;
+
+  // Shipping restrictions
+  repeated string shipping_restrictions = 5;
+
+  // Shipping zones
+  repeated string shipping_zones = 6;
+}
+
+// Product SEO information
+message ProductSEO {
+  // SEO title
+  string seo_title = 1;
+
+  // SEO description
+  string seo_description = 2;
+
+  // SEO keywords
+  repeated string seo_keywords = 3;
+
+  // Canonical URL
+  string canonical_url = 4;
+
+  // Meta robots
+  string meta_robots = 5;
+}
+
+// Product pricing information
+message ProductPricing {
+  // Base price
+  double base_price = 1;
+
+  // Compare at price
+  double compare_at_price = 2;
+
+  // Cost price
+  double cost_price = 3;
+
+  // Currency code
+  string currency = 4;
+
+  // Price per unit
+  double price_per_unit = 5;
+
+  // Unit of measurement
+  string unit = 6;
+}
+
+// Product inventory information
+message ProductInventory {
+  // Track inventory
+  bool track_inventory = 1;
+
+  // Allow backorders
+  bool allow_backorders = 2;
+
+  // Allow preorders
+  bool allow_preorders = 3;
+
+  // Stock quantity
+  int32 stock_quantity = 4;
+
+  // Low stock threshold
+  int32 low_stock_threshold = 5;
+
+  // Stock status
+  string stock_status = 6;
+}

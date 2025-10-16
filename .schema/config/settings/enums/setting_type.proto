@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package settings.settings.enums;
+
+// Setting type enumeration defines the data type and validation rules for settings
+enum SettingType {
+  // Default/unspecified type
+  SETTING_TYPE_UNSPECIFIED = 0;
+
+  // String/text values
+  SETTING_TYPE_STRING = 1;
+
+  // Integer numeric values
+  SETTING_TYPE_INTEGER = 2;
+
+  // Floating-point numeric values
+  SETTING_TYPE_FLOAT = 3;
+
+  // Boolean true/false values
+  SETTING_TYPE_BOOLEAN = 4;
+
+  // JSON object/array values
+  SETTING_TYPE_JSON = 5;
+
+  // Array/list of values
+  SETTING_TYPE_ARRAY = 6;
+
+  // Object/map key-value pairs
+  SETTING_TYPE_OBJECT = 7;
+
+  // Date and time values
+  SETTING_TYPE_DATETIME = 8;
+
+  // Date-only values
+  SETTING_TYPE_DATE = 9;
+
+  // Time-only values
+  SETTING_TYPE_TIME = 10;
+
+  // Email address format
+  SETTING_TYPE_EMAIL = 11;
+
+  // URL/URI format
+  SETTING_TYPE_URL = 12;
+
+  // UUID format
+  SETTING_TYPE_UUID = 13;
+
+  // Base64 encoded binary data
+  SETTING_TYPE_BASE64 = 14;
+
+  // Hexadecimal color values (e.g., #FF0000)
+  SETTING_TYPE_COLOR = 15;
+
+  // File path or filename
+  SETTING_TYPE_FILEPATH = 16;
+
+  // Regular expression pattern
+  SETTING_TYPE_REGEX = 17;
+
+  // IP address format (IPv4 or IPv6)
+  SETTING_TYPE_IP_ADDRESS = 18;
+
+  // MAC address format
+  SETTING_TYPE_MAC_ADDRESS = 19;
+
+  // Version number format (semantic versioning)
+  SETTING_TYPE_VERSION = 20;
+
+  // Currency amount with precision
+  SETTING_TYPE_CURRENCY = 21;
+
+  // Percentage values (0-100)
+  SETTING_TYPE_PERCENTAGE = 22;
+
+  // File size in bytes
+  SETTING_TYPE_FILE_SIZE = 23;
+
+  // Duration in various units
+  SETTING_TYPE_DURATION = 24;
+
+  // Temperature in various units
+  SETTING_TYPE_TEMPERATURE = 25;
+
+  // Distance in various units
+  SETTING_TYPE_DISTANCE = 26;
+
+  // Weight in various units
+  SETTING_TYPE_WEIGHT = 27;
+
+  // Volume in various units
+  SETTING_TYPE_VOLUME = 28;
+
+  // Enumeration from predefined values
+  SETTING_TYPE_ENUM = 29;
+
+  // Secret/password values (encrypted storage)
+  SETTING_TYPE_SECRET = 30;
+}

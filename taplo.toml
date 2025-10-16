@@ -1,0 +1,98 @@
+# ============================================================================
+# TAPLO CONFIGURATION - Rice Monorepo
+# ============================================================================
+# TOML formatting and validation
+# https://taplo.tamasfe.dev/configuration/
+# ============================================================================
+
+# ============================================================================
+# INCLUDE/EXCLUDE
+# ============================================================================
+include = ["**/*.toml"]
+exclude = [
+    "target/**",
+    "node_modules/**",
+    ".venv/**",
+    "venv/**",
+    "dist/**",
+    "build/**",
+    "bazel-*/**",
+]
+
+# ============================================================================
+# FORMATTING RULES
+# ============================================================================
+[formatting]
+# Align entries vertically
+align_entries = true
+
+# Align comments after entries
+align_comments = true
+
+# Array formatting
+array_trailing_comma = true
+array_auto_expand = true
+array_auto_collapse = true
+
+# Compact arrays (single line if possible)
+compact_arrays = true
+
+# Compact inline tables
+compact_inline_tables = false
+
+# Column width for formatting
+column_width = 120
+
+# Indentation
+indent_tables = false
+indent_entries = false
+indent_string = "  "
+
+# Trailing newline
+trailing_newline = true
+
+# Reorder keys alphabetically
+reorder_keys = false
+
+# Reorder arrays
+reorder_arrays = false
+
+# Allowed blank lines
+allowed_blank_lines = 1
+
+# CRLF line endings (false = LF)
+crlf = false
+
+# ============================================================================
+# SCHEMA ASSOCIATIONS
+# ============================================================================
+[schema]
+# Enable schema validation
+enabled = true
+
+# Schema links for validation
+links = {}
+
+# ============================================================================
+# RULE OVERRIDES
+# ============================================================================
+# Cargo.toml specific rules
+[[rule]]
+include = ["**/Cargo.toml"]
+keys = ["dependencies", "dev-dependencies", "build-dependencies"]
+
+[rule.formatting]
+reorder_keys = true
+
+# pyproject.toml specific rules
+[[rule]]
+include = ["**/pyproject.toml"]
+keys = ["tool.poetry.dependencies", "tool.poetry.dev-dependencies"]
+
+[rule.formatting]
+reorder_keys = false
+
+# Package manager lock files (don't format)
+[[rule]]
+include = ["**/Cargo.lock", "**/poetry.lock"]
+formatting = false

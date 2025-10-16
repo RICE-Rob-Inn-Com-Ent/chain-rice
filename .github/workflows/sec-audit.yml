@@ -1,0 +1,406 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  schedule:
+    - cron: "0 0 * * 0" # Weekly on Sunday at midnight UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  python-audit:
+    name: Python Dependencies Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        working-directory: .bot
+        run: poetry install --no-interaction
+
+      - name: Run pip-audit
+        working-directory: .bot
+        run: |
+          pip install pip-audit
+          poetry run pip-audit --format json --output pip-audit-report.json
+        continue-on-error: true
+
+      - name: Run Safety check
+        working-directory: .bot
+        run: |
+          poetry add safety --group dev
+          poetry run safety check --json > safety-report.json
+        continue-on-error: true
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-audit-reports
+          path: |
+            .bot/pip-audit-report.json
+            .bot/safety-report.json
+          retention-days: 30
+
+  npm-audit:
+    name: Node.js Dependencies Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        component:
+          - .frontend/web
+          - .backend/contract/solidity
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: ${{ matrix.component }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.component }}
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: ${{ matrix.component }}
+        run: |
+          npm audit --json > npm-audit-report.json || true
+          npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Run Snyk
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+          args: --severity-threshold=high --file=${{ matrix.component }}/package.json
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-reports-${{ hashFiles(matrix.component) }}
+          path: ${{ matrix.component }}/npm-audit-report.json
+          retention-days: 30
+
+  go-audit:
+    name: Go Dependencies Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        component: [db, token]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: .backend/${{ matrix.component }}/go.sum
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Run govulncheck
+        working-directory: .backend/${{ matrix.component }}
+        run: |
+          govulncheck -json ./... > govulncheck-report.json
+          govulncheck ./...
+        continue-on-error: true
+
+      - name: Install Nancy
+        run: |
+          curl -L -o nancy https://github.com/sonatype-nexus-community/nancy/releases/latest/download/nancy-linux-amd64
+          chmod +x nancy
+          sudo mv nancy /usr/local/bin/
+
+      - name: Run Nancy
+        working-directory: .backend/${{ matrix.component }}
+        run: |
+          go list -json -deps ./... | nancy sleuth --output json > nancy-report.json
+        continue-on-error: true
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-audit-reports-${{ matrix.component }}
+          path: |
+            .backend/${{ matrix.component }}/govulncheck-report.json
+            .backend/${{ matrix.component }}/nancy-report.json
+          retention-days: 30
+
+  rust-audit:
+    name: Rust Dependencies Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.76.0
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: .backend/contract/rust
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run cargo audit
+        working-directory: .backend/contract/rust
+        run: |
+          cargo audit --json > cargo-audit-report.json
+          cargo audit
+        continue-on-error: true
+
+      - name: Run cargo deny
+        uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          manifest-path: .backend/contract/rust/Cargo.toml
+          arguments: --all-features
+          command: check advisories
+        continue-on-error: true
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-audit-reports
+          path: .backend/contract/rust/cargo-audit-report.json
+          retention-days: 30
+
+  solidity-audit:
+    name: Solidity Smart Contract Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: .backend/contract/solidity/package-lock.json
+
+      - name: Install dependencies
+        working-directory: .backend/contract/solidity
+        run: npm ci
+
+      - name: Install Slither
+        run: pip install slither-analyzer
+
+      - name: Run Slither
+        working-directory: .backend/contract/solidity
+        run: |
+          slither . \
+            --json slither-report.json \
+            --exclude-dependencies \
+            --exclude-low \
+            --exclude-informational
+        continue-on-error: true
+
+      - name: Install Mythril
+        run: pip install mythril
+
+      - name: Run Mythril
+        working-directory: .backend/contract/solidity/contracts
+        run: |
+          for file in *.sol; do
+            myth analyze "$file" --solc-json mythril-config.json > "mythril-$file.txt" || true
+          done
+        continue-on-error: true
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: solidity-audit-reports
+          path: |
+            .backend/contract/solidity/slither-report.json
+            .backend/contract/solidity/contracts/mythril-*.txt
+          retention-days: 30
+
+  osv-scanner:
+    name: OSV Vulnerability Scanner
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run OSV Scanner
+        uses: google/osv-scanner/actions/scanner@v1
+        with:
+          scan-args: |-
+            --recursive
+            --skip-git
+            --format json
+            --output osv-report.json
+            ./
+        continue-on-error: true
+
+      - name: Upload OSV report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: osv-scan-report
+          path: osv-report.json
+          retention-days: 30
+
+  grype-scan:
+    name: Grype Vulnerability Scanner
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Grype scan
+        id: grype-scan
+        uses: anchore/scan-action@v3
+        with:
+          path: "."
+          fail-build: false
+          output-format: json
+          severity-cutoff: high
+
+      - name: Upload Grype report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grype-scan-report
+          path: ${{ steps.grype-scan.outputs.json }}
+          retention-days: 30
+
+  sbom-generation:
+    name: Generate Software Bill of Materials (SBOM)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Generate CycloneDX SBOM
+        uses: CycloneDX/gh-gomod-generate-sbom@v2
+        with:
+          version: v1
+          args: mod -licenses -json -output sbom.cyclonedx.json .backend/db
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-reports
+          path: |
+            sbom.spdx.json
+            sbom.cyclonedx.json
+          retention-days: 90
+
+  license-scan:
+    name: License Compliance Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run FOSSA scan
+        uses: fossas/fossa-action@main
+        with:
+          api-key: ${{ secrets.FOSSA_TOKEN }}
+        continue-on-error: true
+
+      - name: Check for GPL licenses
+        run: |
+          echo "Checking for GPL licenses in dependencies..."
+          # Add license checking logic here
+        continue-on-error: true
+
+  audit-summary:
+    name: Security Audit Summary
+    runs-on: ubuntu-latest
+    needs:
+      - python-audit
+      - npm-audit
+      - go-audit
+      - rust-audit
+      - solidity-audit
+      - osv-scanner
+      - grype-scan
+      - sbom-generation
+    if: always()
+
+    steps:
+      - name: Generate audit summary
+        run: |
+          echo "## Security Audit Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Audit Type | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Dependencies | ${{ needs.python-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Node.js Dependencies | ${{ needs.npm-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Go Dependencies | ${{ needs.go-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Rust Dependencies | ${{ needs.rust-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Solidity Contracts | ${{ needs.solidity-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| OSV Scanner | ${{ needs.osv-scanner.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Grype Scanner | ${{ needs.grype-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| SBOM Generation | ${{ needs.sbom-generation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Note**: Some checks may report warnings or informational findings." >> $GITHUB_STEP_SUMMARY
+          echo "Review the detailed reports in the artifacts section." >> $GITHUB_STEP_SUMMARY

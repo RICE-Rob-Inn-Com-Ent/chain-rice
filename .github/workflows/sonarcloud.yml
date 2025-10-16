@@ -1,0 +1,67 @@
+name: SonarCloud Analysis
+
+on:
+    push:
+        branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+        types: [opened, synchronize, reopened]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    sonarcloud:
+        name: SonarCloud Code Quality
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # Shallow clones should be disabled for better analysis
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.22"
+
+            - name: Install Python dependencies
+              working-directory: .bot
+              run: |
+                  pip install poetry
+                  poetry install --no-interaction
+
+            - name: Run Python tests with coverage
+              working-directory: .bot
+              run: |
+                  poetry run pytest --cov=core --cov=integration --cov-report=xml:coverage.xml
+              continue-on-error: true
+
+            - name: Run Go tests with coverage
+              working-directory: .backend/db
+              run: |
+                  go test -coverprofile=coverage.out ./...
+              continue-on-error: true
+
+            - name: SonarCloud Scan
+              uses: SonarSource/sonarcloud-github-action@master
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              with:
+                  args: >
+                      -Dsonar.projectKey=rice-mono
+                      -Dsonar.organization=rice-dev

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package integrations.edi.enums;
+
+option go_package = "github.com/rice-dev/integrations/edi/enums";
+
+// EDI Partner Types for business relationship classification
+enum EdiPartnerType {
+  EDI_PARTNER_TYPE_UNSPECIFIED = 0;
+
+  // Supply Chain Partners
+  EDI_PARTNER_TYPE_SUPPLIER = 1;        // Raw materials, components suppliers
+  EDI_PARTNER_TYPE_MANUFACTURER = 2;    // Product manufacturers
+  EDI_PARTNER_TYPE_DISTRIBUTOR = 3;     // Product distributors
+  EDI_PARTNER_TYPE_WHOLESALER = 4;      // Wholesale partners
+  EDI_PARTNER_TYPE_RETAILER = 5;        // Retail partners
+  EDI_PARTNER_TYPE_RESELLER = 6;        // Reseller partners
+
+  // Service Partners
+  EDI_PARTNER_TYPE_LOGISTICS = 10;      // Shipping, warehousing, fulfillment
+  EDI_PARTNER_TYPE_CARRIER = 11;        // Transportation carriers
+  EDI_PARTNER_TYPE_3PL = 12;            // Third-party logistics providers
+  EDI_PARTNER_TYPE_FREIGHT_FORWARDER = 13; // Freight forwarding services
+
+  // Financial Partners
+  EDI_PARTNER_TYPE_BANK = 20;           // Banking partners
+  EDI_PARTNER_TYPE_PAYMENT_PROCESSOR = 21; // Payment processing services
+  EDI_PARTNER_TYPE_CREDIT_CARD_COMPANY = 22; // Credit card processors
+  EDI_PARTNER_TYPE_INSURANCE = 23;      // Insurance providers
+
+  // Technology Partners
+  EDI_PARTNER_TYPE_EDI_PROVIDER = 30;   // EDI service providers
+  EDI_PARTNER_TYPE_VAN_PROVIDER = 31;   // Value Added Network providers
+  EDI_PARTNER_TYPE_INTEGRATION_PARTNER = 32; // System integration partners
+  EDI_PARTNER_TYPE_SOFTWARE_VENDOR = 33; // Software solution vendors
+
+  // Regulatory & Compliance
+  EDI_PARTNER_TYPE_GOVERNMENT = 40;     // Government agencies
+  EDI_PARTNER_TYPE_REGULATORY = 41;     // Regulatory bodies
+  EDI_PARTNER_TYPE_CUSTOMS = 42;        // Customs authorities
+  EDI_PARTNER_TYPE_TAX_AUTHORITY = 43;  // Tax authorities
+
+  // Customer Types
+  EDI_PARTNER_TYPE_CUSTOMER = 50;       // End customers
+  EDI_PARTNER_TYPE_ENTERPRISE_CUSTOMER = 51; // Enterprise customers
+  EDI_PARTNER_TYPE_SMB_CUSTOMER = 52;   // Small/Medium business customers
+  EDI_PARTNER_TYPE_CONSUMER = 53;       // Individual consumers
+
+  // Internal
+  EDI_PARTNER_TYPE_INTERNAL = 60;       // Internal departments/systems
+  EDI_PARTNER_TYPE_SUBSIDIARY = 61;     // Company subsidiaries
+  EDI_PARTNER_TYPE_AFFILIATE = 62;      // Affiliated companies
+
+  // Testing & Development
+  EDI_PARTNER_TYPE_TEST = 70;           // Testing partners
+  EDI_PARTNER_TYPE_DEVELOPMENT = 71;    // Development partners
+  EDI_PARTNER_TYPE_SANDBOX = 72;        // Sandbox/test environment partners
+}

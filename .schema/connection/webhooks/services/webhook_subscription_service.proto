@@ -1,0 +1,846 @@
+syntax = "proto3";
+
+package integrations.webhooks.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "integrations/webhooks/messages/webhook_subscription_models.proto";
+import "integrations/webhooks/messages/webhook_event_models.proto";
+
+option go_package = "github.com/rice-dev/integrations/webhooks/services";
+
+// Webhook Subscription Service for managing webhook subscriptions
+service WebhookSubscriptionService {
+  // Subscription Management
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
+  rpc GetSubscription(GetSubscriptionRequest) returns (GetSubscriptionResponse);
+  rpc UpdateSubscription(UpdateSubscriptionRequest) returns (UpdateSubscriptionResponse);
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (DeleteSubscriptionResponse);
+  rpc ListSubscriptions(ListSubscriptionsRequest) returns (ListSubscriptionsResponse);
+
+  // Subscription Configuration
+  rpc ConfigureSubscription(ConfigureSubscriptionRequest) returns (ConfigureSubscriptionResponse);
+  rpc GetSubscriptionConfiguration(GetSubscriptionConfigurationRequest) returns (GetSubscriptionConfigurationResponse);
+  rpc UpdateSubscriptionConfiguration(UpdateSubscriptionConfigurationRequest) returns (UpdateSubscriptionConfigurationResponse);
+
+  // Subscription Endpoints
+  rpc AddEndpoint(AddEndpointRequest) returns (AddEndpointResponse);
+  rpc UpdateEndpoint(UpdateEndpointRequest) returns (UpdateEndpointResponse);
+  rpc RemoveEndpoint(RemoveEndpointRequest) returns (RemoveEndpointResponse);
+  rpc ListEndpoints(ListEndpointsRequest) returns (ListEndpointsResponse);
+  rpc TestEndpoint(TestEndpointRequest) returns (TestEndpointResponse);
+
+  // Subscription Security
+  rpc SetupSecurity(SetupSecurityRequest) returns (SetupSecurityResponse);
+  rpc UpdateSecurity(UpdateSecurityRequest) returns (UpdateSecurityResponse);
+  rpc RotateSecrets(RotateSecretsRequest) returns (RotateSecretsResponse);
+  rpc ValidateSecurity(ValidateSecurityRequest) returns (ValidateSecurityResponse);
+
+  // Subscription Filtering
+  rpc ConfigureEventFilter(ConfigureEventFilterRequest) returns (ConfigureEventFilterResponse);
+  rpc GetEventFilter(GetEventFilterRequest) returns (GetEventFilterResponse);
+  rpc UpdateEventFilter(UpdateEventFilterRequest) returns (UpdateEventFilterResponse);
+  rpc TestEventFilter(TestEventFilterRequest) returns (TestEventFilterResponse);
+
+  // Subscription Retry Configuration
+  rpc ConfigureRetryPolicy(ConfigureRetryPolicyRequest) returns (ConfigureRetryPolicyResponse);
+  rpc GetRetryPolicy(GetRetryPolicyRequest) returns (GetRetryPolicyResponse);
+  rpc UpdateRetryPolicy(UpdateRetryPolicyRequest) returns (UpdateRetryPolicyResponse);
+  rpc TestRetryPolicy(TestRetryPolicyRequest) returns (TestRetryPolicyResponse);
+
+  // Subscription Status and Health
+  rpc GetSubscriptionStatus(GetSubscriptionStatusRequest) returns (GetSubscriptionStatusResponse);
+  rpc HealthCheckSubscription(HealthCheckSubscriptionRequest) returns (HealthCheckSubscriptionResponse);
+  rpc GetSubscriptionMetrics(GetSubscriptionMetricsRequest) returns (GetSubscriptionMetricsResponse);
+
+  // Subscription Validation
+  rpc ValidateSubscription(ValidateSubscriptionRequest) returns (ValidateSubscriptionResponse);
+  rpc TestSubscription(TestSubscriptionRequest) returns (TestSubscriptionResponse);
+  rpc GetValidationResults(GetValidationResultsRequest) returns (GetValidationResultsResponse);
+
+  // Subscription Templates
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse);
+  rpc GetTemplate(GetTemplateRequest) returns (GetTemplateResponse);
+  rpc UpdateTemplate(UpdateTemplateRequest) returns (UpdateTemplateResponse);
+  rpc DeleteTemplate(DeleteTemplateRequest) returns (DeleteTemplateResponse);
+  rpc ListTemplates(ListTemplatesRequest) returns (ListTemplatesResponse);
+  rpc ApplyTemplate(ApplyTemplateRequest) returns (ApplyTemplateResponse);
+
+  // Subscription Lifecycle
+  rpc ActivateSubscription(ActivateSubscriptionRequest) returns (ActivateSubscriptionResponse);
+  rpc DeactivateSubscription(DeactivateSubscriptionRequest) returns (DeactivateSubscriptionResponse);
+  rpc SuspendSubscription(SuspendSubscriptionRequest) returns (SuspendSubscriptionResponse);
+  rpc ResumeSubscription(ResumeSubscriptionRequest) returns (ResumeSubscriptionResponse);
+
+  // Subscription Monitoring
+  rpc EnableMonitoring(EnableMonitoringRequest) returns (EnableMonitoringResponse);
+  rpc DisableMonitoring(DisableMonitoringRequest) returns (DisableMonitoringResponse);
+  rpc ConfigureAlerts(ConfigureAlertsRequest) returns (ConfigureAlertsResponse);
+  rpc GetAlertConfiguration(GetAlertConfigurationRequest) returns (GetAlertConfigurationResponse);
+}
+
+// Create Subscription Request
+message CreateSubscriptionRequest {
+  integrations.webhooks.messages.WebhookSubscriptionBasicInfo basic_info = 1;
+  integrations.webhooks.messages.WebhookSubscriptionConfiguration configuration = 2;
+  integrations.webhooks.messages.WebhookEndpoint endpoint = 3;
+  integrations.webhooks.messages.WebhookSecurity security = 4;
+  integrations.webhooks.messages.WebhookEventFilter event_filter = 5;
+  integrations.webhooks.messages.WebhookRetryConfiguration retry_config = 6;
+  bool auto_configure = 7;
+  string template_id = 8;
+}
+
+// Create Subscription Response
+message CreateSubscriptionResponse {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSubscription subscription = 2;
+  google.protobuf.Timestamp created_at = 3;
+  repeated string configuration_steps = 4;
+  repeated string next_steps = 5;
+}
+
+// Get Subscription Request
+message GetSubscriptionRequest {
+  string subscription_id = 1;
+  bool include_sensitive_data = 2;
+  bool include_metrics = 3;
+}
+
+// Get Subscription Response
+message GetSubscriptionResponse {
+  integrations.webhooks.messages.WebhookSubscription subscription = 1;
+}
+
+// Update Subscription Request
+message UpdateSubscriptionRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSubscriptionBasicInfo basic_info = 2;
+  integrations.webhooks.messages.WebhookSubscriptionConfiguration configuration = 3;
+  integrations.webhooks.messages.WebhookEndpoint endpoint = 4;
+  integrations.webhooks.messages.WebhookSecurity security = 5;
+  integrations.webhooks.messages.WebhookEventFilter event_filter = 6;
+  integrations.webhooks.messages.WebhookRetryConfiguration retry_config = 7;
+  bool update_configuration = 8;
+}
+
+// Update Subscription Response
+message UpdateSubscriptionResponse {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSubscription subscription = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  repeated string changes = 4;
+}
+
+// Delete Subscription Request
+message DeleteSubscriptionRequest {
+  string subscription_id = 1;
+  bool force_delete = 2;
+  string reason = 3;
+}
+
+// Delete Subscription Response
+message DeleteSubscriptionResponse {
+  string subscription_id = 1;
+  bool deleted = 2;
+  google.protobuf.Timestamp deleted_at = 3;
+  repeated string cleanup_steps = 4;
+}
+
+// List Subscriptions Request
+message ListSubscriptionsRequest {
+  integrations.webhooks.messages.WebhookSubscriptionFilter filter = 1;
+}
+
+// List Subscriptions Response
+message ListSubscriptionsResponse {
+  integrations.webhooks.messages.WebhookSubscriptionList subscriptions = 1;
+}
+
+// Configure Subscription Request
+message ConfigureSubscriptionRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSubscriptionConfiguration configuration = 2;
+  bool validate_configuration = 3;
+}
+
+// Configure Subscription Response
+message ConfigureSubscriptionResponse {
+  string subscription_id = 1;
+  bool configured = 2;
+  repeated string configuration_errors = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Get Subscription Configuration Request
+message GetSubscriptionConfigurationRequest {
+  string subscription_id = 1;
+  bool include_sensitive_data = 2;
+}
+
+// Get Subscription Configuration Response
+message GetSubscriptionConfigurationResponse {
+  integrations.webhooks.messages.WebhookSubscriptionConfiguration configuration = 1;
+}
+
+// Update Subscription Configuration Request
+message UpdateSubscriptionConfigurationRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSubscriptionConfiguration configuration = 2;
+  bool validate_configuration = 3;
+}
+
+// Update Subscription Configuration Response
+message UpdateSubscriptionConfigurationResponse {
+  string subscription_id = 1;
+  bool updated = 2;
+  repeated string configuration_errors = 3;
+  repeated string configuration_warnings = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Add Endpoint Request
+message AddEndpointRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookEndpoint endpoint = 2;
+  bool test_endpoint = 3;
+}
+
+// Add Endpoint Response
+message AddEndpointResponse {
+  string subscription_id = 1;
+  string endpoint_id = 2;
+  bool endpoint_added = 3;
+  repeated string test_results = 4;
+  google.protobuf.Timestamp added_at = 5;
+}
+
+// Update Endpoint Request
+message UpdateEndpointRequest {
+  string subscription_id = 1;
+  string endpoint_id = 2;
+  integrations.webhooks.messages.WebhookEndpoint endpoint = 3;
+  bool test_endpoint = 4;
+}
+
+// Update Endpoint Response
+message UpdateEndpointResponse {
+  string subscription_id = 1;
+  string endpoint_id = 2;
+  bool endpoint_updated = 3;
+  repeated string test_results = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Remove Endpoint Request
+message RemoveEndpointRequest {
+  string subscription_id = 1;
+  string endpoint_id = 2;
+  string reason = 3;
+}
+
+// Remove Endpoint Response
+message RemoveEndpointResponse {
+  string subscription_id = 1;
+  string endpoint_id = 2;
+  bool endpoint_removed = 3;
+  google.protobuf.Timestamp removed_at = 4;
+}
+
+// List Endpoints Request
+message ListEndpointsRequest {
+  string subscription_id = 1;
+  bool include_inactive = 2;
+}
+
+// List Endpoints Response
+message ListEndpointsResponse {
+  string subscription_id = 1;
+  repeated integrations.webhooks.messages.WebhookEndpoint endpoints = 2;
+  int32 total_count = 3;
+}
+
+// Test Endpoint Request
+message TestEndpointRequest {
+  string subscription_id = 1;
+  string endpoint_id = 2;
+  bool test_all_endpoints = 3;
+  integrations.webhooks.messages.WebhookEvent test_event = 4;
+}
+
+// Test Endpoint Response
+message TestEndpointResponse {
+  string subscription_id = 1;
+  repeated WebhookEndpointTestResult test_results = 2;
+  bool all_tests_passed = 3;
+  google.protobuf.Timestamp tested_at = 4;
+}
+
+// Setup Security Request
+message SetupSecurityRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSecurity security = 2;
+  bool generate_secrets = 3;
+  bool test_security = 4;
+}
+
+// Setup Security Response
+message SetupSecurityResponse {
+  string subscription_id = 1;
+  bool security_configured = 2;
+  repeated string generated_secrets = 3;
+  repeated string security_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Update Security Request
+message UpdateSecurityRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookSecurity security = 2;
+  bool test_security = 3;
+}
+
+// Update Security Response
+message UpdateSecurityResponse {
+  string subscription_id = 1;
+  bool security_updated = 2;
+  repeated string security_warnings = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// Rotate Secrets Request
+message RotateSecretsRequest {
+  string subscription_id = 1;
+  string secret_type = 2; // API_KEY, HMAC_SECRET, ENCRYPTION_KEY, SIGNING_KEY
+  bool invalidate_old_secret = 3;
+  google.protobuf.Timestamp new_secret_expires_at = 4;
+}
+
+// Rotate Secrets Response
+message RotateSecretsResponse {
+  string subscription_id = 1;
+  string old_secret_id = 2;
+  string new_secret_id = 3;
+  google.protobuf.Timestamp rotated_at = 4;
+  google.protobuf.Timestamp old_secret_expires_at = 5;
+}
+
+// Validate Security Request
+message ValidateSecurityRequest {
+  string subscription_id = 1;
+  bool validate_ssl = 2;
+  bool validate_authentication = 3;
+  bool validate_encryption = 4;
+}
+
+// Validate Security Response
+message ValidateSecurityResponse {
+  string subscription_id = 1;
+  bool is_valid = 2;
+  repeated WebhookSecurityValidationResult validation_results = 3;
+  repeated string errors = 4;
+  repeated string warnings = 5;
+  google.protobuf.Timestamp validated_at = 6;
+}
+
+// Configure Event Filter Request
+message ConfigureEventFilterRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookEventFilter event_filter = 2;
+  bool validate_filter = 3;
+}
+
+// Configure Event Filter Response
+message ConfigureEventFilterResponse {
+  string subscription_id = 1;
+  bool filter_configured = 2;
+  repeated string filter_errors = 3;
+  repeated string filter_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Get Event Filter Request
+message GetEventFilterRequest {
+  string subscription_id = 1;
+}
+
+// Get Event Filter Response
+message GetEventFilterResponse {
+  integrations.webhooks.messages.WebhookEventFilter event_filter = 1;
+}
+
+// Update Event Filter Request
+message UpdateEventFilterRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookEventFilter event_filter = 2;
+  bool validate_filter = 3;
+}
+
+// Update Event Filter Response
+message UpdateEventFilterResponse {
+  string subscription_id = 1;
+  bool filter_updated = 2;
+  repeated string filter_errors = 3;
+  repeated string filter_warnings = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Test Event Filter Request
+message TestEventFilterRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookEvent test_event = 2;
+  bool test_multiple_events = 3;
+}
+
+// Test Event Filter Response
+message TestEventFilterResponse {
+  string subscription_id = 1;
+  bool event_matches_filter = 2;
+  repeated string filter_results = 3;
+  repeated string filter_explanations = 4;
+  google.protobuf.Timestamp tested_at = 5;
+}
+
+// Configure Retry Policy Request
+message ConfigureRetryPolicyRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookRetryConfiguration retry_config = 2;
+  bool validate_policy = 3;
+}
+
+// Configure Retry Policy Response
+message ConfigureRetryPolicyResponse {
+  string subscription_id = 1;
+  bool retry_policy_configured = 2;
+  repeated string policy_errors = 3;
+  repeated string policy_warnings = 4;
+  google.protobuf.Timestamp configured_at = 5;
+}
+
+// Get Retry Policy Request
+message GetRetryPolicyRequest {
+  string subscription_id = 1;
+}
+
+// Get Retry Policy Response
+message GetRetryPolicyResponse {
+  integrations.webhooks.messages.WebhookRetryConfiguration retry_config = 1;
+}
+
+// Update Retry Policy Request
+message UpdateRetryPolicyRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookRetryConfiguration retry_config = 2;
+  bool validate_policy = 3;
+}
+
+// Update Retry Policy Response
+message UpdateRetryPolicyResponse {
+  string subscription_id = 1;
+  bool retry_policy_updated = 2;
+  repeated string policy_errors = 3;
+  repeated string policy_warnings = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+// Test Retry Policy Request
+message TestRetryPolicyRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookEvent test_event = 2;
+  bool simulate_failure = 3;
+}
+
+// Test Retry Policy Response
+message TestRetryPolicyResponse {
+  string subscription_id = 1;
+  repeated WebhookRetryTestResult retry_test_results = 2;
+  bool retry_policy_works = 3;
+  google.protobuf.Timestamp tested_at = 4;
+}
+
+// Get Subscription Status Request
+message GetSubscriptionStatusRequest {
+  string subscription_id = 1;
+}
+
+// Get Subscription Status Response
+message GetSubscriptionStatusResponse {
+  integrations.webhooks.enums.WebhookStatus status = 1;
+  string health_status = 2;
+  google.protobuf.Timestamp last_health_check = 3;
+  google.protobuf.Timestamp last_successful_delivery = 4;
+  google.protobuf.Timestamp last_failed_delivery = 5;
+  int32 consecutive_failures = 6;
+  int32 total_deliveries = 7;
+  int32 successful_deliveries = 8;
+  int32 failed_deliveries = 9;
+  double success_rate = 10;
+  string status_message = 11;
+  repeated string active_alerts = 12;
+}
+
+// Health Check Subscription Request
+message HealthCheckSubscriptionRequest {
+  string subscription_id = 1;
+  bool check_all_endpoints = 2;
+  bool deep_check = 3;
+}
+
+// Health Check Subscription Response
+message HealthCheckSubscriptionResponse {
+  string subscription_id = 1;
+  string health_status = 2;
+  repeated WebhookHealthCheckResult health_checks = 3;
+  google.protobuf.Timestamp checked_at = 4;
+}
+
+// Get Subscription Metrics Request
+message GetSubscriptionMetricsRequest {
+  string subscription_id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+  string granularity = 4; // HOUR, DAY, WEEK, MONTH
+}
+
+// Get Subscription Metrics Response
+message GetSubscriptionMetricsResponse {
+  string subscription_id = 1;
+  WebhookSubscriptionMetrics metrics = 2;
+  google.protobuf.Timestamp generated_at = 3;
+}
+
+// Validate Subscription Request
+message ValidateSubscriptionRequest {
+  string subscription_id = 1;
+  bool validate_configuration = 2;
+  bool validate_endpoints = 3;
+  bool validate_security = 4;
+  bool validate_filters = 5;
+  bool validate_retry_policy = 6;
+}
+
+// Validate Subscription Response
+message ValidateSubscriptionResponse {
+  string subscription_id = 1;
+  bool is_valid = 2;
+  repeated WebhookValidationResult validation_results = 3;
+  repeated string errors = 4;
+  repeated string warnings = 5;
+  google.protobuf.Timestamp validated_at = 6;
+}
+
+// Test Subscription Request
+message TestSubscriptionRequest {
+  string subscription_id = 1;
+  integrations.webhooks.messages.WebhookEvent test_event = 2;
+  bool end_to_end_test = 3;
+  bool test_all_components = 4;
+}
+
+// Test Subscription Response
+message TestSubscriptionResponse {
+  string subscription_id = 1;
+  bool test_passed = 2;
+  repeated WebhookTestResult test_results = 3;
+  repeated string errors = 4;
+  repeated string warnings = 5;
+  google.protobuf.Timestamp tested_at = 6;
+}
+
+// Get Validation Results Request
+message GetValidationResultsRequest {
+  string subscription_id = 1;
+  string validation_id = 2;
+}
+
+// Get Validation Results Response
+message GetValidationResultsResponse {
+  integrations.webhooks.messages.WebhookSubscriptionValidation validation = 1;
+}
+
+// Create Template Request
+message CreateTemplateRequest {
+  integrations.webhooks.messages.WebhookSubscriptionTemplate template = 1;
+  bool is_public = 2;
+}
+
+// Create Template Response
+message CreateTemplateResponse {
+  string template_id = 1;
+  bool created = 2;
+  google.protobuf.Timestamp created_at = 3;
+}
+
+// Get Template Request
+message GetTemplateRequest {
+  string template_id = 1;
+}
+
+// Get Template Response
+message GetTemplateResponse {
+  integrations.webhooks.messages.WebhookSubscriptionTemplate template = 1;
+}
+
+// Update Template Request
+message UpdateTemplateRequest {
+  string template_id = 1;
+  integrations.webhooks.messages.WebhookSubscriptionTemplate template = 2;
+}
+
+// Update Template Response
+message UpdateTemplateResponse {
+  string template_id = 1;
+  bool updated = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+// Delete Template Request
+message DeleteTemplateRequest {
+  string template_id = 1;
+  string reason = 2;
+}
+
+// Delete Template Response
+message DeleteTemplateResponse {
+  string template_id = 1;
+  bool deleted = 2;
+  google.protobuf.Timestamp deleted_at = 3;
+}
+
+// List Templates Request
+message ListTemplatesRequest {
+  repeated string template_types = 1;
+  bool include_system_templates = 2;
+  bool include_public_templates = 3;
+  string category = 4;
+}
+
+// List Templates Response
+message ListTemplatesResponse {
+  repeated integrations.webhooks.messages.WebhookSubscriptionTemplate templates = 1;
+  int32 total_count = 2;
+}
+
+// Apply Template Request
+message ApplyTemplateRequest {
+  string subscription_id = 1;
+  string template_id = 2;
+  map<string, string> template_parameters = 3;
+  bool override_existing = 4;
+}
+
+// Apply Template Response
+message ApplyTemplateResponse {
+  string subscription_id = 1;
+  string template_id = 2;
+  bool template_applied = 3;
+  repeated string applied_changes = 4;
+  google.protobuf.Timestamp applied_at = 5;
+}
+
+// Activate Subscription Request
+message ActivateSubscriptionRequest {
+  string subscription_id = 1;
+  string reason = 2;
+}
+
+// Activate Subscription Response
+message ActivateSubscriptionResponse {
+  string subscription_id = 1;
+  bool activated = 2;
+  google.protobuf.Timestamp activated_at = 3;
+}
+
+// Deactivate Subscription Request
+message DeactivateSubscriptionRequest {
+  string subscription_id = 1;
+  string reason = 2;
+}
+
+// Deactivate Subscription Response
+message DeactivateSubscriptionResponse {
+  string subscription_id = 1;
+  bool deactivated = 2;
+  google.protobuf.Timestamp deactivated_at = 3;
+}
+
+// Suspend Subscription Request
+message SuspendSubscriptionRequest {
+  string subscription_id = 1;
+  string reason = 2;
+  google.protobuf.Timestamp suspend_until = 3;
+}
+
+// Suspend Subscription Response
+message SuspendSubscriptionResponse {
+  string subscription_id = 1;
+  bool suspended = 2;
+  google.protobuf.Timestamp suspended_at = 3;
+  google.protobuf.Timestamp suspend_until = 4;
+}
+
+// Resume Subscription Request
+message ResumeSubscriptionRequest {
+  string subscription_id = 1;
+  string reason = 2;
+}
+
+// Resume Subscription Response
+message ResumeSubscriptionResponse {
+  string subscription_id = 1;
+  bool resumed = 2;
+  google.protobuf.Timestamp resumed_at = 3;
+}
+
+// Enable Monitoring Request
+message EnableMonitoringRequest {
+  string subscription_id = 1;
+  bool enable_metrics = 2;
+  bool enable_logging = 3;
+  bool enable_alerting = 4;
+}
+
+// Enable Monitoring Response
+message EnableMonitoringResponse {
+  string subscription_id = 1;
+  bool monitoring_enabled = 2;
+  google.protobuf.Timestamp enabled_at = 3;
+}
+
+// Disable Monitoring Request
+message DisableMonitoringRequest {
+  string subscription_id = 1;
+  string reason = 2;
+}
+
+// Disable Monitoring Response
+message DisableMonitoringResponse {
+  string subscription_id = 1;
+  bool monitoring_disabled = 2;
+  google.protobuf.Timestamp disabled_at = 3;
+}
+
+// Configure Alerts Request
+message ConfigureAlertsRequest {
+  string subscription_id = 1;
+  repeated WebhookAlertRule alert_rules = 2;
+  bool enable_alerts = 3;
+}
+
+// Configure Alerts Response
+message ConfigureAlertsResponse {
+  string subscription_id = 1;
+  bool alerts_configured = 2;
+  repeated string configured_alert_rules = 3;
+  google.protobuf.Timestamp configured_at = 4;
+}
+
+// Get Alert Configuration Request
+message GetAlertConfigurationRequest {
+  string subscription_id = 1;
+}
+
+// Get Alert Configuration Response
+message GetAlertConfigurationResponse {
+  string subscription_id = 1;
+  repeated WebhookAlertRule alert_rules = 2;
+  bool alerts_enabled = 3;
+  google.protobuf.Timestamp last_updated = 4;
+}
+
+// Supporting message types
+message WebhookEndpointTestResult {
+  string endpoint_id = 1;
+  string endpoint_name = 2;
+  bool test_passed = 3;
+  int32 response_time_ms = 4;
+  int32 status_code = 5;
+  string response_message = 6;
+  repeated string errors = 7;
+  google.protobuf.Timestamp tested_at = 8;
+}
+
+message WebhookSecurityValidationResult {
+  string validation_type = 1;
+  string validation_name = 2;
+  bool validation_passed = 3;
+  string validation_message = 4;
+  repeated string validation_errors = 5;
+  google.protobuf.Timestamp validated_at = 6;
+}
+
+message WebhookRetryTestResult {
+  int32 attempt_number = 1;
+  bool retry_scheduled = 2;
+  int32 retry_delay_seconds = 3;
+  google.protobuf.Timestamp retry_at = 4;
+  string retry_reason = 5;
+}
+
+message WebhookHealthCheckResult {
+  string check_type = 1;
+  string check_name = 2;
+  bool check_passed = 3;
+  string check_message = 4;
+  int32 response_time_ms = 5;
+  google.protobuf.Timestamp checked_at = 6;
+}
+
+message WebhookSubscriptionMetrics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+  int32 total_events = 3;
+  int32 delivered_events = 4;
+  int32 failed_events = 5;
+  double delivery_success_rate = 6;
+  int64 average_delivery_time_ms = 7;
+  int32 active_endpoints = 8;
+  int32 failed_endpoints = 9;
+  repeated WebhookEndpointMetrics endpoint_metrics = 10;
+}
+
+message WebhookEndpointMetrics {
+  string endpoint_id = 1;
+  string endpoint_name = 2;
+  int32 total_deliveries = 3;
+  int32 successful_deliveries = 4;
+  int32 failed_deliveries = 5;
+  double success_rate = 6;
+  int64 average_response_time_ms = 7;
+  int32 uptime_percentage = 8;
+}
+
+message WebhookValidationResult {
+  string validation_type = 1;
+  string validation_name = 2;
+  bool validation_passed = 3;
+  string validation_message = 4;
+  repeated string validation_errors = 5;
+  repeated string validation_warnings = 6;
+  google.protobuf.Timestamp validated_at = 7;
+}
+
+message WebhookTestResult {
+  string test_type = 1;
+  string test_name = 2;
+  bool test_passed = 3;
+  string test_message = 4;
+  int32 response_time_ms = 5;
+  string response_data = 6;
+  repeated string test_errors = 7;
+  google.protobuf.Timestamp tested_at = 8;
+}
+
+message WebhookAlertRule {
+  string rule_id = 1;
+  string rule_name = 2;
+  string rule_type = 3; // DELIVERY_FAILURE, HIGH_ERROR_RATE, SLOW_DELIVERY, ENDPOINT_DOWN
+  string condition = 4;
+  double threshold = 5;
+  string comparison_operator = 6; // GREATER_THAN, LESS_THAN, EQUALS
+  int32 evaluation_period_seconds = 7;
+  int32 alert_cooldown_seconds = 8;
+  repeated string notification_channels = 9;
+  bool is_active = 10;
+}

@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.metaverse.enums;
+
+option go_package = "github.com/rice-dev/gaming/metaverse/enums";
+
+// Статуси світів
+enum WorldStatus {
+  WORLD_STATUS_UNSPECIFIED = 0;
+
+  // Створений
+  WORLD_STATUS_CREATED = 1;
+
+  // Активний
+  WORLD_STATUS_ACTIVE = 2;
+
+  // Неактивний
+  WORLD_STATUS_INACTIVE = 3;
+
+  // Призупинений
+  WORLD_STATUS_PAUSED = 4;
+
+  // Завершений
+  WORLD_STATUS_COMPLETED = 5;
+
+  // Скасований
+  WORLD_STATUS_CANCELLED = 6;
+
+  // Видалений
+  WORLD_STATUS_DELETED = 7;
+
+  // Заблокований
+  WORLD_STATUS_BLOCKED = 8;
+
+  // На модерації
+  WORLD_STATUS_PENDING = 9;
+
+  // Відхилений
+  WORLD_STATUS_REJECTED = 10;
+
+  // Очікує підтвердження
+  WORLD_STATUS_PENDING_CONFIRMATION = 11;
+
+  // Очікує схвалення
+  WORLD_STATUS_PENDING_APPROVAL = 12;
+
+  // Очікує модерації
+  WORLD_STATUS_PENDING_MODERATION = 13;
+
+  // Очікує перевірки
+  WORLD_STATUS_PENDING_VERIFICATION = 14;
+
+  // Очікує валідації
+  WORLD_STATUS_PENDING_VALIDATION = 15;
+
+  // Очікує авторизації
+  WORLD_STATUS_PENDING_AUTHORIZATION = 16;
+
+  // Очікує аутентифікації
+  WORLD_STATUS_PENDING_AUTHENTICATION = 17;
+
+  // Очікує ідентифікації
+  WORLD_STATUS_PENDING_IDENTIFICATION = 18;
+
+  // Очікує реєстрації
+  WORLD_STATUS_PENDING_REGISTRATION = 19;
+
+  // Очікує активації
+  WORLD_STATUS_PENDING_ACTIVATION = 20;
+
+  // Очікує деактивації
+  WORLD_STATUS_PENDING_DEACTIVATION = 21;
+
+  // Очікує блокування
+  WORLD_STATUS_PENDING_BLOCKING = 22;
+
+  // Очікує розблокування
+  WORLD_STATUS_PENDING_UNBLOCKING = 23;
+
+  // Очікує бану
+  WORLD_STATUS_PENDING_BANNING = 24;
+
+  // Очікує розбану
+  WORLD_STATUS_PENDING_UNBANNING = 25;
+
+  // Очікує мутінгу
+  WORLD_STATUS_PENDING_MUTING = 26;
+
+  // Очікує розмутування
+  WORLD_STATUS_PENDING_UNMUTING = 27;
+
+  // Очікує кікування
+  WORLD_STATUS_PENDING_KICKING = 28;
+
+  // Очікує виключення
+  WORLD_STATUS_PENDING_EXCLUSION = 29;
+
+  // Очікує включення
+  WORLD_STATUS_PENDING_INCLUSION = 30;
+
+  // Очікує додавання
+  WORLD_STATUS_PENDING_ADDITION = 31;
+
+  // Очікує видалення
+  WORLD_STATUS_PENDING_REMOVAL = 32;
+
+  // Очікує оновлення
+  WORLD_STATUS_PENDING_UPDATE = 33;
+
+  // Очікує зміни
+  WORLD_STATUS_PENDING_CHANGE = 34;
+
+  // Очікує модифікації
+  WORLD_STATUS_PENDING_MODIFICATION = 35;
+
+  // Очікує адаптації
+  WORLD_STATUS_PENDING_ADAPTATION = 36;
+
+  // Очікує кастомізації
+  WORLD_STATUS_PENDING_CUSTOMIZATION = 37;
+
+  // Очікує персоналізації
+  WORLD_STATUS_PENDING_PERSONALIZATION = 38;
+
+  // Очікує налаштування
+  WORLD_STATUS_PENDING_CONFIGURATION = 39;
+
+  // Очікує конфігурації
+  WORLD_STATUS_PENDING_SETUP = 40;
+
+  // Очікує установки
+  WORLD_STATUS_PENDING_INSTALLATION = 41;
+
+  // Очікує інсталяції
+  WORLD_STATUS_PENDING_DEPLOYMENT = 42;
+
+  // Очікує розгортання
+  WORLD_STATUS_PENDING_ROLLOUT = 43;
+
+  // Очікує запуску
+  WORLD_STATUS_PENDING_LAUNCH = 44;
+
+  // Очікує старту
+  WORLD_STATUS_PENDING_START = 45;
+
+  // Очікує початку
+  WORLD_STATUS_PENDING_BEGINNING = 46;
+
+  // Очікує ініціації
+  WORLD_STATUS_PENDING_INITIATION = 47;
+
+  // Очікує ініціалізації
+  WORLD_STATUS_PENDING_INITIALIZATION = 48;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_PREPARATION = 49;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_SETUP = 50;
+
+  // Очікує налаштування
+  WORLD_STATUS_PENDING_CONFIGURATION = 51;
+
+  // Очікує конфігурації
+  WORLD_STATUS_PENDING_SETUP = 52;
+
+  // Очікує установки
+  WORLD_STATUS_PENDING_INSTALLATION = 53;
+
+  // Очікує інсталяції
+  WORLD_STATUS_PENDING_DEPLOYMENT = 54;
+
+  // Очікує розгортання
+  WORLD_STATUS_PENDING_ROLLOUT = 55;
+
+  // Очікує запуску
+  WORLD_STATUS_PENDING_LAUNCH = 56;
+
+  // Очікує старту
+  WORLD_STATUS_PENDING_START = 57;
+
+  // Очікує початку
+  WORLD_STATUS_PENDING_BEGINNING = 58;
+
+  // Очікує ініціації
+  WORLD_STATUS_PENDING_INITIATION = 59;
+
+  // Очікує ініціалізації
+  WORLD_STATUS_PENDING_INITIALIZATION = 60;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_PREPARATION = 61;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_SETUP = 62;
+
+  // Очікує налаштування
+  WORLD_STATUS_PENDING_CONFIGURATION = 63;
+
+  // Очікує конфігурації
+  WORLD_STATUS_PENDING_SETUP = 64;
+
+  // Очікує установки
+  WORLD_STATUS_PENDING_INSTALLATION = 65;
+
+  // Очікує інсталяції
+  WORLD_STATUS_PENDING_DEPLOYMENT = 66;
+
+  // Очікує розгортання
+  WORLD_STATUS_PENDING_ROLLOUT = 67;
+
+  // Очікує запуску
+  WORLD_STATUS_PENDING_LAUNCH = 68;
+
+  // Очікує старту
+  WORLD_STATUS_PENDING_START = 69;
+
+  // Очікує початку
+  WORLD_STATUS_PENDING_BEGINNING = 70;
+
+  // Очікує ініціації
+  WORLD_STATUS_PENDING_INITIATION = 71;
+
+  // Очікує ініціалізації
+  WORLD_STATUS_PENDING_INITIALIZATION = 72;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_PREPARATION = 73;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_SETUP = 74;
+
+  // Очікує налаштування
+  WORLD_STATUS_PENDING_CONFIGURATION = 75;
+
+  // Очікує конфігурації
+  WORLD_STATUS_PENDING_SETUP = 76;
+
+  // Очікує установки
+  WORLD_STATUS_PENDING_INSTALLATION = 77;
+
+  // Очікує інсталяції
+  WORLD_STATUS_PENDING_DEPLOYMENT = 78;
+
+  // Очікує розгортання
+  WORLD_STATUS_PENDING_ROLLOUT = 79;
+
+  // Очікує запуску
+  WORLD_STATUS_PENDING_LAUNCH = 80;
+
+  // Очікує старту
+  WORLD_STATUS_PENDING_START = 81;
+
+  // Очікує початку
+  WORLD_STATUS_PENDING_BEGINNING = 82;
+
+  // Очікує ініціації
+  WORLD_STATUS_PENDING_INITIATION = 83;
+
+  // Очікує ініціалізації
+  WORLD_STATUS_PENDING_INITIALIZATION = 84;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_PREPARATION = 85;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_SETUP = 86;
+
+  // Очікує налаштування
+  WORLD_STATUS_PENDING_CONFIGURATION = 87;
+
+  // Очікує конфігурації
+  WORLD_STATUS_PENDING_SETUP = 88;
+
+  // Очікує установки
+  WORLD_STATUS_PENDING_INSTALLATION = 89;
+
+  // Очікує інсталяції
+  WORLD_STATUS_PENDING_DEPLOYMENT = 90;
+
+  // Очікує розгортання
+  WORLD_STATUS_PENDING_ROLLOUT = 91;
+
+  // Очікує запуску
+  WORLD_STATUS_PENDING_LAUNCH = 92;
+
+  // Очікує старту
+  WORLD_STATUS_PENDING_START = 93;
+
+  // Очікує початку
+  WORLD_STATUS_PENDING_BEGINNING = 94;
+
+  // Очікує ініціації
+  WORLD_STATUS_PENDING_INITIATION = 95;
+
+  // Очікує ініціалізації
+  WORLD_STATUS_PENDING_INITIALIZATION = 96;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_PREPARATION = 97;
+
+  // Очікує підготовки
+  WORLD_STATUS_PENDING_SETUP = 98;
+
+  // Очікує налаштування
+  WORLD_STATUS_PENDING_CONFIGURATION = 99;
+
+  // Очікує конфігурації
+  WORLD_STATUS_PENDING_SETUP = 100;
+}

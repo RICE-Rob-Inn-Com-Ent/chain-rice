@@ -1,0 +1,114 @@
+name: Sync Subrepos
+
+on:
+    push:
+        branches: [main]
+        paths:
+            - "backend/**"
+            - "bots/**"
+            - "contract/**"
+            - "frontend/**"
+            - "proto/**"
+    workflow_dispatch:
+
+jobs:
+    sync-backend:
+        name: Sync Backend Subrepo
+        runs-on: ubuntu-latest
+        if: contains(github.event.head_commit.modified, 'backend/') || github.event_name == 'workflow_dispatch'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Sync backend changes
+              run: |
+                  echo "Syncing backend subrepo..."
+                  # Add your git subtree or subrepo sync logic here
+                  # Example: git subtree push --prefix=backend backend-repo main
+
+    sync-bots:
+        name: Sync Bots Subrepo
+        runs-on: ubuntu-latest
+        if: contains(github.event.head_commit.modified, 'bots/') || github.event_name == 'workflow_dispatch'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Sync bots changes
+              run: |
+                  echo "Syncing bots subrepo..."
+                  # Add your git subtree or subrepo sync logic here
+
+    sync-frontend:
+        name: Sync Frontend Subrepo
+        runs-on: ubuntu-latest
+        if: contains(github.event.head_commit.modified, 'frontend/') || github.event_name == 'workflow_dispatch'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Sync frontend changes
+              run: |
+                  echo "Syncing frontend subrepo..."
+                  # Add your git subtree or subrepo sync logic here
+
+    sync-contracts:
+        name: Sync Contracts Subrepo
+        runs-on: ubuntu-latest
+        if: contains(github.event.head_commit.modified, 'contract/') || github.event_name == 'workflow_dispatch'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Sync contract changes
+              run: |
+                  echo "Syncing contract subrepo..."
+                  # Add your git subtree or subrepo sync logic here
+
+    sync-proto:
+        name: Sync Proto Subrepo
+        runs-on: ubuntu-latest
+        if: contains(github.event.head_commit.modified, 'proto/') || github.event_name == 'workflow_dispatch'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Sync proto changes
+              run: |
+                  echo "Syncing proto subrepo..."
+                  # Add your git subtree or subrepo sync logic here

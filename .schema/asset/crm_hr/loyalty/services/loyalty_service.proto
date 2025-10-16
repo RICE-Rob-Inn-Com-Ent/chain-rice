@@ -1,0 +1,858 @@
+syntax = "proto3";
+
+package crm_hr.loyalty.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/loyalty/messages/loyalty_program.proto";
+import "crm_hr/loyalty/messages/reward.proto";
+import "crm_hr/loyalty/messages/loyalty_activity.proto";
+import "crm_hr/loyalty/enums/loyalty_tier.proto";
+import "crm_hr/loyalty/enums/loyalty_status.proto";
+import "crm_hr/loyalty/enums/reward_type.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/loyalty/services";
+
+// LoyaltyService provides comprehensive loyalty program management functionality
+service LoyaltyService {
+  // Loyalty Program Management
+  rpc CreateLoyaltyProgram(CreateLoyaltyProgramRequest) returns (LoyaltyProgram);
+  rpc GetLoyaltyProgram(GetLoyaltyProgramRequest) returns (LoyaltyProgram);
+  rpc UpdateLoyaltyProgram(UpdateLoyaltyProgramRequest) returns (LoyaltyProgram);
+  rpc DeleteLoyaltyProgram(DeleteLoyaltyProgramRequest) returns (google.protobuf.Empty);
+  rpc ListLoyaltyPrograms(ListLoyaltyProgramsRequest) returns (ListLoyaltyProgramsResponse);
+
+  // Loyalty Program Business Operations
+  rpc ActivateLoyaltyProgram(ActivateLoyaltyProgramRequest) returns (LoyaltyProgram);
+  rpc DeactivateLoyaltyProgram(DeactivateLoyaltyProgramRequest) returns (LoyaltyProgram);
+  rpc GetLoyaltyProgramMetrics(GetLoyaltyProgramMetricsRequest) returns (LoyaltyProgramMetrics);
+  rpc GetLoyaltyProgramPerformance(GetLoyaltyProgramPerformanceRequest) returns (LoyaltyProgramPerformanceResponse);
+
+  // Loyalty Tier Management
+  rpc CreateLoyaltyTier(CreateLoyaltyTierRequest) returns (LoyaltyTier);
+  rpc GetLoyaltyTier(GetLoyaltyTierRequest) returns (LoyaltyTier);
+  rpc UpdateLoyaltyTier(UpdateLoyaltyTierRequest) returns (LoyaltyTier);
+  rpc DeleteLoyaltyTier(DeleteLoyaltyTierRequest) returns (google.protobuf.Empty);
+  rpc ListLoyaltyTiers(ListLoyaltyTiersRequest) returns (ListLoyaltyTiersResponse);
+
+  // Loyalty Member Management
+  rpc EnrollMember(EnrollMemberRequest) returns (LoyaltyMember);
+  rpc GetLoyaltyMember(GetLoyaltyMemberRequest) returns (LoyaltyMember);
+  rpc UpdateLoyaltyMember(UpdateLoyaltyMemberRequest) returns (LoyaltyMember);
+  rpc DeactivateMember(DeactivateMemberRequest) returns (LoyaltyMember);
+  rpc ListLoyaltyMembers(ListLoyaltyMembersRequest) returns (ListLoyaltyMembersResponse);
+
+  // Loyalty Member Business Operations
+  rpc EarnPoints(EarnPointsRequest) returns (LoyaltyActivity);
+  rpc RedeemPoints(RedeemPointsRequest) returns (LoyaltyActivity);
+  rpc TransferPoints(TransferPointsRequest) returns (LoyaltyActivity);
+  rpc GiftPoints(GiftPointsRequest) returns (LoyaltyActivity);
+  rpc UpdateMemberTier(UpdateMemberTierRequest) returns (LoyaltyMember);
+  rpc GetMemberBalance(GetMemberBalanceRequest) returns (MemberBalance);
+  rpc GetMemberHistory(GetMemberHistoryRequest) returns (GetMemberHistoryResponse);
+
+  // Reward Management
+  rpc CreateReward(CreateRewardRequest) returns (Reward);
+  rpc GetReward(GetRewardRequest) returns (Reward);
+  rpc UpdateReward(UpdateRewardRequest) returns (Reward);
+  rpc DeleteReward(DeleteRewardRequest) returns (google.protobuf.Empty);
+  rpc ListRewards(ListRewardsRequest) returns (ListRewardsResponse);
+
+  // Reward Business Operations
+  rpc RedeemReward(RedeemRewardRequest) returns (RewardRedemption);
+  rpc GetRewardRedemption(GetRewardRedemptionRequest) returns (RewardRedemption);
+  rpc UpdateRewardRedemption(UpdateRewardRedemptionRequest) returns (RewardRedemption);
+  rpc ListRewardRedemptions(ListRewardRedemptionsRequest) returns (ListRewardRedemptionsResponse);
+  rpc GetRewardCatalog(GetRewardCatalogRequest) returns (RewardCatalog);
+  rpc GetRewardAnalytics(GetRewardAnalyticsRequest) returns (RewardAnalytics);
+
+  // Loyalty Activity Management
+  rpc CreateLoyaltyActivity(CreateLoyaltyActivityRequest) returns (LoyaltyActivity);
+  rpc GetLoyaltyActivity(GetLoyaltyActivityRequest) returns (LoyaltyActivity);
+  rpc ListLoyaltyActivities(ListLoyaltyActivitiesRequest) returns (ListLoyaltyActivitiesResponse);
+  rpc GetMemberActivities(GetMemberActivitiesRequest) returns (GetMemberActivitiesResponse);
+
+  // Loyalty Campaign Management
+  rpc CreateLoyaltyCampaign(CreateLoyaltyCampaignRequest) returns (LoyaltyCampaign);
+  rpc GetLoyaltyCampaign(GetLoyaltyCampaignRequest) returns (LoyaltyCampaign);
+  rpc UpdateLoyaltyCampaign(UpdateLoyaltyCampaignRequest) returns (LoyaltyCampaign);
+  rpc DeleteLoyaltyCampaign(DeleteLoyaltyCampaignRequest) returns (google.protobuf.Empty);
+  rpc ListLoyaltyCampaigns(ListLoyaltyCampaignsRequest) returns (ListLoyaltyCampaignsResponse);
+
+  // Loyalty Campaign Business Operations
+  rpc ActivateCampaign(ActivateCampaignRequest) returns (LoyaltyCampaign);
+  rpc PauseCampaign(PauseCampaignRequest) returns (LoyaltyCampaign);
+  rpc CompleteCampaign(CompleteCampaignRequest) returns (LoyaltyCampaign);
+  rpc GetCampaignMetrics(GetCampaignMetricsRequest) returns (CampaignMetrics);
+
+  // Loyalty Segment Management
+  rpc CreateLoyaltySegment(CreateLoyaltySegmentRequest) returns (LoyaltySegment);
+  rpc GetLoyaltySegment(GetLoyaltySegmentRequest) returns (LoyaltySegment);
+  rpc UpdateLoyaltySegment(UpdateLoyaltySegmentRequest) returns (LoyaltySegment);
+  rpc DeleteLoyaltySegment(DeleteLoyaltySegmentRequest) returns (google.protobuf.Empty);
+  rpc ListLoyaltySegments(ListLoyaltySegmentsRequest) returns (ListLoyaltySegmentsResponse);
+
+  // Analytics and Reporting
+  rpc GetLoyaltyAnalytics(GetLoyaltyAnalyticsRequest) returns (LoyaltyAnalyticsResponse);
+  rpc GetMemberSegmentation(GetMemberSegmentationRequest) returns (MemberSegmentationResponse);
+  rpc GetLoyaltyReport(GetLoyaltyReportRequest) returns (LoyaltyReportResponse);
+  rpc GetLoyaltyROI(GetLoyaltyROIRequest) returns (LoyaltyROIResponse);
+}
+
+// Loyalty Program Management Requests/Responses
+message CreateLoyaltyProgramRequest {
+  string name = 1;
+  string description = 2;
+  string program_type = 3;
+  string currency = 4;
+  string point_name = 5;
+  double point_value = 6;
+  int32 points_per_dollar = 7;
+  double minimum_redemption = 8;
+  google.protobuf.Timestamp start_date = 9;
+  google.protobuf.Timestamp end_date = 10;
+  bool is_public = 11;
+  string created_by = 12;
+  string team_id = 13;
+  repeated string tags = 14;
+  map<string, string> custom_fields = 15;
+}
+
+message GetLoyaltyProgramRequest {
+  string id = 1;
+}
+
+message UpdateLoyaltyProgramRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  crm_hr.loyalty.enums.LoyaltyStatus status = 4;
+  string currency = 5;
+  string point_name = 6;
+  double point_value = 7;
+  int32 points_per_dollar = 8;
+  double minimum_redemption = 9;
+  google.protobuf.Timestamp end_date = 10;
+  bool is_active = 11;
+  bool is_public = 12;
+  repeated string tags = 13;
+  map<string, string> custom_fields = 14;
+}
+
+message DeleteLoyaltyProgramRequest {
+  string id = 1;
+}
+
+message ListLoyaltyProgramsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  crm_hr.loyalty.enums.LoyaltyStatus status = 4;
+  string team_id = 5;
+  bool is_active = 6;
+}
+
+message ListLoyaltyProgramsResponse {
+  repeated LoyaltyProgram programs = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Loyalty Program Business Operations
+message ActivateLoyaltyProgramRequest {
+  string program_id = 1;
+  string activated_by = 2;
+  google.protobuf.Timestamp activation_date = 3;
+}
+
+message DeactivateLoyaltyProgramRequest {
+  string program_id = 1;
+  string deactivated_by = 2;
+  string reason = 3;
+  google.protobuf.Timestamp deactivation_date = 4;
+}
+
+message GetLoyaltyProgramMetricsRequest {
+  string program_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message GetLoyaltyProgramPerformanceRequest {
+  string program_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message LoyaltyProgramPerformanceResponse {
+  string program_id = 1;
+  int32 total_members = 2;
+  int32 active_members = 3;
+  int32 new_members = 4;
+  int32 churned_members = 5;
+  double retention_rate = 6;
+  double total_points_earned = 7;
+  double total_points_redeemed = 8;
+  double redemption_rate = 9;
+  google.protobuf.Money total_revenue = 10;
+  google.protobuf.Money program_cost = 11;
+  double roi = 12;
+  map<string, int32> members_by_tier = 13;
+  google.protobuf.Timestamp calculated_at = 14;
+}
+
+// Loyalty Tier Management
+message CreateLoyaltyTierRequest {
+  string program_id = 1;
+  crm_hr.loyalty.enums.LoyaltyTier tier_level = 2;
+  string name = 3;
+  string description = 4;
+  int32 order = 5;
+  int32 minimum_points = 6;
+  google.protobuf.Money minimum_spend = 7;
+  int32 minimum_visits = 8;
+  double point_multiplier = 9;
+  double discount_percentage = 10;
+  google.protobuf.Money bonus_points = 11;
+  repeated string exclusive_benefits = 12;
+  string color = 13;
+  string icon_url = 14;
+  map<string, string> custom_fields = 15;
+}
+
+message GetLoyaltyTierRequest {
+  string id = 1;
+}
+
+message UpdateLoyaltyTierRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 minimum_points = 4;
+  google.protobuf.Money minimum_spend = 5;
+  int32 minimum_visits = 6;
+  double point_multiplier = 7;
+  double discount_percentage = 8;
+  google.protobuf.Money bonus_points = 9;
+  repeated string exclusive_benefits = 10;
+  string color = 11;
+  string icon_url = 12;
+  map<string, string> custom_fields = 13;
+}
+
+message DeleteLoyaltyTierRequest {
+  string id = 1;
+}
+
+message ListLoyaltyTiersRequest {
+  string program_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  bool is_active = 4;
+}
+
+message ListLoyaltyTiersResponse {
+  repeated LoyaltyTier tiers = 1;
+  string next_page_token = 2;
+}
+
+// Loyalty Member Management
+message EnrollMemberRequest {
+  string program_id = 1;
+  string customer_id = 2;
+  string member_number = 3;
+  string referral_code = 4;
+  string referred_by = 5;
+  repeated string preferred_categories = 6;
+  repeated string preferred_channels = 7;
+  string communication_preference = 8;
+  bool email_notifications = 9;
+  bool sms_notifications = 10;
+  bool push_notifications = 11;
+  map<string, string> custom_fields = 12;
+}
+
+message GetLoyaltyMemberRequest {
+  string id = 1;
+}
+
+message UpdateLoyaltyMemberRequest {
+  string id = 1;
+  string status = 2;
+  repeated string preferred_categories = 3;
+  repeated string preferred_channels = 4;
+  string communication_preference = 5;
+  bool email_notifications = 6;
+  bool sms_notifications = 7;
+  bool push_notifications = 8;
+  map<string, string> custom_fields = 9;
+}
+
+message DeactivateMemberRequest {
+  string member_id = 1;
+  string reason = 2;
+  string deactivated_by = 3;
+  google.protobuf.Timestamp deactivation_date = 4;
+}
+
+message ListLoyaltyMembersRequest {
+  string program_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string status = 5;
+  string tier = 6;
+  string segment = 7;
+}
+
+message ListLoyaltyMembersResponse {
+  repeated LoyaltyMember members = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Loyalty Member Business Operations
+message EarnPointsRequest {
+  string member_id = 1;
+  string program_id = 2;
+  double points = 3;
+  string activity_type = 4;
+  string activity_category = 5;
+  string description = 6;
+  string source = 7;
+  string channel = 8;
+  string location = 9;
+  google.protobuf.Money transaction_amount = 10;
+  double point_multiplier = 11;
+  string transaction_id = 12;
+  string staff_member = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+}
+
+message RedeemPointsRequest {
+  string member_id = 1;
+  string program_id = 2;
+  double points = 3;
+  string reward_id = 4;
+  string activity_type = 5;
+  string description = 6;
+  string source = 7;
+  string channel = 8;
+  string location = 9;
+  string staff_member = 10;
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+}
+
+message TransferPointsRequest {
+  string from_member_id = 1;
+  string to_member_id = 2;
+  string program_id = 3;
+  double points = 4;
+  string reason = 5;
+  string notes = 6;
+  map<string, string> custom_fields = 7;
+}
+
+message GiftPointsRequest {
+  string from_member_id = 1;
+  string to_member_id = 2;
+  string program_id = 3;
+  double points = 4;
+  string gift_message = 5;
+  string notes = 6;
+  map<string, string> custom_fields = 7;
+}
+
+message UpdateMemberTierRequest {
+  string member_id = 1;
+  string program_id = 2;
+  crm_hr.loyalty.enums.LoyaltyTier new_tier = 3;
+  string reason = 4;
+  string updated_by = 5;
+  google.protobuf.Timestamp effective_date = 6;
+}
+
+message GetMemberBalanceRequest {
+  string member_id = 1;
+  string program_id = 2;
+}
+
+message MemberBalance {
+  string member_id = 1;
+  string program_id = 2;
+  double current_points = 3;
+  double lifetime_points_earned = 4;
+  double lifetime_points_redeemed = 5;
+  double lifetime_points_expired = 6;
+  double pending_points = 7;
+  string current_tier = 8;
+  int32 tier_level = 9;
+  google.protobuf.Timestamp last_activity_date = 10;
+  google.protobuf.Timestamp points_expiration_date = 11;
+  google.protobuf.Timestamp calculated_at = 12;
+}
+
+message GetMemberHistoryRequest {
+  string member_id = 1;
+  string program_id = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  string activity_type = 7;
+  string activity_category = 8;
+}
+
+message GetMemberHistoryResponse {
+  repeated LoyaltyActivity activities = 1;
+  string next_page_token = 2;
+  MemberBalance balance = 3;
+}
+
+// Reward Management
+message CreateRewardRequest {
+  string program_id = 1;
+  string name = 2;
+  string description = 3;
+  crm_hr.loyalty.enums.RewardType type = 4;
+  string category = 5;
+  string subcategory = 6;
+  double point_cost = 7;
+  google.protobuf.Money cash_value = 8;
+  double discount_percentage = 9;
+  google.protobuf.Money discount_amount = 10;
+  int32 total_quantity = 11;
+  bool is_limited_edition = 12;
+  bool is_exclusive = 13;
+  repeated string eligible_tiers = 14;
+  int32 minimum_tier_level = 15;
+  double minimum_points_required = 16;
+  google.protobuf.Money minimum_spend_required = 17;
+  google.protobuf.Timestamp start_date = 18;
+  google.protobuf.Timestamp end_date = 19;
+  google.protobuf.Timestamp redemption_start_date = 20;
+  google.protobuf.Timestamp redemption_end_date = 21;
+  string terms_and_conditions = 22;
+  string redemption_instructions = 23;
+  string image_url = 24;
+  string thumbnail_url = 25;
+  repeated string tags = 26;
+  map<string, string> custom_fields = 27;
+}
+
+message GetRewardRequest {
+  string id = 1;
+}
+
+message UpdateRewardRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double point_cost = 4;
+  google.protobuf.Money cash_value = 5;
+  double discount_percentage = 6;
+  google.protobuf.Money discount_amount = 7;
+  int32 total_quantity = 8;
+  bool is_limited_edition = 9;
+  bool is_exclusive = 10;
+  repeated string eligible_tiers = 11;
+  int32 minimum_tier_level = 12;
+  double minimum_points_required = 13;
+  google.protobuf.Money minimum_spend_required = 14;
+  google.protobuf.Timestamp start_date = 15;
+  google.protobuf.Timestamp end_date = 16;
+  google.protobuf.Timestamp redemption_start_date = 17;
+  google.protobuf.Timestamp redemption_end_date = 18;
+  string terms_and_conditions = 19;
+  string redemption_instructions = 20;
+  string image_url = 21;
+  string thumbnail_url = 22;
+  repeated string tags = 23;
+  map<string, string> custom_fields = 24;
+}
+
+message DeleteRewardRequest {
+  string id = 1;
+}
+
+message ListRewardsRequest {
+  string program_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  crm_hr.loyalty.enums.RewardType type = 5;
+  string category = 6;
+  string subcategory = 7;
+  bool is_active = 8;
+  bool is_exclusive = 9;
+  repeated string eligible_tiers = 10;
+}
+
+message ListRewardsResponse {
+  repeated Reward rewards = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Reward Business Operations
+message RedeemRewardRequest {
+  string member_id = 1;
+  string reward_id = 2;
+  string program_id = 3;
+  string redemption_method = 4;
+  string redemption_location = 5;
+  string redemption_notes = 6;
+  string customer_notes = 7;
+  map<string, string> custom_fields = 8;
+}
+
+message GetRewardRedemptionRequest {
+  string id = 1;
+}
+
+message UpdateRewardRedemptionRequest {
+  string id = 1;
+  string status = 2;
+  string fulfillment_status = 3;
+  string redemption_notes = 4;
+  string staff_notes = 5;
+  string tracking_number = 6;
+  string tracking_url = 7;
+  string shipping_address = 8;
+  map<string, string> custom_fields = 9;
+}
+
+message ListRewardRedemptionsRequest {
+  string member_id = 1;
+  string program_id = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+  string status = 5;
+  string fulfillment_status = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+}
+
+message ListRewardRedemptionsResponse {
+  repeated RewardRedemption redemptions = 1;
+  string next_page_token = 2;
+}
+
+message GetRewardCatalogRequest {
+  string program_id = 1;
+  string catalog_type = 2;
+  string tier = 3;
+  string category = 4;
+  bool is_active = 5;
+}
+
+message GetRewardAnalyticsRequest {
+  string reward_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+// Loyalty Activity Management
+message CreateLoyaltyActivityRequest {
+  string customer_id = 1;
+  string program_id = 2;
+  string activity_type = 3;
+  string activity_category = 4;
+  string description = 5;
+  string status = 6;
+  double points_earned = 7;
+  double points_redeemed = 8;
+  double points_expired = 9;
+  double points_transferred = 10;
+  double points_received = 11;
+  google.protobuf.Money transaction_amount = 12;
+  double point_multiplier = 13;
+  string source = 14;
+  string channel = 15;
+  string location = 16;
+  string staff_member = 17;
+  string related_reward_id = 18;
+  string related_campaign_id = 19;
+  string related_promotion_id = 20;
+  string related_transaction_id = 21;
+  google.protobuf.Timestamp activity_date = 22;
+  google.protobuf.Timestamp effective_date = 23;
+  google.protobuf.Timestamp expiration_date = 24;
+  string notes = 25;
+  string reference_number = 26;
+  repeated string tags = 27;
+  map<string, string> custom_fields = 28;
+}
+
+message GetLoyaltyActivityRequest {
+  string id = 1;
+}
+
+message ListLoyaltyActivitiesRequest {
+  string program_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string activity_type = 5;
+  string activity_category = 6;
+  string status = 7;
+  google.protobuf.Timestamp start_date = 8;
+  google.protobuf.Timestamp end_date = 9;
+}
+
+message ListLoyaltyActivitiesResponse {
+  repeated LoyaltyActivity activities = 1;
+  string next_page_token = 2;
+}
+
+message GetMemberActivitiesRequest {
+  string member_id = 1;
+  string program_id = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+  string activity_type = 5;
+  string activity_category = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+}
+
+message GetMemberActivitiesResponse {
+  repeated LoyaltyActivity activities = 1;
+  string next_page_token = 2;
+  MemberBalance balance = 3;
+}
+
+// Loyalty Campaign Management
+message CreateLoyaltyCampaignRequest {
+  string program_id = 1;
+  string name = 2;
+  string description = 3;
+  string campaign_type = 4;
+  string target_audience = 5;
+  repeated string target_tiers = 6;
+  repeated string target_segments = 7;
+  double point_multiplier = 8;
+  double bonus_points = 9;
+  double discount_percentage = 10;
+  google.protobuf.Money discount_amount = 11;
+  google.protobuf.Money minimum_spend = 12;
+  google.protobuf.Timestamp start_date = 13;
+  google.protobuf.Timestamp end_date = 14;
+  string created_by = 15;
+  string team_id = 16;
+  repeated string tags = 17;
+  map<string, string> custom_fields = 18;
+}
+
+message GetLoyaltyCampaignRequest {
+  string id = 1;
+}
+
+message UpdateLoyaltyCampaignRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string status = 4;
+  double point_multiplier = 5;
+  double bonus_points = 6;
+  double discount_percentage = 7;
+  google.protobuf.Money discount_amount = 8;
+  google.protobuf.Money minimum_spend = 9;
+  google.protobuf.Timestamp start_date = 10;
+  google.protobuf.Timestamp end_date = 11;
+  repeated string tags = 12;
+  map<string, string> custom_fields = 13;
+}
+
+message DeleteLoyaltyCampaignRequest {
+  string id = 1;
+}
+
+message ListLoyaltyCampaignsRequest {
+  string program_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string campaign_type = 5;
+  string status = 6;
+  string team_id = 7;
+}
+
+message ListLoyaltyCampaignsResponse {
+  repeated LoyaltyCampaign campaigns = 1;
+  string next_page_token = 2;
+}
+
+// Loyalty Campaign Business Operations
+message ActivateCampaignRequest {
+  string campaign_id = 1;
+  string activated_by = 2;
+  google.protobuf.Timestamp activation_date = 3;
+}
+
+message PauseCampaignRequest {
+  string campaign_id = 1;
+  string paused_by = 2;
+  string reason = 3;
+  google.protobuf.Timestamp pause_date = 4;
+}
+
+message CompleteCampaignRequest {
+  string campaign_id = 1;
+  string completed_by = 2;
+  string completion_notes = 3;
+  google.protobuf.Timestamp completion_date = 4;
+}
+
+message GetCampaignMetricsRequest {
+  string campaign_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message CampaignMetrics {
+  string campaign_id = 1;
+  int32 target_members = 2;
+  int32 reached_members = 3;
+  int32 engaged_members = 4;
+  int32 converted_members = 5;
+  double engagement_rate = 6;
+  double conversion_rate = 7;
+  double total_points_earned = 8;
+  double total_points_redeemed = 9;
+  google.protobuf.Money total_revenue = 10;
+  google.protobuf.Money campaign_cost = 11;
+  double roi = 12;
+  google.protobuf.Timestamp calculated_at = 13;
+}
+
+// Loyalty Segment Management
+message CreateLoyaltySegmentRequest {
+  string program_id = 1;
+  string name = 2;
+  string description = 3;
+  string segment_type = 4;
+  string criteria = 5;
+  repeated string required_conditions = 6;
+  repeated string optional_conditions = 7;
+  string created_by = 8;
+  string team_id = 9;
+}
+
+message GetLoyaltySegmentRequest {
+  string id = 1;
+}
+
+message UpdateLoyaltySegmentRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string criteria = 4;
+  repeated string required_conditions = 5;
+  repeated string optional_conditions = 6;
+}
+
+message DeleteLoyaltySegmentRequest {
+  string id = 1;
+}
+
+message ListLoyaltySegmentsRequest {
+  string program_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string segment_type = 5;
+  bool is_active = 6;
+}
+
+message ListLoyaltySegmentsResponse {
+  repeated LoyaltySegment segments = 1;
+  string next_page_token = 2;
+}
+
+// Analytics and Reporting
+message GetLoyaltyAnalyticsRequest {
+  string program_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string segment = 4;
+  string tier = 5;
+}
+
+message LoyaltyAnalyticsResponse {
+  string program_id = 1;
+  int32 total_members = 2;
+  int32 active_members = 3;
+  int32 new_members = 4;
+  int32 churned_members = 5;
+  double retention_rate = 6;
+  double total_points_earned = 7;
+  double total_points_redeemed = 8;
+  double redemption_rate = 9;
+  google.protobuf.Money total_revenue = 10;
+  google.protobuf.Money program_cost = 11;
+  double roi = 12;
+  map<string, int32> members_by_tier = 13;
+  map<string, double> points_by_tier = 14;
+  map<string, google.protobuf.Money> revenue_by_tier = 15;
+  google.protobuf.Timestamp calculated_at = 16;
+}
+
+message GetMemberSegmentationRequest {
+  string program_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  string segmentation_type = 4;
+}
+
+message MemberSegmentationResponse {
+  string program_id = 1;
+  map<string, int32> segment_counts = 2;
+  map<string, double> segment_values = 3;
+  repeated LoyaltySegment segments = 4;
+  google.protobuf.Timestamp calculated_at = 5;
+}
+
+message GetLoyaltyReportRequest {
+  string program_id = 1;
+  string report_type = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+  string format = 5;
+  string generated_by = 6;
+  repeated string segments = 7;
+  repeated string tiers = 8;
+}
+
+message LoyaltyReportResponse {
+  string program_id = 1;
+  string report_type = 2;
+  string report_url = 3;
+  string format = 4;
+  int64 file_size = 5;
+  string generated_by = 6;
+  google.protobuf.Timestamp generated_at = 7;
+  map<string, string> report_data = 8;
+}
+
+message GetLoyaltyROIRequest {
+  string program_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message LoyaltyROIResponse {
+  string program_id = 1;
+  google.protobuf.Money total_investment = 2;
+  google.protobuf.Money total_revenue = 3;
+  google.protobuf.Money net_profit = 4;
+  double roi_percentage = 5;
+  double payback_period_months = 6;
+  double customer_lifetime_value = 7;
+  double program_cost_per_member = 8;
+  double revenue_per_member = 9;
+  google.protobuf.Timestamp calculated_at = 10;
+}

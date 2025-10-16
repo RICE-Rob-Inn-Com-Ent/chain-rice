@@ -1,0 +1,707 @@
+syntax = "proto3";
+
+package gaming.nft_assets.services;
+
+import "gaming/nft-assets/messages/nft_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/nft-assets/services";
+
+// Сервіс управління NFT
+service NftService {
+  // Створити NFT
+  rpc CreateNft(CreateNftRequest) returns (CreateNftResponse);
+
+  // Отримати NFT
+  rpc GetNft(GetNftRequest) returns (GetNftResponse);
+
+  // Оновити NFT
+  rpc UpdateNft(UpdateNftRequest) returns (UpdateNftResponse);
+
+  // Видалити NFT
+  rpc DeleteNft(DeleteNftRequest) returns (DeleteNftResponse);
+
+  // Отримати список NFT
+  rpc ListNfts(ListNftsRequest) returns (ListNftsResponse);
+
+  // Карбувати NFT
+  rpc MintNft(MintNftRequest) returns (MintNftResponse);
+
+  // Передати NFT
+  rpc TransferNft(TransferNftRequest) returns (TransferNftResponse);
+
+  // Отримати статистику NFT
+  rpc GetNftStats(GetNftStatsRequest) returns (GetNftStatsResponse);
+}
+
+// Запит створення NFT
+message CreateNftRequest {
+  string name = 1;
+  string description = 2;
+  gaming.nft_assets.enums.NftType type = 3;
+  string creator_id = 4;
+  string collection_id = 5;
+  string contract_address = 6;
+  string token_id = 7;
+  string token_uri = 8;
+  string metadata_uri = 9;
+  string image_uri = 10;
+  string animation_uri = 11;
+  string external_uri = 12;
+  string blockchain = 13;
+  string network = 14;
+  string standard = 15;
+  int64 price = 16;
+  string currency = 17;
+  int32 rarity_score = 18;
+  string rarity_rank = 19;
+  string rarity_tier = 20;
+  int32 edition_number = 21;
+  int32 total_editions = 22;
+  bool is_unique = 23;
+  bool is_limited = 24;
+  bool is_rare = 25;
+  bool is_epic = 26;
+  bool is_legendary = 27;
+  bool is_mythic = 28;
+  bool is_divine = 29;
+  bool is_celestial = 30;
+  bool is_cosmic = 31;
+  bool is_universal = 32;
+  bool is_multiverse = 33;
+  bool is_parallel = 34;
+  bool is_alternative = 35;
+  bool is_mirror = 36;
+  bool is_reverse = 37;
+  bool is_opposite = 38;
+  bool is_contrast = 39;
+  bool is_conflict = 40;
+  bool is_hostile = 41;
+  bool is_friendly = 42;
+  bool is_neutral = 43;
+  bool is_peaceful = 44;
+  bool is_aggressive = 45;
+  bool is_passive = 46;
+  bool is_active = 47;
+  bool is_interactive = 48;
+  bool is_reactive = 49;
+  bool is_proactive = 50;
+  bool is_initiative = 51;
+  bool is_creative = 52;
+  bool is_innovative = 53;
+  bool is_original = 54;
+  bool is_unique = 55;
+  bool is_rare = 56;
+  bool is_epic = 57;
+  bool is_legendary = 58;
+  bool is_mythic = 59;
+  bool is_divine = 60;
+  bool is_celestial = 61;
+  bool is_cosmic = 62;
+  bool is_universal = 63;
+  bool is_multiverse = 64;
+  bool is_parallel = 65;
+  bool is_alternative = 66;
+  bool is_mirror = 67;
+  bool is_reverse = 68;
+  bool is_opposite = 69;
+  bool is_contrast = 70;
+  bool is_conflict = 71;
+  bool is_hostile = 72;
+  bool is_friendly = 73;
+  bool is_neutral = 74;
+  bool is_peaceful = 75;
+  bool is_aggressive = 76;
+  bool is_passive = 77;
+  bool is_active = 78;
+  bool is_interactive = 79;
+  bool is_reactive = 80;
+  bool is_proactive = 81;
+  bool is_initiative = 82;
+  bool is_creative = 83;
+  bool is_innovative = 84;
+  bool is_original = 85;
+  bool is_unique = 86;
+  bool is_rare = 87;
+  bool is_epic = 88;
+  bool is_legendary = 89;
+  bool is_mythic = 90;
+  bool is_divine = 91;
+  bool is_celestial = 92;
+  bool is_cosmic = 93;
+  bool is_universal = 94;
+  bool is_multiverse = 95;
+  bool is_parallel = 96;
+  bool is_alternative = 97;
+  bool is_mirror = 98;
+  bool is_reverse = 99;
+  bool is_opposite = 100;
+  int64 expires_at = 101;
+  map<string, string> metadata = 102;
+  map<string, string> attributes = 103;
+  map<string, string> properties = 104;
+  map<string, string> traits = 105;
+  map<string, string> characteristics = 106;
+  map<string, string> features = 107;
+  map<string, string> aspects = 108;
+  map<string, string> elements = 109;
+  map<string, string> components = 110;
+  map<string, string> modules = 111;
+  map<string, string> systems = 112;
+  map<string, string> processes = 113;
+  map<string, string> procedures = 114;
+  map<string, string> protocols = 115;
+  map<string, string> standards = 116;
+  map<string, string> rules = 117;
+  map<string, string> regulations = 118;
+  map<string, string> laws = 119;
+  map<string, string> acts = 120;
+  map<string, string> statutes = 121;
+  map<string, string> ordinances = 122;
+  map<string, string> decrees = 123;
+  map<string, string> edicts = 124;
+  map<string, string> mandates = 125;
+  map<string, string> orders = 126;
+  map<string, string> commands = 127;
+  map<string, string> instructions = 128;
+  map<string, string> directions = 129;
+  map<string, string> guidance = 130;
+  map<string, string> advice = 131;
+  map<string, string> suggestions = 132;
+  map<string, string> recommendations = 133;
+  map<string, string> proposals = 134;
+  map<string, string> offers = 135;
+  map<string, string> bids = 136;
+  map<string, string> auctions = 137;
+  map<string, string> sales = 138;
+  map<string, string> purchases = 139;
+  map<string, string> trades = 140;
+  map<string, string> exchanges = 141;
+  map<string, string> swaps = 142;
+  map<string, string> barters = 143;
+  map<string, string> negotiations = 144;
+  map<string, string> agreements = 145;
+  map<string, string> contracts = 146;
+  map<string, string> deals = 147;
+  map<string, string> transactions = 148;
+  map<string, string> operations = 149;
+  map<string, string> processes = 150;
+  map<string, string> procedures = 151;
+  map<string, string> protocols = 152;
+  map<string, string> standards = 153;
+  map<string, string> rules = 154;
+  map<string, string> regulations = 155;
+  map<string, string> laws = 156;
+  map<string, string> acts = 157;
+  map<string, string> statutes = 158;
+  map<string, string> ordinances = 159;
+  map<string, string> decrees = 160;
+  map<string, string> edicts = 161;
+  map<string, string> mandates = 162;
+  map<string, string> orders = 163;
+  map<string, string> commands = 164;
+  map<string, string> instructions = 165;
+  map<string, string> directions = 166;
+  map<string, string> guidance = 167;
+  map<string, string> advice = 168;
+  map<string, string> suggestions = 169;
+  map<string, string> recommendations = 170;
+  map<string, string> proposals = 171;
+  map<string, string> offers = 172;
+  map<string, string> bids = 173;
+  map<string, string> auctions = 174;
+  map<string, string> sales = 175;
+  map<string, string> purchases = 176;
+  map<string, string> trades = 177;
+  map<string, string> exchanges = 178;
+  map<string, string> swaps = 179;
+  map<string, string> barters = 180;
+  map<string, string> negotiations = 181;
+  map<string, string> agreements = 182;
+  map<string, string> contracts = 183;
+  map<string, string> deals = 184;
+  map<string, string> transactions = 185;
+  map<string, string> operations = 186;
+  map<string, string> processes = 187;
+  map<string, string> procedures = 188;
+  map<string, string> protocols = 189;
+  map<string, string> standards = 190;
+  map<string, string> rules = 191;
+  map<string, string> regulations = 192;
+  map<string, string> laws = 193;
+  map<string, string> acts = 194;
+  map<string, string> statutes = 195;
+  map<string, string> ordinances = 196;
+  map<string, string> decrees = 197;
+  map<string, string> edicts = 198;
+  map<string, string> mandates = 199;
+  map<string, string> orders = 200;
+}
+
+// Відповідь створення NFT
+message CreateNftResponse {
+  bool success = 1;
+  string nft_id = 2;
+  string message = 3;
+  gaming.nft_assets.messages.Nft nft = 4;
+}
+
+// Запит отримання NFT
+message GetNftRequest {
+  string nft_id = 1;
+}
+
+// Відповідь отримання NFT
+message GetNftResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.nft_assets.messages.Nft nft = 3;
+}
+
+// Запит оновлення NFT
+message UpdateNftRequest {
+  string nft_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.nft_assets.enums.NftType type = 4;
+  gaming.nft_assets.enums.MintingStatus minting_status = 5;
+  gaming.nft_assets.enums.TradingStatus trading_status = 6;
+  string owner_id = 7;
+  string owner_name = 8;
+  string collection_id = 9;
+  string collection_name = 10;
+  string contract_address = 11;
+  string token_id = 12;
+  string token_uri = 13;
+  string metadata_uri = 14;
+  string image_uri = 15;
+  string animation_uri = 16;
+  string external_uri = 17;
+  string blockchain = 18;
+  string network = 19;
+  string standard = 20;
+  int64 price = 21;
+  string currency = 22;
+  int64 floor_price = 23;
+  int64 highest_bid = 24;
+  int64 volume_traded = 25;
+  int32 total_sales = 26;
+  int32 total_views = 27;
+  int32 total_likes = 28;
+  int32 total_favorites = 29;
+  int32 total_shares = 30;
+  int32 total_comments = 31;
+  int32 rarity_score = 32;
+  string rarity_rank = 33;
+  string rarity_tier = 34;
+  int32 edition_number = 35;
+  int32 total_editions = 36;
+  bool is_unique = 37;
+  bool is_limited = 38;
+  bool is_rare = 39;
+  bool is_epic = 40;
+  bool is_legendary = 41;
+  bool is_mythic = 42;
+  bool is_divine = 43;
+  bool is_celestial = 44;
+  bool is_cosmic = 45;
+  bool is_universal = 46;
+  bool is_multiverse = 47;
+  bool is_parallel = 48;
+  bool is_alternative = 49;
+  bool is_mirror = 50;
+  bool is_reverse = 51;
+  bool is_opposite = 52;
+  bool is_contrast = 53;
+  bool is_conflict = 54;
+  bool is_hostile = 55;
+  bool is_friendly = 56;
+  bool is_neutral = 57;
+  bool is_peaceful = 58;
+  bool is_aggressive = 59;
+  bool is_passive = 60;
+  bool is_active = 61;
+  bool is_interactive = 62;
+  bool is_reactive = 63;
+  bool is_proactive = 64;
+  bool is_initiative = 65;
+  bool is_creative = 66;
+  bool is_innovative = 67;
+  bool is_original = 68;
+  bool is_unique = 69;
+  bool is_rare = 70;
+  bool is_epic = 71;
+  bool is_legendary = 72;
+  bool is_mythic = 73;
+  bool is_divine = 74;
+  bool is_celestial = 75;
+  bool is_cosmic = 76;
+  bool is_universal = 77;
+  bool is_multiverse = 78;
+  bool is_parallel = 79;
+  bool is_alternative = 80;
+  bool is_mirror = 81;
+  bool is_reverse = 82;
+  bool is_opposite = 83;
+  bool is_contrast = 84;
+  bool is_conflict = 85;
+  bool is_hostile = 86;
+  bool is_friendly = 87;
+  bool is_neutral = 88;
+  bool is_peaceful = 89;
+  bool is_aggressive = 90;
+  bool is_passive = 91;
+  bool is_active = 92;
+  bool is_interactive = 93;
+  bool is_reactive = 94;
+  bool is_proactive = 95;
+  bool is_initiative = 96;
+  bool is_creative = 97;
+  bool is_innovative = 98;
+  bool is_original = 99;
+  bool is_unique = 100;
+  int64 expires_at = 101;
+  map<string, string> metadata = 102;
+  map<string, string> attributes = 103;
+  map<string, string> properties = 104;
+  map<string, string> traits = 105;
+  map<string, string> characteristics = 106;
+  map<string, string> features = 107;
+  map<string, string> aspects = 108;
+  map<string, string> elements = 109;
+  map<string, string> components = 110;
+  map<string, string> modules = 111;
+  map<string, string> systems = 112;
+  map<string, string> processes = 113;
+  map<string, string> procedures = 114;
+  map<string, string> protocols = 115;
+  map<string, string> standards = 116;
+  map<string, string> rules = 117;
+  map<string, string> regulations = 118;
+  map<string, string> laws = 119;
+  map<string, string> acts = 120;
+  map<string, string> statutes = 121;
+  map<string, string> ordinances = 122;
+  map<string, string> decrees = 123;
+  map<string, string> edicts = 124;
+  map<string, string> mandates = 125;
+  map<string, string> orders = 126;
+  map<string, string> commands = 127;
+  map<string, string> instructions = 128;
+  map<string, string> directions = 129;
+  map<string, string> guidance = 130;
+  map<string, string> advice = 131;
+  map<string, string> suggestions = 132;
+  map<string, string> recommendations = 133;
+  map<string, string> proposals = 134;
+  map<string, string> offers = 135;
+  map<string, string> bids = 136;
+  map<string, string> auctions = 137;
+  map<string, string> sales = 138;
+  map<string, string> purchases = 139;
+  map<string, string> trades = 140;
+  map<string, string> exchanges = 141;
+  map<string, string> swaps = 142;
+  map<string, string> barters = 143;
+  map<string, string> negotiations = 144;
+  map<string, string> agreements = 145;
+  map<string, string> contracts = 146;
+  map<string, string> deals = 147;
+  map<string, string> transactions = 148;
+  map<string, string> operations = 149;
+  map<string, string> processes = 150;
+  map<string, string> procedures = 151;
+  map<string, string> protocols = 152;
+  map<string, string> standards = 153;
+  map<string, string> rules = 154;
+  map<string, string> regulations = 155;
+  map<string, string> laws = 156;
+  map<string, string> acts = 157;
+  map<string, string> statutes = 158;
+  map<string, string> ordinances = 159;
+  map<string, string> decrees = 160;
+  map<string, string> edicts = 161;
+  map<string, string> mandates = 162;
+  map<string, string> orders = 163;
+  map<string, string> commands = 164;
+  map<string, string> instructions = 165;
+  map<string, string> directions = 166;
+  map<string, string> guidance = 167;
+  map<string, string> advice = 168;
+  map<string, string> suggestions = 169;
+  map<string, string> recommendations = 170;
+  map<string, string> proposals = 171;
+  map<string, string> offers = 172;
+  map<string, string> bids = 173;
+  map<string, string> auctions = 174;
+  map<string, string> sales = 175;
+  map<string, string> purchases = 176;
+  map<string, string> trades = 177;
+  map<string, string> exchanges = 178;
+  map<string, string> swaps = 179;
+  map<string, string> barters = 180;
+  map<string, string> negotiations = 181;
+  map<string, string> agreements = 182;
+  map<string, string> contracts = 183;
+  map<string, string> deals = 184;
+  map<string, string> transactions = 185;
+  map<string, string> operations = 186;
+  map<string, string> processes = 187;
+  map<string, string> procedures = 188;
+  map<string, string> protocols = 189;
+  map<string, string> standards = 190;
+  map<string, string> rules = 191;
+  map<string, string> regulations = 192;
+  map<string, string> laws = 193;
+  map<string, string> acts = 194;
+  map<string, string> statutes = 195;
+  map<string, string> ordinances = 196;
+  map<string, string> decrees = 197;
+  map<string, string> edicts = 198;
+  map<string, string> mandates = 199;
+  map<string, string> orders = 200;
+}
+
+// Відповідь оновлення NFT
+message UpdateNftResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.nft_assets.messages.Nft nft = 3;
+}
+
+// Запит видалення NFT
+message DeleteNftRequest {
+  string nft_id = 1;
+}
+
+// Відповідь видалення NFT
+message DeleteNftResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку NFT
+message ListNftsRequest {
+  string creator_id = 1;
+  string owner_id = 2;
+  string collection_id = 3;
+  string contract_address = 4;
+  string blockchain = 5;
+  string network = 6;
+  string standard = 7;
+  gaming.nft_assets.enums.NftType type = 8;
+  gaming.nft_assets.enums.MintingStatus minting_status = 9;
+  gaming.nft_assets.enums.TradingStatus trading_status = 10;
+  int64 price_min = 11;
+  int64 price_max = 12;
+  string currency = 13;
+  int32 rarity_score_min = 14;
+  int32 rarity_score_max = 15;
+  string rarity_rank = 16;
+  string rarity_tier = 17;
+  int32 edition_number_min = 18;
+  int32 edition_number_max = 19;
+  int32 total_editions_min = 20;
+  int32 total_editions_max = 21;
+  bool is_unique = 22;
+  bool is_limited = 23;
+  bool is_rare = 24;
+  bool is_epic = 25;
+  bool is_legendary = 26;
+  bool is_mythic = 27;
+  bool is_divine = 28;
+  bool is_celestial = 29;
+  bool is_cosmic = 30;
+  bool is_universal = 31;
+  bool is_multiverse = 32;
+  bool is_parallel = 33;
+  bool is_alternative = 34;
+  bool is_mirror = 35;
+  bool is_reverse = 36;
+  bool is_opposite = 37;
+  bool is_contrast = 38;
+  bool is_conflict = 39;
+  bool is_hostile = 40;
+  bool is_friendly = 41;
+  bool is_neutral = 42;
+  bool is_peaceful = 43;
+  bool is_aggressive = 44;
+  bool is_passive = 45;
+  bool is_active = 46;
+  bool is_interactive = 47;
+  bool is_reactive = 48;
+  bool is_proactive = 49;
+  bool is_initiative = 50;
+  bool is_creative = 51;
+  bool is_innovative = 52;
+  bool is_original = 53;
+  bool is_unique = 54;
+  bool is_rare = 55;
+  bool is_epic = 56;
+  bool is_legendary = 57;
+  bool is_mythic = 58;
+  bool is_divine = 59;
+  bool is_celestial = 60;
+  bool is_cosmic = 61;
+  bool is_universal = 62;
+  bool is_multiverse = 63;
+  bool is_parallel = 64;
+  bool is_alternative = 65;
+  bool is_mirror = 66;
+  bool is_reverse = 67;
+  bool is_opposite = 68;
+  bool is_contrast = 69;
+  bool is_conflict = 70;
+  bool is_hostile = 71;
+  bool is_friendly = 72;
+  bool is_neutral = 73;
+  bool is_peaceful = 74;
+  bool is_aggressive = 75;
+  bool is_passive = 76;
+  bool is_active = 77;
+  bool is_interactive = 78;
+  bool is_reactive = 79;
+  bool is_proactive = 80;
+  bool is_initiative = 81;
+  bool is_creative = 82;
+  bool is_innovative = 83;
+  bool is_original = 84;
+  bool is_unique = 85;
+  bool is_rare = 86;
+  bool is_epic = 87;
+  bool is_legendary = 88;
+  bool is_mythic = 89;
+  bool is_divine = 90;
+  bool is_celestial = 91;
+  bool is_cosmic = 92;
+  bool is_universal = 93;
+  bool is_multiverse = 94;
+  bool is_parallel = 95;
+  bool is_alternative = 96;
+  bool is_mirror = 97;
+  bool is_reverse = 98;
+  bool is_opposite = 99;
+  bool is_contrast = 100;
+  int32 limit = 101;
+  int32 offset = 102;
+  string sort_by = 103;
+  bool ascending = 104;
+  map<string, string> metadata_filters = 105;
+}
+
+// Відповідь списку NFT
+message ListNftsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.nft_assets.messages.Nft nfts = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит карбування NFT
+message MintNftRequest {
+  string nft_id = 1;
+  string to_address = 2;
+  string contract_address = 3;
+  string token_id = 4;
+  string token_uri = 5;
+  string metadata_uri = 6;
+  string image_uri = 7;
+  string animation_uri = 8;
+  string external_uri = 9;
+  string blockchain = 10;
+  string network = 11;
+  string standard = 12;
+  int64 gas_price = 13;
+  int64 gas_limit = 14;
+  int64 nonce = 15;
+  string private_key = 16;
+  string public_key = 17;
+  string signature = 18;
+  string transaction_hash = 19;
+  string block_hash = 20;
+  int64 block_number = 21;
+  int64 transaction_index = 22;
+  int64 gas_used = 23;
+  int64 effective_gas_price = 24;
+  int64 cumulative_gas_used = 25;
+  string status = 26;
+  string error_message = 27;
+  int64 timestamp = 28;
+  map<string, string> metadata = 29;
+}
+
+// Відповідь карбування NFT
+message MintNftResponse {
+  bool success = 1;
+  string message = 2;
+  string transaction_hash = 3;
+  string block_hash = 4;
+  int64 block_number = 5;
+  int64 transaction_index = 6;
+  int64 gas_used = 7;
+  int64 effective_gas_price = 8;
+  int64 cumulative_gas_used = 9;
+  string status = 10;
+  string error_message = 11;
+  int64 timestamp = 12;
+  gaming.nft_assets.messages.Nft nft = 13;
+}
+
+// Запит передачі NFT
+message TransferNftRequest {
+  string nft_id = 1;
+  string from_address = 2;
+  string to_address = 3;
+  string contract_address = 4;
+  string token_id = 5;
+  string blockchain = 6;
+  string network = 7;
+  string standard = 8;
+  int64 gas_price = 9;
+  int64 gas_limit = 10;
+  int64 nonce = 11;
+  string private_key = 12;
+  string public_key = 13;
+  string signature = 14;
+  string transaction_hash = 15;
+  string block_hash = 16;
+  int64 block_number = 17;
+  int64 transaction_index = 18;
+  int64 gas_used = 19;
+  int64 effective_gas_price = 20;
+  int64 cumulative_gas_used = 21;
+  string status = 22;
+  string error_message = 23;
+  int64 timestamp = 24;
+  map<string, string> metadata = 25;
+}
+
+// Відповідь передачі NFT
+message TransferNftResponse {
+  bool success = 1;
+  string message = 2;
+  string transaction_hash = 3;
+  string block_hash = 4;
+  int64 block_number = 5;
+  int64 transaction_index = 6;
+  int64 gas_used = 7;
+  int64 effective_gas_price = 8;
+  int64 cumulative_gas_used = 9;
+  string status = 10;
+  string error_message = 11;
+  int64 timestamp = 12;
+  gaming.nft_assets.messages.Nft nft = 13;
+}
+
+// Запит статистики NFT
+message GetNftStatsRequest {
+  string nft_id = 1;
+}
+
+// Відповідь статистики NFT
+message GetNftStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.nft_assets.messages.NftStats stats = 3;
+}

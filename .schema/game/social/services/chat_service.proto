@@ -1,0 +1,457 @@
+syntax = "proto3";
+
+package gaming.social.services;
+
+import "gaming/social/messages/chat_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/social/services";
+
+// Сервіс управління чатами
+service ChatService {
+  // Створити чат
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+
+  // Отримати чат
+  rpc GetChat(GetChatRequest) returns (GetChatResponse);
+
+  // Оновити чат
+  rpc UpdateChat(UpdateChatRequest) returns (UpdateChatResponse);
+
+  // Видалити чат
+  rpc DeleteChat(DeleteChatRequest) returns (DeleteChatResponse);
+
+  // Отримати список чатів
+  rpc ListChats(ListChatsRequest) returns (ListChatsResponse);
+
+  // Додати учасника до чату
+  rpc AddMember(AddMemberRequest) returns (AddMemberResponse);
+
+  // Видалити учасника з чату
+  rpc RemoveMember(RemoveMemberRequest) returns (RemoveMemberResponse);
+
+  // Отримати учасників чату
+  rpc GetMembers(GetMembersRequest) returns (GetMembersResponse);
+
+  // Надіслати повідомлення
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+
+  // Отримати повідомлення
+  rpc GetMessage(GetMessageRequest) returns (GetMessageResponse);
+
+  // Отримати список повідомлень
+  rpc ListMessages(ListMessagesRequest) returns (ListMessagesResponse);
+
+  // Оновити повідомлення
+  rpc UpdateMessage(UpdateMessageRequest) returns (UpdateMessageResponse);
+
+  // Видалити повідомлення
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+}
+
+// Запит створення чату
+message CreateChatRequest {
+  string name = 1;
+  string description = 2;
+  gaming.social.enums.ChatType type = 3;
+  string creator_id = 4;
+  repeated string member_ids = 5;
+  repeated string admin_ids = 6;
+  repeated string moderator_ids = 7;
+  repeated string owner_ids = 8;
+  int32 max_members = 9;
+  int32 max_admins = 10;
+  int32 max_moderators = 11;
+  int32 max_owners = 12;
+  bool is_public = 13;
+  bool is_private = 14;
+  bool is_protected = 15;
+  bool is_encrypted = 16;
+  bool is_verified = 17;
+  bool is_official = 18;
+  int64 expires_at = 19;
+  map<string, string> metadata = 20;
+}
+
+// Відповідь створення чату
+message CreateChatResponse {
+  bool success = 1;
+  string chat_id = 2;
+  string message = 3;
+  gaming.social.messages.Chat chat = 4;
+}
+
+// Запит отримання чату
+message GetChatRequest {
+  string chat_id = 1;
+}
+
+// Відповідь отримання чату
+message GetChatResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.social.messages.Chat chat = 3;
+}
+
+// Запит оновлення чату
+message UpdateChatRequest {
+  string chat_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.social.enums.ChatType type = 4;
+  repeated string member_ids = 5;
+  repeated string admin_ids = 6;
+  repeated string moderator_ids = 7;
+  repeated string owner_ids = 8;
+  int32 max_members = 9;
+  int32 max_admins = 10;
+  int32 max_moderators = 11;
+  int32 max_owners = 12;
+  bool is_public = 13;
+  bool is_private = 14;
+  bool is_protected = 15;
+  bool is_encrypted = 16;
+  bool is_verified = 17;
+  bool is_official = 18;
+  int64 expires_at = 19;
+  map<string, string> metadata = 20;
+}
+
+// Відповідь оновлення чату
+message UpdateChatResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.social.messages.Chat chat = 3;
+}
+
+// Запит видалення чату
+message DeleteChatRequest {
+  string chat_id = 1;
+}
+
+// Відповідь видалення чату
+message DeleteChatResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку чатів
+message ListChatsRequest {
+  string creator_id = 1;
+  gaming.social.enums.ChatType type = 2;
+  bool is_public = 3;
+  bool is_private = 4;
+  bool is_protected = 5;
+  bool is_encrypted = 6;
+  bool is_verified = 7;
+  bool is_official = 8;
+  int32 max_members_min = 9;
+  int32 max_members_max = 10;
+  int32 current_members_min = 11;
+  int32 current_members_max = 12;
+  int32 limit = 13;
+  int32 offset = 14;
+  string sort_by = 15;
+  bool ascending = 16;
+  map<string, string> metadata_filters = 17;
+}
+
+// Відповідь списку чатів
+message ListChatsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.social.messages.Chat chats = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит додавання учасника
+message AddMemberRequest {
+  string chat_id = 1;
+  string member_id = 2;
+  string role = 3;
+  bool is_admin = 4;
+  bool is_moderator = 5;
+  bool is_owner = 6;
+  bool is_guest = 7;
+  bool is_banned = 8;
+  bool is_muted = 9;
+  bool is_kicked = 10;
+  bool is_invited = 11;
+  bool is_pending = 12;
+  bool is_rejected = 13;
+  bool is_blocked = 14;
+  bool is_unblocked = 15;
+  bool is_ignored = 16;
+  bool is_unignored = 17;
+  bool is_followed = 18;
+  bool is_unfollowed = 19;
+  bool is_subscribed = 20;
+  bool is_unsubscribed = 21;
+  bool is_liked = 22;
+  bool is_unliked = 23;
+  bool is_favorited = 24;
+  bool is_unfavorited = 25;
+  bool is_shared = 26;
+  bool is_unshared = 27;
+  bool is_commented = 28;
+  bool is_uncommented = 29;
+  bool is_reacted = 30;
+  bool is_unreacted = 31;
+  bool is_mentioned = 32;
+  bool is_unmentioned = 33;
+  bool is_tagged = 34;
+  bool is_untagged = 35;
+  bool is_pinned = 36;
+  bool is_unpinned = 37;
+  bool is_starred = 38;
+  bool is_unstarred = 39;
+  bool is_archived = 40;
+  bool is_unarchived = 41;
+  bool is_deleted = 42;
+  bool is_undeleted = 43;
+  bool is_restored = 44;
+  bool is_moved = 45;
+  bool is_unmoved = 46;
+  bool is_copied = 47;
+  bool is_uncopied = 48;
+  bool is_pasted = 49;
+  map<string, string> metadata = 50;
+}
+
+// Відповідь додавання учасника
+message AddMemberResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит видалення учасника
+message RemoveMemberRequest {
+  string chat_id = 1;
+  string member_id = 2;
+}
+
+// Відповідь видалення учасника
+message RemoveMemberResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит учасників чату
+message GetMembersRequest {
+  string chat_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+// Відповідь учасників чату
+message GetMembersResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string member_ids = 3;
+  repeated string member_names = 4;
+  int32 total_count = 5;
+  int32 limit = 6;
+  int32 offset = 7;
+}
+
+// Запит надсилання повідомлення
+message SendMessageRequest {
+  string chat_id = 1;
+  string sender_id = 2;
+  gaming.social.enums.MessageType type = 3;
+  string content = 4;
+  string text = 5;
+  string image_url = 6;
+  string video_url = 7;
+  string audio_url = 8;
+  string file_url = 9;
+  string link_url = 10;
+  string emoji = 11;
+  string sticker = 12;
+  string gif = 13;
+  string animation = 14;
+  string model_3d = 15;
+  string ar_object = 16;
+  string vr_scene = 17;
+  string voice = 18;
+  string video_call = 19;
+  string audio_call = 20;
+  string screen_share = 21;
+  string stream = 22;
+  string broadcast = 23;
+  string live = 24;
+  string podcast = 25;
+  string radio = 26;
+  string tv = 27;
+  string movie = 28;
+  string series = 29;
+  string documentary = 30;
+  string news = 31;
+  string sports = 32;
+  string music = 33;
+  string song = 34;
+  string album = 35;
+  string playlist = 36;
+  string concert = 37;
+  string festival = 38;
+  string exhibition = 39;
+  string museum = 40;
+  string gallery = 41;
+  string theater = 42;
+  string opera = 43;
+  string ballet = 44;
+  string circus = 45;
+  string show = 46;
+  string performance = 47;
+  repeated string mentioned_ids = 48;
+  repeated string tagged_ids = 49;
+  map<string, string> metadata = 50;
+}
+
+// Відповідь надсилання повідомлення
+message SendMessageResponse {
+  bool success = 1;
+  string message_id = 2;
+  string message = 3;
+  gaming.social.messages.Message message = 4;
+}
+
+// Запит отримання повідомлення
+message GetMessageRequest {
+  string message_id = 1;
+}
+
+// Відповідь отримання повідомлення
+message GetMessageResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.social.messages.Message message = 3;
+}
+
+// Запит списку повідомлень
+message ListMessagesRequest {
+  string chat_id = 1;
+  string sender_id = 2;
+  gaming.social.enums.MessageType type = 3;
+  bool is_edited = 4;
+  bool is_deleted = 5;
+  bool is_forwarded = 6;
+  bool is_replied = 7;
+  bool is_pinned = 8;
+  bool is_starred = 9;
+  bool is_archived = 10;
+  bool is_bookmarked = 11;
+  bool is_favorited = 12;
+  bool is_liked = 13;
+  bool is_shared = 14;
+  bool is_reacted = 15;
+  bool is_mentioned = 16;
+  bool is_tagged = 17;
+  bool is_reported = 18;
+  bool is_spam = 19;
+  bool is_abuse = 20;
+  bool is_harassment = 21;
+  bool is_bullying = 22;
+  bool is_hate_speech = 23;
+  bool is_violence = 24;
+  bool is_explicit = 25;
+  bool is_inappropriate = 26;
+  bool is_offensive = 27;
+  bool is_disturbing = 28;
+  bool is_graphic = 29;
+  bool is_sensitive = 30;
+  bool is_mature = 31;
+  bool is_adult = 32;
+  bool is_restricted = 33;
+  bool is_private = 34;
+  bool is_confidential = 35;
+  bool is_secret = 36;
+  bool is_classified = 37;
+  bool is_top_secret = 38;
+  int32 limit = 39;
+  int32 offset = 40;
+  string sort_by = 41;
+  bool ascending = 42;
+  map<string, string> metadata_filters = 43;
+}
+
+// Відповідь списку повідомлень
+message ListMessagesResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.social.messages.Message messages = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит оновлення повідомлення
+message UpdateMessageRequest {
+  string message_id = 1;
+  string content = 2;
+  string text = 3;
+  string image_url = 4;
+  string video_url = 5;
+  string audio_url = 6;
+  string file_url = 7;
+  string link_url = 8;
+  string emoji = 9;
+  string sticker = 10;
+  string gif = 11;
+  string animation = 12;
+  string model_3d = 13;
+  string ar_object = 14;
+  string vr_scene = 15;
+  string voice = 16;
+  string video_call = 17;
+  string audio_call = 18;
+  string screen_share = 19;
+  string stream = 20;
+  string broadcast = 21;
+  string live = 22;
+  string podcast = 23;
+  string radio = 24;
+  string tv = 25;
+  string movie = 26;
+  string series = 27;
+  string documentary = 28;
+  string news = 29;
+  string sports = 30;
+  string music = 31;
+  string song = 32;
+  string album = 33;
+  string playlist = 34;
+  string concert = 35;
+  string festival = 36;
+  string exhibition = 37;
+  string museum = 38;
+  string gallery = 39;
+  string theater = 40;
+  string opera = 41;
+  string ballet = 42;
+  string circus = 43;
+  string show = 44;
+  string performance = 45;
+  repeated string mentioned_ids = 46;
+  repeated string tagged_ids = 47;
+  map<string, string> metadata = 48;
+}
+
+// Відповідь оновлення повідомлення
+message UpdateMessageResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.social.messages.Message message = 3;
+}
+
+// Запит видалення повідомлення
+message DeleteMessageRequest {
+  string message_id = 1;
+}
+
+// Відповідь видалення повідомлення
+message DeleteMessageResponse {
+  bool success = 1;
+  string message = 2;
+}

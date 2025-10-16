@@ -1,0 +1,22 @@
+# Traefik Static Configuration
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: rice-network
+
+log:
+  level: INFO
+  format: common
+
+accessLog:
+  format: common

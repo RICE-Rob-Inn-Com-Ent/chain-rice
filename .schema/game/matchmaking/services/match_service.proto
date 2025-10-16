@@ -1,0 +1,544 @@
+syntax = "proto3";
+
+package gaming.matchmaking.services;
+
+import "gaming/matchmaking/messages/match_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/matchmaking/services";
+
+// Сервіс управління матчами
+service MatchService {
+  // Створити матч
+  rpc CreateMatch(CreateMatchRequest) returns (CreateMatchResponse);
+
+  // Отримати матч
+  rpc GetMatch(GetMatchRequest) returns (GetMatchResponse);
+
+  // Оновити матч
+  rpc UpdateMatch(UpdateMatchRequest) returns (UpdateMatchResponse);
+
+  // Видалити матч
+  rpc DeleteMatch(DeleteMatchRequest) returns (DeleteMatchResponse);
+
+  // Отримати список матчів
+  rpc ListMatches(ListMatchesRequest) returns (ListMatchesResponse);
+
+  // Додати гравця до матчу
+  rpc AddPlayerToMatch(AddPlayerToMatchRequest) returns (AddPlayerToMatchResponse);
+
+  // Видалити гравця з матчу
+  rpc RemovePlayerFromMatch(RemovePlayerFromMatchRequest) returns (RemovePlayerFromMatchResponse);
+
+  // Отримати гравців у матчі
+  rpc GetMatchPlayers(GetMatchPlayersRequest) returns (GetMatchPlayersResponse);
+
+  // Отримати статистику матчу
+  rpc GetMatchStats(GetMatchStatsRequest) returns (GetMatchStatsResponse);
+
+  // Завершити матч
+  rpc EndMatch(EndMatchRequest) returns (EndMatchResponse);
+}
+
+// Запит створення матчу
+message CreateMatchRequest {
+  string queue_id = 1;
+  string game_mode = 2;
+  string map = 3;
+  string server = 4;
+  string region = 5;
+  int32 max_players = 6;
+  string match_type = 7;
+  string tournament_id = 8;
+  string season_id = 9;
+  string league_id = 10;
+  string division_id = 11;
+  string bracket_id = 12;
+  string round_id = 13;
+  string game_id = 14;
+  string lobby_id = 15;
+  string session_id = 16;
+  string room_id = 17;
+  string channel_id = 18;
+  string group_id = 19;
+  string party_id = 20;
+  string guild_id = 21;
+  string clan_id = 22;
+  string alliance_id = 23;
+  string coalition_id = 24;
+  string league_id = 25;
+  string association_id = 26;
+  string organization_id = 27;
+  string corporation_id = 28;
+  string company_id = 29;
+  string firm_id = 30;
+  string institution_id = 31;
+  string establishment_id = 32;
+  string facility_id = 33;
+  string building_id = 34;
+  string structure_id = 35;
+  string construction_id = 36;
+  string architecture_id = 37;
+  string design_id = 38;
+  string model_id = 39;
+  string version_id = 40;
+  string edition_id = 41;
+  string series_id = 42;
+  string collection_id = 43;
+  string set_id = 44;
+  string group_id = 45;
+  string category_id = 46;
+  string class_id = 47;
+  string type_id = 48;
+  string kind_id = 49;
+  string sort_id = 50;
+  string variety_id = 51;
+  string form_id = 52;
+  string shape_id = 53;
+  string figure_id = 54;
+  string pattern_id = 55;
+  string style_id = 56;
+  string fashion_id = 57;
+  string trend_id = 58;
+  string mode_id = 59;
+  string manner_id = 60;
+  string way_id = 61;
+  string method_id = 62;
+  string technique_id = 63;
+  string approach_id = 64;
+  string strategy_id = 65;
+  string tactic_id = 66;
+  string plan_id = 67;
+  string scheme_id = 68;
+  string system_id = 69;
+  string process_id = 70;
+  string procedure_id = 71;
+  string protocol_id = 72;
+  string standard_id = 73;
+  string rule_id = 74;
+  string regulation_id = 75;
+  string law_id = 76;
+  string act_id = 77;
+  string statute_id = 78;
+  string ordinance_id = 79;
+  string decree_id = 80;
+  string edict_id = 81;
+  string mandate_id = 82;
+  string order_id = 83;
+  map<string, string> metadata = 84;
+}
+
+// Відповідь створення матчу
+message CreateMatchResponse {
+  bool success = 1;
+  string match_id = 2;
+  string message = 3;
+  gaming.matchmaking.messages.Match match = 4;
+}
+
+// Запит отримання матчу
+message GetMatchRequest {
+  string match_id = 1;
+}
+
+// Відповідь отримання матчу
+message GetMatchResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.matchmaking.messages.Match match = 3;
+}
+
+// Запит оновлення матчу
+message UpdateMatchRequest {
+  string match_id = 1;
+  gaming.matchmaking.enums.MatchStatus status = 2;
+  string game_mode = 3;
+  string map = 4;
+  string server = 5;
+  string region = 6;
+  int32 max_players = 7;
+  int32 current_players = 8;
+  int64 started_at = 9;
+  int64 ended_at = 10;
+  int64 duration = 11;
+  string winner = 12;
+  string result = 13;
+  int32 score_team_a = 14;
+  int32 score_team_b = 15;
+  string team_a_name = 16;
+  string team_b_name = 17;
+  repeated string team_a_players = 18;
+  repeated string team_b_players = 19;
+  string match_type = 20;
+  string tournament_id = 21;
+  string season_id = 22;
+  string league_id = 23;
+  string division_id = 24;
+  string bracket_id = 25;
+  string round_id = 26;
+  string game_id = 27;
+  string lobby_id = 28;
+  string session_id = 29;
+  string room_id = 30;
+  string channel_id = 31;
+  string group_id = 32;
+  string party_id = 33;
+  string guild_id = 34;
+  string clan_id = 35;
+  string alliance_id = 36;
+  string coalition_id = 37;
+  string league_id = 38;
+  string association_id = 39;
+  string organization_id = 40;
+  string corporation_id = 41;
+  string company_id = 42;
+  string firm_id = 43;
+  string institution_id = 44;
+  string establishment_id = 45;
+  string facility_id = 46;
+  string building_id = 47;
+  string structure_id = 48;
+  string construction_id = 49;
+  string architecture_id = 50;
+  string design_id = 51;
+  string model_id = 52;
+  string version_id = 53;
+  string edition_id = 54;
+  string series_id = 55;
+  string collection_id = 56;
+  string set_id = 57;
+  string group_id = 58;
+  string category_id = 59;
+  string class_id = 60;
+  string type_id = 61;
+  string kind_id = 62;
+  string sort_id = 63;
+  string variety_id = 64;
+  string form_id = 65;
+  string shape_id = 66;
+  string figure_id = 67;
+  string pattern_id = 68;
+  string style_id = 69;
+  string fashion_id = 70;
+  string trend_id = 71;
+  string mode_id = 72;
+  string manner_id = 73;
+  string way_id = 74;
+  string method_id = 75;
+  string technique_id = 76;
+  string approach_id = 77;
+  string strategy_id = 78;
+  string tactic_id = 79;
+  string plan_id = 80;
+  string scheme_id = 81;
+  string system_id = 82;
+  string process_id = 83;
+  string procedure_id = 84;
+  string protocol_id = 85;
+  string standard_id = 86;
+  string rule_id = 87;
+  string regulation_id = 88;
+  string law_id = 89;
+  string act_id = 90;
+  string statute_id = 91;
+  string ordinance_id = 92;
+  string decree_id = 93;
+  string edict_id = 94;
+  string mandate_id = 95;
+  string order_id = 96;
+  map<string, string> metadata = 97;
+}
+
+// Відповідь оновлення матчу
+message UpdateMatchResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.matchmaking.messages.Match match = 3;
+}
+
+// Запит видалення матчу
+message DeleteMatchRequest {
+  string match_id = 1;
+}
+
+// Відповідь видалення матчу
+message DeleteMatchResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку матчів
+message ListMatchesRequest {
+  string queue_id = 1;
+  string game_mode = 2;
+  string map = 3;
+  string server = 4;
+  string region = 5;
+  string match_type = 6;
+  string tournament_id = 7;
+  string season_id = 8;
+  string league_id = 9;
+  string division_id = 10;
+  string bracket_id = 11;
+  string round_id = 12;
+  string game_id = 13;
+  string lobby_id = 14;
+  string session_id = 15;
+  string room_id = 16;
+  string channel_id = 17;
+  string group_id = 18;
+  string party_id = 19;
+  string guild_id = 20;
+  string clan_id = 21;
+  string alliance_id = 22;
+  string coalition_id = 23;
+  string league_id = 24;
+  string association_id = 25;
+  string organization_id = 26;
+  string corporation_id = 27;
+  string company_id = 28;
+  string firm_id = 29;
+  string institution_id = 30;
+  string establishment_id = 31;
+  string facility_id = 32;
+  string building_id = 33;
+  string structure_id = 34;
+  string construction_id = 35;
+  string architecture_id = 36;
+  string design_id = 37;
+  string model_id = 38;
+  string version_id = 39;
+  string edition_id = 40;
+  string series_id = 41;
+  string collection_id = 42;
+  string set_id = 43;
+  string group_id = 44;
+  string category_id = 45;
+  string class_id = 46;
+  string type_id = 47;
+  string kind_id = 48;
+  string sort_id = 49;
+  string variety_id = 50;
+  string form_id = 51;
+  string shape_id = 52;
+  string figure_id = 53;
+  string pattern_id = 54;
+  string style_id = 55;
+  string fashion_id = 56;
+  string trend_id = 57;
+  string mode_id = 58;
+  string manner_id = 59;
+  string way_id = 60;
+  string method_id = 61;
+  string technique_id = 62;
+  string approach_id = 63;
+  string strategy_id = 64;
+  string tactic_id = 65;
+  string plan_id = 66;
+  string scheme_id = 67;
+  string system_id = 68;
+  string process_id = 69;
+  string procedure_id = 70;
+  string protocol_id = 71;
+  string standard_id = 72;
+  string rule_id = 73;
+  string regulation_id = 74;
+  string law_id = 75;
+  string act_id = 76;
+  string statute_id = 77;
+  string ordinance_id = 78;
+  string decree_id = 79;
+  string edict_id = 80;
+  string mandate_id = 81;
+  string order_id = 82;
+  gaming.matchmaking.enums.MatchStatus status = 83;
+  int32 limit = 84;
+  int32 offset = 85;
+  string sort_by = 86;
+  bool ascending = 87;
+  map<string, string> metadata_filters = 88;
+}
+
+// Відповідь списку матчів
+message ListMatchesResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.matchmaking.messages.Match matches = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит додавання гравця до матчу
+message AddPlayerToMatchRequest {
+  string player_id = 1;
+  string match_id = 2;
+  string team = 3;
+  int32 position = 4;
+  int32 score = 5;
+  int32 kills = 6;
+  int32 deaths = 7;
+  int32 assists = 8;
+  int32 damage_dealt = 9;
+  int32 damage_taken = 10;
+  int32 healing_done = 11;
+  int32 healing_received = 12;
+  int32 experience_gained = 13;
+  int32 level_gained = 14;
+  int32 coins_earned = 15;
+  int32 items_collected = 16;
+  int32 objectives_completed = 17;
+  int32 time_played = 18;
+  int32 ping = 19;
+  int32 fps = 20;
+  double accuracy = 21;
+  double headshot_percentage = 22;
+  double win_rate = 23;
+  double kd_ratio = 24;
+  double adr = 25;
+  double rating = 26;
+  double skill_level = 27;
+  double performance_score = 28;
+  double contribution_score = 29;
+  double teamwork_score = 30;
+  double communication_score = 31;
+  double leadership_score = 32;
+  double strategy_score = 33;
+  double tactics_score = 34;
+  double execution_score = 35;
+  double adaptation_score = 36;
+  double innovation_score = 37;
+  double creativity_score = 38;
+  double originality_score = 39;
+  double uniqueness_score = 40;
+  double rarity_score = 41;
+  double value_score = 42;
+  double quality_score = 43;
+  double quantity_score = 44;
+  double volume_score = 45;
+  double size_score = 46;
+  double weight_score = 47;
+  double mass_score = 48;
+  double length_score = 49;
+  double width_score = 50;
+  double height_score = 51;
+  double depth_score = 52;
+  double area_score = 53;
+  double perimeter_score = 54;
+  double diameter_score = 55;
+  double radius_score = 56;
+  double circumference_score = 57;
+  double volume_3d_score = 58;
+  double surface_score = 59;
+  double density_score = 60;
+  double viscosity_score = 61;
+  double elasticity_score = 62;
+  double plasticity_score = 63;
+  double hardness_score = 64;
+  double softness_score = 65;
+  double rigidity_score = 66;
+  double flexibility_score = 67;
+  double stability_score = 68;
+  double instability_score = 69;
+  double balance_score = 70;
+  double imbalance_score = 71;
+  double symmetry_score = 72;
+  double asymmetry_score = 73;
+  double proportions_score = 74;
+  double ratio_score = 75;
+  double percentage_score = 76;
+  double share_score = 77;
+  double part_score = 78;
+  double whole_score = 79;
+  double sum_score = 80;
+  double difference_score = 81;
+  double product_score = 82;
+  double quotient_score = 83;
+  double remainder_score = 84;
+  double modulus_score = 85;
+  double power_score = 86;
+  double root_score = 87;
+  double logarithm_score = 88;
+  double exponential_score = 89;
+  double trigonometry_score = 90;
+  double geometry_score = 91;
+  double algebra_score = 92;
+  double arithmetic_score = 93;
+  double statistics_score = 94;
+  double probability_score = 95;
+  double combinatorics_score = 96;
+  double permutations_score = 97;
+  double combinations_score = 98;
+  double variations_score = 99;
+  map<string, string> metadata = 100;
+}
+
+// Відповідь додавання гравця до матчу
+message AddPlayerToMatchResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.matchmaking.messages.MatchPlayer player = 3;
+}
+
+// Запит видалення гравця з матчу
+message RemovePlayerFromMatchRequest {
+  string player_id = 1;
+  string match_id = 2;
+}
+
+// Відповідь видалення гравця з матчу
+message RemovePlayerFromMatchResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит гравців у матчі
+message GetMatchPlayersRequest {
+  string match_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+// Відповідь гравців у матчі
+message GetMatchPlayersResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.matchmaking.messages.MatchPlayer players = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит статистики матчу
+message GetMatchStatsRequest {
+  string match_id = 1;
+}
+
+// Відповідь статистики матчу
+message GetMatchStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.matchmaking.messages.MatchStats stats = 3;
+}
+
+// Запит завершення матчу
+message EndMatchRequest {
+  string match_id = 1;
+  string winner = 2;
+  string result = 3;
+  int32 score_team_a = 4;
+  int32 score_team_b = 5;
+  string team_a_name = 6;
+  string team_b_name = 7;
+  repeated string team_a_players = 8;
+  repeated string team_b_players = 9;
+  int64 ended_at = 10;
+  int64 duration = 11;
+  map<string, string> metadata = 12;
+}
+
+// Відповідь завершення матчу
+message EndMatchResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.matchmaking.messages.Match match = 3;
+}

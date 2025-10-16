@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package tokenchain.token.v1;
+
+import "amino/amino.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "tokenchain/token/v1/params.proto";
+import "tokenchain/token/v1/token.proto";
+
+option go_package = "tokenchain/x/token/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tokenchain/token/v1/params";
+  }
+
+  // Balance Queries a list of Balance items.
+  rpc Balance(QueryBalanceRequest) returns (QueryBalanceResponse) {
+    option (google.api.http).get = "/tokenchain/token/v1/balance/{address}/{denom}";
+  }
+
+  // TokenInfo Queries a list of TokenInfo items.
+  rpc TokenInfo(QueryTokenInfoRequest) returns (QueryTokenInfoResponse) {
+    option (google.api.http).get = "/tokenchain/token/v1/token_info/{denom}";
+  }
+
+  // ListTokens Queries a list of ListTokens items.
+  rpc ListTokens(QueryListTokensRequest) returns (QueryListTokensResponse) {
+    option (google.api.http).get = "/tokenchain/token/v1/list_tokens";
+  }
+
+  // ListToken Queries a list of Token items.
+  rpc GetToken(QueryGetTokenRequest) returns (QueryGetTokenResponse) {
+    option (google.api.http).get = "/tokenchain/token/v1/token/{denom}";
+  }
+
+  // ListToken defines the ListToken RPC.
+  rpc ListToken(QueryAllTokenRequest) returns (QueryAllTokenResponse) {
+    option (google.api.http).get = "/tokenchain/token/v1/token";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// QueryBalanceRequest defines the QueryBalanceRequest message.
+message QueryBalanceRequest {
+  string address = 1;
+  string denom = 2;
+}
+
+// QueryBalanceResponse defines the QueryBalanceResponse message.
+message QueryBalanceResponse {
+  uint64 balance = 1;
+}
+
+// QueryTokenInfoRequest defines the QueryTokenInfoRequest message.
+message QueryTokenInfoRequest {
+  string denom = 1;
+}
+
+// QueryTokenInfoResponse defines the QueryTokenInfoResponse message.
+message QueryTokenInfoResponse {}
+
+// QueryListTokensRequest defines the QueryListTokensRequest message.
+message QueryListTokensRequest {}
+
+// QueryListTokensResponse defines the QueryListTokensResponse message.
+message QueryListTokensResponse {}
+
+// QueryGetTokenRequest defines the QueryGetTokenRequest message.
+message QueryGetTokenRequest {
+  string denom = 1;
+}
+
+// QueryGetTokenResponse defines the QueryGetTokenResponse message.
+message QueryGetTokenResponse {
+  Token token = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllTokenRequest defines the QueryAllTokenRequest message.
+message QueryAllTokenRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllTokenResponse defines the QueryAllTokenResponse message.
+message QueryAllTokenResponse {
+  repeated Token token = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

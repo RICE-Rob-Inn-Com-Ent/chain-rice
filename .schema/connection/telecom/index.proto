@@ -1,0 +1,457 @@
+syntax = "proto3";
+
+package telecom;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/double_value.proto";
+
+// Telecom module index - Unified access to all telecom microservices
+// This file provides a single entry point for all telecom-related gRPC services
+
+// ============================================================================
+// BILLING MODULE IMPORTS
+// ============================================================================
+
+// Billing Enums
+import "telecom/billing/enums/invoice_status.proto";
+import "telecom/billing/enums/payment_method.proto";
+
+// Billing Messages
+import "telecom/billing/messages/billing_request.proto";
+import "telecom/billing/messages/billing_response.proto";
+
+// Billing Services
+import "telecom/billing/services/billing_service.proto";
+
+// ============================================================================
+// CUSTOMERS MODULE IMPORTS
+// ============================================================================
+
+// Customer Enums
+import "telecom/customers/enums/customer_status.proto";
+import "telecom/customers/enums/customer_type.proto";
+
+// Customer Messages
+import "telecom/customers/messages/customer_request.proto";
+import "telecom/customers/messages/customer_response.proto";
+
+// Customer Services
+import "telecom/customers/services/customer_service.proto";
+
+// ============================================================================
+// SUBSCRIPTIONS MODULE IMPORTS
+// ============================================================================
+
+// Subscription Enums
+import "telecom/subscriptions/enums/subscription_plan.proto";
+import "telecom/subscriptions/enums/subscription_status.proto";
+
+// Subscription Messages
+import "telecom/subscriptions/messages/subscription_request.proto";
+import "telecom/subscriptions/messages/subscription_response.proto";
+
+// Subscription Services
+import "telecom/subscriptions/services/subscription_service.proto";
+
+// ============================================================================
+// USAGE MODULE IMPORTS
+// ============================================================================
+
+// Usage Enums
+import "telecom/usage/enums/usage_type.proto";
+import "telecom/usage/enums/usage_status.proto";
+
+// Usage Messages
+import "telecom/usage/messages/usage_request.proto";
+import "telecom/usage/messages/usage_response.proto";
+
+// Usage Services
+import "telecom/usage/services/usage_service.proto";
+
+// ============================================================================
+// UNIFIED TELECOM SERVICE
+// ============================================================================
+
+// TelecomService provides a unified interface to all telecom microservices
+// This allows clients to access all telecom functionality through a single service
+service TelecomService {
+  // Customer Management
+  rpc CreateCustomer(telecom.customers.messages.CreateCustomerRequest) returns (telecom.customers.messages.CreateCustomerResponse);
+  rpc GetCustomer(telecom.customers.messages.GetCustomerRequest) returns (telecom.customers.messages.GetCustomerResponse);
+  rpc ListCustomers(telecom.customers.messages.ListCustomersRequest) returns (telecom.customers.messages.ListCustomersResponse);
+  rpc UpdateCustomer(telecom.customers.messages.UpdateCustomerRequest) returns (telecom.customers.messages.UpdateCustomerResponse);
+  rpc DeleteCustomer(telecom.customers.messages.DeleteCustomerRequest) returns (telecom.customers.messages.DeleteCustomerResponse);
+
+  // Subscription Management
+  rpc CreateSubscription(telecom.subscriptions.messages.CreateSubscriptionRequest) returns (telecom.subscriptions.messages.CreateSubscriptionResponse);
+  rpc GetSubscription(telecom.subscriptions.messages.GetSubscriptionRequest) returns (telecom.subscriptions.messages.GetSubscriptionResponse);
+  rpc ListSubscriptions(telecom.subscriptions.messages.ListSubscriptionsRequest) returns (telecom.subscriptions.messages.ListSubscriptionsResponse);
+  rpc UpdateSubscription(telecom.subscriptions.messages.UpdateSubscriptionRequest) returns (telecom.subscriptions.messages.UpdateSubscriptionResponse);
+  rpc CancelSubscription(telecom.subscriptions.messages.CancelSubscriptionRequest) returns (telecom.subscriptions.messages.CancelSubscriptionResponse);
+
+  // Usage Tracking
+  rpc CreateUsage(telecom.usage.messages.CreateUsageRequest) returns (telecom.usage.messages.CreateUsageResponse);
+  rpc GetUsage(telecom.usage.messages.GetUsageRequest) returns (telecom.usage.messages.GetUsageResponse);
+  rpc ListUsage(telecom.usage.messages.ListUsageRequest) returns (telecom.usage.messages.ListUsageResponse);
+  rpc GetUsageSummary(telecom.usage.messages.GetUsageSummaryRequest) returns (telecom.usage.messages.GetUsageSummaryResponse);
+
+  // Billing Management
+  rpc CreateInvoice(telecom.billing.messages.CreateInvoiceRequest) returns (telecom.billing.messages.CreateInvoiceResponse);
+  rpc GetInvoice(telecom.billing.messages.GetInvoiceRequest) returns (telecom.billing.messages.GetInvoiceResponse);
+  rpc ListInvoices(telecom.billing.messages.ListInvoicesRequest) returns (telecom.billing.messages.ListInvoicesResponse);
+  rpc ProcessPayment(telecom.billing.messages.ProcessPaymentRequest) returns (telecom.billing.messages.ProcessPaymentResponse);
+
+  // Unified Operations
+  rpc GetCustomerDashboard(GetCustomerDashboardRequest) returns (GetCustomerDashboardResponse);
+  rpc ProcessMonthlyBilling(ProcessMonthlyBillingRequest) returns (ProcessMonthlyBillingResponse);
+  rpc GetTelecomAnalytics(GetTelecomAnalyticsRequest) returns (GetTelecomAnalyticsResponse);
+}
+
+// ============================================================================
+// UNIFIED REQUEST/RESPONSE MESSAGES
+// ============================================================================
+
+// GetCustomerDashboardRequest represents a request to get comprehensive customer dashboard
+message GetCustomerDashboardRequest {
+  // Customer ID to get dashboard for
+  string customer_id = 1;
+
+  // Date range for dashboard data
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+
+  // Dashboard sections to include
+  repeated string sections = 4; // ["subscriptions", "usage", "billing", "alerts"]
+}
+
+// GetCustomerDashboardResponse represents comprehensive customer dashboard data
+message GetCustomerDashboardResponse {
+  // Customer ID
+  string customer_id = 1;
+
+  // Customer basic information
+  telecom.customers.messages.Customer customer = 2;
+
+  // Active subscriptions
+  repeated telecom.subscriptions.messages.SubscriptionSummary subscriptions = 3;
+
+  // Usage summary
+  telecom.usage.messages.GetUsageSummaryResponse usage_summary = 4;
+
+  // Recent invoices
+  repeated telecom.billing.messages.Invoice recent_invoices = 5;
+
+  // Usage alerts
+  repeated telecom.usage.messages.UsageAlert alerts = 6;
+
+  // Dashboard metrics
+  CustomerDashboardMetrics metrics = 7;
+
+  // Generated at timestamp
+  google.protobuf.Timestamp generated_at = 8;
+}
+
+// CustomerDashboardMetrics represents key customer metrics
+message CustomerDashboardMetrics {
+  // Total monthly cost across all subscriptions
+  int64 total_monthly_cost = 1;
+
+  // Currency code
+  string currency = 2;
+
+  // Data usage percentage (if applicable)
+  google.protobuf.DoubleValue data_usage_percentage = 3;
+
+  // Voice usage percentage (if applicable)
+  google.protobuf.DoubleValue voice_usage_percentage = 4;
+
+  // SMS usage percentage (if applicable)
+  google.protobuf.DoubleValue sms_usage_percentage = 5;
+
+  // Number of active subscriptions
+  int32 active_subscriptions = 6;
+
+  // Number of pending invoices
+  int32 pending_invoices = 7;
+
+  // Customer lifetime value
+  int64 lifetime_value = 8;
+
+  // Customer since date
+  google.protobuf.Timestamp customer_since = 9;
+
+  // Last activity date
+  google.protobuf.Timestamp last_activity = 10;
+}
+
+// ProcessMonthlyBillingRequest represents a request to process monthly billing for a customer
+message ProcessMonthlyBillingRequest {
+  // Customer ID to process billing for
+  string customer_id = 1;
+
+  // Billing month (YYYY-MM format)
+  string billing_month = 2;
+
+  // Whether to generate invoices
+  bool generate_invoices = 3;
+
+  // Whether to send notifications
+  bool send_notifications = 4;
+
+  // Billing processing options
+  BillingProcessingOptions billing_options = 5;
+}
+
+// ProcessMonthlyBillingResponse represents the monthly billing processing response
+message ProcessMonthlyBillingResponse {
+  // Customer ID
+  string customer_id = 1;
+
+  // Billing month
+  string billing_month = 2;
+
+  // Number of subscriptions processed
+  int32 subscriptions_processed = 3;
+
+  // Number of invoices generated
+  int32 invoices_generated = 4;
+
+  // Total billing amount
+  int64 total_billing_amount = 5;
+
+  // Currency
+  string currency = 6;
+
+  // Processing status
+  string processing_status = 7;
+
+  // Success message
+  string message = 8;
+
+  // Processing timestamp
+  google.protobuf.Timestamp processed_at = 9;
+
+  // List of generated invoice IDs
+  repeated string invoice_ids = 10;
+}
+
+// BillingProcessingOptions represents options for billing processing
+message BillingProcessingOptions {
+  // Whether to include roaming charges
+  bool include_roaming = 1;
+
+  // Whether to apply promotional discounts
+  bool apply_discounts = 2;
+
+  // Whether to prorate partial months
+  bool prorate_partial_months = 3;
+
+  // Whether to include usage overages
+  bool include_overages = 4;
+
+  // Currency for billing
+  string currency = 5;
+}
+
+// GetTelecomAnalyticsRequest represents a request to get telecom analytics
+message GetTelecomAnalyticsRequest {
+  // Date range for analytics
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+
+  // Analytics type (customer, subscription, usage, billing, financial)
+  string analytics_type = 3;
+
+  // Granularity (daily, weekly, monthly, quarterly, yearly)
+  string granularity = 4;
+
+  // Customer segment to filter by (optional)
+  google.protobuf.StringValue customer_segment = 5;
+
+  // Subscription plan to filter by (optional)
+  telecom.subscriptions.enums.SubscriptionPlan subscription_plan = 6;
+}
+
+// GetTelecomAnalyticsResponse represents comprehensive telecom analytics
+message GetTelecomAnalyticsResponse {
+  // Analytics period
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Analytics type
+  string analytics_type = 3;
+
+  // Granularity used
+  string granularity = 4;
+
+  // Customer analytics
+  CustomerAnalytics customer_analytics = 5;
+
+  // Subscription analytics
+  SubscriptionAnalytics subscription_analytics = 6;
+
+  // Usage analytics
+  UsageAnalytics usage_analytics = 7;
+
+  // Billing analytics
+  BillingAnalytics billing_analytics = 8;
+
+  // Financial metrics
+  FinancialMetrics financial_metrics = 9;
+
+  // Key performance indicators
+  repeated KPIMetric kpi_metrics = 10;
+
+  // Generated at timestamp
+  google.protobuf.Timestamp generated_at = 11;
+}
+
+// CustomerAnalytics represents customer-related analytics
+message CustomerAnalytics {
+  // Total number of customers
+  int32 total_customers = 1;
+
+  // New customers in period
+  int32 new_customers = 2;
+
+  // Churned customers in period
+  int32 churned_customers = 3;
+
+  // Customer growth rate
+  google.protobuf.DoubleValue growth_rate = 4;
+
+  // Customer churn rate
+  google.protobuf.DoubleValue churn_rate = 5;
+
+  // Customer lifetime value
+  google.protobuf.DoubleValue average_lifetime_value = 6;
+
+  // Customer satisfaction score
+  google.protobuf.DoubleValue satisfaction_score = 7;
+}
+
+// SubscriptionAnalytics represents subscription-related analytics
+message SubscriptionAnalytics {
+  // Total active subscriptions
+  int32 active_subscriptions = 1;
+
+  // New subscriptions in period
+  int32 new_subscriptions = 2;
+
+  // Cancelled subscriptions in period
+  int32 cancelled_subscriptions = 3;
+
+  // Subscription growth rate
+  google.protobuf.DoubleValue growth_rate = 4;
+
+  // Average subscription duration
+  google.protobuf.DoubleValue average_duration_days = 5;
+
+  // Plan distribution
+  repeated PlanDistribution plan_distribution = 6;
+}
+
+// PlanDistribution represents subscription plan distribution
+message PlanDistribution {
+  // Subscription plan
+  telecom.subscriptions.enums.SubscriptionPlan plan = 1;
+
+  // Number of subscriptions
+  int32 subscription_count = 2;
+
+  // Percentage of total
+  google.protobuf.DoubleValue percentage = 3;
+
+  // Revenue from this plan
+  int64 revenue = 4;
+}
+
+// UsageAnalytics represents usage-related analytics
+message UsageAnalytics {
+  // Total data usage in GB
+  google.protobuf.DoubleValue total_data_usage_gb = 1;
+
+  // Total voice usage in minutes
+  google.protobuf.DoubleValue total_voice_usage_minutes = 2;
+
+  // Total SMS usage count
+  google.protobuf.DoubleValue total_sms_usage_count = 3;
+
+  // Average usage per customer
+  google.protobuf.DoubleValue average_usage_per_customer = 4;
+
+  // Peak usage times
+  repeated string peak_usage_times = 5;
+
+  // Usage growth trends
+  google.protobuf.StringValue usage_trends = 6;
+}
+
+// BillingAnalytics represents billing-related analytics
+message BillingAnalytics {
+  // Total revenue in period
+  int64 total_revenue = 1;
+
+  // Average revenue per customer
+  google.protobuf.DoubleValue average_revenue_per_customer = 2;
+
+  // Collection rate percentage
+  google.protobuf.DoubleValue collection_rate = 3;
+
+  // Average days to payment
+  google.protobuf.DoubleValue average_days_to_payment = 4;
+
+  // Outstanding receivables
+  int64 outstanding_receivables = 5;
+
+  // Billing disputes count
+  int32 billing_disputes = 6;
+}
+
+// FinancialMetrics represents financial performance metrics
+message FinancialMetrics {
+  // Monthly recurring revenue
+  int64 monthly_recurring_revenue = 1;
+
+  // Annual recurring revenue
+  int64 annual_recurring_revenue = 2;
+
+  // Customer acquisition cost
+  google.protobuf.DoubleValue customer_acquisition_cost = 3;
+
+  // Customer lifetime value
+  google.protobuf.DoubleValue customer_lifetime_value = 4;
+
+  // Gross margin percentage
+  google.protobuf.DoubleValue gross_margin_percentage = 5;
+
+  // Operating expenses
+  int64 operating_expenses = 6;
+
+  // Net profit
+  int64 net_profit = 7;
+}
+
+// KPIMetric represents a key performance indicator
+message KPIMetric {
+  // KPI name
+  string name = 1;
+
+  // KPI value
+  google.protobuf.DoubleValue value = 2;
+
+  // KPI unit
+  string unit = 3;
+
+  // KPI target value
+  google.protobuf.DoubleValue target_value = 4;
+
+  // Whether target was achieved
+  bool target_achieved = 5;
+
+  // KPI trend (improving, declining, stable)
+  string trend = 6;
+
+  // Period over period change
+  google.protobuf.DoubleValue period_over_period_change = 7;
+}

@@ -1,0 +1,781 @@
+syntax = "proto3";
+
+package gaming.marketplace.services;
+
+import "gaming/marketplace/messages/listing_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/marketplace/services";
+
+// Сервіс управління оголошеннями
+service ListingService {
+  // Створити оголошення
+  rpc CreateListing(CreateListingRequest) returns (CreateListingResponse);
+
+  // Отримати оголошення
+  rpc GetListing(GetListingRequest) returns (GetListingResponse);
+
+  // Оновити оголошення
+  rpc UpdateListing(UpdateListingRequest) returns (UpdateListingResponse);
+
+  // Видалити оголошення
+  rpc DeleteListing(DeleteListingRequest) returns (DeleteListingResponse);
+
+  // Отримати список оголошень
+  rpc ListListings(ListListingsRequest) returns (ListListingsResponse);
+
+  // Пошук оголошень
+  rpc SearchListings(SearchListingsRequest) returns (SearchListingsResponse);
+
+  // Отримати оголошення продавця
+  rpc GetSellerListings(GetSellerListingsRequest) returns (GetSellerListingsResponse);
+
+  // Отримати оголошення за категорією
+  rpc GetCategoryListings(GetCategoryListingsRequest) returns (GetCategoryListingsResponse);
+
+  // Отримати популярні оголошення
+  rpc GetPopularListings(GetPopularListingsRequest) returns (GetPopularListingsResponse);
+
+  // Отримати рекомендовані оголошення
+  rpc GetRecommendedListings(GetRecommendedListingsRequest) returns (GetRecommendedListingsResponse);
+}
+
+// Запит створення оголошення
+message CreateListingRequest {
+  string seller_id = 1;
+  string item_id = 2;
+  int64 price = 3;
+  string currency = 4;
+  int32 quantity = 5;
+  string title = 6;
+  string description = 7;
+  repeated string images = 8;
+  repeated string tags = 9;
+  string category = 10;
+  string subcategory = 11;
+  string location = 12;
+  string condition = 13;
+  bool is_new = 14;
+  bool is_used = 15;
+  bool is_refurbished = 16;
+  bool is_damaged = 17;
+  bool is_for_parts = 18;
+  bool is_not_working = 19;
+  bool is_working = 20;
+  bool is_tested = 21;
+  bool is_untested = 22;
+  bool is_warranty = 23;
+  bool is_no_warranty = 24;
+  bool is_guarantee = 25;
+  bool is_no_guarantee = 26;
+  bool is_returnable = 27;
+  bool is_no_return = 28;
+  bool is_exchangeable = 29;
+  bool is_no_exchange = 30;
+  bool is_shippable = 31;
+  bool is_no_shipping = 32;
+  bool is_pickup_only = 33;
+  bool is_delivery_only = 34;
+  bool is_local_only = 35;
+  bool is_worldwide = 36;
+  bool is_negotiable = 37;
+  bool is_fixed_price = 38;
+  bool is_auction = 39;
+  bool is_buy_now = 40;
+  bool is_best_offer = 41;
+  bool is_make_offer = 42;
+  bool is_accept_offers = 43;
+  bool is_decline_offers = 44;
+  bool is_auto_accept = 45;
+  bool is_auto_decline = 46;
+  bool is_instant_buy = 47;
+  bool is_reserve_met = 48;
+  bool is_reserve_not_met = 49;
+  bool is_sold = 50;
+  bool is_unsold = 51;
+  bool is_ended = 52;
+  bool is_active = 53;
+  bool is_inactive = 54;
+  bool is_paused = 55;
+  bool is_completed = 56;
+  bool is_cancelled = 57;
+  bool is_deleted = 58;
+  bool is_blocked = 59;
+  bool is_pending = 60;
+  bool is_rejected = 61;
+  bool is_pending_approval = 62;
+  bool is_pending_payment = 63;
+  bool is_pending_delivery = 64;
+  bool is_pending_receipt = 65;
+  bool is_pending_confirmation = 66;
+  bool is_pending_rating = 67;
+  bool is_pending_review = 68;
+  bool is_pending_comment = 69;
+  bool is_pending_response = 70;
+  bool is_pending_reaction = 71;
+  bool is_pending_action = 72;
+  bool is_pending_decision = 73;
+  bool is_pending_choice = 74;
+  bool is_pending_selection = 75;
+  bool is_pending_option = 76;
+  bool is_pending_alternative = 77;
+  bool is_pending_variant = 78;
+  bool is_pending_version = 79;
+  bool is_pending_edition = 80;
+  bool is_pending_series = 81;
+  bool is_pending_collection = 82;
+  bool is_pending_set = 83;
+  bool is_pending_group = 84;
+  bool is_pending_category = 85;
+  bool is_pending_class = 86;
+  bool is_pending_type = 87;
+  bool is_pending_kind = 88;
+  bool is_pending_sort = 89;
+  bool is_pending_variety = 90;
+  bool is_pending_form = 91;
+  bool is_pending_shape = 92;
+  bool is_pending_figure = 93;
+  bool is_pending_pattern = 94;
+  bool is_pending_style = 95;
+  bool is_pending_fashion = 96;
+  int64 expires_at = 97;
+  int64 started_at = 98;
+  int64 ended_at = 99;
+  int64 sold_at = 100;
+  int64 cancelled_at = 101;
+  int64 deleted_at = 102;
+  int64 blocked_at = 103;
+  int64 pending_at = 104;
+  int64 rejected_at = 105;
+  int64 approved_at = 106;
+  int64 paid_at = 107;
+  int64 shipped_at = 108;
+  int64 delivered_at = 109;
+  int64 received_at = 110;
+  int64 confirmed_at = 111;
+  int64 rated_at = 112;
+  int64 reviewed_at = 113;
+  int64 commented_at = 114;
+  int64 responded_at = 115;
+  int64 reacted_at = 116;
+  int64 acted_at = 117;
+  int64 decided_at = 118;
+  int64 chosen_at = 119;
+  int64 selected_at = 120;
+  int64 opted_at = 121;
+  int64 alternated_at = 122;
+  int64 varied_at = 123;
+  int64 versioned_at = 124;
+  int64 edited_at = 125;
+  int64 serialized_at = 126;
+  int64 collected_at = 127;
+  int64 set_at = 128;
+  int64 grouped_at = 129;
+  int64 categorized_at = 130;
+  int64 classed_at = 131;
+  int64 typed_at = 132;
+  int64 kinded_at = 133;
+  int64 sorted_at = 134;
+  int64 varied_at = 135;
+  int64 formed_at = 136;
+  int64 shaped_at = 137;
+  int64 figured_at = 138;
+  int64 patterned_at = 139;
+  int64 styled_at = 140;
+  int64 fashioned_at = 141;
+  int64 trended_at = 142;
+  int64 moded_at = 143;
+  int64 mannered_at = 144;
+  int64 wayed_at = 145;
+  int64 methoded_at = 146;
+  int64 techniqued_at = 147;
+  int64 approached_at = 148;
+  int64 strategized_at = 149;
+  int64 tacticed_at = 150;
+  int64 planned_at = 151;
+  int64 schemed_at = 152;
+  int64 systemed_at = 153;
+  int64 processed_at = 154;
+  int64 procedured_at = 155;
+  int64 protocoled_at = 156;
+  int64 standardized_at = 157;
+  int64 ruled_at = 158;
+  int64 regulated_at = 159;
+  int64 lawed_at = 160;
+  int64 acted_at = 161;
+  int64 statuted_at = 162;
+  int64 ordinanced_at = 163;
+  int64 decreed_at = 164;
+  int64 edicted_at = 165;
+  int64 mandated_at = 166;
+  int64 ordered_at = 167;
+  int64 commanded_at = 168;
+  int64 instructed_at = 169;
+  int64 directed_at = 170;
+  int64 guided_at = 171;
+  int64 advised_at = 172;
+  int64 suggested_at = 173;
+  int64 recommended_at = 174;
+  int64 proposed_at = 175;
+  int64 offered_at = 176;
+  int64 bidded_at = 177;
+  int64 auctioned_at = 178;
+  int64 sold_at = 179;
+  int64 purchased_at = 180;
+  int64 traded_at = 181;
+  int64 exchanged_at = 182;
+  int64 swapped_at = 183;
+  int64 bartered_at = 184;
+  int64 negotiated_at = 185;
+  int64 agreed_at = 186;
+  int64 contracted_at = 187;
+  int64 dealed_at = 188;
+  int64 transacted_at = 189;
+  int64 operated_at = 190;
+  int64 processed_at = 191;
+  int64 executed_at = 192;
+  int64 implemented_at = 193;
+  int64 completed_at = 194;
+  int64 finalized_at = 195;
+  int64 concluded_at = 196;
+  int64 terminated_at = 197;
+  int64 finished_at = 198;
+  int64 ended_at = 199;
+  int64 stopped_at = 200;
+  map<string, string> metadata = 201;
+}
+
+// Відповідь створення оголошення
+message CreateListingResponse {
+  bool success = 1;
+  string listing_id = 2;
+  string message = 3;
+  gaming.marketplace.messages.Listing listing = 4;
+}
+
+// Запит отримання оголошення
+message GetListingRequest {
+  string listing_id = 1;
+}
+
+// Відповідь отримання оголошення
+message GetListingResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.Listing listing = 3;
+}
+
+// Запит оновлення оголошення
+message UpdateListingRequest {
+  string listing_id = 1;
+  string title = 2;
+  string description = 3;
+  int64 price = 4;
+  string currency = 5;
+  int32 quantity = 6;
+  int32 available_quantity = 7;
+  gaming.marketplace.enums.ListingStatus status = 8;
+  repeated string images = 9;
+  repeated string tags = 10;
+  string category = 11;
+  string subcategory = 12;
+  string location = 13;
+  string condition = 14;
+  bool is_new = 15;
+  bool is_used = 16;
+  bool is_refurbished = 17;
+  bool is_damaged = 18;
+  bool is_for_parts = 19;
+  bool is_not_working = 20;
+  bool is_working = 21;
+  bool is_tested = 22;
+  bool is_untested = 23;
+  bool is_warranty = 24;
+  bool is_no_warranty = 25;
+  bool is_guarantee = 26;
+  bool is_no_guarantee = 27;
+  bool is_returnable = 28;
+  bool is_no_return = 29;
+  bool is_exchangeable = 30;
+  bool is_no_exchange = 31;
+  bool is_shippable = 32;
+  bool is_no_shipping = 33;
+  bool is_pickup_only = 34;
+  bool is_delivery_only = 35;
+  bool is_local_only = 36;
+  bool is_worldwide = 37;
+  bool is_negotiable = 38;
+  bool is_fixed_price = 39;
+  bool is_auction = 40;
+  bool is_buy_now = 41;
+  bool is_best_offer = 42;
+  bool is_make_offer = 43;
+  bool is_accept_offers = 44;
+  bool is_decline_offers = 45;
+  bool is_auto_accept = 46;
+  bool is_auto_decline = 47;
+  bool is_instant_buy = 48;
+  bool is_reserve_met = 49;
+  bool is_reserve_not_met = 50;
+  bool is_sold = 51;
+  bool is_unsold = 52;
+  bool is_ended = 53;
+  bool is_active = 54;
+  bool is_inactive = 55;
+  bool is_paused = 56;
+  bool is_completed = 57;
+  bool is_cancelled = 58;
+  bool is_deleted = 59;
+  bool is_blocked = 60;
+  bool is_pending = 61;
+  bool is_rejected = 62;
+  bool is_pending_approval = 63;
+  bool is_pending_payment = 64;
+  bool is_pending_delivery = 65;
+  bool is_pending_receipt = 66;
+  bool is_pending_confirmation = 67;
+  bool is_pending_rating = 68;
+  bool is_pending_review = 69;
+  bool is_pending_comment = 70;
+  bool is_pending_response = 71;
+  bool is_pending_reaction = 72;
+  bool is_pending_action = 73;
+  bool is_pending_decision = 74;
+  bool is_pending_choice = 75;
+  bool is_pending_selection = 76;
+  bool is_pending_option = 77;
+  bool is_pending_alternative = 78;
+  bool is_pending_variant = 79;
+  bool is_pending_version = 80;
+  bool is_pending_edition = 81;
+  bool is_pending_series = 82;
+  bool is_pending_collection = 83;
+  bool is_pending_set = 84;
+  bool is_pending_group = 85;
+  bool is_pending_category = 86;
+  bool is_pending_class = 87;
+  bool is_pending_type = 88;
+  bool is_pending_kind = 89;
+  bool is_pending_sort = 90;
+  bool is_pending_variety = 91;
+  bool is_pending_form = 92;
+  bool is_pending_shape = 93;
+  bool is_pending_figure = 94;
+  bool is_pending_pattern = 95;
+  bool is_pending_style = 96;
+  bool is_pending_fashion = 97;
+  int64 expires_at = 98;
+  int64 started_at = 99;
+  int64 ended_at = 100;
+  int64 sold_at = 101;
+  int64 cancelled_at = 102;
+  int64 deleted_at = 103;
+  int64 blocked_at = 104;
+  int64 pending_at = 105;
+  int64 rejected_at = 106;
+  int64 approved_at = 107;
+  int64 paid_at = 108;
+  int64 shipped_at = 109;
+  int64 delivered_at = 110;
+  int64 received_at = 111;
+  int64 confirmed_at = 112;
+  int64 rated_at = 113;
+  int64 reviewed_at = 114;
+  int64 commented_at = 115;
+  int64 responded_at = 116;
+  int64 reacted_at = 117;
+  int64 acted_at = 118;
+  int64 decided_at = 119;
+  int64 chosen_at = 120;
+  int64 selected_at = 121;
+  int64 opted_at = 122;
+  int64 alternated_at = 123;
+  int64 varied_at = 124;
+  int64 versioned_at = 125;
+  int64 edited_at = 126;
+  int64 serialized_at = 127;
+  int64 collected_at = 128;
+  int64 set_at = 129;
+  int64 grouped_at = 130;
+  int64 categorized_at = 131;
+  int64 classed_at = 132;
+  int64 typed_at = 133;
+  int64 kinded_at = 134;
+  int64 sorted_at = 135;
+  int64 varied_at = 136;
+  int64 formed_at = 137;
+  int64 shaped_at = 138;
+  int64 figured_at = 139;
+  int64 patterned_at = 140;
+  int64 styled_at = 141;
+  int64 fashioned_at = 142;
+  int64 trended_at = 143;
+  int64 moded_at = 144;
+  int64 mannered_at = 145;
+  int64 wayed_at = 146;
+  int64 methoded_at = 147;
+  int64 techniqued_at = 148;
+  int64 approached_at = 149;
+  int64 strategized_at = 150;
+  int64 tacticed_at = 151;
+  int64 planned_at = 152;
+  int64 schemed_at = 153;
+  int64 systemed_at = 154;
+  int64 processed_at = 155;
+  int64 procedured_at = 156;
+  int64 protocoled_at = 157;
+  int64 standardized_at = 158;
+  int64 ruled_at = 159;
+  int64 regulated_at = 160;
+  int64 lawed_at = 161;
+  int64 acted_at = 162;
+  int64 statuted_at = 163;
+  int64 ordinanced_at = 164;
+  int64 decreed_at = 165;
+  int64 edicted_at = 166;
+  int64 mandated_at = 167;
+  int64 ordered_at = 168;
+  int64 commanded_at = 169;
+  int64 instructed_at = 170;
+  int64 directed_at = 171;
+  int64 guided_at = 172;
+  int64 advised_at = 173;
+  int64 suggested_at = 174;
+  int64 recommended_at = 175;
+  int64 proposed_at = 176;
+  int64 offered_at = 177;
+  int64 bidded_at = 178;
+  int64 auctioned_at = 179;
+  int64 sold_at = 180;
+  int64 purchased_at = 181;
+  int64 traded_at = 182;
+  int64 exchanged_at = 183;
+  int64 swapped_at = 184;
+  int64 bartered_at = 185;
+  int64 negotiated_at = 186;
+  int64 agreed_at = 187;
+  int64 contracted_at = 188;
+  int64 dealed_at = 189;
+  int64 transacted_at = 190;
+  int64 operated_at = 191;
+  int64 processed_at = 192;
+  int64 executed_at = 193;
+  int64 implemented_at = 194;
+  int64 completed_at = 195;
+  int64 finalized_at = 196;
+  int64 concluded_at = 197;
+  int64 terminated_at = 198;
+  int64 finished_at = 199;
+  int64 ended_at = 200;
+  map<string, string> metadata = 201;
+}
+
+// Відповідь оновлення оголошення
+message UpdateListingResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.marketplace.messages.Listing listing = 3;
+}
+
+// Запит видалення оголошення
+message DeleteListingRequest {
+  string listing_id = 1;
+}
+
+// Відповідь видалення оголошення
+message DeleteListingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку оголошень
+message ListListingsRequest {
+  string seller_id = 1;
+  string category = 2;
+  string subcategory = 3;
+  string location = 4;
+  string condition = 5;
+  bool is_new = 6;
+  bool is_used = 7;
+  bool is_refurbished = 8;
+  bool is_damaged = 9;
+  bool is_for_parts = 10;
+  bool is_not_working = 11;
+  bool is_working = 12;
+  bool is_tested = 13;
+  bool is_untested = 14;
+  bool is_warranty = 15;
+  bool is_no_warranty = 16;
+  bool is_guarantee = 17;
+  bool is_no_guarantee = 18;
+  bool is_returnable = 19;
+  bool is_no_return = 20;
+  bool is_exchangeable = 21;
+  bool is_no_exchange = 22;
+  bool is_shippable = 23;
+  bool is_no_shipping = 24;
+  bool is_pickup_only = 25;
+  bool is_delivery_only = 26;
+  bool is_local_only = 27;
+  bool is_worldwide = 28;
+  bool is_negotiable = 29;
+  bool is_fixed_price = 30;
+  bool is_auction = 31;
+  bool is_buy_now = 32;
+  bool is_best_offer = 33;
+  bool is_make_offer = 34;
+  bool is_accept_offers = 35;
+  bool is_decline_offers = 36;
+  bool is_auto_accept = 37;
+  bool is_auto_decline = 38;
+  bool is_instant_buy = 39;
+  bool is_reserve_met = 40;
+  bool is_reserve_not_met = 41;
+  bool is_sold = 42;
+  bool is_unsold = 43;
+  bool is_ended = 44;
+  bool is_active = 45;
+  bool is_inactive = 46;
+  bool is_paused = 47;
+  bool is_completed = 48;
+  bool is_cancelled = 49;
+  bool is_deleted = 50;
+  bool is_blocked = 51;
+  bool is_pending = 52;
+  bool is_rejected = 53;
+  bool is_pending_approval = 54;
+  bool is_pending_payment = 55;
+  bool is_pending_delivery = 56;
+  bool is_pending_receipt = 57;
+  bool is_pending_confirmation = 58;
+  bool is_pending_rating = 59;
+  bool is_pending_review = 60;
+  bool is_pending_comment = 61;
+  bool is_pending_response = 62;
+  bool is_pending_reaction = 63;
+  bool is_pending_action = 64;
+  bool is_pending_decision = 65;
+  bool is_pending_choice = 66;
+  bool is_pending_selection = 67;
+  bool is_pending_option = 68;
+  bool is_pending_alternative = 69;
+  bool is_pending_variant = 70;
+  bool is_pending_version = 71;
+  bool is_pending_edition = 72;
+  bool is_pending_series = 73;
+  bool is_pending_collection = 74;
+  bool is_pending_set = 75;
+  bool is_pending_group = 76;
+  bool is_pending_category = 77;
+  bool is_pending_class = 78;
+  bool is_pending_type = 79;
+  bool is_pending_kind = 80;
+  bool is_pending_sort = 81;
+  bool is_pending_variety = 82;
+  bool is_pending_form = 83;
+  bool is_pending_shape = 84;
+  bool is_pending_figure = 85;
+  bool is_pending_pattern = 86;
+  bool is_pending_style = 87;
+  bool is_pending_fashion = 88;
+  int64 min_price = 89;
+  int64 max_price = 90;
+  string currency = 91;
+  int32 limit = 92;
+  int32 offset = 93;
+  string sort_by = 94;
+  bool ascending = 95;
+  map<string, string> metadata_filters = 96;
+}
+
+// Відповідь списку оголошень
+message ListListingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Listing listings = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит пошуку оголошень
+message SearchListingsRequest {
+  string query = 1;
+  string category = 2;
+  string subcategory = 3;
+  string location = 4;
+  string condition = 5;
+  bool is_new = 6;
+  bool is_used = 7;
+  bool is_refurbished = 8;
+  bool is_damaged = 9;
+  bool is_for_parts = 10;
+  bool is_not_working = 11;
+  bool is_working = 12;
+  bool is_tested = 13;
+  bool is_untested = 14;
+  bool is_warranty = 15;
+  bool is_no_warranty = 16;
+  bool is_guarantee = 17;
+  bool is_no_guarantee = 18;
+  bool is_returnable = 19;
+  bool is_no_return = 20;
+  bool is_exchangeable = 21;
+  bool is_no_exchange = 22;
+  bool is_shippable = 23;
+  bool is_no_shipping = 24;
+  bool is_pickup_only = 25;
+  bool is_delivery_only = 26;
+  bool is_local_only = 27;
+  bool is_worldwide = 28;
+  bool is_negotiable = 29;
+  bool is_fixed_price = 30;
+  bool is_auction = 31;
+  bool is_buy_now = 32;
+  bool is_best_offer = 33;
+  bool is_make_offer = 34;
+  bool is_accept_offers = 35;
+  bool is_decline_offers = 36;
+  bool is_auto_accept = 37;
+  bool is_auto_decline = 38;
+  bool is_instant_buy = 39;
+  bool is_reserve_met = 40;
+  bool is_reserve_not_met = 41;
+  bool is_sold = 42;
+  bool is_unsold = 43;
+  bool is_ended = 44;
+  bool is_active = 45;
+  bool is_inactive = 46;
+  bool is_paused = 47;
+  bool is_completed = 48;
+  bool is_cancelled = 49;
+  bool is_deleted = 50;
+  bool is_blocked = 51;
+  bool is_pending = 52;
+  bool is_rejected = 53;
+  bool is_pending_approval = 54;
+  bool is_pending_payment = 55;
+  bool is_pending_delivery = 56;
+  bool is_pending_receipt = 57;
+  bool is_pending_confirmation = 58;
+  bool is_pending_rating = 59;
+  bool is_pending_review = 60;
+  bool is_pending_comment = 61;
+  bool is_pending_response = 62;
+  bool is_pending_reaction = 63;
+  bool is_pending_action = 64;
+  bool is_pending_decision = 65;
+  bool is_pending_choice = 66;
+  bool is_pending_selection = 67;
+  bool is_pending_option = 68;
+  bool is_pending_alternative = 69;
+  bool is_pending_variant = 70;
+  bool is_pending_version = 71;
+  bool is_pending_edition = 72;
+  bool is_pending_series = 73;
+  bool is_pending_collection = 74;
+  bool is_pending_set = 75;
+  bool is_pending_group = 76;
+  bool is_pending_category = 77;
+  bool is_pending_class = 78;
+  bool is_pending_type = 79;
+  bool is_pending_kind = 80;
+  bool is_pending_sort = 81;
+  bool is_pending_variety =  82;
+  bool is_pending_form = 83;
+  bool is_pending_shape = 84;
+  bool is_pending_figure = 85;
+  bool is_pending_pattern = 86;
+  bool is_pending_style = 87;
+  bool is_pending_fashion = 88;
+  int64 min_price = 89;
+  int64 max_price = 90;
+  string currency = 91;
+  int32 limit = 92;
+  int32 offset = 93;
+  string sort_by = 94;
+  bool ascending = 95;
+  map<string, string> metadata_filters = 96;
+}
+
+// Відповідь пошуку оголошень
+message SearchListingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Listing listings = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит оголошень продавця
+message GetSellerListingsRequest {
+  string seller_id = 1;
+  string status = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+// Відповідь оголошень продавця
+message GetSellerListingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Listing listings = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит оголошень за категорією
+message GetCategoryListingsRequest {
+  string category = 1;
+  string subcategory = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+// Відповідь оголошень за категорією
+message GetCategoryListingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Listing listings = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит популярних оголошень
+message GetPopularListingsRequest {
+  string category = 1;
+  string subcategory = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+// Відповідь популярних оголошень
+message GetPopularListingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Listing listings = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит рекомендованих оголошень
+message GetRecommendedListingsRequest {
+  string user_id = 1;
+  string category = 2;
+  string subcategory = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+// Відповідь рекомендованих оголошень
+message GetRecommendedListingsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.marketplace.messages.Listing listings = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}

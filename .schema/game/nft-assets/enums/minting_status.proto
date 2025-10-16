@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.nft_assets.enums;
+
+option go_package = "github.com/rice-dev/gaming/nft-assets/enums";
+
+// Статуси карбування
+enum MintingStatus {
+  MINTING_STATUS_UNSPECIFIED = 0;
+
+  // Створений
+  MINTING_STATUS_CREATED = 1;
+
+  // В процесі карбування
+  MINTING_STATUS_MINTING = 2;
+
+  // Карбування завершено
+  MINTING_STATUS_MINTED = 3;
+
+  // Карбування невдале
+  MINTING_STATUS_FAILED = 4;
+
+  // Карбування скасовано
+  MINTING_STATUS_CANCELLED = 5;
+
+  // Карбування призупинено
+  MINTING_STATUS_PAUSED = 6;
+
+  // Карбування відновлено
+  MINTING_STATUS_RESUMED = 7;
+
+  // Карбування перервано
+  MINTING_STATUS_INTERRUPTED = 8;
+
+  // Карбування відкладено
+  MINTING_STATUS_POSTPONED = 9;
+
+  // Карбування перенесено
+  MINTING_STATUS_RESCHEDULED = 10;
+
+  // Карбування відхилено
+  MINTING_STATUS_REJECTED = 11;
+
+  // Карбування прийнято
+  MINTING_STATUS_ACCEPTED = 12;
+
+  // Карбування підтверджено
+  MINTING_STATUS_CONFIRMED = 13;
+
+  // Очікує підтвердження
+  MINTING_STATUS_PENDING_CONFIRMATION = 14;
+
+  // Очікує схвалення
+  MINTING_STATUS_PENDING_APPROVAL = 15;
+
+  // Очікує модерації
+  MINTING_STATUS_PENDING_MODERATION = 16;
+
+  // Очікує перевірки
+  MINTING_STATUS_PENDING_VERIFICATION = 17;
+
+  // Очікує валідації
+  MINTING_STATUS_PENDING_VALIDATION = 18;
+
+  // Очікує авторизації
+  MINTING_STATUS_PENDING_AUTHORIZATION = 19;
+
+  // Очікує аутентифікації
+  MINTING_STATUS_PENDING_AUTHENTICATION = 20;
+
+  // Очікує ідентифікації
+  MINTING_STATUS_PENDING_IDENTIFICATION = 21;
+
+  // Очікує реєстрації
+  MINTING_STATUS_PENDING_REGISTRATION = 22;
+
+  // Очікує активації
+  MINTING_STATUS_PENDING_ACTIVATION = 23;
+
+  // Очікує деактивації
+  MINTING_STATUS_PENDING_DEACTIVATION = 24;
+
+  // Очікує блокування
+  MINTING_STATUS_PENDING_BLOCKING = 25;
+
+  // Очікує розблокування
+  MINTING_STATUS_PENDING_UNBLOCKING = 26;
+
+  // Очікує бану
+  MINTING_STATUS_PENDING_BANNING = 27;
+
+  // Очікує розбану
+  MINTING_STATUS_PENDING_UNBANNING = 28;
+
+  // Очікує мутінгу
+  MINTING_STATUS_PENDING_MUTING = 29;
+
+  // Очікує розмутування
+  MINTING_STATUS_PENDING_UNMUTING = 30;
+
+  // Очікує кікування
+  MINTING_STATUS_PENDING_KICKING = 31;
+
+  // Очікує виключення
+  MINTING_STATUS_PENDING_EXCLUSION = 32;
+
+  // Очікує включення
+  MINTING_STATUS_PENDING_INCLUSION = 33;
+
+  // Очікує додавання
+  MINTING_STATUS_PENDING_ADDITION = 34;
+
+  // Очікує видалення
+  MINTING_STATUS_PENDING_REMOVAL = 35;
+
+  // Очікує оновлення
+  MINTING_STATUS_PENDING_UPDATE = 36;
+
+  // Очікує зміни
+  MINTING_STATUS_PENDING_CHANGE = 37;
+
+  // Очікує модифікації
+  MINTING_STATUS_PENDING_MODIFICATION = 38;
+
+  // Очікує адаптації
+  MINTING_STATUS_PENDING_ADAPTATION = 39;
+
+  // Очікує кастомізації
+  MINTING_STATUS_PENDING_CUSTOMIZATION = 40;
+
+  // Очікує персоналізації
+  MINTING_STATUS_PENDING_PERSONALIZATION = 41;
+
+  // Очікує налаштування
+  MINTING_STATUS_PENDING_CONFIGURATION = 42;
+
+  // Очікує конфігурації
+  MINTING_STATUS_PENDING_SETUP = 43;
+
+  // Очікує установки
+  MINTING_STATUS_PENDING_INSTALLATION = 44;
+
+  // Очікує інсталяції
+  MINTING_STATUS_PENDING_DEPLOYMENT = 45;
+
+  // Очікує розгортання
+  MINTING_STATUS_PENDING_ROLLOUT = 46;
+
+  // Очікує запуску
+  MINTING_STATUS_PENDING_LAUNCH = 47;
+
+  // Очікує старту
+  MINTING_STATUS_PENDING_START = 48;
+
+  // Очікує початку
+  MINTING_STATUS_PENDING_BEGINNING = 49;
+
+  // Очікує ініціації
+  MINTING_STATUS_PENDING_INITIATION = 50;
+
+  // Очікує ініціалізації
+  MINTING_STATUS_PENDING_INITIALIZATION = 51;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_PREPARATION = 52;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_SETUP = 53;
+
+  // Очікує налаштування
+  MINTING_STATUS_PENDING_CONFIGURATION = 54;
+
+  // Очікує конфігурації
+  MINTING_STATUS_PENDING_SETUP = 55;
+
+  // Очікує установки
+  MINTING_STATUS_PENDING_INSTALLATION = 56;
+
+  // Очікує інсталяції
+  MINTING_STATUS_PENDING_DEPLOYMENT = 57;
+
+  // Очікує розгортання
+  MINTING_STATUS_PENDING_ROLLOUT = 58;
+
+  // Очікує запуску
+  MINTING_STATUS_PENDING_LAUNCH = 59;
+
+  // Очікує старту
+  MINTING_STATUS_PENDING_START = 60;
+
+  // Очікує початку
+  MINTING_STATUS_PENDING_BEGINNING = 61;
+
+  // Очікує ініціації
+  MINTING_STATUS_PENDING_INITIATION = 62;
+
+  // Очікує ініціалізації
+  MINTING_STATUS_PENDING_INITIALIZATION = 63;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_PREPARATION = 64;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_SETUP = 65;
+
+  // Очікує налаштування
+  MINTING_STATUS_PENDING_CONFIGURATION = 66;
+
+  // Очікує конфігурації
+  MINTING_STATUS_PENDING_SETUP = 67;
+
+  // Очікує установки
+  MINTING_STATUS_PENDING_INSTALLATION = 68;
+
+  // Очікує інсталяції
+  MINTING_STATUS_PENDING_DEPLOYMENT = 69;
+
+  // Очікує розгортання
+  MINTING_STATUS_PENDING_ROLLOUT = 70;
+
+  // Очікує запуску
+  MINTING_STATUS_PENDING_LAUNCH = 71;
+
+  // Очікує старту
+  MINTING_STATUS_PENDING_START = 72;
+
+  // Очікує початку
+  MINTING_STATUS_PENDING_BEGINNING = 73;
+
+  // Очікує ініціації
+  MINTING_STATUS_PENDING_INITIATION = 74;
+
+  // Очікує ініціалізації
+  MINTING_STATUS_PENDING_INITIALIZATION = 75;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_PREPARATION = 76;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_SETUP = 77;
+
+  // Очікує налаштування
+  MINTING_STATUS_PENDING_CONFIGURATION = 78;
+
+  // Очікує конфігурації
+  MINTING_STATUS_PENDING_SETUP = 79;
+
+  // Очікує установки
+  MINTING_STATUS_PENDING_INSTALLATION = 80;
+
+  // Очікує інсталяції
+  MINTING_STATUS_PENDING_DEPLOYMENT = 81;
+
+  // Очікує розгортання
+  MINTING_STATUS_PENDING_ROLLOUT = 82;
+
+  // Очікує запуску
+  MINTING_STATUS_PENDING_LAUNCH = 83;
+
+  // Очікує старту
+  MINTING_STATUS_PENDING_START = 84;
+
+  // Очікує початку
+  MINTING_STATUS_PENDING_BEGINNING = 85;
+
+  // Очікує ініціації
+  MINTING_STATUS_PENDING_INITIATION = 86;
+
+  // Очікує ініціалізації
+  MINTING_STATUS_PENDING_INITIALIZATION = 87;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_PREPARATION = 88;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_SETUP = 89;
+
+  // Очікує налаштування
+  MINTING_STATUS_PENDING_CONFIGURATION = 90;
+
+  // Очікує конфігурації
+  MINTING_STATUS_PENDING_SETUP = 91;
+
+  // Очікує установки
+  MINTING_STATUS_PENDING_INSTALLATION = 92;
+
+  // Очікує інсталяції
+  MINTING_STATUS_PENDING_DEPLOYMENT = 93;
+
+  // Очікує розгортання
+  MINTING_STATUS_PENDING_ROLLOUT = 94;
+
+  // Очікує запуску
+  MINTING_STATUS_PENDING_LAUNCH = 95;
+
+  // Очікує старту
+  MINTING_STATUS_PENDING_START = 96;
+
+  // Очікує початку
+  MINTING_STATUS_PENDING_BEGINNING = 97;
+
+  // Очікує ініціації
+  MINTING_STATUS_PENDING_INITIATION = 98;
+
+  // Очікує ініціалізації
+  MINTING_STATUS_PENDING_INITIALIZATION = 99;
+
+  // Очікує підготовки
+  MINTING_STATUS_PENDING_PREPARATION = 100;
+}

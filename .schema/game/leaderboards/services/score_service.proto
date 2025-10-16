@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+package gaming.leaderboards.services;
+
+import "gaming/leaderboards/messages/score_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/leaderboards/services";
+
+// Сервіс управління очками
+service ScoreService {
+  // Отримати очки гравця
+  rpc GetPlayerScore(GetPlayerScoreRequest) returns (GetPlayerScoreResponse);
+
+  // Отримати очки гравця
+  rpc GetPlayerScores(GetPlayerScoresRequest) returns (GetPlayerScoresResponse);
+
+  // Оновити очки гравця
+  rpc UpdatePlayerScore(UpdatePlayerScoreRequest) returns (UpdatePlayerScoreResponse);
+
+  // Отримати статистику очок
+  rpc GetScoreStats(GetScoreStatsRequest) returns (GetScoreStatsResponse);
+
+  // Отримати історію очок
+  rpc GetScoreHistory(GetScoreHistoryRequest) returns (GetScoreHistoryResponse);
+
+  // Отримати прогноз очок
+  rpc GetScorePrediction(GetScorePredictionRequest) returns (GetScorePredictionResponse);
+
+  // Отримати порівняння очок
+  rpc GetScoreComparison(GetScoreComparisonRequest) returns (GetScoreComparisonResponse);
+
+  // Отримати аналіз очок
+  rpc GetScoreAnalysis(GetScoreAnalysisRequest) returns (GetScoreAnalysisResponse);
+
+  // Отримати топ очок
+  rpc GetTopScores(GetTopScoresRequest) returns (GetTopScoresResponse);
+
+  // Отримати очки навколо гравця
+  rpc GetScoresAroundPlayer(GetScoresAroundPlayerRequest) returns (GetScoresAroundPlayerResponse);
+}
+
+// Запит очок гравця
+message GetPlayerScoreRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+}
+
+// Відповідь очок гравця
+message GetPlayerScoreResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.Score score = 3;
+}
+
+// Запит очок гравця
+message GetPlayerScoresRequest {
+  string player_id = 1;
+  string game_id = 2;
+  string category_id = 3;
+  string season_id = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Відповідь очок гравця
+message GetPlayerScoresResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Score scores = 3;
+}
+
+// Запит оновлення очок гравця
+message UpdatePlayerScoreRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+  int64 value = 4;
+  map<string, string> metadata = 5;
+}
+
+// Відповідь оновлення очок гравця
+message UpdatePlayerScoreResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.Score score = 3;
+}
+
+// Запит статистики очок
+message GetScoreStatsRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+}
+
+// Відповідь статистики очок
+message GetScoreStatsResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.ScoreStats stats = 3;
+}
+
+// Запит історії очок
+message GetScoreHistoryRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+  int64 start_date = 4;
+  int64 end_date = 5;
+  int32 limit = 6;
+  int32 offset = 7;
+}
+
+// Відповідь історії очок
+message GetScoreHistoryResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.ScoreHistory history = 3;
+}
+
+// Запит прогнозу очок
+message GetScorePredictionRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+  int64 target_date = 4;
+}
+
+// Відповідь прогнозу очок
+message GetScorePredictionResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.ScorePrediction prediction = 3;
+}
+
+// Запит порівняння очок
+message GetScoreComparisonRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+  int64 target_score = 4;
+}
+
+// Відповідь порівняння очок
+message GetScoreComparisonResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.ScoreComparison comparison = 3;
+}
+
+// Запит аналізу очок
+message GetScoreAnalysisRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+}
+
+// Відповідь аналізу очок
+message GetScoreAnalysisResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.leaderboards.messages.ScoreAnalysis analysis = 3;
+}
+
+// Запит топ очок
+message GetTopScoresRequest {
+  string leaderboard_id = 1;
+  gaming.leaderboards.enums.ScoreType type = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+// Відповідь топ очок
+message GetTopScoresResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Score scores = 3;
+}
+
+// Запит очок навколо гравця
+message GetScoresAroundPlayerRequest {
+  string player_id = 1;
+  string leaderboard_id = 2;
+  gaming.leaderboards.enums.ScoreType type = 3;
+  int32 range = 4;
+}
+
+// Відповідь очок навколо гравця
+message GetScoresAroundPlayerResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.leaderboards.messages.Score scores = 3;
+}

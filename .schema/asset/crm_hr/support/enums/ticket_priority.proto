@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package crm_hr.support.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/support/enums";
+
+// TicketPriority represents the priority level of a support ticket
+enum TicketPriority {
+  // Unspecified priority - should not be used in production
+  TICKET_PRIORITY_UNSPECIFIED = 0;
+
+  // Priority levels
+  LOW = 1;
+  MEDIUM = 2;
+  HIGH = 3;
+  URGENT = 4;
+  CRITICAL = 5;
+
+  // Special priorities
+  EMERGENCY = 6;
+  P1 = 7;
+  P2 = 8;
+  P3 = 9;
+  P4 = 10;
+  P5 = 11;
+
+  // Business impact priorities
+  LOW_IMPACT = 12;
+  MEDIUM_IMPACT = 13;
+  HIGH_IMPACT = 14;
+  CRITICAL_IMPACT = 15;
+
+  // Time-based priorities
+  IMMEDIATE = 16;
+  WITHIN_1_HOUR = 17;
+  WITHIN_4_HOURS = 18;
+  WITHIN_24_HOURS = 19;
+  WITHIN_3_DAYS = 20;
+  WITHIN_1_WEEK = 21;
+}

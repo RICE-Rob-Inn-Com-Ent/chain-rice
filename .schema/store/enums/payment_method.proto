@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package commerce.marketplace.enums;
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/marketplace/enums";
+
+// Payment method enumeration
+enum PaymentMethod {
+  // Unknown or unspecified payment method
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+
+  // Credit card payment
+  PAYMENT_METHOD_CREDIT_CARD = 1;
+
+  // Debit card payment
+  PAYMENT_METHOD_DEBIT_CARD = 2;
+
+  // Bank transfer
+  PAYMENT_METHOD_BANK_TRANSFER = 3;
+
+  // PayPal payment
+  PAYMENT_METHOD_PAYPAL = 4;
+
+  // Digital wallet (Apple Pay, Google Pay, etc.)
+  PAYMENT_METHOD_DIGITAL_WALLET = 5;
+
+  // Cryptocurrency payment
+  PAYMENT_METHOD_CRYPTOCURRENCY = 6;
+
+  // Cash on delivery
+  PAYMENT_METHOD_CASH_ON_DELIVERY = 7;
+
+  // Check payment
+  PAYMENT_METHOD_CHECK = 8;
+
+  // Wire transfer
+  PAYMENT_METHOD_WIRE_TRANSFER = 9;
+
+  // Buy now, pay later (BNPL)
+  PAYMENT_METHOD_BNPL = 10;
+
+  // Store credit
+  PAYMENT_METHOD_STORE_CREDIT = 11;
+
+  // Gift card
+  PAYMENT_METHOD_GIFT_CARD = 12;
+
+  // Mobile payment
+  PAYMENT_METHOD_MOBILE_PAYMENT = 13;
+
+  // Invoice payment
+  PAYMENT_METHOD_INVOICE = 14;
+
+  // Escrow payment
+  PAYMENT_METHOD_ESCROW = 15;
+}

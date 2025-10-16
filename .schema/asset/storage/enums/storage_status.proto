@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package agriculture.storage.enums;
+
+// StorageStatus enum defines the operational status of storage facilities
+enum StorageStatus {
+  // Operational states
+  STORAGE_STATUS_UNSPECIFIED = 0;
+  STORAGE_STATUS_OPERATIONAL = 1;     // Storage is working normally
+  STORAGE_STATUS_AVAILABLE = 2;       // Storage is available for use
+  STORAGE_STATUS_IN_USE = 3;          // Storage is currently being used
+  STORAGE_STATUS_FULL = 4;            // Storage is at full capacity
+  STORAGE_STATUS_PARTIALLY_FULL = 5;  // Storage is partially filled
+  STORAGE_STATUS_EMPTY = 6;           // Storage is empty
+
+  // Maintenance states
+  STORAGE_STATUS_MAINTENANCE = 7;     // Storage is under maintenance
+  STORAGE_STATUS_REPAIR = 8;          // Storage is being repaired
+  STORAGE_STATUS_CLEANING = 9;        // Storage is being cleaned
+  STORAGE_STATUS_INSPECTION = 10;     // Storage is under inspection
+  STORAGE_STATUS_UPGRADE = 11;        // Storage is being upgraded
+
+  // Non-operational states
+  STORAGE_STATUS_OUT_OF_SERVICE = 12; // Storage is out of service
+  STORAGE_STATUS_DECOMMISSIONED = 13; // Storage has been decommissioned
+  STORAGE_STATUS_DEMOLISHED = 14;     // Storage has been demolished
+  STORAGE_STATUS_FOR_SALE = 15;       // Storage is for sale
+  STORAGE_STATUS_RENTED = 16;         // Storage is rented out
+
+  // Problem states
+  STORAGE_STATUS_DAMAGED = 17;        // Storage is damaged
+  STORAGE_STATUS_LEAKING = 18;        // Storage has leaks
+  STORAGE_STATUS_CONTAMINATED = 19;   // Storage is contaminated
+  STORAGE_STATUS_INFESTED = 20;       // Storage is infested with pests
+  STORAGE_STATUS_MOLDY = 21;          // Storage has mold issues
+  STORAGE_STATUS_ROTTEN = 22;         // Storage contents are rotten
+
+  // Environmental states
+  STORAGE_STATUS_TEMPERATURE_ISSUE = 23; // Temperature control problems
+  STORAGE_STATUS_HUMIDITY_ISSUE = 24;    // Humidity control problems
+  STORAGE_STATUS_VENTILATION_ISSUE = 25; // Ventilation problems
+  STORAGE_STATUS_POWER_OUTAGE = 26;      // Power outage affecting storage
+  STORAGE_STATUS_FLOODED = 27;           // Storage is flooded
+  STORAGE_STATUS_FROZEN = 28;            // Storage is frozen
+
+  // Safety states
+  STORAGE_STATUS_SAFETY_HAZARD = 29;     // Storage has safety hazards
+  STORAGE_STATUS_LOCKED = 30;            // Storage is locked
+  STORAGE_STATUS_SECURED = 31;           // Storage is secured
+  STORAGE_STATUS_QUARANTINED = 32;       // Storage is quarantined
+  STORAGE_STATUS_RESTRICTED_ACCESS = 33; // Access is restricted
+
+  // Capacity states
+  STORAGE_STATUS_OVER_CAPACITY = 34;     // Storage is over capacity
+  STORAGE_STATUS_NEAR_CAPACITY = 35;     // Storage is near capacity
+  STORAGE_STATUS_UNDER_CAPACITY = 36;    // Storage is under capacity
+  STORAGE_STATUS_OPTIMAL_CAPACITY = 37;  // Storage is at optimal capacity
+
+  // Quality states
+  STORAGE_STATUS_QUALITY_CONTROL = 38;   // Storage is under quality control
+  STORAGE_STATUS_GRADE_A = 39;           // Storage meets grade A standards
+  STORAGE_STATUS_GRADE_B = 40;           // Storage meets grade B standards
+  STORAGE_STATUS_GRADE_C = 41;           // Storage meets grade C standards
+  STORAGE_STATUS_SUBSTANDARD = 42;       // Storage is substandard
+
+  // Seasonal states
+  STORAGE_STATUS_SEASONAL_USE = 43;      // Storage is used seasonally
+  STORAGE_STATUS_WINTER_STORAGE = 44;    // Storage is prepared for winter
+  STORAGE_STATUS_SUMMER_STORAGE = 45;    // Storage is prepared for summer
+  STORAGE_STATUS_HARVEST_STORAGE = 46;   // Storage is ready for harvest
+
+  // Financial states
+  STORAGE_STATUS_INSURED = 47;           // Storage is insured
+  STORAGE_STATUS_INSURANCE_EXPIRED = 48; // Insurance has expired
+  STORAGE_STATUS_UNDER_INVESTIGATION = 49; // Storage is under investigation
+  STORAGE_STATUS_LEGAL_ISSUE = 50;       // Storage has legal issues
+
+  // Technology states
+  STORAGE_STATUS_MONITORED = 51;         // Storage is monitored
+  STORAGE_STATUS_AUTOMATED = 52;         // Storage is automated
+  STORAGE_STATUS_MANUAL = 53;            // Storage is manually operated
+  STORAGE_STATUS_SENSOR_ISSUE = 54;      // Storage sensors have issues
+  STORAGE_STATUS_SYSTEM_ERROR = 55;      // Storage system has errors
+}

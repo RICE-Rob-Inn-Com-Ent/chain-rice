@@ -1,0 +1,479 @@
+syntax = "proto3";
+
+package integrations.external_apis.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "integrations/external_apis/enums/api_auth_method.proto";
+
+option go_package = "github.com/rice-dev/integrations/external_apis/messages";
+
+// API Request represents a request to an external API
+message ApiRequest {
+  // Unique request identifier
+  string request_id = 1;
+
+  // Provider information
+  string provider_id = 2;
+  string endpoint_id = 3;
+
+  // Request configuration
+  ApiRequestConfiguration configuration = 4;
+
+  // Request data
+  ApiRequestData data = 5;
+
+  // Authentication
+  ApiRequestAuthentication authentication = 6;
+
+  // Headers
+  repeated ApiRequestHeader headers = 7;
+
+  // Query parameters
+  repeated ApiRequestParameter query_parameters = 8;
+
+  // Path parameters
+  repeated ApiRequestParameter path_parameters = 9;
+
+  // Request body
+  ApiRequestBody body = 10;
+
+  // Retry configuration
+  ApiRequestRetry retry = 11;
+
+  // Timeout configuration
+  ApiRequestTimeout timeout = 12;
+
+  // Metadata
+  ApiRequestMetadata metadata = 13;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp scheduled_at = 15;
+  google.protobuf.Timestamp expires_at = 16;
+}
+
+// API Request Configuration
+message ApiRequestConfiguration {
+  // HTTP method
+  string method = 1; // GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
+
+  // URL configuration
+  string base_url = 2;
+  string endpoint_path = 3;
+  string full_url = 4;
+
+  // Protocol settings
+  string protocol = 5; // HTTP, HTTPS, GRPC, WEBSOCKET
+  int32 port = 6;
+  string scheme = 7; // http, https, ws, wss
+
+  // Content settings
+  string content_type = 8;
+  string accept = 9;
+  string charset = 10;
+  string encoding = 11;
+
+  // Request settings
+  bool follow_redirects = 12;
+  int32 max_redirects = 13;
+  bool allow_insecure_ssl = 14;
+  bool enable_compression = 15;
+
+  // Custom configuration
+  map<string, string> custom_config = 16;
+}
+
+// API Request Data
+message ApiRequestData {
+  // Request type
+  string request_type = 1; // API_CALL, WEBHOOK, BATCH, STREAMING
+
+  // Request purpose
+  string purpose = 2; // DATA_SYNC, PAYMENT, NOTIFICATION, QUERY, etc.
+
+  // Request priority
+  string priority = 3; // LOW, NORMAL, HIGH, URGENT
+
+  // Request context
+  string context = 4;
+  string correlation_id = 5;
+  string session_id = 6;
+  string user_id = 7;
+
+  // Request tags
+  repeated string tags = 8;
+
+  // Custom data
+  map<string, string> custom_data = 9;
+
+  // Request source
+  string source_system = 10;
+  string source_component = 11;
+  string source_version = 12;
+}
+
+// API Request Authentication
+message ApiRequestAuthentication {
+  // Authentication method
+  integrations.external_apis.enums.ApiAuthMethod method = 1;
+
+  // OAuth 2.0
+  ApiOAuth2Request oauth2 = 2;
+
+  // OAuth 1.0
+  ApiOAuth1Request oauth1 = 3;
+
+  // API Key
+  ApiKeyRequest api_key = 4;
+
+  // JWT
+  ApiJwtRequest jwt = 5;
+
+  // Basic Auth
+  ApiBasicAuthRequest basic_auth = 6;
+
+  // Certificate
+  ApiCertificateRequest certificate = 7;
+
+  // Custom authentication
+  ApiCustomAuthRequest custom_auth = 8;
+
+  // Token information
+  ApiTokenInfo token_info = 9;
+}
+
+// OAuth 2.0 Request
+message ApiOAuth2Request {
+  string client_id = 1;
+  string client_secret = 2;
+  string access_token = 3;
+  string refresh_token = 4;
+  repeated string scopes = 5;
+  string grant_type = 6;
+  string redirect_uri = 7;
+  string state = 8;
+  string code_verifier = 9;
+  string code_challenge = 10;
+  string code_challenge_method = 11;
+  map<string, string> additional_parameters = 12;
+}
+
+// OAuth 1.0 Request
+message ApiOAuth1Request {
+  string consumer_key = 1;
+  string consumer_secret = 2;
+  string token = 3;
+  string token_secret = 4;
+  string signature_method = 5;
+  string realm = 6;
+  string callback = 7;
+  string verifier = 8;
+  map<string, string> additional_parameters = 9;
+}
+
+// API Key Request
+message ApiKeyRequest {
+  string key_name = 1;
+  string key_value = 2;
+  string key_location = 3; // HEADER, QUERY, BODY
+  string key_format = 4; // BEARER, API_KEY, CUSTOM
+  string custom_header_name = 5;
+  string custom_query_name = 6;
+  string custom_body_field = 7;
+}
+
+// JWT Request
+message ApiJwtRequest {
+  string token = 1;
+  string algorithm = 2;
+  string issuer = 3;
+  string audience = 4;
+  string key_id = 5;
+  map<string, string> custom_claims = 6;
+  string secret_key = 7;
+  string public_key = 8;
+  string private_key = 9;
+}
+
+// Basic Auth Request
+message ApiBasicAuthRequest {
+  string username = 1;
+  string password = 2;
+  string realm = 3;
+  bool preemptive = 4;
+}
+
+// Certificate Request
+message ApiCertificateRequest {
+  string certificate_data = 1;
+  string private_key_data = 2;
+  string ca_certificate_data = 3;
+  string certificate_password = 4;
+  bool verify_ssl = 5;
+  bool verify_hostname = 6;
+}
+
+// Custom Auth Request
+message ApiCustomAuthRequest {
+  string auth_type = 1;
+  map<string, string> parameters = 2;
+  string custom_header_name = 3;
+  string custom_header_value = 4;
+  string custom_query_name = 5;
+  string custom_query_value = 6;
+  string custom_body_field = 7;
+  string custom_body_value = 8;
+}
+
+// Token Information
+message ApiTokenInfo {
+  string token_type = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  int32 expires_in_seconds = 4;
+  google.protobuf.Timestamp expires_at = 5;
+  repeated string scopes = 6;
+  string token_id = 7;
+  bool auto_refresh = 8;
+}
+
+// API Request Header
+message ApiRequestHeader {
+  string name = 1;
+  string value = 2;
+  bool required = 3;
+  string description = 4;
+  bool is_sensitive = 5; // For logging purposes
+}
+
+// API Request Parameter
+message ApiRequestParameter {
+  string name = 1;
+  string value = 2;
+  string type = 3; // STRING, INTEGER, BOOLEAN, ARRAY, OBJECT
+  bool required = 4;
+  string description = 5;
+  bool is_sensitive = 6; // For logging purposes
+  repeated string allowed_values = 7;
+  string validation_pattern = 8;
+}
+
+// API Request Body
+message ApiRequestBody {
+  // Body type
+  string body_type = 1; // JSON, XML, FORM, MULTIPART, RAW, BINARY
+
+  // Content
+  string content = 2;
+  bytes binary_content = 3;
+  google.protobuf.Any structured_content = 4;
+
+  // Form data
+  repeated ApiFormField form_fields = 5;
+
+  // Multipart data
+  repeated ApiMultipartField multipart_fields = 6;
+
+  // File uploads
+  repeated ApiFileUpload file_uploads = 7;
+
+  // Content settings
+  string content_type = 8;
+  string charset = 9;
+  string encoding = 10;
+  int64 content_length = 11;
+
+  // Validation
+  string schema = 12; // JSON Schema or similar
+  bool validate_schema = 13;
+}
+
+// API Form Field
+message ApiFormField {
+  string name = 1;
+  string value = 2;
+  string type = 3; // TEXT, PASSWORD, EMAIL, NUMBER, etc.
+  bool required = 4;
+  string description = 5;
+}
+
+// API Multipart Field
+message ApiMultipartField {
+  string name = 1;
+  string value = 2;
+  string content_type = 3;
+  string filename = 4;
+  bool required = 5;
+  string description = 6;
+}
+
+// API File Upload
+message ApiFileUpload {
+  string field_name = 1;
+  string filename = 2;
+  string content_type = 3;
+  bytes file_data = 4;
+  string file_path = 5;
+  int64 file_size = 6;
+  string description = 7;
+  bool required = 8;
+}
+
+// API Request Retry
+message ApiRequestRetry {
+  bool enable_retries = 1;
+  int32 max_retries = 2;
+  int32 retry_delay_seconds = 3;
+  string retry_strategy = 4; // FIXED, EXPONENTIAL, LINEAR, CUSTOM
+  double backoff_multiplier = 5;
+  int32 max_retry_delay_seconds = 6;
+  repeated int32 retry_status_codes = 7;
+  repeated string retry_conditions = 8;
+  bool respect_retry_after_header = 9;
+  int32 retry_after_max_seconds = 10;
+}
+
+// API Request Timeout
+message ApiRequestTimeout {
+  int32 connection_timeout_seconds = 1;
+  int32 read_timeout_seconds = 2;
+  int32 write_timeout_seconds = 3;
+  int32 total_timeout_seconds = 4;
+  bool enable_timeout = 5;
+  string timeout_strategy = 6; // ABORT, RETRY, FALLBACK
+}
+
+// API Request Metadata
+message ApiRequestMetadata {
+  // Request tracking
+  string trace_id = 1;
+  string span_id = 2;
+  string parent_span_id = 3;
+
+  // Request context
+  string user_agent = 4;
+  string client_ip = 5;
+  string referer = 6;
+  string origin = 7;
+
+  // Request source
+  string source_system = 8;
+  string source_component = 9;
+  string source_version = 10;
+  string source_environment = 11;
+
+  // Request purpose
+  string business_purpose = 12;
+  string operation_type = 13;
+  string data_classification = 14; // PUBLIC, INTERNAL, CONFIDENTIAL, RESTRICTED
+
+  // Request lifecycle
+  string request_stage = 15; // INITIATED, PREPARED, SENT, PROCESSING, COMPLETED
+  string request_status = 16; // PENDING, IN_PROGRESS, SUCCESS, FAILED, CANCELLED
+
+  // Performance tracking
+  int64 estimated_duration_ms = 17;
+  int32 priority_score = 18;
+  string resource_requirements = 19;
+
+  // Compliance and audit
+  string compliance_requirements = 20;
+  bool requires_audit = 21;
+  string audit_category = 22;
+  repeated string compliance_tags = 23;
+
+  // Custom metadata
+  map<string, string> custom_metadata = 24;
+  map<string, google.protobuf.Any> custom_objects = 25;
+}
+
+// API Request Template
+message ApiRequestTemplate {
+  string template_id = 1;
+  string template_name = 2;
+  string template_description = 3;
+  string provider_id = 4;
+  string endpoint_id = 5;
+
+  // Template configuration
+  ApiRequestConfiguration configuration = 6;
+  ApiRequestAuthentication authentication = 7;
+  repeated ApiRequestHeader headers = 8;
+  repeated ApiRequestParameter parameters = 9;
+  ApiRequestBody body_template = 10;
+  ApiRequestRetry retry = 11;
+  ApiRequestTimeout timeout = 12;
+
+  // Template metadata
+  string created_by = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+  string version = 16;
+  bool is_active = 17;
+  repeated string tags = 18;
+  map<string, string> custom_fields = 19;
+}
+
+// API Request Batch
+message ApiRequestBatch {
+  string batch_id = 1;
+  string batch_name = 2;
+  string batch_description = 3;
+  repeated ApiRequest requests = 4;
+
+  // Batch configuration
+  string batch_strategy = 5; // SEQUENTIAL, PARALLEL, BATCH_SIZE
+  int32 batch_size = 6;
+  int32 max_concurrent_requests = 7;
+  int32 batch_delay_seconds = 8;
+
+  // Batch processing
+  string processing_status = 9; // PENDING, PROCESSING, COMPLETED, FAILED
+  int32 completed_requests = 10;
+  int32 failed_requests = 11;
+  int32 total_requests = 12;
+
+  // Batch metadata
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp started_at = 14;
+  google.protobuf.Timestamp completed_at = 15;
+  string created_by = 16;
+  map<string, string> custom_fields = 17;
+}
+
+// API Request Search/Filter
+message ApiRequestFilter {
+  repeated string request_ids = 1;
+  repeated string provider_ids = 2;
+  repeated string endpoint_ids = 3;
+  repeated string methods = 4;
+  repeated string request_types = 5;
+  repeated string purposes = 6;
+  repeated string priorities = 7;
+  repeated string statuses = 8;
+  repeated string source_systems = 9;
+  repeated string user_ids = 10;
+  repeated string correlation_ids = 11;
+  google.protobuf.Timestamp created_from = 12;
+  google.protobuf.Timestamp created_to = 13;
+  google.protobuf.Timestamp scheduled_from = 14;
+  google.protobuf.Timestamp scheduled_to = 15;
+  bool has_errors = 16;
+  bool has_retries = 17;
+  string search_text = 18;
+  int32 limit = 19;
+  int32 offset = 20;
+  string sort_by = 21;
+  string sort_order = 22; // ASC, DESC
+}
+
+// API Request List
+message ApiRequestList {
+  repeated ApiRequest requests = 1;
+  int32 total_count = 2;
+  int32 page_size = 3;
+  int32 page_number = 4;
+  bool has_next_page = 5;
+  bool has_previous_page = 6;
+}

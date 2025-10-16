@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.metaverse.enums;
+
+option go_package = "github.com/rice-dev/gaming/metaverse/enums";
+
+// Типи активів
+enum AssetType {
+  ASSET_TYPE_UNSPECIFIED = 0;
+
+  // 3D моделі
+  ASSET_TYPE_3D_MODEL = 1;
+
+  // Текстури
+  ASSET_TYPE_TEXTURE = 2;
+
+  // Матеріали
+  ASSET_TYPE_MATERIAL = 3;
+
+  // Анімації
+  ASSET_TYPE_ANIMATION = 4;
+
+  // Звуки
+  ASSET_TYPE_AUDIO = 5;
+
+  // Музика
+  ASSET_TYPE_MUSIC = 6;
+
+  // Ефекти
+  ASSET_TYPE_EFFECT = 7;
+
+  // Частинки
+  ASSET_TYPE_PARTICLE = 8;
+
+  // Шейдери
+  ASSET_TYPE_SHADER = 9;
+
+  // Скрипти
+  ASSET_TYPE_SCRIPT = 10;
+
+  // Пресети
+  ASSET_TYPE_PRESET = 11;
+
+  // Шаблони
+  ASSET_TYPE_TEMPLATE = 12;
+
+  // Сцени
+  ASSET_TYPE_SCENE = 13;
+
+  // Об'єкти
+  ASSET_TYPE_OBJECT = 14;
+
+  // Персонажі
+  ASSET_TYPE_CHARACTER = 15;
+
+  // Зброя
+  ASSET_TYPE_WEAPON = 16;
+
+  // Броня
+  ASSET_TYPE_ARMOR = 17;
+
+  // Аксесуари
+  ASSET_TYPE_ACCESSORY = 18;
+
+  // Транспорт
+  ASSET_TYPE_VEHICLE = 19;
+
+  // Будівлі
+  ASSET_TYPE_BUILDING = 20;
+
+  // Меблі
+  ASSET_TYPE_FURNITURE = 21;
+
+  // Декорації
+  ASSET_TYPE_DECORATION = 22;
+
+  // Природа
+  ASSET_TYPE_NATURE = 23;
+
+  // Рослини
+  ASSET_TYPE_PLANT = 24;
+
+  // Тварини
+  ASSET_TYPE_ANIMAL = 25;
+
+  // Погода
+  ASSET_TYPE_WEATHER = 26;
+
+  // Освітлення
+  ASSET_TYPE_LIGHTING = 27;
+
+  // Камера
+  ASSET_TYPE_CAMERA = 28;
+
+  // UI елементи
+  ASSET_TYPE_UI_ELEMENT = 29;
+
+  // Іконки
+  ASSET_TYPE_ICON = 30;
+
+  // Шрифти
+  ASSET_TYPE_FONT = 31;
+
+  // Кольори
+  ASSET_TYPE_COLOR = 32;
+
+  // Градієнти
+  ASSET_TYPE_GRADIENT = 33;
+
+  // Паттерни
+  ASSET_TYPE_PATTERN = 34;
+
+  // Бордери
+  ASSET_TYPE_BORDER = 35;
+
+  // Тіні
+  ASSET_TYPE_SHADOW = 36;
+
+  // Відблиски
+  ASSET_TYPE_REFLECTION = 37;
+
+  // Прозорість
+  ASSET_TYPE_TRANSPARENCY = 38;
+
+  // Непрозорість
+  ASSET_TYPE_OPACITY = 39;
+
+  // Блюр
+  ASSET_TYPE_BLUR = 40;
+
+  // Різкість
+  ASSET_TYPE_SHARPNESS = 41;
+
+  // Контраст
+  ASSET_TYPE_CONTRAST = 42;
+
+  // Яскравість
+  ASSET_TYPE_BRIGHTNESS = 43;
+
+  // Насиченість
+  ASSET_TYPE_SATURATION = 44;
+
+  // Відтінок
+  ASSET_TYPE_HUE = 45;
+
+  // Тон
+  ASSET_TYPE_TONE = 46;
+
+  // Колір
+  ASSET_TYPE_COLOR = 47;
+
+  // Відтінок
+  ASSET_TYPE_SHADE = 48;
+
+  // Тінь
+  ASSET_TYPE_TINT = 49;
+
+  // Колір
+  ASSET_TYPE_TINGE = 50;
+
+  // Колір
+  ASSET_TYPE_TINT = 51;
+
+  // Колір
+  ASSET_TYPE_TINGE = 52;
+
+  // Колір
+  ASSET_TYPE_TINT = 53;
+
+  // Колір
+  ASSET_TYPE_TINGE = 54;
+
+  // Колір
+  ASSET_TYPE_TINT = 55;
+
+  // Колір
+  ASSET_TYPE_TINGE = 56;
+
+  // Колір
+  ASSET_TYPE_TINT = 57;
+
+  // Колір
+  ASSET_TYPE_TINGE = 58;
+
+  // Колір
+  ASSET_TYPE_TINT = 59;
+
+  // Колір
+  ASSET_TYPE_TINGE = 60;
+
+  // Колір
+  ASSET_TYPE_TINT = 61;
+
+  // Колір
+  ASSET_TYPE_TINGE = 62;
+
+  // Колір
+  ASSET_TYPE_TINT = 63;
+
+  // Колір
+  ASSET_TYPE_TINGE = 64;
+
+  // Колір
+  ASSET_TYPE_TINT = 65;
+
+  // Колір
+  ASSET_TYPE_TINGE = 66;
+
+  // Колір
+  ASSET_TYPE_TINT = 67;
+
+  // Колір
+  ASSET_TYPE_TINGE = 68;
+
+  // Колір
+  ASSET_TYPE_TINT = 69;
+
+  // Колір
+  ASSET_TYPE_TINGE = 70;
+
+  // Колір
+  ASSET_TYPE_TINT = 71;
+
+  // Колір
+  ASSET_TYPE_TINGE = 72;
+
+  // Колір
+  ASSET_TYPE_TINT = 73;
+
+  // Колір
+  ASSET_TYPE_TINGE = 74;
+
+  // Колір
+  ASSET_TYPE_TINT = 75;
+
+  // Колір
+  ASSET_TYPE_TINGE = 76;
+
+  // Колір
+  ASSET_TYPE_TINT = 77;
+
+  // Колір
+  ASSET_TYPE_TINGE = 78;
+
+  // Колір
+  ASSET_TYPE_TINT = 79;
+
+  // Колір
+  ASSET_TYPE_TINGE = 80;
+
+  // Колір
+  ASSET_TYPE_TINT = 81;
+
+  // Колір
+  ASSET_TYPE_TINGE = 82;
+
+  // Колір
+  ASSET_TYPE_TINT = 83;
+
+  // Колір
+  ASSET_TYPE_TINGE = 84;
+
+  // Колір
+  ASSET_TYPE_TINT = 85;
+
+  // Колір
+  ASSET_TYPE_TINGE = 86;
+
+  // Колір
+  ASSET_TYPE_TINT = 87;
+
+  // Колір
+  ASSET_TYPE_TINGE = 88;
+
+  // Колір
+  ASSET_TYPE_TINT = 89;
+
+  // Колір
+  ASSET_TYPE_TINGE = 90;
+
+  // Колір
+  ASSET_TYPE_TINT = 91;
+
+  // Колір
+  ASSET_TYPE_TINGE = 92;
+
+  // Колір
+  ASSET_TYPE_TINT = 93;
+
+  // Колір
+  ASSET_TYPE_TINGE = 94;
+
+  // Колір
+  ASSET_TYPE_TINT = 95;
+
+  // Колір
+  ASSET_TYPE_TINGE = 96;
+
+  // Колір
+  ASSET_TYPE_TINT = 97;
+
+  // Колір
+  ASSET_TYPE_TINGE = 98;
+
+  // Колір
+  ASSET_TYPE_TINT = 99;
+
+  // Колір
+  ASSET_TYPE_TINGE = 100;
+}

@@ -1,0 +1,646 @@
+syntax = "proto3";
+
+package gaming.game_economy.services;
+
+import "gaming/game_economy/messages/transaction_models.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/game_economy/services";
+
+// Сервіс управління транзакціями
+service TransactionService {
+  // Створити нову транзакцію
+  rpc CreateTransaction(CreateTransactionRequest) returns (CreateTransactionResponse);
+
+  // Отримати транзакцію за ID
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+
+  // Оновити транзакцію
+  rpc UpdateTransaction(UpdateTransactionRequest) returns (UpdateTransactionResponse);
+
+  // Видалити транзакцію
+  rpc DeleteTransaction(DeleteTransactionRequest) returns (google.protobuf.Empty);
+
+  // Отримати список транзакцій
+  rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse);
+
+  // Підтвердити транзакцію
+  rpc ConfirmTransaction(ConfirmTransactionRequest) returns (ConfirmTransactionResponse);
+
+  // Скасувати транзакцію
+  rpc CancelTransaction(CancelTransactionRequest) returns (CancelTransactionResponse);
+
+  // Повернути транзакцію
+  rpc RefundTransaction(RefundTransactionRequest) returns (RefundTransactionResponse);
+
+  // Отримати баланс
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+
+  // Оновити баланс
+  rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse);
+
+  // Отримати курс обміну
+  rpc GetExchangeRate(GetExchangeRateRequest) returns (GetExchangeRateResponse);
+
+  // Оновити курс обміну
+  rpc UpdateExchangeRate(UpdateExchangeRateRequest) returns (UpdateExchangeRateResponse);
+
+  // Отримати комісію
+  rpc GetFee(GetFeeRequest) returns (GetFeeResponse);
+
+  // Оновити комісію
+  rpc UpdateFee(UpdateFeeRequest) returns (UpdateFeeResponse);
+
+  // Отримати обмін
+  rpc GetExchange(GetExchangeRequest) returns (GetExchangeResponse);
+
+  // Оновити обмін
+  rpc UpdateExchange(UpdateExchangeRequest) returns (UpdateExchangeResponse);
+
+  // Отримати конвертацію
+  rpc GetConversion(GetConversionRequest) returns (GetConversionResponse);
+
+  // Оновити конвертацію
+  rpc UpdateConversion(UpdateConversionRequest) returns (UpdateConversionResponse);
+
+  // Пошук транзакцій
+  rpc SearchTransactions(SearchTransactionsRequest) returns (SearchTransactionsResponse);
+
+  // Отримати рекомендації транзакцій
+  rpc GetTransactionRecommendations(GetTransactionRecommendationsRequest) returns (GetTransactionRecommendationsResponse);
+
+  // Отримати історію транзакцій
+  rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (GetTransactionHistoryResponse);
+}
+
+// Запит створення транзакції
+message CreateTransactionRequest {
+  // Дані транзакції
+  gaming.game_economy.messages.Transaction transaction = 1;
+
+  // Додаткові параметри
+  map<string, string> parameters = 2;
+}
+
+// Відповідь створення транзакції
+message CreateTransactionResponse {
+  // Створена транзакція
+  gaming.game_economy.messages.Transaction transaction = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання транзакції
+message GetTransactionRequest {
+  // Ідентифікатор транзакції
+  string transaction_id = 1;
+}
+
+// Відповідь отримання транзакції
+message GetTransactionResponse {
+  // Транзакція
+  gaming.game_economy.messages.Transaction transaction = 1;
+}
+
+// Запит оновлення транзакції
+message UpdateTransactionRequest {
+  // Ідентифікатор транзакції
+  string transaction_id = 1;
+
+  // Дані для оновлення
+  gaming.game_economy.messages.Transaction transaction = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення транзакції
+message UpdateTransactionResponse {
+  // Оновлена транзакція
+  gaming.game_economy.messages.Transaction transaction = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення транзакції
+message DeleteTransactionRequest {
+  // Ідентифікатор транзакції
+  string transaction_id = 1;
+
+  // Причина видалення
+  string reason = 2;
+}
+
+// Запит списку транзакцій
+message ListTransactionsRequest {
+  // Фільтри
+  TransactionFilters filters = 1;
+
+  // Пагінація
+  Pagination pagination = 2;
+
+  // Сортування
+  Sorting sorting = 3;
+}
+
+// Відповідь списку транзакцій
+message ListTransactionsResponse {
+  // Список транзакцій
+  repeated gaming.game_economy.messages.Transaction transactions = 1;
+
+  // Загальна кількість
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит підтвердження транзакції
+message ConfirmTransactionRequest {
+  // Ідентифікатор транзакції
+  string transaction_id = 1;
+
+  // Додаткові параметри
+  map<string, string> parameters = 2;
+}
+
+// Відповідь підтвердження транзакції
+message ConfirmTransactionResponse {
+  // Підтверджена транзакція
+  gaming.game_economy.messages.Transaction transaction = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час підтвердження
+  google.protobuf.Timestamp confirmed_at = 4;
+}
+
+// Запит скасування транзакції
+message CancelTransactionRequest {
+  // Ідентифікатор транзакції
+  string transaction_id = 1;
+
+  // Причина скасування
+  string reason = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь скасування транзакції
+message CancelTransactionResponse {
+  // Скасована транзакція
+  gaming.game_economy.messages.Transaction transaction = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час скасування
+  google.protobuf.Timestamp cancelled_at = 4;
+}
+
+// Запит повернення транзакції
+message RefundTransactionRequest {
+  // Ідентифікатор транзакції
+  string transaction_id = 1;
+
+  // Причина повернення
+  string reason = 2;
+
+  // Сума повернення
+  string refund_amount = 3;
+
+  // Додаткові параметри
+  map<string, string> parameters = 4;
+}
+
+// Відповідь повернення транзакції
+message RefundTransactionResponse {
+  // Повернена транзакція
+  gaming.game_economy.messages.Transaction transaction = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Час повернення
+  google.protobuf.Timestamp refunded_at = 4;
+}
+
+// Запит балансу
+message GetBalanceRequest {
+  // Ідентифікатор власника балансу
+  string owner_id = 1;
+
+  // Фільтри
+  BalanceFilters filters = 2;
+}
+
+// Відповідь балансу
+message GetBalanceResponse {
+  // Баланси
+  repeated gaming.game_economy.messages.Balance balances = 1;
+
+  // Загальна кількість балансів
+  int64 total_count = 2;
+}
+
+// Запит оновлення балансу
+message UpdateBalanceRequest {
+  // Ідентифікатор балансу
+  string balance_id = 1;
+
+  // Дані балансу для оновлення
+  gaming.game_economy.messages.Balance balance = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення балансу
+message UpdateBalanceResponse {
+  // Оновлений баланс
+  gaming.game_economy.messages.Balance balance = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит курсу обміну
+message GetExchangeRateRequest {
+  // Базова валюта
+  gaming.game_economy.enums.CurrencyType base_currency = 1;
+
+  // Цільова валюта
+  gaming.game_economy.enums.CurrencyType target_currency = 2;
+}
+
+// Відповідь курсу обміну
+message GetExchangeRateResponse {
+  // Курс обміну
+  gaming.game_economy.messages.ExchangeRate exchange_rate = 1;
+}
+
+// Запит оновлення курсу обміну
+message UpdateExchangeRateRequest {
+  // Ідентифікатор курсу обміну
+  string exchange_rate_id = 1;
+
+  // Дані курсу обміну для оновлення
+  gaming.game_economy.messages.ExchangeRate exchange_rate = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення курсу обміну
+message UpdateExchangeRateResponse {
+  // Оновлений курс обміну
+  gaming.game_economy.messages.ExchangeRate exchange_rate = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит комісії
+message GetFeeRequest {
+  // Тип комісії
+  string fee_type = 1;
+
+  // Тип валюти комісії
+  gaming.game_economy.enums.CurrencyType currency_type = 2;
+}
+
+// Відповідь комісії
+message GetFeeResponse {
+  // Комісія
+  gaming.game_economy.messages.Fee fee = 1;
+}
+
+// Запит оновлення комісії
+message UpdateFeeRequest {
+  // Ідентифікатор комісії
+  string fee_id = 1;
+
+  // Дані комісії для оновлення
+  gaming.game_economy.messages.Fee fee = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення комісії
+message UpdateFeeResponse {
+  // Оновлена комісія
+  gaming.game_economy.messages.Fee fee = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит обміну
+message GetExchangeRequest {
+  // Ідентифікатор обміну
+  string exchange_id = 1;
+}
+
+// Відповідь обміну
+message GetExchangeResponse {
+  // Обмін
+  gaming.game_economy.messages.Exchange exchange = 1;
+}
+
+// Запит оновлення обміну
+message UpdateExchangeRequest {
+  // Ідентифікатор обміну
+  string exchange_id = 1;
+
+  // Дані обміну для оновлення
+  gaming.game_economy.messages.Exchange exchange = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення обміну
+message UpdateExchangeResponse {
+  // Оновлений обмін
+  gaming.game_economy.messages.Exchange exchange = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит конвертації
+message GetConversionRequest {
+  // Ідентифікатор конвертації
+  string conversion_id = 1;
+}
+
+// Відповідь конвертації
+message GetConversionResponse {
+  // Конвертація
+  gaming.game_economy.messages.Conversion conversion = 1;
+}
+
+// Запит оновлення конвертації
+message UpdateConversionRequest {
+  // Ідентифікатор конвертації
+  string conversion_id = 1;
+
+  // Дані конвертації для оновлення
+  gaming.game_economy.messages.Conversion conversion = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення конвертації
+message UpdateConversionResponse {
+  // Оновлена конвертація
+  gaming.game_economy.messages.Conversion conversion = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит пошуку транзакцій
+message SearchTransactionsRequest {
+  // Пошуковий запит
+  string query = 1;
+
+  // Фільтри
+  TransactionFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+
+  // Сортування
+  Sorting sorting = 4;
+}
+
+// Відповідь пошуку транзакцій
+message SearchTransactionsResponse {
+  // Список знайдених транзакцій
+  repeated gaming.game_economy.messages.Transaction transactions = 1;
+
+  // Загальна кількість результатів
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+
+  // Час пошуку (в мілісекундах)
+  int64 search_time_ms = 4;
+}
+
+// Запит рекомендацій транзакцій
+message GetTransactionRecommendationsRequest {
+  // Ідентифікатор користувача
+  string user_id = 1;
+
+  // Кількість рекомендацій
+  int32 limit = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь рекомендацій транзакцій
+message GetTransactionRecommendationsResponse {
+  // Список рекомендованих транзакцій
+  repeated gaming.game_economy.messages.Transaction recommended_transactions = 1;
+
+  // Загальна кількість рекомендацій
+  int64 total_count = 2;
+
+  // Додаткові дані рекомендацій
+  map<string, string> recommendation_data = 3;
+}
+
+// Запит історії транзакцій
+message GetTransactionHistoryRequest {
+  // Ідентифікатор користувача
+  string user_id = 1;
+
+  // Фільтри
+  TransactionHistoryFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь історії транзакцій
+message GetTransactionHistoryResponse {
+  // Список записів історії
+  repeated gaming.game_economy.messages.Transaction history_transactions = 1;
+
+  // Загальна кількість записів
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Фільтри транзакцій
+message TransactionFilters {
+  // Тип транзакції
+  repeated gaming.game_economy.enums.TransactionType transaction_types = 1;
+
+  // Статус транзакції
+  repeated gaming.game_economy.enums.TransactionStatus transaction_statuses = 2;
+
+  // Тип валюти
+  repeated gaming.game_economy.enums.CurrencyType currency_types = 3;
+
+  // Відправник
+  string from_address = 4;
+
+  // Отримувач
+  string to_address = 5;
+
+  // Мінімальна сума
+  string min_amount = 6;
+
+  // Максимальна сума
+  string max_amount = 7;
+
+  // Час створення (від)
+  google.protobuf.Timestamp created_from = 8;
+
+  // Час створення (до)
+  google.protobuf.Timestamp created_to = 9;
+
+  // Час підтвердження (від)
+  google.protobuf.Timestamp confirmed_from = 10;
+
+  // Час підтвердження (до)
+  google.protobuf.Timestamp confirmed_to = 11;
+
+  // Час завершення (від)
+  google.protobuf.Timestamp completed_from = 12;
+
+  // Час завершення (до)
+  google.protobuf.Timestamp completed_to = 13;
+}
+
+// Фільтри балансів
+message BalanceFilters {
+  // Тип валюти
+  repeated gaming.game_economy.enums.CurrencyType currency_types = 1;
+
+  // Мінімальна сума
+  string min_amount = 2;
+
+  // Максимальна сума
+  string max_amount = 3;
+
+  // Час оновлення (від)
+  google.protobuf.Timestamp updated_from = 4;
+
+  // Час оновлення (до)
+  google.protobuf.Timestamp updated_to = 5;
+}
+
+// Фільтри історії транзакцій
+message TransactionHistoryFilters {
+  // Тип транзакції
+  repeated gaming.game_economy.enums.TransactionType transaction_types = 1;
+
+  // Статус транзакції
+  repeated gaming.game_economy.enums.TransactionStatus transaction_statuses = 2;
+
+  // Тип валюти
+  repeated gaming.game_economy.enums.CurrencyType currency_types = 3;
+
+  // Час транзакції (від)
+  google.protobuf.Timestamp transaction_from = 4;
+
+  // Час транзакції (до)
+  google.protobuf.Timestamp transaction_to = 5;
+
+  // Мінімальна сума
+  string min_amount = 6;
+
+  // Максимальна сума
+  string max_amount = 7;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+
+  // Чи є наступна сторінка
+  bool has_next = 5;
+
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}
+
+// Сортування
+message Sorting {
+  // Поле для сортування
+  string field = 1;
+
+  // Напрямок сортування
+  SortDirection direction = 2;
+}
+
+// Напрямок сортування
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

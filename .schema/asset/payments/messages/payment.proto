@@ -1,0 +1,407 @@
+syntax = "proto3";
+
+package finance.payments.messages;
+
+import "finance/payments/enums/payment_method.proto";
+import "finance/payments/enums/payment_status.proto";
+import "finance/payments/enums/settlement_type.proto";
+
+// Payment representation
+message Payment {
+  // Unique payment identifier
+  string payment_id = 1;
+
+  // Payment method
+  finance.payments.enums.PaymentMethod payment_method = 2;
+
+  // Payment status
+  finance.payments.enums.PaymentStatus status = 3;
+
+  // Payment amount
+  double amount = 4;
+
+  // Currency code
+  string currency = 5;
+
+  // Payment date
+  int64 payment_date = 6;
+
+  // Settlement date
+  int64 settlement_date = 7;
+
+  // Settlement type
+  finance.payments.enums.SettlementType settlement_type = 8;
+
+  // Transaction ID
+  string transaction_id = 9;
+
+  // External transaction ID
+  string external_transaction_id = 10;
+
+  // Payment gateway
+  string payment_gateway = 11;
+
+  // Payment processor
+  string payment_processor = 12;
+
+  // Customer information
+  PaymentCustomer customer = 13;
+
+  // Payment details
+  PaymentDetails payment_details = 14;
+
+  // Fee information
+  PaymentFee fee = 15;
+
+  // Refund information
+  PaymentRefund refund = 16;
+
+  // Payment notes
+  string notes = 17;
+
+  // Payment tags
+  repeated string tags = 18;
+
+  // Custom fields
+  map<string, string> custom_fields = 19;
+
+  // Creation timestamp
+  int64 created_at = 20;
+
+  // Last update timestamp
+  int64 updated_at = 21;
+
+  // Created by user ID
+  string created_by = 22;
+
+  // Updated by user ID
+  string updated_by = 23;
+
+  // Processed timestamp
+  int64 processed_at = 24;
+
+  // Failed timestamp
+  int64 failed_at = 25;
+
+  // Failure reason
+  string failure_reason = 26;
+}
+
+// Payment customer information
+message PaymentCustomer {
+  // Customer ID
+  string customer_id = 1;
+
+  // Customer name
+  string name = 2;
+
+  // Customer email
+  string email = 3;
+
+  // Customer phone
+  string phone = 4;
+
+  // Billing address
+  Address billing_address = 5;
+
+  // Payment method details
+  PaymentMethodDetails payment_method_details = 6;
+}
+
+// Payment method details
+message PaymentMethodDetails {
+  // Card information
+  CardDetails card = 1;
+
+  // Bank account information
+  BankAccountDetails bank_account = 2;
+
+  // Digital wallet information
+  DigitalWalletDetails digital_wallet = 3;
+
+  // Cryptocurrency information
+  CryptoDetails crypto = 4;
+}
+
+// Card details
+message CardDetails {
+  // Card number (masked)
+  string card_number = 1;
+
+  // Card holder name
+  string cardholder_name = 2;
+
+  // Expiry month
+  int32 expiry_month = 3;
+
+  // Expiry year
+  int32 expiry_year = 4;
+
+  // Card type
+  string card_type = 5;
+
+  // Card brand
+  string card_brand = 6;
+
+  // Last 4 digits
+  string last_four_digits = 7;
+}
+
+// Bank account details
+message BankAccountDetails {
+  // Account number (masked)
+  string account_number = 1;
+
+  // Routing number
+  string routing_number = 2;
+
+  // Bank name
+  string bank_name = 3;
+
+  // Account holder name
+  string account_holder_name = 4;
+
+  // Account type
+  string account_type = 5;
+}
+
+// Digital wallet details
+message DigitalWalletDetails {
+  // Wallet type
+  string wallet_type = 1;
+
+  // Wallet ID
+  string wallet_id = 2;
+
+  // Wallet email
+  string wallet_email = 3;
+}
+
+// Cryptocurrency details
+message CryptoDetails {
+  // Cryptocurrency type
+  string crypto_type = 1;
+
+  // Wallet address
+  string wallet_address = 2;
+
+  // Transaction hash
+  string transaction_hash = 3;
+
+  // Block number
+  int64 block_number = 4;
+}
+
+// Address information
+message Address {
+  // Street address
+  string street = 1;
+
+  // City
+  string city = 2;
+
+  // State/Province
+  string state = 3;
+
+  // Postal code
+  string postal_code = 4;
+
+  // Country
+  string country = 5;
+
+  // Country code
+  string country_code = 6;
+}
+
+// Payment details
+message PaymentDetails {
+  // Payment description
+  string description = 1;
+
+  // Payment reference
+  string reference = 2;
+
+  // Related invoice ID
+  string invoice_id = 3;
+
+  // Related order ID
+  string order_id = 4;
+
+  // Payment intent
+  string payment_intent = 5;
+
+  // Payment confirmation
+  string confirmation = 6;
+}
+
+// Payment fee information
+message PaymentFee {
+  // Processing fee
+  double processing_fee = 1;
+
+  // Gateway fee
+  double gateway_fee = 2;
+
+  // Transaction fee
+  double transaction_fee = 3;
+
+  // Currency conversion fee
+  double conversion_fee = 4;
+
+  // Total fees
+  double total_fees = 5;
+
+  // Fee currency
+  string fee_currency = 6;
+}
+
+// Payment refund information
+message PaymentRefund {
+  // Refund amount
+  double refund_amount = 1;
+
+  // Refund currency
+  string refund_currency = 2;
+
+  // Refund date
+  int64 refund_date = 3;
+
+  // Refund reason
+  string refund_reason = 4;
+
+  // Refund status
+  string refund_status = 5;
+
+  // Refund transaction ID
+  string refund_transaction_id = 6;
+}
+
+// Payment creation request
+message CreatePaymentRequest {
+  // Payment method
+  finance.payments.enums.PaymentMethod payment_method = 1;
+
+  // Payment amount
+  double amount = 2;
+
+  // Currency code
+  string currency = 3;
+
+  // Payment date
+  int64 payment_date = 4;
+
+  // Settlement type
+  finance.payments.enums.SettlementType settlement_type = 5;
+
+  // Payment gateway
+  string payment_gateway = 6;
+
+  // Customer information
+  PaymentCustomer customer = 7;
+
+  // Payment details
+  PaymentDetails payment_details = 8;
+
+  // Payment notes
+  string notes = 9;
+
+  // Payment tags
+  repeated string tags = 10;
+
+  // Custom fields
+  map<string, string> custom_fields = 11;
+}
+
+// Payment creation response
+message CreatePaymentResponse {
+  // Created payment
+  Payment payment = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Payment update request
+message UpdatePaymentRequest {
+  // Payment ID
+  string payment_id = 1;
+
+  // Updated payment status
+  finance.payments.enums.PaymentStatus status = 2;
+
+  // Updated notes
+  string notes = 3;
+
+  // Updated tags
+  repeated string tags = 4;
+
+  // Updated custom fields
+  map<string, string> custom_fields = 5;
+}
+
+// Payment update response
+message UpdatePaymentResponse {
+  // Updated payment
+  Payment payment = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Payment list request
+message ListPaymentsRequest {
+  // Filter by payment method
+  finance.payments.enums.PaymentMethod payment_method = 1;
+
+  // Filter by payment status
+  finance.payments.enums.PaymentStatus status = 2;
+
+  // Filter by customer ID
+  string customer_id = 3;
+
+  // Filter by date range
+  int64 start_date = 4;
+  int64 end_date = 5;
+
+  // Filter by currency
+  string currency = 6;
+
+  // Filter by payment gateway
+  string payment_gateway = 7;
+
+  // Search term
+  string search_term = 8;
+
+  // Page number
+  int32 page = 9;
+
+  // Page size
+  int32 page_size = 10;
+}
+
+// Payment list response
+message ListPaymentsResponse {
+  // List of payments
+  repeated Payment payments = 1;
+
+  // Total count
+  int64 total_count = 2;
+
+  // Page number
+  int32 page = 3;
+
+  // Page size
+  int32 page_size = 4;
+
+  // Success status
+  bool success = 5;
+
+  // Error message if any
+  string error_message = 6;
+}

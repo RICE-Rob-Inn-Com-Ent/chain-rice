@@ -1,3 +1,32 @@
+# Exclude vendor dependencies, generated files, and third-party code
+exclude: |
+  (?x)^(
+    .*connection/BEAM/deps/.*|
+    .*connection/.NET/obj/.*|
+    .*frontend/dart/.dart_tool/.*|
+    .*frontend/kotlin/.gradle/.*|
+    .*\.schema/token/third_party/.*|
+    .*\.dev/k8s/templates/.*|
+    .*node_modules/.*|
+    .*dist/.*|
+    .*build/.*|
+    .*bazel-.*/.*|
+    .*vendor/.*|
+    .*deps/.*|
+    .*\.lock$|
+    .*\.min\.(js|css)$|
+    .*_pb\..*|
+    .*_pb2\.py$|
+    .*_pb2_grpc\.py$|
+    .*\.generated\..*|
+    .*package-lock\.json$|
+    .*yarn\.lock$|
+    .*poetry\.lock$|
+    .*Cargo\.lock$|
+    .*go\.sum$|
+    .*\.phar$
+  )$
+
 repos:
   # =============================================================================
   # BASIC HOOKS (Universal)
@@ -36,7 +65,7 @@ repos:
         description: "Format Python code"
         language_version: python3
         files: \.py$
-        args: [--line-length=120]
+        args: [--line-length=120, --target-version=py312]
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.1.8

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://raw.githubusercontent.com/pivotal/LicenseFinder/master/schema.json",
+  "allowedLicenses": [
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "0BSD",
+    "CC0-1.0",
+    "Unlicense",
+    "Python-2.0",
+    "PSF-2.0",
+    "BlueOak-1.0.0",
+    "CC-BY-3.0",
+    "CC-BY-4.0"
+  ],
+  "rejectedLicenses": [
+    "GPL",
+    "GPL-2.0",
+    "GPL-3.0",
+    "LGPL",
+    "LGPL-2.1",
+    "LGPL-3.0",
+    "AGPL",
+    "AGPL-3.0",
+    "SSPL",
+    "BUSL-1.1"
+  ],
+  "approvedDependencies": {
+    "exceptions": []
+  },
+  "ignoredGroups": ["devDependencies", "buildDependencies"],
+  "ignoredPackages": [],
+  "whitelist": [],
+  "blacklist": [],
+  "decisions": {
+    "file": ".licenses.yml"
+  },
+  "scanners": {
+    "npm": true,
+    "pip": true,
+    "cargo": true,
+    "go": true,
+    "maven": true,
+    "gradle": true,
+    "bundler": true,
+    "mix": true,
+    "nuget": true,
+    "composer": true,
+    "yarn": true,
+    "poetry": true
+  },
+  "reportFormats": ["csv", "html", "json", "markdown", "xml"],
+  "projectPath": ".",
+  "logLevel": "info",
+  "recursive": true,
+  "summary": true
+}

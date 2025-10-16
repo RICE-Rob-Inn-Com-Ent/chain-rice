@@ -1,0 +1,181 @@
+# ==============================================================================
+# RUFF CONFIGURATION - Rice Monorepo
+# ==============================================================================
+# Ultra-fast Python linter and formatter (10-100x faster than Flake8+Black)
+# https://docs.astral.sh/ruff/
+# ==============================================================================
+
+# ============================================================================
+# GLOBAL SETTINGS
+# ============================================================================
+line-length = 120
+target-version = "py311"
+output-format = "grouped"
+show-fixes = true
+fix = true
+
+# ============================================================================
+# FILE SELECTION
+# ============================================================================
+extend-exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
+  "bazel-*",
+  "*_pb2.py",
+  "*_pb2_grpc.py",
+  "*.pyi",
+]
+
+# ============================================================================
+# LINTING
+# ============================================================================
+[lint]
+# Enable specific rule sets
+select = [
+  "E",     # pycodestyle errors
+  "W",     # pycodestyle warnings
+  "F",     # Pyflakes
+  "I",     # isort
+  "N",     # pep8-naming
+  "D",     # pydocstyle
+  "UP",    # pyupgrade
+  "YTT",   # flake8-2020
+  "ANN",   # flake8-annotations
+  "ASYNC", # flake8-async
+  "S",     # flake8-bandit
+  "BLE",   # flake8-blind-except
+  "FBT",   # flake8-boolean-trap
+  "B",     # flake8-bugbear
+  "A",     # flake8-builtins
+  "COM",   # flake8-commas
+  "C4",    # flake8-comprehensions
+  "DTZ",   # flake8-datetimez
+  "T10",   # flake8-debugger
+  "EM",    # flake8-errmsg
+  "EXE",   # flake8-executable
+  "FA",    # flake8-future-annotations
+  "ISC",   # flake8-implicit-str-concat
+  "ICN",   # flake8-import-conventions
+  "G",     # flake8-logging-format
+  "INP",   # flake8-no-pep420
+  "PIE",   # flake8-pie
+  "T20",   # flake8-print
+  "PYI",   # flake8-pyi
+  "PT",    # flake8-pytest-style
+  "Q",     # flake8-quotes
+  "RSE",   # flake8-raise
+  "RET",   # flake8-return
+  "SLF",   # flake8-self
+  "SLOT",  # flake8-slots
+  "SIM",   # flake8-simplify
+  "TID",   # flake8-tidy-imports
+  "TCH",   # flake8-type-checking
+  "INT",   # flake8-gettext
+  "ARG",   # flake8-unused-arguments
+  "PTH",   # flake8-use-pathlib
+  "TD",    # flake8-todos
+  "FIX",   # flake8-fixme
+  "ERA",   # eradicate
+  "PD",    # pandas-vet
+  "PGH",   # pygrep-hooks
+  "PL",    # Pylint
+  "TRY",   # tryceratops
+  "FLY",   # flynt
+  "NPY",   # NumPy-specific rules
+  "AIR",   # Airflow
+  "PERF",  # Perflint
+  "FURB",  # refurb
+  "LOG",   # flake8-logging
+  "RUF",   # Ruff-specific rules
+]
+
+# Ignore specific rules
+ignore = [
+  "D100",   # Missing docstring in public module
+  "D101",   # Missing docstring in public class
+  "D102",   # Missing docstring in public method
+  "D103",   # Missing docstring in public function
+  "D104",   # Missing docstring in public package
+  "D105",   # Missing docstring in magic method
+  "D107",   # Missing docstring in __init__
+  "ANN101", # Missing type annotation for self
+  "ANN102", # Missing type annotation for cls
+  "COM812", # Trailing comma missing
+  "ISC001", # Implicit string concatenation
+  "TD002",  # Missing author in TODO
+  "TD003",  # Missing issue link in TODO
+  "FIX002", # Line contains TODO
+]
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401", "D104"]
+"test_*.py" = ["S101", "D", "ANN", "PLR2004"]
+"*_test.py" = ["S101", "D", "ANN", "PLR2004"]
+"tests/*.py" = ["S101", "D", "ANN", "PLR2004"]
+"conftest.py" = ["D"]
+
+[lint.isort]
+known-first-party = ["rice"]
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint.pylint]
+max-args = 7
+max-branches = 15
+max-returns = 6
+max-statements = 60
+
+[lint.mccabe]
+max-complexity = 15
+
+[lint.flake8-annotations]
+suppress-none-returning = true
+
+[lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+
+# ============================================================================
+# FORMATTING
+# ============================================================================
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+docstring-code-format = true
+docstring-code-line-length = 100

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package marketing.campaings.enums;
+
+// Enumeration for campaign status
+enum CampaignStatus {
+  // Default status - not specified
+  CAMPAIGN_STATUS_UNSPECIFIED = 0;
+
+  // Campaign is being drafted
+  CAMPAIGN_STATUS_DRAFT = 1;
+
+  // Campaign is pending approval
+  CAMPAIGN_STATUS_PENDING = 2;
+
+  // Campaign is approved and scheduled
+  CAMPAIGN_STATUS_SCHEDULED = 3;
+
+  // Campaign is currently running
+  CAMPAIGN_STATUS_RUNNING = 4;
+
+  // Campaign is paused
+  CAMPAIGN_STATUS_PAUSED = 5;
+
+  // Campaign is completed
+  CAMPAIGN_STATUS_COMPLETED = 6;
+
+  // Campaign is cancelled
+  CAMPAIGN_STATUS_CANCELLED = 7;
+
+  // Campaign is archived
+  CAMPAIGN_STATUS_ARCHIVED = 8;
+}

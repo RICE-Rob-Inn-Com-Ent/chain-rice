@@ -1,0 +1,339 @@
+syntax = "proto3";
+
+package commerce.products.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/product.proto";
+import "../messages/product_attribute.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/products/services";
+
+// Product service for managing products and product attributes
+service ProductService {
+  // Product Management
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse);
+  rpc DeleteProduct(DeleteProductRequest) returns (google.protobuf.Empty);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+  rpc SearchProducts(SearchProductsRequest) returns (SearchProductsResponse);
+
+  // Product Variant Management
+  rpc CreateProductVariant(CreateProductVariantRequest) returns (CreateProductVariantResponse);
+  rpc GetProductVariant(GetProductVariantRequest) returns (GetProductVariantResponse);
+  rpc UpdateProductVariant(UpdateProductVariantRequest) returns (UpdateProductVariantResponse);
+  rpc DeleteProductVariant(DeleteProductVariantRequest) returns (google.protobuf.Empty);
+  rpc ListProductVariants(ListProductVariantsRequest) returns (ListProductVariantsResponse);
+
+  // Product Attribute Management
+  rpc CreateProductAttribute(CreateProductAttributeRequest) returns (CreateProductAttributeResponse);
+  rpc GetProductAttribute(GetProductAttributeRequest) returns (GetProductAttributeResponse);
+  rpc UpdateProductAttribute(UpdateProductAttributeRequest) returns (UpdateProductAttributeResponse);
+  rpc DeleteProductAttribute(DeleteProductAttributeRequest) returns (google.protobuf.Empty);
+  rpc ListProductAttributes(ListProductAttributesRequest) returns (ListProductAttributesResponse);
+
+  // Product Operations
+  rpc PublishProduct(PublishProductRequest) returns (PublishProductResponse);
+  rpc UnpublishProduct(UnpublishProductRequest) returns (UnpublishProductResponse);
+  rpc ArchiveProduct(ArchiveProductRequest) returns (ArchiveProductResponse);
+  rpc DuplicateProduct(DuplicateProductRequest) returns (DuplicateProductResponse);
+  rpc GetProductBySKU(GetProductBySKURequest) returns (GetProductBySKUResponse);
+  rpc GetProductByBarcode(GetProductByBarcodeRequest) returns (GetProductByBarcodeResponse);
+
+  // Product Analytics
+  rpc GetProductAnalytics(GetProductAnalyticsRequest) returns (GetProductAnalyticsResponse);
+  rpc GetProductPerformance(GetProductPerformanceRequest) returns (GetProductPerformanceResponse);
+}
+
+// Product Request/Response Messages
+message CreateProductRequest {
+  commerce.products.messages.Product product = 1;
+}
+
+message CreateProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message GetProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  commerce.products.messages.Product product = 2;
+}
+
+message UpdateProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message ListProductsRequest {
+  string category = 1;
+  string status = 2;
+  string brand = 3;
+  string manufacturer = 4;
+  string product_type = 5;
+  string search_query = 6;
+  int32 page_size = 7;
+  string page_token = 8;
+}
+
+message ListProductsResponse {
+  repeated commerce.products.messages.Product products = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message SearchProductsRequest {
+  string query = 1;
+  string category = 2;
+  string brand = 3;
+  string manufacturer = 4;
+  string product_type = 5;
+  string status = 6;
+  repeated string tags = 7;
+  repeated string keywords = 8;
+  string sort_by = 9;
+  string sort_order = 10;
+  int32 page_size = 11;
+  string page_token = 12;
+}
+
+message SearchProductsResponse {
+  repeated commerce.products.messages.Product products = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Product Variant Request/Response Messages
+message CreateProductVariantRequest {
+  string product_id = 1;
+  commerce.products.messages.ProductVariant variant = 2;
+}
+
+message CreateProductVariantResponse {
+  commerce.products.messages.ProductVariant variant = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetProductVariantRequest {
+  string id = 1;
+}
+
+message GetProductVariantResponse {
+  commerce.products.messages.ProductVariant variant = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdateProductVariantRequest {
+  string id = 1;
+  commerce.products.messages.ProductVariant variant = 2;
+}
+
+message UpdateProductVariantResponse {
+  commerce.products.messages.ProductVariant variant = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DeleteProductVariantRequest {
+  string id = 1;
+}
+
+message ListProductVariantsRequest {
+  string product_id = 1;
+  string status = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListProductVariantsResponse {
+  repeated commerce.products.messages.ProductVariant variants = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Product Attribute Request/Response Messages
+message CreateProductAttributeRequest {
+  commerce.products.messages.CreateProductAttributeRequest attribute = 1;
+}
+
+message CreateProductAttributeResponse {
+  commerce.products.messages.ProductAttribute attribute = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetProductAttributeRequest {
+  string id = 1;
+}
+
+message GetProductAttributeResponse {
+  commerce.products.messages.ProductAttribute attribute = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UpdateProductAttributeRequest {
+  string id = 1;
+  commerce.products.messages.UpdateProductAttributeRequest attribute = 2;
+}
+
+message UpdateProductAttributeResponse {
+  commerce.products.messages.ProductAttribute attribute = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DeleteProductAttributeRequest {
+  string id = 1;
+}
+
+message ListProductAttributesRequest {
+  string product_id = 1;
+  string attribute_type = 2;
+  string group = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+message ListProductAttributesResponse {
+  repeated commerce.products.messages.ProductAttribute attributes = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+// Product Operations Request/Response Messages
+message PublishProductRequest {
+  string product_id = 1;
+  string notes = 2;
+}
+
+message PublishProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message UnpublishProductRequest {
+  string product_id = 1;
+  string reason = 2;
+  string notes = 3;
+}
+
+message UnpublishProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message ArchiveProductRequest {
+  string product_id = 1;
+  string reason = 2;
+  string notes = 3;
+}
+
+message ArchiveProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message DuplicateProductRequest {
+  string product_id = 1;
+  string new_name = 2;
+  string new_sku = 3;
+  bool copy_variants = 4;
+  bool copy_attributes = 5;
+}
+
+message DuplicateProductResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetProductBySKURequest {
+  string sku = 1;
+}
+
+message GetProductBySKUResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetProductByBarcodeRequest {
+  string barcode = 1;
+}
+
+message GetProductByBarcodeResponse {
+  commerce.products.messages.Product product = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Product Analytics Request/Response Messages
+message GetProductAnalyticsRequest {
+  string product_id = 1;
+  string period = 2; // daily, weekly, monthly, yearly
+}
+
+message GetProductAnalyticsResponse {
+  ProductAnalytics analytics = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message GetProductPerformanceRequest {
+  string product_id = 1;
+  string period = 2; // daily, weekly, monthly, yearly
+}
+
+message GetProductPerformanceResponse {
+  ProductPerformance performance = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// Product analytics data
+message ProductAnalytics {
+  string product_id = 1;
+  int32 total_views = 2;
+  int32 total_orders = 3;
+  int32 total_quantity_sold = 4;
+  double total_revenue = 5;
+  double average_rating = 6;
+  int32 total_reviews = 7;
+  double conversion_rate = 8;
+  double return_rate = 9;
+  string period = 10;
+}
+
+// Product performance data
+message ProductPerformance {
+  string product_id = 1;
+  double sales_velocity = 2;
+  double inventory_turnover = 3;
+  double profit_margin = 4;
+  double market_share = 5;
+  int32 competitor_count = 6;
+  double price_competitiveness = 7;
+  string period = 8;
+}

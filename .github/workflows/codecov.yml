@@ -1,0 +1,74 @@
+name: Code Coverage
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+    name: Upload Coverage to Codecov
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Python coverage
+        working-directory: .bot
+        run: |
+          poetry install --no-interaction
+          poetry run pytest --cov=core --cov=integration --cov-report=xml:coverage.xml
+        continue-on-error: true
+
+      - name: Go coverage
+        working-directory: .backend/db
+        run: |
+          go test -coverprofile=coverage.out ./...
+        continue-on-error: true
+
+      - name: TypeScript coverage
+        working-directory: .frontend/web
+        run: |
+          npm ci
+          npm test -- --coverage --watchAll=false
+        continue-on-error: true
+
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: |
+            .bot/coverage.xml
+            .backend/db/coverage.out
+            .frontend/web/coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true

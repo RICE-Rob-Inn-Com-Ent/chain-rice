@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package marketing.social.messages;
+
+import "google/protobuf/timestamp.proto";
+import "marketing/social/enums/social_platform.proto";
+
+// Request message for creating a new social media post
+message CreateSocialRequest {
+  // Post content
+  string content = 1;
+
+  // Social media platforms
+  repeated marketing.social.enums.SocialPlatform platforms = 2;
+
+  // Post type
+  string post_type = 3;
+
+  // Media URLs (images, videos)
+  repeated string media_urls = 4;
+
+  // Hashtags
+  repeated string hashtags = 5;
+
+  // Mentions
+  repeated string mentions = 6;
+
+  // Campaign ID (if applicable)
+  string campaign_id = 7;
+
+  // Scheduled post time
+  google.protobuf.Timestamp scheduled_time = 8;
+
+  // Post tags
+  repeated string tags = 9;
+
+  // Post priority
+  int32 priority = 10;
+}
+
+// Request message for getting a social media post by ID
+message GetSocialRequest {
+  // Social media post ID
+  string id = 1;
+}
+
+// Request message for listing social media posts
+message ListSocialRequest {
+  // Page number for pagination
+  int32 page = 1;
+
+  // Number of items per page
+  int32 page_size = 2;
+
+  // Filter by platform
+  marketing.social.enums.SocialPlatform platform = 3;
+
+  // Filter by post type
+  string post_type = 4;
+
+  // Filter by campaign ID
+  string campaign_id = 5;
+
+  // Filter by tags
+  repeated string tags = 6;
+
+  // Filter by date range - start
+  google.protobuf.Timestamp start_date = 7;
+
+  // Filter by date range - end
+  google.protobuf.Timestamp end_date = 8;
+}
+
+// Request message for updating a social media post
+message UpdateSocialRequest {
+  // Social media post ID
+  string id = 1;
+
+  // Post content
+  string content = 2;
+
+  // Social media platforms
+  repeated marketing.social.enums.SocialPlatform platforms = 3;
+
+  // Post type
+  string post_type = 4;
+
+  // Media URLs (images, videos)
+  repeated string media_urls = 5;
+
+  // Hashtags
+  repeated string hashtags = 6;
+
+  // Mentions
+  repeated string mentions = 7;
+
+  // Scheduled post time
+  google.protobuf.Timestamp scheduled_time = 8;
+
+  // Post tags
+  repeated string tags = 9;
+
+  // Post priority
+  int32 priority = 10;
+}
+
+// Request message for deleting a social media post
+message DeleteSocialRequest {
+  // Social media post ID
+  string id = 1;
+}

@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package gaming.matchmaking.enums;
+
+option go_package = "github.com/rice-dev/gaming/matchmaking/enums";
+
+// Алгоритми пошуку матчів
+enum MatchingAlgorithm {
+  MATCHING_ALGORITHM_UNSPECIFIED = 0;
+
+  // Простий алгоритм
+  MATCHING_ALGORITHM_SIMPLE = 1;
+
+  // Алгоритм на основі навичок
+  MATCHING_ALGORITHM_SKILL_BASED = 2;
+
+  // Алгоритм на основі рейтингу
+  MATCHING_ALGORITHM_RATING_BASED = 3;
+
+  // Алгоритм на основі рівня
+  MATCHING_ALGORITHM_LEVEL_BASED = 4;
+
+  // Алгоритм на основі часу очікування
+  MATCHING_ALGORITHM_TIME_BASED = 5;
+
+  // Алгоритм на основі географії
+  MATCHING_ALGORITHM_GEOGRAPHIC = 6;
+
+  // Алгоритм на основі пінг
+  MATCHING_ALGORITHM_PING_BASED = 7;
+
+  // Алгоритм на основі підключення
+  MATCHING_ALGORITHM_CONNECTION_BASED = 8;
+
+  // Алгоритм на основі платформи
+  MATCHING_ALGORITHM_PLATFORM_BASED = 9;
+
+  // Алгоритм на основі мови
+  MATCHING_ALGORITHM_LANGUAGE_BASED = 10;
+
+  // Алгоритм на основі регіону
+  MATCHING_ALGORITHM_REGION_BASED = 11;
+
+  // Алгоритм на основі часового поясу
+  MATCHING_ALGORITHM_TIMEZONE_BASED = 12;
+
+  // Алгоритм на основі преференцій
+  MATCHING_ALGORITHM_PREFERENCE_BASED = 13;
+
+  // Алгоритм на основі історії
+  MATCHING_ALGORITHM_HISTORY_BASED = 14;
+
+  // Алгоритм на основі поведінки
+  MATCHING_ALGORITHM_BEHAVIOR_BASED = 15;
+
+  // Алгоритм на основі соціальних зв'язків
+  MATCHING_ALGORITHM_SOCIAL_BASED = 16;
+
+  // Алгоритм на основі друзів
+  MATCHING_ALGORITHM_FRIEND_BASED = 17;
+
+  // Алгоритм на основі гільдії
+  MATCHING_ALGORITHM_GUILD_BASED = 18;
+
+  // Алгоритм на основі команди
+  MATCHING_ALGORITHM_TEAM_BASED = 19;
+
+  // Алгоритм на основі клану
+  MATCHING_ALGORITHM_CLAN_BASED = 20;
+
+  // Алгоритм на основі альянсу
+  MATCHING_ALGORITHM_ALLIANCE_BASED = 21;
+
+  // Алгоритм на основі коаліції
+  MATCHING_ALGORITHM_COALITION_BASED = 22;
+
+  // Алгоритм на основі ліги
+  MATCHING_ALGORITHM_LEAGUE_BASED = 23;
+
+  // Алгоритм на основі асоціації
+  MATCHING_ALGORITHM_ASSOCIATION_BASED = 24;
+
+  // Алгоритм на основі організації
+  MATCHING_ALGORITHM_ORGANIZATION_BASED = 25;
+
+  // Алгоритм на основі корпорації
+  MATCHING_ALGORITHM_CORPORATION_BASED = 26;
+
+  // Алгоритм на основі компанії
+  MATCHING_ALGORITHM_COMPANY_BASED = 27;
+
+  // Алгоритм на основі фірми
+  MATCHING_ALGORITHM_FIRM_BASED = 28;
+
+  // Алгоритм на основі установи
+  MATCHING_ALGORITHM_INSTITUTION_BASED = 29;
+
+  // Алгоритм на основі закладу
+  MATCHING_ALGORITHM_ESTABLISHMENT_BASED = 30;
+
+  // Алгоритм на основі об'єкта
+  MATCHING_ALGORITHM_FACILITY_BASED = 31;
+
+  // Алгоритм на основі будівлі
+  MATCHING_ALGORITHM_BUILDING_BASED = 32;
+
+  // Алгоритм на основі споруди
+  MATCHING_ALGORITHM_STRUCTURE_BASED = 33;
+
+  // Алгоритм на основі конструкції
+  MATCHING_ALGORITHM_CONSTRUCTION_BASED = 34;
+
+  // Алгоритм на основі архітектури
+  MATCHING_ALGORITHM_ARCHITECTURE_BASED = 35;
+
+  // Алгоритм на основі дизайну
+  MATCHING_ALGORITHM_DESIGN_BASED = 36;
+
+  // Алгоритм на основі моделі
+  MATCHING_ALGORITHM_MODEL_BASED = 37;
+
+  // Алгоритм на основі версії
+  MATCHING_ALGORITHM_VERSION_BASED = 38;
+
+  // Алгоритм на основі редакції
+  MATCHING_ALGORITHM_EDITION_BASED = 39;
+
+  // Алгоритм на основі серії
+  MATCHING_ALGORITHM_SERIES_BASED = 40;
+
+  // Алгоритм на основі колекції
+  MATCHING_ALGORITHM_COLLECTION_BASED = 41;
+
+  // Алгоритм на основі набору
+  MATCHING_ALGORITHM_SET_BASED = 42;
+
+  // Алгоритм на основі групи
+  MATCHING_ALGORITHM_GROUP_BASED = 43;
+
+  // Алгоритм на основі категорії
+  MATCHING_ALGORITHM_CATEGORY_BASED = 44;
+
+  // Алгоритм на основі класу
+  MATCHING_ALGORITHM_CLASS_BASED = 45;
+
+  // Алгоритм на основі типу
+  MATCHING_ALGORITHM_TYPE_BASED = 46;
+
+  // Алгоритм на основі виду
+  MATCHING_ALGORITHM_KIND_BASED = 47;
+
+  // Алгоритм на основі сорту
+  MATCHING_ALGORITHM_SORT_BASED = 48;
+
+  // Алгоритм на основі різновиду
+  MATCHING_ALGORITHM_VARIETY_BASED = 49;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_FORM_BASED = 50;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_SHAPE_BASED = 51;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_FIGURE_BASED = 52;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PATTERN_BASED = 53;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_STYLE_BASED = 54;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_FASHION_BASED = 55;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_TREND_BASED = 56;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_MODE_BASED = 57;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_MANNER_BASED = 58;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_WAY_BASED = 59;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_METHOD_BASED = 60;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_TECHNIQUE_BASED = 61;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_APPROACH_BASED = 62;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_STRATEGY_BASED = 63;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_TACTIC_BASED = 64;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PLAN_BASED = 65;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_SCHEME_BASED = 66;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_SYSTEM_BASED = 67;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PROCESS_BASED = 68;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PROCEDURE_BASED = 69;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PROTOCOL_BASED = 70;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_STANDARD_BASED = 71;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_RULE_BASED = 72;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_REGULATION_BASED = 73;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_LAW_BASED = 74;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_ACT_BASED = 75;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_STATUTE_BASED = 76;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_ORDINANCE_BASED = 77;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_DECREE_BASED = 78;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_EDICT_BASED = 79;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_MANDATE_BASED = 80;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_ORDER_BASED = 81;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_COMMAND_BASED = 82;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_INSTRUCTION_BASED = 83;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_DIRECTION_BASED = 84;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_GUIDANCE_BASED = 85;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_ADVICE_BASED = 86;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_SUGGESTION_BASED = 87;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_RECOMMENDATION_BASED = 88;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PROPOSAL_BASED = 89;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_OFFER_BASED = 90;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_BID_BASED = 91;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_AUCTION_BASED = 92;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_SALE_BASED = 93;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_PURCHASE_BASED = 94;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_TRADE_BASED = 95;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_EXCHANGE_BASED = 96;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_SWAP_BASED = 97;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_BARTER_BASED = 98;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_NEGOTIATION_BASED = 99;
+
+  // Алгоритм на основі форми
+  MATCHING_ALGORITHM_AGREEMENT_BASED = 100;
+}

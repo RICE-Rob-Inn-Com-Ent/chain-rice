@@ -1,0 +1,448 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g., v1.0.0)"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark as pre-release"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            echo "is_prerelease=${{ inputs.prerelease }}" >> $GITHUB_OUTPUT
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            if [[ "$VERSION" == *"-alpha"* ]] || [[ "$VERSION" == *"-beta"* ]] || [[ "$VERSION" == *"-rc"* ]]; then
+              echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Validate version format
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if ! [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+            echo "Error: Invalid version format: $VERSION"
+            echo "Expected format: v1.2.3 or v1.2.3-alpha.1"
+            exit 1
+          fi
+
+      - name: Check if tag exists
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Error: Tag $VERSION already exists"
+            exit 1
+          fi
+
+  generate-changelog:
+    name: Generate Changelog
+    needs: validate-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          configuration: ".github/changelog-config.json"
+          toTag: ${{ needs.validate-release.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Save changelog
+        run: |
+          echo "${{ steps.changelog.outputs.changelog }}" > RELEASE_CHANGELOG.md
+
+      - name: Upload changelog
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: RELEASE_CHANGELOG.md
+          retention-days: 90
+
+  build-binaries:
+    name: Build Binaries - ${{ matrix.os }}
+    needs: validate-release
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: linux-amd64
+          - os: macos-latest
+            artifact_name: darwin-amd64
+          - os: windows-latest
+            artifact_name: windows-amd64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Build backend binaries
+        working-directory: .backend
+        run: |
+          mkdir -p ../artifacts/${{ matrix.artifact_name }}
+          cd db && go build -ldflags="-s -w -X main.version=${{ needs.validate-release.outputs.version }}" -o ../../artifacts/${{ matrix.artifact_name }}/rice-db ./cmd/server
+          cd ../token && go build -ldflags="-s -w -X main.version=${{ needs.validate-release.outputs.version }}" -o ../../artifacts/${{ matrix.artifact_name }}/rice-token ./cmd/tokenchaind
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.artifact_name }}
+          path: artifacts/${{ matrix.artifact_name }}/
+          retention-days: 90
+
+  build-docker-images:
+    name: Build Docker Images - ${{ matrix.component }}
+    needs: validate-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+          - name: backend
+            path: .backend
+          - name: bots
+            path: .bot
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.component.name }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ needs.validate-release.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.validate-release.outputs.version }}
+            type=semver,pattern={{major}},value=${{ needs.validate-release.outputs.version }}
+            type=sha,format=long
+            type=raw,value=latest,enable=${{ needs.validate-release.outputs.is_prerelease == 'false' }}
+          labels: |
+            org.opencontainers.image.title=Rice Mono ${{ matrix.component.name }}
+            org.opencontainers.image.description=Rice Monorepo - ${{ matrix.component.name }} component
+            org.opencontainers.image.version=${{ needs.validate-release.outputs.version }}
+
+      - name: Build and push Docker image
+        id: docker-build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.component.path }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ needs.validate-release.outputs.version }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VCS_REF=${{ github.sha }}
+
+      - name: Sign image with Cosign
+        run: |
+          cosign sign --yes ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.component.name }}@${{ steps.docker-build.outputs.digest }}
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        continue-on-error: true
+
+  build-frontend-packages:
+    name: Build Frontend Packages
+    needs: validate-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Build web frontend
+        working-directory: .frontend/web
+        run: |
+          npm ci
+          npm run build
+          npm pack
+
+      - name: Upload frontend artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-packages
+          path: .frontend/web/*.tgz
+          retention-days: 90
+
+  build-contracts:
+    name: Build Smart Contracts
+    needs: validate-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.76.0
+
+      - name: Build Rust contracts
+        working-directory: .backend/contract/rust
+        run: |
+          cargo build --release
+          mkdir -p ../../../artifacts/contracts/rust
+          cp target/release/*.wasm ../../../artifacts/contracts/rust/ 2>/dev/null || true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build Solidity contracts
+        working-directory: .backend/contract/solidity
+        run: |
+          npm ci
+          npx hardhat compile
+          mkdir -p ../../../artifacts/contracts/solidity
+          cp -r artifacts/contracts/* ../../../artifacts/contracts/solidity/
+
+      - name: Upload contract artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-contracts
+          path: artifacts/contracts/
+          retention-days: 90
+
+  create-release:
+    name: Create GitHub Release
+    needs:
+      - validate-release
+      - generate-changelog
+      - build-binaries
+      - build-docker-images
+      - build-frontend-packages
+      - build-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Download changelog
+        uses: actions/download-artifact@v4
+        with:
+          name: changelog
+
+      - name: Package artifacts
+        run: |
+          mkdir -p release-packages
+
+          # Package binaries
+          cd release-artifacts
+          for dir in binaries-*; do
+            if [ -d "$dir" ]; then
+              platform=${dir#binaries-}
+              tar -czf "../release-packages/rice-mono-${{ needs.validate-release.outputs.version }}-${platform}.tar.gz" -C "$dir" .
+            fi
+          done
+
+          # Package smart contracts
+          if [ -d "smart-contracts" ]; then
+            tar -czf "../release-packages/rice-mono-contracts-${{ needs.validate-release.outputs.version }}.tar.gz" -C smart-contracts .
+          fi
+
+          cd ..
+
+      - name: Generate checksums
+        run: |
+          cd release-packages
+          sha256sum * > checksums.txt
+          cat checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.validate-release.outputs.version }}
+          name: Release ${{ needs.validate-release.outputs.version }}
+          body_path: RELEASE_CHANGELOG.md
+          draft: false
+          prerelease: ${{ needs.validate-release.outputs.is_prerelease == 'true' }}
+          files: |
+            release-packages/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release summary
+        run: |
+          echo "## 🎉 Release ${{ needs.validate-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts Published:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Binaries (Linux, macOS, Windows)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Docker Images (multi-arch)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Frontend Packages" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Smart Contracts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Docker Images:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:${{ needs.validate-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/bots:${{ needs.validate-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  publish-npm:
+    name: Publish to NPM
+    needs: [validate-release, create-release]
+    runs-on: ubuntu-latest
+    if: needs.validate-release.outputs.is_prerelease == 'false'
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish to NPM
+        working-directory: .frontend/web
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true
+
+  deploy-docs:
+    name: Deploy Documentation
+    needs: [validate-release, create-release]
+    runs-on: ubuntu-latest
+    if: needs.validate-release.outputs.is_prerelease == 'false'
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install MkDocs
+        run: |
+          pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
+
+      - name: Build documentation
+        working-directory: .doc
+        run: mkdocs build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .doc/site
+          cname: docs.rice-mono.dev
+
+  notify-release:
+    name: Notify Release
+    needs: [validate-release, create-release]
+    runs-on: ubuntu-latest
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: Send notification
+        run: |
+          echo "Release ${{ needs.validate-release.outputs.version }} completed!"
+          # Add Discord/Slack notification here if needed

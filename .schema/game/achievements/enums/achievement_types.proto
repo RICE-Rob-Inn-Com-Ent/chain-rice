@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package gaming.achievements.enums;
+
+option go_package = "github.com/rice-dev/gaming/achievements/enums";
+
+// Типи досягнень у грі
+enum AchievementType {
+  ACHIEVEMENT_TYPE_UNSPECIFIED = 0;
+
+  // Місії - основні завдання гри
+  ACHIEVEMENT_TYPE_MISSION = 1;
+
+  // Квести - побічні завдання
+  ACHIEVEMENT_TYPE_QUEST = 2;
+
+  // Сезонні досягнення
+  ACHIEVEMENT_TYPE_SEASONAL = 3;
+
+  // Досягнення за час гри
+  ACHIEVEMENT_TYPE_TIME_BASED = 4;
+
+  // Досягнення за кількість дій
+  ACHIEVEMENT_TYPE_COUNTER_BASED = 5;
+
+  // Досягнення за прогрес
+  ACHIEVEMENT_TYPE_PROGRESS_BASED = 6;
+
+  // Досягнення за соціальні взаємодії
+  ACHIEVEMENT_TYPE_SOCIAL = 7;
+
+  // Досягнення за економічну активність
+  ACHIEVEMENT_TYPE_ECONOMIC = 8;
+
+  // Досягнення за PvP активність
+  ACHIEVEMENT_TYPE_PVP = 9;
+
+  // Досягнення за PvE активність
+  ACHIEVEMENT_TYPE_PVE = 10;
+}
+
+// Категорії досягнень
+enum AchievementCategory {
+  ACHIEVEMENT_CATEGORY_UNSPECIFIED = 0;
+
+  // Бойові досягнення
+  ACHIEVEMENT_CATEGORY_COMBAT = 1;
+
+  // Економічні досягнення
+  ACHIEVEMENT_CATEGORY_ECONOMY = 2;
+
+  // Соціальні досягнення
+  ACHIEVEMENT_CATEGORY_SOCIAL = 3;
+
+  // Досягнення за дослідження
+  ACHIEVEMENT_CATEGORY_EXPLORATION = 4;
+
+  // Досягнення за колекціонування
+  ACHIEVEMENT_CATEGORY_COLLECTION = 5;
+
+  // Досягнення за творчість
+  ACHIEVEMENT_CATEGORY_CREATIVE = 6;
+
+  // Досягнення за спорт
+  ACHIEVEMENT_CATEGORY_SPORTS = 7;
+
+  // Досягнення за стратегію
+  ACHIEVEMENT_CATEGORY_STRATEGY = 8;
+}
+
+// Рівні складності досягнень
+enum AchievementDifficulty {
+  ACHIEVEMENT_DIFFICULTY_UNSPECIFIED = 0;
+
+  // Легкий
+  ACHIEVEMENT_DIFFICULTY_EASY = 1;
+
+  // Середній
+  ACHIEVEMENT_DIFFICULTY_MEDIUM = 2;
+
+  // Важкий
+  ACHIEVEMENT_DIFFICULTY_HARD = 3;
+
+  // Екстремальний
+  ACHIEVEMENT_DIFFICULTY_EXTREME = 4;
+
+  // Легендарний
+  ACHIEVEMENT_DIFFICULTY_LEGENDARY = 5;
+}
+
+// Типи прогресу досягнень
+enum ProgressType {
+  PROGRESS_TYPE_UNSPECIFIED = 0;
+
+  // Лінійний прогрес
+  PROGRESS_TYPE_LINEAR = 1;
+
+  // Експоненційний прогрес
+  PROGRESS_TYPE_EXPONENTIAL = 2;
+
+  // Ступеневий прогрес
+  PROGRESS_TYPE_STEPPED = 3;
+
+  // Процентний прогрес
+  PROGRESS_TYPE_PERCENTAGE = 4;
+
+  // Без прогресу (одноразове)
+  PROGRESS_TYPE_ONE_TIME = 5;
+}

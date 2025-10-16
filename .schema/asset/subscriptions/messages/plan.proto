@@ -1,0 +1,354 @@
+syntax = "proto3";
+
+package finance.subscriptions.messages;
+
+import "finance/subscriptions/enums/subscription_plan.proto";
+import "finance/subscriptions/enums/billing_cycle.proto";
+
+// Subscription plan representation
+message Plan {
+  // Unique plan identifier
+  string plan_id = 1;
+
+  // Plan type
+  finance.subscriptions.enums.SubscriptionPlan plan_type = 2;
+
+  // Plan name
+  string name = 3;
+
+  // Plan description
+  string description = 4;
+
+  // Plan features
+  repeated PlanFeature features = 5;
+
+  // Plan pricing
+  PlanPricing pricing = 6;
+
+  // Plan limits
+  PlanLimits limits = 7;
+
+  // Plan add-ons
+  repeated PlanAddon addons = 8;
+
+  // Plan settings
+  PlanSettings settings = 9;
+
+  // Plan status
+  string status = 10;
+
+  // Plan tags
+  repeated string tags = 11;
+
+  // Custom fields
+  map<string, string> custom_fields = 12;
+
+  // Creation timestamp
+  int64 created_at = 13;
+
+  // Last update timestamp
+  int64 updated_at = 14;
+
+  // Created by user ID
+  string created_by = 15;
+
+  // Updated by user ID
+  string updated_by = 16;
+}
+
+// Plan feature
+message PlanFeature {
+  // Feature ID
+  string feature_id = 1;
+
+  // Feature name
+  string name = 2;
+
+  // Feature description
+  string description = 3;
+
+  // Feature type
+  string feature_type = 4;
+
+  // Feature value
+  string value = 5;
+
+  // Feature enabled
+  bool enabled = 6;
+
+  // Feature limit
+  int64 limit = 7;
+
+  // Feature unit
+  string unit = 8;
+}
+
+// Plan pricing
+message PlanPricing {
+  // Base price
+  double base_price = 1;
+
+  // Currency code
+  string currency = 2;
+
+  // Billing cycle
+  finance.subscriptions.enums.BillingCycle billing_cycle = 3;
+
+  // Setup fee
+  double setup_fee = 4;
+
+  // Trial price
+  double trial_price = 5;
+
+  // Trial period (in days)
+  int32 trial_period = 6;
+
+  // Discount amount
+  double discount_amount = 7;
+
+  // Discount percentage
+  double discount_percentage = 8;
+
+  // Tax rate
+  double tax_rate = 9;
+
+  // Total price
+  double total_price = 10;
+
+  // Pricing tiers
+  repeated PricingTier tiers = 11;
+}
+
+// Pricing tier
+message PricingTier {
+  // Tier ID
+  string tier_id = 1;
+
+  // Tier name
+  string name = 2;
+
+  // Tier description
+  string description = 3;
+
+  // Tier minimum quantity
+  int32 min_quantity = 4;
+
+  // Tier maximum quantity
+  int32 max_quantity = 5;
+
+  // Tier price
+  double price = 6;
+
+  // Tier unit
+  string unit = 7;
+
+  // Tier type
+  string tier_type = 8;
+}
+
+// Plan limits
+message PlanLimits {
+  // User limit
+  int32 user_limit = 1;
+
+  // Storage limit (in bytes)
+  int64 storage_limit = 2;
+
+  // Bandwidth limit (in bytes)
+  int64 bandwidth_limit = 3;
+
+  // Transaction limit
+  int32 transaction_limit = 4;
+
+  // API call limit
+  int32 api_call_limit = 5;
+
+  // Custom limits
+  map<string, int64> custom_limits = 6;
+}
+
+// Plan add-on
+message PlanAddon {
+  // Add-on ID
+  string addon_id = 1;
+
+  // Add-on name
+  string name = 2;
+
+  // Add-on description
+  string description = 3;
+
+  // Add-on price
+  double price = 4;
+
+  // Add-on currency
+  string currency = 5;
+
+  // Add-on billing cycle
+  string billing_cycle = 6;
+
+  // Add-on type
+  string addon_type = 7;
+
+  // Add-on required
+  bool required = 8;
+
+  // Add-on limit
+  int32 limit = 9;
+
+  // Add-on unit
+  string unit = 10;
+}
+
+// Plan settings
+message PlanSettings {
+  // Auto-renewal
+  bool auto_renewal = 1;
+
+  // Proration
+  bool proration = 2;
+
+  // Trial enabled
+  bool trial_enabled = 3;
+
+  // Usage tracking
+  bool usage_tracking = 4;
+
+  // Alerts enabled
+  bool alerts_enabled = 5;
+
+  // Custom settings
+  map<string, string> custom_settings = 6;
+}
+
+// Plan creation request
+message CreatePlanRequest {
+  // Plan type
+  finance.subscriptions.enums.SubscriptionPlan plan_type = 1;
+
+  // Plan name
+  string name = 2;
+
+  // Plan description
+  string description = 3;
+
+  // Plan features
+  repeated PlanFeature features = 4;
+
+  // Plan pricing
+  PlanPricing pricing = 5;
+
+  // Plan limits
+  PlanLimits limits = 6;
+
+  // Plan add-ons
+  repeated PlanAddon addons = 7;
+
+  // Plan settings
+  PlanSettings settings = 8;
+
+  // Plan tags
+  repeated string tags = 9;
+
+  // Custom fields
+  map<string, string> custom_fields = 10;
+}
+
+// Plan creation response
+message CreatePlanResponse {
+  // Created plan
+  Plan plan = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Plan update request
+message UpdatePlanRequest {
+  // Plan ID
+  string plan_id = 1;
+
+  // Updated plan name
+  string name = 2;
+
+  // Updated plan description
+  string description = 3;
+
+  // Updated plan features
+  repeated PlanFeature features = 4;
+
+  // Updated plan pricing
+  PlanPricing pricing = 5;
+
+  // Updated plan limits
+  PlanLimits limits = 6;
+
+  // Updated plan add-ons
+  repeated PlanAddon addons = 7;
+
+  // Updated plan settings
+  PlanSettings settings = 8;
+
+  // Updated plan tags
+  repeated string tags = 9;
+
+  // Updated custom fields
+  map<string, string> custom_fields = 10;
+}
+
+// Plan update response
+message UpdatePlanResponse {
+  // Updated plan
+  Plan plan = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Plan list request
+message ListPlansRequest {
+  // Filter by plan type
+  finance.subscriptions.enums.SubscriptionPlan plan_type = 1;
+
+  // Filter by status
+  string status = 2;
+
+  // Filter by billing cycle
+  finance.subscriptions.enums.BillingCycle billing_cycle = 3;
+
+  // Search term
+  string search_term = 4;
+
+  // Page number
+  int32 page = 5;
+
+  // Page size
+  int32 page_size = 6;
+}
+
+// Plan list response
+message ListPlansResponse {
+  // List of plans
+  repeated Plan plans = 1;
+
+  // Total count
+  int64 total_count = 2;
+
+  // Page number
+  int32 page = 3;
+
+  // Page size
+  int32 page_size = 4;
+
+  // Success status
+  bool success = 5;
+
+  // Error message if any
+  string error_message = 6;
+}

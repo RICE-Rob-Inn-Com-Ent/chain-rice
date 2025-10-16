@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package settings.localization.enums;
+
+// Region enumeration for geographic localization
+enum Region {
+  // Default/unspecified region
+  REGION_UNSPECIFIED = 0;
+
+  // North America
+  REGION_NA = 1;            // North America (General)
+  REGION_US = 2;            // United States
+  REGION_CA = 3;            // Canada
+  REGION_MX = 4;            // Mexico
+
+  // Europe
+  REGION_EU = 5;            // Europe (General)
+  REGION_GB = 6;            // United Kingdom
+  REGION_FR = 7;            // France
+  REGION_DE = 8;            // Germany
+  REGION_IT = 9;            // Italy
+  REGION_ES = 10;           // Spain
+  REGION_NL = 11;           // Netherlands
+  REGION_BE = 12;           // Belgium
+  REGION_AT = 13;           // Austria
+  REGION_CH = 14;           // Switzerland
+  REGION_SE = 15;           // Sweden
+  REGION_NO = 16;           // Norway
+  REGION_DK = 17;           // Denmark
+  REGION_FI = 18;           // Finland
+  REGION_PL = 19;           // Poland
+  REGION_CZ = 20;           // Czech Republic
+  REGION_HU = 21;           // Hungary
+  REGION_RO = 22;           // Romania
+  REGION_BG = 23;           // Bulgaria
+  REGION_HR = 24;           // Croatia
+  REGION_SK = 25;           // Slovakia
+  REGION_SI = 26;           // Slovenia
+  REGION_EE = 27;           // Estonia
+  REGION_LV = 28;           // Latvia
+  REGION_LT = 29;           // Lithuania
+  REGION_IE = 30;           // Ireland
+  REGION_PT = 31;           // Portugal
+  REGION_GR = 32;           // Greece
+  REGION_CY = 33;           // Cyprus
+  REGION_MT = 34;           // Malta
+  REGION_LU = 35;           // Luxembourg
+
+  // Asia Pacific
+  REGION_APAC = 36;         // Asia Pacific (General)
+  REGION_JP = 37;           // Japan
+  REGION_KR = 38;           // South Korea
+  REGION_CN = 39;           // China
+  REGION_TW = 40;           // Taiwan
+  REGION_HK = 41;           // Hong Kong
+  REGION_SG = 42;           // Singapore
+  REGION_TH = 43;           // Thailand
+  REGION_VN = 44;           // Vietnam
+  REGION_IN = 45;           // India
+  REGION_ID = 46;           // Indonesia
+  REGION_MY = 47;           // Malaysia
+  REGION_PH = 48;           // Philippines
+  REGION_AU = 49;           // Australia
+  REGION_NZ = 50;           // New Zealand
+
+  // Middle East & Africa
+  REGION_ME = 51;           // Middle East (General)
+  REGION_AE = 52;           // United Arab Emirates
+  REGION_SA = 53;           // Saudi Arabia
+  REGION_IL = 54;           // Israel
+  REGION_TR = 55;           // Turkey
+  REGION_ZA = 56;           // South Africa
+  REGION_EG = 57;           // Egypt
+  REGION_MA = 58;           // Morocco
+  REGION_KE = 59;           // Kenya
+  REGION_NG = 60;           // Nigeria
+
+  // South America
+  REGION_SA_AMERICA = 61;   // South America (General)
+  REGION_BR = 62;           // Brazil
+  REGION_AR = 63;           // Argentina
+  REGION_CL = 64;           // Chile
+  REGION_CO = 65;           // Colombia
+  REGION_PE = 66;           // Peru
+  REGION_VE = 67;           // Venezuela
+  REGION_EC = 68;           // Ecuador
+  REGION_UY = 69;           // Uruguay
+  REGION_PY = 70;           // Paraguay
+  REGION_BO = 71;           // Bolivia
+
+  // Central America & Caribbean
+  REGION_CARIBBEAN = 72;    // Caribbean (General)
+  REGION_GT = 73;           // Guatemala
+  REGION_CR = 74;           // Costa Rica
+  REGION_PA = 75;           // Panama
+  REGION_CU = 76;           // Cuba
+  REGION_JM = 77;           // Jamaica
+  REGION_DO = 78;           // Dominican Republic
+  REGION_PR = 79;           // Puerto Rico
+}

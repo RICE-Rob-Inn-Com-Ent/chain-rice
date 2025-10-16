@@ -1,0 +1,251 @@
+syntax = "proto3";
+
+package crm_hr.loyalty.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/loyalty/enums/reward_type.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/loyalty/messages";
+
+// Reward represents a reward in the loyalty system
+message Reward {
+  // Unique identifier for the reward
+  string id = 1;
+
+  // Associated program ID
+  string program_id = 2;
+
+  // Reward information
+  string name = 3;
+  string description = 4;
+  crm_hr.loyalty.enums.RewardType type = 5;
+  string category = 6;
+  string subcategory = 7;
+
+  // Reward value
+  double point_cost = 8;
+  google.protobuf.Money cash_value = 9;
+  double discount_percentage = 10;
+  google.protobuf.Money discount_amount = 11;
+
+  // Reward availability
+  int32 total_quantity = 12;
+  int32 available_quantity = 13;
+  int32 redeemed_quantity = 14;
+  bool is_limited_edition = 15;
+  bool is_exclusive = 16;
+
+  // Reward eligibility
+  repeated string eligible_tiers = 17;
+  int32 minimum_tier_level = 18;
+  double minimum_points_required = 19;
+  google.protobuf.Money minimum_spend_required = 20;
+
+  // Reward lifecycle
+  google.protobuf.Timestamp start_date = 21;
+  google.protobuf.Timestamp end_date = 22;
+  google.protobuf.Timestamp redemption_start_date = 23;
+  google.protobuf.Timestamp redemption_end_date = 24;
+  bool is_active = 25;
+
+  // Reward details
+  string terms_and_conditions = 26;
+  string redemption_instructions = 27;
+  string image_url = 28;
+  string thumbnail_url = 29;
+  repeated string tags = 30;
+
+  // Reward metadata
+  string created_by = 31;
+  string team_id = 32;
+  int32 priority = 33;
+  double popularity_score = 34;
+  map<string, string> custom_fields = 35;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 36;
+  google.protobuf.Timestamp updated_at = 37;
+
+  // Version for optimistic concurrency control
+  int32 version = 38;
+}
+
+// RewardRedemption represents a reward redemption by a customer
+message RewardRedemption {
+  // Unique identifier for the redemption
+  string id = 1;
+
+  // Associated IDs
+  string reward_id = 2;
+  string customer_id = 3;
+  string program_id = 4;
+
+  // Redemption details
+  string redemption_code = 5;
+  string status = 6; // pending, completed, cancelled, expired, refunded
+  google.protobuf.Timestamp redeemed_at = 7;
+  google.protobuf.Timestamp expires_at = 8;
+
+  // Redemption value
+  double points_used = 9;
+  google.protobuf.Money cash_value = 10;
+  double discount_percentage = 11;
+  google.protobuf.Money discount_amount = 12;
+
+  // Redemption information
+  string redemption_method = 13; // online, in_store, phone, email
+  string redemption_location = 14;
+  string redemption_notes = 15;
+  string tracking_number = 16;
+
+  // Fulfillment information
+  string fulfillment_status = 17; // pending, shipped, delivered, completed
+  google.protobuf.Timestamp shipped_at = 18;
+  google.protobuf.Timestamp delivered_at = 19;
+  string shipping_address = 20;
+  string tracking_url = 21;
+
+  // Additional information
+  string customer_notes = 22;
+  string staff_notes = 23;
+  repeated string attachments = 24;
+  map<string, string> custom_fields = 25;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 26;
+  google.protobuf.Timestamp updated_at = 27;
+}
+
+// RewardCatalog represents a catalog of available rewards
+message RewardCatalog {
+  // Unique identifier for the catalog
+  string id = 1;
+
+  // Associated program ID
+  string program_id = 2;
+
+  // Catalog information
+  string name = 3;
+  string description = 4;
+  string catalog_type = 5; // general, seasonal, exclusive, tier_specific
+  bool is_active = 6;
+
+  // Catalog organization
+  repeated RewardCategory categories = 7;
+  repeated Reward featured_rewards = 8;
+  repeated Reward popular_rewards = 9;
+  repeated Reward new_rewards = 10;
+
+  // Catalog metadata
+  string created_by = 11;
+  string team_id = 12;
+  repeated string tags = 13;
+  map<string, string> custom_fields = 14;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  google.protobuf.Timestamp published_at = 17;
+}
+
+// RewardCategory represents a category of rewards
+message RewardCategory {
+  // Unique identifier for the category
+  string id = 1;
+
+  // Associated catalog ID
+  string catalog_id = 2;
+
+  // Category information
+  string name = 3;
+  string description = 4;
+  string parent_category_id = 5;
+  int32 order = 6;
+
+  // Category details
+  string icon_url = 7;
+  string image_url = 8;
+  string color = 9;
+  bool is_active = 10;
+
+  // Category metadata
+  repeated string tags = 11;
+  map<string, string> custom_fields = 12;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+// RewardTemplate represents a reusable template for creating rewards
+message RewardTemplate {
+  // Unique identifier for the template
+  string id = 1;
+
+  // Template information
+  string name = 2;
+  string description = 3;
+  crm_hr.loyalty.enums.RewardType type = 4;
+  string category = 5;
+
+  // Template configuration
+  double default_point_cost = 6;
+  google.protobuf.Money default_cash_value = 7;
+  double default_discount_percentage = 8;
+  google.protobuf.Money default_discount_amount = 9;
+
+  // Template settings
+  bool is_active = 10;
+  bool is_public = 11;
+  string created_by = 12;
+  string team_id = 13;
+
+  // Template usage
+  int32 usage_count = 14;
+  google.protobuf.Timestamp last_used_at = 15;
+
+  // Template metadata
+  repeated string tags = 16;
+  map<string, string> custom_fields = 17;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// RewardAnalytics represents analytics data for rewards
+message RewardAnalytics {
+  // Associated reward ID
+  string reward_id = 1;
+
+  // View metrics
+  int32 total_views = 2;
+  int32 unique_views = 3;
+  int32 views_this_month = 4;
+  int32 views_this_week = 5;
+  int32 views_today = 6;
+
+  // Redemption metrics
+  int32 total_redemptions = 7;
+  int32 redemptions_this_month = 8;
+  int32 redemptions_this_week = 9;
+  int32 redemptions_today = 10;
+  double redemption_rate = 11;
+
+  // Revenue metrics
+  google.protobuf.Money total_revenue = 12;
+  google.protobuf.Money revenue_this_month = 13;
+  google.protobuf.Money revenue_this_week = 14;
+  google.protobuf.Money revenue_today = 15;
+  google.protobuf.Money average_revenue_per_redemption = 16;
+
+  // Popularity metrics
+  double popularity_score = 17;
+  int32 ranking = 18;
+  double trend_score = 19;
+  double satisfaction_score = 20;
+
+  // Calculated at timestamp
+  google.protobuf.Timestamp calculated_at = 21;
+}

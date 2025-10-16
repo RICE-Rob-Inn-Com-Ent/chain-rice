@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package finance.accounting.enums;
+
+// Types of ledger entries for double-entry bookkeeping
+enum LedgerEntryType {
+  // Default value
+  LEDGER_ENTRY_TYPE_UNSPECIFIED = 0;
+
+  // Debit entries
+  LEDGER_ENTRY_TYPE_DEBIT = 1;
+
+  // Credit entries
+  LEDGER_ENTRY_TYPE_CREDIT = 2;
+
+  // Adjustment entries
+  LEDGER_ENTRY_TYPE_ADJUSTMENT = 3;
+
+  // Closing entries
+  LEDGER_ENTRY_TYPE_CLOSING = 4;
+
+  // Reversing entries
+  LEDGER_ENTRY_TYPE_REVERSING = 5;
+
+  // Compound entries (multiple debits/credits)
+  LEDGER_ENTRY_TYPE_COMPOUND = 6;
+
+  // Opening balance entries
+  LEDGER_ENTRY_TYPE_OPENING_BALANCE = 7;
+
+  // Transfer entries
+  LEDGER_ENTRY_TYPE_TRANSFER = 8;
+
+  // Correction entries
+  LEDGER_ENTRY_TYPE_CORRECTION = 9;
+
+  // Accrual entries
+  LEDGER_ENTRY_TYPE_ACCRUAL = 10;
+
+  // Deferral entries
+  LEDGER_ENTRY_TYPE_DEFERRAL = 11;
+
+  // Depreciation entries
+  LEDGER_ENTRY_TYPE_DEPRECIATION = 12;
+
+  // Amortization entries
+  LEDGER_ENTRY_TYPE_AMORTIZATION = 13;
+
+  // Provision entries
+  LEDGER_ENTRY_TYPE_PROVISION = 14;
+
+  // Write-off entries
+  LEDGER_ENTRY_TYPE_WRITE_OFF = 15;
+
+  // Revaluation entries
+  LEDGER_ENTRY_TYPE_REVALUATION = 16;
+}

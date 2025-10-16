@@ -1,0 +1,390 @@
+syntax = "proto3";
+
+package healthcare.patients.services;
+
+import "google/protobuf/timestamp.proto";
+import "../messages/patient_models.proto";
+import "../messages/patient_events.proto";
+import "../enums/patient_status.proto";
+import "../enums/patient_type.proto";
+import "../enums/insurance_status.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/patients/services";
+
+// Patient reporting service for reports and demographics
+service PatientReportingService {
+  // Get patient demographics report
+  rpc GetPatientDemographicsReport(PatientDemographicsReportRequest) returns (PatientDemographicsReportResponse);
+
+  // Get patient registration report
+  rpc GetPatientRegistrationReport(PatientRegistrationReportRequest) returns (PatientRegistrationReportResponse);
+
+  // Get patient activity report
+  rpc GetPatientActivityReport(PatientActivityReportRequest) returns (PatientActivityReportResponse);
+
+  // Get patient status report
+  rpc GetPatientStatusReport(PatientStatusReportRequest) returns (PatientStatusReportResponse);
+
+  // Get patient insurance report
+  rpc GetPatientInsuranceReport(PatientInsuranceReportRequest) returns (PatientInsuranceReportResponse);
+
+  // Get patient age distribution report
+  rpc GetPatientAgeDistributionReport(PatientAgeDistributionReportRequest) returns (PatientAgeDistributionReportResponse);
+
+  // Get patient geographic distribution report
+  rpc GetPatientGeographicDistributionReport(PatientGeographicDistributionReportRequest) returns (PatientGeographicDistributionReportResponse);
+
+  // Get patient trends report
+  rpc GetPatientTrendsReport(PatientTrendsReportRequest) returns (PatientTrendsReportResponse);
+
+  // Get patient summary report
+  rpc GetPatientSummaryReport(PatientSummaryReportRequest) returns (PatientSummaryReportResponse);
+}
+
+// Patient demographics report request
+message PatientDemographicsReportRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string clinic_id = 3;
+  string doctor_id = 4;
+  string group_by = 5; // gender, age_group, race, ethnicity, marital_status
+}
+
+// Patient demographics report response
+message PatientDemographicsReportResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_patients = 3;
+  repeated DemographicsBreakdown demographics_breakdown = 4;
+  repeated AgeGroupBreakdown age_group_breakdown = 5;
+  repeated GenderBreakdown gender_breakdown = 6;
+  repeated RaceBreakdown race_breakdown = 7;
+  repeated EthnicityBreakdown ethnicity_breakdown = 8;
+  repeated MaritalStatusBreakdown marital_status_breakdown = 9;
+}
+
+// Demographics breakdown
+message DemographicsBreakdown {
+  string category = 1;
+  string value = 2;
+  int32 count = 3;
+  double percentage = 4;
+}
+
+// Age group breakdown
+message AgeGroupBreakdown {
+  string age_group = 1; // 0-18, 19-35, 36-50, 51-65, 65+
+  int32 count = 2;
+  double percentage = 3;
+  int32 min_age = 4;
+  int32 max_age = 5;
+}
+
+// Gender breakdown
+message GenderBreakdown {
+  string gender = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Race breakdown
+message RaceBreakdown {
+  string race = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Ethnicity breakdown
+message EthnicityBreakdown {
+  string ethnicity = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Marital status breakdown
+message MaritalStatusBreakdown {
+  string marital_status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Patient registration report request
+message PatientRegistrationReportRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string clinic_id = 3;
+  string doctor_id = 4;
+  string group_by = 5; // daily, weekly, monthly, yearly
+}
+
+// Patient registration report response
+message PatientRegistrationReportResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_registrations = 3;
+  repeated RegistrationDataPoint registration_data = 4;
+  repeated RegistrationSourceBreakdown registration_sources = 5;
+  repeated RegistrationMethodBreakdown registration_methods = 6;
+}
+
+// Registration data point
+message RegistrationDataPoint {
+  google.protobuf.Timestamp date = 1;
+  int32 registration_count = 2;
+  double change_from_previous = 3;
+  double percentage_change = 4;
+}
+
+// Registration source breakdown
+message RegistrationSourceBreakdown {
+  string source = 1; // referral, walk-in, online, etc.
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Registration method breakdown
+message RegistrationMethodBreakdown {
+  string method = 1; // online, phone, walk-in, etc.
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Patient activity report request
+message PatientActivityReportRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string patient_id = 3;
+  string clinic_id = 4;
+  string doctor_id = 5;
+}
+
+// Patient activity report response
+message PatientActivityReportResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  int32 total_activities = 3;
+  repeated PatientActivityBreakdown activity_breakdown = 4;
+  repeated PatientEvent recent_events = 5;
+  PatientActivitySummary activity_summary = 6;
+}
+
+// Patient activity breakdown
+message PatientActivityBreakdown {
+  PatientEventType activity_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Patient activity summary
+message PatientActivitySummary {
+  int32 total_appointments = 1;
+  int32 total_medical_records = 2;
+  int32 total_lab_tests = 3;
+  int32 total_prescriptions = 4;
+  google.protobuf.Timestamp last_activity = 5;
+  string most_active_day = 6;
+  int32 average_activities_per_month = 7;
+}
+
+// Patient status report request
+message PatientStatusReportRequest {
+  google.protobuf.Timestamp as_of_date = 1;
+  string clinic_id = 2;
+  string doctor_id = 3;
+}
+
+// Patient status report response
+message PatientStatusReportResponse {
+  google.protobuf.Timestamp as_of_date = 1;
+  int32 total_patients = 2;
+  repeated PatientStatusBreakdown status_breakdown = 3;
+  repeated PatientTypeBreakdown type_breakdown = 4;
+  int32 new_patients_this_month = 5;
+  int32 discharged_patients_this_month = 6;
+}
+
+// Patient status breakdown
+message PatientStatusBreakdown {
+  healthcare.patients.enums.PatientStatus status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Patient type breakdown
+message PatientTypeBreakdown {
+  healthcare.patients.enums.PatientType patient_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Patient insurance report request
+message PatientInsuranceReportRequest {
+  google.protobuf.Timestamp as_of_date = 1;
+  string clinic_id = 2;
+  string doctor_id = 3;
+}
+
+// Patient insurance report response
+message PatientInsuranceReportResponse {
+  google.protobuf.Timestamp as_of_date = 1;
+  int32 total_patients = 2;
+  repeated InsuranceStatusBreakdown insurance_status_breakdown = 3;
+  repeated InsuranceTypeBreakdown insurance_type_breakdown = 4;
+  repeated InsuranceCompanyBreakdown insurance_company_breakdown = 5;
+  int32 uninsured_patients = 6;
+  double uninsured_percentage = 7;
+}
+
+// Insurance status breakdown
+message InsuranceStatusBreakdown {
+  healthcare.patients.enums.InsuranceStatus status = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Insurance type breakdown
+message InsuranceTypeBreakdown {
+  healthcare.patients.enums.InsuranceType insurance_type = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Insurance company breakdown
+message InsuranceCompanyBreakdown {
+  string insurance_company = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Patient age distribution report request
+message PatientAgeDistributionReportRequest {
+  google.protobuf.Timestamp as_of_date = 1;
+  string clinic_id = 2;
+  string doctor_id = 3;
+}
+
+// Patient age distribution report response
+message PatientAgeDistributionReportResponse {
+  google.protobuf.Timestamp as_of_date = 1;
+  int32 total_patients = 2;
+  repeated AgeGroupBreakdown age_distribution = 3;
+  double average_age = 4;
+  int32 median_age = 5;
+  int32 youngest_patient_age = 6;
+  int32 oldest_patient_age = 7;
+}
+
+// Patient geographic distribution report request
+message PatientGeographicDistributionReportRequest {
+  google.protobuf.Timestamp as_of_date = 1;
+  string clinic_id = 2;
+  string doctor_id = 3;
+  string group_by = 4; // city, state, postal_code, country
+}
+
+// Patient geographic distribution report response
+message PatientGeographicDistributionReportResponse {
+  google.protobuf.Timestamp as_of_date = 1;
+  int32 total_patients = 2;
+  repeated GeographicBreakdown geographic_distribution = 3;
+  repeated CityBreakdown city_breakdown = 4;
+  repeated StateBreakdown state_breakdown = 5;
+  repeated PostalCodeBreakdown postal_code_breakdown = 6;
+}
+
+// Geographic breakdown
+message GeographicBreakdown {
+  string location = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// City breakdown
+message CityBreakdown {
+  string city = 1;
+  string state = 2;
+  int32 count = 3;
+  double percentage = 4;
+}
+
+// State breakdown
+message StateBreakdown {
+  string state = 1;
+  int32 count = 2;
+  double percentage = 3;
+}
+
+// Postal code breakdown
+message PostalCodeBreakdown {
+  string postal_code = 1;
+  string city = 2;
+  string state = 3;
+  int32 count = 4;
+  double percentage = 5;
+}
+
+// Patient trends report request
+message PatientTrendsReportRequest {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string trend_type = 3; // registration, activity, status_change
+  string clinic_id = 4;
+  string doctor_id = 5;
+  string group_by = 6; // daily, weekly, monthly
+}
+
+// Patient trends report response
+message PatientTrendsReportResponse {
+  google.protobuf.Timestamp start_date = 1;
+  google.protobuf.Timestamp end_date = 2;
+  string trend_type = 3;
+  repeated TrendDataPoint trend_data = 4;
+  double trend_direction = 5; // positive or negative percentage change
+  string trend_description = 6;
+  repeated TrendInsight insights = 7;
+}
+
+// Trend data point
+message TrendDataPoint {
+  google.protobuf.Timestamp date = 1;
+  int32 value = 2;
+  double change_from_previous = 3;
+  double percentage_change = 4;
+}
+
+// Trend insight
+message TrendInsight {
+  string insight_type = 1;
+  string description = 2;
+  double impact_score = 3;
+  string recommendation = 4;
+}
+
+// Patient summary report request
+message PatientSummaryReportRequest {
+  google.protobuf.Timestamp as_of_date = 1;
+  string clinic_id = 2;
+  string doctor_id = 3;
+}
+
+// Patient summary report response
+message PatientSummaryReportResponse {
+  google.protobuf.Timestamp as_of_date = 1;
+  PatientDemographicsReportResponse demographics = 2;
+  PatientStatusReportResponse status_report = 3;
+  PatientInsuranceReportResponse insurance_report = 4;
+  PatientAgeDistributionReportResponse age_distribution = 5;
+  PatientGeographicDistributionReportResponse geographic_distribution = 6;
+  PatientActivitySummary overall_activity = 7;
+  repeated KeyMetric key_metrics = 8;
+}
+
+// Key metric
+message KeyMetric {
+  string metric_name = 1;
+  string metric_value = 2;
+  string metric_unit = 3;
+  double change_from_previous_period = 4;
+  double percentage_change = 5;
+  string trend_direction = 6; // up, down, stable
+}

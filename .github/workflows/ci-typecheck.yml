@@ -1,0 +1,172 @@
+name: Type Check
+
+on:
+    push:
+        branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+    merge_group:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    typescript-typecheck:
+        name: TypeScript Type Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+                  cache-dependency-path: .frontend/web/package-lock.json
+
+            - name: Install dependencies
+              working-directory: .frontend/web
+              run: npm ci
+
+            - name: Run TypeScript compiler
+              working-directory: .frontend/web
+              run: npx tsc --noEmit --pretty
+
+            - name: Run type coverage
+              working-directory: .frontend/web
+              run: npx type-coverage --at-least 90
+              continue-on-error: true
+
+    python-typecheck:
+        name: Python Type Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+
+            - name: Install Poetry
+              run: |
+                  curl -sSL https://install.python-poetry.org | python3 -
+                  echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+            - name: Install dependencies
+              working-directory: .bot
+              run: poetry install --no-interaction
+
+            - name: Run mypy
+              working-directory: .bot
+              run: |
+                  poetry run mypy core integration \
+                    --strict \
+                    --pretty \
+                    --show-error-codes \
+                    --show-column-numbers \
+                    --no-error-summary
+
+            - name: Run pyright
+              working-directory: .bot
+              run: |
+                  npm install -g pyright
+                  poetry run pyright core integration
+              continue-on-error: true
+
+    go-typecheck:
+        name: Go Type Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        strategy:
+            matrix:
+                component: [db, token]
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.22"
+                  cache-dependency-path: .backend/${{ matrix.component }}/go.sum
+
+            - name: Run go vet
+              working-directory: .backend/${{ matrix.component }}
+              run: go vet ./...
+
+            - name: Check go types
+              working-directory: .backend/${{ matrix.component }}
+              run: go build -o /dev/null ./...
+
+    rust-typecheck:
+        name: Rust Type Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: 1.76.0
+
+            - name: Cache Rust dependencies
+              uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: .backend/contract/rust
+
+            - name: Run cargo check
+              working-directory: .backend/contract/rust
+              run: cargo check --all-targets --all-features
+
+    typecheck-summary:
+        name: Type Check Summary
+        runs-on: ubuntu-latest
+        needs:
+            [
+                typescript-typecheck,
+                python-typecheck,
+                go-typecheck,
+                rust-typecheck,
+            ]
+        if: always()
+
+        steps:
+            - name: Generate summary
+              run: |
+                  echo "## Type Check Summary" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "| Language | Status |" >> $GITHUB_STEP_SUMMARY
+                  echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+                  echo "| TypeScript | ${{ needs.typescript-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Python | ${{ needs.python-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Go | ${{ needs.go-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Rust | ${{ needs.rust-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+
+                  if [ "${{ needs.typescript-typecheck.result }}" != "success" ] || \
+                     [ "${{ needs.python-typecheck.result }}" != "success" ] || \
+                     [ "${{ needs.go-typecheck.result }}" != "success" ] || \
+                     [ "${{ needs.rust-typecheck.result }}" != "success" ]; then
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "❌ Type checking failed!" >> $GITHUB_STEP_SUMMARY
+                    exit 1
+                  else
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "✅ All type checks passed!" >> $GITHUB_STEP_SUMMARY
+                  fi

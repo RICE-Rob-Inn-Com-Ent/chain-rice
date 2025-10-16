@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package crm_hr.customers.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/customers/enums";
+
+// CustomerStatus represents the current status of a customer
+enum CustomerStatus {
+  // Unspecified status - should not be used in production
+  CUSTOMER_STATUS_UNSPECIFIED = 0;
+
+  // Active customer states
+  ACTIVE = 1;
+  PREMIUM = 2;
+  VIP = 3;
+
+  // Inactive customer states
+  INACTIVE = 4;
+  SUSPENDED = 5;
+  CANCELLED = 6;
+  TERMINATED = 7;
+
+  // Prospect states
+  LEAD = 8;
+  QUALIFIED = 9;
+  PROSPECT = 10;
+  TRIAL = 11;
+
+  // Special states
+  CHURNED = 12;
+  AT_RISK = 13;
+  ONBOARDING = 14;
+  PENDING_APPROVAL = 15;
+
+  // Dormant states
+  DORMANT = 16;
+  INACTIVE_GRACE_PERIOD = 17;
+}

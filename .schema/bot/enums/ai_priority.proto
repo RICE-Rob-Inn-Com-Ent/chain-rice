@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package automation.ai.enums;
+
+// AI Priority enumeration
+// Defines the priority levels for AI tasks and operations
+enum AIPriority {
+  // Unspecified priority
+  AI_PRIORITY_UNSPECIFIED = 0;
+
+  // Critical Priority Levels
+  AI_PRIORITY_CRITICAL = 1;              // Critical priority - highest urgency
+  AI_PRIORITY_EMERGENCY = 2;             // Emergency priority - immediate attention required
+  AI_PRIORITY_URGENT = 3;                // Urgent priority - high urgency
+
+  // High Priority Levels
+  AI_PRIORITY_HIGH = 4;                  // High priority - important tasks
+  AI_PRIORITY_IMPORTANT = 5;             // Important priority - significant tasks
+
+  // Medium Priority Levels
+  AI_PRIORITY_MEDIUM = 6;                // Medium priority - standard tasks
+  AI_PRIORITY_NORMAL = 7;                // Normal priority - regular tasks
+  AI_PRIORITY_STANDARD = 8;              // Standard priority - typical tasks
+
+  // Low Priority Levels
+  AI_PRIORITY_LOW = 9;                   // Low priority - less urgent tasks
+  AI_PRIORITY_BACKGROUND = 10;           // Background priority - non-urgent tasks
+  AI_PRIORITY_BATCH = 11;                // Batch priority - batch processing tasks
+
+  // Special Priority Levels
+  AI_PRIORITY_MAINTENANCE = 12;          // Maintenance priority - system maintenance tasks
+  AI_PRIORITY_DEVELOPMENT = 13;          // Development priority - development/testing tasks
+  AI_PRIORITY_EXPERIMENTAL = 14;         // Experimental priority - experimental tasks
+  AI_PRIORITY_DEMO = 15;                 // Demo priority - demonstration tasks
+
+  // Resource-based Priority Levels
+  AI_PRIORITY_RESOURCE_INTENSIVE = 16;   // Resource intensive - requires significant resources
+  AI_PRIORITY_CPU_INTENSIVE = 17;        // CPU intensive - requires significant CPU resources
+  AI_PRIORITY_MEMORY_INTENSIVE = 18;     // Memory intensive - requires significant memory
+  AI_PRIORITY_GPU_INTENSIVE = 19;        // GPU intensive - requires significant GPU resources
+
+  // Time-based Priority Levels
+  AI_PRIORITY_REAL_TIME = 20;            // Real-time priority - requires immediate processing
+  AI_PRIORITY_NEAR_REAL_TIME = 21;       // Near real-time priority - requires fast processing
+  AI_PRIORITY_SCHEDULED = 22;            // Scheduled priority - time-based execution
+  AI_PRIORITY_OFF_PEAK = 23;             // Off-peak priority - execute during off-peak hours
+}

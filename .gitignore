@@ -1,112 +1,328 @@
-# Bazel
-bazel-*
-.bazelrc.local
+# ==============================================================================
+# RICE-MONO .GITIGNORE
+# ==============================================================================
+# Enterprise monorepo gitignore patterns
+# Excludes build artifacts, dependencies, IDE files, secrets, and OS files
+# ==============================================================================
 
-# Nix
-result
-.direnv
+# ============================================================================
+# DEPENDENCIES
+# ============================================================================
+# Node.js
+node_modules/
+.pnp/
+.pnp.js
 
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
+.venv/
+venv/
+ENV/
+env/
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
+dist/
+build/
 *.egg
-MANIFEST
-
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.yarn-integrity
-
-# Go
-vendor/
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
-go.work
 
 # Rust
 target/
 Cargo.lock
+**/*.rs.bk
 
-# Java
+# Go
+/vendor/
+
+# Ruby
+/.bundle/
+/vendor/bundle
+
+# ============================================================================
+# BUILD OUTPUTS
+# ============================================================================
+# Bazel
+bazel-*
+/bazel-bin/
+/bazel-out/
+/bazel-testlogs/
+
+# General build directories
+dist/
+build/
+out/
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Frontend frameworks
+.next/
+.nuxt/
+.angular/
+.svelte-kit/
+.cache/
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.g.dart
+
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
 *.class
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
-hs_err_pid*
+bin/
+gen/
+local.properties
+.gradle/
+gradle-app.setting
 
-# IDE
-.vscode/
+# iOS
+*.ipa
+*.dSYM.zip
+*.dSYM
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+*.xcworkspace/
+!default.xcworkspace
+
+# ============================================================================
+# TESTING & COVERAGE
+# ============================================================================
+coverage/
+.nyc_output/
+*.lcov
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+.hypothesis/
+junit.xml
+test-results/
+
+# ============================================================================
+# IDE & EDITORS
+# ============================================================================
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/.ropeproject
+
+# IntelliJ IDEA
 .idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
 *.swp
 *.swo
 *~
+.*.sw?
 
-# OS
+# Emacs
+*~
+\#*\#
+.\#*
+
+# JetBrains
+.idea/
+*.iml
+out/
+
+# ============================================================================
+# OS FILES
+# ============================================================================
+# macOS
 .DS_Store
-.DS_Store?
+.AppleDouble
+.LSOverride
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
 
-# Logs
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# ============================================================================
+# LOGS & TEMPORARY FILES
+# ============================================================================
 *.log
 logs/
-
-# Temporary files
 *.tmp
 *.temp
-.tmp/
-.temp/
+tmp/
+temp/
+*.pid
+*.seed
+*.pid.lock
 
-# Environment files
+# ============================================================================
+# ENVIRONMENT & SECRETS
+# ============================================================================
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+.envrc.local
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa
+id_rsa.pub
+*.p12
+*.pfx
 
-# Database
+# ============================================================================
+# CACHES
+# ============================================================================
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
+.stylelintcache
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ============================================================================
+# DOCKER & KUBERNETES
+# ============================================================================
+docker-compose.override.yml
+.dockerignore.local
+
+# ============================================================================
+# TERRAFORM
+# ============================================================================
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ============================================================================
+# DATABASE
+# ============================================================================
 *.db
 *.sqlite
 *.sqlite3
 
-# Cache
-.cache/
+# ============================================================================
+# PACKAGE MANAGER SPECIFIC
+# ============================================================================
+# npm
 .npm/
-.yarn/
-.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Build artifacts
-build/
-dist/
-out/
+# pnpm
+.pnpm-debug.log*
+
+# yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ============================================================================
+# GENERATED FILES
+# ============================================================================
+# Protocol Buffers
+*_pb2.py
+*_pb2_grpc.py
+*.pb.go
+*_pb.js
+*_pb.ts
+
+# GraphQL
+*.generated.ts
+*.generated.js
+
+# ============================================================================
+# MONOREPO SPECIFIC
+# ============================================================================
+# Version manager
+.nvmrc.local
+.python-version.local
+
+# User-specific Bazel config
+.bazelrc.user
+.bazelrc.local
+
+# User-specific configs
+.local/
+local/
+
+# ============================================================================
+# SECURITY SCANNING
+# ============================================================================
+# Don't ignore the baseline - we want to track it
+# .secrets.baseline
+
+# ============================================================================
+# DOCUMENTATION BUILDS
+# ============================================================================
+site/
+docs/_build/
+docs/.doctrees/
+
+# ============================================================================
+# BLOCKCHAIN (Cosmos SDK / Ignite)
+# ============================================================================
+# Ignite CLI
+*.ign
+
+# Blockchain releases
+release/
+
+# Graph/diagram files
+*.dot
+
+# Vue frontend (if using ignite scaffold vue)
+vue/node_modules
+vue/dist
+
+# ============================================================================
+# MISC
+# ============================================================================
+*.bak
+*.backup
+*.orig
+*.rej
+.vscode-test
+
+# ==============================================================================
+# END OF .GITIGNORE
+# ==============================================================================

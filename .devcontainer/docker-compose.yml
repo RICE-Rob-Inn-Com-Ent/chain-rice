@@ -1,0 +1,707 @@
+# ==============================================================================
+# ULTIMATE DEVELOPMENT ENVIRONMENT - Docker Compose
+# ==============================================================================
+# Complete infrastructure stack for modern development
+# All services ready for any project type
+# ==============================================================================
+
+version: "3.8"
+
+services:
+  # ============================================================================
+  # MAIN DEVELOPMENT CONTAINER
+  # ============================================================================
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BAZEL_VERSION: 7.0.0
+        NODE_VERSION: 20
+        GO_VERSION: 1.22.0
+        PYTHON_VERSION: 3.11
+        JAVA_VERSION: 17
+        KOTLIN_VERSION: 1.9.22
+        RUBY_VERSION: 3.3.0
+        TERRAFORM_VERSION: 1.7.0
+        PROTOC_VERSION: 25.2
+        BUF_VERSION: 1.29.0
+    container_name: rice-devcontainer
+    hostname: rice-dev
+    volumes:
+      - ../:/workspace:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Persistent caches for faster builds
+      - rice-bazel-cache:/home/vscode/.cache/bazel
+      - rice-cargo-registry:/usr/local/cargo/registry
+      - rice-cargo-git:/usr/local/cargo/git
+      - rice-npm-cache:/home/vscode/.npm
+      - rice-yarn-cache:/home/vscode/.yarn
+      - rice-pnpm-cache:/home/vscode/.pnpm-store
+      - rice-go-cache:/go/pkg
+      - rice-go-build-cache:/home/vscode/.cache/go-build
+      - rice-maven-cache:/home/vscode/.m2
+      - rice-gradle-cache:/home/vscode/.gradle
+      - rice-pip-cache:/home/vscode/.cache/pip
+      - rice-poetry-cache:/home/vscode/.cache/pypoetry
+    command: sleep infinity
+    networks:
+      - rice-network
+    depends_on:
+      - postgres
+      - mysql
+      - redis
+      - mongodb
+      - elasticsearch
+      - kafka
+      - rabbitmq
+      - minio
+    environment:
+      # Database connections
+      - DATABASE_URL=postgresql://rice_user:rice_password@postgres:5432/rice_db
+      - MYSQL_URL=mysql://rice_user:rice_password@mysql:3306/rice_db
+      - REDIS_URL=redis://redis:6379
+      - MONGODB_URL=mongodb://rice_user:rice_password@mongodb:27017/rice_db
+      # Message queues
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - RABBITMQ_URL=amqp://rice_user:rice_password@rabbitmq:5672
+      # Object storage
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=rice_admin
+      - MINIO_SECRET_KEY=rice_password_123
+      # Search
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      # Observability
+      - JAEGER_ENDPOINT=http://jaeger:14268/api/traces
+      - PROMETHEUS_URL=http://prometheus:9090
+      - GRAFANA_URL=http://grafana:3000
+      # Development settings
+      - NODE_ENV=development
+      - PYTHON_ENV=development
+      - RUST_ENV=development
+      - GO_ENV=development
+      - RAILS_ENV=development
+      - DJANGO_SETTINGS_MODULE=core.settings.development
+    cap_add:
+      - SYS_PTRACE
+      - NET_ADMIN
+    security_opt:
+      - seccomp:unconfined
+    privileged: false
+
+  # ============================================================================
+  # SQL DATABASES
+  # ============================================================================
+
+  # PostgreSQL - Primary relational database
+  postgres:
+    image: postgres:16-alpine
+    container_name: rice-postgres
+    hostname: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rice_user
+      POSTGRES_PASSWORD: rice_password
+      POSTGRES_DB: rice_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rice_user -d rice_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=200"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=1GB"
+
+  # MySQL/MariaDB - Alternative relational database
+  mysql:
+    image: mysql:8.3
+    container_name: rice-mysql
+    hostname: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: rice_db
+      MYSQL_USER: rice_user
+      MYSQL_PASSWORD: rice_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-scripts/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - rice-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "rice_user",
+          "-price_password",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command:
+      - "--default-authentication-plugin=mysql_native_password"
+      - "--max-connections=200"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+
+  # ============================================================================
+  # NOSQL DATABASES
+  # ============================================================================
+
+  # Redis - Cache / Pub-Sub / Queue
+  redis:
+    image: redis:7-alpine
+    container_name: rice-redis
+    hostname: redis
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly yes
+      - --maxmemory 512mb
+      - --maxmemory-policy allkeys-lru
+      - --requirepass rice_password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # MongoDB - Document database
+  mongodb:
+    image: mongo:7
+    container_name: rice-mongodb
+    hostname: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rice_user
+      MONGO_INITDB_ROOT_PASSWORD: rice_password
+      MONGO_INITDB_DATABASE: rice_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - rice-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  # ============================================================================
+  # MESSAGE QUEUES & STREAMING
+  # ============================================================================
+
+  # Zookeeper - Required for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: rice-zookeeper
+    hostname: zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Kafka - Event streaming platform
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: rice-kafka
+    hostname: kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - rice-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "kafka-broker-api-versions",
+          "--bootstrap-server",
+          "localhost:9092",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # RabbitMQ - Message broker with management UI
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: rice-rabbitmq
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: rice_user
+      RABBITMQ_DEFAULT_PASS: rice_password
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672" # AMQP port
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============================================================================
+  # SEARCH & ANALYTICS
+  # ============================================================================
+
+  # Elasticsearch - Search and analytics engine
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: rice-elasticsearch
+    hostname: elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - rice-network
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Logstash - Log processing pipeline
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.0
+    container_name: rice-logstash
+    hostname: logstash
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5044:5044" # Beats input
+      - "9600:9600" # Monitoring API
+      - "5000:5000" # TCP input
+    environment:
+      - "LS_JAVA_OPTS=-Xmx512m -Xms512m"
+    volumes:
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./config/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - logstash_data:/usr/share/logstash/data
+    networks:
+      - rice-network
+
+  # ============================================================================
+  # OBJECT STORAGE
+  # ============================================================================
+
+  # MinIO - S3-compatible object storage
+  minio:
+    image: minio/minio:latest
+    container_name: rice-minio
+    hostname: minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: rice_admin
+      MINIO_ROOT_PASSWORD: rice_password_123
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console
+    volumes:
+      - minio_data:/data
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================================================
+  # MONITORING & OBSERVABILITY
+  # ============================================================================
+
+  # Prometheus - Metrics collection and storage
+  prometheus:
+    image: prom/prometheus:v2.49.1
+    container_name: rice-prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - rice-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Grafana - Metrics visualization and dashboards
+  grafana:
+    image: grafana/grafana:10.3.1
+    container_name: rice-grafana
+    hostname: grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_ROOT_URL: http://localhost:3000
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Jaeger - Distributed tracing
+  jaeger:
+    image: jaegertracing/all-in-one:1.54
+    container_name: rice-jaeger
+    hostname: jaeger
+    restart: unless-stopped
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "5775:5775/udp" # Agent - accept zipkin.thrift over compact thrift protocol
+      - "6831:6831/udp" # Agent - accept jaeger.thrift over compact thrift protocol
+      - "6832:6832/udp" # Agent - accept jaeger.thrift over binary thrift protocol
+      - "5778:5778" # Agent - serve configs
+      - "16686:16686" # Query - serve frontend
+      - "14250:14250" # Collector - gRPC
+      - "14268:14268" # Collector - HTTP
+      - "14269:14269" # Admin - health check
+      - "9411:9411" # Collector - Zipkin
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:14269"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Loki - Log aggregation system
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: rice-loki
+    hostname: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    networks:
+      - rice-network
+    command: -config.file=/etc/loki/local-config.yaml
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================================================
+  # REVERSE PROXY & LOAD BALANCER
+  # ============================================================================
+
+  # Traefik - Modern HTTP reverse proxy and load balancer
+  traefik:
+    image: traefik:v2.11
+    container_name: rice-traefik
+    hostname: traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+      - "8080:8080" # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - traefik_data:/etc/traefik/acme
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # ============================================================================
+  # OPTIONAL SERVICES (Comment out if not needed)
+  # ============================================================================
+
+  # Mailhog - Email testing tool
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: rice-mailhog
+    hostname: mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    networks:
+      - rice-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8025"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Adminer - Database management UI
+  adminer:
+    image: adminer:latest
+    container_name: rice-adminer
+    hostname: adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: nette
+    networks:
+      - rice-network
+    depends_on:
+      - postgres
+      - mysql
+      - mongodb
+
+  # Redis Commander - Redis management UI
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: rice-redis-commander
+    hostname: redis-commander
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:rice_password
+    ports:
+      - "8082:8081"
+    networks:
+      - rice-network
+    depends_on:
+      - redis
+
+  # Mongo Express - MongoDB management UI
+  mongo-express:
+    image: mongo-express:latest
+    container_name: rice-mongo-express
+    hostname: mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: rice_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: rice_password
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports:
+      - "8083:8081"
+    networks:
+      - rice-network
+    depends_on:
+      - mongodb
+
+# ==============================================================================
+# NETWORKS
+# ==============================================================================
+networks:
+  rice-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ==============================================================================
+# VOLUMES - PERSISTENT DATA
+# ==============================================================================
+volumes:
+  # Dev container caches
+  rice-bazel-cache:
+    driver: local
+  rice-cargo-registry:
+    driver: local
+  rice-cargo-git:
+    driver: local
+  rice-npm-cache:
+    driver: local
+  rice-yarn-cache:
+    driver: local
+  rice-pnpm-cache:
+    driver: local
+  rice-go-cache:
+    driver: local
+  rice-go-build-cache:
+    driver: local
+  rice-maven-cache:
+    driver: local
+  rice-gradle-cache:
+    driver: local
+  rice-pip-cache:
+    driver: local
+  rice-poetry-cache:
+    driver: local
+
+  # Database data
+  postgres_data:
+    driver: local
+  mysql_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  redis_data:
+    driver: local
+
+  # Message queues
+  zookeeper_data:
+    driver: local
+  zookeeper_logs:
+    driver: local
+  kafka_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
+  # Search & logging
+  elasticsearch_data:
+    driver: local
+  logstash_data:
+    driver: local
+
+  # Object storage
+  minio_data:
+    driver: local
+
+  # Monitoring & observability
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  loki_data:
+    driver: local
+
+  # Reverse proxy
+  traefik_data:
+    driver: local
+# ==============================================================================
+# END OF DOCKER COMPOSE CONFIGURATION
+# ==============================================================================

@@ -1,0 +1,461 @@
+syntax = "proto3";
+
+package gaming.metaverse.services;
+
+import "gaming/metaverse/messages/world_models.proto";
+
+option go_package = "github.com/rice-dev/gaming/metaverse/services";
+
+// Сервіс управління активами
+service AssetService {
+  // Створити актив
+  rpc CreateAsset(CreateAssetRequest) returns (CreateAssetResponse);
+
+  // Отримати актив
+  rpc GetAsset(GetAssetRequest) returns (GetAssetResponse);
+
+  // Оновити актив
+  rpc UpdateAsset(UpdateAssetRequest) returns (UpdateAssetResponse);
+
+  // Видалити актив
+  rpc DeleteAsset(DeleteAssetRequest) returns (DeleteAssetResponse);
+
+  // Отримати список активів
+  rpc ListAssets(ListAssetsRequest) returns (ListAssetsResponse);
+
+  // Завантажити актив
+  rpc UploadAsset(UploadAssetRequest) returns (UploadAssetResponse);
+
+  // Скачати актив
+  rpc DownloadAsset(DownloadAssetRequest) returns (DownloadAssetResponse);
+
+  // Отримати метадані активу
+  rpc GetAssetMetadata(GetAssetMetadataRequest) returns (GetAssetMetadataResponse);
+
+  // Оновити метадані активу
+  rpc UpdateAssetMetadata(UpdateAssetMetadataRequest) returns (UpdateAssetMetadataResponse);
+}
+
+// Запит створення активу
+message CreateAssetRequest {
+  string name = 1;
+  string description = 2;
+  gaming.metaverse.enums.AssetType type = 3;
+  string world_id = 4;
+  string creator_id = 5;
+  string file_path = 6;
+  string file_url = 7;
+  int64 file_size = 8;
+  string file_hash = 9;
+  string file_format = 10;
+  string mime_type = 11;
+  int32 width = 12;
+  int32 height = 13;
+  int32 depth = 14;
+  int32 channels = 15;
+  int32 bit_depth = 16;
+  int32 sample_rate = 17;
+  int32 duration = 18;
+  int32 frame_rate = 19;
+  int32 quality = 20;
+  int32 compression = 21;
+  int32 resolution = 22;
+  int32 dpi = 23;
+  int32 color_space = 24;
+  int32 color_profile = 25;
+  int32 gamma = 26;
+  int32 brightness = 27;
+  int32 contrast = 28;
+  int32 saturation = 29;
+  int32 hue = 30;
+  int32 temperature = 31;
+  int32 tint = 32;
+  int32 exposure = 33;
+  int32 shadows = 34;
+  int32 highlights = 35;
+  int32 whites = 36;
+  int32 blacks = 37;
+  int32 vibrance = 38;
+  int32 clarity = 39;
+  int32 dehaze = 40;
+  int32 noise_reduction = 41;
+  int32 sharpening = 42;
+  int32 lens_correction = 43;
+  int32 perspective_correction = 44;
+  int32 chromatic_aberration = 45;
+  int32 vignetting = 46;
+  int32 distortion = 47;
+  int32 barrel_distortion = 48;
+  int32 pincushion_distortion = 49;
+  int32 mustache_distortion = 50;
+  int32 fisheye_distortion = 51;
+  int32 wide_angle_distortion = 52;
+  int32 telephoto_distortion = 53;
+  int32 macro_distortion = 54;
+  int32 micro_distortion = 55;
+  int32 nano_distortion = 56;
+  int32 pico_distortion = 57;
+  int32 femto_distortion = 58;
+  int32 atto_distortion = 59;
+  int32 zepto_distortion = 60;
+  int32 yocto_distortion = 61;
+  int32 ronto_distortion = 62;
+  int32 quecto_distortion = 63;
+  int32 ronna_distortion = 64;
+  int32 quetta_distortion = 65;
+  int32 hecto_distortion = 66;
+  int32 deca_distortion = 67;
+  int32 deci_distortion = 68;
+  int32 centi_distortion = 69;
+  int32 milli_distortion = 70;
+  int32 micro_distortion = 71;
+  int32 nano_distortion = 72;
+  int32 pico_distortion = 73;
+  int32 femto_distortion = 74;
+  int32 atto_distortion = 75;
+  int32 zepto_distortion = 76;
+  int32 yocto_distortion = 77;
+  int32 ronto_distortion = 78;
+  int32 quecto_distortion = 79;
+  int32 ronna_distortion = 80;
+  int32 quetta_distortion = 81;
+  int32 hecto_distortion = 82;
+  int32 deca_distortion = 83;
+  int32 deci_distortion = 84;
+  int32 centi_distortion = 85;
+  int32 milli_distortion = 86;
+  int32 micro_distortion = 87;
+  int32 nano_distortion = 88;
+  int32 pico_distortion = 89;
+  int32 femto_distortion = 90;
+  int32 atto_distortion = 91;
+  int32 zepto_distortion = 92;
+  int32 yocto_distortion = 93;
+  int32 ronto_distortion = 94;
+  int32 quecto_distortion = 95;
+  int32 ronna_distortion = 96;
+  int32 quetta_distortion = 97;
+  int32 hecto_distortion = 98;
+  int32 deca_distortion = 99;
+  int32 deci_distortion = 100;
+  int64 expires_at = 101;
+  map<string, string> metadata = 102;
+}
+
+// Відповідь створення активу
+message CreateAssetResponse {
+  bool success = 1;
+  string asset_id = 2;
+  string message = 3;
+  gaming.metaverse.messages.Asset asset = 4;
+}
+
+// Запит отримання активу
+message GetAssetRequest {
+  string asset_id = 1;
+}
+
+// Відповідь отримання активу
+message GetAssetResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.metaverse.messages.Asset asset = 3;
+}
+
+// Запит оновлення активу
+message UpdateAssetRequest {
+  string asset_id = 1;
+  string name = 2;
+  string description = 3;
+  gaming.metaverse.enums.AssetType type = 4;
+  string world_id = 5;
+  string file_path = 6;
+  string file_url = 7;
+  int64 file_size = 8;
+  string file_hash = 9;
+  string file_format = 10;
+  string mime_type = 11;
+  int32 width = 12;
+  int32 height = 13;
+  int32 depth = 14;
+  int32 channels = 15;
+  int32 bit_depth = 16;
+  int32 sample_rate = 17;
+  int32 duration = 18;
+  int32 frame_rate = 19;
+  int32 quality = 20;
+  int32 compression = 21;
+  int32 resolution = 22;
+  int32 dpi = 23;
+  int32 color_space = 24;
+  int32 color_profile = 25;
+  int32 gamma = 26;
+  int32 brightness = 27;
+  int32 contrast = 28;
+  int32 saturation = 29;
+  int32 hue = 30;
+  int32 temperature = 31;
+  int32 tint = 32;
+  int32 exposure = 33;
+  int32 shadows = 34;
+  int32 highlights = 35;
+  int32 whites = 36;
+  int32 blacks = 37;
+  int32 vibrance = 38;
+  int32 clarity = 39;
+  int32 dehaze = 40;
+  int32 noise_reduction = 41;
+  int32 sharpening = 42;
+  int32 lens_correction = 43;
+  int32 perspective_correction = 44;
+  int32 chromatic_aberration = 45;
+  int32 vignetting = 46;
+  int32 distortion = 47;
+  int32 barrel_distortion = 48;
+  int32 pincushion_distortion = 49;
+  int32 mustache_distortion = 50;
+  int32 fisheye_distortion = 51;
+  int32 wide_angle_distortion = 52;
+  int32 telephoto_distortion = 53;
+  int32 macro_distortion = 54;
+  int32 micro_distortion = 55;
+  int32 nano_distortion = 56;
+  int32 pico_distortion = 57;
+  int32 femto_distortion = 58;
+  int32 atto_distortion = 59;
+  int32 zepto_distortion = 60;
+  int32 yocto_distortion = 61;
+  int32 ronto_distortion = 62;
+  int32 quecto_distortion = 63;
+  int32 ronna_distortion = 64;
+  int32 quetta_distortion = 65;
+  int32 hecto_distortion = 66;
+  int32 deca_distortion = 67;
+  int32 deci_distortion = 68;
+  int32 centi_distortion = 69;
+  int32 milli_distortion = 70;
+  int32 micro_distortion = 71;
+  int32 nano_distortion = 72;
+  int32 pico_distortion = 73;
+  int32 femto_distortion = 74;
+  int32 atto_distortion = 75;
+  int32 zepto_distortion = 76;
+  int32 yocto_distortion = 77;
+  int32 ronto_distortion = 78;
+  int32 quecto_distortion = 79;
+  int32 ronna_distortion = 80;
+  int32 quetta_distortion = 81;
+  int32 hecto_distortion = 82;
+  int32 deca_distortion = 83;
+  int32 deci_distortion = 84;
+  int32 centi_distortion = 85;
+  int32 milli_distortion = 86;
+  int32 micro_distortion = 87;
+  int32 nano_distortion = 88;
+  int32 pico_distortion = 89;
+  int32 femto_distortion = 90;
+  int32 atto_distortion = 91;
+  int32 zepto_distortion = 92;
+  int32 yocto_distortion = 93;
+  int32 ronto_distortion = 94;
+  int32 quecto_distortion = 95;
+  int32 ronna_distortion = 96;
+  int32 quetta_distortion = 97;
+  int32 hecto_distortion = 98;
+  int32 deca_distortion = 99;
+  int32 deci_distortion = 100;
+  int64 expires_at = 101;
+  map<string, string> metadata = 102;
+}
+
+// Відповідь оновлення активу
+message UpdateAssetResponse {
+  bool success = 1;
+  string message = 2;
+  gaming.metaverse.messages.Asset asset = 3;
+}
+
+// Запит видалення активу
+message DeleteAssetRequest {
+  string asset_id = 1;
+}
+
+// Відповідь видалення активу
+message DeleteAssetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Запит списку активів
+message ListAssetsRequest {
+  string world_id = 1;
+  string creator_id = 2;
+  gaming.metaverse.enums.AssetType type = 3;
+  string file_format = 4;
+  string mime_type = 5;
+  int32 width_min = 6;
+  int32 width_max = 7;
+  int32 height_min = 8;
+  int32 height_max = 9;
+  int32 depth_min = 10;
+  int32 depth_max = 11;
+  int32 channels_min = 12;
+  int32 channels_max = 13;
+  int32 bit_depth_min = 14;
+  int32 bit_depth_max = 15;
+  int32 sample_rate_min = 16;
+  int32 sample_rate_max = 17;
+  int32 duration_min = 18;
+  int32 duration_max = 19;
+  int32 frame_rate_min = 20;
+  int32 frame_rate_max = 21;
+  int32 quality_min = 22;
+  int32 quality_max = 23;
+  int32 compression_min = 24;
+  int32 compression_max = 25;
+  int32 resolution_min = 26;
+  int32 resolution_max = 27;
+  int32 dpi_min = 28;
+  int32 dpi_max = 29;
+  int32 color_space_min = 30;
+  int32 color_space_max = 31;
+  int32 color_profile_min = 32;
+  int32 color_profile_max = 33;
+  int32 gamma_min = 34;
+  int32 gamma_max = 35;
+  int32 brightness_min = 36;
+  int32 brightness_max = 37;
+  int32 contrast_min = 38;
+  int32 contrast_max = 39;
+  int32 saturation_min = 40;
+  int32 saturation_max = 41;
+  int32 hue_min = 42;
+  int32 hue_max = 43;
+  int32 temperature_min = 44;
+  int32 temperature_max = 45;
+  int32 tint_min = 46;
+  int32 tint_max = 47;
+  int32 exposure_min = 48;
+  int32 exposure_max = 49;
+  int32 shadows_min = 50;
+  int32 shadows_max = 51;
+  int32 highlights_min = 52;
+  int32 highlights_max = 53;
+  int32 whites_min = 54;
+  int32 whites_max = 55;
+  int32 blacks_min = 56;
+  int32 blacks_max = 57;
+  int32 vibrance_min = 58;
+  int32 vibrance_max = 59;
+  int32 clarity_min = 60;
+  int32 clarity_max = 61;
+  int32 dehaze_min = 62;
+  int32 dehaze_max = 63;
+  int32 noise_reduction_min = 64;
+  int32 noise_reduction_max = 65;
+  int32 sharpening_min = 66;
+  int32 sharpening_max = 67;
+  int32 lens_correction_min = 68;
+  int32 lens_correction_max = 69;
+  int32 perspective_correction_min = 70;
+  int32 perspective_correction_max = 71;
+  int32 chromatic_aberration_min = 72;
+  int32 chromatic_aberration_max = 73;
+  int32 vignetting_min = 74;
+  int32 vignetting_max = 75;
+  int32 distortion_min = 76;
+  int32 distortion_max = 77;
+  int32 barrel_distortion_min = 78;
+  int32 barrel_distortion_max = 79;
+  int32 pincushion_distortion_min = 80;
+  int32 pincushion_distortion_max = 81;
+  int32 mustache_distortion_min = 82;
+  int32 mustache_distortion_max = 83;
+  int32 fisheye_distortion_min = 84;
+  int32 fisheye_distortion_max = 85;
+  int32 wide_angle_distortion_min = 86;
+  int32 wide_angle_distortion_max = 87;
+  int32 telephoto_distortion_min = 88;
+  int32 telephoto_distortion_max = 89;
+  int32 macro_distortion_min = 90;
+  int32 macro_distortion_max = 91;
+  int32 micro_distortion_min = 92;
+  int32 micro_distortion_max = 93;
+  int32 nano_distortion_min = 94;
+  int32 nano_distortion_max = 95;
+  int32 pico_distortion_min = 96;
+  int32 pico_distortion_max = 97;
+  int32 femto_distortion_min = 98;
+  int32 femto_distortion_max = 99;
+  int32 atto_distortion_min = 100;
+  int32 atto_distortion_max = 101;
+  int32 limit = 102;
+  int32 offset = 103;
+  string sort_by = 104;
+  bool ascending = 105;
+  map<string, string> metadata_filters = 106;
+}
+
+// Відповідь списку активів
+message ListAssetsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated gaming.metaverse.messages.Asset assets = 3;
+  int32 total_count = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// Запит завантаження активу
+message UploadAssetRequest {
+  string asset_id = 1;
+  bytes file_data = 2;
+  string file_name = 3;
+  string mime_type = 4;
+}
+
+// Відповідь завантаження активу
+message UploadAssetResponse {
+  bool success = 1;
+  string message = 2;
+  string file_url = 3;
+}
+
+// Запит скачування активу
+message DownloadAssetRequest {
+  string asset_id = 1;
+}
+
+// Відповідь скачування активу
+message DownloadAssetResponse {
+  bool success = 1;
+  string message = 2;
+  bytes file_data = 3;
+  string file_name = 4;
+  string mime_type = 5;
+}
+
+// Запит метаданих активу
+message GetAssetMetadataRequest {
+  string asset_id = 1;
+}
+
+// Відповідь метаданих активу
+message GetAssetMetadataResponse {
+  bool success = 1;
+  string message = 2;
+  map<string, string> metadata = 3;
+}
+
+// Запит оновлення метаданих активу
+message UpdateAssetMetadataRequest {
+  string asset_id = 1;
+  map<string, string> metadata = 2;
+}
+
+// Відповідь оновлення метаданих активу
+message UpdateAssetMetadataResponse {
+  bool success = 1;
+  string message = 2;
+  map<string, string> metadata = 3;
+}

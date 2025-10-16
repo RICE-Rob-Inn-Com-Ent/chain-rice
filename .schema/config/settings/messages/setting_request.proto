@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package settings.settings.messages;
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "settings/settings/enums/setting_scope.proto";
+import "settings/settings/enums/setting_type.proto";
+
+// Request message for creating a new setting
+message CreateSettingRequest {
+  // The setting key identifier (must be unique within scope)
+  string key = 1;
+
+  // The setting value (can be string, number, boolean, or JSON)
+  google.protobuf.Value value = 2;
+
+  // The scope at which this setting applies
+  settings.settings.enums.SettingScope scope = 3;
+
+  // The data type of the setting value
+  settings.settings.enums.SettingType type = 4;
+
+  // Optional description of what this setting controls
+  string description = 5;
+
+  // Optional default value for the setting
+  google.protobuf.Value default_value = 6;
+
+  // Optional validation rules as JSON schema
+  google.protobuf.Struct validation_rules = 7;
+
+  // Whether this setting is required
+  bool is_required = 8;
+
+  // Whether this setting is sensitive/encrypted
+  bool is_sensitive = 9;
+
+  // Optional category for organizing settings
+  string category = 10;
+
+  // Optional tags for categorization and search
+  repeated string tags = 11;
+
+  // Optional metadata about the setting
+  map<string, string> metadata = 12;
+
+  // Scope-specific identifier (e.g., user_id, organization_id, project_id)
+  string scope_id = 13;
+}
+
+// Request message for retrieving a specific setting
+message GetSettingRequest {
+  // The unique identifier of the setting
+  string id = 1;
+
+  // Optional: include metadata in response
+  bool include_metadata = 2;
+
+  // Optional: include validation rules in response
+  bool include_validation_rules = 3;
+}
+
+// Request message for retrieving a setting by key and scope
+message GetSettingByKeyRequest {
+  // The setting key to retrieve
+  string key = 1;
+
+  // The scope to search within
+  settings.settings.enums.SettingScope scope = 2;
+
+  // Optional scope-specific identifier
+  string scope_id = 3;
+
+  // Optional: include metadata in response
+  bool include_metadata = 4;
+}
+
+// Request message for listing settings with filtering
+message ListSettingsRequest {
+  // Optional filter by setting key pattern
+  string key_filter = 1;
+
+  // Optional filter by scope
+  settings.settings.enums.SettingScope scope_filter = 2;
+
+  // Optional filter by type
+  settings.settings.enums.SettingType type_filter = 3;
+
+  // Optional filter by category
+  string category_filter = 4;
+
+  // Optional filter by tags
+  repeated string tag_filters = 5;
+
+  // Optional filter by scope-specific identifier
+  string scope_id_filter = 6;
+
+  // Optional filter by whether setting is required
+  bool is_required_filter = 7;
+
+  // Optional filter by whether setting is sensitive
+  bool is_sensitive_filter = 8;
+
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 9;
+
+  // Page token for pagination
+  string page_token = 10;
+
+  // Sort order: "key", "scope", "type", "category", "created_at", "updated_at"
+  string order_by = 11;
+
+  // Sort direction: "asc" or "desc" (default: "asc")
+  string sort_direction = 12;
+
+  // Whether to include sensitive settings in results
+  bool include_sensitive = 13;
+}
+
+// Request message for updating an existing setting
+message UpdateSettingRequest {
+  // The unique identifier of the setting to update
+  string id = 1;
+
+  // The updated setting value
+  google.protobuf.Value value = 2;
+
+  // Optional description update
+  string description = 3;
+
+  // Optional validation rules update
+  google.protobuf.Struct validation_rules = 4;
+
+  // Optional category update
+  string category = 5;
+
+  // Optional tags update
+  repeated string tags = 6;
+
+  // Optional metadata update
+  map<string, string> metadata = 7;
+
+  // Field mask to specify which fields to update
+  google.protobuf.FieldMask update_mask = 8;
+}
+
+// Request message for deleting a setting
+message DeleteSettingRequest {
+  // The unique identifier of the setting to delete
+  string id = 1;
+
+  // Optional: force deletion even if setting is referenced elsewhere
+  bool force = 2;
+}
+
+// Request message for bulk operations on settings
+message BulkSettingsRequest {
+  // List of settings to create/update
+  repeated CreateSettingRequest settings = 1;
+
+  // Operation type: "create", "update", or "upsert"
+  string operation = 2;
+}
+
+// Request message for searching settings by content
+message SearchSettingsRequest {
+  // Search query string
+  string query = 1;
+
+  // Optional scope filter for search
+  settings.settings.enums.SettingScope scope_filter = 2;
+
+  // Optional type filter for search
+  settings.settings.enums.SettingType type_filter = 3;
+
+  // Search in: "key", "description", "category", "tags", or "all"
+  string search_in = 4;
+
+  // Page size for pagination (default: 50, max: 1000)
+  int32 page_size = 5;
+
+  // Page token for pagination
+  string page_token = 6;
+
+  // Whether to include sensitive settings in search results
+  bool include_sensitive = 7;
+}
+
+// Request message for validating setting values
+message ValidateSettingRequest {
+  // The setting key to validate
+  string key = 1;
+
+  // The value to validate
+  google.protobuf.Value value = 2;
+
+  // The scope context for validation
+  settings.settings.enums.SettingScope scope = 3;
+
+  // Optional scope-specific identifier
+  string scope_id = 4;
+}
+
+// Request message for getting setting schema/definition
+message GetSettingSchemaRequest {
+  // The setting key to get schema for
+  string key = 1;
+
+  // The scope context
+  settings.settings.enums.SettingScope scope = 2;
+
+  // Optional scope-specific identifier
+  string scope_id = 3;
+}

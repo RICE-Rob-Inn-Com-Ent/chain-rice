@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package core.common.enums;
+
+// CountryCode includes a representative subset of ISO-3166-1 alpha-2 codes.
+enum CountryCode {
+  COUNTRY_CODE_UNSPECIFIED = 0; // Unspecified
+  COUNTRY_CODE_US = 1; // United States
+  COUNTRY_CODE_CA = 2; // Canada
+  COUNTRY_CODE_GB = 3; // United Kingdom
+  COUNTRY_CODE_DE = 4; // Germany
+  COUNTRY_CODE_FR = 5; // France
+  COUNTRY_CODE_ES = 6; // Spain
+  COUNTRY_CODE_IT = 7; // Italy
+  COUNTRY_CODE_PL = 8; // Poland
+  COUNTRY_CODE_NL = 9; // Netherlands
+  COUNTRY_CODE_SE = 10; // Sweden
+  COUNTRY_CODE_NO = 11; // Norway
+  COUNTRY_CODE_DK = 12; // Denmark
+  COUNTRY_CODE_FI = 13; // Finland
+  COUNTRY_CODE_AU = 14; // Australia
+  COUNTRY_CODE_NZ = 15; // New Zealand
+  COUNTRY_CODE_BR = 16; // Brazil
+  COUNTRY_CODE_MX = 17; // Mexico
+  COUNTRY_CODE_JP = 18; // Japan
+  COUNTRY_CODE_KR = 19; // South Korea
+  COUNTRY_CODE_CN = 20; // China
+  COUNTRY_CODE_IN = 21; // India
+  COUNTRY_CODE_ZA = 22; // South Africa
+}

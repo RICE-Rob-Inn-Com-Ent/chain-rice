@@ -1,0 +1,58 @@
+# ==============================================================================
+# Rust Linting Configuration (Clippy)
+# ==============================================================================
+#
+# Enterprise-grade Rust linting for catching bugs and enforcing best practices.
+# Used by: rules_rust, IDE integrations, CI/CD pipelines
+#
+# ==============================================================================
+
+# Maximum cognitive complexity for functions
+cognitive-complexity-threshold = 25
+
+# Documentation
+missing-docs-in-crate-items = false
+
+# Naming conventions
+enum-variant-name-threshold = 3
+
+# Performance
+too-many-arguments-threshold        = 7
+type-complexity-threshold           = 250
+single-char-binding-names-threshold = 4
+
+# Size limits
+too-large-for-stack    = 200
+vec-box-size-threshold = 4096
+
+# Verbosity
+verbose-bit-mask-threshold = 1
+
+# Disallowed names (reserved for examples only)
+disallowed-names = ["foo", "bar", "baz", "quux"]
+
+# ==============================================================================
+# Lint Level Configuration (set in Cargo.toml or rust files)
+# ==============================================================================
+#
+# Recommended additions to your Cargo.toml:
+#
+# [lints.clippy]
+# # Deny these lints (catch serious issues)
+# unwrap_used = "deny"
+# expect_used = "deny"
+# panic = "deny"
+# unimplemented = "deny"
+# todo = "deny"
+#
+# # Warn on these lints (best practices)
+# pedantic = "warn"
+# nursery = "warn"
+# cargo = "warn"
+#
+# # Allow specific pedantic lints that are too noisy
+# must_use_candidate = "allow"
+# missing_errors_doc = "allow"
+# missing_panics_doc = "allow"
+#
+# ==============================================================================

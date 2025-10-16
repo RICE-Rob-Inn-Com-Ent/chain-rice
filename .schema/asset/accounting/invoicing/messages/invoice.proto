@@ -1,0 +1,340 @@
+syntax = "proto3";
+
+package finance.invoicing.messages;
+
+import "finance/invoicing/enums/invoice_status.proto";
+import "finance/invoicing/enums/invoice_type.proto";
+import "finance/invoicing/enums/tax_handling.proto";
+import "finance/invoicing/messages/invoice_item.proto";
+
+// Invoice representation
+message Invoice {
+  // Unique invoice identifier
+  string invoice_id = 1;
+
+  // Invoice number
+  string invoice_number = 2;
+
+  // Invoice type
+  finance.invoicing.enums.InvoiceType invoice_type = 3;
+
+  // Invoice status
+  finance.invoicing.enums.InvoiceStatus status = 4;
+
+  // Invoice date
+  int64 invoice_date = 5;
+
+  // Due date
+  int64 due_date = 6;
+
+  // Customer information
+  CustomerInfo customer = 7;
+
+  // Vendor information
+  VendorInfo vendor = 8;
+
+  // Invoice items
+  repeated InvoiceItem items = 9;
+
+  // Subtotal amount
+  double subtotal = 10;
+
+  // Tax amount
+  double tax_amount = 11;
+
+  // Discount amount
+  double discount_amount = 12;
+
+  // Shipping amount
+  double shipping_amount = 13;
+
+  // Total amount
+  double total_amount = 14;
+
+  // Currency code
+  string currency = 15;
+
+  // Tax handling method
+  finance.invoicing.enums.TaxHandling tax_handling = 16;
+
+  // Payment terms
+  string payment_terms = 17;
+
+  // Notes
+  string notes = 18;
+
+  // Terms and conditions
+  string terms_conditions = 19;
+
+  // Reference number
+  string reference_number = 20;
+
+  // Purchase order number
+  string purchase_order_number = 21;
+
+  // Invoice tags
+  repeated string tags = 22;
+
+  // Custom fields
+  map<string, string> custom_fields = 23;
+
+  // Creation timestamp
+  int64 created_at = 24;
+
+  // Last update timestamp
+  int64 updated_at = 25;
+
+  // Created by user ID
+  string created_by = 26;
+
+  // Updated by user ID
+  string updated_by = 27;
+
+  // Sent timestamp
+  int64 sent_at = 28;
+
+  // Paid timestamp
+  int64 paid_at = 29;
+
+  // Cancelled timestamp
+  int64 cancelled_at = 30;
+}
+
+// Customer information
+message CustomerInfo {
+  // Customer ID
+  string customer_id = 1;
+
+  // Customer name
+  string name = 2;
+
+  // Customer email
+  string email = 3;
+
+  // Customer phone
+  string phone = 4;
+
+  // Billing address
+  Address billing_address = 5;
+
+  // Shipping address
+  Address shipping_address = 6;
+
+  // Tax ID
+  string tax_id = 7;
+
+  // Customer type
+  string customer_type = 8;
+}
+
+// Vendor information
+message VendorInfo {
+  // Vendor ID
+  string vendor_id = 1;
+
+  // Vendor name
+  string name = 2;
+
+  // Vendor email
+  string email = 3;
+
+  // Vendor phone
+  string phone = 4;
+
+  // Business address
+  Address business_address = 5;
+
+  // Tax ID
+  string tax_id = 6;
+
+  // Business registration number
+  string registration_number = 7;
+
+  // Bank account information
+  BankAccount bank_account = 8;
+}
+
+// Address information
+message Address {
+  // Street address
+  string street = 1;
+
+  // City
+  string city = 2;
+
+  // State/Province
+  string state = 3;
+
+  // Postal code
+  string postal_code = 4;
+
+  // Country
+  string country = 5;
+
+  // Country code
+  string country_code = 6;
+}
+
+// Bank account information
+message BankAccount {
+  // Bank name
+  string bank_name = 1;
+
+  // Account number
+  string account_number = 2;
+
+  // Routing number
+  string routing_number = 3;
+
+  // SWIFT code
+  string swift_code = 4;
+
+  // IBAN
+  string iban = 5;
+
+  // Account holder name
+  string account_holder_name = 6;
+}
+
+// Invoice creation request
+message CreateInvoiceRequest {
+  // Invoice type
+  finance.invoicing.enums.InvoiceType invoice_type = 1;
+
+  // Invoice date
+  int64 invoice_date = 2;
+
+  // Due date
+  int64 due_date = 3;
+
+  // Customer information
+  CustomerInfo customer = 4;
+
+  // Invoice items
+  repeated InvoiceItem items = 5;
+
+  // Currency code
+  string currency = 6;
+
+  // Tax handling method
+  finance.invoicing.enums.TaxHandling tax_handling = 7;
+
+  // Payment terms
+  string payment_terms = 8;
+
+  // Notes
+  string notes = 9;
+
+  // Terms and conditions
+  string terms_conditions = 10;
+
+  // Reference number
+  string reference_number = 11;
+
+  // Purchase order number
+  string purchase_order_number = 12;
+
+  // Invoice tags
+  repeated string tags = 13;
+
+  // Custom fields
+  map<string, string> custom_fields = 14;
+}
+
+// Invoice creation response
+message CreateInvoiceResponse {
+  // Created invoice
+  Invoice invoice = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Invoice update request
+message UpdateInvoiceRequest {
+  // Invoice ID
+  string invoice_id = 1;
+
+  // Updated invoice status
+  finance.invoicing.enums.InvoiceStatus status = 2;
+
+  // Updated due date
+  int64 due_date = 3;
+
+  // Updated notes
+  string notes = 4;
+
+  // Updated tags
+  repeated string tags = 5;
+
+  // Updated custom fields
+  map<string, string> custom_fields = 6;
+}
+
+// Invoice update response
+message UpdateInvoiceResponse {
+  // Updated invoice
+  Invoice invoice = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Invoice list request
+message ListInvoicesRequest {
+  // Filter by status
+  finance.invoicing.enums.InvoiceStatus status = 1;
+
+  // Filter by invoice type
+  finance.invoicing.enums.InvoiceType invoice_type = 2;
+
+  // Filter by customer ID
+  string customer_id = 3;
+
+  // Filter by date range
+  int64 start_date = 4;
+  int64 end_date = 5;
+
+  // Filter by due date range
+  int64 due_start_date = 6;
+  int64 due_end_date = 7;
+
+  // Filter by currency
+  string currency = 8;
+
+  // Search term
+  string search_term = 9;
+
+  // Page number
+  int32 page = 10;
+
+  // Page size
+  int32 page_size = 11;
+}
+
+// Invoice list response
+message ListInvoicesResponse {
+  // List of invoices
+  repeated Invoice invoices = 1;
+
+  // Total count
+  int64 total_count = 2;
+
+  // Page number
+  int32 page = 3;
+
+  // Page size
+  int32 page_size = 4;
+
+  // Success status
+  bool success = 5;
+
+  // Error message if any
+  string error_message = 6;
+}

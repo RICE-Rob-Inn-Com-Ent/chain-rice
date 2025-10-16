@@ -1,0 +1,129 @@
+name: GitLeaks Secret Detection
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  schedule:
+    - cron: "0 0 * * 1" # Weekly on Monday at midnight UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  gitleaks:
+    name: GitLeaks Secret Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Gitleaks report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
+          retention-days: 30
+
+  trufflehog:
+    name: TruffleHog Secret Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified --json
+
+      - name: Upload TruffleHog report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trufflehog-report
+          path: trufflehog-results.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+  detect-secrets:
+    name: Detect Secrets Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install detect-secrets
+        run: pip install detect-secrets
+
+      - name: Run detect-secrets
+        run: |
+          detect-secrets scan \
+            --all-files \
+            --exclude-files '.*\.lock$' \
+            --exclude-files 'node_modules/.*' \
+            --exclude-files '\.git/.*' \
+            > detect-secrets-report.json
+        continue-on-error: true
+
+      - name: Upload detect-secrets report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detect-secrets-report
+          path: detect-secrets-report.json
+          retention-days: 30
+
+  secret-scan-summary:
+    name: Secret Scan Summary
+    runs-on: ubuntu-latest
+    needs: [gitleaks, trufflehog, detect-secrets]
+    if: always()
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Secret Detection Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scanner | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| GitLeaks | ${{ needs.gitleaks.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| TruffleHog | ${{ needs.trufflehog.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Detect Secrets | ${{ needs.detect-secrets.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔐 **Important**: If secrets are detected, rotate them immediately!" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.gitleaks.result }}" == "failure" ] || \
+             [ "${{ needs.trufflehog.result }}" == "failure" ] || \
+             [ "${{ needs.detect-secrets.result }}" == "failure" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **WARNING**: Potential secrets detected! Review the reports immediately." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

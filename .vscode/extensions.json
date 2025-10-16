@@ -1,0 +1,291 @@
+{
+  // ============================================================================
+  // RICE-MONO RECOMMENDED EXTENSIONS
+  // ============================================================================
+  // Enterprise-grade extensions following industry best practices
+  // All team members will be prompted to install these
+  // ============================================================================
+
+  "recommendations": [
+    // ============================================================================
+    // 🔥 ESSENTIAL - Core Development (MUST HAVE)
+    // ============================================================================
+    "esbenp.prettier-vscode", // Code formatter - Industry standard
+    "editorconfig.editorconfig", // EditorConfig support - Cross-editor consistency
+    "usernamehw.errorlens", // Inline error messages - Instant feedback
+    "eamodio.gitlens", // Git supercharged - Best Git extension
+    "mhutchie.git-graph", // Git graph visualization
+    "github.vscode-pull-request-github", // GitHub PR integration
+    "streetsidesoftware.code-spell-checker", // Spell checker - Prevent typos
+    "wayou.vscode-todo-highlight", // TODO/FIXME highlighter
+    "gruntfuggly.todo-tree", // TODO tree view - Track all TODOs
+    "alefragnani.bookmarks", // Code bookmarks - Navigate large files
+
+    // ============================================================================
+    // 🎨 CODE QUALITY & ANALYSIS
+    // ============================================================================
+    "sonarsource.sonarlint-vscode", // SonarLint - Code quality & security
+    "ryanluker.vscode-coverage-gutters", // Coverage visualization
+    "wix.vscode-import-cost", // Import cost analyzer - Bundle size awareness
+    "kisstkondoros.vscode-gutter-preview", // Image preview in gutter
+    "aaron-bond.better-comments", // Enhanced comments with colors
+    "oderwat.indent-rainbow", // Rainbow indentation - Visual hierarchy
+    "coenraads.bracket-pair-colorizer-2", // Bracket colorization (backup if built-in fails)
+
+    // ============================================================================
+    // 🤝 COLLABORATION & REMOTE
+    // ============================================================================
+    "ms-vsliveshare.vsliveshare", // Live Share - Pair programming
+    "ms-vscode-remote.remote-ssh", // Remote SSH
+    "ms-vscode-remote.remote-containers", // Dev Containers
+    "ms-vscode.remote-explorer", // Remote Explorer
+
+    // ============================================================================
+    // 📝 JAVASCRIPT / TYPESCRIPT
+    // ============================================================================
+    "dbaeumer.vscode-eslint", // ESLint - Must have for JS/TS
+    "ms-vscode.vscode-typescript-next", // TypeScript - Latest features
+    "bradlc.vscode-tailwindcss", // Tailwind CSS IntelliSense
+    "styled-components.vscode-styled-components", // Styled Components
+    "wix.vscode-import-cost", // Bundle size impact
+    "xabikos.javascriptsnippets", // JavaScript ES6 snippets
+    "sburg.vscode-javascript-booster", // JavaScript refactoring
+    "wallabyjs.quokka-vscode", // Live JavaScript playground
+
+    // ============================================================================
+    // ⚛️ FRAMEWORKS
+    // ============================================================================
+    // Angular
+    "angular.ng-template", // Angular Language Service
+    "johnpapa.angular2", // Angular snippets
+    "cyrilletuzi.angular-schematics", // Angular schematics
+
+    // React / Next.js
+    "dsznajder.es7-react-js-snippets", // React snippets - Most popular
+    "burkeholland.simple-react-snippets", // Additional React snippets
+    "formulahendry.auto-close-tag", // Auto close JSX tags
+    "formulahendry.auto-rename-tag", // Auto rename paired tags
+
+    // Vue / Nuxt
+    "vue.volar", // Vue Language Features
+    "vue.vscode-typescript-vue-plugin", // Vue TypeScript plugin
+
+    // Svelte
+    "svelte.svelte-vscode", // Svelte Language Support
+
+    // ============================================================================
+    // 🐍 PYTHON
+    // ============================================================================
+    "ms-python.python", // Python - Essential
+    "ms-python.vscode-pylance", // Pylance - Fast IntelliSense
+    "ms-python.black-formatter", // Black formatter - PEP 8
+    "charliermarsh.ruff", // Ruff - Fast linter
+    "ms-python.debugpy", // Python debugger
+    "ms-python.isort", // Import sorting
+    "ms-toolsai.jupyter", // Jupyter notebooks
+    "ms-toolsai.jupyter-keymap", // Jupyter keyboard shortcuts
+    "ms-toolsai.jupyter-renderers", // Jupyter renderers
+    "donjayamanne.python-environment-manager", // Python env manager
+
+    // ============================================================================
+    // 🔷 GO
+    // ============================================================================
+    "golang.go", // Go - Official extension
+
+    // ============================================================================
+    // 🦀 RUST
+    // ============================================================================
+    "rust-lang.rust-analyzer", // Rust analyzer - Best Rust support
+    "vadimcn.vscode-lldb", // LLDB debugger
+    "serayuzgur.crates", // Crate version management
+    "dustypomerleau.rust-syntax", // Enhanced Rust syntax
+
+    // ============================================================================
+    // 📱 DART / FLUTTER
+    // ============================================================================
+    "dart-code.dart-code", // Dart language support
+    "dart-code.flutter", // Flutter support
+    "alexisvt.flutter-snippets", // Flutter snippets
+    "nash.awesome-flutter-snippets", // Additional Flutter snippets
+
+    // ============================================================================
+    // ☕ JAVA / JVM
+    // ============================================================================
+    "redhat.java", // Java Language Support (RedHat) - Essential
+    "vscjava.vscode-java-debug", // Java debugger
+    "vscjava.vscode-java-test", // Java test runner
+    "vscjava.vscode-java-dependency", // Java dependency viewer
+    "vscjava.vscode-maven", // Maven support
+    "vscjava.vscode-java-pack", // Java extension pack (meta)
+
+    // ============================================================================
+    // 🟢 KOTLIN / ANDROID
+    // ============================================================================
+    "fwcd.kotlin", // Kotlin language support
+    "mathiasfrohlich.kotlin", // Kotlin language (alternative)
+    "vscjava.vscode-gradle", // Gradle support
+
+    // ============================================================================
+    // 🍎 SWIFT / IOS
+    // ============================================================================
+    "sswg.swift-lang", // Swift language support
+
+    // ============================================================================
+    // ⛓️ SOLIDITY / WEB3
+    // ============================================================================
+    "juanblanco.solidity", // Solidity support - Most popular
+    "tintinweb.solidity-visual-auditor", // Solidity security auditor
+    "tintinweb.vscode-solidity-language", // Enhanced Solidity syntax
+    "nomic-foundation.hardhat-solidity", // Hardhat integration
+
+    // ============================================================================
+    // 🐳 INFRASTRUCTURE / DEVOPS
+    // ============================================================================
+    "ms-azuretools.vscode-docker", // Docker - Essential
+    "ms-vscode-remote.remote-containers", // Dev Containers
+    "p1c2u.docker-compose", // Docker Compose syntax
+    "ms-kubernetes-tools.vscode-kubernetes-tools", // Kubernetes
+    "ipedrazas.kubernetes-snippets", // Kubernetes snippets
+    "hashicorp.terraform", // Terraform - Official
+    "hashicorp.hcl", // HCL syntax
+    "redhat.ansible", // Ansible
+    "redhat.vscode-yaml", // YAML - Essential for configs
+    "wholroyd.jinja", // Jinja template support
+
+    // ============================================================================
+    // 🏗️ BAZEL
+    // ============================================================================
+    "bazelbuild.vscode-bazel", // Bazel support - Official
+    "stackbuild.bazel-stack-vscode", // Bazel Stack
+    "devondcarew.bazel-code", // Enhanced Bazel support
+
+    // ============================================================================
+    // 💻 SHELL / BASH
+    // ============================================================================
+    "foxundermoon.shell-format", // Shell script formatter
+    "timonwong.shellcheck", // ShellCheck linter
+    "mads-hartmann.bash-ide-vscode", // Bash IDE
+
+    // ============================================================================
+    // 🔌 PROTOCOL BUFFERS
+    // ============================================================================
+    "zxh404.vscode-proto3", // Protobuf - Most popular
+    "pbkit.vscode-pbkit", // Protobuf toolkit
+
+    // ============================================================================
+    // 📄 CONFIGURATION FILES & FORMATS
+    // ============================================================================
+    "tamasfe.even-better-toml", // TOML - Best TOML support
+    "dotenv.dotenv-vscode", // .env file support
+    "redhat.vscode-xml", // XML support
+    "mechatroner.rainbow-csv", // CSV colorization
+    "eriklynd.json-tools", // JSON tools
+    "quicktype.quicktype", // JSON to code
+
+    // ============================================================================
+    // 🔒 SECURITY & SCANNING
+    // ============================================================================
+    "snyk-security.snyk-vulnerability-scanner", // Snyk - Security scanning
+    "github.vscode-github-actions", // GitHub Actions
+    "gitlab.gitlab-workflow", // GitLab integration
+    "ms-vscode.vscode-github-issue-notebooks", // GitHub Issues
+
+    // ============================================================================
+    // 🌐 REST / API / DATABASE
+    // ============================================================================
+    "humao.rest-client", // REST client - Test APIs in VSCode
+    "rangav.vscode-thunder-client", // Thunder Client - Postman alternative
+    "42crunch.vscode-openapi", // OpenAPI (Swagger) support
+    "graphql.vscode-graphql", // GraphQL
+    "graphql.vscode-graphql-syntax", // GraphQL syntax
+    "mtxr.sqltools", // SQL tools
+    "mtxr.sqltools-driver-pg", // PostgreSQL driver
+    "mongodb.mongodb-vscode", // MongoDB
+    "redis.redis-for-vscode", // Redis
+
+    // ============================================================================
+    // 🎯 PRODUCTIVITY & SNIPPETS
+    // ============================================================================
+    "christian-kohler.path-intellisense", // Path autocomplete - Essential
+    "christian-kohler.npm-intellisense", // NPM autocomplete
+    "zignd.html-css-class-completion", // CSS class autocomplete
+    "naumovs.color-highlight", // Color highlighting
+    "formulahendry.code-runner", // Run code snippets
+    "alefragnani.project-manager", // Project manager
+    "chakrounanas.turbo-console-log", // Fast console.log
+    "wmaurer.change-case", // Change case commands
+    "sleistner.vscode-fileutils", // File utilities
+    "oouo-diogo-perdigao.docthis", // JSDoc generator
+
+    // ============================================================================
+    // 🧪 TESTING
+    // ============================================================================
+    "hbenl.vscode-test-explorer", // Test Explorer UI
+    "orta.vscode-jest", // Jest support
+    "firsttris.vscode-jest-runner", // Jest runner
+    "ms-playwright.playwright", // Playwright
+    "hbenl.vscode-mocha-test-adapter", // Mocha adapter
+    "kavod-io.vscode-jest-test-adapter", // Jest adapter
+
+    // ============================================================================
+    // 📚 DOCUMENTATION
+    // ============================================================================
+    "yzhang.markdown-all-in-one", // Markdown - All-in-one
+    "davidanson.vscode-markdownlint", // Markdown linting
+    "bierner.markdown-mermaid", // Mermaid diagrams
+    "shd101wyy.markdown-preview-enhanced", // Enhanced Markdown preview
+    "yzane.markdown-pdf", // Markdown to PDF
+    "jebbs.plantuml", // PlantUML diagrams
+
+    // ============================================================================
+    // 🤖 AI / COPILOT
+    // ============================================================================
+    "github.copilot", // GitHub Copilot
+    "github.copilot-chat", // Copilot Chat
+    "visualstudioexptteam.vscodeintellicode", // IntelliCode
+    "visualstudioexptteam.intellicode-api-usage-examples", // IntelliCode examples
+
+    // ============================================================================
+    // 🎨 UI / THEMES / ICONS
+    // ============================================================================
+    "pkief.material-icon-theme", // Material icons - Most popular
+    "github.github-vscode-theme", // GitHub theme
+    "zhuangtongfa.material-theme", // One Dark Pro theme
+    "dracula-theme.theme-dracula", // Dracula theme
+    "monokai.theme-monokai-pro-vscode", // Monokai Pro
+
+    // ============================================================================
+    // ⚡ PERFORMANCE & MONITORING
+    // ============================================================================
+    "wix.vscode-import-cost", // Import cost - Bundle awareness
+    "shardulm94.trailing-spaces", // Trailing spaces highlighter
+    "pflannery.vscode-versionlens", // Package version lens
+    "arrterian.nix-env-selector", // Nix environment selector
+
+    // ============================================================================
+    // 🔧 UTILITIES
+    // ============================================================================
+    "tombonnike.vscode-status-bar-format-toggle", // Format toggle
+    "ritwickdey.liveserver", // Live Server - Web dev
+    "vincaslt.highlight-matching-tag", // Highlight matching tag
+    "pranaygp.vscode-css-peek", // CSS Peek
+    "stylelint.vscode-stylelint", // Stylelint
+    "bradlc.vscode-tailwindcss", // Tailwind IntelliSense
+    "benjaminbenais.copilot-theme", // Copilot theme
+    "vscode-icons-team.vscode-icons" // VSCode icons (alternative)
+  ],
+
+  // ============================================================================
+  // ❌ UNWANTED EXTENSIONS
+  // ============================================================================
+  // Extensions that conflict, are deprecated, or have better alternatives
+  "unwantedRecommendations": [
+    "hookyqr.beautify", // Use Prettier instead
+    "dbaeumer.jshint", // Use ESLint instead
+    "ms-vscode.vscode-json-languageservice", // Built-in is sufficient
+    "eg2.tslint", // Deprecated - Use ESLint
+    "octref.vetur", // Use Volar for Vue instead
+    "jpoissonnier.vscode-styled-components", // Duplicate
+    "ms-vscode.typescript-javascript-grammar" // Built-in
+  ]
+}

@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package tokenchain.token.v1;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "tokenchain/token/v1/params.proto";
+
+option go_package = "tokenchain/x/token/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // CreateToken defines the CreateToken RPC.
+  rpc CreateToken(MsgCreateToken) returns (MsgCreateTokenResponse);
+
+  // Mint defines the Mint RPC.
+  rpc Mint(MsgMint) returns (MsgMintResponse);
+
+  // Burn defines the Burn RPC.
+  rpc Burn(MsgBurn) returns (MsgBurnResponse);
+
+  // Transfer defines the Transfer RPC.
+  rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
+}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "tokenchain/x/token/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the module parameters to update.
+
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+// MsgCreateToken defines the MsgCreateToken message.
+message MsgCreateToken {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string name = 2;
+  string symbol = 3;
+  uint64 decimals = 4;
+  uint64 initial_supply = 5;
+  bool mintable = 6;
+}
+
+// MsgCreateTokenResponse defines the MsgCreateTokenResponse message.
+message MsgCreateTokenResponse {}
+
+// MsgMint defines the MsgMint message.
+message MsgMint {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string denom = 2;
+  uint64 amount = 3;
+  string recipient = 4;
+}
+
+// MsgMintResponse defines the MsgMintResponse message.
+message MsgMintResponse {}
+
+// MsgBurn defines the MsgBurn message.
+message MsgBurn {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string denom = 2;
+  uint64 amount = 3;
+}
+
+// MsgBurnResponse defines the MsgBurnResponse message.
+message MsgBurnResponse {}
+
+// MsgTransfer defines the MsgTransfer message.
+message MsgTransfer {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string denom = 2;
+  uint64 amount = 3;
+  string recipient = 4;
+}
+
+// MsgTransferResponse defines the MsgTransferResponse message.
+message MsgTransferResponse {}

@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+package commerce.marketplace.messages;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/commerce/marketplace/messages";
+
+// Offer message representing a buyer's offer for a listing
+message Offer {
+  // Unique identifier for the offer
+  string id = 1;
+
+  // Listing identifier
+  string listing_id = 2;
+
+  // Buyer identifier
+  string buyer_id = 3;
+
+  // Seller identifier
+  string seller_id = 4;
+
+  // Offer amount
+  double amount = 5;
+
+  // Currency code (ISO 4217)
+  string currency = 6;
+
+  // Offer quantity
+  int32 quantity = 7;
+
+  // Offer message from buyer
+  string message = 8;
+
+  // Offer status
+  string status = 9;
+
+  // Offer type (buy_now, bid, negotiation, etc.)
+  string offer_type = 10;
+
+  // Expiration date for the offer
+  google.protobuf.Timestamp expiration_date = 11;
+
+  // Date when offer was created
+  google.protobuf.Timestamp created_at = 12;
+
+  // Date when offer was last updated
+  google.protobuf.Timestamp updated_at = 13;
+
+  // Date when offer was accepted
+  google.protobuf.Timestamp accepted_at = 14;
+
+  // Date when offer was rejected
+  google.protobuf.Timestamp rejected_at = 15;
+
+  // Date when offer was withdrawn
+  google.protobuf.Timestamp withdrawn_at = 16;
+
+  // Counter offer from seller
+  CounterOffer counter_offer = 17;
+
+  // Negotiation history
+  repeated NegotiationMessage negotiation_history = 18;
+
+  // Additional conditions
+  string conditions = 19;
+
+  // Payment terms
+  string payment_terms = 20;
+
+  // Delivery terms
+  string delivery_terms = 21;
+
+  // Additional metadata
+  map<string, string> metadata = 22;
+}
+
+// Counter offer from seller
+message CounterOffer {
+  // Counter offer amount
+  double amount = 1;
+
+  // Counter offer quantity
+  int32 quantity = 2;
+
+  // Counter offer message
+  string message = 3;
+
+  // Counter offer expiration date
+  google.protobuf.Timestamp expiration_date = 4;
+
+  // Date when counter offer was created
+  google.protobuf.Timestamp created_at = 5;
+
+  // Additional conditions
+  string conditions = 6;
+}
+
+// Negotiation message between buyer and seller
+message NegotiationMessage {
+  // Message identifier
+  string id = 1;
+
+  // Sender identifier (buyer or seller)
+  string sender_id = 2;
+
+  // Message content
+  string content = 3;
+
+  // Message type (offer, counter_offer, question, response, etc.)
+  string message_type = 4;
+
+  // Date when message was sent
+  google.protobuf.Timestamp sent_at = 5;
+
+  // Whether message is from buyer
+  bool is_from_buyer = 6;
+
+  // Attached files or images
+  repeated string attachments = 7;
+}
+
+// Request message for creating an offer
+message CreateOfferRequest {
+  // Listing identifier
+  string listing_id = 1;
+
+  // Buyer identifier
+  string buyer_id = 2;
+
+  // Offer amount
+  double amount = 3;
+
+  // Currency code
+  string currency = 4;
+
+  // Offer quantity
+  int32 quantity = 5;
+
+  // Offer message
+  string message = 6;
+
+  // Offer expiration date
+  google.protobuf.Timestamp expiration_date = 7;
+
+  // Additional conditions
+  string conditions = 8;
+
+  // Payment terms
+  string payment_terms = 9;
+
+  // Delivery terms
+  string delivery_terms = 10;
+}
+
+// Response message for offer creation
+message CreateOfferResponse {
+  // Created offer
+  Offer offer = 1;
+
+  // Success indicator
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Request message for responding to an offer
+message RespondToOfferRequest {
+  // Offer identifier
+  string offer_id = 1;
+
+  // Response type (accept, reject, counter_offer)
+  string response_type = 2;
+
+  // Counter offer details (if applicable)
+  CounterOffer counter_offer = 3;
+
+  // Response message
+  string message = 4;
+}
+
+// Response message for offer response
+message RespondToOfferResponse {
+  // Updated offer
+  Offer offer = 1;
+
+  // Success indicator
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}

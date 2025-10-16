@@ -1,0 +1,488 @@
+syntax = "proto3";
+
+package gaming.achievements.services;
+
+import "gaming/achievements/messages/reward_models.proto";
+import "gaming/achievements/messages/achievement_events.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/achievements/services";
+
+// Сервіс управління нагородами
+service RewardService {
+  // Створити нову нагороду
+  rpc CreateReward(CreateRewardRequest) returns (CreateRewardResponse);
+
+  // Отримати нагороду за ID
+  rpc GetReward(GetRewardRequest) returns (GetRewardResponse);
+
+  // Оновити нагороду
+  rpc UpdateReward(UpdateRewardRequest) returns (UpdateRewardResponse);
+
+  // Видалити нагороду
+  rpc DeleteReward(DeleteRewardRequest) returns (google.protobuf.Empty);
+
+  // Отримати список нагород
+  rpc ListRewards(ListRewardsRequest) returns (ListRewardsResponse);
+
+  // Отримати нагороди гравця
+  rpc GetPlayerRewards(GetPlayerRewardsRequest) returns (GetPlayerRewardsResponse);
+
+  // Видати нагороду гравцю
+  rpc DistributeReward(DistributeRewardRequest) returns (DistributeRewardResponse);
+
+  // Отримати нагороду гравцем
+  rpc ClaimReward(ClaimRewardRequest) returns (ClaimRewardResponse);
+
+  // Отримати історію нагород гравця
+  rpc GetPlayerRewardHistory(GetPlayerRewardHistoryRequest) returns (GetPlayerRewardHistoryResponse);
+
+  // Отримати статистику нагород
+  rpc GetRewardStats(GetRewardStatsRequest) returns (GetRewardStatsResponse);
+
+  // Створити пакет нагород
+  rpc CreateRewardBundle(CreateRewardBundleRequest) returns (CreateRewardBundleResponse);
+
+  // Отримати пакет нагород
+  rpc GetRewardBundle(GetRewardBundleRequest) returns (GetRewardBundleResponse);
+
+  // Видати пакет нагород
+  rpc DistributeRewardBundle(DistributeRewardBundleRequest) returns (DistributeRewardBundleResponse);
+
+  // Отримати сезонні нагороди
+  rpc GetSeasonalRewards(GetSeasonalRewardsRequest) returns (GetSeasonalRewardsResponse);
+
+  // Створити сезонні нагороди
+  rpc CreateSeasonalRewards(CreateSeasonalRewardsRequest) returns (CreateSeasonalRewardsResponse);
+}
+
+// Запит створення нагороди
+message CreateRewardRequest {
+  // Дані нагороди
+  gaming.achievements.messages.Reward reward = 1;
+
+  // Автор нагороди
+  string author_id = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь створення нагороди
+message CreateRewardResponse {
+  // Створена нагорода
+  gaming.achievements.messages.Reward reward = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання нагороди
+message GetRewardRequest {
+  // Ідентифікатор нагороди
+  string reward_id = 1;
+}
+
+// Відповідь отримання нагороди
+message GetRewardResponse {
+  // Нагорода
+  gaming.achievements.messages.Reward reward = 1;
+}
+
+// Запит оновлення нагороди
+message UpdateRewardRequest {
+  // Ідентифікатор нагороди
+  string reward_id = 1;
+
+  // Дані для оновлення
+  gaming.achievements.messages.Reward reward = 2;
+
+  // Додаткові параметри
+  map<string, string> parameters = 3;
+}
+
+// Відповідь оновлення нагороди
+message UpdateRewardResponse {
+  // Оновлена нагорода
+  gaming.achievements.messages.Reward reward = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит видалення нагороди
+message DeleteRewardRequest {
+  // Ідентифікатор нагороди
+  string reward_id = 1;
+
+  // Причина видалення
+  string reason = 2;
+}
+
+// Запит списку нагород
+message ListRewardsRequest {
+  // Фільтри
+  RewardFilters filters = 1;
+
+  // Пагінація
+  Pagination pagination = 2;
+
+  // Сортування
+  Sorting sorting = 3;
+}
+
+// Відповідь списку нагород
+message ListRewardsResponse {
+  // Список нагород
+  repeated gaming.achievements.messages.Reward rewards = 1;
+
+  // Загальна кількість
+  int64 total_count = 2;
+
+  // Інформація про пагінацію
+  PaginationInfo pagination_info = 3;
+}
+
+// Запит нагород гравця
+message GetPlayerRewardsRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Фільтри
+  PlayerRewardFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь нагород гравця
+message GetPlayerRewardsResponse {
+  // Список нагород гравця
+  repeated gaming.achievements.messages.PlayerReward player_rewards = 1;
+
+  // Статистика гравця
+  gaming.achievements.messages.RewardStats stats = 2;
+
+  // Загальна кількість
+  int64 total_count = 3;
+}
+
+// Запит видачі нагороди
+message DistributeRewardRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Ідентифікатор нагороди
+  string reward_id = 2;
+
+  // Кількість
+  int64 amount = 3;
+
+  // Причина видачі
+  string reason = 4;
+
+  // Додаткові дані
+  map<string, string> distribution_data = 5;
+}
+
+// Відповідь видачі нагороди
+message DistributeRewardResponse {
+  // Видана нагорода гравцю
+  gaming.achievements.messages.PlayerReward player_reward = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+
+  // Транзакція видачі
+  string transaction_id = 4;
+}
+
+// Запит отримання нагороди гравцем
+message ClaimRewardRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Ідентифікатор нагороди
+  string reward_id = 2;
+
+  // Додаткові дані
+  map<string, string> claim_data = 3;
+}
+
+// Відповідь отримання нагороди гравцем
+message ClaimRewardResponse {
+  // Отримана нагорода
+  gaming.achievements.messages.PlayerReward player_reward = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит історії нагород гравця
+message GetPlayerRewardHistoryRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Фільтри
+  RewardHistoryFilters filters = 2;
+
+  // Пагінація
+  Pagination pagination = 3;
+}
+
+// Відповідь історії нагород гравця
+message GetPlayerRewardHistoryResponse {
+  // Історія нагород гравця
+  gaming.achievements.messages.PlayerRewardHistory history = 1;
+
+  // Загальна кількість
+  int64 total_count = 2;
+}
+
+// Запит статистики нагород
+message GetRewardStatsRequest {
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 1;
+
+  // Фільтри
+  RewardStatsFilters filters = 2;
+}
+
+// Відповідь статистики нагород
+message GetRewardStatsResponse {
+  // Статистика
+  gaming.achievements.messages.RewardStats stats = 1;
+
+  // Додаткові метрики
+  map<string, double> additional_metrics = 2;
+}
+
+// Запит створення пакету нагород
+message CreateRewardBundleRequest {
+  // Дані пакету нагород
+  gaming.achievements.messages.RewardBundle bundle = 1;
+
+  // Автор пакету
+  string author_id = 2;
+}
+
+// Відповідь створення пакету нагород
+message CreateRewardBundleResponse {
+  // Створений пакет нагород
+  gaming.achievements.messages.RewardBundle bundle = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит отримання пакету нагород
+message GetRewardBundleRequest {
+  // Ідентифікатор пакету
+  string bundle_id = 1;
+}
+
+// Відповідь отримання пакету нагород
+message GetRewardBundleResponse {
+  // Пакет нагород
+  gaming.achievements.messages.RewardBundle bundle = 1;
+}
+
+// Запит видачі пакету нагород
+message DistributeRewardBundleRequest {
+  // Ідентифікатор гравця
+  string player_id = 1;
+
+  // Ідентифікатор пакету
+  string bundle_id = 2;
+
+  // Причина видачі
+  string reason = 3;
+}
+
+// Відповідь видачі пакету нагород
+message DistributeRewardBundleResponse {
+  // Видані нагороди
+  repeated gaming.achievements.messages.PlayerReward player_rewards = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Запит сезонних нагород
+message GetSeasonalRewardsRequest {
+  // Ідентифікатор сезону
+  string season_id = 1;
+
+  // Ідентифікатор гравця (опціонально)
+  string player_id = 2;
+}
+
+// Відповідь сезонних нагород
+message GetSeasonalRewardsResponse {
+  // Сезонні нагороди
+  gaming.achievements.messages.SeasonalRewards seasonal_rewards = 1;
+
+  // Прогрес гравця (якщо вказано player_id)
+  map<string, int64> player_progress = 2;
+}
+
+// Запит створення сезонних нагород
+message CreateSeasonalRewardsRequest {
+  // Дані сезонних нагород
+  gaming.achievements.messages.SeasonalRewards seasonal_rewards = 1;
+
+  // Автор сезону
+  string author_id = 2;
+}
+
+// Відповідь створення сезонних нагород
+message CreateSeasonalRewardsResponse {
+  // Створені сезонні нагороди
+  gaming.achievements.messages.SeasonalRewards seasonal_rewards = 1;
+
+  // Статус операції
+  string status = 2;
+
+  // Повідомлення
+  string message = 3;
+}
+
+// Фільтри нагород
+message RewardFilters {
+  // Тип нагороди
+  repeated string types = 1;
+
+  // Рідкість нагороди
+  repeated string rarities = 2;
+
+  // Статус нагороди
+  repeated string statuses = 3;
+
+  // Теги
+  repeated string tags = 4;
+
+  // Мова
+  string language = 5;
+
+  // Версія
+  string version = 6;
+}
+
+// Фільтри нагород гравця
+message PlayerRewardFilters {
+  // Тип нагороди
+  repeated string types = 1;
+
+  // Рідкість нагороди
+  repeated string rarities = 2;
+
+  // Статус нагороди
+  repeated string statuses = 3;
+
+  // Час отримання (від)
+  google.protobuf.Timestamp claimed_from = 4;
+
+  // Час отримання (до)
+  google.protobuf.Timestamp claimed_to = 5;
+
+  // Час видачі (від)
+  google.protobuf.Timestamp distributed_from = 6;
+
+  // Час видачі (до)
+  google.protobuf.Timestamp distributed_to = 7;
+}
+
+// Фільтри історії нагород
+message RewardHistoryFilters {
+  // Тип нагороди
+  repeated string types = 1;
+
+  // Рідкість нагороди
+  repeated string rarities = 2;
+
+  // Час отримання (від)
+  google.protobuf.Timestamp claimed_from = 3;
+
+  // Час отримання (до)
+  google.protobuf.Timestamp claimed_to = 4;
+}
+
+// Фільтри статистики нагород
+message RewardStatsFilters {
+  // Період часу (від)
+  google.protobuf.Timestamp period_from = 1;
+
+  // Період часу (до)
+  google.protobuf.Timestamp period_to = 2;
+
+  // Тип нагороди
+  repeated string types = 3;
+
+  // Рідкість нагороди
+  repeated string rarities = 4;
+}
+
+// Пагінація
+message Pagination {
+  // Номер сторінки
+  int32 page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+}
+
+// Інформація про пагінацію
+message PaginationInfo {
+  // Поточна сторінка
+  int32 current_page = 1;
+
+  // Розмір сторінки
+  int32 page_size = 2;
+
+  // Загальна кількість сторінок
+  int32 total_pages = 3;
+
+  // Загальна кількість елементів
+  int64 total_elements = 4;
+
+  // Чи є наступна сторінка
+  bool has_next = 5;
+
+  // Чи є попередня сторінка
+  bool has_previous = 6;
+}
+
+// Сортування
+message Sorting {
+  // Поле для сортування
+  string field = 1;
+
+  // Напрямок сортування
+  SortDirection direction = 2;
+}
+
+// Напрямок сортування
+enum SortDirection {
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  SORT_DIRECTION_ASC = 1;
+  SORT_DIRECTION_DESC = 2;
+}

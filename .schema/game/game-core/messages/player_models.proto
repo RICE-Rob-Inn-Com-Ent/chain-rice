@@ -1,0 +1,635 @@
+syntax = "proto3";
+
+package gaming.game_core.messages;
+
+import "gaming/game_core/enums/player_roles.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/rice-dev/gaming/game_core/messages";
+
+// Модель гравця
+message Player {
+  // Унікальний ідентифікатор гравця
+  string player_id = 1;
+
+  // Ім'я гравця
+  string name = 2;
+
+  // Псевдонім гравця
+  string nickname = 3;
+
+  // Email гравця
+  string email = 4;
+
+  // Роль гравця
+  gaming.game_core.enums.PlayerRole role = 5;
+
+  // Рівень доступу
+  gaming.game_core.enums.AccessLevel access_level = 6;
+
+  // Профіль гравця
+  PlayerProfile profile = 7;
+
+  // Статистика гравця
+  PlayerStatistics statistics = 8;
+
+  // Налаштування гравця
+  PlayerSettings settings = 9;
+
+  // Інвентар гравця
+  PlayerInventory inventory = 10;
+
+  // Навички гравця
+  repeated PlayerSkill skills = 11;
+
+  // Досягнення гравця
+  repeated PlayerAchievement achievements = 12;
+
+  // Метадані гравця
+  PlayerMetadata metadata = 13;
+
+  // Час створення
+  google.protobuf.Timestamp created_at = 14;
+
+  // Час останнього входу
+  google.protobuf.Timestamp last_login = 15;
+
+  // Час останнього оновлення
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+// Профіль гравця
+message PlayerProfile {
+  // Аватар гравця
+  string avatar_url = 1;
+
+  // Біографія гравця
+  string bio = 2;
+
+  // Країна гравця
+  string country = 3;
+
+  // Місто гравця
+  string city = 4;
+
+  // Дата народження
+  google.protobuf.Timestamp birth_date = 5;
+
+  // Стать гравця
+  string gender = 6;
+
+  // Мова гравця
+  string language = 7;
+
+  // Часовий пояс
+  string timezone = 8;
+
+  // Соціальні мережі
+  map<string, string> social_networks = 9;
+
+  // Додаткові дані профілю
+  map<string, string> additional_data = 10;
+}
+
+// Статистика гравця
+message PlayerStatistics {
+  // Загальна статистика
+  OverallStats overall_stats = 1;
+
+  // Статистика по режимах гри
+  map<string, GameModeStats> game_mode_stats = 2;
+
+  // Статистика по картах
+  map<string, MapStats> map_stats = 3;
+
+  // Статистика по командах
+  map<string, TeamStats> team_stats = 4;
+
+  // Статистика по ролях
+  map<string, RoleStats> role_stats = 5;
+
+  // Статистика по періодах
+  map<string, PeriodStats> period_stats = 6;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 7;
+}
+
+// Загальна статистика
+message OverallStats {
+  // Кількість зіграних ігор
+  int64 games_played = 1;
+
+  // Кількість перемог
+  int64 wins = 2;
+
+  // Кількість поразок
+  int64 losses = 3;
+
+  // Відсоток перемог
+  double win_rate = 4;
+
+  // Загальний час гри (в секундах)
+  int64 total_play_time = 5;
+
+  // Середній час гри
+  double average_game_time = 6;
+
+  // Кількість вбивств
+  int64 total_kills = 7;
+
+  // Кількість смертей
+  int64 total_deaths = 8;
+
+  // Кількість асистів
+  int64 total_assists = 9;
+
+  // Співвідношення K/D
+  double kill_death_ratio = 10;
+
+  // Загальний досвід
+  int64 total_experience = 11;
+
+  // Поточний рівень
+  int32 current_level = 12;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 13;
+}
+
+// Статистика по режиму гри
+message GameModeStats {
+  // Кількість зіграних ігор
+  int64 games_played = 1;
+
+  // Кількість перемог
+  int64 wins = 2;
+
+  // Кількість поразок
+  int64 losses = 3;
+
+  // Відсоток перемог
+  double win_rate = 4;
+
+  // Загальний час гри
+  int64 total_play_time = 5;
+
+  // Середній час гри
+  double average_game_time = 6;
+
+  // Кількість вбивств
+  int64 kills = 7;
+
+  // Кількість смертей
+  int64 deaths = 8;
+
+  // Кількість асистів
+  int64 assists = 9;
+
+  // Співвідношення K/D
+  double kill_death_ratio = 10;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 11;
+}
+
+// Статистика по карті
+message MapStats {
+  // Кількість зіграних ігор
+  int64 games_played = 1;
+
+  // Кількість перемог
+  int64 wins = 2;
+
+  // Кількість поразок
+  int64 losses = 3;
+
+  // Відсоток перемог
+  double win_rate = 4;
+
+  // Загальний час гри
+  int64 total_play_time = 5;
+
+  // Середній час гри
+  double average_game_time = 6;
+
+  // Кількість вбивств
+  int64 kills = 7;
+
+  // Кількість смертей
+  int64 deaths = 8;
+
+  // Кількість асистів
+  int64 assists = 9;
+
+  // Співвідношення K/D
+  double kill_death_ratio = 10;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 11;
+}
+
+// Статистика по команді
+message TeamStats {
+  // Кількість зіграних ігор
+  int64 games_played = 1;
+
+  // Кількість перемог
+  int64 wins = 2;
+
+  // Кількість поразок
+  int64 losses = 3;
+
+  // Відсоток перемог
+  double win_rate = 4;
+
+  // Загальний час гри
+  int64 total_play_time = 5;
+
+  // Середній час гри
+  double average_game_time = 6;
+
+  // Кількість вбивств
+  int64 kills = 7;
+
+  // Кількість смертей
+  int64 deaths = 8;
+
+  // Кількість асистів
+  int64 assists = 9;
+
+  // Співвідношення K/D
+  double kill_death_ratio = 10;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 11;
+}
+
+// Статистика по ролі
+message RoleStats {
+  // Кількість зіграних ігор
+  int64 games_played = 1;
+
+  // Кількість перемог
+  int64 wins = 2;
+
+  // Кількість поразок
+  int64 losses = 3;
+
+  // Відсоток перемог
+  double win_rate = 4;
+
+  // Загальний час гри
+  int64 total_play_time = 5;
+
+  // Середній час гри
+  double average_game_time = 6;
+
+  // Кількість вбивств
+  int64 kills = 7;
+
+  // Кількість смертей
+  int64 deaths = 8;
+
+  // Кількість асистів
+  int64 assists = 9;
+
+  // Співвідношення K/D
+  double kill_death_ratio = 10;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 11;
+}
+
+// Статистика по періоду
+message PeriodStats {
+  // Кількість зіграних ігор
+  int64 games_played = 1;
+
+  // Кількість перемог
+  int64 wins = 2;
+
+  // Кількість поразок
+  int64 losses = 3;
+
+  // Відсоток перемог
+  double win_rate = 4;
+
+  // Загальний час гри
+  int64 total_play_time = 5;
+
+  // Середній час гри
+  double average_game_time = 6;
+
+  // Кількість вбивств
+  int64 kills = 7;
+
+  // Кількість смертей
+  int64 deaths = 8;
+
+  // Кількість асистів
+  int64 assists = 9;
+
+  // Співвідношення K/D
+  double kill_death_ratio = 10;
+
+  // Додаткові статистики
+  map<string, int64> additional_stats = 11;
+}
+
+// Налаштування гравця
+message PlayerSettings {
+  // Налаштування графіки
+  GraphicsSettings graphics = 1;
+
+  // Налаштування звуку
+  AudioSettings audio = 2;
+
+  // Налаштування управління
+  ControlSettings controls = 3;
+
+  // Налаштування інтерфейсу
+  InterfaceSettings interface = 4;
+
+  // Налаштування приватності
+  PrivacySettings privacy = 5;
+
+  // Налаштування сповіщень
+  NotificationSettings notifications = 6;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 7;
+}
+
+// Налаштування графіки
+message GraphicsSettings {
+  // Роздільна здатність
+  string resolution = 1;
+
+  // Якість графіки
+  string quality = 2;
+
+  // Частота кадрів
+  int32 frame_rate = 3;
+
+  // Повноекранний режим
+  bool fullscreen = 4;
+
+  // Вертикальна синхронізація
+  bool vsync = 5;
+
+  // Антиаліасинг
+  bool anti_aliasing = 6;
+
+  // Тіні
+  bool shadows = 7;
+
+  // Освітлення
+  bool lighting = 8;
+
+  // Ефекти
+  bool effects = 9;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 10;
+}
+
+// Налаштування звуку
+message AudioSettings {
+  // Гучність загальна
+  int32 master_volume = 1;
+
+  // Гучність музики
+  int32 music_volume = 2;
+
+  // Гучність звуків
+  int32 sound_volume = 3;
+
+  // Гучність голосу
+  int32 voice_volume = 4;
+
+  // Просторовий звук
+  bool spatial_audio = 5;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 6;
+}
+
+// Налаштування управління
+message ControlSettings {
+  // Чутливість миші
+  double mouse_sensitivity = 1;
+
+  // Інверсія миші
+  bool mouse_invert = 2;
+
+  // Чутливість геймпада
+  double gamepad_sensitivity = 3;
+
+  // Інверсія геймпада
+  bool gamepad_invert = 4;
+
+  // Клавіші управління
+  map<string, string> key_bindings = 5;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 6;
+}
+
+// Налаштування інтерфейсу
+message InterfaceSettings {
+  // Мова інтерфейсу
+  string language = 1;
+
+  // Розмір шрифту
+  string font_size = 2;
+
+  // Стиль інтерфейсу
+  string interface_style = 3;
+
+  // Показувати FPS
+  bool show_fps = 4;
+
+  // Показувати пінг
+  bool show_ping = 5;
+
+  // Показувати статистику
+  bool show_stats = 6;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 7;
+}
+
+// Налаштування приватності
+message PrivacySettings {
+  // Показувати профіль
+  bool show_profile = 1;
+
+  // Показувати статистику
+  bool show_statistics = 2;
+
+  // Показувати онлайн статус
+  bool show_online_status = 3;
+
+  // Дозволити додавати в друзі
+  bool allow_friend_requests = 4;
+
+  // Дозволити приватні повідомлення
+  bool allow_private_messages = 5;
+
+  // Дозволити голосовий чат
+  bool allow_voice_chat = 6;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 7;
+}
+
+// Налаштування сповіщень
+message NotificationSettings {
+  // Сповіщення про перемоги
+  bool victory_notifications = 1;
+
+  // Сповіщення про поразки
+  bool defeat_notifications = 2;
+
+  // Сповіщення про досягнення
+  bool achievement_notifications = 3;
+
+  // Сповіщення про нагороди
+  bool reward_notifications = 4;
+
+  // Сповіщення про друзів
+  bool friend_notifications = 5;
+
+  // Сповіщення про групи
+  bool group_notifications = 6;
+
+  // Додаткові налаштування
+  map<string, string> additional_settings = 7;
+}
+
+// Інвентар гравця
+message PlayerInventory {
+  // Предмети в інвентарі
+  repeated InventoryItem items = 1;
+
+  // Максимальна кількість слотів
+  int32 max_slots = 2;
+
+  // Поточна кількість слотів
+  int32 current_slots = 3;
+
+  // Додаткові дані інвентаря
+  map<string, string> additional_data = 4;
+}
+
+// Предмет в інвентарі
+message InventoryItem {
+  // Ідентифікатор предмета
+  string item_id = 1;
+
+  // Назва предмета
+  string name = 2;
+
+  // Тип предмета
+  string type = 3;
+
+  // Кількість предмета
+  int32 quantity = 4;
+
+  // Якість предмета
+  string quality = 5;
+
+  // Рідкість предмета
+  string rarity = 6;
+
+  // Рівень предмета
+  int32 level = 7;
+
+  // Додаткові властивості предмета
+  map<string, string> properties = 8;
+}
+
+// Навичка гравця
+message PlayerSkill {
+  // Ідентифікатор навички
+  string skill_id = 1;
+
+  // Назва навички
+  string name = 2;
+
+  // Тип навички
+  string type = 3;
+
+  // Рівень навички
+  int32 level = 4;
+
+  // Досвід навички
+  int64 experience = 5;
+
+  // Максимальний рівень навички
+  int32 max_level = 6;
+
+  // Додаткові дані навички
+  map<string, string> additional_data = 7;
+}
+
+// Досягнення гравця
+message PlayerAchievement {
+  // Ідентифікатор досягнення
+  string achievement_id = 1;
+
+  // Назва досягнення
+  string name = 2;
+
+  // Тип досягнення
+  string type = 3;
+
+  // Рівень досягнення
+  int32 level = 4;
+
+  // Прогрес досягнення
+  int64 progress = 5;
+
+  // Максимальний прогрес
+  int64 max_progress = 6;
+
+  // Чи завершено досягнення
+  bool completed = 7;
+
+  // Час завершення
+  google.protobuf.Timestamp completed_at = 8;
+
+  // Додаткові дані досягнення
+  map<string, string> additional_data = 9;
+}
+
+// Метадані гравця
+message PlayerMetadata {
+  // Версія профілю
+  string version = 1;
+
+  // Теги гравця
+  repeated string tags = 2;
+
+  // Категорія гравця
+  string category = 3;
+
+  // Рейтинг гравця
+  double rating = 4;
+
+  // Кількість переглядів профілю
+  int64 profile_views = 5;
+
+  // Кількість друзів
+  int64 friends_count = 6;
+
+  // Кількість підписників
+  int64 followers_count = 7;
+
+  // Кількість підписок
+  int64 following_count = 8;
+
+  // Додаткові метадані
+  map<string, string> additional_data = 9;
+}

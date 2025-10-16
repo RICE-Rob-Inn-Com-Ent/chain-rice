@@ -1,0 +1,714 @@
+syntax = "proto3";
+
+package integrations.external_apis.services;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "integrations/external_apis/messages/api_provider_models.proto";
+import "integrations/external_apis/messages/api_request_models.proto";
+import "integrations/external_apis/messages/api_response_models.proto";
+
+option go_package = "github.com/rice-dev/integrations/external_apis/services";
+
+// API Gateway Service for routing, retries, and caching external API calls
+service ApiGatewayService {
+  // Request Processing
+  rpc ProcessRequest(ProcessRequestRequest) returns (ProcessRequestResponse);
+  rpc ProcessBatchRequest(ProcessBatchRequestRequest) returns (ProcessBatchRequestResponse);
+  rpc ProcessAsyncRequest(ProcessAsyncRequestRequest) returns (ProcessAsyncRequestResponse);
+
+  // Request Management
+  rpc GetRequest(GetRequestRequest) returns (GetRequestResponse);
+  rpc ListRequests(ListRequestsRequest) returns (ListRequestsResponse);
+  rpc CancelRequest(CancelRequestRequest) returns (CancelRequestResponse);
+  rpc RetryRequest(RetryRequestRequest) returns (RetryRequestResponse);
+
+  // Response Management
+  rpc GetResponse(GetResponseRequest) returns (GetResponseResponse);
+  rpc ListResponses(ListResponsesRequest) returns (ListResponsesResponse);
+  rpc GetResponseStatistics(GetResponseStatisticsRequest) returns (GetResponseStatisticsResponse);
+
+  // Routing and Load Balancing
+  rpc GetRoute(GetRouteRequest) returns (GetRouteResponse);
+  rpc UpdateRoute(UpdateRouteRequest) returns (UpdateRouteResponse);
+  rpc ListRoutes(ListRoutesRequest) returns (ListRoutesResponse);
+  rpc HealthCheckRoute(HealthCheckRouteRequest) returns (HealthCheckRouteResponse);
+
+  // Caching
+  rpc GetCache(GetCacheRequest) returns (GetCacheResponse);
+  rpc SetCache(SetCacheRequest) returns (SetCacheResponse);
+  rpc DeleteCache(DeleteCacheRequest) returns (DeleteCacheResponse);
+  rpc ClearCache(ClearCacheRequest) returns (ClearCacheResponse);
+  rpc GetCacheStatistics(GetCacheStatisticsRequest) returns (GetCacheStatisticsResponse);
+
+  // Rate Limiting
+  rpc CheckRateLimit(CheckRateLimitRequest) returns (CheckRateLimitResponse);
+  rpc GetRateLimitStatus(GetRateLimitStatusRequest) returns (GetRateLimitStatusResponse);
+  rpc ResetRateLimit(ResetRateLimitRequest) returns (ResetRateLimitResponse);
+
+  // Circuit Breaker
+  rpc GetCircuitBreakerStatus(GetCircuitBreakerStatusRequest) returns (GetCircuitBreakerStatusResponse);
+  rpc ResetCircuitBreaker(ResetCircuitBreakerRequest) returns (ResetCircuitBreakerResponse);
+  rpc UpdateCircuitBreakerConfig(UpdateCircuitBreakerConfigRequest) returns (UpdateCircuitBreakerConfigResponse);
+
+  // Monitoring and Health
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+  rpc GetGatewayMetrics(GetGatewayMetricsRequest) returns (GetGatewayMetricsResponse);
+  rpc GetGatewayStatus(GetGatewayStatusRequest) returns (GetGatewayStatusResponse);
+}
+
+// Process Request Request
+message ProcessRequestRequest {
+  integrations.external_apis.messages.ApiRequest request = 1;
+  ApiGatewayOptions options = 2;
+  string correlation_id = 3;
+}
+
+// Process Request Response
+message ProcessRequestResponse {
+  string request_id = 1;
+  integrations.external_apis.messages.ApiResponse response = 2;
+  ApiGatewayResult result = 3;
+  google.protobuf.Timestamp processed_at = 4;
+}
+
+// Process Batch Request Request
+message ProcessBatchRequestRequest {
+  integrations.external_apis.messages.ApiRequestBatch batch = 1;
+  ApiGatewayOptions options = 2;
+  string correlation_id = 3;
+}
+
+// Process Batch Request Response
+message ProcessBatchRequestResponse {
+  string batch_id = 1;
+  ApiBatchResult result = 2;
+  repeated integrations.external_apis.messages.ApiResponse responses = 3;
+  google.protobuf.Timestamp processed_at = 4;
+}
+
+// Process Async Request Request
+message ProcessAsyncRequestRequest {
+  integrations.external_apis.messages.ApiRequest request = 1;
+  ApiGatewayOptions options = 2;
+  string callback_url = 3;
+  string correlation_id = 4;
+}
+
+// Process Async Request Response
+message ProcessAsyncRequestResponse {
+  string request_id = 1;
+  string job_id = 2;
+  string status = 3;
+  string callback_url = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// Get Request Request
+message GetRequestRequest {
+  string request_id = 1;
+  bool include_response = 2;
+  bool include_metrics = 3;
+}
+
+// Get Request Response
+message GetRequestResponse {
+  integrations.external_apis.messages.ApiRequest request = 1;
+  integrations.external_apis.messages.ApiResponse response = 2;
+  ApiGatewayMetrics metrics = 3;
+}
+
+// List Requests Request
+message ListRequestsRequest {
+  integrations.external_apis.messages.ApiRequestFilter filter = 1;
+}
+
+// List Requests Response
+message ListRequestsResponse {
+  integrations.external_apis.messages.ApiRequestList requests = 1;
+}
+
+// Cancel Request Request
+message CancelRequestRequest {
+  string request_id = 1;
+  string reason = 2;
+}
+
+// Cancel Request Response
+message CancelRequestResponse {
+  string request_id = 1;
+  bool cancelled = 2;
+  google.protobuf.Timestamp cancelled_at = 3;
+}
+
+// Retry Request Request
+message RetryRequestRequest {
+  string request_id = 1;
+  bool force_retry = 2;
+  ApiGatewayOptions options = 3;
+}
+
+// Retry Request Response
+message RetryRequestResponse {
+  string request_id = 1;
+  string retry_id = 2;
+  string status = 3;
+  google.protobuf.Timestamp retry_at = 4;
+}
+
+// Get Response Request
+message GetResponseRequest {
+  string response_id = 1;
+  bool include_request = 2;
+  bool include_metrics = 3;
+}
+
+// Get Response Response
+message GetResponseResponse {
+  integrations.external_apis.messages.ApiResponse response = 1;
+  integrations.external_apis.messages.ApiRequest request = 2;
+  ApiGatewayMetrics metrics = 3;
+}
+
+// List Responses Request
+message ListResponsesRequest {
+  integrations.external_apis.messages.ApiResponseFilter filter = 1;
+}
+
+// List Responses Response
+message ListResponsesResponse {
+  integrations.external_apis.messages.ApiResponseList responses = 1;
+}
+
+// Get Response Statistics Request
+message GetResponseStatisticsRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  repeated string provider_ids = 3;
+  repeated string endpoint_ids = 4;
+  string granularity = 5; // HOUR, DAY, WEEK, MONTH
+}
+
+// Get Response Statistics Response
+message GetResponseStatisticsResponse {
+  integrations.external_apis.messages.ApiResponseStatistics statistics = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Route Request
+message GetRouteRequest {
+  string route_id = 1;
+}
+
+// Get Route Response
+message GetRouteResponse {
+  ApiRoute route = 1;
+}
+
+// Update Route Request
+message UpdateRouteRequest {
+  string route_id = 1;
+  ApiRoute route = 2;
+}
+
+// Update Route Response
+message UpdateRouteResponse {
+  string route_id = 1;
+  bool updated = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+// List Routes Request
+message ListRoutesRequest {
+  repeated string route_ids = 1;
+  repeated string provider_ids = 2;
+  repeated string endpoint_ids = 3;
+  bool include_inactive = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+}
+
+// List Routes Response
+message ListRoutesResponse {
+  repeated ApiRoute routes = 1;
+  int32 total_count = 2;
+}
+
+// Health Check Route Request
+message HealthCheckRouteRequest {
+  string route_id = 1;
+  bool check_all_endpoints = 2;
+}
+
+// Health Check Route Response
+message HealthCheckRouteResponse {
+  string route_id = 1;
+  string health_status = 2;
+  repeated ApiHealthCheckResult health_checks = 3;
+  google.protobuf.Timestamp checked_at = 4;
+}
+
+// Get Cache Request
+message GetCacheRequest {
+  string cache_key = 1;
+  string cache_namespace = 2;
+}
+
+// Get Cache Response
+message GetCacheResponse {
+  string cache_key = 1;
+  string cache_value = 2;
+  bool found = 3;
+  google.protobuf.Timestamp expires_at = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// Set Cache Request
+message SetCacheRequest {
+  string cache_key = 1;
+  string cache_value = 2;
+  string cache_namespace = 3;
+  int32 ttl_seconds = 4;
+  map<string, string> cache_tags = 5;
+}
+
+// Set Cache Response
+message SetCacheResponse {
+  string cache_key = 1;
+  bool set = 2;
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+// Delete Cache Request
+message DeleteCacheRequest {
+  string cache_key = 1;
+  string cache_namespace = 2;
+  bool delete_by_pattern = 3;
+}
+
+// Delete Cache Response
+message DeleteCacheResponse {
+  string cache_key = 1;
+  bool deleted = 2;
+  int32 deleted_count = 3;
+}
+
+// Clear Cache Request
+message ClearCacheRequest {
+  string cache_namespace = 1;
+  repeated string cache_tags = 2;
+  bool clear_all = 3;
+}
+
+// Clear Cache Response
+message ClearCacheResponse {
+  bool cleared = 1;
+  int32 cleared_count = 2;
+  string cache_namespace = 3;
+}
+
+// Get Cache Statistics Request
+message GetCacheStatisticsRequest {
+  string cache_namespace = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+}
+
+// Get Cache Statistics Response
+message GetCacheStatisticsResponse {
+  ApiCacheStatistics statistics = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Check Rate Limit Request
+message CheckRateLimitRequest {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string client_id = 3;
+  int32 request_count = 4;
+}
+
+// Check Rate Limit Response
+message CheckRateLimitResponse {
+  bool allowed = 1;
+  int32 remaining_requests = 2;
+  int32 reset_time_seconds = 3;
+  int32 retry_after_seconds = 4;
+  string rate_limit_strategy = 5;
+}
+
+// Get Rate Limit Status Request
+message GetRateLimitStatusRequest {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string client_id = 3;
+}
+
+// Get Rate Limit Status Response
+message GetRateLimitStatusResponse {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string client_id = 3;
+  int32 current_requests = 4;
+  int32 max_requests = 5;
+  int32 remaining_requests = 6;
+  google.protobuf.Timestamp reset_at = 7;
+  string status = 8;
+}
+
+// Reset Rate Limit Request
+message ResetRateLimitRequest {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string client_id = 3;
+  string reason = 4;
+}
+
+// Reset Rate Limit Response
+message ResetRateLimitResponse {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string client_id = 3;
+  bool reset = 4;
+  google.protobuf.Timestamp reset_at = 5;
+}
+
+// Get Circuit Breaker Status Request
+message GetCircuitBreakerStatusRequest {
+  string provider_id = 1;
+  string endpoint_id = 2;
+}
+
+// Get Circuit Breaker Status Response
+message GetCircuitBreakerStatusResponse {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string status = 3; // CLOSED, OPEN, HALF_OPEN
+  int32 failure_count = 4;
+  int32 success_count = 5;
+  double failure_rate = 6;
+  google.protobuf.Timestamp last_failure_at = 7;
+  google.protobuf.Timestamp next_attempt_at = 8;
+}
+
+// Reset Circuit Breaker Request
+message ResetCircuitBreakerRequest {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  string reason = 3;
+}
+
+// Reset Circuit Breaker Response
+message ResetCircuitBreakerResponse {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  bool reset = 3;
+  google.protobuf.Timestamp reset_at = 4;
+}
+
+// Update Circuit Breaker Config Request
+message UpdateCircuitBreakerConfigRequest {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  ApiCircuitBreakerConfig config = 3;
+}
+
+// Update Circuit Breaker Config Response
+message UpdateCircuitBreakerConfigResponse {
+  string provider_id = 1;
+  string endpoint_id = 2;
+  bool updated = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// Health Check Response
+message HealthCheckResponse {
+  string status = 1; // HEALTHY, DEGRADED, UNHEALTHY
+  string version = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  map<string, string> details = 4;
+}
+
+// Get Gateway Metrics Request
+message GetGatewayMetricsRequest {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  string granularity = 3; // MINUTE, HOUR, DAY
+}
+
+// Get Gateway Metrics Response
+message GetGatewayMetricsResponse {
+  ApiGatewayMetrics metrics = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}
+
+// Get Gateway Status Request
+message GetGatewayStatusRequest {
+  bool include_components = 1;
+}
+
+// Get Gateway Status Response
+message GetGatewayStatusResponse {
+  string overall_status = 1;
+  repeated ApiGatewayComponent components = 2;
+  google.protobuf.Timestamp checked_at = 3;
+}
+
+// API Gateway Options
+message ApiGatewayOptions {
+  // Routing options
+  string routing_strategy = 1; // ROUND_ROBIN, LEAST_CONNECTIONS, RANDOM, WEIGHTED
+  bool enable_load_balancing = 2;
+  bool enable_failover = 3;
+
+  // Caching options
+  bool enable_caching = 4;
+  int32 cache_ttl_seconds = 5;
+  string cache_strategy = 6; // LRU, LFU, TTL, CUSTOM
+  repeated string cache_keys = 7;
+
+  // Rate limiting options
+  bool enable_rate_limiting = 8;
+  int32 rate_limit_requests = 9;
+  int32 rate_limit_window_seconds = 10;
+  string rate_limit_strategy = 11; // FIXED_WINDOW, SLIDING_WINDOW, TOKEN_BUCKET
+
+  // Retry options
+  bool enable_retries = 12;
+  int32 max_retries = 13;
+  int32 retry_delay_seconds = 14;
+  string retry_strategy = 15; // FIXED, EXPONENTIAL, LINEAR
+  repeated int32 retry_status_codes = 16;
+
+  // Circuit breaker options
+  bool enable_circuit_breaker = 17;
+  int32 circuit_breaker_threshold = 18;
+  int32 circuit_breaker_timeout_seconds = 19;
+  double circuit_breaker_failure_rate = 20;
+
+  // Timeout options
+  int32 connection_timeout_seconds = 21;
+  int32 read_timeout_seconds = 22;
+  int32 write_timeout_seconds = 23;
+  int32 total_timeout_seconds = 24;
+
+  // Security options
+  bool enable_ssl_verification = 25;
+  bool enable_request_signing = 26;
+  bool enable_response_validation = 27;
+
+  // Monitoring options
+  bool enable_metrics = 28;
+  bool enable_logging = 29;
+  bool enable_tracing = 30;
+  string log_level = 31; // DEBUG, INFO, WARN, ERROR
+
+  // Custom options
+  map<string, string> custom_options = 32;
+}
+
+// API Gateway Result
+message ApiGatewayResult {
+  string result_id = 1;
+  string result_type = 2; // SUCCESS, FAILED, TIMEOUT, CANCELLED, RETRY
+  string result_message = 3;
+  map<string, string> result_data = 4;
+  google.protobuf.Timestamp completed_at = 5;
+  int64 processing_time_ms = 6;
+}
+
+// API Batch Result
+message ApiBatchResult {
+  string batch_id = 1;
+  string status = 2; // PENDING, PROCESSING, COMPLETED, FAILED, PARTIAL
+  int32 total_requests = 3;
+  int32 successful_requests = 4;
+  int32 failed_requests = 5;
+  int32 pending_requests = 6;
+  double success_rate = 7;
+  google.protobuf.Timestamp started_at = 8;
+  google.protobuf.Timestamp completed_at = 9;
+  repeated string failed_request_ids = 10;
+}
+
+// API Gateway Metrics
+message ApiGatewayMetrics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Request metrics
+  int32 total_requests = 3;
+  int32 successful_requests = 4;
+  int32 failed_requests = 5;
+  int32 timeout_requests = 6;
+  int32 retry_requests = 7;
+  double success_rate = 8;
+  double failure_rate = 9;
+
+  // Performance metrics
+  int64 average_response_time_ms = 10;
+  int64 min_response_time_ms = 11;
+  int64 max_response_time_ms = 12;
+  int64 p50_response_time_ms = 13;
+  int64 p90_response_time_ms = 14;
+  int64 p95_response_time_ms = 15;
+  int64 p99_response_time_ms = 16;
+
+  // Throughput metrics
+  double requests_per_second = 17;
+  double requests_per_minute = 18;
+  double requests_per_hour = 19;
+
+  // Cache metrics
+  int32 cache_hits = 20;
+  int32 cache_misses = 21;
+  double cache_hit_rate = 22;
+  int32 cache_evictions = 23;
+
+  // Rate limiting metrics
+  int32 rate_limited_requests = 24;
+  int32 rate_limit_violations = 25;
+  double rate_limit_violation_rate = 26;
+
+  // Circuit breaker metrics
+  int32 circuit_breaker_opens = 27;
+  int32 circuit_breaker_closes = 28;
+  double circuit_breaker_failure_rate = 29;
+
+  // Error metrics
+  map<string, int32> error_type_counts = 30;
+  map<string, int32> status_code_counts = 31;
+  repeated string top_errors = 32;
+
+  // Provider metrics
+  map<string, int32> provider_counts = 33;
+  map<string, int32> endpoint_counts = 34;
+
+  // Time series data
+  repeated ApiGatewayTimeSeries time_series = 35;
+}
+
+// API Gateway Time Series
+message ApiGatewayTimeSeries {
+  google.protobuf.Timestamp timestamp = 1;
+  int32 request_count = 2;
+  int32 success_count = 3;
+  int32 error_count = 4;
+  int64 average_response_time_ms = 5;
+  double success_rate = 6;
+  string granularity = 7; // MINUTE, HOUR, DAY
+}
+
+// API Route
+message ApiRoute {
+  string route_id = 1;
+  string route_name = 2;
+  string route_description = 3;
+  string provider_id = 4;
+  string endpoint_id = 5;
+
+  // Routing configuration
+  string routing_strategy = 6; // ROUND_ROBIN, LEAST_CONNECTIONS, RANDOM, WEIGHTED
+  repeated ApiRouteEndpoint endpoints = 7;
+  map<string, int32> endpoint_weights = 8;
+
+  // Load balancing
+  bool enable_load_balancing = 9;
+  bool enable_health_checks = 10;
+  int32 health_check_interval_seconds = 11;
+  int32 health_check_timeout_seconds = 12;
+
+  // Failover
+  bool enable_failover = 13;
+  int32 max_failover_attempts = 14;
+  int32 failover_timeout_seconds = 15;
+
+  // Route status
+  string status = 16; // ACTIVE, INACTIVE, MAINTENANCE, DEPRECATED
+  bool is_primary = 17;
+  int32 priority = 18;
+
+  // Route metadata
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
+  string created_by = 21;
+  repeated string tags = 22;
+  map<string, string> custom_fields = 23;
+}
+
+// API Route Endpoint
+message ApiRouteEndpoint {
+  string endpoint_id = 1;
+  string endpoint_name = 2;
+  string url = 3;
+  int32 weight = 4;
+  bool is_healthy = 5;
+  int32 response_time_ms = 6;
+  double success_rate = 7;
+  google.protobuf.Timestamp last_health_check = 8;
+}
+
+// API Health Check Result
+message ApiHealthCheckResult {
+  string endpoint_id = 1;
+  string endpoint_name = 2;
+  bool is_healthy = 3;
+  int32 response_time_ms = 4;
+  int32 status_code = 5;
+  string response_message = 6;
+  google.protobuf.Timestamp checked_at = 7;
+  repeated string errors = 8;
+}
+
+// API Cache Statistics
+message ApiCacheStatistics {
+  google.protobuf.Timestamp period_start = 1;
+  google.protobuf.Timestamp period_end = 2;
+
+  // Cache metrics
+  int32 total_requests = 3;
+  int32 cache_hits = 4;
+  int32 cache_misses = 5;
+  double cache_hit_rate = 6;
+  int32 cache_evictions = 7;
+  int32 cache_size = 8;
+  int64 cache_memory_usage_bytes = 9;
+
+  // Cache performance
+  int64 average_hit_time_ms = 10;
+  int64 average_miss_time_ms = 11;
+  int64 average_eviction_time_ms = 12;
+
+  // Cache by namespace
+  map<string, int32> namespace_hits = 13;
+  map<string, int32> namespace_misses = 14;
+  map<string, double> namespace_hit_rates = 15;
+
+  // Cache by key pattern
+  map<string, int32> key_pattern_hits = 16;
+  map<string, int32> key_pattern_misses = 17;
+  map<string, double> key_pattern_hit_rates = 18;
+}
+
+// API Circuit Breaker Config
+message ApiCircuitBreakerConfig {
+  bool enabled = 1;
+  int32 failure_threshold = 2;
+  int32 success_threshold = 3;
+  int32 timeout_seconds = 4;
+  double failure_rate_threshold = 5;
+  int32 minimum_requests = 6;
+  string state = 7; // CLOSED, OPEN, HALF_OPEN
+  google.protobuf.Timestamp last_state_change = 8;
+}
+
+// API Gateway Component
+message ApiGatewayComponent {
+  string component_name = 1;
+  string component_type = 2; // ROUTER, CACHE, RATE_LIMITER, CIRCUIT_BREAKER, MONITOR
+  string status = 3; // HEALTHY, DEGRADED, UNHEALTHY, UNKNOWN
+  string version = 4;
+  google.protobuf.Timestamp last_check = 5;
+  map<string, string> metrics = 6;
+  repeated string errors = 7;
+}

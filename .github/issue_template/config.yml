@@ -1,0 +1,33 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/mrDinkelman/rice-mono/discussions
+    about: Ask questions, share ideas, and connect with the community
+
+  - name: 📚 Documentation
+    url: https://github.com/mrDinkelman/rice-mono/tree/main/.doc/docs
+    about: Browse comprehensive documentation, guides, and architecture details
+
+  - name: 🔒 Security Vulnerability
+    url: https://github.com/mrDinkelman/rice-mono/security/advisories/new
+    about: Report security vulnerabilities privately (DO NOT create a public issue)
+
+  - name: 💡 Feature Discussions
+    url: https://github.com/mrDinkelman/rice-mono/discussions/categories/ideas
+    about: Discuss feature ideas with the community before creating a formal request
+
+  - name: 🗺️ Project Roadmap
+    url: https://github.com/mrDinkelman/rice-mono/discussions/categories/roadmap
+    about: View the project roadmap and planned features
+
+  - name: 🎓 Contributing Guide
+    url: https://github.com/mrDinkelman/rice-mono/blob/main/.doc/docs/CONTRIBUTING.md
+    about: Learn how to contribute to Rice Monorepo
+
+  - name: 📖 Architecture Documentation
+    url: https://github.com/mrDinkelman/rice-mono/blob/main/.doc/docs/ARCHITECTURE.md
+    about: Understand the architecture and design decisions
+
+  - name: 🐛 Stack Overflow
+    url: https://stackoverflow.com/questions/tagged/rice-mono
+    about: Ask technical questions on Stack Overflow with the 'rice-mono' tag

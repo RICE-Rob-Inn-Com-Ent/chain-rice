@@ -1,0 +1,55 @@
+# ==============================================================================
+# BROWSERSLIST CONFIGURATION - Rice Monorepo
+# ==============================================================================
+# Define target browsers for frontend builds
+# Used by: Babel, PostCSS, Autoprefixer, ESLint, Stylelint
+# ==============================================================================
+
+# ============================================================================
+# PRODUCTION ENVIRONMENT
+# ============================================================================
+[production]
+# Modern browsers (covers 95%+ of global users)
+>= 0.5%
+last 2 major versions
+not dead
+not op_mini all
+
+# Specific browsers for enterprise support
+Chrome >= 90
+Firefox >= 88
+Safari >= 14
+Edge >= 90
+iOS >= 14
+Android >= 90
+
+# ============================================================================
+# DEVELOPMENT ENVIRONMENT
+# ============================================================================
+[development]
+# Latest versions for faster development
+last 1 chrome version
+last 1 firefox version
+last 1 safari version
+last 1 edge version
+
+# ============================================================================
+# MODERN ENVIRONMENT (for cutting-edge features)
+# ============================================================================
+[modern]
+# ES6+ support, modern JS features
+chrome >= 95
+firefox >= 90
+safari >= 15
+edge >= 95
+
+# ============================================================================
+# LEGACY ENVIRONMENT (for maximum compatibility)
+# ============================================================================
+[legacy]
+# Includes IE11 and older browsers
+> 0.1%
+last 5 major versions
+Firefox ESR
+not dead
+IE 11

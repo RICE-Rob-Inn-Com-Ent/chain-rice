@@ -1,0 +1,189 @@
+syntax = "proto3";
+
+package finance.accounting.messages;
+
+import "finance/accounting/enums/account_type.proto";
+import "finance/accounting/enums/accounting_status.proto";
+
+// Financial account representation
+message Account {
+  // Unique account identifier
+  string account_id = 1;
+
+  // Account name
+  string name = 2;
+
+  // Account code/number
+  string account_code = 3;
+
+  // Account description
+  string description = 4;
+
+  // Account type
+  finance.accounting.enums.AccountType account_type = 5;
+
+  // Account status
+  finance.accounting.enums.AccountingStatus status = 6;
+
+  // Parent account ID (for hierarchical accounts)
+  string parent_account_id = 7;
+
+  // Account level in hierarchy
+  int32 level = 8;
+
+  // Current balance
+  double balance = 9;
+
+  // Currency code
+  string currency = 10;
+
+  // Normal balance (debit or credit)
+  string normal_balance = 11;
+
+  // Whether account is active
+  bool is_active = 12;
+
+  // Whether account allows sub-accounts
+  bool allows_sub_accounts = 13;
+
+  // Account tags for categorization
+  repeated string tags = 14;
+
+  // Custom fields
+  map<string, string> custom_fields = 15;
+
+  // Creation timestamp
+  int64 created_at = 16;
+
+  // Last update timestamp
+  int64 updated_at = 17;
+
+  // Created by user ID
+  string created_by = 18;
+
+  // Updated by user ID
+  string updated_by = 19;
+}
+
+// Account creation request
+message CreateAccountRequest {
+  // Account name
+  string name = 1;
+
+  // Account code/number
+  string account_code = 2;
+
+  // Account description
+  string description = 3;
+
+  // Account type
+  finance.accounting.enums.AccountType account_type = 4;
+
+  // Parent account ID (optional)
+  string parent_account_id = 5;
+
+  // Currency code
+  string currency = 6;
+
+  // Normal balance (debit or credit)
+  string normal_balance = 7;
+
+  // Whether account allows sub-accounts
+  bool allows_sub_accounts = 8;
+
+  // Account tags
+  repeated string tags = 9;
+
+  // Custom fields
+  map<string, string> custom_fields = 10;
+}
+
+// Account creation response
+message CreateAccountResponse {
+  // Created account
+  Account account = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Account update request
+message UpdateAccountRequest {
+  // Account ID
+  string account_id = 1;
+
+  // Updated account name
+  string name = 2;
+
+  // Updated account description
+  string description = 3;
+
+  // Updated account status
+  finance.accounting.enums.AccountingStatus status = 4;
+
+  // Updated tags
+  repeated string tags = 5;
+
+  // Updated custom fields
+  map<string, string> custom_fields = 6;
+}
+
+// Account update response
+message UpdateAccountResponse {
+  // Updated account
+  Account account = 1;
+
+  // Success status
+  bool success = 2;
+
+  // Error message if any
+  string error_message = 3;
+}
+
+// Account list request
+message ListAccountsRequest {
+  // Filter by account type
+  finance.accounting.enums.AccountType account_type = 1;
+
+  // Filter by status
+  finance.accounting.enums.AccountingStatus status = 2;
+
+  // Filter by parent account ID
+  string parent_account_id = 3;
+
+  // Filter by currency
+  string currency = 4;
+
+  // Search term
+  string search_term = 5;
+
+  // Page number
+  int32 page = 6;
+
+  // Page size
+  int32 page_size = 7;
+}
+
+// Account list response
+message ListAccountsResponse {
+  // List of accounts
+  repeated Account accounts = 1;
+
+  // Total count
+  int64 total_count = 2;
+
+  // Page number
+  int32 page = 3;
+
+  // Page size
+  int32 page_size = 4;
+
+  // Success status
+  bool success = 5;
+
+  // Error message if any
+  string error_message = 6;
+}

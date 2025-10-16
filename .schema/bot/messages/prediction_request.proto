@@ -1,0 +1,398 @@
+syntax = "proto3";
+
+package automation.ai.messages;
+
+import "automation/ai/enums/ai_priority.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// Prediction Request message
+// Represents a request for AI model prediction
+message PredictionRequest {
+  // Unique identifier for the prediction request
+  string id = 1;
+
+  // Model ID to use for prediction
+  string model_id = 2;
+
+  // Model version to use for prediction
+  string model_version = 3;
+
+  // Request priority
+  automation.ai.enums.AIPriority priority = 4;
+
+  // Input data for prediction
+  PredictionInput input = 5;
+
+  // Prediction configuration
+  PredictionConfig config = 6;
+
+  // Request metadata
+  map<string, string> metadata = 7;
+
+  // Request tags
+  repeated string tags = 8;
+
+  // Request timestamp
+  google.protobuf.Timestamp timestamp = 9;
+
+  // Request timeout in seconds
+  int32 timeout_seconds = 10;
+
+  // Request source
+  string source = 11;
+
+  // Request user
+  string user = 12;
+
+  // Request session
+  string session = 13;
+
+  // Request correlation ID
+  string correlation_id = 14;
+
+  // Request trace ID
+  string trace_id = 15;
+}
+
+// Prediction input data
+message PredictionInput {
+  // Input data type
+  string data_type = 1;
+
+  // Input data format
+  string format = 2;
+
+  // Input data content
+  oneof content {
+    // Raw data as bytes
+    bytes raw_data = 3;
+
+    // Structured data
+    google.protobuf.Struct structured_data = 4;
+
+    // Text data
+    string text_data = 5;
+
+    // Image data
+    ImageData image_data = 6;
+
+    // Audio data
+    AudioData audio_data = 7;
+
+    // Video data
+    VideoData video_data = 8;
+
+    // Tabular data
+    TabularData tabular_data = 9;
+
+    // Time series data
+    TimeSeriesData time_series_data = 10;
+  }
+
+  // Input data preprocessing
+  InputPreprocessing preprocessing = 11;
+
+  // Input data validation
+  InputValidation validation = 12;
+
+  // Input data encoding
+  InputEncoding encoding = 13;
+}
+
+// Image data
+message ImageData {
+  // Image data as bytes
+  bytes image_bytes = 1;
+
+  // Image format (JPEG, PNG, etc.)
+  string format = 2;
+
+  // Image width
+  int32 width = 3;
+
+  // Image height
+  int32 height = 4;
+
+  // Image channels
+  int32 channels = 5;
+
+  // Image metadata
+  map<string, string> metadata = 6;
+}
+
+// Audio data
+message AudioData {
+  // Audio data as bytes
+  bytes audio_bytes = 1;
+
+  // Audio format (WAV, MP3, etc.)
+  string format = 2;
+
+  // Sample rate
+  int32 sample_rate = 3;
+
+  // Number of channels
+  int32 channels = 4;
+
+  // Bit depth
+  int32 bit_depth = 5;
+
+  // Duration in seconds
+  double duration = 6;
+
+  // Audio metadata
+  map<string, string> metadata = 7;
+}
+
+// Video data
+message VideoData {
+  // Video data as bytes
+  bytes video_bytes = 1;
+
+  // Video format (MP4, AVI, etc.)
+  string format = 2;
+
+  // Video width
+  int32 width = 3;
+
+  // Video height
+  int32 height = 4;
+
+  // Frame rate
+  double frame_rate = 5;
+
+  // Duration in seconds
+  double duration = 6;
+
+  // Video metadata
+  map<string, string> metadata = 7;
+}
+
+// Tabular data
+message TabularData {
+  // Column names
+  repeated string columns = 1;
+
+  // Row data
+  repeated TabularRow rows = 2;
+
+  // Data types
+  map<string, string> data_types = 3;
+
+  // Missing value indicators
+  map<string, string> missing_indicators = 4;
+}
+
+// Tabular row
+message TabularRow {
+  // Row values
+  repeated string values = 1;
+
+  // Row index
+  int64 index = 2;
+}
+
+// Time series data
+message TimeSeriesData {
+  // Time series values
+  repeated TimeSeriesPoint points = 1;
+
+  // Time series frequency
+  string frequency = 2;
+
+  // Time series start time
+  google.protobuf.Timestamp start_time = 3;
+
+  // Time series end time
+  google.protobuf.Timestamp end_time = 4;
+
+  // Time series metadata
+  map<string, string> metadata = 5;
+}
+
+// Time series point
+message TimeSeriesPoint {
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 1;
+
+  // Value
+  double value = 2;
+
+  // Quality indicator
+  string quality = 3;
+}
+
+// Input preprocessing
+message InputPreprocessing {
+  // Preprocessing steps
+  repeated PreprocessingStep steps = 1;
+
+  // Preprocessing parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Preprocessing enabled
+  bool enabled = 3;
+}
+
+// Preprocessing step
+message PreprocessingStep {
+  // Step name
+  string name = 1;
+
+  // Step type
+  string type = 2;
+
+  // Step parameters
+  google.protobuf.Struct parameters = 3;
+
+  // Step order
+  int32 order = 4;
+}
+
+// Input validation
+message InputValidation {
+  // Validation rules
+  repeated ValidationRule rules = 1;
+
+  // Validation enabled
+  bool enabled = 2;
+
+  // Validation strict mode
+  bool strict_mode = 3;
+}
+
+// Validation rule
+message ValidationRule {
+  // Rule name
+  string name = 1;
+
+  // Rule type
+  string type = 2;
+
+  // Rule expression
+  string expression = 3;
+
+  // Rule parameters
+  google.protobuf.Struct parameters = 4;
+}
+
+// Input encoding
+message InputEncoding {
+  // Encoding type
+  string encoding_type = 1;
+
+  // Encoding parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Encoding enabled
+  bool enabled = 3;
+}
+
+// Prediction configuration
+message PredictionConfig {
+  // Prediction type
+  string prediction_type = 1;
+
+  // Prediction parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Output format
+  string output_format = 3;
+
+  // Output options
+  PredictionOutputOptions output_options = 4;
+
+  // Model configuration
+  ModelConfiguration model_config = 5;
+
+  // Inference configuration
+  InferenceConfiguration inference_config = 6;
+
+  // Postprocessing configuration
+  PostprocessingConfiguration postprocessing_config = 7;
+}
+
+// Prediction output options
+message PredictionOutputOptions {
+  // Include confidence scores
+  bool include_confidence = 1;
+
+  // Include prediction probabilities
+  bool include_probabilities = 2;
+
+  // Include feature importance
+  bool include_feature_importance = 3;
+
+  // Include model metadata
+  bool include_model_metadata = 4;
+
+  // Include prediction metadata
+  bool include_prediction_metadata = 5;
+
+  // Maximum number of predictions
+  int32 max_predictions = 6;
+
+  // Prediction threshold
+  double prediction_threshold = 7;
+}
+
+// Model configuration
+message ModelConfiguration {
+  // Model parameters
+  google.protobuf.Struct parameters = 1;
+
+  // Model version
+  string version = 2;
+
+  // Model environment
+  string environment = 3;
+
+  // Model configuration
+  google.protobuf.Struct config = 4;
+}
+
+// Inference configuration
+message InferenceConfiguration {
+  // Batch size
+  int32 batch_size = 1;
+
+  // Inference timeout
+  int32 timeout_seconds = 2;
+
+  // Inference retries
+  int32 retries = 3;
+
+  // Inference mode
+  string mode = 4;
+
+  // Inference parameters
+  google.protobuf.Struct parameters = 5;
+}
+
+// Postprocessing configuration
+message PostprocessingConfiguration {
+  // Postprocessing steps
+  repeated PostprocessingStep steps = 1;
+
+  // Postprocessing parameters
+  google.protobuf.Struct parameters = 2;
+
+  // Postprocessing enabled
+  bool enabled = 3;
+}
+
+// Postprocessing step
+message PostprocessingStep {
+  // Step name
+  string name = 1;
+
+  // Step type
+  string type = 2;
+
+  // Step parameters
+  google.protobuf.Struct parameters = 3;
+
+  // Step order
+  int32 order = 4;
+}

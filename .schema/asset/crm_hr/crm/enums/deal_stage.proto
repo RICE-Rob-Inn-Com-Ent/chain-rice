@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package crm_hr.crm.enums;
+
+option go_package = "github.com/rice-dev/crm-hr/crm/enums";
+
+// DealStage represents the different stages a deal can be in during the sales process
+enum DealStage {
+  // Unspecified stage - should not be used in production
+  DEAL_STAGE_UNSPECIFIED = 0;
+
+  // Initial contact and qualification
+  LEAD = 1;
+  QUALIFIED_LEAD = 2;
+
+  // Discovery and proposal phase
+  DISCOVERY = 3;
+  PROPOSAL = 4;
+  NEGOTIATION = 5;
+
+  // Decision and closing phase
+  DECISION_MAKER = 6;
+  CONTRACT_SENT = 7;
+  CLOSED_WON = 8;
+  CLOSED_LOST = 9;
+
+  // Post-sale follow-up
+  ONBOARDING = 10;
+  CUSTOMER = 11;
+}

@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package healthcare.patients.services;
+
+import "google/protobuf/empty.proto";
+import "../messages/patient_models.proto";
+
+option go_package = "github.com/rice-dev/stacks/tools/AUTO/modules/healthcare/patients/services";
+
+// Patient service for CRUD operations
+service PatientService {
+  // Create a new patient
+  rpc CreatePatient(PatientRequest) returns (PatientResponse);
+
+  // Get patient by ID
+  rpc GetPatient(GetPatientRequest) returns (PatientResponse);
+
+  // Update an existing patient
+  rpc UpdatePatient(UpdatePatientRequest) returns (PatientResponse);
+
+  // Delete a patient
+  rpc DeletePatient(DeletePatientRequest) returns (google.protobuf.Empty);
+
+  // List patients with filtering
+  rpc ListPatients(ListPatientsRequest) returns (ListPatientsResponse);
+
+  // Search patients
+  rpc SearchPatients(SearchPatientsRequest) returns (ListPatientsResponse);
+
+  // Get patient by MRN
+  rpc GetPatientByMRN(GetPatientByMRNRequest) returns (PatientResponse);
+
+  // Get patient by SSN
+  rpc GetPatientBySSN(GetPatientBySSNRequest) returns (PatientResponse);
+
+  // Get patient summary
+  rpc GetPatientSummary(GetPatientSummaryRequest) returns (PatientSummary);
+
+  // Update patient status
+  rpc UpdatePatientStatus(UpdatePatientStatusRequest) returns (PatientResponse);
+
+  // Merge patient records
+  rpc MergePatientRecords(MergePatientRecordsRequest) returns (PatientResponse);
+
+  // Duplicate patient check
+  rpc CheckDuplicatePatient(CheckDuplicatePatientRequest) returns (CheckDuplicatePatientResponse);
+}
+
+// Get patient request
+message GetPatientRequest {
+  string patient_id = 1;
+}
+
+// Update patient request
+message UpdatePatientRequest {
+  string patient_id = 1;
+  PatientRequest patient = 2;
+}
+
+// Delete patient request
+message DeletePatientRequest {
+  string patient_id = 1;
+  string reason = 2;
+}
+
+// Search patients request
+message SearchPatientsRequest {
+  string query = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+  string email = 5;
+  string mrn = 6;
+  int32 page_size = 7;
+  string page_token = 8;
+}
+
+// Get patient by MRN request
+message GetPatientByMRNRequest {
+  string mrn = 1;
+}
+
+// Get patient by SSN request
+message GetPatientBySSNRequest {
+  string ssn = 1;
+}
+
+// Get patient summary request
+message GetPatientSummaryRequest {
+  string patient_id = 1;
+}
+
+// Update patient status request
+message UpdatePatientStatusRequest {
+  string patient_id = 1;
+  healthcare.patients.enums.PatientStatus new_status = 2;
+  string reason = 3;
+  string updated_by = 4;
+}
+
+// Merge patient records request
+message MergePatientRecordsRequest {
+  string primary_patient_id = 1;
+  string secondary_patient_id = 2;
+  string reason = 3;
+  string merged_by = 4;
+}
+
+// Check duplicate patient request
+message CheckDuplicatePatientRequest {
+  string first_name = 1;
+  string last_name = 2;
+  google.protobuf.Timestamp date_of_birth = 3;
+  string ssn = 4;
+  string phone = 5;
+  string email = 6;
+}
+
+// Check duplicate patient response
+message CheckDuplicatePatientResponse {
+  bool has_duplicates = 1;
+  repeated Patient potential_duplicates = 2;
+  double confidence_score = 3;
+  string match_reason = 4;
+}

@@ -1,0 +1,50 @@
+# 💰 Funding & Sponsorship Configuration
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# GitHub Sponsors
+# https://github.com/sponsors
+github: [mrDinkelman]
+
+# Patreon
+# https://www.patreon.com/
+patreon: rice-mono
+
+# Open Collective
+# https://opencollective.com/
+open_collective: rice-mono
+
+# Ko-fi
+# https://ko-fi.com/
+ko_fi: mrdinkelman
+
+# Tidelift
+# https://tidelift.com/
+# tidelift: npm/rice-mono
+
+# Community Bridge
+# https://communitybridge.org/
+# community_bridge: rice-mono
+
+# Liberapay
+# https://liberapay.com/
+liberapay: mrDinkelman
+
+# IssueHunt
+# https://issuehunt.io/
+# issuehunt: rice-mono
+
+# Buy Me a Coffee
+# https://www.buymeacoffee.com/
+# buy_me_a_coffee: mrdinkelman
+
+# Otechie
+# https://otechie.com/
+# otechie: rice-mono
+
+# Custom sponsorship URLs
+custom:
+  - https://github.com/mrDinkelman/rice-mono/blob/main/.doc/docs/CONTRIBUTING.md#sponsorship
+  # Cryptocurrency donations
+  - https://github.com/mrDinkelman/rice-mono/wiki/Crypto-Donations
+  # Bank transfer / Wire transfer
+  - https://github.com/mrDinkelman/rice-mono/wiki/Bank-Transfer

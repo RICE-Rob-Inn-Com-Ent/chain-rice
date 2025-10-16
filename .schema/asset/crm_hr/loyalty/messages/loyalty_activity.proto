@@ -1,0 +1,248 @@
+syntax = "proto3";
+
+package crm_hr.loyalty.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/loyalty/messages";
+
+// LoyaltyActivity represents an activity in the loyalty system
+message LoyaltyActivity {
+  // Unique identifier for the activity
+  string id = 1;
+
+  // Associated IDs
+  string customer_id = 2;
+  string program_id = 3;
+  string transaction_id = 4;
+
+  // Activity details
+  string activity_type = 5; // earn, redeem, expire, transfer, gift, bonus, etc.
+  string activity_category = 6; // purchase, referral, social, birthday, etc.
+  string description = 7;
+  string status = 8; // pending, completed, failed, cancelled, expired
+
+  // Activity value
+  double points_earned = 9;
+  double points_redeemed = 10;
+  double points_expired = 11;
+  double points_transferred = 12;
+  double points_received = 13;
+  google.protobuf.Money transaction_amount = 14;
+  double point_multiplier = 15;
+
+  // Activity metadata
+  string source = 16; // purchase, referral, social_media, birthday, anniversary, etc.
+  string channel = 17; // online, in_store, mobile, email, etc.
+  string location = 18;
+  string staff_member = 19;
+
+  // Related entities
+  string related_reward_id = 20;
+  string related_campaign_id = 21;
+  string related_promotion_id = 22;
+  string related_transaction_id = 23;
+
+  // Activity timing
+  google.protobuf.Timestamp activity_date = 24;
+  google.protobuf.Timestamp effective_date = 25;
+  google.protobuf.Timestamp expiration_date = 26;
+
+  // Additional information
+  string notes = 27;
+  string reference_number = 28;
+  repeated string tags = 29;
+  map<string, string> custom_fields = 30;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 31;
+  google.protobuf.Timestamp updated_at = 32;
+}
+
+// LoyaltyMember represents a member in a loyalty program
+message LoyaltyMember {
+  // Unique identifier for the member
+  string id = 1;
+
+  // Associated IDs
+  string customer_id = 2;
+  string program_id = 3;
+
+  // Member information
+  string member_number = 4;
+  string status = 5; // active, inactive, suspended, terminated
+  string tier = 6;
+  int32 tier_level = 7;
+
+  // Point balance
+  double current_points = 8;
+  double lifetime_points_earned = 9;
+  double lifetime_points_redeemed = 10;
+  double lifetime_points_expired = 11;
+  double pending_points = 12;
+
+  // Member lifecycle
+  google.protobuf.Timestamp joined_date = 13;
+  google.protobuf.Timestamp last_activity_date = 14;
+  google.protobuf.Timestamp last_purchase_date = 15;
+  google.protobuf.Timestamp tier_upgrade_date = 16;
+  google.protobuf.Timestamp tier_downgrade_date = 17;
+
+  // Member preferences
+  repeated string preferred_categories = 18;
+  repeated string preferred_channels = 19;
+  string communication_preference = 20;
+  bool email_notifications = 21;
+  bool sms_notifications = 22;
+  bool push_notifications = 23;
+
+  // Member statistics
+  int32 total_transactions = 24;
+  google.protobuf.Money total_spent = 25;
+  google.protobuf.Money average_transaction_value = 26;
+  int32 total_redemptions = 27;
+  double redemption_rate = 28;
+
+  // Member metadata
+  string referral_code = 29;
+  string referred_by = 30;
+  int32 referrals_made = 31;
+  double referral_points_earned = 32;
+  repeated string tags = 33;
+  map<string, string> custom_fields = 34;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 35;
+  google.protobuf.Timestamp updated_at = 36;
+  google.protobuf.Timestamp last_login_at = 37;
+}
+
+// LoyaltyCampaign represents a marketing campaign for the loyalty program
+message LoyaltyCampaign {
+  // Unique identifier for the campaign
+  string id = 1;
+
+  // Associated program ID
+  string program_id = 2;
+
+  // Campaign information
+  string name = 3;
+  string description = 4;
+  string campaign_type = 5; // points_multiplier, bonus_points, discount, exclusive_access, etc.
+  string status = 6; // draft, active, paused, completed, cancelled
+
+  // Campaign details
+  string target_audience = 7; // all_members, specific_tier, specific_segment, etc.
+  repeated string target_tiers = 8;
+  repeated string target_segments = 9;
+
+  // Campaign value
+  double point_multiplier = 10;
+  double bonus_points = 11;
+  double discount_percentage = 12;
+  google.protobuf.Money discount_amount = 13;
+  google.protobuf.Money minimum_spend = 14;
+
+  // Campaign timing
+  google.protobuf.Timestamp start_date = 15;
+  google.protobuf.Timestamp end_date = 16;
+  google.protobuf.Timestamp created_by = 17;
+  google.protobuf.Timestamp approved_by = 18;
+  google.protobuf.Timestamp approved_at = 19;
+
+  // Campaign metrics
+  int32 target_members = 20;
+  int32 reached_members = 21;
+  int32 engaged_members = 22;
+  int32 converted_members = 23;
+  double engagement_rate = 24;
+  double conversion_rate = 25;
+
+  // Campaign metadata
+  string created_by = 26;
+  string team_id = 27;
+  repeated string tags = 28;
+  map<string, string> custom_fields = 29;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 30;
+  google.protobuf.Timestamp updated_at = 31;
+}
+
+// LoyaltySegment represents a customer segment for the loyalty program
+message LoyaltySegment {
+  // Unique identifier for the segment
+  string id = 1;
+
+  // Associated program ID
+  string program_id = 2;
+
+  // Segment information
+  string name = 3;
+  string description = 4;
+  string segment_type = 5; // behavioral, demographic, value_based, etc.
+  bool is_active = 6;
+
+  // Segment criteria
+  string criteria = 7; // JSON string with segmentation rules
+  repeated string required_conditions = 8;
+  repeated string optional_conditions = 9;
+
+  // Segment metadata
+  int32 member_count = 10;
+  double average_points = 11;
+  google.protobuf.Money average_spend = 12;
+  string created_by = 13;
+  string team_id = 14;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+  google.protobuf.Timestamp last_calculated_at = 17;
+}
+
+// LoyaltyNotification represents a notification sent to loyalty members
+message LoyaltyNotification {
+  // Unique identifier for the notification
+  string id = 1;
+
+  // Associated IDs
+  string member_id = 2;
+  string program_id = 3;
+  string campaign_id = 4;
+
+  // Notification details
+  string notification_type = 5; // points_earned, points_expiring, tier_upgrade, reward_available, etc.
+  string title = 6;
+  string message = 7;
+  string status = 8; // sent, delivered, opened, clicked, failed
+
+  // Notification channel
+  string channel = 9; // email, sms, push, in_app, etc.
+  string recipient = 10; // email address, phone number, etc.
+
+  // Notification timing
+  google.protobuf.Timestamp scheduled_at = 11;
+  google.protobuf.Timestamp sent_at = 12;
+  google.protobuf.Timestamp delivered_at = 13;
+  google.protobuf.Timestamp opened_at = 14;
+  google.protobuf.Timestamp clicked_at = 15;
+
+  // Notification content
+  string subject = 16;
+  string body = 17;
+  string call_to_action = 18;
+  string call_to_action_url = 19;
+  string image_url = 20;
+
+  // Additional information
+  string template_id = 21;
+  string personalization_data = 22; // JSON string
+  repeated string tags = 23;
+  map<string, string> custom_fields = 24;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 25;
+  google.protobuf.Timestamp updated_at = 26;
+}

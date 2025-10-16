@@ -1,0 +1,251 @@
+syntax = "proto3";
+
+package crm_hr.hr.messages;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/money.proto";
+import "crm_hr/hr/enums/employee_role.proto";
+import "crm_hr/hr/enums/job_position.proto";
+
+option go_package = "github.com/rice-dev/crm-hr/hr/messages";
+
+// Employee represents an employee in the HR system
+message Employee {
+  // Unique identifier for the employee
+  string id = 1;
+
+  // Personal information
+  string employee_number = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string middle_name = 5;
+  string preferred_name = 6;
+  string email = 7;
+  string personal_email = 8;
+  string phone_number = 9;
+  string emergency_contact = 10;
+  string emergency_phone = 11;
+
+  // Employment information
+  crm_hr.hr.enums.EmployeeRole role = 12;
+  crm_hr.hr.enums.JobPosition position = 13;
+  string department = 14;
+  string team = 15;
+  string manager_id = 16;
+  string reporting_manager = 17;
+  string employment_type = 18; // full_time, part_time, contract, intern, consultant
+  string employment_status = 19; // active, inactive, terminated, on_leave, suspended
+
+  // Work location
+  string office_location = 20;
+  string work_address = 21;
+  string timezone = 22;
+  string work_schedule = 23; // standard, flexible, remote, hybrid
+
+  // Compensation
+  google.protobuf.Money salary = 24;
+  string salary_currency = 25;
+  string pay_frequency = 26; // monthly, bi_weekly, weekly, annual
+  google.protobuf.Money hourly_rate = 27;
+  google.protobuf.Money bonus = 28;
+  google.protobuf.Money commission = 29;
+
+  // Employment dates
+  google.protobuf.Timestamp hire_date = 30;
+  google.protobuf.Timestamp start_date = 31;
+  google.protobuf.Timestamp probation_end_date = 32;
+  google.protobuf.Timestamp last_promotion_date = 33;
+  google.protobuf.Timestamp termination_date = 34;
+
+  // Personal details
+  google.protobuf.Timestamp date_of_birth = 35;
+  string gender = 36;
+  string marital_status = 37;
+  string nationality = 38;
+  string passport_number = 39;
+  string social_security_number = 40;
+  string tax_id = 41;
+
+  // Address information
+  string home_address = 42;
+  string city = 43;
+  string state_province = 44;
+  string postal_code = 45;
+  string country = 46;
+
+  // Skills and qualifications
+  repeated string skills = 47;
+  repeated string certifications = 48;
+  repeated string languages = 49;
+  string education_level = 50;
+  string university = 51;
+  string degree = 52;
+  string major = 53;
+  int32 graduation_year = 54;
+
+  // Performance and development
+  string performance_rating = 55;
+  google.protobuf.Timestamp last_review_date = 56;
+  google.protobuf.Timestamp next_review_date = 57;
+  repeated string goals = 58;
+  repeated string development_plans = 59;
+
+  // Benefits and permissions
+  repeated string benefits = 60;
+  repeated string permissions = 61;
+  repeated string access_levels = 62;
+  bool is_admin = 63;
+  bool can_approve_expenses = 64;
+  bool can_approve_time_off = 65;
+
+  // Additional information
+  string notes = 66;
+  string bio = 67;
+  string profile_picture_url = 68;
+  repeated string tags = 69;
+  map<string, string> custom_fields = 70;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 71;
+  google.protobuf.Timestamp updated_at = 72;
+  google.protobuf.Timestamp last_login_at = 73;
+  google.protobuf.Timestamp last_activity_at = 74;
+
+  // Version for optimistic concurrency control
+  int32 version = 75;
+}
+
+// EmployeeProfile represents a detailed employee profile with additional information
+message EmployeeProfile {
+  // Associated employee ID
+  string employee_id = 1;
+
+  // Professional summary
+  string professional_summary = 2;
+  string career_objectives = 3;
+  repeated string key_achievements = 4;
+  repeated string projects = 5;
+
+  // Work experience
+  repeated WorkExperience work_experience = 6;
+  repeated Education education = 7;
+  repeated Certification certifications = 8;
+
+  // Skills and competencies
+  repeated Skill skills = 9;
+  repeated Language languages = 10;
+  repeated string interests = 11;
+
+  // References
+  repeated Reference references = 12;
+
+  // Social profiles
+  string linkedin_url = 13;
+  string github_url = 14;
+  string portfolio_url = 15;
+  string website_url = 16;
+
+  // Availability
+  string availability_status = 17;
+  string preferred_work_hours = 18;
+  repeated string preferred_projects = 19;
+
+  // Timestamps
+  google.protobuf.Timestamp created_at = 20;
+  google.protobuf.Timestamp updated_at = 21;
+}
+
+// WorkExperience represents a work experience entry
+message WorkExperience {
+  string id = 1;
+  string company_name = 2;
+  string position = 3;
+  string department = 4;
+  string location = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  bool is_current = 8;
+  string description = 9;
+  repeated string achievements = 10;
+  repeated string skills_used = 11;
+}
+
+// Education represents an education entry
+message Education {
+  string id = 1;
+  string institution_name = 2;
+  string degree = 3;
+  string field_of_study = 4;
+  string location = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  bool is_current = 8;
+  double gpa = 9;
+  string description = 10;
+  repeated string achievements = 11;
+}
+
+// Certification represents a certification entry
+message Certification {
+  string id = 1;
+  string name = 2;
+  string issuing_organization = 3;
+  string credential_id = 4;
+  google.protobuf.Timestamp issue_date = 5;
+  google.protobuf.Timestamp expiration_date = 6;
+  bool is_current = 7;
+  string credential_url = 8;
+  string description = 9;
+}
+
+// Skill represents a skill with proficiency level
+message Skill {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string proficiency_level = 4; // beginner, intermediate, advanced, expert
+  int32 years_of_experience = 5;
+  bool is_verified = 6;
+  string verification_method = 7;
+  google.protobuf.Timestamp last_used = 8;
+}
+
+// Language represents a language with proficiency level
+message Language {
+  string id = 1;
+  string name = 2;
+  string proficiency_level = 3; // basic, conversational, fluent, native
+  bool is_native = 4;
+  bool is_verified = 5;
+  string verification_method = 6;
+}
+
+// Reference represents a professional reference
+message Reference {
+  string id = 1;
+  string name = 2;
+  string position = 3;
+  string company = 4;
+  string email = 5;
+  string phone = 6;
+  string relationship = 7;
+  bool can_contact = 8;
+  string notes = 9;
+}
+
+// EmployeeDocument represents a document associated with an employee
+message EmployeeDocument {
+  string id = 1;
+  string employee_id = 2;
+  string document_type = 3; // contract, id, passport, visa, etc.
+  string title = 4;
+  string description = 5;
+  string file_url = 6;
+  string file_name = 7;
+  string mime_type = 8;
+  int64 file_size = 9;
+  bool is_confidential = 10;
+  google.protobuf.Timestamp uploaded_at = 11;
+  string uploaded_by = 12;
+  google.protobuf.Timestamp expires_at = 13;
+}

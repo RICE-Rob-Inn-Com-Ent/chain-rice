@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package core.files.services;
+
+import "core/files/messages/file.proto";
+import "core/files/messages/file_metadata.proto";
+
+// FileService manages file metadata and access URLs.
+service FileService {
+  // Create a file record and optionally return an upload URL.
+  rpc CreateFile(CreateFileRequest) returns (CreateFileResponse);
+
+  // Get a file by id including pre-signed URLs.
+  rpc GetFile(GetFileRequest) returns (GetFileResponse);
+
+  // Update file metadata (e.g., status, tags).
+  rpc UpdateFile(UpdateFileRequest) returns (UpdateFileResponse);
+
+  // Delete a file logically.
+  rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
+
+  // List files with pagination and filtering.
+  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse);
+
+  // Refresh access URLs for a file.
+  rpc RefreshUrls(RefreshUrlsRequest) returns (RefreshUrlsResponse);
+}
+
+// Requests and responses
+
+message CreateFileRequest {
+  core.files.messages.FileMetadata metadata = 1; // Initial metadata.
+  bool return_upload_url = 2; // Whether to return an upload URL.
+}
+
+message CreateFileResponse {
+  core.files.messages.File file = 1; // Created file with URLs.
+}
+
+message GetFileRequest {
+  string id = 1; // File id.
+}
+
+message GetFileResponse {
+  core.files.messages.File file = 1; // File with URLs.
+}
+
+message UpdateFileRequest {
+  core.files.messages.FileMetadata metadata = 1; // Updated metadata.
+}
+
+message UpdateFileResponse {
+  core.files.messages.File file = 1; // File after update.
+}
+
+message DeleteFileRequest {
+  string id = 1; // File id to delete.
+}
+
+message DeleteFileResponse {
+  bool success = 1; // Whether deletion was successful.
+}
+
+message ListFilesRequest {
+  int32 page_size = 1;   // Page size.
+  string page_token = 2; // Page token.
+  string query = 3;      // Search over filename.
+}
+
+message ListFilesResponse {
+  repeated core.files.messages.FileMetadata files = 1; // Page of file metadata.
+  string next_page_token = 2; // Next page token when present.
+}
+
+message RefreshUrlsRequest {
+  string id = 1; // File id.
+}
+
+message RefreshUrlsResponse {
+  core.files.messages.File file = 1; // File with refreshed URLs.
+}

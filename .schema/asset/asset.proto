@@ -1,0 +1,272 @@
+syntax = "proto3";
+
+package finance;
+
+// Finance module index - comprehensive Protobuf definitions for financial operations
+// This module provides complete gRPC services for financial management including
+// accounting, invoicing, payments, subscriptions, and tax operations.
+
+// Accounting module imports
+import "finance/accounting/enums/account_type.proto";
+import "finance/accounting/enums/ledger_entry_type.proto";
+import "finance/accounting/enums/accounting_status.proto";
+import "finance/accounting/messages/account.proto";
+import "finance/accounting/messages/ledger_entry.proto";
+import "finance/accounting/messages/balance_sheet.proto";
+import "finance/accounting/services/accounting_service.proto";
+
+// Invoicing module imports
+import "finance/invoicing/enums/invoice_status.proto";
+import "finance/invoicing/enums/invoice_type.proto";
+import "finance/invoicing/enums/tax_handling.proto";
+import "finance/invoicing/messages/invoice.proto";
+import "finance/invoicing/messages/invoice_item.proto";
+import "finance/invoicing/messages/invoice_adjustment.proto";
+import "finance/invoicing/services/invoicing_service.proto";
+
+// Payments module imports
+import "finance/payments/enums/payment_method.proto";
+import "finance/payments/enums/payment_status.proto";
+import "finance/payments/enums/settlement_type.proto";
+import "finance/payments/messages/payment.proto";
+import "finance/payments/messages/refund.proto";
+import "finance/payments/messages/payout.proto";
+import "finance/payments/services/payments_service.proto";
+
+// Subscriptions module imports
+import "finance/subscriptions/enums/subscription_plan.proto";
+import "finance/subscriptions/enums/subscription_status.proto";
+import "finance/subscriptions/enums/billing_cycle.proto";
+import "finance/subscriptions/messages/subscription.proto";
+import "finance/subscriptions/messages/plan.proto";
+import "finance/subscriptions/messages/usage_record.proto";
+import "finance/subscriptions/services/subscriptions_service.proto";
+
+// Tax module imports
+import "finance/tax/enums/tax_type.proto";
+import "finance/tax/enums/tax_region.proto";
+import "finance/tax/messages/tax_record.proto";
+import "finance/tax/messages/tax_declaration.proto";
+import "finance/tax/services/tax_service.proto";
+
+// Re-export accounting enums for easy access
+option go_package = "finance";
+
+// Accounting enums re-exports
+message AccountType {
+  finance.accounting.enums.AccountType value = 1;
+}
+
+message LedgerEntryType {
+  finance.accounting.enums.LedgerEntryType value = 1;
+}
+
+message AccountingStatus {
+  finance.accounting.enums.AccountingStatus value = 1;
+}
+
+// Invoicing enums re-exports
+message InvoiceStatus {
+  finance.invoicing.enums.InvoiceStatus value = 1;
+}
+
+message InvoiceType {
+  finance.invoicing.enums.InvoiceType value = 1;
+}
+
+message TaxHandling {
+  finance.invoicing.enums.TaxHandling value = 1;
+}
+
+// Payments enums re-exports
+message PaymentMethod {
+  finance.payments.enums.PaymentMethod value = 1;
+}
+
+message PaymentStatus {
+  finance.payments.enums.PaymentStatus value = 1;
+}
+
+message SettlementType {
+  finance.payments.enums.SettlementType value = 1;
+}
+
+// Subscriptions enums re-exports
+message SubscriptionPlan {
+  finance.subscriptions.enums.SubscriptionPlan value = 1;
+}
+
+message SubscriptionStatus {
+  finance.subscriptions.enums.SubscriptionStatus value = 1;
+}
+
+message BillingCycle {
+  finance.subscriptions.enums.BillingCycle value = 1;
+}
+
+// Tax enums re-exports
+message TaxType {
+  finance.tax.enums.TaxType value = 1;
+}
+
+message TaxRegion {
+  finance.tax.enums.TaxRegion value = 1;
+}
+
+// Shared financial types
+message Money {
+  // Currency code (ISO 4217)
+  string currency = 1;
+
+  // Amount in smallest currency unit (e.g., cents for USD)
+  int64 amount = 2;
+
+  // Display amount (for human readability)
+  string display_amount = 3;
+}
+
+message Pagination {
+  // Page number (1-based)
+  int32 page = 1;
+
+  // Page size
+  int32 page_size = 2;
+
+  // Total number of items
+  int64 total = 3;
+
+  // Total number of pages
+  int32 total_pages = 4;
+}
+
+message Metadata {
+  // Creation timestamp
+  int64 created_at = 1;
+
+  // Last update timestamp
+  int64 updated_at = 2;
+
+  // Created by user ID
+  string created_by = 3;
+
+  // Updated by user ID
+  string updated_by = 4;
+
+  // Version number
+  int32 version = 5;
+
+  // Additional metadata
+  map<string, string> tags = 6;
+}
+
+message Error {
+  // Error code
+  string code = 1;
+
+  // Error message
+  string message = 2;
+
+  // Error details
+  string details = 3;
+
+  // Error timestamp
+  int64 timestamp = 4;
+
+  // Request ID for tracing
+  string request_id = 5;
+}
+
+// Main service aggregator - provides access to all finance services
+service FinanceService {
+  // Accounting operations
+  rpc CreateAccount(finance.accounting.services.CreateAccountRequest) returns (finance.accounting.services.CreateAccountResponse);
+  rpc GetAccount(finance.accounting.services.GetAccountRequest) returns (finance.accounting.services.GetAccountResponse);
+  rpc CreateLedgerEntry(finance.accounting.services.CreateLedgerEntryRequest) returns (finance.accounting.services.CreateLedgerEntryResponse);
+  rpc GetBalanceSheet(finance.accounting.services.GetBalanceSheetRequest) returns (finance.accounting.services.GetBalanceSheetResponse);
+
+  // Invoicing operations
+  rpc CreateInvoice(finance.invoicing.services.CreateInvoiceRequest) returns (finance.invoicing.services.CreateInvoiceResponse);
+  rpc GetInvoice(finance.invoicing.services.GetInvoiceRequest) returns (finance.invoicing.services.GetInvoiceResponse);
+  rpc UpdateInvoiceStatus(finance.invoicing.services.UpdateInvoiceStatusRequest) returns (finance.invoicing.services.UpdateInvoiceStatusResponse);
+  rpc CreateInvoiceAdjustment(finance.invoicing.services.CreateInvoiceAdjustmentRequest) returns (finance.invoicing.services.CreateInvoiceAdjustmentResponse);
+
+  // Payment operations
+  rpc ProcessPayment(finance.payments.services.ProcessPaymentRequest) returns (finance.payments.services.ProcessPaymentResponse);
+  rpc GetPayment(finance.payments.services.GetPaymentRequest) returns (finance.payments.services.GetPaymentResponse);
+  rpc CreateRefund(finance.payments.services.CreateRefundRequest) returns (finance.payments.services.CreateRefundResponse);
+  rpc CreatePayout(finance.payments.services.CreatePayoutRequest) returns (finance.payments.services.CreatePayoutResponse);
+
+  // Subscription operations
+  rpc CreateSubscription(finance.subscriptions.services.CreateSubscriptionRequest) returns (finance.subscriptions.services.CreateSubscriptionResponse);
+  rpc GetSubscription(finance.subscriptions.services.GetSubscriptionRequest) returns (finance.subscriptions.services.GetSubscriptionResponse);
+  rpc UpdateSubscription(finance.subscriptions.services.UpdateSubscriptionRequest) returns (finance.subscriptions.services.UpdateSubscriptionResponse);
+  rpc RecordUsage(finance.subscriptions.services.RecordUsageRequest) returns (finance.subscriptions.services.RecordUsageResponse);
+
+  // Tax operations
+  rpc CalculateTax(finance.tax.services.CalculateTaxRequest) returns (finance.tax.services.CalculateTaxResponse);
+  rpc CreateTaxRecord(finance.tax.services.CreateTaxRecordRequest) returns (finance.tax.services.CreateTaxRecordResponse);
+  rpc GenerateTaxDeclaration(finance.tax.services.GenerateTaxDeclarationRequest) returns (finance.tax.services.GenerateTaxDeclarationResponse);
+}
+
+// Finance module summary
+message FinanceModuleSummary {
+  // Module version
+  string version = 1;
+
+  // Module description
+  string description = 2;
+
+  // Available services
+  repeated string available_services = 3;
+
+  // Available enums
+  repeated string available_enums = 4;
+
+  // Available messages
+  repeated string available_messages = 5;
+
+  // Module capabilities
+  repeated string capabilities = 6;
+
+  // Last updated timestamp
+  int64 last_updated = 7;
+}
+
+// Financial overview
+message FinancialOverview {
+  // Total revenue
+  Money total_revenue = 1;
+
+  // Total expenses
+  Money total_expenses = 2;
+
+  // Net profit
+  Money net_profit = 3;
+
+  // Total assets
+  Money total_assets = 4;
+
+  // Total liabilities
+  Money total_liabilities = 5;
+
+  // Total equity
+  Money total_equity = 6;
+
+  // Active subscriptions
+  int32 active_subscriptions = 7;
+
+  // Pending invoices
+  int32 pending_invoices = 8;
+
+  // Outstanding payments
+  Money outstanding_payments = 9;
+
+  // Cash flow status
+  string cash_flow_status = 10;
+
+  // Financial health score
+  double financial_health_score = 11;
+
+  // Last updated timestamp
+  int64 last_updated = 12;
+}
