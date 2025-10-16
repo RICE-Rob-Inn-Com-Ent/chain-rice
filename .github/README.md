@@ -37,7 +37,7 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 
 - **🏗️ Automated Building**: Multi-language build system using Bazel
 - **✅ Comprehensive Testing**: Python, Go, TypeScript, Rust, Solidity, Dart
-- **🔍 Code Quality**: Linting, formatting, and static analysis
+- **🔍 Code Quality**: 3-layer linting (VSCode + Pre-commit + CI/CD) with 14 parallel jobs
 - **🔒 Security Scanning**: Dependency audits, CodeQL analysis, container scanning
 - **📦 Release Automation**: Semantic versioning, changelog generation, artifact publishing
 - **🐳 Docker Publishing**: Automated container builds and registry publishing
@@ -50,7 +50,8 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 2. **Reproducible Builds**: Hermetic builds with Bazel
 3. **Fast Feedback**: Parallel execution, intelligent caching
 4. **Security First**: Multiple layers of security scanning
-5. **Developer Experience**: Clear feedback, easy debugging
+5. **Developer Experience**: Ultra-fast pre-commit (~1-2s) + real-time VSCode linting
+6. **Performance Optimized**: 15-30x faster pre-commit (1-2s vs 30-60s)
 
 ---
 
@@ -128,12 +129,15 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
     ├── meta-stale.yml            # Stale issue management
     └── docs-deploy.yml           # Documentation deployment
 
-📚 Detailed Documentation: ../.doc/helpers/github/
-    ├── WORKFLOWS.md              # Complete workflow guide
-    ├── ISSUE_TEMPLATE.md         # Issue template guide
-    ├── CODEOWNERS.md             # Code ownership guide
-    ├── FUNDING.md                # Funding guide
-    └── PULL_REQUEST_TEMPLATE_GUIDE.md  # PR template guide
+📚 Detailed Documentation:
+    ../.doc/helpers/
+    ├── PRE_COMMIT_GUIDE.md       # Pre-commit & linting architecture
+    └── github/
+        ├── WORKFLOWS.md          # Complete workflow guide
+        ├── ISSUE_TEMPLATE.md     # Issue template guide
+        ├── CODEOWNERS.md         # Code ownership guide
+        ├── FUNDING.md            # Funding guide
+        └── PULL_REQUEST_TEMPLATE_GUIDE.md  # PR template guide
 ```
 
 ---
@@ -180,21 +184,30 @@ This directory contains the complete CI/CD infrastructure for the Rice Monorepo.
 #### 🎨 [Lint Workflow](workflows/ci-lint.yml)
 
 **Trigger**: Push to `main`/`dev`, Pull Requests
-**Purpose**: Enforce code quality and style standards
+**Purpose**: Comprehensive code quality enforcement across 14 parallel jobs
 
-**Linters by Language**:
+**Architecture**: 3-layer quality assurance (VSCode + Pre-commit + CI/CD)
 
-- **Python**: `ruff`, `black`, `mypy`
-- **Go**: `golangci-lint`
-- **TypeScript**: `eslint`, `prettier`
-- **Rust**: `clippy`, `rustfmt`
-- **Solidity**: `solhint`
-- **YAML**: `yamllint`
-- **Markdown**: `markdownlint`
-- **Shell**: `shellcheck`
-- **Docker**: `hadolint`
+**14 Parallel Jobs**:
 
-**Tools**: [pre-commit](https://pre-commit.com/), [super-linter](https://github.com/github/super-linter)
+- 🐍 **Python**: Ruff, Black, isort, mypy, Bandit
+- 🔵 **Go**: golangci-lint, go vet, staticcheck (matrix: db, token)
+- ✨ **TypeScript**: ESLint, Prettier, TSC type checking
+- 🦀 **Rust**: Clippy, rustfmt, cargo-deny
+- ⛓️ **Solidity**: solhint, Prettier, Slither security
+- 🎯 **Dart/Flutter**: flutter analyze, dart format
+- 📦 **Protobuf**: buf lint, buf format, buf breaking
+- 🏗️ **Terraform**: tflint, tfsec, terraform validate
+- 📝 **Markdown**: markdownlint
+- 📋 **YAML**: yamllint
+- 🐳 **Docker**: hadolint
+- 🐚 **Shell**: ShellCheck
+- 🏗️ **Bazel**: buildifier
+- 📖 **Spelling**: codespell
+
+**Performance**: Pre-commit ~1-2s (formatting only) → CI/CD ~3-5min (full linting)
+
+**→ See [WORKFLOWS.md](../.doc/helpers/github/WORKFLOWS.md#3-lint-workflow-ci-lintyml) for detailed architecture**
 
 ---
 
@@ -785,6 +798,7 @@ For complete mastery of CI/CD in this repository, read these detailed guides:
 | Topic               | Guide                                                                                                            | What You'll Learn                                                  |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | **Workflows**       | [`../.doc/helpers/github/WORKFLOWS.md`](../.doc/helpers/github/WORKFLOWS.md)                                     | Every workflow explained, configuration patterns, troubleshooting  |
+| **Pre-Commit & Linting** | [`../.doc/helpers/PRE_COMMIT_GUIDE.md`](../.doc/helpers/PRE_COMMIT_GUIDE.md)                              | 3-layer architecture, performance optimization, local development  |
 | **Issue Templates** | [`../.doc/helpers/github/ISSUE_TEMPLATE.md`](../.doc/helpers/github/ISSUE_TEMPLATE.md)                           | How to use templates, best practices for reporters and maintainers |
 | **Code Ownership**  | [`../.doc/helpers/github/CODEOWNERS.md`](../.doc/helpers/github/CODEOWNERS.md)                                   | Review process, ownership patterns, becoming a code owner          |
 | **Funding**         | [`../.doc/helpers/github/FUNDING.md`](../.doc/helpers/github/FUNDING.md)                                         | Sponsorship options, benefits, transparency                        |

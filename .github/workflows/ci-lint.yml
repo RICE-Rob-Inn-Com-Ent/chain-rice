@@ -419,10 +419,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up buildifier
+        run: |
+          curl -L -o buildifier https://github.com/bazelbuild/buildtools/releases/latest/download/buildifier-linux-amd64
+          chmod +x buildifier
+
       - name: Run buildifier
-        uses: keith/buildifier-action@v1
-        with:
-          args: -mode=check -lint=warn
+        run: |
+          ./buildifier -mode=check -lint=warn $(find . -type f \( -name 'BUILD' -o -name 'BUILD.bazel' -o -name '*.bzl' -o -name 'WORKSPACE' \))
 
   # ===========================================================================
   # COMMIT MESSAGES (PRs only)
