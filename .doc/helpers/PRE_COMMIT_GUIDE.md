@@ -1,139 +1,383 @@
-# 💎 Pre-Commit Configuration Guide
+# 💎 Pre-Commit & CI/CD Linting Guide
 
 ## Overview
 
-Rice Monorepo uses a **billion-dollar enterprise-grade pre-commit configuration** supporting all languages and
-frameworks in the monorepo.
+Rice Monorepo uses a **three-layer quality assurance** strategy for optimal developer experience:
 
-## Supported Languages & Tools
+1. **VSCode Extensions** → Real-time linting while coding
+2. **Pre-Commit Hooks** → Fast auto-fix formatting (~1-2 seconds)
+3. **CI/CD Pipeline** → Comprehensive linting before merge (~3-5 minutes)
 
-### 🐍 Python (.bot/)
+## Architecture
 
-- **Black** - Code formatter (PEP 8)
-- **Ruff** - Ultra-fast linter (10-100x faster than Flake8)
-- **isort** - Import organizer
-- **mypy** - Static type checker
+```text
+┌─────────────────────────────────────────────────────────┐
+│ LAYER 1: VSCode Extensions (Real-time)                 │
+├─────────────────────────────────────────────────────────┤
+│ • Pylance, Ruff, ESLint, rust-analyzer                 │
+│ • Instant feedback while typing                        │
+│ • Configured via .vscode/settings.json                 │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│ LAYER 2: Pre-Commit (~1-2 seconds)                     │
+├─────────────────────────────────────────────────────────┤
+│ • Auto-fix formatting (Black, Prettier, gofmt, etc.)   │
+│ • Basic syntax checks (YAML, JSON, TOML)               │
+│ • Security scanning (detect-secrets)                   │
+│ • NO heavy linting (Ruff, ESLint, mypy, clippy, etc.)  │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│ LAYER 3: CI/CD (3-5 minutes)                           │
+├─────────────────────────────────────────────────────────┤
+│ • ALL linters: Ruff, ESLint, Clippy, golangci-lint     │
+│ • Type checking: mypy, TSC                             │
+│ • Security: Bandit, Slither, tfsec, cargo-deny         │
+│ • Breaking changes: buf breaking, dependency-review    │
+└─────────────────────────────────────────────────────────┘
+```
 
-### 🔵 Go (.backend/db/, .backend/token/)
+## Pre-Commit Hooks (Fast Layer)
 
-- **gofmt** - Standard Go formatter
-- **goimports** - Import organizer
-- **go vet** - Go code analyzer
-- **go mod tidy** - Module cleanup
+### What Runs Locally (~1-2 seconds)
 
-### 🦀 Rust (.backend/contract/rust/)
+✅ **File Cleanup**
+- Trim trailing whitespace
+- Fix end-of-file newlines
+- Fix line endings (LF)
+- Check merge conflicts
+- Check large files
 
-- **rustfmt** - Rust formatter
-- **clippy** - Rust linter
+✅ **Formatting Only** (NO linting)
+- 🐍 Python: `black`, `isort`
+- 🔵 Go: `gofmt`, `goimports`
+- 🦀 Rust: `rustfmt`
+- ✨ JS/TS: `prettier`
+- 🐚 Shell: `shfmt`
+- 🏗️ Bazel: `buildifier`
 
-### ✨ JavaScript/TypeScript (.frontend/web/)
+✅ **Basic Syntax Validation**
+- YAML, JSON, TOML syntax
+- No deep validation
 
-- **Prettier** - Code formatter
-- **ESLint** - Linter with TypeScript support
+✅ **Security & Git**
+- Secret detection (detect-secrets)
+- Conventional commits
+- Branch protection
 
-### ⛓️ Solidity (.backend/contract/solidity/)
+### What Does NOT Run (Runs in CI/CD)
 
-- **solhint** - Solidity linter
+❌ **Heavy Linters** (too slow)
+- Ruff, ESLint, Clippy, golangci-lint, solhint
+- mypy, TSC type checking
+- Markdown, YAML deep linting
 
-### 🎯 Dart/Flutter (.frontend/flutter/)
+❌ **Security Scanners** (too slow)
+- Bandit, Slither, tfsec, cargo-deny
 
-- **dart format** - Dart formatter
-- **flutter analyze** - Static analyzer
+❌ **Breaking Change Detection**
+- buf breaking, dependency-review
 
-### 📦 Protocol Buffers (.schema/)
+## CI/CD Linting (Comprehensive Layer)
 
-- **buf format** - Protobuf formatter
-- **buf lint** - Protobuf linter
+### 14 Parallel Jobs
 
-### 🏗️ Infrastructure
+All linters run in GitHub Actions on `push` and `pull_request`:
 
-- **Terraform** - fmt, validate, tflint
-- **Kubernetes/Helm** - helm lint
-- **Bazel** - buildifier
-- **Docker** - hadolint
+| Job | Tools | Languages |
+|-----|-------|-----------|
+| 🐍 Python | Ruff, Black, isort, mypy, Bandit | `.bot/**/*.py` |
+| 🔵 Go | golangci-lint, go vet, staticcheck | `.backend/**/*.go` |
+| ✨ TypeScript | ESLint, Prettier, TSC | `.frontend/web/**/*.ts` |
+| 🦀 Rust | Clippy, rustfmt, cargo-deny | `.backend/contract/rust/**/*.rs` |
+| ⛓️ Solidity | solhint, Prettier, Slither | `.backend/contract/solidity/**/*.sol` |
+| 🎯 Dart/Flutter | flutter analyze, dart format | `.frontend/flutter/**/*.dart` |
+| 📦 Protobuf | buf lint, buf format, buf breaking | `.schema/**/*.proto` |
+| 🏗️ Terraform | tflint, tfsec, terraform validate | `.dev/terraform/**/*.tf` |
+| 📝 Markdown | markdownlint | `**/*.md` |
+| 📋 YAML | yamllint | `**/*.{yaml,yml}` |
+| 🐳 Docker | hadolint | `**/Dockerfile*` |
+| 🐚 Shell | ShellCheck | `**/*.sh` |
+| 🏗️ Bazel | buildifier | `**/*.{bazel,bzl}` |
+| 📖 Spelling | codespell | All text files |
 
-### 📝 Documentation & Config
+### Additional Checks
 
-- **Markdown** - markdownlint
-- **YAML** - yamllint
-- **TOML** - pretty-format-toml
-- **EditorConfig** - compliance checker
-
-### 🔒 Security & Quality
-
-- **detect-secrets** - Secret scanner
-- **codespell** - Spell checker
-- **conventional-commits** - Commit message format
+- 💬 **Commitlint** - Conventional commits enforcement
+- ⚖️ **License** - License header compliance
+- 🔍 **Dependency Review** - Vulnerability & license scanning
 
 ## Quick Start
 
 ### Install Pre-Commit Hooks
 
 ```bash
-# Using make
+# Using make (recommended)
 make pre-commit-install
 
 # Or directly
 pre-commit install --install-hooks --hook-type pre-commit --hook-type commit-msg
 ```
 
-### Run on Staged Files
+### Daily Usage
 
 ```bash
-# Using make
+# Normal commit - auto-formatting applied (~1s)
+git add .
+git commit -m "feat(backend/token): add transfer endpoint"
+
+# Pre-commit will:
+# ✅ Auto-fix formatting (Black, Prettier, gofmt, etc.)
+# ✅ Check syntax (YAML, JSON)
+# ✅ Scan for secrets
+# ✅ Validate commit message format
+```
+
+### Run Manually
+
+```bash
+# Run on staged files only
 make pre-commit-run
 
-# Or directly
-pre-commit run
-```
-
-### Run on All Files
-
-```bash
-# Using make (WARNING: slow on large monorepo)
+# Run on all files (slower, ~10-30s for whole repo)
 make pre-commit-run-all
 
-# Or directly
-pre-commit run --all-files
+# Run specific hook
+pre-commit run black --all-files
 ```
 
-### Update Hook Versions
+## Bypassing Pre-Commit
+
+### When to Skip
+
+Use `--no-verify` for:
+- 🔄 Mass refactors (1000+ files)
+- 📦 Vendor/dependency updates
+- 🤖 Generated code commits
+- 🔥 Emergency hotfixes
+- 🚧 WIP commits to feature branch
+
+### How to Skip
 
 ```bash
-# Using make
-make pre-commit-update
+# Skip all hooks for one commit
+git commit --no-verify -m "message"
+# or
+git commit -n -m "message"
 
-# Or directly
-pre-commit autoupdate
+# Skip specific hooks
+SKIP=detect-secrets,black git commit -m "message"
+
+# Skip all hooks temporarily
+SKIP=all git commit -m "message"
 ```
 
-### Clean Cache
+## CI/CD Pipeline
+
+### Triggers
+
+```yaml
+# Runs on:
+- Push to: main, dev, v.*
+- Pull requests to: main, dev
+- Merge queue
+```
+
+### Viewing Results
+
+1. **GitHub Actions tab** - See all 14 jobs
+2. **PR Checks** - Status badges on PR
+3. **Step Summary** - Beautiful table with results
+
+### Local Testing (Before Push)
 
 ```bash
-# Using make
+# Run specific linter locally
+cd .bot && ruff check .
+cd .backend/db && golangci-lint run
+cd .frontend/web && npm run lint
+
+# Or use act to run GitHub Actions locally
+act -j python-lint
+```
+
+## Commit Message Format
+
+### Conventional Commits
+
+Format: `<type>(<scope>): <subject>`
+
+#### Types
+
+- `feat` - New feature ✨
+- `fix` - Bug fix 🐛
+- `docs` - Documentation 📚
+- `style` - Formatting 💎
+- `refactor` - Code refactoring 📦
+- `perf` - Performance 🚀
+- `test` - Tests 🧪
+- `build` - Build system 🛠
+- `ci` - CI/CD ⚙️
+- `chore` - Maintenance ♻️
+- `security` - Security 🔒
+- `deps` - Dependencies 📦
+
+#### Scopes (examples)
+
+```text
+backend/db
+backend/token
+backend/contract/rust
+backend/contract/solidity
+bot/core
+bot/integration
+frontend/flutter
+frontend/web/angular
+frontend/web/next
+schema/token
+dev/terraform
+dev/k8s
+config
+ci
+```
+
+#### Examples
+
+```bash
+git commit -m "feat(backend/token): add transfer validation"
+git commit -m "fix(bot/core): resolve import circular dependency"
+git commit -m "docs(readme): update installation steps"
+git commit -m "ci(github/workflows): optimize lint pipeline"
+git commit -m "chore(deps): update Rust dependencies"
+```
+
+## Performance Comparison
+
+### Before (Full Linting in Pre-Commit)
+
+```text
+⏱️  30-60 seconds per commit
+😫 Frustrating developer experience
+🐌 Slow feedback loop
+❌ Often bypassed with --no-verify
+```
+
+### After (Minimal Pre-Commit + CI/CD)
+
+```text
+⚡ 1-2 seconds per commit
+😊 Great developer experience
+🚀 Fast feedback loop
+✅ Rarely bypassed
+💪 Comprehensive validation in CI/CD
+```
+
+## What Gets Checked Where?
+
+### ⚡ Pre-Commit (1-2s)
+
+```text
+✅ Formatting (auto-fix)
+✅ Basic syntax
+✅ Secrets
+✅ Commit format
+❌ NO linting
+❌ NO type checking
+❌ NO complex validation
+```
+
+### 🔍 CI/CD (3-5min)
+
+```text
+✅ ALL linters
+✅ Type checking
+✅ Security scanning
+✅ Breaking changes
+✅ License compliance
+✅ Dependency review
+```
+
+### 💡 VSCode (Real-time)
+
+```text
+✅ Instant feedback
+✅ Auto-complete
+✅ Inline errors
+✅ Quick fixes
+```
+
+## Troubleshooting
+
+### Pre-Commit Fails with "File was modified"
+
+This is **normal** - the hook auto-fixed your code:
+
+```bash
+git add -u  # Stage the auto-fixes
+git commit  # Commit again
+```
+
+### Pre-Commit is Still Slow
+
+Check if you're running on vendor files:
+
+```bash
+# Should be excluded already, but verify
+pre-commit run --verbose --files path/to/file
+```
+
+### CI/CD Lint Job Fails
+
+1. **Run locally first:**
+
+```bash
+# Python
+cd .bot && ruff check . && mypy core
+
+# Go
+cd .backend/db && golangci-lint run
+
+# TypeScript
+cd .frontend/web && npm run lint
+```
+
+2. **Check workflow logs** in GitHub Actions
+3. **Fix locally** and push again
+
+### "InvalidManifestError" or Cache Issues
+
+```bash
 make pre-commit-clean
-
-# Or directly
-pre-commit clean && rm -rf ~/.cache/pre-commit
+make pre-commit-install
 ```
 
-## Bypass Pre-Commit (Use Sparingly)
+### Secrets Detected (False Positive)
 
-### Skip for One Commit
+Add to `.secrets.baseline`:
+
+```bash
+detect-secrets scan --baseline .secrets.baseline
+git add .secrets.baseline
+git commit -m "chore(security): update secrets baseline"
+```
+
+## Advanced Usage
+
+### Run Single Hook
+
+```bash
+pre-commit run black --all-files
+pre-commit run prettier --files .frontend/web/src/main.ts
+```
+
+### Skip Commit-Msg Hook
 
 ```bash
 git commit --no-verify -m "message"
-# or shorter
-git commit -n -m "message"
 ```
 
-### Skip Specific Hooks
-
-```bash
-SKIP=markdownlint,detect-secrets git commit -m "message"
-```
-
-### Temporarily Disable
+### Disable Temporarily
 
 ```bash
 # Disable
@@ -143,245 +387,203 @@ mv .git/hooks/pre-commit .git/hooks/pre-commit.disabled
 mv .git/hooks/pre-commit.disabled .git/hooks/pre-commit
 ```
 
-## Commit Message Format
-
-### Conventional Commits
-
-Format: `<type>(<scope>): <subject>`
-
-**Types:**
-
-- `feat` - New feature
-- `fix` - Bug fix
-- `docs` - Documentation
-- `style` - Code style/formatting
-- `refactor` - Code refactoring
-- `perf` - Performance improvement
-- `test` - Tests
-- `build` - Build system
-- `ci` - CI/CD changes
-- `chore` - Maintenance
-- `security` - Security fixes
-
-**Scopes (examples):**
-
-- `backend/db`
-- `backend/token`
-- `backend/contract/rust`
-- `backend/contract/solidity`
-- `bot/core`
-- `bot/integration`
-- `frontend/flutter`
-- `frontend/web/angular`
-- `frontend/web/next`
-- `schema/token`
-- `dev/terraform`
-- `dev/k8s`
-- `config`
-- `ci`
-
-**Examples:**
-
-```bash
-git commit -m "feat(backend/token): add token transfer endpoint"
-git commit -m "fix(bot/core): resolve import error in main.py"
-git commit -m "docs(readme): update installation instructions"
-git commit -m "ci(github/workflows): add Python test workflow"
-```
-
-## What Gets Checked?
-
-### ✅ Always Checked
-
-- Your source code in `.backend/`, `.frontend/`, `.bot/`, `.schema/`
-- Configuration files (`.yaml`, `.json`, `.toml`)
-- Scripts (`.sh`, `.bash`)
-- Documentation (`.md`)
-
-### 🚫 Always Excluded
-
-- `node_modules/`, `dist/`, `build/`, `target/`
-- `vendor/`, `deps/`, `bazel-*/`
-- `connection/BEAM/deps/` (Erlang vendor)
-- `connection/.NET/obj/` (.NET build)
-- `.schema/token/third_party/` (vendor proto)
-- Lock files (`*.lock`, `go.sum`, `package-lock.json`)
-- Generated files (`*_pb.*`, `*.generated.*`)
-- Minified files (`*.min.js`, `*.min.css`)
-
-## Troubleshooting
-
-### Hook Fails with "File was modified"
-
-This is **normal** - the hook auto-fixed your code. Just:
-
-```bash
-git add -u  # Stage the fixes
-git commit  # Commit again
-```
-
-### "InvalidManifestError" or Cache Issues
-
-```bash
-make pre-commit-clean
-make pre-commit-install
-```
-
-### Pre-Commit is Too Slow
-
-For **mass changes** or **vendor updates**, bypass it:
-
-```bash
-git commit --no-verify -m "chore: mass refactor"
-```
-
-Then run manually on small batches:
-
-```bash
-pre-commit run --files src/file1.py src/file2.py
-```
-
-### Specific Hook Keeps Failing
-
-Skip it temporarily:
-
-```bash
-SKIP=problematic-hook git commit -m "message"
-```
-
-Or disable permanently in `.pre-commit-config.yaml`:
-
-```yaml
-- id: problematic-hook
-  # ... config ...
-  exclude: .* # Disables for all files
-```
-
-## Performance Tips
-
-### 1. Use `make` commands
-
-They're optimized and user-friendly.
-
-### 2. Commit frequently
-
-Smaller commits = faster pre-commit runs.
-
-### 3. Use `--no-verify` for
-
-- Mass refactors (1000+ files)
-- Vendor/dependency updates
-- Generated code commits
-- Emergency hotfixes
-
-### 4. Clean cache periodically
-
-```bash
-make pre-commit-clean
-```
-
-## What Makes This Config "Billion Dollar"?
-
-✅ **26+ tools** integrated seamlessly ✅ **8 programming languages** supported ✅ **Smart excludes** - skips
-vendor/generated files ✅ **Fast** - only checks what matters ✅ **Emoji indicators** - easy to read output ✅ **CI/CD
-ready** - pre-commit.ci configured ✅ **Conventional commits** - enforces good git history ✅ **Security first** -
-secret detection enabled ✅ **Monorepo optimized** - per-directory targeting ✅ **Auto-fix** - most issues fixed
-automatically
-
-## CI/CD Integration
-
-The same hooks run in GitHub Actions:
-
-- `.github/workflows/ci-lint.yml` - Runs pre-commit on PRs
-- `.github/workflows/ci-format.yml` - Checks formatting
-- **pre-commit.ci** - Automatic PR fixes
-
-## Advanced Usage
-
-### Run Specific Hook
-
-```bash
-pre-commit run black --all-files
-pre-commit run ruff --files .bot/core/main.py
-```
-
-### Debug Hook
-
-```bash
-pre-commit run hook-name --verbose --files path/to/file
-```
-
-### Manual Hook Installation
-
-```bash
-pre-commit install --hook-type pre-push
-pre-commit install --hook-type pre-merge-commit
-```
-
 ### Environment Variables
 
 ```bash
-# Skip all hooks
+# Skip specific hooks
+SKIP=black,ruff git commit -m "message"
+
+# Skip all
 SKIP=all git commit -m "message"
 
-# Skip multiple hooks
-SKIP=black,ruff,mypy git commit -m "message"
-
-# Run even if no files match
-PRE_COMMIT_ALLOW_NO_CONFIG=1 pre-commit run
+# Verbose output
+PRE_COMMIT_VERBOSE=1 git commit
 ```
 
 ## Files Structure
 
 ```text
 .
-├── .pre-commit-config.yaml    # Main configuration
+├── .pre-commit-config.yaml    # Minimal fast hooks
 ├── .commitlintrc.js           # Commit message rules
-├── .markdownlint.json         # Markdown linter config
-├── .yamllint                  # YAML linter config
+├── .markdownlint.json         # Markdown config
+├── .yamllint                  # YAML config
 ├── .editorconfig              # Editor config
 ├── .secrets.baseline          # Allowed "secrets"
+├── .github/workflows/
+│   └── ci-lint.yml            # 14 comprehensive lint jobs
 ├── .bot/
 │   ├── ruff.toml              # Ruff configuration
-│   └── pyproject.toml         # Python tools config
+│   └── pyproject.toml         # Python tools
 ├── .backend/
-│   └── .golangci.yml          # Go linter (CI/CD only)
+│   └── .golangci.yml          # Go linter config
 └── .frontend/web/
-    └── .eslintrc.js           # ESLint configuration
+    └── .eslintrc.js           # ESLint config
 ```
 
-## Common Issues & Solutions
-
-### Issue: "unknown variant 'concise'" (Ruff)
-
-**Solution:** Already fixed - uses `grouped` format
-
-### Issue: "py313 is not one of..." (Black)
-
-**Solution:** Already fixed - uses `py312` as target
-
-### Issue: Too many markdown warnings
-
-**Solution:** Markdownlint is configured with relaxed rules
-
-### Issue: False positive secrets detected
-
-**Solution:** Add to `.secrets.baseline`:
+## Makefile Commands
 
 ```bash
-detect-secrets scan --baseline .secrets.baseline
+make pre-commit-install     # Install hooks
+make pre-commit-run         # Run on staged files
+make pre-commit-run-all     # Run on all files (slow)
+make pre-commit-update      # Update hook versions
+make pre-commit-clean       # Clean cache
+make pre-commit-uninstall   # Remove hooks
 ```
 
-### Issue: Pre-commit modifying vendor files
+## Best Practices
 
-**Solution:** Already excluded via global `exclude` pattern
+### ✅ Do
 
-## Support
+- Commit frequently (smaller = faster)
+- Let pre-commit auto-fix formatting
+- Use VSCode extensions for real-time feedback
+- Review CI/CD logs when linting fails
+- Update `.secrets.baseline` when adding test data
+
+### ❌ Don't
+
+- Skip pre-commit for normal commits
+- Ignore CI/CD lint failures
+- Commit vendor/generated files
+- Use `--no-verify` as default
+
+## What Makes This Setup Special?
+
+✅ **Ultra-fast pre-commit** (~1-2s, not 30-60s)
+✅ **Comprehensive CI/CD** (14 parallel jobs)
+✅ **Real-time VSCode feedback**
+✅ **Smart excludes** (vendor, deps, generated)
+✅ **14 languages/tools supported**
+✅ **Auto-fix enabled** (most issues fixed automatically)
+✅ **Security-first** (secrets, dependencies, licenses)
+✅ **Conventional commits** (clean git history)
+✅ **Beautiful output** (emojis, colors, summaries)
+✅ **Developer-friendly** (rarely need --no-verify)
+
+## CI/CD Jobs Details
+
+### 🐍 Python Job
+
+```yaml
+- Ruff: Lint + format check
+- Black: Format check
+- isort: Import check
+- mypy: Type checking
+- Bandit: Security scanning
+```
+
+### 🔵 Go Job (Matrix: db, token)
+
+```yaml
+- golangci-lint: 50+ linters
+- go vet: Code analysis
+- staticcheck: Additional checks
+```
+
+### ✨ TypeScript Job
+
+```yaml
+- ESLint: Lint all TS/JS
+- Prettier: Format check
+- TSC: Type checking (--noEmit)
+```
+
+### 🦀 Rust Job
+
+```yaml
+- rustfmt: Format check
+- Clippy: Lint with -D warnings
+- cargo-deny: License & security
+```
+
+### ⛓️ Solidity Job
+
+```yaml
+- solhint: Lint smart contracts
+- Prettier: Format check
+- Slither: Security analysis
+```
+
+### 🎯 Dart/Flutter Job
+
+```yaml
+- flutter analyze: Static analysis
+- dart format: Format check
+```
+
+### 📦 Protobuf Job
+
+```yaml
+- buf lint: Style & best practices
+- buf format: Format check
+- buf breaking: API breaking changes
+```
+
+### 🏗️ Terraform Job
+
+```yaml
+- terraform fmt: Format check
+- terraform validate: Config validation
+- tflint: Linting
+- tfsec: Security scanning
+```
+
+## Migration from Old Config
+
+### What Changed?
+
+**Old Pre-Commit (26 tools, 30-60s):**
+- ❌ Heavy linting in pre-commit
+- ❌ Type checking in pre-commit
+- ❌ Slow developer experience
+- ❌ Often bypassed
+
+**New Pre-Commit (11 tools, 1-2s):**
+- ✅ Only auto-fix formatting
+- ✅ Basic syntax checks
+- ✅ Lightning fast
+- ✅ Rarely bypassed
+- ✅ Heavy linting in CI/CD
+
+### Upgrade Steps
+
+Already done! Just:
+
+```bash
+make pre-commit-clean
+make pre-commit-install
+```
+
+## Monitoring & Reports
+
+### GitHub Actions
+
+- **Summary page** - Beautiful table with all results
+- **Artifacts** - Bandit security reports
+- **PR comments** - Automatic feedback
+- **Status checks** - Must pass before merge
+
+### Local Reports
+
+```bash
+# Generate coverage report
+cd .bot && pytest --cov --cov-report=html
+
+# Run security scan
+cd .bot && bandit -r core integration -f html -o report.html
+```
+
+## Support & Help
 
 - **Documentation:** `.doc/helpers/`
 - **Issues:** `.github/issue_template/`
-- **Slack:** #dev-tooling
+- **CI/CD Logs:** GitHub Actions tab
+- **VSCode Problems:** View → Problems panel
 
 ---
 
-**Made with 💎 for Rice Monorepo** | Last updated: October 2025
+**Made with 💎 for Rice Monorepo**
+**Developer Experience First** | **Speed Meets Quality**
+Last updated: October 2025
