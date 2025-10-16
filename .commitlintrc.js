@@ -59,44 +59,66 @@ module.exports = {
       2,
       "always",
       [
-        // Infrastructure
+        // Infrastructure (.dev/)
         "dev/ansible",
         "dev/k8s",
         "dev/terraform",
 
-        // Backend
+        // Backend (.backend/)
         "backend/db",
         "backend/token",
         "backend/contract/rust",
         "backend/contract/solidity",
 
-        // Bots
-        "bots/core",
-        "bots/integration",
+        // Bots (.bot/)
+        "bot/core",
+        "bot/integration",
 
-        // Frontend
-        "frontend/dart",
+        // Frontend (.frontend/)
+        "frontend/flutter",
         "frontend/android",
         "frontend/ios",
-        "frontend/node/angular",
-        "frontend/node/next",
-        "frontend/node/nuxt",
-        "frontend/node/svelte",
-        "frontend/node/shared",
+        "frontend/web/angular",
+        "frontend/web/next",
+        "frontend/web/nuxt",
+        "frontend/web/svelte",
+        "frontend/web/shared",
 
-        // Shared
-        "proto",
-        "rules",
+        // Schema (.schema/)
+        "schema/asset",
+        "schema/auth",
+        "schema/bot",
+        "schema/common",
+        "schema/config",
+        "schema/connection",
+        "schema/content",
+        "schema/game",
+        "schema/store",
+        "schema/token",
+
+        // Documentation (.doc/)
+        "doc/api",
+        "doc/docs",
+        "doc/helpers",
+
+        // DevContainer (.devcontainer/)
+        "devcontainer",
+
+        // GitHub (.github/)
+        "github/workflows",
+        "github/templates",
+
+        // VSCode (.vscode/)
+        "vscode",
+
+        // Shared/Root
         "config",
-        "docs",
         "ci",
-        "tools",
         "deps",
         "security",
-
-        // Cross-cutting
         "monorepo",
         "workspace",
+        "root",
       ],
     ],
 
