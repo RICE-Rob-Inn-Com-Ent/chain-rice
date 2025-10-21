@@ -1,6 +1,10 @@
 # This .gitignore is for the active project repository
 # Add project-specific ignores below
 
+# Rice-mono swap system (DO NOT COMMIT THESE!)
+.project-active
+.project-cache/
+
 # Node
 node_modules/
 dist/

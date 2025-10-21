@@ -653,18 +653,24 @@ swap: ## Swap to a different project (make swap PROJECT=code_rice or interactive
 		echo "  → Fetching from GitHub..."; \
 		git fetch origin $$branch 2>/dev/null || git fetch origin 2>/dev/null || true; \
 		echo "  → Cleaning working directory (removing old project files)..."; \
-		find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.gitignore' -exec rm -rf {} + 2>/dev/null || true; \
-		echo "$(GREEN)  ✅ Old files removed$(NC)"; \
+		find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} + 2>/dev/null || true; \
+		git reset --hard 2>/dev/null || true; \
+		git clean -fd 2>/dev/null || true; \
+		echo "$(GREEN)  ✅ Old files removed & git cleaned$(NC)"; \
 		echo "  → Checking out $$branch..."; \
 		git checkout $$branch 2>/dev/null || git checkout -b $$branch --track origin/$$branch 2>/dev/null || true; \
-		echo "  → Pulling fresh files from GitHub..."; \
-		if git pull origin $$branch --rebase 2>/dev/null || git pull origin $$branch 2>/dev/null; then \
-			echo "$(GREEN)  ✅ Pulled latest from $$name$(NC)"; \
+		echo "  → Hard reset to origin/$$branch (FORCE FRESH FILES)..."; \
+		if git reset --hard origin/$$branch 2>/dev/null; then \
+			echo "$(GREEN)  ✅ Reset to latest from $$name$(NC)"; \
+			echo "  → Verifying files..."; \
+			file_count=$$(find . -mindepth 1 -maxdepth 1 ! -name '.git' | wc -l); \
+			echo "$(GREEN)  ✅ Files in .project: $$file_count$(NC)"; \
 		elif [ -d ../.project-cache/$$selected ] && [ -n "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
-			echo "$(YELLOW)  ⚠️  Pull failed - restoring from cache...$(NC)"; \
+			echo "$(YELLOW)  ⚠️  Reset failed - restoring from cache...$(NC)"; \
 			rsync -a ../.project-cache/$$selected/ ./ --exclude .git 2>/dev/null || cp -r ../.project-cache/$$selected/* ./ 2>/dev/null || true; \
 		else \
 			echo "$(RED)  ❌ No remote content and no cache - project might be empty$(NC)"; \
+			echo "$(YELLOW)  💡 Create files in this repo on GitHub first$(NC)"; \
 		fi; \
 		echo "  → Updating cache..."; \
 		mkdir -p ../.project-cache/$$selected; \
