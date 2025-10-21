@@ -15,7 +15,7 @@
     "infinir": {
       "name": "InfiniR",
       "url": "https://github.com/RICE-Rob-Inn-Com-Ent/InfiniR.git",
-      "branch": "v.0.1.0",
+      "branch": "main",
       "description": "InfiniR is the all-in-one frontend hub for the CRICE ecosystem, enabling businesses to create tokens, manage operations, leverage AI insights, and interact with blockchain smart contracts — infinite potential in a single platform."
     }
   }
