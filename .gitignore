@@ -297,8 +297,8 @@ local/
 
 # Project management
 .project-cache/
-.project-active
-# .project-repos.json - commit this file!
+# .project-active - commit this file to track active project!
+# .project-repos.json - commit this file to track available projects!
 
 # ============================================================================
 # SECURITY SCANNING

@@ -1,0 +1,107 @@
+name: Auto-Sync Project Repository
+
+on:
+  push:
+    branches: [v.0.1.0, main]
+    paths:
+      - ".project/**"
+      - ".project-active"
+  workflow_dispatch:
+
+jobs:
+  sync-project:
+    name: Sync .project to Target Repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Detect Active Project
+        id: detect
+        run: |
+          if [ -f .project-active ]; then
+            ACTIVE_PROJECT=$(cat .project-active)
+            echo "active_project=$ACTIVE_PROJECT" >> $GITHUB_OUTPUT
+            echo "✅ Active project: $ACTIVE_PROJECT"
+          else
+            echo "❌ No .project-active file found"
+            exit 1
+          fi
+
+      - name: Get Project Repository URL
+        id: get-repo
+        run: |
+          if [ -f .project-repos.json ]; then
+            PROJECT="${{ steps.detect.outputs.active_project }}"
+            REPO_URL=$(jq -r ".projects.$PROJECT.url" .project-repos.json)
+            REPO_NAME=$(jq -r ".projects.$PROJECT.name" .project-repos.json)
+            BRANCH=$(jq -r ".projects.$PROJECT.branch" .project-repos.json)
+
+            echo "repo_url=$REPO_URL" >> $GITHUB_OUTPUT
+            echo "repo_name=$REPO_NAME" >> $GITHUB_OUTPUT
+            echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+            echo "📦 Target: $REPO_NAME"
+            echo "🔗 URL: $REPO_URL"
+            echo "🌿 Branch: $BRANCH"
+          else
+            echo "❌ .project-repos.json not found"
+            exit 1
+          fi
+
+      - name: Clone Target Repository
+        run: |
+          REPO_URL="${{ steps.get-repo.outputs.repo_url }}"
+          BRANCH="${{ steps.get-repo.outputs.branch }}"
+
+          # Clone target repo
+          git clone $REPO_URL /tmp/target-repo
+          cd /tmp/target-repo
+
+          # Checkout or create branch
+          git checkout $BRANCH 2>/dev/null || git checkout -b $BRANCH
+
+      - name: Sync .project to Target Repository
+        run: |
+          echo "🔄 Syncing .project/ to target repository..."
+
+          # Remove old files (except .git)
+          cd /tmp/target-repo
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
+          # Copy new files from .project
+          cp -r $GITHUB_WORKSPACE/.project/* .
+          cp -r $GITHUB_WORKSPACE/.project/.[!.]* . 2>/dev/null || true
+
+          # Remove .git if accidentally copied
+          rm -rf .git/.git
+
+          echo "✅ Files synced"
+
+      - name: Commit and Push Changes
+        run: |
+          cd /tmp/target-repo
+
+          # Check if there are changes
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+
+            COMMIT_MSG="chore: auto-sync from rice-mono"
+            if [ -n "${{ github.event.head_commit.message }}" ]; then
+              COMMIT_MSG="sync: ${{ github.event.head_commit.message }}"
+            fi
+
+            git commit -m "$COMMIT_MSG"
+            git push origin ${{ steps.get-repo.outputs.branch }}
+
+            echo "✅ Changes pushed to ${{ steps.get-repo.outputs.repo_name }}"
+          else
+            echo "ℹ️  No changes to sync"
+          fi

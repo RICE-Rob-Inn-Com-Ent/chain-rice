@@ -414,7 +414,7 @@ pre-commit-clean: ## Clean pre-commit cache
 # ==============================================================================
 # PROJECT SWAP - Dynamic Project Management
 # ==============================================================================
-.PHONY: swap project-list project-status project-save
+.PHONY: swap project-list project-status project-save project-sync-repos
 
 project-status: ## Show current project status
 	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
@@ -441,30 +441,75 @@ project-status: ## Show current project status
 	fi
 	@echo ""
 
+project-sync-repos: ## Auto-sync repository list from GitHub
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Syncing Projects from GitHub                                  $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Fetching repositories from RICE-Rob-Inn-Com-Ent...$(NC)"; \
+	repos=$$(curl -s "https://api.github.com/orgs/RICE-Rob-Inn-Com-Ent/repos?per_page=100" 2>/dev/null || \
+	         curl -s "https://api.github.com/users/RICE-Rob-Inn-Com-Ent/repos?per_page=100" 2>/dev/null); \
+	if [ -z "$$repos" ]; then \
+		echo "$(RED)Failed to fetch repositories from GitHub$(NC)"; \
+		echo "$(YELLOW)Make sure you have internet connection$(NC)"; \
+		exit 1; \
+	fi; \
+	echo "{" > .project-repos.json.tmp; \
+	echo '  "projects": {' >> .project-repos.json.tmp; \
+	first=true; \
+	echo "$$repos" | grep -o '"name": "[^"]*"' | cut -d'"' -f4 | while read repo; do \
+		if [ "$$repo" != "rice-mono" ]; then \
+			if [ "$$first" = false ]; then echo "," >> .project-repos.json.tmp; fi; \
+			first=false; \
+			key=$$(echo "$$repo" | tr '[:upper:]' '[:lower:]' | tr '-' '_'); \
+			echo "    \"$$key\": {" >> .project-repos.json.tmp; \
+			echo "      \"name\": \"$$repo\"," >> .project-repos.json.tmp; \
+			echo "      \"url\": \"https://github.com/RICE-Rob-Inn-Com-Ent/$$repo.git\"," >> .project-repos.json.tmp; \
+			echo "      \"branch\": \"main\"," >> .project-repos.json.tmp; \
+			echo "      \"description\": \"Auto-synced from GitHub\"" >> .project-repos.json.tmp; \
+			echo -n "    }" >> .project-repos.json.tmp; \
+		fi; \
+	done; \
+	echo "" >> .project-repos.json.tmp; \
+	echo "  }" >> .project-repos.json.tmp; \
+	echo "}" >> .project-repos.json.tmp; \
+	mv .project-repos.json.tmp .project-repos.json; \
+	echo ""; \
+	echo "$(GREEN)✅ Synced repositories to .project-repos.json$(NC)"; \
+	echo ""; \
+	$(MAKE) project-list
+
 project-list: ## List all configured projects
 	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
-	@echo "$(BLUE)║$(NC)  Available Projects                                            $(BLUE)║$(NC)"
+	@echo "$(BLUE)║$(NC)  Available Projects (from GitHub)                              $(BLUE)║$(NC)"
 	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
 	@if [ ! -f .project-repos.json ]; then \
-		echo "$(RED)Error: .project-repos.json not found$(NC)"; \
-		exit 1; \
+		echo "$(YELLOW)No .project-repos.json found. Syncing from GitHub...$(NC)"; \
+		$(MAKE) project-sync-repos; \
 	fi
 	@current=""; \
 	if [ -f .project-active ]; then current=$$(cat .project-active); fi; \
 	echo "$(YELLOW)Configured Projects:$(NC)"; \
 	echo ""; \
-	cat .project-repos.json | jq -r '.projects | to_entries[] | "\(.key)|\(.value.name)|\(.value.description)"' | \
-	while IFS='|' read -r key name desc; do \
-		if [ "$$key" = "$$current" ]; then \
-			echo "  $(GREEN)★ $$key$(NC) - $$name"; \
-			echo "    $(GREEN)  ↳ $$desc (ACTIVE)$(NC)"; \
-		else \
-			echo "  $(YELLOW)  $$key$(NC) - $$name"; \
-			echo "      ↳ $$desc"; \
-		fi; \
-		echo ""; \
-	done
+	if command -v jq >/dev/null 2>&1; then \
+		cat .project-repos.json | jq -r '.projects | to_entries[] | "\(.key)|\(.value.name)|\(.value.url)"' | \
+		while IFS='|' read -r key name url; do \
+			if [ "$$key" = "$$current" ]; then \
+				echo "  $(GREEN)★ $$key$(NC) - $$name"; \
+				echo "    $(GREEN)  ↳ $$url (ACTIVE)$(NC)"; \
+			else \
+				echo "  $(YELLOW)  $$key$(NC) - $$name"; \
+				echo "      ↳ $$url"; \
+			fi; \
+			echo ""; \
+		done; \
+	else \
+		echo "$(RED)jq not installed - install with: sudo pacman -S jq$(NC)"; \
+		grep -o '"[^"]*": {' .project-repos.json | sed 's/": {//' | sed 's/"//g' | while read key; do \
+			echo "  $$key"; \
+		done; \
+	fi
 
 swap: ## Swap to a different project (interactive with auto-commit/push/pull)
 	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
