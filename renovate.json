@@ -103,35 +103,35 @@
     {
       "description": "Kubernetes - Container orchestration",
       "matchManagers": ["helm-values", "helmv3", "kubernetes"],
-      "matchPaths": [".dev/k8s/*"],
+      "matchPaths": [".dev/kubernetes/*"],
       "groupName": "kubernetes dependencies",
       "labels": ["dependencies", "kubernetes"]
     },
     {
       "description": "Dart/Flutter - Mobile",
       "matchManagers": ["pub"],
-      "matchPaths": ["frontend/dart/**"],
+      "matchPaths": [".frontend/dart/*"],
       "groupName": "dart/flutter dependencies",
       "labels": ["dependencies", "dart", "flutter"]
     },
     {
       "description": "Kotlin/Android - Mobile",
       "matchManagers": ["gradle", "gradle-wrapper"],
-      "matchPaths": ["frontend/android/**"],
+      "matchPaths": [".frontend/android/*"],
       "groupName": "android dependencies",
       "labels": ["dependencies", "kotlin", "android"]
     },
     {
       "description": "Swift/iOS - Mobile",
       "matchManagers": ["swift"],
-      "matchPaths": ["frontend/ios/**"],
+      "matchPaths": [".frontend/ios/*"],
       "groupName": "ios dependencies",
       "labels": ["dependencies", "swift", "ios"]
     },
     {
       "description": "Protocol Buffers",
       "matchManagers": ["bazel"],
-      "matchPaths": ["proto/**"],
+      "matchPaths": [".schema/*"],
       "groupName": "proto dependencies",
       "labels": ["dependencies", "protobuf"]
     },
@@ -158,24 +158,6 @@
       "matchPackagePatterns": ["^react", "^@types/react"],
       "groupName": "react",
       "labels": ["dependencies", "react"]
-    },
-    {
-      "description": "Angular ecosystem",
-      "matchPackagePatterns": ["^@angular/"],
-      "groupName": "angular",
-      "labels": ["dependencies", "angular"]
-    },
-    {
-      "description": "Vue/Nuxt ecosystem",
-      "matchPackagePatterns": ["^vue", "^nuxt", "^@nuxt/"],
-      "groupName": "vue",
-      "labels": ["dependencies", "vue"]
-    },
-    {
-      "description": "Svelte ecosystem",
-      "matchPackagePatterns": ["^svelte", "^@sveltejs/"],
-      "groupName": "svelte",
-      "labels": ["dependencies", "svelte"]
     },
     {
       "description": "Testing packages",

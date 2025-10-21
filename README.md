@@ -19,6 +19,7 @@ make prepare
 ```
 
 This will:
+
 1. ✅ Install **asdf** version manager (if not installed)
 2. ✅ Install all **asdf plugins** (Rust, Go, Node.js, Python, Java, etc.)
 3. ✅ Install **all tools** from `.tool-versions` (40+ tools)
