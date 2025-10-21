@@ -551,18 +551,21 @@ project-list: ## List all configured projects
 		done; \
 	fi
 
-swap: ## Swap to a different project (interactive with auto-commit/push/pull)
+swap: ## Swap to a different project (make swap PROJECT=code_rice or interactive)
 	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
 	@echo "$(BLUE)║$(NC)  Project Swap - Change Active Project                          $(BLUE)║$(NC)"
 	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
 	@if [ ! -f .project-repos.json ]; then \
 		echo "$(RED)Error: .project-repos.json not found$(NC)"; \
+		echo "$(YELLOW)Run: make project-sync-repos$(NC)"; \
 		exit 1; \
 	fi
 	@if [ ! -d .project/.git ]; then \
-		echo "$(RED)Error: .project is not a git repository$(NC)"; \
-		exit 1; \
+		echo "$(YELLOW)Initializing .project as git repository...$(NC)"; \
+		cd .project && git init && git branch -m main 2>/dev/null || true; \
+		echo "$(GREEN)✅ .project initialized$(NC)"; \
+		echo ""; \
 	fi
 	@current="none"; \
 	if [ -f .project-active ]; then current=$$(cat .project-active); fi; \
@@ -596,29 +599,43 @@ swap: ## Swap to a different project (interactive with auto-commit/push/pull)
 	rsync -a --delete .project/ .project-cache/$$current/ --exclude .git 2>/dev/null || cp -r .project/* .project-cache/$$current/ 2>/dev/null || true; \
 	echo "$(GREEN)✅ Cached: .project-cache/$$current/$(NC)"; \
 	echo ""; \
-	echo "$(YELLOW)Available projects:$(NC)"; \
-	echo ""; \
-	i=1; \
-	declare -a keys; \
-	declare -a names; \
-	while IFS='|' read -r key name; do \
-		keys[$$i]=$$key; \
-		names[$$i]=$$name; \
-		if [ "$$key" = "$$current" ]; then \
-			echo "  $$i. $$key - $$name $(GREEN)(current)$(NC)"; \
-		else \
-			echo "  $$i. $$key - $$name"; \
+	if [ -n "$(PROJECT)" ]; then \
+		selected="$(PROJECT)"; \
+		echo "$(YELLOW)Selected project: $$selected$(NC)"; \
+		if ! cat .project-repos.json | jq -e ".projects.$$selected" >/dev/null 2>&1; then \
+			echo "$(RED)Error: Project '$$selected' not found in .project-repos.json$(NC)"; \
+			echo ""; \
+			echo "$(YELLOW)Available projects:$(NC)"; \
+			cat .project-repos.json | jq -r '.projects | keys[]' | while read key; do \
+				echo "  - $$key"; \
+			done; \
+			exit 1; \
 		fi; \
-		i=$$((i+1)); \
-	done < <(cat .project-repos.json | jq -r '.projects | to_entries[] | "\(.key)|\(.value.name)"'); \
-	max=$$((i-1)); \
-	echo ""; \
-	read -p "Select project number [1-$$max]: " choice; \
-	if [ -z "$$choice" ] || [ "$$choice" -lt 1 ] || [ "$$choice" -gt "$$max" ]; then \
-		echo "$(RED)Invalid choice$(NC)"; \
-		exit 1; \
+	else \
+		echo "$(YELLOW)Available projects:$(NC)"; \
+		echo ""; \
+		i=1; \
+		declare -a keys; \
+		declare -a names; \
+		while IFS='|' read -r key name; do \
+			keys[$$i]=$$key; \
+			names[$$i]=$$name; \
+			if [ "$$key" = "$$current" ]; then \
+				echo "  $$i. $$key - $$name $(GREEN)(current)$(NC)"; \
+			else \
+				echo "  $$i. $$key - $$name"; \
+			fi; \
+			i=$$((i+1)); \
+		done < <(cat .project-repos.json | jq -r '.projects | to_entries[] | "\(.key)|\(.value.name)"'); \
+		max=$$((i-1)); \
+		echo ""; \
+		read -p "Select project number [1-$$max]: " choice; \
+		if [ -z "$$choice" ] || [ "$$choice" -lt 1 ] || [ "$$choice" -gt "$$max" ]; then \
+			echo "$(RED)Invalid choice$(NC)"; \
+			exit 1; \
+		fi; \
+		selected=$${keys[$$choice]}; \
 	fi; \
-	selected=$${keys[$$choice]}; \
 	url=$$(cat .project-repos.json | jq -r ".projects.$$selected.url"); \
 	branch=$$(cat .project-repos.json | jq -r ".projects.$$selected.branch"); \
 	echo ""; \
