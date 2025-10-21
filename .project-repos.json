@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "infinir": {
+      "name": "InfiniR",
+      "url": "https://github.com/RICE-Rob-Inn-Com-Ent/InfiniR.git",
+      "branch": "main",
+      "description": "Multi-Platform AI-Powered Infinite Reality"
+    },
+    "code-rice": {
+      "name": "Code-Rice",
+      "url": "https://github.com/RICE-Rob-Inn-Com-Ent/Code-Rice.git",
+      "branch": "main",
+      "description": "Code-Rice Project"
+    }
+  }
+}

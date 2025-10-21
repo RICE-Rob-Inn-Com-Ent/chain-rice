@@ -295,6 +295,11 @@ local/
 !.project/.vscode/
 .project/.vscode/settings.json
 
+# Project management
+.project-cache/
+.project-active
+# .project-repos.json - commit this file!
+
 # ============================================================================
 # SECURITY SCANNING
 # ============================================================================

@@ -410,3 +410,172 @@ pre-commit-clean: ## Clean pre-commit cache
 	@pre-commit clean
 	@rm -rf ~/.cache/pre-commit
 	@echo "$(GREEN)✅ Pre-commit cache cleaned$(NC)"
+
+# ==============================================================================
+# PROJECT SWAP - Dynamic Project Management
+# ==============================================================================
+.PHONY: swap project-list project-status project-save
+
+project-status: ## Show current project status
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Current Project Status                                        $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@if [ -f .project-active ]; then \
+		active=$$(cat .project-active); \
+		echo "$(GREEN)Active Project: $$active$(NC)"; \
+		if [ -d .project/.git ]; then \
+			cd .project && \
+			echo "" && \
+			echo "$(YELLOW)Git Status:$(NC)" && \
+			git status -s || echo "  Clean working directory" && \
+			echo "" && \
+			echo "$(YELLOW)Remote URL:$(NC)" && \
+			git remote get-url origin 2>/dev/null || echo "  No remote configured" && \
+			echo "" && \
+			echo "$(YELLOW)Current Branch:$(NC)" && \
+			git branch --show-current 2>/dev/null || echo "  Not on any branch"; \
+		fi; \
+	else \
+		echo "$(RED)No active project$(NC)"; \
+	fi
+	@echo ""
+
+project-list: ## List all configured projects
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Available Projects                                            $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@if [ ! -f .project-repos.json ]; then \
+		echo "$(RED)Error: .project-repos.json not found$(NC)"; \
+		exit 1; \
+	fi
+	@current=""; \
+	if [ -f .project-active ]; then current=$$(cat .project-active); fi; \
+	echo "$(YELLOW)Configured Projects:$(NC)"; \
+	echo ""; \
+	cat .project-repos.json | jq -r '.projects | to_entries[] | "\(.key)|\(.value.name)|\(.value.description)"' | \
+	while IFS='|' read -r key name desc; do \
+		if [ "$$key" = "$$current" ]; then \
+			echo "  $(GREEN)★ $$key$(NC) - $$name"; \
+			echo "    $(GREEN)  ↳ $$desc (ACTIVE)$(NC)"; \
+		else \
+			echo "  $(YELLOW)  $$key$(NC) - $$name"; \
+			echo "      ↳ $$desc"; \
+		fi; \
+		echo ""; \
+	done
+
+swap: ## Swap to a different project (interactive with auto-commit/push/pull)
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Project Swap - Change Active Project                          $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@if [ ! -f .project-repos.json ]; then \
+		echo "$(RED)Error: .project-repos.json not found$(NC)"; \
+		exit 1; \
+	fi
+	@if [ ! -d .project/.git ]; then \
+		echo "$(RED)Error: .project is not a git repository$(NC)"; \
+		exit 1; \
+	fi
+	@current="none"; \
+	if [ -f .project-active ]; then current=$$(cat .project-active); fi; \
+	echo "$(YELLOW)Current project: $$current$(NC)"; \
+	echo ""; \
+	cd .project && { \
+		if [ -n "$$(git status --porcelain)" ]; then \
+			echo "$(YELLOW)⚠️  Uncommitted changes detected!$(NC)"; \
+			echo ""; \
+			git status -s; \
+			echo ""; \
+			read -p "Commit and push changes? [Y/n] " -r; \
+			if [[ ! $$REPLY =~ ^[Nn]$$ ]]; then \
+				read -p "Commit message: " msg; \
+				git add -A && \
+				git commit -m "$$msg" && \
+				git push origin $$(git branch --show-current) && \
+				echo "$(GREEN)✅ Changes committed and pushed$(NC)"; \
+			else \
+				echo "$(RED)❌ Cannot swap with uncommitted changes$(NC)"; \
+				exit 1; \
+			fi; \
+		else \
+			echo "$(GREEN)✅ Working directory clean$(NC)"; \
+			git push origin $$(git branch --show-current) 2>/dev/null || echo "$(YELLOW)Nothing to push$(NC)"; \
+		fi; \
+	}; \
+	echo ""; \
+	echo "$(YELLOW)Saving current project to cache...$(NC)"; \
+	mkdir -p .project-cache/$$current; \
+	rsync -a --delete .project/ .project-cache/$$current/ --exclude .git 2>/dev/null || cp -r .project/* .project-cache/$$current/ 2>/dev/null || true; \
+	echo "$(GREEN)✅ Cached: .project-cache/$$current/$(NC)"; \
+	echo ""; \
+	echo "$(YELLOW)Available projects:$(NC)"; \
+	echo ""; \
+	i=1; \
+	declare -a keys; \
+	declare -a names; \
+	while IFS='|' read -r key name; do \
+		keys[$$i]=$$key; \
+		names[$$i]=$$name; \
+		if [ "$$key" = "$$current" ]; then \
+			echo "  $$i. $$key - $$name $(GREEN)(current)$(NC)"; \
+		else \
+			echo "  $$i. $$key - $$name"; \
+		fi; \
+		i=$$((i+1)); \
+	done < <(cat .project-repos.json | jq -r '.projects | to_entries[] | "\(.key)|\(.value.name)"'); \
+	max=$$((i-1)); \
+	echo ""; \
+	read -p "Select project number [1-$$max]: " choice; \
+	if [ -z "$$choice" ] || [ "$$choice" -lt 1 ] || [ "$$choice" -gt "$$max" ]; then \
+		echo "$(RED)Invalid choice$(NC)"; \
+		exit 1; \
+	fi; \
+	selected=$${keys[$$choice]}; \
+	url=$$(cat .project-repos.json | jq -r ".projects.$$selected.url"); \
+	branch=$$(cat .project-repos.json | jq -r ".projects.$$selected.branch"); \
+	echo ""; \
+	echo "$(YELLOW)Switching to: $$selected$(NC)"; \
+	echo "$(YELLOW)Repository: $$url$(NC)"; \
+	echo "$(YELLOW)Branch: $$branch$(NC)"; \
+	echo ""; \
+	cd .project && { \
+		git remote set-url origin $$url 2>/dev/null || git remote add origin $$url; \
+		echo "$(YELLOW)Fetching from $$url...$(NC)"; \
+		git fetch origin $$branch 2>/dev/null || true; \
+		if [ -d ../.project-cache/$$selected ] && [ -n "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
+			echo "$(YELLOW)Restoring from cache...$(NC)"; \
+			find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +; \
+			rsync -a ../.project-cache/$$selected/ ./ --exclude .git 2>/dev/null || cp -r ../.project-cache/$$selected/* ./ 2>/dev/null || true; \
+		fi; \
+		git checkout $$branch 2>/dev/null || git checkout -b $$branch 2>/dev/null || true; \
+		echo "$(YELLOW)Pulling latest changes...$(NC)"; \
+		git pull origin $$branch 2>/dev/null || echo "$(YELLOW)⚠️  Pull failed - might be first time$(NC)"; \
+		if [ ! -d ../.project-cache/$$selected ] || [ -z "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
+			echo "$(YELLOW)Caching fresh copy...$(NC)"; \
+			mkdir -p ../.project-cache/$$selected; \
+			rsync -a ./ ../.project-cache/$$selected/ --exclude .git 2>/dev/null || cp -r ./* ../.project-cache/$$selected/ 2>/dev/null || true; \
+		fi; \
+	}; \
+	echo "$$selected" > .project-active; \
+	echo ""; \
+	echo "$(GREEN)╔════════════════════════════════════════════════════════════════╗$(NC)"; \
+	echo "$(GREEN)║$(NC)  ✅ Switched to: $$selected                                     $(GREEN)║$(NC)"; \
+	echo "$(GREEN)╚════════════════════════════════════════════════════════════════╝$(NC)"; \
+	echo ""; \
+	echo "$(YELLOW)Next steps:$(NC)"; \
+	echo "  cd .project"; \
+	echo "  git status"
+
+project-save: ## Manually save current project to cache
+	@if [ ! -f .project-active ]; then \
+		echo "$(RED)No active project$(NC)"; \
+		exit 1; \
+	fi
+	@current=$$(cat .project-active); \
+	echo "$(YELLOW)Saving $$current to cache...$(NC)"; \
+	mkdir -p .project-cache/$$current; \
+	rsync -a --delete .project/ .project-cache/$$current/ --exclude .git 2>/dev/null || cp -r .project/* .project-cache/$$current/; \
+	echo "$(GREEN)✅ Saved to .project-cache/$$current/$(NC)"
