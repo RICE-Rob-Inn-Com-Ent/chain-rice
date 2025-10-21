@@ -3,19 +3,19 @@
     "meowtopia": {
       "name": "Meowtopia",
       "url": "https://github.com/RICE-Rob-Inn-Com-Ent/Meowtopia.git",
-      "branch": "main",
+      "branch": "dev",
       "description": "Meowtopia Project"
     },
     "code_rice": {
       "name": "Code-Rice",
       "url": "https://github.com/RICE-Rob-Inn-Com-Ent/Code-Rice.git",
-      "branch": "main",
+      "branch": "dev",
       "description": "Code-Rice Project"
     },
     "infinir": {
       "name": "InfiniR",
       "url": "https://github.com/RICE-Rob-Inn-Com-Ent/InfiniR.git",
-      "branch": "main",
+      "branch": "dev",
       "description": "InfiniR is the all-in-one frontend hub for the CRICE ecosystem, enabling businesses to create tokens, manage operations, leverage AI insights, and interact with blockchain smart contracts — infinite potential in a single platform."
     }
   }

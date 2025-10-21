@@ -662,15 +662,24 @@ swap: ## Swap to a different project (make swap PROJECT=code_rice or interactive
 		echo "  → Hard reset to origin/$$branch (FORCE FRESH FILES)..."; \
 		if git reset --hard origin/$$branch 2>/dev/null; then \
 			echo "$(GREEN)  ✅ Reset to latest from $$name$(NC)"; \
-			echo "  → Verifying files..."; \
-			file_count=$$(find . -mindepth 1 -maxdepth 1 ! -name '.git' | wc -l); \
-			echo "$(GREEN)  ✅ Files in .project: $$file_count$(NC)"; \
-		elif [ -d ../.project-cache/$$selected ] && [ -n "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
-			echo "$(YELLOW)  ⚠️  Reset failed - restoring from cache...$(NC)"; \
-			rsync -a ../.project-cache/$$selected/ ./ --exclude .git 2>/dev/null || cp -r ../.project-cache/$$selected/* ./ 2>/dev/null || true; \
 		else \
-			echo "$(RED)  ❌ No remote content and no cache - project might be empty$(NC)"; \
-			echo "$(YELLOW)  💡 Create files in this repo on GitHub first$(NC)"; \
+			echo "$(YELLOW)  ⚠️  Remote branch not found, trying cache...$(NC)"; \
+		fi; \
+		echo "  → Verifying files..."; \
+		file_count=$$(find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.gitignore' | wc -l); \
+		if [ $$file_count -lt 2 ]; then \
+			echo "$(YELLOW)  ⚠️  Only $$file_count files - restoring from cache$(NC)"; \
+			if [ -d ../.project-cache/$$selected ] && [ -n "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
+				cp -r ../.project-cache/$$selected/* ./ 2>/dev/null || true; \
+				cp -r ../.project-cache/$$selected/.[!.]* ./ 2>/dev/null || true; \
+				file_count=$$(find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.gitignore' | wc -l); \
+				echo "$(GREEN)  ✅ Restored from cache - $$file_count files$(NC)"; \
+			else \
+				echo "$(RED)  ❌ No cache available - project empty$(NC)"; \
+				echo "$(YELLOW)  💡 Add files to $$name on GitHub first$(NC)"; \
+			fi; \
+		else \
+			echo "$(GREEN)  ✅ Files in .project: $$file_count$(NC)"; \
 		fi; \
 		echo "  → Updating cache..."; \
 		mkdir -p ../.project-cache/$$selected; \
