@@ -13,7 +13,7 @@
 # Documentation: .helper/ROOT.md
 # ==============================================================================
 
-.PHONY: help deps-install deps-update dev-start dev-stop \
+.PHONY: help prepare asdf-install asdf-plugins deps-install deps-update dev-start dev-stop \
         blockchain-install blockchain-build blockchain-start blockchain-proto \
         blockchain-test blockchain-test-race blockchain-test-cover \
         blockchain-lint blockchain-lint-fix blockchain-clean blockchain-reset
@@ -36,6 +36,9 @@ help: ## Show this help message
 	@echo "$(BLUE)║$(NC)  $(GREEN)RICE-MONO MAKEFILE$(NC) - Enterprise Monorepo Automation  $(BLUE)║$(NC)"
 	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
+	@echo "$(YELLOW)🚀 Quick Start (First Time Setup):$(NC)"
+	@echo "  $(GREEN)make prepare$(NC)          - Complete development environment setup"
+	@echo ""
 	@echo "$(YELLOW)Available Commands:$(NC)"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
@@ -44,6 +47,93 @@ help: ## Show this help message
 	@echo "  • Root files guide:     .helper/ROOT.md"
 	@echo "  • Full documentation:   README.md"
 	@echo ""
+
+# ==============================================================================
+# FIRST TIME SETUP
+# ==============================================================================
+prepare: ## Complete setup for new developers (asdf + all dependencies + pre-commit)
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  $(GREEN)RICE-MONO COMPLETE SETUP$(NC) - New Developer Onboarding     $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)This will install:$(NC)"
+	@echo "  1. asdf version manager (if not installed)"
+	@echo "  2. All asdf plugins (Rust, Go, Node.js, Python, etc.)"
+	@echo "  3. All tools from .tool-versions"
+	@echo "  4. All project dependencies"
+	@echo "  5. Pre-commit hooks"
+	@echo ""
+	@read -p "Continue? [Y/n] " -n 1 -r; \
+	echo; \
+	if [[ ! $$REPLY =~ ^[Nn]$$ ]]; then \
+		$(MAKE) asdf-install && \
+		$(MAKE) asdf-plugins && \
+		$(MAKE) deps-install && \
+		$(MAKE) pre-commit-install && \
+		echo "" && \
+		echo "$(GREEN)╔════════════════════════════════════════════════════════════════╗$(NC)" && \
+		echo "$(GREEN)║$(NC)  ✅ Setup Complete! Environment is ready for development!    $(GREEN)║$(NC)" && \
+		echo "$(GREEN)╚════════════════════════════════════════════════════════════════╝$(NC)" && \
+		echo "" && \
+		echo "$(YELLOW)🎯 Next Steps:$(NC)" && \
+		echo "  1. Restart your shell or run: $(GREEN)source ~/.bashrc$(NC)" && \
+		echo "  2. Start dev environment: $(GREEN)make dev-start$(NC)" && \
+		echo "  3. Read documentation: $(GREEN)README.md$(NC)" && \
+		echo "" && \
+		echo "$(YELLOW)📝 Important Notes:$(NC)" && \
+		echo "  • Add to ~/.bashrc: $(GREEN)source ~/.asdf/asdf.sh$(NC)" && \
+		echo "  • Verify installation: $(GREEN)asdf list$(NC)" && \
+		echo ""; \
+	else \
+		echo "$(YELLOW)Setup cancelled$(NC)"; \
+	fi
+
+asdf-install: ## Install asdf version manager
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Installing asdf Version Manager                               $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@if command -v asdf >/dev/null 2>&1; then \
+		echo "$(GREEN)✅ asdf is already installed$(NC)"; \
+		asdf --version; \
+	else \
+		echo "$(YELLOW)📦 Installing asdf...$(NC)"; \
+		git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0 && \
+		echo "" && \
+		echo "$(GREEN)✅ asdf installed successfully!$(NC)" && \
+		echo "" && \
+		echo "$(YELLOW)⚠️  Please add to your ~/.bashrc:$(NC)" && \
+		echo "  . ~/.asdf/asdf.sh" && \
+		echo "  . ~/.asdf/completions/asdf.bash" && \
+		echo "" && \
+		echo "$(YELLOW)Then restart your shell or run:$(NC) source ~/.bashrc"; \
+	fi
+
+asdf-plugins: ## Install all asdf plugins from .tool-versions
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Installing asdf Plugins                                       $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@if ! command -v asdf >/dev/null 2>&1; then \
+		echo "$(RED)❌ asdf not found! Run: make asdf-install$(NC)"; \
+		exit 1; \
+	fi
+	@echo "$(YELLOW)📦 Installing plugins and tools from .tool-versions...$(NC)"
+	@echo ""
+	@cat .tool-versions | grep -v "^#" | grep -v "^$$" | while read -r plugin version; do \
+		if [ -n "$$plugin" ]; then \
+			echo "$(YELLOW)  • $$plugin $$version$(NC)"; \
+			asdf plugin add $$plugin 2>/dev/null || true; \
+		fi; \
+	done
+	@echo ""
+	@echo "$(YELLOW)🔨 Installing all tool versions (this may take 10-30 minutes)...$(NC)"
+	@asdf install
+	@echo ""
+	@echo "$(GREEN)✅ All asdf plugins and tools installed!$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Verify installation:$(NC)"
+	@asdf current
 
 # ==============================================================================
 # DEPENDENCIES INSTALLATION
@@ -70,15 +160,19 @@ deps-install: ## Install all project dependencies (Python, Rust, Node, Flutter, 
 	@cd .backend/token && go mod download && echo "$(GREEN)✅ Blockchain dependencies downloaded$(NC)"
 	@echo ""
 
-	@echo "$(YELLOW)🌐 [5/7] Frontend Web (Yarn Workspaces)$(NC)"
-	@cd .frontend/web && yarn install && echo "$(GREEN)✅ Frontend dependencies installed$(NC)"
+	@echo "$(YELLOW)🌐 [5/8] Frontend Next.js (Yarn)$(NC)"
+	@cd .frontend/next && yarn install && echo "$(GREEN)✅ Frontend dependencies installed$(NC)"
 	@echo ""
 
-	@echo "$(YELLOW)📱 [6/7] Flutter (Dart)$(NC)"
+	@echo "$(YELLOW)📱 [6/8] Flutter (Dart)$(NC)"
 	@cd .frontend/flutter && flutter pub get && echo "$(GREEN)✅ Flutter dependencies installed$(NC)"
 	@echo ""
 
-	@echo "$(YELLOW)🍎 [7/7] iOS (Swift)$(NC)"
+	@echo "$(YELLOW)🖥️  [7/8] Project Web (npm)$(NC)"
+	@cd .project/web && npm install && echo "$(GREEN)✅ Project web dependencies installed$(NC)"
+	@echo ""
+
+	@echo "$(YELLOW)🍎 [8/8] iOS (Swift)$(NC)"
 	@cd .frontend/ios && swift package resolve && echo "$(GREEN)✅ Swift dependencies resolved$(NC)"
 	@echo ""
 
@@ -111,15 +205,19 @@ deps-update: ## Update all dependencies to latest compatible versions
 	@cd .backend/token && go get -u ./... && go mod tidy && echo "$(GREEN)✅ Blockchain dependencies updated$(NC)"
 	@echo ""
 
-	@echo "$(YELLOW)🌐 [5/7] Frontend Web - Yarn Upgrade$(NC)"
-	@cd .frontend/web && yarn upgrade && echo "$(GREEN)✅ Frontend dependencies updated$(NC)"
+	@echo "$(YELLOW)🌐 [5/8] Frontend Next.js - Yarn Upgrade$(NC)"
+	@cd .frontend/next && yarn upgrade && echo "$(GREEN)✅ Frontend dependencies updated$(NC)"
 	@echo ""
 
-	@echo "$(YELLOW)📱 [6/7] Flutter (Dart) - Pub Upgrade$(NC)"
+	@echo "$(YELLOW)📱 [6/8] Flutter (Dart) - Pub Upgrade$(NC)"
 	@cd .frontend/flutter && flutter pub upgrade && echo "$(GREEN)✅ Flutter dependencies upgraded$(NC)"
 	@echo ""
 
-	@echo "$(YELLOW)🍎 [7/7] iOS (Swift) - Swift Package Update$(NC)"
+	@echo "$(YELLOW)🖥️  [7/8] Project Web - npm Update$(NC)"
+	@cd .project/web && npm update && echo "$(GREEN)✅ Project web dependencies updated$(NC)"
+	@echo ""
+
+	@echo "$(YELLOW)🍎 [8/8] iOS (Swift) - Swift Package Update$(NC)"
 	@cd .frontend/ios && swift package update && echo "$(GREEN)✅ Swift dependencies updated$(NC)"
 	@echo ""
 

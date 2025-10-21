@@ -68,42 +68,42 @@
     {
       "description": "Python - Bot packages",
       "matchManagers": ["pip_requirements", "pip_setup", "pipenv", "poetry"],
-      "matchPaths": ["bots/**"],
+      "matchPaths": [".bot/*"],
       "groupName": "bots dependencies",
       "labels": ["dependencies", "bots", "python"]
     },
     {
       "description": "Go - Backend packages",
       "matchManagers": ["gomod"],
-      "matchPaths": ["backend/**"],
+      "matchPaths": [".backend/*"],
       "groupName": "backend dependencies",
       "labels": ["dependencies", "backend", "go"]
     },
     {
       "description": "Rust - Smart contracts",
       "matchManagers": ["cargo"],
-      "matchPaths": ["backend/contract/rust/**"],
+      "matchPaths": [".backend/contract/rust/*"],
       "groupName": "rust contract dependencies",
       "labels": ["dependencies", "rust", "smart-contracts"]
     },
     {
       "description": "Solidity - EVM contracts",
       "matchManagers": ["npm"],
-      "matchPaths": ["backend/contract/solidity/**"],
+      "matchPaths": [".backend/contract/solidity/*"],
       "groupName": "solidity dependencies",
       "labels": ["dependencies", "solidity", "smart-contracts"]
     },
     {
       "description": "Terraform - Infrastructure",
       "matchManagers": ["terraform"],
-      "matchPaths": ["dev/terraform/**"],
+      "matchPaths": [".dev/terraform/*"],
       "groupName": "terraform dependencies",
       "labels": ["dependencies", "terraform", "infrastructure"]
     },
     {
       "description": "Kubernetes - Container orchestration",
       "matchManagers": ["helm-values", "helmv3", "kubernetes"],
-      "matchPaths": ["dev/k8s/**"],
+      "matchPaths": [".dev/k8s/*"],
       "groupName": "kubernetes dependencies",
       "labels": ["dependencies", "kubernetes"]
     },

@@ -20,7 +20,6 @@ crystal 1.11.2
 python 3.11.7
 python 3.12.1
 ruby 3.3.0
-php 8.3.2
 perl 5.38.2
 lua 5.4.6
 
@@ -29,22 +28,15 @@ java 17
 java 21
 kotlin 1.9.22
 scala 3.3.1
-groovy 4.0.18
-clojure 1.11.1
-
-# .NET Ecosystem
-dotnet 8.0.101
 
 # JavaScript/TypeScript Runtimes
 nodejs 20.11.0
 deno 1.40.2
 bun 1.0.25
 
-# Functional Languages
-elixir 1.16.1
-erlang 26.2.1
-haskell 9.8.1
-ocaml 5.1.1
+# Mobile Development
+flutter 3.24.3
+dart 3.5.3
 
 # ==============================================================================
 # BUILD SYSTEMS & TASK RUNNERS
@@ -88,8 +80,6 @@ trivy 0.48.3
 # DATABASES - SQL
 # ==============================================================================
 postgres 16
-mysql 8.3.0
-sqlite 3.45.0
 
 # ==============================================================================
 # DATABASES - NOSQL
@@ -194,6 +184,8 @@ fd 9.0.0
 bat 0.24.0
 direnv 2.34.0
 fzf 0.46.1
+starship 1.17.1
+zoxide 0.9.4
 
 # ==============================================================================
 # ANDROID DEVELOPMENT
@@ -204,4 +196,5 @@ android-cmdline 11076708
 # BLOCKCHAIN & WEB3
 # ==============================================================================
 solana 1.17.16
-hardhat 2.19.5
+# hardhat - installed via npm in project
+# ignite - Cosmos blockchain CLI (install via: curl https://get.ignite.com/cli! | bash)
