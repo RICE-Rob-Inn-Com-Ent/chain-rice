@@ -647,26 +647,29 @@ swap: ## Swap to a different project (make swap PROJECT=code_rice or interactive
 	echo "  URL: $$url"; \
 	echo "  Branch: $$branch"; \
 	cd .project && { \
-		echo "  → Changing remote..."; \
+		echo "  → Changing remote to $$url..."; \
 		git remote remove origin 2>/dev/null || true; \
 		git remote add origin $$url; \
-		echo "  → Fetching..."; \
+		echo "  → Fetching from GitHub..."; \
 		git fetch origin $$branch 2>/dev/null || git fetch origin 2>/dev/null || true; \
-		if [ -d ../.project-cache/$$selected ] && [ -n "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
-			echo "  → Restoring from cache..."; \
-			find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} + 2>/dev/null || true; \
-			rsync -a ../.project-cache/$$selected/ ./ --exclude .git 2>/dev/null || true; \
-		fi; \
-		echo "  → Checkout $$branch..."; \
-		git checkout $$branch 2>/dev/null || git checkout -b $$branch 2>/dev/null || true; \
-		echo "  → Pulling from GitHub..."; \
-		if git pull origin $$branch 2>/dev/null; then \
-			echo "$(GREEN)  ✅ Pulled latest from GitHub$(NC)"; \
+		echo "  → Cleaning working directory (removing old project files)..."; \
+		find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.gitignore' -exec rm -rf {} + 2>/dev/null || true; \
+		echo "$(GREEN)  ✅ Old files removed$(NC)"; \
+		echo "  → Checking out $$branch..."; \
+		git checkout $$branch 2>/dev/null || git checkout -b $$branch --track origin/$$branch 2>/dev/null || true; \
+		echo "  → Pulling fresh files from GitHub..."; \
+		if git pull origin $$branch --rebase 2>/dev/null || git pull origin $$branch 2>/dev/null; then \
+			echo "$(GREEN)  ✅ Pulled latest from $$name$(NC)"; \
+		elif [ -d ../.project-cache/$$selected ] && [ -n "$$(ls -A ../.project-cache/$$selected 2>/dev/null)" ]; then \
+			echo "$(YELLOW)  ⚠️  Pull failed - restoring from cache...$(NC)"; \
+			rsync -a ../.project-cache/$$selected/ ./ --exclude .git 2>/dev/null || cp -r ../.project-cache/$$selected/* ./ 2>/dev/null || true; \
 		else \
-			echo "$(YELLOW)  ⚠️  Pull failed - creating from cache$(NC)"; \
+			echo "$(RED)  ❌ No remote content and no cache - project might be empty$(NC)"; \
 		fi; \
+		echo "  → Updating cache..."; \
 		mkdir -p ../.project-cache/$$selected; \
 		rsync -a ./ ../.project-cache/$$selected/ --exclude .git 2>/dev/null || true; \
+		echo "$(GREEN)  ✅ Cache updated$(NC)"; \
 	}; \
 	echo "$$selected" > .project-active; \
 	echo ""; \
