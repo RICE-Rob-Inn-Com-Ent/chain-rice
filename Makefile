@@ -441,39 +441,79 @@ project-status: ## Show current project status
 	fi
 	@echo ""
 
-project-sync-repos: ## Auto-sync repository list from GitHub
+project-sync-repos: ## Auto-sync repository list from GitHub (uses gh CLI or GITHUB_TOKEN)
 	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
 	@echo "$(BLUE)║$(NC)  Syncing Projects from GitHub                                  $(BLUE)║$(NC)"
 	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Fetching repositories from RICE-Rob-Inn-Com-Ent...$(NC)"; \
-	repos=$$(curl -s "https://api.github.com/orgs/RICE-Rob-Inn-Com-Ent/repos?per_page=100" 2>/dev/null || \
-	         curl -s "https://api.github.com/users/RICE-Rob-Inn-Com-Ent/repos?per_page=100" 2>/dev/null); \
-	if [ -z "$$repos" ]; then \
-		echo "$(RED)Failed to fetch repositories from GitHub$(NC)"; \
-		echo "$(YELLOW)Make sure you have internet connection$(NC)"; \
-		exit 1; \
-	fi; \
-	echo "{" > .project-repos.json.tmp; \
-	echo '  "projects": {' >> .project-repos.json.tmp; \
-	first=true; \
-	echo "$$repos" | grep -o '"name": "[^"]*"' | cut -d'"' -f4 | while read repo; do \
-		if [ "$$repo" != "rice-mono" ]; then \
+	@if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then \
+		echo "$(GREEN)✅ Using GitHub CLI (shows private repos)$(NC)"; \
+		echo "$(YELLOW)Fetching repositories from RICE-Rob-Inn-Com-Ent...$(NC)"; \
+		echo ""; \
+		gh repo list RICE-Rob-Inn-Com-Ent --limit 100 --json name,url,description,defaultBranchRef > /tmp/repos.json; \
+		echo "{" > .project-repos.json.tmp; \
+		echo '  "projects": {' >> .project-repos.json.tmp; \
+		first=true; \
+		cat /tmp/repos.json | jq -r '.[] | select(.name != "rice-mono") | "\(.name)|\(.url)|\(.description // "No description")|\(.defaultBranchRef.name // "main")"' | while IFS='|' read -r name url desc branch; do \
 			if [ "$$first" = false ]; then echo "," >> .project-repos.json.tmp; fi; \
 			first=false; \
-			key=$$(echo "$$repo" | tr '[:upper:]' '[:lower:]' | tr '-' '_'); \
+			key=$$(echo "$$name" | tr '[:upper:]' '[:lower:]' | tr '-' '_'); \
 			echo "    \"$$key\": {" >> .project-repos.json.tmp; \
-			echo "      \"name\": \"$$repo\"," >> .project-repos.json.tmp; \
-			echo "      \"url\": \"https://github.com/RICE-Rob-Inn-Com-Ent/$$repo.git\"," >> .project-repos.json.tmp; \
-			echo "      \"branch\": \"main\"," >> .project-repos.json.tmp; \
-			echo "      \"description\": \"Auto-synced from GitHub\"" >> .project-repos.json.tmp; \
+			echo "      \"name\": \"$$name\"," >> .project-repos.json.tmp; \
+			echo "      \"url\": \"$$url\"," >> .project-repos.json.tmp; \
+			echo "      \"branch\": \"$$branch\"," >> .project-repos.json.tmp; \
+			echo "      \"description\": \"$$desc\"" >> .project-repos.json.tmp; \
 			echo -n "    }" >> .project-repos.json.tmp; \
-		fi; \
-	done; \
-	echo "" >> .project-repos.json.tmp; \
-	echo "  }" >> .project-repos.json.tmp; \
-	echo "}" >> .project-repos.json.tmp; \
-	mv .project-repos.json.tmp .project-repos.json; \
+			echo "  $(GREEN)✓$(NC) $$name"; \
+		done; \
+		echo "" >> .project-repos.json.tmp; \
+		echo "  }" >> .project-repos.json.tmp; \
+		echo "}" >> .project-repos.json.tmp; \
+		mv .project-repos.json.tmp .project-repos.json; \
+	elif [ -n "$$GITHUB_TOKEN" ]; then \
+		echo "$(GREEN)✅ Using GITHUB_TOKEN (shows private repos)$(NC)"; \
+		echo "$(YELLOW)Fetching repositories from RICE-Rob-Inn-Com-Ent...$(NC)"; \
+		echo ""; \
+		repos=$$(curl -s -H "Authorization: token $$GITHUB_TOKEN" "https://api.github.com/orgs/RICE-Rob-Inn-Com-Ent/repos?per_page=100"); \
+		echo "{" > .project-repos.json.tmp; \
+		echo '  "projects": {' >> .project-repos.json.tmp; \
+		first=true; \
+		echo "$$repos" | jq -r '.[] | select(.name != "rice-mono") | "\(.name)|\(.clone_url)|\(.description // "No description")|\(.default_branch)"' | while IFS='|' read -r name url desc branch; do \
+			if [ "$$first" = false ]; then echo "," >> .project-repos.json.tmp; fi; \
+			first=false; \
+			key=$$(echo "$$name" | tr '[:upper:]' '[:lower:]' | tr '-' '_'); \
+			echo "    \"$$key\": {" >> .project-repos.json.tmp; \
+			echo "      \"name\": \"$$name\"," >> .project-repos.json.tmp; \
+			echo "      \"url\": \"$$url\"," >> .project-repos.json.tmp; \
+			echo "      \"branch\": \"$$branch\"," >> .project-repos.json.tmp; \
+			echo "      \"description\": \"$$desc\"" >> .project-repos.json.tmp; \
+			echo -n "    }" >> .project-repos.json.tmp; \
+			echo "  $(GREEN)✓$(NC) $$name"; \
+		done; \
+		echo "" >> .project-repos.json.tmp; \
+		echo "  }" >> .project-repos.json.tmp; \
+		echo "}" >> .project-repos.json.tmp; \
+		mv .project-repos.json.tmp .project-repos.json; \
+	else \
+		echo "$(RED)❌ Cannot access private repositories$(NC)"; \
+		echo ""; \
+		echo "$(YELLOW)To sync private repos, either:$(NC)"; \
+		echo ""; \
+		echo "  $(GREEN)Option 1: GitHub CLI (recommended)$(NC)"; \
+		echo "    1. Install: curl -sL https://github.com/cli/cli/releases/download/v2.42.1/gh_2.42.1_linux_amd64.tar.gz | tar xz"; \
+		echo "    2. Login: gh auth login"; \
+		echo "    3. Run: make project-sync-repos"; \
+		echo ""; \
+		echo "  $(GREEN)Option 2: GitHub Token$(NC)"; \
+		echo "    1. Create token: https://github.com/settings/tokens"; \
+		echo "    2. Export: export GITHUB_TOKEN=ghp_xxxxx"; \
+		echo "    3. Run: make project-sync-repos"; \
+		echo ""; \
+		echo "  $(GREEN)Option 3: Manual$(NC)"; \
+		echo "    Edit .project-repos.json directly"; \
+		echo ""; \
+		exit 1; \
+	fi; \
 	echo ""; \
 	echo "$(GREEN)✅ Synced repositories to .project-repos.json$(NC)"; \
 	echo ""; \
