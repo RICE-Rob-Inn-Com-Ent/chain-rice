@@ -1,0 +1,75 @@
+---
+# Master Playbook - Orchestrates all infrastructure setup
+# Run this to deploy the complete infrastructure
+
+- name: "🚀 Rice-Mono Infrastructure Deployment"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display deployment banner
+      debug:
+        msg:
+          - "╔═══════════════════════════════════════════╗"
+          - "║   Rice-Mono Infrastructure Deployment    ║"
+          - "║   Professional DevOps Automation Suite   ║"
+          - "╚═══════════════════════════════════════════╝"
+
+- name: "📦 System Preparation"
+  import_playbook: prepare-systems.yml
+  tags: [prepare, base]
+
+- name: "🔒 Security Hardening"
+  import_playbook: security-hardening.yml
+  tags: [security]
+
+- name: "🐳 Docker Installation"
+  import_playbook: install-docker.yml
+  tags: [docker]
+
+- name: "☸️  Kubernetes Cluster Setup"
+  import_playbook: setup-kubernetes.yml
+  tags: [kubernetes, k8s]
+
+- name: "🗄️  Database Deployment"
+  import_playbook: deploy-database.yml
+  tags: [database, db]
+
+- name: "🌐 Web Server Configuration"
+  import_playbook: configure-webservers.yml
+  tags: [web, nginx]
+
+- name: "⚡ Cache Layer Setup"
+  import_playbook: setup-cache.yml
+  tags: [cache, redis]
+
+- name: "📊 Monitoring Stack"
+  import_playbook: deploy-monitoring.yml
+  tags: [monitoring, prometheus]
+
+- name: "🔄 Load Balancer Setup"
+  import_playbook: setup-loadbalancer.yml
+  tags: [lb, loadbalancer]
+
+- name: "🚢 Application Deployment"
+  import_playbook: deploy-applications.yml
+  tags: [app, deploy]
+
+- name: "✅ Health Checks"
+  import_playbook: health-check.yml
+  tags: [health, check]
+
+- name: "🎉 Deployment Summary"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display success message
+      debug:
+        msg:
+          - "╔═══════════════════════════════════════════╗"
+          - "║   ✅ Deployment Completed Successfully!  ║"
+          - "║                                           ║"
+          - "║   Access your services:                   ║"
+          - "║   - API: https://api.{{ domain }}        ║"
+          - "║   - Dashboard: https://{{ domain }}      ║"
+          - "║   - Monitoring: https://grafana.{{ domain }}║"
+          - "╚═══════════════════════════════════════════╝"

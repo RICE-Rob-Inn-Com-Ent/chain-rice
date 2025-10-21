@@ -1,11 +1,11 @@
-load("@rules_go//go:def.bzl", "go_binary", "go_library")
+load("@rules_go//go:def.bzl", "go_binary")
 
 # Main backend binary
 go_binary(
     name = "backend",
     srcs = ["main.go"],
+    visibility = ["//visibility:public"],
     deps = [
         "@com_github_gin_gonic_gin//:gin",
     ],
-    visibility = ["//visibility:public"],
 )

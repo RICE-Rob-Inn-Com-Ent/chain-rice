@@ -1,0 +1,106 @@
+---
+- name: System Health Check
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Check system load
+      shell: uptime
+      register: system_load
+      changed_when: false
+
+    - name: Check disk usage
+      shell: df -h | grep -E '^/dev/'
+      register: disk_usage
+      changed_when: false
+
+    - name: Check memory usage
+      shell: free -h
+      register: memory_usage
+      changed_when: false
+
+    - name: Verify critical services are running
+      service_facts:
+
+    - name: Check Docker status
+      service:
+        name: docker
+        state: started
+      when: docker_enabled | default(true)
+      check_mode: true
+      register: docker_status
+
+    - name: Generate health report
+      debug:
+        msg:
+          - "=== Health Check Report for {{ inventory_hostname }} ==="
+          - "System Load: {{ system_load.stdout }}"
+          - "Disk Usage:"
+          - "{{ disk_usage.stdout_lines }}"
+          - "Memory Usage:"
+          - "{{ memory_usage.stdout_lines }}"
+          - "Docker: {{ 'Running' if docker_status is success else 'Not Running' }}"
+
+- name: Kubernetes Health Check
+  hosts: k8s_master[0]
+  become_user: "{{ ansible_user }}"
+
+  tasks:
+    - name: Check cluster status
+      command: kubectl cluster-info
+      register: cluster_info
+      changed_when: false
+
+    - name: Check node status
+      command: kubectl get nodes
+      register: node_status
+      changed_when: false
+
+    - name: Check pod status
+      command: kubectl get pods --all-namespaces
+      register: pod_status
+      changed_when: false
+
+    - name: Check critical pods
+      shell: kubectl get pods --all-namespaces | grep -E 'CrashLoopBackOff|Error|ImagePullBackOff' || true
+      register: failing_pods
+      changed_when: false
+
+    - name: Display Kubernetes health
+      debug:
+        msg:
+          - "=== Kubernetes Cluster Health ==="
+          - "{{ cluster_info.stdout_lines }}"
+          - ""
+          - "=== Node Status ==="
+          - "{{ node_status.stdout_lines }}"
+          - ""
+          - "=== Failing Pods ==="
+          - "{{ failing_pods.stdout_lines if failing_pods.stdout else 'All pods healthy!' }}"
+
+- name: Database Health Check
+  hosts: database
+  become: true
+
+  tasks:
+    - name: Check PostgreSQL status
+      shell: su - postgres -c "psql -c 'SELECT version();'"
+      register: pg_status
+      when: db_type == 'postgresql'
+      changed_when: false
+      ignore_errors: true
+
+    - name: Check MySQL status
+      shell: mysql -e "SELECT VERSION();"
+      register: mysql_status
+      when: db_type == 'mysql'
+      changed_when: false
+      ignore_errors: true
+
+    - name: Display database health
+      debug:
+        msg:
+          - "=== Database Health for {{ inventory_hostname }} ==="
+          - "Type: {{ db_type }}"
+          - "{{ pg_status.stdout if db_type == 'postgresql' else mysql_status.stdout }}"
+      when: pg_status is success or mysql_status is success

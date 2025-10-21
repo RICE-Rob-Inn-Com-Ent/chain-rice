@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: ipfs-node
+    ports:
+      - "4001:4001" # P2P swarm
+      - "4001:4001/udp" # P2P swarm (UDP)
+      - "5001:5001" # HTTP API
+      - "8080:8080" # HTTP Gateway
+    volumes:
+      - ipfs-data:/data/ipfs
+      - ipfs-staging:/export
+    environment:
+      - IPFS_PROFILE=server
+    command: >
+      daemon --migrate=true --enable-gc
+    networks:
+      - ipfs-network
+    restart: unless-stopped
+
+  # IPFS Cluster (for distributed pinning)
+  ipfs-cluster:
+    image: ipfs/ipfs-cluster:latest
+    container_name: ipfs-cluster
+    depends_on:
+      - ipfs
+    ports:
+      - "9094:9094" # HTTP API
+      - "9096:9096" # Cluster swarm
+    volumes:
+      - ipfs-cluster-data:/data/ipfs-cluster
+    environment:
+      - CLUSTER_SECRET=your-32-byte-secret-here
+      - IPFS_API=/dns4/ipfs/tcp/5001
+    networks:
+      - ipfs-network
+    restart: unless-stopped
+
+volumes:
+  ipfs-data:
+  ipfs-staging:
+  ipfs-cluster-data:
+
+networks:
+  ipfs-network:
+    driver: bridge

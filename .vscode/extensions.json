@@ -10,6 +10,7 @@
     // ============================================================================
     // 🔥 ESSENTIAL - Core Development (MUST HAVE)
     // ============================================================================
+    "mkhl.direnv", // direnv support - Auto-load environment variables
     "esbenp.prettier-vscode", // Code formatter - Industry standard
     "editorconfig.editorconfig", // EditorConfig support - Cross-editor consistency
     "usernamehw.errorlens", // Inline error messages - Instant feedback
@@ -241,9 +242,8 @@
     // 🤖 AI / COPILOT
     // ============================================================================
     "github.copilot", // GitHub Copilot
-    "github.copilot-chat", // Copilot Chat
     "visualstudioexptteam.vscodeintellicode", // IntelliCode
-    "visualstudioexptteam.intellicode-api-usage-examples", // IntelliCode examples
+    "visualstudioexptteam.intellicode-api-usage-examples" // IntelliCode examples
 
     // ============================================================================
     // 🎨 UI / THEMES / ICONS
@@ -286,6 +286,7 @@
     "eg2.tslint", // Deprecated - Use ESLint
     "octref.vetur", // Use Volar for Vue instead
     "jpoissonnier.vscode-styled-components", // Duplicate
-    "ms-vscode.typescript-javascript-grammar" // Built-in
+    "ms-vscode.typescript-javascript-grammar", // Built-in
+    "github.copilot-chat" // Not compatible with Cursor (use Cursor's native AI instead)
   ]
 }

@@ -1,0 +1,100 @@
+version: "3.8"
+
+services:
+  # Apollo Router (Gateway)
+  apollo-router:
+    image: ghcr.io/apollographql/router:v1.62.0
+    container_name: apollo-router
+    ports:
+      - "4000:4000"
+      - "9090:9090" # Prometheus metrics
+    volumes:
+      - ./router/router.yaml:/app/router.yaml
+      - ./supergraph-schema.graphql:/app/supergraph-schema.graphql:ro
+    command:
+      - "--config"
+      - "/app/router.yaml"
+      - "--supergraph"
+      - "/app/supergraph-schema.graphql"
+    environment:
+      - APOLLO_ROUTER_LOG=info
+      - APOLLO_ROUTER_SUPERGRAPH_PATH=/app/supergraph-schema.graphql
+    depends_on:
+      - users-subgraph
+      - products-subgraph
+      - orders-subgraph
+    networks:
+      - graphql-network
+
+  # Users Subgraph
+  users-subgraph:
+    build:
+      context: ./subgraphs/users
+      dockerfile: Dockerfile
+    container_name: users-subgraph
+    ports:
+      - "4001:4001"
+    environment:
+      - PORT=4001
+      - DATABASE_URL=postgresql://rice_user:rice_password@postgres:5432/rice_db
+    networks:
+      - graphql-network
+
+  # Products Subgraph
+  products-subgraph:
+    build:
+      context: ./subgraphs/products
+      dockerfile: Dockerfile
+    container_name: products-subgraph
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+      - DATABASE_URL=postgresql://rice_user:rice_password@postgres:5432/rice_db
+    networks:
+      - graphql-network
+
+  # Orders Subgraph
+  orders-subgraph:
+    build:
+      context: ./subgraphs/orders
+      dockerfile: Dockerfile
+    container_name: orders-subgraph
+    ports:
+      - "4003:4003"
+    environment:
+      - PORT=4003
+      - DATABASE_URL=postgresql://rice_user:rice_password@postgres:5432/rice_db
+    networks:
+      - graphql-network
+
+  # PostgreSQL (shared database)
+  postgres:
+    image: postgres:16-alpine
+    container_name: graphql-postgres
+    environment:
+      POSTGRES_USER: rice_user
+      POSTGRES_PASSWORD: rice_password  # pragma: allowlist secret
+      POSTGRES_DB: rice_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - graphql-postgres-data:/var/lib/postgresql/data
+    networks:
+      - graphql-network
+
+  # Redis (for caching)
+  redis:
+    image: redis:7-alpine
+    container_name: graphql-redis
+    ports:
+      - "6380:6379"
+    networks:
+      - graphql-network
+
+networks:
+  graphql-network:
+    driver: bridge
+
+volumes:
+  graphql-postgres-data:

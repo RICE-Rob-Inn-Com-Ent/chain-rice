@@ -1,0 +1,124 @@
+# Apollo Router Configuration
+# https://www.apollographql.com/docs/router/configuration/overview
+
+# Supergraph configuration
+supergraph:
+  listen: 0.0.0.0:4000
+  path: /graphql
+  introspection: true
+  query_planning:
+    cache:
+      in_memory:
+        limit: 512
+
+# Homepage / GraphiQL
+homepage:
+  enabled: true
+
+# CORS configuration
+cors:
+  origins:
+    - http://localhost:3000
+    - http://localhost:8080
+  allow_credentials: true
+  allow_headers:
+    - Content-Type
+    - Authorization
+  methods:
+    - GET
+    - POST
+    - OPTIONS
+
+# Headers propagation
+headers:
+  all:
+    request:
+      - propagate:
+          named: authorization
+      - propagate:
+          named: x-user-id
+      - propagate:
+          named: x-tenant-id
+
+# Subgraphs configuration
+override_subgraph_url:
+  users: http://localhost:4001/graphql
+  products: http://localhost:4002/graphql
+  orders: http://localhost:4003/graphql
+
+# Rate limiting
+traffic_shaping:
+  router:
+    timeout: 30s
+    global_rate_limit:
+      capacity: 1000
+      interval: 1s
+
+  all:
+    deduplicate_query: true
+    timeout: 10s
+
+# Telemetry
+telemetry:
+  instrumentation:
+    spans:
+      mode: spec_compliant
+    instruments:
+      graphql:
+        default: true
+
+  exporters:
+    tracing:
+      common:
+        service_name: apollo-router
+      otlp:
+        enabled: true
+        endpoint: http://jaeger:4317
+        protocol: grpc
+
+    metrics:
+      prometheus:
+        enabled: true
+        listen: 0.0.0.0:9090
+        path: /metrics
+
+# Caching
+apq:
+  enabled: true
+  router:
+    cache:
+      redis:
+        urls: ["redis://redis:6379"]
+        ttl: 3600s
+
+# Limits
+limits:
+  max_depth: 15
+  max_height: 100
+  max_aliases: 30
+  max_root_fields: 20
+
+# Plugins
+plugins:
+  # Authentication
+  authentication:
+    jwt:
+      jwks:
+        - url: https://auth.example.com/.well-known/jwks.json
+      header_name: Authorization
+      header_value_prefix: Bearer
+
+  # Authorization
+  authorization:
+    require_authentication: false
+    directives:
+      enabled: true
+
+# Health checks
+health_check:
+  listen: 0.0.0.0:8088
+  enabled: true
+
+# Sandbox (GraphQL IDE)
+sandbox:
+  enabled: true

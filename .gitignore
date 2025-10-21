@@ -97,6 +97,8 @@ DerivedData/
 *.xcuserstate
 *.xcworkspace/
 !default.xcworkspace
+.build/
+.swiftpm/
 
 # ============================================================================
 # TESTING & COVERAGE
@@ -284,6 +286,14 @@ lerna-debug.log*
 # User-specific configs
 .local/
 local/
+
+# Project slot - contains active project (has its own .git)
+# NOTE: .project/ is a dynamic slot that changes between projects.
+#       Each project is a separate git repo, so git automatically ignores it.
+#       Keep .instructions.md and .vscode/ template for onboarding.
+!.project/.instructions.md
+!.project/.vscode/
+.project/.vscode/settings.json
 
 # ============================================================================
 # SECURITY SCANNING

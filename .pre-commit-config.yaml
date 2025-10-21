@@ -97,7 +97,7 @@ repos:
       - id: check-yaml
         name: "✅ YAML syntax"
         files: \.(yaml|yml)$
-        exclude: .*\.dev/k8s/templates/.*
+        exclude: .*\.dev/kubernetes/templates/.*
 
       - id: check-json
         name: "✅ JSON syntax"
@@ -140,6 +140,9 @@ repos:
       - id: go-imports
         name: "🔵 Organize imports"
         files: ^\.backend/.*\.go$
+        entry: /home/mrDinkelman/go/bin/goimports -w
+        language: system
+        types: [go]
 
   # =============================================================================
   # 5. RUST AUTO-FORMAT (Fast - only formatting, NO linting)

@@ -14,7 +14,7 @@
 - [Overview](#-overview)
 - [Quick Start](#-quick-start)
 - [Directory Structure](#-directory-structure)
-- [Workflows](#-workflows)
+- [Workflows](#️-workflows)
   - [Continuous Integration (CI)](#continuous-integration-ci)
   - [Continuous Deployment (CD)](#continuous-deployment-cd)
   - [Security & Compliance](#security--compliance)

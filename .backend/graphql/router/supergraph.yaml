@@ -1,0 +1,20 @@
+# Supergraph Composition Config
+# Used by Rover CLI to compose the supergraph schema
+
+federation_version: 2
+
+subgraphs:
+  users:
+    routing_url: http://localhost:4001/graphql
+    schema:
+      file: ../subgraphs/users/schema.graphql
+
+  products:
+    routing_url: http://localhost:4002/graphql
+    schema:
+      file: ../subgraphs/products/schema.graphql
+
+  orders:
+    routing_url: http://localhost:4003/graphql
+    schema:
+      file: ../subgraphs/orders/schema.graphql

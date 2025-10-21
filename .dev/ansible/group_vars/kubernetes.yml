@@ -1,0 +1,73 @@
+---
+# Kubernetes Cluster Variables
+
+# Cluster Configuration
+k8s_cluster_name: rice-mono
+k8s_version: "1.30"
+k8s_network_plugin: calico
+k8s_pod_network_cidr: 10.244.0.0/16
+k8s_service_cidr: 10.96.0.0/12
+
+# Container Runtime
+container_runtime: containerd
+containerd_version: "1.7"
+
+# API Server
+k8s_api_server_port: 6443
+k8s_api_server_advertise_address: "{{ ansible_default_ipv4.address }}"
+
+# etcd Configuration
+etcd_version: "3.5"
+etcd_data_dir: /var/lib/etcd
+etcd_backup_enabled: true
+
+# Kubelet Configuration
+kubelet_max_pods: 110
+kubelet_pod_eviction_timeout: 5m
+kubelet_cgroup_driver: systemd
+
+# Network Plugin (Calico)
+calico_version: "3.27"
+calico_ipip_mode: Always
+calico_nat_outgoing: true
+
+# Add-ons
+k8s_dashboard_enabled: true
+k8s_metrics_server_enabled: true
+k8s_cert_manager_enabled: true
+k8s_ingress_nginx_enabled: true
+
+# Storage
+k8s_storage_class: gp3
+k8s_default_storage_class: true
+
+# RBAC
+k8s_rbac_enabled: true
+
+# Audit
+k8s_audit_enabled: true
+k8s_audit_log_path: /var/log/kubernetes/audit.log
+k8s_audit_log_maxage: 30
+
+# Feature Gates
+k8s_feature_gates:
+  - "TTLAfterFinished=true"
+  - "EphemeralContainers=true"
+
+# CNI Configuration
+cni_bin_dir: /opt/cni/bin
+cni_conf_dir: /etc/cni/net.d
+
+# Monitoring
+prometheus_operator_enabled: true
+grafana_enabled: true
+
+# Helm
+helm_version: "3.14"
+helm_repos:
+  - name: stable
+    url: https://charts.helm.sh/stable
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: prometheus
+    url: https://prometheus-community.github.io/helm-charts

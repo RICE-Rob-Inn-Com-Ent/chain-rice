@@ -1,0 +1,53 @@
+---
+# Database Server Variables
+
+# PostgreSQL Configuration
+postgresql_version: "15"
+postgresql_port: 5432
+postgresql_max_connections: 200
+postgresql_shared_buffers: 256MB
+postgresql_effective_cache_size: 1GB
+postgresql_maintenance_work_mem: 64MB
+postgresql_checkpoint_completion_target: 0.9
+postgresql_wal_buffers: 16MB
+postgresql_default_statistics_target: 100
+postgresql_random_page_cost: 1.1
+postgresql_effective_io_concurrency: 200
+postgresql_work_mem: 4MB
+postgresql_min_wal_size: 1GB
+postgresql_max_wal_size: 4GB
+
+# MySQL Configuration
+mysql_version: "8.0"
+mysql_port: 3306
+mysql_max_connections: 200
+mysql_innodb_buffer_pool_size: 1G
+mysql_innodb_log_file_size: 256M
+mysql_query_cache_size: 0
+mysql_slow_query_log: 1
+mysql_long_query_time: 2
+
+# Backup Configuration
+db_backup_enabled: true
+db_backup_schedule: "0 2 * * *" # Daily at 2 AM
+db_backup_retention: 7
+db_backup_path: /var/backups/database
+db_backup_s3_enabled: true
+
+# Replication
+db_replication_enabled: true
+db_replication_user: replicator
+
+# Monitoring
+db_monitoring_enabled: true
+db_exporter_port: 9187
+
+# Security
+db_ssl_enabled: true
+db_firewall_rules:
+  - source: "10.0.1.0/24" # Web servers
+  - source: "10.0.4.0/24" # K8s cluster
+
+# Performance
+db_vacuum_enabled: true
+db_analyze_enabled: true

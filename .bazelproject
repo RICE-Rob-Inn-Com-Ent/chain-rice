@@ -1,0 +1,39 @@
+# Bazel Project Configuration
+# This file helps IDEs and tools identify the Bazel workspace root
+# Especially useful for multi-root workspaces
+
+directories:
+  # Include all source directories
+  .backend
+  .frontend
+  .bot
+  .schema
+  .dev
+  tools
+
+# Derive targets from directories
+derive_targets_from_directories: true
+
+# Workspace type
+workspace_type: BazelWorkspace
+
+# Target patterns to index
+targets: //...
+
+# Additional languages to support
+additional_languages:
+  - python
+  - rust
+  - typescript
+  - javascript
+  - go
+  - kotlin
+  - swift
+
+# Build flags (inherit from .bazelrc)
+build_flags:
+  - --enable_bzlmod
+
+# Sync flags
+sync_flags:
+  - --enable_bzlmod

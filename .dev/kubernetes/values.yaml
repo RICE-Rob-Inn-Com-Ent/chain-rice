@@ -1,0 +1,440 @@
+# Default values for Rice-Mono Kubernetes deployment
+# This is a YAML-formatted file.
+
+# Global settings
+global:
+  environment: dev
+  domain: rice-mono.local
+  registry: docker.io/rice-mono
+  imagePullSecrets: []
+
+  # Storage class
+  storageClass: standard
+
+  # Monitoring
+  monitoring:
+    enabled: true
+    prometheus: true
+    grafana: true
+
+  # Security
+  podSecurityPolicy:
+    enabled: false
+  networkPolicy:
+    enabled: true
+
+# Namespace configuration
+namespaceOverride: ""
+
+# Common labels
+commonLabels:
+  app.kubernetes.io/part-of: rice-mono
+  app.kubernetes.io/managed-by: helm
+
+# Common annotations
+commonAnnotations: {}
+
+# Backend API Service
+backend:
+  enabled: true
+  name: rice-backend
+
+  replicaCount: 3
+
+  image:
+    repository: rice-mono/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    annotations: {}
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/rate-limit: "100"
+    hosts:
+      - host: api.rice-mono.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: backend-tls  # pragma: allowlist secret
+        hosts:
+          - api.rice-mono.local
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  env:
+    - name: ENVIRONMENT
+      value: "dev"
+    - name: LOG_LEVEL
+      value: "info"
+    - name: PORT
+      value: "8080"
+
+  envFrom:
+    - configMapRef:
+        name: backend-config
+    - secretRef:
+        name: backend-secrets
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 5
+
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+
+# Frontend Web Service
+frontend:
+  enabled: true
+  name: rice-frontend
+
+  replicaCount: 2
+
+  image:
+    repository: rice-mono/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: rice-mono.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: frontend-tls  # pragma: allowlist secret
+        hosts:
+          - rice-mono.local
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+
+# Bot Service
+bot:
+  enabled: true
+  name: rice-bot
+
+  replicaCount: 1
+
+  image:
+    repository: rice-mono/bot
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+
+# Token Chain Service
+token:
+  enabled: true
+  name: rice-token
+
+  replicaCount: 1
+
+  image:
+    repository: rice-mono/token
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 26657
+    targetPort: 26657
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+  persistence:
+    enabled: true
+    size: 50Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+
+# Database (PostgreSQL)
+database:
+  enabled: true
+
+  # Use external database or deploy internal
+  external: false
+  host: ""
+  port: 5432
+  database: rice_db
+  username: rice_user
+
+  # Internal PostgreSQL deployment
+  internal:
+    replicaCount: 1
+
+    image:
+      repository: postgres
+      tag: "15-alpine"
+
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: ""
+
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+
+    backup:
+      enabled: true
+      schedule: "0 2 * * *"
+      retention: 7
+
+# Redis Cache
+redis:
+  enabled: true
+
+  architecture: standalone
+  # or 'replication' for master-slave
+
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  replica:
+    replicaCount: 2
+    persistence:
+      enabled: true
+      size: 8Gi
+
+# Monitoring Stack
+monitoring:
+  enabled: true
+
+  prometheus:
+    enabled: true
+    retention: 15d
+    storage:
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+
+  grafana:
+    enabled: true
+    adminPassword: "" # Set via secret
+    persistence:
+      enabled: true
+      size: 10Gi
+
+    dashboards:
+      - rice-mono-overview
+      - kubernetes-cluster
+      - application-metrics
+
+  alertmanager:
+    enabled: true
+    config:
+      receivers:
+        - name: "slack"
+          slack_configs:
+            - api_url: "" # Set via secret
+              channel: "#alerts"
+
+# Service Mesh (Istio)
+serviceMesh:
+  enabled: false
+  mtls:
+    enabled: true
+
+  virtualServices:
+    - name: backend
+      hosts:
+        - api.rice-mono.local
+      gateways:
+        - rice-gateway
+
+  destinationRules:
+    - name: backend
+      trafficPolicy:
+        loadBalancer:
+          simple: ROUND_ROBIN
+
+# Cert Manager
+certManager:
+  enabled: true
+  email: admin@rice-mono.com
+
+  clusterIssuer:
+    production:
+      server: https://acme-v02.api.letsencrypt.org/directory
+    staging:
+      server: https://acme-staging-v02.api.letsencrypt.org/directory
+
+# ArgoCD Configuration
+argocd:
+  enabled: true
+
+  projects:
+    - name: rice-mono
+      description: "Rice Mono Applications"
+      sourceRepos:
+        - "*"
+      destinations:
+        - namespace: "*"
+          server: https://kubernetes.default.svc
+
+  applications:
+    - name: backend
+      project: rice-mono
+      source:
+        repoURL: https://github.com/rice-mono/rice-mono.git
+        targetRevision: main
+        path: .dev/k8s/charts/backend
+    - name: frontend
+      project: rice-mono
+      source:
+        repoURL: https://github.com/rice-mono/rice-mono.git
+        targetRevision: main
+        path: .dev/k8s/charts/frontend
+
+# Network Policies
+networkPolicies:
+  enabled: true
+
+  policies:
+    - name: deny-all-ingress
+      podSelector: {}
+      policyTypes:
+        - Ingress
+
+    - name: allow-backend
+      podSelector:
+        matchLabels:
+          app: rice-backend
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: rice-frontend
+          ports:
+            - protocol: TCP
+              port: 8080
+
+# Resource Quotas
+resourceQuotas:
+  enabled: true
+
+  hard:
+    requests.cpu: "10"
+    requests.memory: 20Gi
+    persistentvolumeclaims: "10"
+    services.loadbalancers: "2"
+
+# Secrets Management
+secrets:
+  # Use external secrets operator
+  externalSecrets:
+    enabled: false
+    backend: aws-secrets-manager
+
+  # Or sealed secrets
+  sealedSecrets:
+    enabled: true
+    namespace: kube-system

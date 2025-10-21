@@ -1,0 +1,197 @@
+---
+- name: Prepare Systems for Deployment
+  hosts: all
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+      changed_when: false
+
+    - name: Update yum cache (RedHat/CentOS)
+      yum:
+        update_cache: true
+      when: ansible_os_family == "RedHat"
+      changed_when: false
+
+  tasks:
+    - name: Install essential packages
+      package:
+        name:
+          - curl
+          - wget
+          - git
+          - vim
+          - htop
+          - net-tools
+          - unzip
+          - jq
+          - python3
+          - python3-pip
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Set timezone
+      timezone:
+        name: "{{ timezone | default('UTC') }}"
+
+    - name: Configure NTP
+      block:
+        - name: Install chrony
+          package:
+            name: chrony
+            state: present
+
+        - name: Configure NTP servers
+          template:
+            src: ../templates/chrony.conf.j2
+            dest: /etc/chrony/chrony.conf
+            mode: "0644"
+          notify: Restart chrony
+
+        - name: Enable and start chrony
+          service:
+            name: chronyd
+            state: started
+            enabled: true
+
+    - name: Configure sysctl parameters
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+      loop: "{{ sysctl_config | dict2items }}"
+      when: sysctl_config is defined
+
+    - name: Disable swap
+      block:
+        - name: Disable swap immediately
+          command: swapoff -a
+          changed_when: false
+
+        - name: Remove swap from fstab
+          lineinfile:
+            path: /etc/fstab
+            regexp: '^.*\s+swap\s+swap.*$'
+            state: absent
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        group: "{{ app_group }}"
+        shell: /bin/bash
+        create_home: true
+        state: present
+
+    - name: Create application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+      loop:
+        - "{{ app_base_dir }}"
+        - "{{ app_base_dir }}/config"
+        - "{{ app_base_dir }}/data"
+        - "{{ app_base_dir }}/logs"
+        - "{{ backup_scripts_path }}"
+
+    - name: Configure SSH
+      block:
+        - name: Update SSH configuration
+          lineinfile:
+            path: /etc/ssh/sshd_config
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            state: present
+          loop:
+            - { regexp: "^#?PermitRootLogin", line: 'PermitRootLogin {{ "yes" if ssh_permit_root_login else "no" }}' }
+            - {
+                regexp: "^#?PasswordAuthentication",
+                line: 'PasswordAuthentication {{ "yes" if ssh_password_authentication else "no" }}',
+              }
+            - { regexp: "^#?Port", line: "Port {{ ssh_port }}" }
+          notify: Restart sshd
+
+    - name: Configure firewall
+      block:
+        - name: Install firewalld
+          package:
+            name: firewalld
+            state: present
+          when: firewall_enabled | default(true)
+
+        - name: Enable and start firewalld
+          service:
+            name: firewalld
+            state: started
+            enabled: true
+          when: firewall_enabled | default(true)
+
+        - name: Allow required ports
+          firewalld:
+            port: "{{ item }}/tcp"
+            permanent: true
+            state: enabled
+            immediate: true
+          loop: "{{ firewall_allowed_tcp_ports }}"
+          when: firewall_enabled | default(true)
+
+    - name: Install monitoring agent
+      block:
+        - name: Install node_exporter
+          get_url:
+            url: "https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-amd64.tar.gz"
+            dest: /tmp/node_exporter.tar.gz
+            mode: "0644"
+
+        - name: Extract node_exporter
+          unarchive:
+            src: /tmp/node_exporter.tar.gz
+            dest: /usr/local/bin
+            remote_src: true
+            extra_opts:
+              - --strip-components=1
+              - --wildcards
+              - "*/node_exporter"
+
+        - name: Create node_exporter systemd service
+          template:
+            src: ../templates/node_exporter.service.j2
+            dest: /etc/systemd/system/node_exporter.service
+            mode: "0644"
+          notify: Restart node_exporter
+
+        - name: Enable and start node_exporter
+          systemd:
+            name: node_exporter
+            enabled: true
+            state: started
+            daemon_reload: true
+
+      when: node_exporter_enabled | default(true)
+
+  handlers:
+    - name: Restart chrony
+      service:
+        name: chronyd
+        state: restarted
+
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
+
+    - name: Restart node_exporter
+      systemd:
+        name: node_exporter
+        state: restarted
+        daemon_reload: true

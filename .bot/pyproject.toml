@@ -21,8 +21,12 @@ llama-index = "^0.11.23"         # LlamaIndex for RAG applications
 sentence-transformers = "^3.2.0" # Sentence embeddings and similarity
 
 # --- RAG and Knowledge Bases ---
-faiss-cpu = "^1.9.0" # Facebook AI Similarity Search (CPU version)
-chromadb = "^0.5.0"  # Vector database for embeddings
+faiss-cpu = "^1.9.0"            # Facebook AI Similarity Search (CPU version)
+chromadb = "^0.5.0"             # Vector database for embeddings
+ollama = "^0.4.4"               # Ollama Python SDK for local LLMs
+langchain-community = "^0.3.12" # LangChain community integrations
+langgraph = "^0.2.58"           # LangGraph for agent workflows
+rich = "^13.9.4"                # Rich text and beautiful formatting
 
 # --- Audio, Image, Video Processing ---
 pillow = "^10.4.0"        # Python Imaging Library

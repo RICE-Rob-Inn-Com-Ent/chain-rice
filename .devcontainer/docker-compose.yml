@@ -49,7 +49,6 @@ services:
       - rice-network
     depends_on:
       - postgres
-      - mysql
       - redis
       - mongodb
       - elasticsearch
@@ -59,7 +58,6 @@ services:
     environment:
       # Database connections
       - DATABASE_URL=postgresql://rice_user:rice_password@postgres:5432/rice_db
-      - MYSQL_URL=mysql://rice_user:rice_password@mysql:3306/rice_db
       - REDIS_URL=redis://redis:6379
       - MONGODB_URL=mongodb://rice_user:rice_password@mongodb:27017/rice_db
       # Message queues
@@ -126,46 +124,6 @@ services:
       - "shared_buffers=256MB"
       - "-c"
       - "effective_cache_size=1GB"
-
-  # MySQL/MariaDB - Alternative relational database
-  mysql:
-    image: mysql:8.3
-    container_name: rice-mysql
-    hostname: mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: rice_db
-      MYSQL_USER: rice_user
-      MYSQL_PASSWORD: rice_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init-scripts/mysql:/docker-entrypoint-initdb.d
-    networks:
-      - rice-network
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "rice_user",
-          "-price_password",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    command:
-      - "--default-authentication-plugin=mysql_native_password"
-      - "--max-connections=200"
-      - "--character-set-server=utf8mb4"
-      - "--collation-server=utf8mb4_unicode_ci"
 
   # ============================================================================
   # NOSQL DATABASES
@@ -581,7 +539,6 @@ services:
       - rice-network
     depends_on:
       - postgres
-      - mysql
       - mongodb
 
   # Redis Commander - Redis management UI
@@ -661,8 +618,6 @@ volumes:
 
   # Database data
   postgres_data:
-    driver: local
-  mysql_data:
     driver: local
   mongodb_data:
     driver: local

@@ -1,0 +1,21 @@
+{
+  "name": "infinir",
+  "version": "0.1.0",
+  "private": true,
+  "description": "InfiniR - Multi-platform project using rice-mono libraries",
+  "workspaces": ["web"],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@rice-mono/next-components": "file:../../.frontend/next"
+  }
+}

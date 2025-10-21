@@ -2,83 +2,113 @@
 # SNYK SECURITY CONFIGURATION - Rice Monorepo
 # ============================================================================
 # Security vulnerability scanning and policy configuration
+#
+# WHAT GETS SCANNED:
+#   ✅ .backend/*   → Go, Rust, Solidity, GraphQL (application services)
+#   ✅ .frontend/*  → Next.js, Flutter, Kotlin, Swift (component libraries)
+#   ✅ .bot/*       → Python (AI bot logic)
+#
+# WHAT GETS EXCLUDED:
+#   ❌ Infrastructure folders (.schema, .dev, .devcontainer, etc.)
+#   ❌ Project slot (.project/ - separate repo with own security)
+#   ❌ Build outputs (dist, target, node_modules, etc.)
+#   ❌ Generated files (*_pb.*, *.generated.*)
 # ============================================================================
 
-# Snyk (https://snyk.io) policy file
+# Snyk policy file version
 version: v1.25.0
 
 # ============================================================================
 # LANGUAGE SETTINGS
 # ============================================================================
 language-settings:
-  # Python settings
   python: '3.11'
 
 # ============================================================================
-# EXCLUSIONS
+# EXCLUSIONS (Sorted Alphabetically by Category)
 # ============================================================================
-# Exclude specific paths from testing
 exclude:
-  # Development and test directories
-  - 'test/**'
-  - 'tests/**'
-  - '**/__tests__/**'
-  - '**/*.test.*'
-  - '**/*.spec.*'
+  # --- Monorepo Infrastructure (NOT application code) ---
+  - '.dev/**'             # Infrastructure as Code (Ansible, Terraform, Kubernetes)
+  - '.devcontainer/**'    # DevContainer Docker configuration
+  - '.document/**'        # Documentation and API specs
+  - '.github/**'          # GitHub workflows (scanned separately by GitHub)
+  - '.project/**'         # Project slot (separate repository with own CI/CD)
+  - '.schema/**'          # Protocol Buffer definitions (not supported by Snyk)
+  - '.vscode/**'          # VS Code IDE configuration
 
-  # Build outputs
-  - 'dist/**'
-  - 'build/**'
-  - 'target/**'
-  - 'out/**'
-  - '.next/**'
-  - '.nuxt/**'
+  # --- Build Outputs (Compiled/Generated artifacts) ---
+  - '.dart_tool/**'       # Flutter build artifacts
+  - '.gradle/**'          # Gradle build cache
+  - '.next/**'            # Next.js build output
+  - '.nuxt/**'            # Nuxt.js build output
+  - 'bazel-*/**'          # Bazel build outputs
+  - 'build/**'            # Generic build directory
+  - 'dist/**'             # Distribution builds
+  - 'out/**'              # Output directory
+  - 'target/**'           # Rust/Java build targets
 
-  # Dependencies
-  - 'node_modules/**'
-  - 'vendor/**'
-  - '.venv/**'
-  - 'venv/**'
+  # --- Dependencies (Third-party packages) ---
+  - '__pycache__/**'      # Python bytecode cache
+  - '.venv/**'            # Python virtual environment
+  - 'node_modules/**'     # Node.js dependencies
+  - 'vendor/**'           # Go/Ruby dependencies
+  - 'venv/**'             # Python virtual environment (alternate)
 
-  # Generated files
-  - 'bazel-*/**'
-  - '**/*_pb.js'
-  - '**/*_pb.ts'
-  - '**/*.generated.*'
+  # --- Generated Code (Auto-generated, not maintained) ---
+  - '**/*.generated.*'    # Any generated files
+  - '**/*_pb.go'          # Protocol Buffer Go files
+  - '**/*_pb.js'          # Protocol Buffer JavaScript files
+  - '**/*_pb.ts'          # Protocol Buffer TypeScript files
+  - '**/*_pb2.py'         # Protocol Buffer Python files
 
-  # Documentation
-  - 'docs/**'
-  - 'documentation/**'
+  # --- Test Files (Test code and fixtures) ---
+  - '**/__tests__/**'     # Test directories
+  - '**/*.spec.*'         # Spec test files
+  - '**/*.test.*'         # Test files
+  - 'test/**'             # Test directory
+  - 'tests/**'            # Tests directory
 
-# ============================================================================
-# IGNORE SPECIFIC VULNERABILITIES
-# ============================================================================
-# Use this section to ignore specific vulnerabilities
-# Format:
-# ignore:
-#   SNYK-<ECOSYSTEM>-<PACKAGE>-<ID>:
-#     - '*':
-#         reason: <explanation>
-#         expires: <YYYY-MM-DD>
-#         created: <YYYY-MM-DD>
-
-ignore: {}
+  # --- Documentation (Non-code files) ---
+  - 'docs/**'             # Documentation directory
+  - 'documentation/**'    # Documentation directory (alternate)
 
 # ============================================================================
 # PATCH SETTINGS
 # ============================================================================
-# Automatically apply patches for vulnerabilities
+# Automatically apply patches for vulnerabilities when available
 patch: {}
 
 # ============================================================================
-# FAIL ON
+# IGNORE SPECIFIC VULNERABILITIES
+# ============================================================================
+# Temporarily ignore known vulnerabilities with expiration dates
+#
+# Example:
+#   ignore:
+#     SNYK-JS-LODASH-590103:
+#       - '*':
+#           reason: 'Not exploitable in our use case'
+#           expires: '2025-12-31'
+#           created: '2025-10-19'
+#
+ignore: {}
+
+# ============================================================================
+# FAIL ON SEVERITY THRESHOLD
 # ============================================================================
 # Configure what severity level should cause the test to fail
 # Options: all | upgradable | patchable
+# Uncomment to enforce:
 # failOn: all
 
 # ============================================================================
 # ORGANIZATION SETTINGS
 # ============================================================================
-# Optional: Link to your Snyk organization
+# Link to your Snyk organization for centralized policy management
+# Uncomment and set your org name:
 # org: your-org-name
+
+# ============================================================================
+# END OF SNYK CONFIGURATION
+# ============================================================================

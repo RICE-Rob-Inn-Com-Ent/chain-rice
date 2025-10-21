@@ -1,60 +1,61 @@
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
-load("//rules:python_toolchain.bzl", "nix_python_toolchain")
+# load("//rules:python_toolchain.bzl", "nix_python_toolchain")
 
 # Python dependencies for FastAPI
 py_library(
     name = "fastapi_deps",
     srcs = [],
-    deps = [
-        "@pypi_fastapi//:pkg",
-        "@pypi_uvicorn//:pkg",
-        "@pypi_requests//:pkg",
-        "@pypi_pydantic//:pkg",
-        "@pypi_openai//:pkg",
-        "@pypi_huggingface_hub//:pkg",
-        "@pypi_aiohttp//:pkg",
-        "@pypi_websockets//:pkg",
-        "@pypi_loguru//:pkg",
-        "@pypi_structlog//:pkg",
-        "@pypi_pyyaml//:pkg",
-        "@pypi_orjson//:pkg",
-        "@pypi_httpx//:pkg",
-        "@pypi_python_multipart//:pkg",
-        "@pypi_python_jose//:pkg",
-        "@pypi_passlib//:pkg",
-        "@pypi_bcrypt//:pkg",
-    ],
     visibility = ["//visibility:public"],
+    deps = [
+        "@pypi_aiohttp//:pkg",
+        "@pypi_bcrypt//:pkg",
+        "@pypi_fastapi//:pkg",
+        "@pypi_httpx//:pkg",
+        "@pypi_huggingface_hub//:pkg",
+        "@pypi_loguru//:pkg",
+        "@pypi_openai//:pkg",
+        "@pypi_orjson//:pkg",
+        "@pypi_passlib//:pkg",
+        "@pypi_pydantic//:pkg",
+        "@pypi_python_jose//:pkg",
+        "@pypi_python_multipart//:pkg",
+        "@pypi_pyyaml//:pkg",
+        "@pypi_requests//:pkg",
+        "@pypi_structlog//:pkg",
+        "@pypi_uvicorn//:pkg",
+        "@pypi_websockets//:pkg",
+    ],
 )
 
 # Main bot core application
 py_binary(
     name = "bot_core",
     srcs = ["main.py"],
+    main = "main.py",
+    visibility = ["//visibility:public"],
     deps = [
         ":fastapi_deps",
         "//bots/integration:huggingface",
         "//bots/integration:openai",
     ],
-    main = "main.py",
-    visibility = ["//visibility:public"],
 )
 
 # Test for integrations
 py_test(
     name = "test_integrations",
     srcs = ["test_simple.py"],
+    visibility = ["//visibility:public"],
     deps = [
         "//bots/integration:huggingface",
         "//bots/integration:openai",
     ],
-    visibility = ["//visibility:public"],
 )
 
 # Python toolchain
-nix_python_toolchain(
-    name = "python_toolchain",
-    flake_path = ".",
-    shell_name = "python-fastapi-bridge",
-    visibility = ["//visibility:public"],
-)
+# Commented out until custom toolchain is implemented
+# nix_python_toolchain(
+#     name = "python_toolchain",
+#     flake_path = ".",
+#     shell_name = "python-fastapi-bridge",
+#     visibility = ["//visibility:public"],
+# )

@@ -1,0 +1,60 @@
+{{- if .Values.argocd.enabled }}
+{{- range .Values.argocd.applications }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .name }}
+  namespace: argocd
+  labels:
+    project: {{ .project }}
+    {{- with $.Values.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .project }}
+
+  source:
+    repoURL: {{ .source.repoURL }}
+    targetRevision: {{ .source.targetRevision | default "HEAD" }}
+    path: {{ .source.path }}
+    {{- if .source.helm }}
+    helm:
+      {{- with .source.helm.valueFiles }}
+      valueFiles:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .source.helm.values }}
+      values: |
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+
+  destination:
+    server: {{ .destination.server | default "https://kubernetes.default.svc" }}
+    namespace: {{ .destination.namespace | default $.Values.namespaceOverride | default $.Release.Namespace }}
+
+  syncPolicy:
+    automated:
+      prune: {{ .syncPolicy.automated.prune | default true }}
+      selfHeal: {{ .syncPolicy.automated.selfHeal | default true }}
+      allowEmpty: {{ .syncPolicy.automated.allowEmpty | default false }}
+    syncOptions:
+      - CreateNamespace={{ .syncPolicy.createNamespace | default true }}
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: {{ .syncPolicy.retry.limit | default 5 }}
+      backoff:
+        duration: {{ .syncPolicy.retry.backoff.duration | default "5s" }}
+        factor: {{ .syncPolicy.retry.backoff.factor | default 2 }}
+        maxDuration: {{ .syncPolicy.retry.backoff.maxDuration | default "3m" }}
+
+  {{- with .ignoreDifferences }}
+  ignoreDifferences:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

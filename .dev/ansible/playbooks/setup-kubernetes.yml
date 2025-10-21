@@ -1,0 +1,228 @@
+---
+- name: Setup Kubernetes Cluster
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Verify system requirements
+      assert:
+        that:
+          - ansible_memtotal_mb >= 2048
+          - ansible_processor_vcpus >= 2
+        fail_msg: "System does not meet minimum requirements (2GB RAM, 2 CPU cores)"
+
+  tasks:
+    - name: Load kernel modules
+      modprobe:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - overlay
+        - br_netfilter
+
+    - name: Persist kernel modules
+      copy:
+        dest: /etc/modules-load.d/k8s.conf
+        content: |
+          overlay
+          br_netfilter
+        mode: "0644"
+
+    - name: Configure sysctl for Kubernetes
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+        sysctl_file: /etc/sysctl.d/k8s.conf
+      loop:
+        - { key: "net.bridge.bridge-nf-call-iptables", value: "1" }
+        - { key: "net.bridge.bridge-nf-call-ip6tables", value: "1" }
+        - { key: "net.ipv4.ip_forward", value: "1" }
+
+    - name: Install containerd
+      block:
+        - name: Install containerd dependencies
+          package:
+            name:
+              - apt-transport-https
+              - ca-certificates
+              - curl
+              - gnupg
+            state: present
+
+        - name: Add Docker GPG key
+          apt_key:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            state: present
+
+        - name: Add Docker repository
+          apt_repository:
+            repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+            state: present
+
+        - name: Install containerd
+          package:
+            name: containerd.io
+            state: present
+
+        - name: Create containerd config directory
+          file:
+            path: /etc/containerd
+            state: directory
+            mode: "0755"
+
+        - name: Generate default containerd config
+          shell: containerd config default > /etc/containerd/config.toml
+          args:
+            creates: /etc/containerd/config.toml
+
+        - name: Configure containerd to use systemd cgroup driver
+          lineinfile:
+            path: /etc/containerd/config.toml
+            regexp: '^\s*SystemdCgroup\s*='
+            line: "            SystemdCgroup = true"
+            insertafter: '^\s*\[plugins\."io\.containerd\.grpc\.v1\.cri"\.containerd\.runtimes\.runc\.options\]'
+
+        - name: Enable and start containerd
+          service:
+            name: containerd
+            state: started
+            enabled: true
+
+    - name: Install Kubernetes components
+      block:
+        - name: Add Kubernetes GPG key
+          apt_key:
+            url:
+              https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[0] }}.{{ k8s_version.split('.')[1]
+              }}/deb/Release.key
+            state: present
+
+        - name: Add Kubernetes repository
+          apt_repository:
+            repo:
+              "deb https://pkgs.k8s.io/core:/stable:/v{{ k8s_version.split('.')[0] }}.{{ k8s_version.split('.')[1]
+              }}/deb/ /"
+            state: present
+            filename: kubernetes
+
+        - name: Install kubelet, kubeadm, kubectl
+          package:
+            name:
+              - kubelet={{ k8s_version }}*
+              - kubeadm={{ k8s_version }}*
+              - kubectl={{ k8s_version }}*
+            state: present
+            update_cache: true
+
+        - name: Hold Kubernetes packages
+          dpkg_selections:
+            name: "{{ item }}"
+            selection: hold
+          loop:
+            - kubelet
+            - kubeadm
+            - kubectl
+
+        - name: Enable kubelet service
+          service:
+            name: kubelet
+            enabled: true
+
+- name: Initialize Kubernetes Master
+  hosts: k8s_master[0]
+  become: true
+
+  tasks:
+    - name: Check if cluster is already initialized
+      stat:
+        path: /etc/kubernetes/admin.conf
+      register: k8s_initialized
+
+    - name: Initialize Kubernetes cluster
+      command: >
+        kubeadm init --pod-network-cidr={{ k8s_pod_network_cidr }} --service-cidr={{ k8s_service_cidr }}
+        --apiserver-advertise-address={{ k8s_api_server_advertise_address }} --kubernetes-version={{ k8s_version }}
+      when: not k8s_initialized.stat.exists
+      register: kubeadm_init
+
+    - name: Create .kube directory
+      file:
+        path: /home/{{ ansible_user }}/.kube
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+
+    - name: Copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/{{ ansible_user }}/.kube/config
+        remote_src: true
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0600"
+
+    - name: Install Calico network plugin
+      become_user: "{{ ansible_user }}"
+      shell: |
+        kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v{{ calico_version }}/manifests/calico.yaml
+      when: k8s_network_plugin == 'calico'
+
+    - name: Get join command
+      command: kubeadm token create --print-join-command
+      register: join_command
+
+    - name: Save join command
+      set_fact:
+        k8s_join_command: "{{ join_command.stdout }}"
+
+- name: Join Worker Nodes to Cluster
+  hosts: k8s_worker
+  become: true
+
+  tasks:
+    - name: Check if node is already joined
+      stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: k8s_joined
+
+    - name: Join cluster
+      command: "{{ hostvars[groups['k8s_master'][0]]['k8s_join_command'] }}"
+      when: not k8s_joined.stat.exists
+
+- name: Install Kubernetes Add-ons
+  hosts: k8s_master[0]
+  become_user: "{{ ansible_user }}"
+
+  tasks:
+    - name: Install Metrics Server
+      shell: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+      when: k8s_metrics_server_enabled | default(true)
+
+    - name: Install cert-manager
+      block:
+        - name: Install cert-manager CRDs
+          shell:
+            kubectl apply -f
+            https://github.com/cert-manager/cert-manager/releases/download/v1.14.0/cert-manager.crds.yaml
+
+        - name: Install cert-manager
+          shell:
+            kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.0/cert-manager.yaml
+      when: k8s_cert_manager_enabled | default(true)
+
+    - name: Install Ingress NGINX
+      shell:
+        kubectl apply -f
+        https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
+      when: k8s_ingress_nginx_enabled | default(true)
+
+    - name: Wait for all pods to be ready
+      shell: kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
+      register: pods_ready
+      retries: 3
+      delay: 10
+      until: pods_ready.rc == 0

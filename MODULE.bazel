@@ -37,8 +37,8 @@ bazel_dep(name = "aspect_rules_js", version = "1.39.0")
 bazel_dep(name = "aspect_rules_ts", version = "2.2.0")
 
 # Protocol Buffers
-bazel_dep(name = "rules_proto", version = "5.3.0-21.7")
-bazel_dep(name = "protobuf", version = "21.7")
+bazel_dep(name = "rules_proto", version = "6.0.0")
+bazel_dep(name = "protobuf", version = "27.1")
 
 # Container images
 bazel_dep(name = "rules_oci", version = "1.7.4")
@@ -65,20 +65,17 @@ bazel_dep(name = "bazel_skylib", version = "1.5.0")
 # ============================================================================
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-
 python.toolchain(
     python_version = "3.11",
 )
 
 # Poetry/pip dependencies
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
-
 pip.parse(
     hub_name = "pip",
     python_version = "3.11",
     requirements_lock = "//bots:poetry.lock",
 )
-
 use_repo(pip, "pip")
 
 # ============================================================================
@@ -86,7 +83,6 @@ use_repo(pip, "pip")
 # ============================================================================
 
 rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
-
 rust.toolchain(
     edition = "2021",
     versions = ["1.75.0"],
@@ -94,13 +90,11 @@ rust.toolchain(
 
 # Crate dependencies
 crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
-
 crate.from_cargo(
     name = "crates",
     cargo_lockfile = "//backend/contract/rust:Cargo.lock",
     manifests = ["//backend/contract/rust:Cargo.toml"],
 )
-
 use_repo(crate, "crates")
 
 # ============================================================================
@@ -108,13 +102,11 @@ use_repo(crate, "crates")
 # ============================================================================
 
 node = use_extension("@aspect_rules_js//yarn:extensions.bzl", "yarn")
-
 node.yarn_translate_lock(
     name = "yarn",
-    yarn_lock = "//frontend/node:yarn.lock",
     verify_node_modules_ignored = "//:.bazelignore",
+    yarn_lock = "//frontend/node:yarn.lock",
 )
-
 use_repo(node, "yarn")
 
 # ============================================================================
@@ -122,7 +114,6 @@ use_repo(node, "yarn")
 # ============================================================================
 
 go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
-
 go_sdk.download(
     name = "go_sdk",
     version = "1.22.0",
@@ -130,7 +121,6 @@ go_sdk.download(
 
 # Go dependencies
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
-
 go_deps.from_file(go_mod = "//:go.mod")
 
 # All gazelle-managed Go dependencies
@@ -143,23 +133,9 @@ use_repo(
 # Protocol Buffers Configuration
 # ============================================================================
 
-# gRPC
-bazel_dep(name = "grpc", version = "1.59.2")
-
-# Protocol buffer language support
-protobuf_lang = use_extension("@protobuf//bazel:extensions.bzl", "protobuf_lang")
-
-protobuf_lang.toolchain(
-    languages = [
-        "python",
-        "cpp",
-        "go",
-        "java",
-        "javascript",
-        "typescript",
-        "rust",
-    ],
-)
+# gRPC - removed as it's not available in BCR at this version
+# Consider using grpc-java or com_github_grpc_grpc if needed
+# bazel_dep(name = "grpc", version = "1.59.2")
 
 # ============================================================================
 # Container Configuration
@@ -171,33 +147,41 @@ oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
     name = "python_base",
     image = "python:3.11-slim",
-    platforms = ["linux/amd64", "linux/arm64"],
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
 )
-
 oci.pull(
     name = "rust_base",
     image = "rust:1.75-slim",
-    platforms = ["linux/amd64", "linux/arm64"],
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
 )
-
 oci.pull(
     name = "node_base",
     image = "node:20-alpine",
-    platforms = ["linux/amd64", "linux/arm64"],
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
 )
-
 oci.pull(
     name = "distroless_base",
     image = "gcr.io/distroless/base:latest",
-    platforms = ["linux/amd64", "linux/arm64"],
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
 )
-
 use_repo(
     oci,
+    "distroless_base",
+    "node_base",
     "python_base",
     "rust_base",
-    "node_base",
-    "distroless_base",
 )
 
 # ============================================================================
@@ -205,7 +189,6 @@ use_repo(
 # ============================================================================
 
 android_sdk = use_extension("@rules_android//android:extensions.bzl", "android_sdk")
-
 android_sdk.configure(
     api_level = 34,
     build_tools_version = "34.0.0",
@@ -219,10 +202,12 @@ android_sdk.configure(
 bazel_dep(name = "buildifier_prebuilt", version = "6.4.0", dev_dependency = True)
 
 # Hedron Compile Commands for IDE integration (clangd, rust-analyzer)
-bazel_dep(name = "hedron_compile_commands", version = "0.0.0", dev_dependency = True)
+# Note: This is loaded via git_override below since it's not in the BCR
+# bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 
 # Aspect CLI for enhanced developer experience
-bazel_dep(name = "aspect_cli", version = "5.9.0", dev_dependency = True)
+# Note: aspect_cli is not available in BCR, install separately if needed
+# bazel_dep(name = "aspect_cli", version = "5.9.0", dev_dependency = True)
 
 # ============================================================================
 # Toolchain Registration

@@ -1,0 +1,123 @@
+---
+- name: Deploy Applications to Kubernetes
+  hosts: k8s_master[0]
+  become_user: "{{ ansible_user }}"
+  gather_facts: false
+
+  vars:
+    helm_charts_dir: "../../k8s/charts"
+    namespace: "{{ environment }}"
+
+  tasks:
+    - name: Create namespace
+      k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: "{{ namespace }}"
+            labels:
+              environment: "{{ environment }}"
+              managed-by: ansible
+
+    - name: Add Helm repositories
+      kubernetes.core.helm_repository:
+        name: "{{ item.name }}"
+        repo_url: "{{ item.url }}"
+      loop: "{{ helm_repos }}"
+
+    - name: Update Helm repositories
+      command: helm repo update
+      changed_when: false
+
+    - name: Deploy Backend API
+      kubernetes.core.helm:
+        name: rice-backend
+        chart_ref: "{{ helm_charts_dir }}/rice-backend"
+        release_namespace: "{{ namespace }}"
+        create_namespace: true
+        values:
+          image:
+            repository: rice-mono/backend
+            tag: "{{ backend_version | default('latest') }}"
+          replicaCount: "{{ backend_replicas | default(3) }}"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          env:
+            - name: ENVIRONMENT
+              value: "{{ environment }}"
+            - name: LOG_LEVEL
+              value: "{{ log_level | default('info') }}"
+
+    - name: Deploy Frontend Web
+      kubernetes.core.helm:
+        name: rice-frontend
+        chart_ref: "{{ helm_charts_dir }}/rice-frontend"
+        release_namespace: "{{ namespace }}"
+        create_namespace: true
+        values:
+          image:
+            repository: rice-mono/frontend
+            tag: "{{ frontend_version | default('latest') }}"
+          replicaCount: "{{ frontend_replicas | default(2) }}"
+          ingress:
+            enabled: true
+            hosts:
+              - host: "{{ domain }}"
+                paths:
+                  - path: /
+                    pathType: Prefix
+
+    - name: Deploy Bot Service
+      kubernetes.core.helm:
+        name: rice-bot
+        chart_ref: "{{ helm_charts_dir }}/rice-bot"
+        release_namespace: "{{ namespace }}"
+        create_namespace: true
+        values:
+          image:
+            repository: rice-mono/bot
+            tag: "{{ bot_version | default('latest') }}"
+          replicaCount: "{{ bot_replicas | default(1) }}"
+
+    - name: Deploy Token Chain
+      kubernetes.core.helm:
+        name: rice-token
+        chart_ref: "{{ helm_charts_dir }}/rice-token"
+        release_namespace: "{{ namespace }}"
+        create_namespace: true
+        values:
+          image:
+            repository: rice-mono/token
+            tag: "{{ token_version | default('latest') }}"
+
+    - name: Wait for deployments to be ready
+      command: kubectl rollout status deployment/{{ item }} -n {{ namespace }}
+      loop:
+        - rice-backend
+        - rice-frontend
+        - rice-bot
+        - rice-token
+      register: rollout_status
+      until: rollout_status.rc == 0
+      retries: 10
+      delay: 10
+
+    - name: Get service endpoints
+      command: kubectl get svc -n {{ namespace }} -o json
+      register: services
+      changed_when: false
+
+    - name: Display deployment summary
+      debug:
+        msg:
+          - "🎉 Application Deployment Complete!"
+          - "Namespace: {{ namespace }}"
+          - "Services deployed: backend, frontend, bot, token"
+          - "Access your application at: https://{{ domain }}"

@@ -27,7 +27,7 @@ let package = Package(
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.9.1"), // Мережі
 
         // --- Локалізація та утиліти ---
-        .package(url: "https://github.com/marmelroy/Localize-Swift.git", from: "3.2.1"),
+        .package(url: "https://github.com/marmelroy/Localize-Swift.git", from: "3.2.0"),
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", from: "1.7.1") // Якщо треба шифрування
     ],
     targets: [
@@ -43,7 +43,7 @@ let package = Package(
                 "Kingfisher",
                 "ChartView",
                 "Alamofire",
-                "Localize-Swift",
+                .product(name: "Localize_Swift", package: "Localize-Swift"),
                 "CryptoSwift"
             ],
             path: "Sources"

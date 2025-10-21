@@ -1,0 +1,19 @@
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecStart=/usr/local/bin/node_exporter \
+  --web.listen-address=:{{ node_exporter_port | default(9100) }} \
+  --collector.systemd \
+  --collector.processes
+
+SyslogIdentifier=node_exporter
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

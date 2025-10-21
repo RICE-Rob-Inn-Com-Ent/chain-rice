@@ -1,0 +1,122 @@
+{
+  // ============================================================================
+  // RICE-MONO MULTI-ROOT WORKSPACE
+  // ============================================================================
+  // Professional workspace configuration for enterprise monorepo
+  //
+  // 📁 Folder Structure: Sorted by usage frequency (most used at top)
+  // ⚙️ Settings:         .vscode/settings.json
+  // 🔌 Extensions:       .vscode/extensions.json
+  // 🐛 Debug:            .vscode/launch.json
+  // 🔨 Tasks:            .vscode/tasks.json
+  // ============================================================================
+
+  "folders": [
+    // === TOP: Root Directory (Always First) ===
+    {
+      "name": "🏠 ROOT",
+      "path": "."
+    },
+    {
+      "name": "📂 PROJECT",
+      "path": ".project"
+    },
+
+    // === HIGH PRIORITY: Daily Development ===
+    {
+      "name": "🧠 BACKEND",
+      "path": ".backend"
+    },
+    {
+      "name": "🎨 FRONTEND",
+      "path": ".frontend"
+    },
+    {
+      "name": "🤖 BOT",
+      "path": ".bot"
+    },
+
+    // === MEDIUM PRIORITY: Regular Updates ===
+    {
+      "name": "📐 SCHEMA",
+      "path": ".schema"
+    },
+    {
+      "name": "📝 DOCUMENTATION",
+      "path": ".document"
+    },
+
+    // === LOW PRIORITY: Occasional Access ===
+    {
+      "name": "🐳 CONTAINER",
+      "path": ".devcontainer"
+    },
+    {
+      "name": "🏗️ INFRA",
+      "path": ".dev"
+    },
+    {
+      "name": "🔁 CI/CD",
+      "path": ".github"
+    },
+    {
+      "name": "⚙️ IDE",
+      "path": ".vscode"
+    }
+  ],
+
+  // ============================================================================
+  // WORKSPACE SETTINGS
+  // ============================================================================
+  // These settings apply to the entire multi-root workspace
+  "settings": {
+    // Bazel workspace configuration for multi-root workspace
+    "bazel.executable": "/usr/bin/bazel",
+    "bazel.buildifierExecutable": "/home/mrDinkelman/.local/bin/buildifier",
+    "bazel.buildifierFixOnFormat": true,
+    "bazel.enableCodeLens": true,
+    "bazel.queriesShareServer": true,
+    "bazel.commandLine.startupOptions": ["--enable_bzlmod"],
+    "bazel.commandLine.buildOptions": ["--enable_bzlmod"],
+    "bazel.commandLine.testOptions": ["--enable_bzlmod"],
+
+    // Explicitly set Bazel workspace to the root folder (absolute path)
+    "bazel.workspaceDirectory": "/home/mrDinkelman/rice-mono",
+
+    // Direnv configuration
+    "direnv.restart.automatic": true,
+
+    // Java configuration
+    "java.home": "/usr/lib/jvm/java-21-openjdk",
+    "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk",
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-17",
+        "path": "/usr/lib/jvm/java-17-openjdk"
+      },
+      {
+        "name": "JavaSE-21",
+        "path": "/usr/lib/jvm/java-21-openjdk",
+        "default": true
+      }
+    ],
+    "java.silentNotification": true,
+    "java.recommendations.enabled": false,
+    "sqltools.connections": [
+      {
+        "ssh": "Disabled",
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "name": "Code-Rice",
+        "group": "RICE",
+        "database": "rice_db",
+        "username": "rice_user"
+      }
+    ],
+    "java.project.explorer.showNonJavaResources": false,
+    "projectManager.git.baseFolders": [".project"],
+    "liveServer.settings.multiRootWorkspaceName": "🧠 BACKEND"
+  }
+}

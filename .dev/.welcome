@@ -1,0 +1,40 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║        🚀 Rice-Mono DevOps Infrastructure 🚀              ║
+║                                                            ║
+║     Professional-Grade Infrastructure Automation          ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+📚 Documentation:
+   - Quick Start:  cat .dev/QUICKSTART.md
+   - Full Guide:   cat .dev/README.md
+   - All Commands: make help
+
+🚀 Quick Commands:
+   make setup              # Initial setup
+   make deploy ENV=dev     # Deploy to dev
+   make health ENV=dev     # Health check
+   make add-service NAME=api # Add new service
+
+📊 What's Included:
+   ✅ Terraform Infrastructure
+   ✅ Ansible Automation
+   ✅ Kubernetes Orchestration
+   ✅ Complete CI/CD Pipelines
+   ✅ ArgoCD GitOps
+   ✅ Monitoring & Logging
+   ✅ Security Best Practices
+   ✅ Multi-Cloud Support
+
+🎯 Get Started:
+   cd .dev
+   ./scripts/setup.sh
+   ./scripts/deploy-all.sh --env dev
+
+💡 Need Help?
+   - Documentation: .dev/docs/
+   - Scripts: .dev/scripts/
+   - Examples: .dev/docs/WORKFLOWS.md
+
+Happy Deploying! 🎉

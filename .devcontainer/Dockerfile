@@ -119,7 +119,6 @@ RUN apt-get update && apt-get install -y \
     gnupg2 \
     # Database clients
     postgresql-client \
-    mysql-client \
     redis-tools \
     sqlite3 \
     mongodb-clients \

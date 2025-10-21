@@ -1,0 +1,58 @@
+---
+# Global variables for all hosts
+
+# System Configuration
+ntp_enabled: true
+ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+
+# Security Settings
+ssh_port: 22
+ssh_password_authentication: false
+ssh_permit_root_login: false
+ssh_key_only: true
+
+# Firewall
+firewall_allowed_tcp_ports:
+  - 22
+  - 80
+  - 443
+  - 6443 # Kubernetes API
+
+# Package Management
+package_update_cache: true
+package_upgrade: safe
+
+# Docker Configuration
+docker_enabled: true
+docker_version: "24.0"
+docker_users:
+  - "{{ ansible_user }}"
+
+# System Tuning
+sysctl_config:
+  net.ipv4.ip_forward: 1
+  net.bridge.bridge-nf-call-iptables: 1
+  net.bridge.bridge-nf-call-ip6tables: 1
+  vm.swappiness: 0
+  vm.max_map_count: 262144
+
+# Logging
+log_retention_days: 30
+syslog_server: ""
+
+# Monitoring
+node_exporter_enabled: true
+node_exporter_port: 9100
+
+# Backup
+backup_enabled: true
+backup_time: "02:00"
+backup_scripts_path: /opt/backups
+
+# Application
+app_user: appuser
+app_group: appgroup
+app_base_dir: /opt/rice-mono

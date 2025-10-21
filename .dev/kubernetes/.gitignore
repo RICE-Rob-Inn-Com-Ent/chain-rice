@@ -1,0 +1,41 @@
+# Sensitive kubeconfig files
+.kubeconfig.env
+kubeconfig.local.yaml
+*.backup.*
+
+# Generated certificates
+certs/
+*.crt
+*.key
+*.csr
+*.pem
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Helm files
+charts/
+*.tgz
+Chart.lock
+
+# Terraform state files (if any)
+*.tfstate
+*.tfstate.backup
+
+# Secrets and credentials
+secrets/
+*.secret
+*.token
+*.password
+
+# Local overrides
+values.local.yaml
+values.*.local.yaml

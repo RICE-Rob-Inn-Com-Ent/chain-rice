@@ -1,0 +1,59 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hello-function
+  namespace: default
+  labels:
+    app: hello-function
+    environment: development
+spec:
+  template:
+    metadata:
+      annotations:
+        # Auto-scaling configuration
+        autoscaling.knative.dev/min-scale: "0" # Scale to zero when idle
+        autoscaling.knative.dev/max-scale: "10" # Maximum 10 replicas
+        autoscaling.knative.dev/target: "10" # Target 10 concurrent requests
+        autoscaling.knative.dev/scale-down-delay: "30s" # Wait 30s before scaling down
+        autoscaling.knative.dev/metric: "concurrency" # Scale based on concurrency
+        autoscaling.knative.dev/target-utilization-percentage: "70"
+    spec:
+      containerConcurrency: 0 # Allow unlimited concurrent requests per container
+      timeoutSeconds: 300 # Request timeout
+
+      containers:
+        - name: function
+          image: gcr.io/knative-samples/helloworld-go:latest
+          ports:
+            - name: http1
+              containerPort: 8080
+
+          env:
+            - name: TARGET
+              value: "Knative on Kubernetes"
+            - name: PORT
+              value: "8080"
+
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+
+          # Liveness probe
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          # Readiness probe
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
