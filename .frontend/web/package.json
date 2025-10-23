@@ -1,0 +1,92 @@
+{
+  "name": "@rice-mono/next-components",
+  "version": "1.0.0",
+  "description": "SEO-optimized Next.js components library with full app structure for rice-mono projects",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./app": "./app/index.ts",
+    "./components": "./components/index.ts",
+    "./styles": "./style.css"
+  },
+  "files": [
+    "components/",
+    "app/",
+    "lib/",
+    "*.ts",
+    "*.tsx",
+    "*.css",
+    "*.json"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "rm -rf node_modules dist"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "chart.js": "^4.4.1",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.0",
+    "three": "^0.157.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "cssnano": "^6.0.3",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^15.0.0",
+    "husky": "^9.0.7",
+    "jsdom": "^22.0.0",
+    "lint-staged": "^15.2.2",
+    "postcss-preset-env": "^9.3.0",
+    "prettier": "^3.2.4",
+    "stylelint": "^15.10.0",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-standard": "^34.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.0",
+    "vitest": "^1.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "keywords": [
+    "nextjs",
+    "react",
+    "components",
+    "seo",
+    "tailwindcss",
+    "typescript",
+    "rice-mono"
+  ],
+  "author": "Rice-Mono Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rice-mono/frontend-next"
+  }
+}

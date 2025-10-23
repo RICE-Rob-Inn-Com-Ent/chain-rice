@@ -1,0 +1,40 @@
+import React from 'react'
+import Section from '../../components/Section'
+import { Card } from '@web/components/ui/Card'
+import { Cpu, Smartphone, Brain } from 'lucide-react'
+
+export const metadata = { title: 'O nas — RICE' }
+
+export default function AboutPage() {
+  return (
+    <>
+      <Section>
+        <div className="grid items-center gap-10 md:grid-cols-2">
+          <div>
+            <h1 className="font-display text-4xl font-bold">Kim jesteśmy</h1>
+            <p className="mt-4 text-slate-300">Budujemy nowoczesne systemy dla biznesu: od aplikacji web i mobile, przez backend i automatyzację, po AI i blockchain.</p>
+            <p className="mt-2 text-slate-300">Naszą misją jest łączenie technologii z realnymi potrzebami — prosto, skalowalnie i z wyczuciem estetyki.</p>
+            <p className="mt-2 text-slate-300">Wyróżnia nas pełna odpowiedzialność za produkt i bliska współpraca z klientami.</p>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-8">
+            <div className="h-48 w-full rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-600/20" />
+          </div>
+        </div>
+      </Section>
+
+      <Section className="pt-0">
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="glass neon-hover" title="Automatyzacja procesów">
+            <p className="text-slate-300">Integracje, orkiestracja i optymalizacja przepływów pracy.</p>
+          </Card>
+          <Card className="glass neon-hover" title="Systemy Web & Mobile">
+            <p className="text-slate-300">Piękne, szybkie i dostępne interfejsy na każdą platformę.</p>
+          </Card>
+          <Card className="glass neon-hover" title="AI i Blockchain">
+            <p className="text-slate-300">Inteligentne modele, smart kontrakty i bezpieczna infrastruktura.</p>
+          </Card>
+        </div>
+      </Section>
+    </>
+  )
+}

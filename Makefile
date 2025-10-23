@@ -13,6 +13,9 @@
 # Documentation: .helper/ROOT.md
 # ==============================================================================
 
+# Use bash for advanced shell features (arrays, [[ ]], process substitution, etc.)
+SHELL := /usr/bin/env bash
+
 .PHONY: help prepare asdf-install asdf-plugins deps-install deps-update dev-start dev-stop \
         blockchain-install blockchain-build blockchain-start blockchain-proto \
         blockchain-test blockchain-test-race blockchain-test-cover \

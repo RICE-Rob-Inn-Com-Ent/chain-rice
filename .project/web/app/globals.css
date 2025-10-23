@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.5rem;
+  /* Brand gradient colors derived from company logo */
+  --brand-grad-start: #ff00ff; /* magenta */
+  --brand-grad-end: #00ffff;   /* cyan */
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Brand gradient text (matches company logo colors) */
+.gradient-text {
+  background: linear-gradient(90deg, var(--brand-grad-start) 0%, var(--brand-grad-end) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
+}
+
+/* Neon hover utility (tuned to logo palette) */
+.neon-hover:hover {
+  box-shadow: 0 0 20px rgba(255,0,255,0.35), 0 0 40px rgba(0,255,255,0.25);
+}
+
+/* Typography */
+.font-sans {
+  font-family: var(--font-inter), var(--font-poppins), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+.font-display {
+  font-family: var(--font-orbitron), var(--font-poppins), ui-sans-serif, system-ui;
+}
+
+/* Subtle link underline gradient on hover */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, var(--brand-grad-start), var(--brand-grad-end));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms ease;
+}
+.link-underline:hover::after { transform: scaleX(1); }
+
+/* Smooth transitions */
+.smooth {
+  transition: all 200ms ease;
+}
+
+/* Fade-in utility for scroll animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 1.1s ease-in, transform 1.1s ease-in;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Brand text: white by default, gradient on hover (logo colors) */
+.gradient-on-hover {
+  color: #ffffff;
+  transition: color 200ms ease;
+}
+.gradient-on-hover:hover {
+  background: linear-gradient(90deg, var(--brand-grad-start) 0%, var(--brand-grad-end) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

@@ -65,6 +65,9 @@ out/
 .svelte-kit/
 .cache/
 
+# TypeScript incremental build info
+*.tsbuildinfo
+
 # Flutter
 .dart_tool/
 .flutter-plugins
@@ -341,3 +344,6 @@ vue/dist
 # ==============================================================================
 # END OF .GITIGNORE
 # ==============================================================================
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md

@@ -1,0 +1,31 @@
+# This .gitignore is for the active project repository
+# Add project-specific ignores below
+
+# Node
+node_modules/
+dist/
+.next/
+.turbo/
+
+# Environment
+.env.local
+.env.*.local
+
+# Build
+build/
+out/
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md
