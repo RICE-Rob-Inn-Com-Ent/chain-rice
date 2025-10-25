@@ -14,9 +14,7 @@ class OpenAIIntegration:
             return f"[MOCK OpenAI response] Prompt: {prompt}"
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=50
+                model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}], max_tokens=50
             )
             return response.choices[0].message.content
         except Exception as e:

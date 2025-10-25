@@ -8,54 +8,221 @@ license = "MIT"
 
 # Main package dependencies
 [tool.poetry.dependencies]
-python = ">=3.11,<3.14"
+python = ">=3.11,<3.12"  # FIXED: Python 3.11 dla TTS i AudioCraft compatibility
 
-# --- AI and Machine Learning ---
-torch = "^2.4.0"                 # PyTorch deep learning framework
-transformers = "^4.44.0"         # Hugging Face transformers library
-diffusers = "^0.30.0"            # Diffusion models for image generation
-accelerate = "^0.33.0"           # Training acceleration library
-openai = "^1.45.0"               # OpenAI API client
-langchain = "^0.3.4"             # LangChain framework for LLM applications
-llama-index = "^0.11.23"         # LlamaIndex for RAG applications
-sentence-transformers = "^3.2.0" # Sentence embeddings and similarity
+# ============================================================================
+# CORE AI & MACHINE LEARNING FRAMEWORKS
+# ============================================================================
+torch = "^2.4.0"                 # PyTorch deep learning framework - base dla wszystkich modeli
+torchvision = "^0.19.0"          # PyTorch computer vision models i utilities
+torchaudio = "^2.4.0"            # PyTorch audio processing
+transformers = "^4.44.0"         # Hugging Face transformers - LLM, vision, audio models
+diffusers = "^0.30.0"            # Stable Diffusion i inne diffusion models
+accelerate = "^0.33.0"           # Training acceleration i distributed training
+bitsandbytes = "^0.44.0"         # 4-bit/8-bit quantization dla wielkich modeli (oszczędza VRAM!)
+optimum = "^1.23.0"              # Optymalizacja modeli HuggingFace (ONNX, quantization)
+peft = "^0.13.0"                 # LoRA/QLoRA fine-tuning (Parameter Efficient Fine-Tuning)
 
-# --- RAG and Knowledge Bases ---
-faiss-cpu = "^1.9.0"            # Facebook AI Similarity Search (CPU version)
-chromadb = "^0.5.0"             # Vector database for embeddings
-ollama = "^0.4.4"               # Ollama Python SDK for local LLMs
-langchain-community = "^0.3.12" # LangChain community integrations
-langgraph = "^0.2.58"           # LangGraph for agent workflows
-rich = "^13.9.4"                # Rich text and beautiful formatting
+# ============================================================================
+# TEXT GENERATION & LLMs (Mistral-7B, Code Generation, Chatbots)
+# ============================================================================
+openai = "^1.45.0"               # OpenAI API client (GPT-4, GPT-3.5)
+anthropic = "^0.40.0"            # Claude API client
+ollama = "^0.4.4"                # Ollama SDK - lokalne LLMs (Mistral-7B-4bit, CodeLlama-7B)
+langchain = "^0.3.4"             # LangChain framework - agents, chains, RAG
+langchain-community = "^0.3.12"  # Community integrations dla LangChain
+langgraph = "^0.2.58"            # LangGraph - agent workflows i state machines
+llama-index = "^0.11.23"         # LlamaIndex - RAG applications i document indexing
+sentence-transformers = "^3.2.0" # Sentence embeddings (używane do similarity, RAG)
+tiktoken = "^0.7.0"              # OpenAI tokenization
+tokenizers = "^0.20.3"           # Fast tokenizers dla różnych modeli
 
-# --- Audio, Image, Video Processing ---
-pillow = "^10.4.0"        # Python Imaging Library
-opencv-python = "^4.10.0" # Computer vision library
-soundfile = "^0.12.1"     # Audio file I/O
-pydub = "^0.25.1"         # Audio manipulation
-tiktoken = "^0.7.0"       # Tokenization for LLMs
+# ============================================================================
+# RAG & VECTOR DATABASES (Knowledge Bases, Semantic Search)
+# ============================================================================
+faiss-cpu = "^1.9.0"            # Facebook AI Similarity Search (vector search)
+chromadb = "^0.5.0"             # Vector database dla embeddings
+qdrant-client = "^1.12.1"       # Qdrant vector database client (alternatywa dla Chroma)
+pymilvus = "^2.4.8"             # Milvus vector database (skalowalna opcja)
 
-# --- Finance and Analytics ---
-pandas = "^2.2.2"       # Data manipulation and analysis
-numpy = "^1.26.4"       # Numerical computing
-scipy = "^1.14.1"       # Scientific computing
-matplotlib = "^3.9.2"   # Plotting library
-plotly = "^5.24.1"      # Interactive plotting
-seaborn = "^0.13.2"     # Statistical data visualization
-statsmodels = "^0.14.3" # Statistical modeling
-scikit-learn = "^1.5.2" # Machine learning library
+# ============================================================================
+# IMAGE GENERATION & EDITING (Stable Diffusion, Inpainting)
+# ============================================================================
+# Stable Diffusion 1.5/XL używa diffusers + transformers (już dodane wyżej)
+controlnet-aux = "^0.0.9"       # ControlNet preprocessors (dla SD)
+invisible-watermark = "^0.2.0"  # Watermarking dla wygenerowanych obrazów
+safetensors = "^0.4.5"          # Bezpieczne ładowanie model weights
 
-# --- Integrations and APIs ---
-requests = "^2.32.3" # HTTP library
-httpx = "^0.27.2"    # Modern HTTP client
-fastapi = "^0.115.0" # Web framework for APIs
-uvicorn = "^0.30.6"  # ASGI server
+# ============================================================================
+# IMAGE PROCESSING & COMPUTER VISION
+# ============================================================================
+pillow = "^10.4.0"              # Python Imaging Library - podstawowe operacje na obrazach
+opencv-python = "^4.10.0"       # OpenCV - computer vision (object detection, image processing)
+imageio = "^2.36.0"             # Image I/O (czytanie/zapisywanie różnych formatów)
+scikit-image = "^0.24.0"        # Image processing algorithms (filtering, transformations)
 
-# --- Other Tools ---
-python-dotenv = "^1.0.1" # Environment variable management
-loguru = "^0.7.2"        # Logging library
-tqdm = "^4.66.5"         # Progress bars
-jinja2 = "^3.1.4"        # Template engine
+# [OCR] PaddleOCR - text recognition z obrazów (lekki, działa świetnie!)
+paddleocr = "^2.8.1"            # PaddleOCR - multilingual OCR (~200MB model)
+paddlepaddle = "^3.0.0"         # PaddlePaddle framework (backend dla PaddleOCR)
+
+# [Image Upscaling] RealESRGAN - upscaling obrazów (2x, 4x)
+basicsr = "^1.4.2"              # BasicSR framework (zawiera RealESRGAN)
+facexlib = "^0.3.0"             # Face detection/restoration (używane z RealESRGAN)
+gfpgan = "^1.3.8"               # Face restoration (bonus do RealESRGAN)
+
+# [Object Detection] MMDetection - state-of-art object detection
+# mmcv = "^2.2.0"               # UWAGA: mmcv wymaga kompilacji, zainstaluj ręcznie jeśli potrzebne
+# mmdet = "^3.3.0"              # MMDetection (zainstaluj: pip install mmdet)
+# Alternatywa: użyj ultralytics (YOLOv8/v11) - prostsze w instalacji
+ultralytics = "^8.3.41"         # YOLOv8/v11 - object detection, segmentation, pose
+
+# [Pose Estimation] MMPose / Alternatywa: MediaPipe
+# mmpose = "^1.3.0"             # MMPose (zainstaluj ręcznie jeśli potrzebne)
+mediapipe = "^0.10.20"          # Google MediaPipe - pose, hands, face detection (lekki!)
+
+# [Face Recognition] InsightFace - face recognition i analysis
+insightface = "^0.7.3"          # InsightFace - face recognition, age/gender detection
+onnxruntime = "^1.20.1"         # ONNX runtime (używane przez InsightFace)
+onnxruntime-gpu = "^1.20.1"     # ONNX GPU acceleration
+
+# [Background Removal] RVM (Robust Video Matting)
+# rvm jest w PyTorch, użyj: https://github.com/PeterL1n/RobustVideoMatting
+rembg = "^2.0.59"               # Alternatywa: rembg - prostsze background removal
+
+# ============================================================================
+# AUDIO PROCESSING & SPEECH
+# ============================================================================
+soundfile = "^0.12.1"           # Audio file I/O (czytanie/zapisywanie WAV, FLAC, etc.)
+pydub = "^0.25.1"               # Audio manipulation (cutting, concatenation, effects)
+librosa = "^0.10.2"             # Audio analysis (feature extraction, spectrograms)
+audioread = "^3.0.1"            # Audio file reading (backend dla librosa)
+
+# [Speech Synthesis & Voice Cloning] XTTS v2 - multilingual TTS z voice cloning
+TTS = "^0.22.0"                 # Coqui TTS (zawiera XTTS v2) - ✅ ZAINSTALOWANY (Python 3.11)
+# Wymogi XTTS: ~4-6GB VRAM, generuje ~3-8 sek audio/inference
+# Wspiera: polski, angielski, +15 języków, voice cloning z 6-10 sek próbki
+# Perfect dla RTX 3060 Mobile (6GB VRAM) - działa świetnie!
+
+# [Music Generation] MusicGen - generowanie muzyki z tekstu
+audiocraft = "^1.3.0"           # Meta AudioCraft (MusicGen, AudioGen, EnCodec) - ✅ ZAINSTALOWANY
+# UWAGA: AudioCraft ma konflikty dependency (torch 2.1 vs 2.8), ale powinien działać
+# Używa: torchtext, av (PyAV), xformers, demucs
+
+# ============================================================================
+# VIDEO PROCESSING & ANIMATION
+# ============================================================================
+imageio-ffmpeg = "^0.5.1"       # FFmpeg wrapper dla imageio (video I/O)
+# [Character Animation] AnimateDiff - animowanie SD generowanych obrazów
+# AnimateDiff używa diffusers - dodaj motion modules osobno
+
+# ============================================================================
+# 3D MODELING & GENERATION
+# ============================================================================
+# [3D Modeling] Tripo SR - 3D reconstruction z obrazów
+trimesh = "^4.5.3"              # 3D mesh processing i visualization
+# triposr wymaga instalacji z GitHub: pip install git+https://github.com/VAST-AI-Research/TripoSR.git
+
+# ============================================================================
+# DOCUMENT ANALYSIS & UNDERSTANDING
+# ============================================================================
+# [Document Analysis] Donut - document understanding bez OCR
+# Donut używa transformers (już dodane)
+
+# [Visual QA & Image Captioning] LLaVa-7B (zamiast 13B!) - multimodal LLM
+# LLaVa używa transformers + Ollama (już dodane)
+# Zainstaluj przez Ollama: ollama pull llava:7b
+
+# ============================================================================
+# NLP & TEXT ANALYSIS
+# ============================================================================
+# [Text Analysis] XLM-RoBERTa - multilingual text embeddings
+# [Language Translation] Opus-MT - translation models
+# [Sentiment Analysis] używamy mniejszych modeli (DistilBERT, RoBERTa-base)
+# [Text Summarization] BART, Flan-T5
+# Wszystkie przez transformers (już dodane)
+
+nltk = "^3.9.1"                 # Natural Language Toolkit (tokenization, POS tagging)
+spacy = "^3.8.2"                # spaCy - NLP (NER, dependency parsing)
+textblob = "^0.18.0"            # Simple NLP (sentiment, translation)
+
+# ============================================================================
+# FINANCE & ANALYTICS
+# ============================================================================
+pandas = "^2.2.2"               # Data manipulation i analysis
+numpy = "^1.26.4"               # Numerical computing
+scipy = "^1.14.1"               # Scientific computing
+matplotlib = "^3.9.2"           # Plotting library
+plotly = "^5.24.1"              # Interactive plotting
+seaborn = "^0.13.2"             # Statistical visualization
+statsmodels = "^0.14.3"         # Statistical modeling (time series, regression)
+scikit-learn = "^1.5.2"         # Machine learning (classification, clustering, anomaly detection)
+
+# [Financial Analysis] Używamy Mistral-7B przez Ollama + pandas
+yfinance = "^0.2.50"            # Yahoo Finance API (stock data)
+ta = "^0.11.0"                  # Technical Analysis library
+pandas-ta = "^0.3.14b0"         # Pandas Technical Analysis
+
+# ============================================================================
+# ANOMALY DETECTION
+# ============================================================================
+pyod = "^2.0.2"                 # Python Outlier Detection (Isolation Forest, AutoEncoder, +20 algorithms)
+
+# ============================================================================
+# RECOMMENDATION SYSTEMS
+# ============================================================================
+# [System Recommendation] RecBole - recommendation algorithms
+recbole = "^1.2.0"              # RecBole - comprehensive recommendation library
+
+# ============================================================================
+# GAME AI & REINFORCEMENT LEARNING
+# ============================================================================
+gymnasium = "^1.0.0"            # OpenAI Gym (renamed) - RL environments
+stable-baselines3 = "^2.3.2"    # RL algorithms (PPO, A2C, SAC, TD3)
+# Unity ML-Agents: pip install mlagents (oddzielna instalacja)
+
+# ============================================================================
+# STYLE TRANSFER
+# ============================================================================
+# Neural Style Transfer używa PyTorch (torch + torchvision już dodane)
+# Implementacja: https://pytorch.org/tutorials/advanced/neural_style_tutorial.html
+
+# ============================================================================
+# DATASET CREATION & ANNOTATION
+# ============================================================================
+# Label Studio, CVAT, Roboflow - zewnętrzne narzędzia (web-based)
+# Dla synthetic data generation używamy SD 1.5 + diffusers
+
+# ============================================================================
+# MODEL BENCHMARKING & EXPERIMENT TRACKING
+# ============================================================================
+mlflow = "^2.18.0"              # MLflow - experiment tracking, model registry
+wandb = "^0.18.7"               # Weights & Biases - experiment tracking (cloud)
+tensorboard = "^2.18.0"         # TensorBoard - visualization
+
+# ============================================================================
+# WEB & API
+# ============================================================================
+fastapi = "^0.115.0"            # FastAPI - web framework dla APIs
+uvicorn = "^0.30.6"             # ASGI server dla FastAPI
+requests = "^2.32.3"            # HTTP library
+httpx = "^0.27.2"               # Modern async HTTP client
+pydantic = "^2.10.3"            # Data validation
+gradio = "^5.7.1"               # Szybkie UI dla ML models (demos, testing)
+streamlit = "^1.40.2"           # Dashboard building
+
+# ============================================================================
+# UTILITIES & HELPERS
+# ============================================================================
+python-dotenv = "^1.0.1"        # Environment variable management
+loguru = "^0.7.2"               # Logging library (lepszy niż logging)
+tqdm = "^4.66.5"                # Progress bars
+rich = "^13.9.4"                # Beautiful terminal formatting
+jinja2 = "^3.1.4"               # Template engine
+pyyaml = "^6.0.2"               # YAML parser
+toml = "^0.10.2"                # TOML parser
+click = "^8.1.7"                # CLI creation
+typer = "^0.15.1"               # Modern CLI (używa Click)
+huggingface-hub = "^0.26.5"     # HuggingFace Hub API (download models)
 
 # Development dependencies
 [tool.poetry.group.dev.dependencies]
