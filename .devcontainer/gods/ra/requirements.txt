@@ -1,0 +1,14 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+diffusers==0.26.3
+transformers==4.36.2
+torch==2.1.2
+torchvision==0.16.2
+accelerate==0.26.1
+compel==2.0.2
+safetensors==0.4.1
+realesrgan==0.3.0
+trimesh==4.0.10
+rembg==2.0.56
+pillow==10.2.0
+numpy==1.26.3

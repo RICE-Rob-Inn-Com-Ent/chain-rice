@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package rice.bot.service;
+
+option go_package = "github.com/rice-mono/schema/bot/service;service";
+
+import "bot/message/god.proto";
+import "bot/enum/god_enums.proto";
+import "google/protobuf/empty.proto";
+
+// PantheonService manages the Egyptian AI gods
+service PantheonService {
+  // List all gods in the pantheon
+  rpc ListGods(ListGodsRequest) returns (ListGodsResponse);
+
+  // Get details of a specific god
+  rpc GetGod(GetGodRequest) returns (message.God);
+
+  // Invoke a god for chat
+  rpc InvokeGod(message.ChatRequest) returns (message.ChatResponse);
+
+  // Stream chat with a god
+  rpc StreamInvokeGod(message.ChatRequest)
+      returns (stream message.ChatResponse);
+
+  // Wake up (load) a god
+  rpc WakeGod(WakeGodRequest) returns (WakeGodResponse);
+
+  // Put a god to sleep (unload)
+  rpc SleepGod(SleepGodRequest) returns (SleepGodResponse);
+
+  // Get god metrics
+  rpc GetGodMetrics(GetGodMetricsRequest) returns (GetGodMetricsResponse);
+
+  // Health check
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
+}
+
+// LoRaService manages LoRa adapters for fine-tuning
+service LoRaService {
+  // Create a new LoRa adapter
+  rpc CreateLoRa(CreateLoRaRequest) returns (message.LoRaAdapter);
+
+  // List all LoRa adapters
+  rpc ListLoRa(ListLoRaRequest) returns (ListLoRaResponse);
+
+  // Get LoRa adapter details
+  rpc GetLoRa(GetLoRaRequest) returns (message.LoRaAdapter);
+
+  // Start training a LoRa adapter
+  rpc StartTraining(StartTrainingRequest) returns (StartTrainingResponse);
+
+  // Stop training
+  rpc StopTraining(StopTrainingRequest) returns (StopTrainingResponse);
+
+  // Get training progress
+  rpc GetTrainingStatus(GetTrainingStatusRequest)
+      returns (message.TrainingStatus);
+
+  // Apply LoRa to a god
+  rpc ApplyLoRa(ApplyLoRaRequest) returns (ApplyLoRaResponse);
+}
+
+// ModelCacheService manages model caching and loading
+service ModelCacheService {
+  // Get cache status
+  rpc GetCacheStatus(GetCacheStatusRequest) returns (GetCacheStatusResponse);
+
+  // Preload models
+  rpc PreloadModels(PreloadModelsRequest) returns (PreloadModelsResponse);
+
+  // Clear cache
+  rpc ClearCache(ClearCacheRequest) returns (ClearCacheResponse);
+
+  // Get cache metrics
+  rpc GetCacheMetrics(google.protobuf.Empty) returns (CacheMetricsResponse);
+}
+
+// Request/Response messages
+message ListGodsRequest {
+  repeated enum
+  .GodStatus status_filter = 1;
+  repeated enum
+  .GodDomain domain_filter = 2;
+}
+
+message ListGodsResponse { repeated message.God gods = 1; }
+
+message GetGodRequest { string god_id = 1; }
+
+message WakeGodRequest {
+  string god_id = 1;
+  bool force = 2; // Force wake even if resources are low
+}
+
+message WakeGodResponse {
+  bool success = 1;
+  string message = 2;
+  int64 load_time_ms = 3;
+}
+
+message SleepGodRequest { string god_id = 1; }
+
+message SleepGodResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetGodMetricsRequest { string god_id = 1; }
+
+message GetGodMetricsResponse { message.GodMetrics metrics = 1; }
+
+message HealthCheckResponse {
+  bool healthy = 1;
+  string version = 2;
+  int32 active_gods = 3;
+}
+
+// LoRa messages
+message CreateLoRaRequest {
+  string name = 1;
+  string description = 2;
+  string base_god_id = 3;
+  message.LoRaConfig config = 4;
+  string training_data_path = 5;
+}
+
+message ListLoRaRequest { string god_id_filter = 1; }
+
+message ListLoRaResponse { repeated message.LoRaAdapter adapters = 1; }
+
+message GetLoRaRequest { string lora_id = 1; }
+
+message StartTrainingRequest { string lora_id = 1; }
+
+message StartTrainingResponse {
+  bool success = 1;
+  string job_id = 2;
+}
+
+message StopTrainingRequest { string lora_id = 1; }
+
+message StopTrainingResponse { bool success = 1; }
+
+message GetTrainingStatusRequest { string lora_id = 1; }
+
+message ApplyLoRaRequest {
+  string god_id = 1;
+  string lora_id = 2;
+}
+
+message ApplyLoRaResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Cache messages
+message GetCacheStatusRequest { string god_id = 1; }
+
+message GetCacheStatusResponse { repeated message.ModelCache caches = 1; }
+
+message PreloadModelsRequest { repeated string god_ids = 1; }
+
+message PreloadModelsResponse {
+  int32 loaded = 1;
+  int32 failed = 2;
+  repeated string errors = 3;
+}
+
+message ClearCacheRequest {
+  string god_id = 1; // Empty means clear all
+}
+
+message ClearCacheResponse {
+  bool success = 1;
+  int64 freed_bytes = 2;
+}
+
+message CacheMetricsResponse {
+  int64 total_size_bytes = 1;
+  int64 used_bytes = 2;
+  int64 available_bytes = 3;
+  int32 cached_models = 4;
+  float hit_rate = 5;
+}

@@ -1,278 +1,59 @@
-# ==============================================================================
-# Rice-Mono Enterprise Bazel Configuration
-# ==============================================================================
-#
-# Production-ready configuration for high-performance, secure, and reproducible
-# builds across Python, Rust, Node.js, Go, Android, iOS, and more.
-#
-# Usage:
-#   - Common builds:  bazel build //...
-#   - CI/CD:          bazel build --config=ci //...
-#   - Release:        bazel build --config=release //...
-#   - Performance:    bazel build --config=perf //...
-# ==============================================================================
+# Bazel configuration for RICE Mono
 
-# ==============================================================================
-# Common Flags (Applied to all commands)
-# ==============================================================================
+# Common flags
+build --enable_platform_specific_config
+build --incompatible_strict_action_env
+build --incompatible_enable_cc_toolchain_resolution
 
-# Enable Bzlmod (modern dependency management)
-common --enable_bzlmod
+# Cache configuration
+build --disk_cache=/mnt/ssd/cache/bazel
+build --repository_cache=/mnt/ssd/cache/bazel/repository
 
-# Use modern flag syntax
-common --incompatible_enable_cc_toolchain_resolution
-common --incompatible_strict_action_env
+# Remote cache (optional - for team collaboration)
+# build --remote_cache=grpc://cache.rice-mono.local:9092
 
-# Build metadata
-build --workspace_status_command="$(pwd)/tools/workspace_status.sh"
-build --stamp
-
-# Color output for better readability
-common --color=yes
-
-# Show test output on failure
-test --test_output=errors
-
-# ==============================================================================
-# Performance Optimization
-# ==============================================================================
-
-# Auto-detect CPU count and use 90% for parallelism
+# Build optimization
 build --jobs=auto
-build --local_cpu_resources=HOST_CPUS*.9
-build --local_ram_resources=HOST_RAM*.8
+build --loading_phase_threads=auto
 
-# Enable action caching
-build --experimental_action_cache_store_output_metadata
+# Proto compilation
+build --proto_compiler=@com_google_protobuf//:protoc
+build --proto_toolchain_for_cc=@com_google_protobuf//:cc_toolchain
+build --proto_toolchain_for_java=@com_google_protobuf//:java_toolchain
 
-# Faster file system operations
-build --experimental_check_output_files=false
+# Go configuration
+build --@io_bazel_rules_go//go/config:pure
+build --@io_bazel_rules_go//go/config:static
 
-# Optimize analysis phase
-build --experimental_skyframe_cpu_heavy_skykeys_thread_pool_size=HOST_CPUS
-
-# Enable remote caching (configure endpoint in .bazelrc.user)
-# build --remote_cache=grpc://your-cache-server:9092
-# build --remote_upload_local_results=true
-# build --remote_timeout=60
-
-# Enable disk cache as fallback
-build --disk_cache=~/.cache/bazel/rice-mono
-
-# ==============================================================================
-# Build Configuration
-# ==============================================================================
-
-# Strict error checking
-build --strict_proto_deps=strict
-build --strict_system_includes
-
-# Optimized C++ compilation
-build:release --copt=-O3
-build:release --copt=-DNDEBUG
-build:release --strip=always
-
-# Debug configuration
-build:debug --compilation_mode=dbg
-build:debug --strip=never
-build:debug --copt=-g
-
-# Sanitizer configurations
-build:asan --features=asan
-build:asan --copt=-fsanitize=address
-build:asan --linkopt=-fsanitize=address
-
-build:tsan --features=tsan
-build:tsan --copt=-fsanitize=thread
-build:tsan --linkopt=-fsanitize=thread
-
-build:ubsan --features=ubsan
-build:ubsan --copt=-fsanitize=undefined
-build:ubsan --linkopt=-fsanitize=undefined
-
-# ==============================================================================
-# Platform-Specific Configuration
-# ==============================================================================
-
-# Linux
-build:linux --copt=-fPIC
-build:linux --host_copt=-fPIC
-
-# macOS
-build:macos --copt=-mmacosx-version-min=11.0
-build:macos --host_copt=-mmacosx-version-min=11.0
-
-# Windows (WSL2)
-build:windows --enable_runfiles=no
-
-# ==============================================================================
-# Language-Specific Configuration
-# ==============================================================================
-
-# Python
-build --python_path=/usr/bin/python3
-test --python_path=/usr/bin/python3
-
-# Rust
-build --@rules_rust//:rustfmt.toml=//:.rustfmt.toml
-build --@rules_rust//:clippy.toml=//:.clippy.toml
-
-# Go
-build --@io_bazel_rules_go//go/config:race
-
-# Node.js
-build --@aspect_rules_js//js:node_options=--max-old-space-size=4096
-
-# ==============================================================================
-# Testing Configuration
-# ==============================================================================
-
-# Default test settings
-test --test_verbose_timeout_warnings
+# Test configuration
+test --test_output=errors
 test --test_summary=detailed
-test --test_timeout=300,900,2700,10800
 
-# Coverage settings
+# Performance
+build --experimental_reuse_sandbox_directories
+build --experimental_inmemory_jdeps_files
+build --experimental_inmemory_dotd_files
+
+# GPU support (CUDA)
+build:gpu --define=using_cuda=true
+build:gpu --define=using_cuda_nvcc=true
+build:gpu --crosstool_top=@local_config_cuda//crosstool:toolchain
+build:gpu --define=using_cuda_clang=false
+
+# Development mode
+build:dev --compilation_mode=dbg
+build:dev --strip=never
+
+# Production mode
+build:prod --compilation_mode=opt
+build:prod --strip=always
+build:prod --define=release=true
+
+# Coverage
 coverage --combined_report=lcov
 coverage --experimental_generate_llvm_lcov
-coverage --instrument_test_targets
 
-# Retry flaky tests
-test --flaky_test_attempts=3
-
-# ==============================================================================
-# CI/CD Configuration
-# ==============================================================================
-
-build:ci --loading_phase_threads=1
-build:ci --nobuild_runfile_links
-build:ci --show_progress_rate_limit=30
-build:ci --curses=no
-build:ci --terminal_columns=120
-
-# Fail fast in CI
-test:ci --test_strategy=exclusive
-test:ci --test_keep_going=false
-
-# Build event protocol for analytics
-build:ci --build_event_json_file=bazel-build-events.json
-test:ci --build_event_json_file=bazel-test-events.json
-
-# ==============================================================================
-# Release Configuration
-# ==============================================================================
-
-build:release --compilation_mode=opt
-build:release --stamp
-build:release --workspace_status_command=tools/release_status.sh
-
-# Link time optimization
-build:release --copt=-flto
-build:release --linkopt=-flto
-
-# Strip debug symbols
-build:release --strip=always
-build:release --linkopt=-Wl,--strip-all
-
-# ==============================================================================
-# Security Configuration
-# ==============================================================================
-
-# Sandbox all actions
-build --spawn_strategy=sandboxed
-build --sandbox_default_allow_network=false
-
-# Disable implicit host dependencies
-build --incompatible_disable_starlark_host_transitions
-
-# Use hermetic toolchains
-build --incompatible_enable_cc_toolchain_resolution
-build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
-
-# ==============================================================================
-# Developer Experience
-# ==============================================================================
-
-# Enable BuildBuddy for build insights (optional)
-# build --bes_backend=grpcs://remote.buildbuddy.io
-# build --bes_results_url=https://app.buildbuddy.io/invocation/
-
-# Better error messages
-build --verbose_failures
-build --announce_rc
-
-# Keep build outputs for debugging
-build --experimental_ui_max_stdouterr_bytes=1048576
-
-# ==============================================================================
-# Performance Profiling
-# ==============================================================================
-
-build:perf --profile=bazel-profile.gz
-build:perf --experimental_profile_cpu_usage
-build:perf --experimental_collect_local_sandbox_action_metrics
-build:perf --experimental_collect_system_network_usage
-
-# ==============================================================================
-# Remote Build Execution (RBE)
-# ==============================================================================
-
-# Example RBE configuration (uncomment and configure for your setup)
-# build:rbe --remote_executor=grpcs://remotebuildexecution.googleapis.com
-# build:rbe --remote_cache=grpcs://remotebuildexecution.googleapis.com
-# build:rbe --remote_timeout=3600
-# build:rbe --remote_download_minimal
-# build:rbe --jobs=100
-# build:rbe --host_platform=//tools/platforms:rbe_ubuntu2004
-# build:rbe --platforms=//tools/platforms:rbe_ubuntu2004
-# build:rbe --extra_execution_platforms=//tools/platforms:rbe_ubuntu2004
-
-# ==============================================================================
-# User-Specific Overrides
-# ==============================================================================
-
-# Import user-specific settings (gitignored)
-try-import %workspace%/.bazelrc.user
-
-# Import CI-specific settings
-try-import %workspace%/.bazelrc.ci
-
-# ==============================================================================
-# IDE Integration
-# ==============================================================================
-
-# Hedron compile commands for clangd, rust-analyzer, etc.
-build:compdb --aspects=@hedron_compile_commands//:refresh_compile_commands.bzl%refresh_compile_commands_aspect
-build:compdb --output_groups=+compdb
-build:compdb --experimental_convenience_symlinks=normal
-
-# ==============================================================================
-# Android Configuration
-# ==============================================================================
-
-build:android --android_crosstool_top=@androidndk//:toolchain
-build:android --fat_apk_cpu=armeabi-v7a,arm64-v8a
-build:android --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-
-# ==============================================================================
-# iOS Configuration
-# ==============================================================================
-
-build:ios --apple_platform_type=ios
-build:ios --cpu=ios_arm64
-build:ios --ios_minimum_os=14.0
-build:ios --xcode_version_config=@local_config_xcode//:host_xcodes
-
-# ==============================================================================
-# Documentation
-# ==============================================================================
-
-# Generate comprehensive build documentation
-# bazel build --config=docs //...
-
-build:docs --output_groups=+all_docs
-build:docs --aspects=@io_bazel_skydoc//skydoc:skydoc.bzl%skydoc_aspect
-
-# ==============================================================================
-# End of Configuration
-# ==============================================================================
+# Platform-specific configs
+build:linux --cxxopt=-std=c++17
+build:macos --cxxopt=-std=c++17
+build:windows --cxxopt=/std:c++17

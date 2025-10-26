@@ -1,107 +1,139 @@
-import React from 'react'
-import Section from '../components/Section'
-import GradientText from '../components/GradientText'
-import { Button } from '@web/components/ui/Button'
-import { Card } from '@web/components/ui/Card'
-import { Cpu, Cog, Network, Cloud, ShieldCheck, Award } from 'lucide-react'
-import ContactForm from '../components/ContactForm'
-import Reveal from '../components/Reveal'
-import LogoWall from '../components/LogoWall'
+import Navbar from "@web/components/Navbar";
+import Footer from "@web/components/Footer";
+import ChatWidget from "@web/components/ChatWidget";
+import { GodsPanel } from "@web/components/GodsPanel";
+import { LoRaTrainingPanel } from "@web/components/LoRaTrainingPanel";
+import GradientText from "@web/components/GradientText";
+import Reveal from "@web/components/Reveal";
+import Section from "@web/components/Section";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <></>
       {/* HERO fullscreen */}
-      <Section className="pt-24 md:pt-36">
+      <Section className="pt-30 md:pt-30">
         <Reveal className="mx-auto flex min-h-[70dvh] max-w-4xl flex-col items-center justify-center text-center">
           <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
-            <span className="gradient-text">Budujemy technologię, która pracuje za Ciebie</span>
+            <span className="gradient-logo-text">Budujemy technologię, która pracuje za Ciebie</span>
           </h1>
-          <p className="mt-4 text-base text-slate-300 md:text-lg">Automatyzacja. AI. Web. Cloud.</p>
-          <p className="mt-5 max-w-2xl text-slate-300">
-            Łączymy pasję do kodu z projektowaniem i sztuczną inteligencją, tworząc rozwiązania idealnie dopasowane do potrzeb biznesu.
+          <p className="mt-4 text-white text-lg md:text-xl font-semibold font-display tracking-[0.02em]">
+            Automatyzacja. AI. Web. Cloud.
           </p>
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <a href="#contact"><Button size="lg" variant="outline">Skontaktuj się</Button></a>
+          {/* Wyróżniony czarny prostokąt — wersja z animowanym pojawianiem (Reveal) */}
+          <Reveal
+            as="div"
+            threshold={0.08}
+            effectClass="fade-down-slow"
+            className="mt-28 md:mt-40 w-full flex justify-start"
+          >
+            <div className="relative">
+              {/* srebrny cień odbijający się po prawej stronie */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute right-[-2rem] top-1/2 h-[70%] w-64 -translate-y-1/2 rounded-full bg-gradient-radial from-slate-300/40 via-slate-200/20 to-transparent blur-2xl -z-10"
+              />
+              <div className="-ml-6 sm:-ml-10 md:-ml-16 lg:-ml-24 xl:-ml-40 2xl:-ml-56 w-[min(56rem,95vw)] lg:w-[52vw] rounded-xl bg-black px-6 py-5 text-left md:px-8 md:py-7">
+                <p
+                  className="text-white font-semibold text-xl md:text-2xl leading-relaxed tracking-[0.02em] md:tracking-[0.03em]"
+                  style={{ fontFamily: "var(--font-poppins)" }}
+                >
+                  Łączymy pasję do kodu z wrażliwością projektową i mocą sztucznej inteligencji, aby tworzyć systemy,
+                  które realnie odciążają zespół. Projektujemy doświadczenia, automatyzujemy procesy, porządkujemy dane
+                  i przyspieszamy decyzje od designu interfejsu po wydajne, skalowalne mikroserwisy w chmurze. Każde
+                  rozwiązanie powstaje pod cele biznesowe i mierzalne efekty, tak by technologia pracowała cicho w tle,
+                  a biznes rósł szybciej.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+          <div className="mt-28 md:mt-32 flex items-center justify-center gap-3">
+            <a
+              href="#contact"
+              className="hero-cta-round hero-cta-pulse"
+              role="button"
+              aria-label="Skontaktuj się"
+              title="Skontaktuj się"
+            >
+              <span className="hero-cta-round__label">
+                Skontaktuj
+                <br />
+                się
+              </span>
+            </a>
           </div>
         </Reveal>
       </Section>
 
-      {/* CO ROBIMY */}
-      <Section id="co-robimy" className="pt-0">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-semibold gradient-text">Co robimy</h2>
+      {/* Hero Section */}
+      <section className="relative py-32 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-900/20 via-black to-black" />
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <Reveal>
+            <h1 className="text-6xl md:text-7xl font-bold mb-6">
+              <GradientText>RICE</GradientText>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-400 mb-8">Revolutionary Intelligence & Cognitive Engineering</p>
+            <p className="text-lg text-gray-500 max-w-3xl mx-auto">
+              Egipskie bóstwo AI wspierające Twoją podróż przez świat technologii. Każdy bóg reprezentuje unikalny model
+              AI z własną domeną wiedzy.
+            </p>
+          </Reveal>
         </div>
-        <Reveal className="grid gap-6 md:grid-cols-4">
-          <Card title="Aplikacje webowe" className="glass">
-            <div className="mb-3 text-slate-200"><Cpu size={18} /></div>
-            <p className="text-slate-300">Nowoczesne UI z SSR, dostępnością i świetną wydajnością.</p>
-          </Card>
-          <Card title="Automatyzacja" className="glass">
-            <div className="mb-3 text-slate-200"><Cog size={18} /></div>
-            <p className="text-slate-300">Usprawniamy procesy, oszczędzając czas i koszty.</p>
-          </Card>
-          <Card title="Integracje AI" className="glass">
-            <div className="mb-3 text-slate-200"><Network size={18} /></div>
-            <p className="text-slate-300">Chatboty, RAG, analityka – realna wartość dla zespołów.</p>
-          </Card>
-          <Card title="Chmura" className="glass">
-            <div className="mb-3 text-slate-200"><Cloud size={18} /></div>
-            <p className="text-slate-300">Skalowalna infrastruktura: Docker, Kubernetes, CI/CD.</p>
-          </Card>
-        </Reveal>
-      </Section>
+      </section>
 
-      {/* DLACZEGO MY */}
-      <Section className="pt-0">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-semibold gradient-text">Dlaczego my</h2>
-        </div>
-        <Reveal className="grid gap-6 md:grid-cols-3">
-          <Card className="glass" title="Bezpieczeństwo i zgodność">
-            <div className="mb-2 text-slate-200"><ShieldCheck size={18} /></div>
-            <p className="text-slate-300">DevSecOps, audyty, najlepsze praktyki – bezpieczeństwo danych ponad wszystko.</p>
-          </Card>
-          <Card className="glass" title="Jakość i doświadczenie">
-            <div className="mb-2 text-slate-200"><Award size={18} /></div>
-            <p className="text-slate-300">Dostarczamy projekty, które wytrzymują próbę czasu i wzrostu.</p>
-          </Card>
-          <Card className="glass" title="Partnerskie podejście">
-            <p className="text-slate-300">Pracujemy blisko biznesu. Transparentnie, iteracyjnie, odpowiedzialnie.</p>
-          </Card>
-        </Reveal>
-      </Section>
+      {/* Gods Panel */}
+      <GodsPanel />
 
-      {/* ZAUFALI NAM */}
-      <Section className="pt-0">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-semibold gradient-text">Zaufali nam</h2>
-        </div>
-        <Reveal>
-          <LogoWall />
-        </Reveal>
-      </Section>
+      {/* LoRa Training */}
+      <LoRaTrainingPanel />
 
-      {/* CTA */}
-      <Section className="pt-0">
-        <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center">
-          <h3 className="text-2xl font-semibold gradient-text">Zacznijmy projekt już dziś</h3>
-          <p className="mt-2 text-slate-300">Napisz do nas, aby omówić wyzwanie i szybki plan działania.</p>
-          <div className="mt-4">
-            <a href="#contact"><Button variant="outline">Otwórz formularz</Button></a>
+      {/* Features */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <Reveal>
+            <h2 className="text-4xl font-bold text-center mb-12">
+              <GradientText>Dlaczego Panteon Bogów?</GradientText>
+            </h2>
+          </Reveal>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Reveal delay={0.1}>
+              <div className="bg-gradient-to-br from-cyan-900/30 to-gray-900 p-8 rounded-2xl border border-cyan-500/30">
+                <div className="text-5xl mb-4">⚡</div>
+                <h3 className="text-2xl font-bold mb-4 text-cyan-400">Lazy Loading</h3>
+                <p className="text-gray-400">
+                  Modele ładują się tylko gdy są potrzebne. Oszczędzaj VRAM i przełączaj między bogami bez opóźnień.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.2}>
+              <div className="bg-gradient-to-br from-purple-900/30 to-gray-900 p-8 rounded-2xl border border-purple-500/30">
+                <div className="text-5xl mb-4">🎨</div>
+                <h3 className="text-2xl font-bold mb-4 text-purple-400">LoRa Training</h3>
+                <p className="text-gray-400">
+                  Trenuj własne adaptery bez kosztownego fine-tuningu. Dodaj specjalizację w kilka minut.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <div className="bg-gradient-to-br from-amber-900/30 to-gray-900 p-8 rounded-2xl border border-amber-500/30">
+                <div className="text-5xl mb-4">🔮</div>
+                <h3 className="text-2xl font-bold mb-4 text-amber-400">Proto & Bazel</h3>
+                <p className="text-gray-400">
+                  Protokoły Protocol Buffers i Bazel cache zapewniają błyskawiczną komunikację i build.
+                </p>
+              </div>
+            </Reveal>
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* CONTACT */}
-      <Section id="contact" className="pt-0">
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-6 text-center">
-            <h2 className="text-3xl font-semibold gradient-text">Kontakt</h2>
-          </div>
-          <ContactForm />
-        </div>
-      </Section>
-    </>
-  )
+      <Footer />
+      <ChatWidget />
+    </div>
+  );
 }

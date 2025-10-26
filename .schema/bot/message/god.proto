@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package rice.bot.message;
+
+option go_package = "github.com/rice-mono/schema/bot/message;message";
+
+import "google/protobuf/timestamp.proto";
+
+// God represents an AI model deity in the Egyptian pantheon
+message God {
+  string id = 1;
+  string name = 2;
+  string title = 3;
+  string description = 4;
+  string model = 5;
+  string icon = 6;
+  GodColor color = 7;
+  GodStatus status = 8;
+  int32 port = 9;
+  GodDomain domain = 10;
+  ModelCapabilities capabilities = 11;
+  google.protobuf.Timestamp last_invoked = 12;
+  int64 invocation_count = 13;
+}
+
+// GodColor defines the visual theme for each deity
+message GodColor {
+  string from = 1; // Tailwind gradient start
+  string to = 2;   // Tailwind gradient end
+}
+
+// ModelCapabilities defines what each model can do
+message ModelCapabilities {
+  bool text_generation = 1;
+  bool code_generation = 2;
+  bool translation = 3;
+  bool reasoning = 4;
+  bool image_understanding = 5;
+  bool function_calling = 6;
+  int32 context_length = 7;
+  repeated string languages = 8;
+}
+
+// ChatMessage for communication with gods
+message ChatMessage {
+  string role = 1; // user, assistant, system
+  string content = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  string god_id = 4; // Which god generated this
+  map<string, string> metadata = 5;
+}
+
+// ChatRequest to invoke a god
+message ChatRequest {
+  string god_id = 1;
+  repeated ChatMessage messages = 2;
+  ChatOptions options = 3;
+}
+
+// ChatResponse from a god
+message ChatResponse {
+  ChatMessage message = 1;
+  string god_id = 2;
+  GodMetrics metrics = 3;
+  bool from_cache = 4;
+}
+
+// ChatOptions for controlling generation
+message ChatOptions {
+  float temperature = 1;
+  int32 max_tokens = 2;
+  float top_p = 3;
+  int32 top_k = 4;
+  repeated string stop_sequences = 5;
+  bool stream = 6;
+}
+
+// GodMetrics for performance tracking
+message GodMetrics {
+  int64 response_time_ms = 1;
+  int32 tokens_generated = 2;
+  int32 tokens_per_second = 3;
+  float gpu_utilization = 4;
+  int64 memory_used_mb = 5;
+}
+
+// LoRaAdapter for fine-tuning
+message LoRaAdapter {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string base_god_id = 4;
+  LoRaConfig config = 5;
+  TrainingStatus training_status = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+// LoRaConfig for training parameters
+message LoRaConfig {
+  int32 rank = 1;  // LoRa rank (r)
+  float alpha = 2; // LoRa alpha
+  float learning_rate = 3;
+  int32 batch_size = 4;
+  int32 epochs = 5;
+  repeated string target_modules = 6;
+}
+
+// TrainingStatus tracks LoRa training progress
+message TrainingStatus {
+  enum Status {
+    PENDING = 0;
+    TRAINING = 1;
+    COMPLETED = 2;
+    FAILED = 3;
+    CANCELLED = 4;
+  }
+  Status status = 1;
+  int32 current_epoch = 2;
+  int32 total_epochs = 3;
+  float loss = 4;
+  float accuracy = 5;
+  int32 progress_percent = 6;
+}
+
+// ModelCache for lazy loading
+message ModelCache {
+  string god_id = 1;
+  string model_path = 2;
+  int64 size_bytes = 3;
+  bool is_loaded = 4;
+  google.protobuf.Timestamp loaded_at = 5;
+  google.protobuf.Timestamp last_access = 6;
+  int32 access_count = 7;
+}

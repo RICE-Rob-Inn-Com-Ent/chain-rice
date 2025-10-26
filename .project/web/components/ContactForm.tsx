@@ -32,20 +32,20 @@ export default function ContactForm() {
   }
 
   return (
-  <form onSubmit={onSubmit} className="grid gap-4 rounded-xl border border-white/10 bg-white p-6 text-slate-900">
-      <div className="grid gap-4 md:grid-cols-2">
-        <Input name="name" label="Imię i nazwisko" placeholder="Jan Kowalski" className="bg-black text-white placeholder:text-slate-400 border-black/20" required />
-        <Input name="email" type="email" label="E-mail" placeholder="jan@firma.com" className="bg-black text-white placeholder:text-slate-400 border-black/20" required />
+  <form onSubmit={onSubmit} className="animate-fade-in grid gap-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-slate-100 shadow-[0_20px_70px_rgba(0,0,0,0.5)] backdrop-blur-sm md:p-8">
+      <div className="grid gap-5 md:grid-cols-2">
+        <Input name="name" label="Imię i nazwisko" floating neutralFocus required />
+        <Input name="email" type="email" label="E-mail" floating neutralFocus required />
       </div>
-      <Textarea name="message" label="Wiadomość" placeholder="Opowiedz nam o swoim wyzwaniu..." className="bg-black text-white placeholder:text-slate-400 border-black/20" rows={5} required />
-      {error && <div className="text-sm text-red-600">{error}</div>}
+      <Textarea name="message" label="Wiadomość" floating neutralFocus rows={5} required />
+      {error && <div className="text-sm text-rose-400">{error}</div>}
       <div className="flex items-center justify-end">
-        <Button type="submit" disabled={status==='sending'}>
+        <Button type="submit" size="lg" variant="gradient" className="rounded-full px-6">
           {status==='sending' ? 'Wysyłanie…' : 'Wyślij wiadomość'}
         </Button>
       </div>
       {status==='success' && (
-        <div className="rounded-md border border-emerald-600/30 bg-emerald-600/10 p-3 text-emerald-700">
+        <div className="rounded-md border border-emerald-400/40 bg-emerald-400/10 p-3 text-emerald-200">
           Dziękujemy! Skontaktujemy się z Tobą wkrótce.
         </div>
       )}

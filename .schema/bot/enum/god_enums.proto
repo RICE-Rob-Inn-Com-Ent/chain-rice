@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package rice.bot.enum
+;
+
+option go_package = "github.com/rice-mono/schema/bot/enum;enum";
+
+// GodStatus represents the current state of an AI deity
+enum GodStatus {
+  GOD_STATUS_UNSPECIFIED = 0;
+  GOD_STATUS_INACTIVE = 1;  // Container stopped
+  GOD_STATUS_LOADING = 2;   // Model being loaded into memory
+  GOD_STATUS_ACTIVE = 3;    // Ready to serve
+  GOD_STATUS_BUSY = 4;      // Processing request
+  GOD_STATUS_ERROR = 5;     // Error state
+  GOD_STATUS_SUSPENDED = 6; // Temporarily suspended for resources
+}
+
+// GodDomain represents the area of expertise
+enum GodDomain {
+  GOD_DOMAIN_UNSPECIFIED = 0;
+  GOD_DOMAIN_KNOWLEDGE = 1;  // Thoth - general knowledge, writing
+  GOD_DOMAIN_CREATION = 2;   // Ra - generation, omniscient
+  GOD_DOMAIN_GUIDANCE = 3;   // Anubis - code, debugging, guidance
+  GOD_DOMAIN_MAGIC = 4;      // Isis - problem solving, healing
+  GOD_DOMAIN_PROTECTION = 5; // Horus - security, moderation
+}
+
+// ModelType represents the underlying model architecture
+enum ModelType {
+  MODEL_TYPE_UNSPECIFIED = 0;
+  MODEL_TYPE_MISTRAL = 1;
+  MODEL_TYPE_LLAMA = 2;
+  MODEL_TYPE_DEEPSEEK = 3;
+  MODEL_TYPE_PHI = 4;
+  MODEL_TYPE_GEMMA = 5;
+  MODEL_TYPE_QWEN = 6;
+  MODEL_TYPE_CODE_LLAMA = 7;
+}
+
+// CacheStrategy for model loading
+enum CacheStrategy {
+  CACHE_STRATEGY_UNSPECIFIED = 0;
+  CACHE_STRATEGY_LAZY = 1;       // Load on first request
+  CACHE_STRATEGY_EAGER = 2;      // Load immediately
+  CACHE_STRATEGY_PREDICTIVE = 3; // Load based on usage patterns
+  CACHE_STRATEGY_LRU = 4;        // Least Recently Used eviction
+}
+
+// LoRaTargetModule for fine-tuning specific layers
+enum LoRaTargetModule {
+  LORA_TARGET_MODULE_UNSPECIFIED = 0;
+  LORA_TARGET_MODULE_Q_PROJ = 1;    // Query projection
+  LORA_TARGET_MODULE_K_PROJ = 2;    // Key projection
+  LORA_TARGET_MODULE_V_PROJ = 3;    // Value projection
+  LORA_TARGET_MODULE_O_PROJ = 4;    // Output projection
+  LORA_TARGET_MODULE_GATE_PROJ = 5; // Gate projection
+  LORA_TARGET_MODULE_UP_PROJ = 6;   // Up projection
+  LORA_TARGET_MODULE_DOWN_PROJ = 7; // Down projection
+}

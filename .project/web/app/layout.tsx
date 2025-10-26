@@ -70,10 +70,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pl" className={`${poppins.variable} ${orbitron.variable} ${inter.variable}`}>
-      <body className="min-h-dvh bg-black text-slate-100 antialiased font-sans">
-        <Navbar />
-        <main className="relative">{children}</main>
+  <html lang="pl" className={`${poppins.variable} ${orbitron.variable} ${inter.variable}`}>
+      <head>
+        {/* Zapobieganie flashowi jasnego tła przy preferencji dark: ustaw klasę .dark na <html> przed hydracją */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(() => { try {
+              const ls = localStorage.getItem('theme');
+              const m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+              const dark = ls === 'dark' || (!ls && m);
+              const el = document.documentElement;
+              if (dark) el.classList.add('dark'); else el.classList.remove('dark');
+            } catch(_){} })();`
+          }}
+        />
+      </head>
+      <body className="min-h-dvh bg-white text-slate-900 antialiased font-sans dark:bg-black dark:text-slate-100">
+  <Navbar />
+  {/* padding-top kompensuje wysokość stałego nagłówka */}
+  <main className="relative pt-24 md:pt-24 lg:pt-24">{children}</main>
         <Footer />
         <ChatWidget />
       </body>
