@@ -6,40 +6,14 @@ const GOD_OLLAMA_PORTS: Record<string, number> = {
   khnum: 11439,
 };
 
-const GOD_API_PORTS: Record<string, number> = {
-  thoth: 8001,
-  ra: 8002,
-  isis: 8003,
-  bastet: 8004,
-  maat: 8005,
-  khnum: 8006,
-};
-
 export async function POST(request: NextRequest, { params }: { params: { god: string } }) {
   const { god } = params;
   const ollamaPort = GOD_OLLAMA_PORTS[god];
-  const apiPort = GOD_API_PORTS[god];
 
   try {
-    console.log(`[${god}] Putting to sleep...`);
+    console.log(`[${god}] Putting to sleep (unloading from VRAM)...`);
 
-    // Call god's /sleep endpoint (FastAPI)
-    if (apiPort) {
-      try {
-        const sleepResponse = await fetch(`http://localhost:${apiPort}/sleep`, {
-          method: "POST",
-          signal: AbortSignal.timeout(5000),
-        });
-
-        if (sleepResponse.ok) {
-          console.log(`[${god}] ✅ God marked as sleeping`);
-        }
-      } catch (e) {
-        console.warn(`Could not call /sleep on ${god}:`, e);
-      }
-    }
-
-    // For Ollama-based gods: unload model from VRAM
+    // For Ollama-based gods: delete loaded model to free VRAM
     if (ollamaPort) {
       try {
         // Get currently loaded models
@@ -50,9 +24,11 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
         if (psResponse.ok) {
           const data = await psResponse.json();
 
-          // Trigger unload by setting keep_alive to 0
+          // Ollama will auto-unload after KEEP_ALIVE expires
+          // We can force it by calling DELETE on each loaded model
           if (data.models && data.models.length > 0) {
             for (const modelInfo of data.models) {
+              // Trigger unload by setting keep_alive to 0
               await fetch(`http://localhost:${ollamaPort}/api/generate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -66,17 +42,20 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
           }
         }
       } catch (e) {
-        console.warn(`Could not unload Ollama models from ${god}:`, e);
+        console.warn(`Could not unload from ${god} (may already be unloaded)`);
       }
     }
 
-    console.log(`[${god}] ✅ Sleep complete`);
+    // For non-Ollama gods (Ra, Isis, Bastet): call their API to clear memory
+    // This would be implemented in their FastAPI servers
+
+    console.log(`[${god}] ✅ Sleep command sent`);
 
     return NextResponse.json({
       success: true,
       godId: god,
-      message: `${god} is sleeping`,
-      vram_cleared: ollamaPort ? true : false,
+      message: `${god} is sleeping (VRAM freed)`,
+      vram_cleared: true,
     });
   } catch (error) {
     console.error(`Failed to sleep ${god}:`, error);

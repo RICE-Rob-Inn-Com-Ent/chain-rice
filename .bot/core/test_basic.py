@@ -37,9 +37,7 @@ try:
     print(f"✅ OpenAI query: {openai_response}")
 
     print("\n🎉 All basic tests passed! Integrations work correctly.")
-    print(
-        "📝 Note: External dependencies (requests, openai) need to be installed for full functionality"
-    )
+    print("📝 Note: External dependencies (requests, openai) need to be installed for full functionality")
 
 except ImportError as e:
     print(f"❌ Import error: {e}")

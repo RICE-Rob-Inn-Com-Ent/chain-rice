@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useState } from 'react'
-import { Button } from '@web/components/ui/Button'
+import { Button } from '@atoms/ui/Button'
 
 export default function PricingCalculator() {
   const [features, setFeatures] = useState(6)

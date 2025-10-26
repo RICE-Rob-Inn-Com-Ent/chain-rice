@@ -1,5 +1,5 @@
 import React from "react";
-import Section from "../../components/Section";
+import Section from "@atoms/Section";
 import Link from "next/link";
 
 type Project = {

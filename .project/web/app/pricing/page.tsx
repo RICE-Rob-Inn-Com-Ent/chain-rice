@@ -1,7 +1,7 @@
 import React from "react";
-import Section from "../../components/Section";
-import { Button } from "@web/components/ui/Button";
-import PricingCalculator from "../../components/PricingCalculator";
+import Section from "@atoms/Section";
+import { Button } from "@atoms/ui/Button";
+import PricingCalculator from "@molecules/PricingCalculator";
 
 export const metadata = { title: "Cennik — RICE" };
 

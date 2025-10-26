@@ -1,8 +1,8 @@
-import React from 'react'
-import Section from '../../components/Section'
-import ContactForm from '../../components/ContactForm'
+import React from "react";
+import Section from "@atoms/Section";
+import ContactForm from "@molecules/ContactForm";
 
-export const metadata = { title: 'Kontakt — RICE' }
+export const metadata = { title: "Kontakt — RICE" };
 
 export default function ContactPage() {
   return (
@@ -15,5 +15,5 @@ export default function ContactPage() {
         </div>
       </div>
     </Section>
-  )
+  );
 }

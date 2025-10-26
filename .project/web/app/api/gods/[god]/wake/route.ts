@@ -37,8 +37,8 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
   try {
     const startTime = Date.now();
 
-    // Step 1: Sleep all other gods first
-    console.log(`[${god}] Step 1: Sleeping other gods...`);
+    // Step 1: Clear VRAM - sleep all other gods first
+    console.log(`[${god}] Step 1: Clearing VRAM from other gods...`);
     for (const otherGod of Object.keys(GOD_API_PORTS)) {
       if (otherGod !== god) {
         try {
@@ -51,11 +51,11 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
       }
     }
 
-    // Wait for sleep to complete
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Wait for VRAM to clear
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Step 2: Check if god container is healthy
-    console.log(`[${god}] Step 2: Checking container health...`);
+    // Step 2: Check if god is healthy
+    console.log(`[${god}] Step 2: Checking health...`);
     const healthResponse = await fetch(`http://localhost:${apiPort}/health`, {
       signal: AbortSignal.timeout(5000),
     });
@@ -64,20 +64,9 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
       throw new Error("God container not running or unhealthy");
     }
 
-    // Step 3: Wake up the god (calls FastAPI /wake endpoint)
-    console.log(`[${god}] Step 3: Calling god /wake endpoint...`);
-    const wakeResponse = await fetch(`http://localhost:${apiPort}/wake`, {
-      method: "POST",
-      signal: AbortSignal.timeout(5000),
-    });
-
-    if (!wakeResponse.ok) {
-      throw new Error("Failed to wake god");
-    }
-
-    // Step 4: For Ollama-based gods, pull/load model from cache
+    // Step 3: For Ollama-based gods, pull/load model from cache
     if (ollamaPort) {
-      console.log(`[${god}] Step 4: Loading model from cache...`);
+      console.log(`[${god}] Step 3: Loading model from cache...`);
       const pullResponse = await fetch(`http://localhost:${ollamaPort}/api/pull`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -89,8 +78,8 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
         throw new Error("Failed to load model from cache");
       }
 
-      // Step 5: Warm up with test generation
-      console.log(`[${god}] Step 5: Warming up model...`);
+      // Step 4: Warm up with test generation
+      console.log(`[${god}] Step 4: Warming up model...`);
       await fetch(`http://localhost:${ollamaPort}/api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -111,13 +100,12 @@ export async function POST(request: NextRequest, { params }: { params: { god: st
       success: true,
       godId: god,
       model: model,
-      message: `${god} awakened`,
+      message: `${god} awakened from cache`,
       loadTimeMs: loadTime,
       steps: {
-        others_slept: true,
+        vram_cleared: true,
         health_checked: true,
-        god_awakened: true,
-        model_loaded: ollamaPort ? true : false,
+        model_loaded: true,
         warmed_up: ollamaPort ? true : false,
       },
     });

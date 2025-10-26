@@ -1,7 +1,7 @@
 // Minimal shims to satisfy the TypeScript compiler and editor when node_modules types are unavailable.
 // NOTE: These are intended only as a fallback for local analysis and should not replace proper @types packages.
 
-declare module 'react' {
+declare module "react" {
   const React: {
     forwardRef<T, P = any>(render: (props: P, ref: any) => any): any;
     Fragment: any;
@@ -51,7 +51,7 @@ declare namespace React {
 }
 
 // Next.js ambient modules and types (minimal)
-declare module 'next' {
+declare module "next" {
   export type Metadata = any;
   export type Viewport = any;
   export namespace MetadataRoute {
@@ -65,24 +65,24 @@ declare module 'next' {
   export default nextDefault;
 }
 
-declare module 'next/link' {
+declare module "next/link" {
   const Link: any;
   export default Link;
 }
 
-declare module 'next/dynamic' {
+declare module "next/dynamic" {
   const dynamic: any;
   export default dynamic;
 }
 
-declare module 'next/font/google' {
+declare module "next/font/google" {
   export const Poppins: any;
   export const Orbitron: any;
   export const Inter: any;
 }
 
 // Third-party libs used in UI
-declare module 'lucide-react' {
+declare module "lucide-react" {
   export const Cpu: any;
   export const Cog: any;
   export const Network: any;
@@ -97,16 +97,16 @@ declare module 'lucide-react' {
   export const X: any;
 }
 
-declare module 'next/image' {
+declare module "next/image" {
   const Image: any;
   export default Image;
 }
 
-declare module 'tailwindcss' {
+declare module "tailwindcss" {
   export type Config = any;
 }
 
-declare module 'clsx' {
+declare module "clsx" {
   const clsx: (...args: any[]) => string;
   export default clsx;
 }

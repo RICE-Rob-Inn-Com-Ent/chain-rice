@@ -14,6 +14,7 @@ export interface God {
   status: "active" | "inactive" | "loading" | "busy";
   port: number;
   domain: string;
+  installed?: boolean;
   metrics?: {
     responseTime: number;
     tokensPerSecond: number;
@@ -33,7 +34,7 @@ const EGYPTIAN_GODS: God[] = [
     icon: "📜",
     color: "from-cyan-600 via-blue-700 to-blue-900",
     status: "inactive",
-    port: 8001,
+    port: 11434,
     domain: "text-processing",
   },
   {
@@ -46,7 +47,7 @@ const EGYPTIAN_GODS: God[] = [
     icon: "☀️",
     color: "from-amber-500 via-orange-600 to-red-700",
     status: "inactive",
-    port: 8002,
+    port: 11435,
     domain: "graphics",
   },
   {
@@ -59,7 +60,7 @@ const EGYPTIAN_GODS: God[] = [
     icon: "✨",
     color: "from-purple-600 via-pink-600 to-rose-600",
     status: "inactive",
-    port: 8003,
+    port: 11436,
     domain: "medical",
   },
   {
@@ -72,7 +73,7 @@ const EGYPTIAN_GODS: God[] = [
     icon: "🐱",
     color: "from-yellow-600 via-amber-700 to-orange-800",
     status: "inactive",
-    port: 8004,
+    port: 11437,
     domain: "vision",
   },
   {
@@ -84,7 +85,7 @@ const EGYPTIAN_GODS: God[] = [
     icon: "⚖️",
     color: "from-blue-600 via-indigo-700 to-purple-800",
     status: "inactive",
-    port: 8005,
+    port: 11438,
     domain: "legal",
   },
   {
@@ -97,7 +98,7 @@ const EGYPTIAN_GODS: God[] = [
     icon: "💰",
     color: "from-green-600 via-emerald-700 to-teal-800",
     status: "inactive",
-    port: 8006,
+    port: 11439,
     domain: "finance",
   },
 ];
@@ -112,30 +113,42 @@ export const GodsPanel: React.FC = () => {
   );
 
   useEffect(() => {
-    // Sprawdź status każdego boga
-    const checkStatus = async () => {
+    // Sprawdź status i instalację każdego boga
+    const checkStatusAndInstalled = async () => {
       const updatedGods = await Promise.all(
         gods.map(async (god) => {
+          let installed: boolean | undefined = undefined;
           try {
-            const response = await fetch(`/api/gods/${god.id}/health`, {
-              signal: AbortSignal.timeout(3000),
+            // zapytaj nasz backend o status instalacji (obsługuje bogów Ollama)
+            const instRes = await fetch(`/api/gods/${god.id}/installed`, { signal: AbortSignal.timeout(5000) });
+            if (instRes.ok) {
+              const data = await instRes.json();
+              installed = !!data.installed;
+            }
+          } catch {
+            // ignore
+          }
+
+          try {
+            const response = await fetch(`http://localhost:${god.port}/api/tags`, {
+              signal: AbortSignal.timeout(2000),
             });
             if (response.ok) {
               // Pobierz metryki
               const metrics = await fetchGodMetrics(god.id);
-              return { ...god, status: "active" as const, metrics };
+              return { ...god, status: "active" as const, metrics, installed } as God;
             }
-            return { ...god, status: "inactive" as const };
+            return { ...god, status: "inactive" as const, installed } as God;
           } catch {
-            return { ...god, status: "inactive" as const };
+            return { ...god, status: "inactive" as const, installed } as God;
           }
         })
       );
       setGods(updatedGods);
     };
 
-    checkStatus();
-    const interval = setInterval(checkStatus, 10000); // Co 10s
+    checkStatusAndInstalled();
+    const interval = setInterval(checkStatusAndInstalled, 10000); // Co 10s
     return () => clearInterval(interval);
   }, []);
 
@@ -233,6 +246,33 @@ export const GodsPanel: React.FC = () => {
     window.open(`/benchmark/${godId}`, "_blank", "width=1000,height=700");
   };
 
+  const handleInstallGod = async (godId: string) => {
+    try {
+      setAwakeningGod(godId);
+      setAwakeningProgress(0);
+      setAwakeningStage("downloading");
+
+      const progressInterval = setInterval(() => {
+        setAwakeningProgress((p) => Math.min(p + Math.random() * 12, 95));
+      }, 500);
+
+      const res = await fetch(`/api/gods/${godId}/install`, { method: "POST" });
+      clearInterval(progressInterval);
+
+      if (res.ok) {
+        setAwakeningProgress(100);
+        setAwakeningStage("ready");
+        setGods((prev) => prev.map((g) => (g.id === godId ? { ...g, installed: true } : g)));
+      } else {
+        console.error("Install failed", await res.text());
+      }
+    } catch (e) {
+      console.error("Install error", e);
+    } finally {
+      setTimeout(() => setAwakeningGod(null), 800);
+    }
+  };
+
   const selectedGodData = gods.find((g) => g.id === selectedGod);
 
   return (
@@ -246,7 +286,7 @@ export const GodsPanel: React.FC = () => {
         />
       )}
 
-      <div className="w-full bg-gradient-to-b from-black via-gray-900 to-black py-16 px-4 relative overflow-hidden">
+  <div id="gods-panel" className="w-full bg-gradient-to-b from-black via-gray-900 to-black py-16 px-4 relative overflow-hidden">
         {/* Hieroglyph Background */}
         <div className="absolute inset-0 opacity-5 text-amber-500 text-9xl select-none pointer-events-none">
           <div className="absolute top-10 left-10">𓂀</div>
@@ -283,6 +323,7 @@ export const GodsPanel: React.FC = () => {
                 onStop={() => handleStopGod(god.id)}
                 onDemo={() => handleDemo(god.id)}
                 onBenchmark={() => handleBenchmark(god.id)}
+                onInstall={() => handleInstallGod(god.id)}
               />
             ))}
           </div>

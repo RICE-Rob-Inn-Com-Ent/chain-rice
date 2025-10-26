@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from 'react'
-import { Input } from '@web/components/ui/Input'
-import { Textarea } from '@web/components/ui/Textarea'
-import { Button } from '@web/components/ui/Button'
+import { Input } from '@atoms/ui/Input'
+import { Textarea } from '@atoms/ui/Textarea'
+import { Button } from '@atoms/ui/Button'
 
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle'|'sending'|'success'|'error'>('idle')
