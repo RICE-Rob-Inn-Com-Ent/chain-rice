@@ -4,17 +4,11 @@ import Header from "./molecules/Header";
 import Footer from "./molecules/Footer";
 import "./index.css";
 
-function App() {
+function App({ children }: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <>
       <Header />
-      <main>
-        <HomePage />
-        <AboutPage />
-        <ServicesPage />
-        <TeamPage />
-        <ContactPage />
-      </main>
+      <main>{children}</main>
       <Footer />
     </>
   );
