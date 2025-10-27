@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import TopBar from "./TopBar";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -14,7 +13,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
     <header className="flex min-h-screen flex-col">
-      <Navbar />
+      <TopBar />
     </header>
   );
 };
