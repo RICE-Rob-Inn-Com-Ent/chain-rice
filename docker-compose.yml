@@ -26,6 +26,8 @@ services:
     networks:
       - rice-frontend
     restart: unless-stopped
+    profiles:
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.ui-kit.rule=Host(`ui.rice.local`)"
@@ -58,6 +60,8 @@ services:
       - graphql
       - ui-kit
     restart: unless-stopped
+    profiles:
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextjs.rule=Host(`app.rice.local`)"
@@ -274,9 +278,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - gods
-      - all
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 60s
@@ -314,9 +315,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - gods
-      - all
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 60s
@@ -354,9 +352,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - gods
-      - all
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 60s
@@ -397,9 +392,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - gods
-      - all
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 60s
@@ -440,9 +432,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - gods
-      - all
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 60s
@@ -470,9 +459,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - monitoring
-      - all
 
   # Prometheus - Metrics Collection
   prometheus:
@@ -492,9 +478,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - monitoring
-      - all
 
   # Loki - Log Aggregation
   loki:
@@ -510,9 +493,6 @@ services:
       - rice-backend
       - pantheon
     restart: unless-stopped
-    profiles:
-      - monitoring
-      - all
 
   # Grafana - Visualization & Dashboards
   grafana:
@@ -559,9 +539,6 @@ services:
     networks:
       - rice-backend
     restart: unless-stopped
-    profiles:
-      - monitoring
-      - all
 
   # Logstash - Log Processing Pipeline
   logstash:
@@ -580,9 +557,6 @@ services:
     depends_on:
       - elasticsearch
     restart: unless-stopped
-    profiles:
-      - monitoring
-      - all
 
   # Jaeger - Distributed Tracing
   jaeger:
