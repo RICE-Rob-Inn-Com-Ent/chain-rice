@@ -1,13 +1,13 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import postcssPresetEnv from 'postcss-preset-env';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import postcssPresetEnv from "postcss-preset-env";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 
 export default defineConfig({
   plugins: [react()],
-  root: '.',
-  publicDir: 'public',
+  root: ".",
+  publicDir: "public",
   server: {
     port: 3001,
     strictPort: false,
@@ -15,7 +15,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': '/home/mrDinkelman/rice-mono/.frontend/web',
+      "@": "/home/mrDinkelman/rice-mono/.frontend/web",
     },
   },
   css: {
@@ -24,10 +24,10 @@ export default defineConfig({
         postcssPresetEnv({
           stage: 1,
           features: {
-            'nesting-rules': true,
-            'custom-properties': true,
-            'custom-media-queries': true,
-            'media-query-ranges': true,
+            "nesting-rules": true,
+            "custom-properties": true,
+            "custom-media-queries": true,
+            "media-query-ranges": true,
           },
         }),
         tailwindcss(),
@@ -36,6 +36,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist',
+    outDir: "dist",
   },
 });
