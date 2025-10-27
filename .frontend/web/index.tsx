@@ -4,7 +4,10 @@ import Header from "./molecules/Header";
 import "./index.css";
 
 function App() {
-  return (  <Header />;
+  return (
+    <></>
+    <Header />
+  );
 }
 
 export default App;
