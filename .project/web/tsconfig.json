@@ -25,8 +25,8 @@
       "@rice-mono/ui-kit/*": ["../../.frontend/web/*"],
       "@atoms": ["../../.frontend/web/components"],
       "@atoms/*": ["../../.frontend/web/components/*"],
-      "@molecules": ["../../.frontend/web/molecules"],
-      "@molecules/*": ["../../.frontend/web/molecules/*"],
+      "@molecules": ["../../.frontend/web/layouts"],
+      "@molecules/*": ["../../.frontend/web/layouts/*"],
       "@web/*": ["./*"],
       "@pages/*": ["app/pages/*"]
     },
