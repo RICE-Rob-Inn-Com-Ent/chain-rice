@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { MessageSquare, X } from "lucide-react";
-import { Button } from "../components/Button";
+import { Button } from "../components/Buttons/Button";
 
 type ChatMsg = {
   role: "user" | "assistant";
