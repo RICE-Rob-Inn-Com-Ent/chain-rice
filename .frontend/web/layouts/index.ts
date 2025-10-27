@@ -3,5 +3,5 @@
  * Export all molecule components for easier imports
  */
 
-export { default as Header } from "./Header";
-export { default as Footer } from "./Footer";
+export { default as Header } from "../ui/Header";
+export { default as Footer } from "../ui/Footer";
