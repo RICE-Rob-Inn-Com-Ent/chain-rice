@@ -1,0 +1,368 @@
+version: '3.9'
+
+# Rice Mono - Unified Docker Compose
+# All services: Frontend (UI Kit + Next.js) + Backend (Data, Bot, GraphQL, Gods)
+
+services:
+  # ========================================
+  # FRONTEND SERVICES
+  # ========================================
+
+  # Vite UI Kit - Component Library
+  ui-kit:
+    build:
+      context: .
+      dockerfile: .frontend/web/Dockerfile
+      target: development
+    container_name: rice-ui-kit
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.frontend/web/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - rice-frontend
+    restart: unless-stopped
+
+  # Next.js Web Application
+  nextjs-web:
+    build:
+      context: .
+      dockerfile: .project/web/Dockerfile
+    container_name: rice-nextjs-web
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.frontend/web/node_modules
+      - /app/.project/web/node_modules
+      - /app/.project/web/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+    networks:
+      - rice-frontend
+      - rice-backend
+    depends_on:
+      - graphql
+      - ui-kit
+    restart: unless-stopped
+
+  # ========================================
+  # DATABASE LAYER
+  # ========================================
+
+  # MongoDB
+  mongodb:
+    image: mongo:7
+    container_name: rice-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=rice
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: rice-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: rice
+      POSTGRES_USER: rice
+      POSTGRES_PASSWORD: rice123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rice"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # ========================================
+  # BACKEND DATA SERVICE
+  # ========================================
+
+  data:
+    build:
+      context: .backend/data
+      dockerfile: Dockerfile
+    container_name: rice-data
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      - MONGO_URL=mongodb://rice-mongodb:27017/rice
+      - POSTGRES_URL=postgres://rice:rice123@rice-postgres:5432/rice?sslmode=disable
+      - LOG_LEVEL=info
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # ========================================
+  # GRAPHQL GATEWAY
+  # ========================================
+
+  graphql:
+    build:
+      context: .backend/graphql
+      dockerfile: Dockerfile
+    container_name: rice-graphql
+    ports:
+      - "4000:4000"
+    depends_on:
+      - data
+    environment:
+      - GRAPHQL_PORT=4000
+      - LOG_LEVEL=info
+      - DATA_SERVICE_URL=http://rice-data:8080
+    networks:
+      - rice-backend
+      - rice-frontend
+    restart: unless-stopped
+
+  # ========================================
+  # BOT SERVICES
+  # ========================================
+
+  # Bot Core - Orchestration
+  bot-core:
+    build:
+      context: .backend/bot/core
+      dockerfile: Dockerfile
+    container_name: rice-bot-core
+    ports:
+      - "8100:8100"
+    environment:
+      - BOT_MODE=core
+      - LOG_LEVEL=info
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # Bot Integrations - External AI Providers
+  bot-integrations:
+    build:
+      context: .backend/bot/in
+      dockerfile: Dockerfile
+    container_name: rice-bot-integrations
+    ports:
+      - "8200:8200"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # ========================================
+  # GODS - AI SPECIALIZED SERVICES
+  # ========================================
+
+  # Thoth - God of Knowledge (Text Processing)
+  thoth:
+    build:
+      context: .backend/bot/core/gods/thoth
+      dockerfile: Dockerfile
+    container_name: rice-god-thoth
+    ports:
+      - "8001:8000"
+      - "11434:11434"
+    volumes:
+      - ollama-thoth:/root/.ollama
+    environment:
+      - GOD_NAME=Thoth
+      - GOD_ID=thoth
+      - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # Ra - God of Light (Graphics & Image Generation)
+  ra:
+    build:
+      context: .backend/bot/core/gods/ra
+      dockerfile: Dockerfile
+    container_name: rice-god-ra
+    ports:
+      - "8002:8000"
+    volumes:
+      - models-ra:/models
+      - lora-ra:/lora-adapters
+    environment:
+      - GOD_NAME=Ra
+      - GOD_ID=ra
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # Isis - Goddess of Healing (Medical AI)
+  isis:
+    build:
+      context: .backend/bot/core/gods/isis
+      dockerfile: Dockerfile
+    container_name: rice-god-isis
+    ports:
+      - "8003:8000"
+    volumes:
+      - models-isis:/models
+      - lora-isis:/lora-adapters
+    environment:
+      - GOD_NAME=Isis
+      - GOD_ID=isis
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # Bastet - Goddess of Vision (Computer Vision)
+  bastet:
+    build:
+      context: .backend/bot/core/gods/bastet
+      dockerfile: Dockerfile
+    container_name: rice-god-bastet
+    ports:
+      - "8004:8000"
+    volumes:
+      - models-bastet:/models
+      - lora-bastet:/lora-adapters
+    environment:
+      - GOD_NAME=Bastet
+      - GOD_ID=bastet
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # Maat - Goddess of Justice (Legal Analysis)
+  maat:
+    build:
+      context: .backend/bot/core/gods/maat
+      dockerfile: Dockerfile
+    container_name: rice-god-maat
+    ports:
+      - "8005:8000"
+      - "11438:11434"
+    volumes:
+      - ollama-maat:/root/.ollama
+      - models-maat:/models
+      - lora-maat:/lora-adapters
+    environment:
+      - GOD_NAME=Maat
+      - GOD_ID=maat
+      - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+  # Khnum - God of Wealth (Financial Analysis)
+  khnum:
+    build:
+      context: .backend/bot/core/gods/khnum
+      dockerfile: Dockerfile
+    container_name: rice-god-khnum
+    ports:
+      - "8006:8000"
+      - "11439:11434"
+    volumes:
+      - ollama-khnum:/root/.ollama
+      - models-khnum:/models
+      - lora-khnum:/lora-adapters
+    environment:
+      - GOD_NAME=Khnum
+      - GOD_ID=khnum
+      - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+    restart: unless-stopped
+
+# ========================================
+# VOLUMES
+# ========================================
+
+volumes:
+  # Database volumes
+  mongo-data:
+    driver: local
+  postgres-data:
+    driver: local
+  
+  # Ollama model volumes for gods with Ollama
+  ollama-thoth:
+    driver: local
+  ollama-maat:
+    driver: local
+  ollama-khnum:
+    driver: local
+  
+  # Model storage for each god
+  models-ra:
+    driver: local
+  models-isis:
+    driver: local
+  models-bastet:
+    driver: local
+  models-maat:
+    driver: local
+  models-khnum:
+    driver: local
+  
+  # LoRA adapter storage for each god
+  lora-ra:
+    driver: local
+  lora-isis:
+    driver: local
+  lora-bastet:
+    driver: local
+  lora-maat:
+    driver: local
+  lora-khnum:
+    driver: local
+
+# ========================================
+# NETWORKS
+# ========================================
+
+networks:
+  rice-frontend:
+    driver: bridge
+    name: rice-frontend
+  rice-backend:
+    driver: bridge
+    name: rice-backend
+
