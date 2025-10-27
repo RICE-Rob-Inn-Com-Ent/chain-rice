@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Button } from "../../components/Buttons/Button";
+import { Button } from "../../components/Button";
 
 export default function PricingCalculator() {
   const [features, setFeatures] = useState(6);
