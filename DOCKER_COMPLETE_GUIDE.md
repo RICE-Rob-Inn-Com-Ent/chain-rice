@@ -80,12 +80,13 @@ docker-compose --profile all up -d
 
 ## 🎯 Profiles
 
-Docker Compose używa profili do grupowania serwisów:
+Docker Compose używa profili:
 
-- **Bez profilu**: Backend Core + Frontend (podstawowe serwisy)
-- **`--profile gods`**: Tylko Gods (AI services)
-- **`--profile monitoring`**: Tylko Monitoring Stack
-- **`--profile all`**: WSZYSTKO (21 serwisów!)
+- **Bez profilu** (`up -d`): Backend + Gods + Monitoring = **19 serwisów** (WSZYSTKO poza frontendem)
+- **`--profile web`**: Tylko Frontend (UI Kit + Next.js) = **2 serwisy**
+
+**Dlaczego frontend osobno?**
+Frontend często odpalasz lokalnie (yarn dev), więc domyślnie jest wyłączony z Docker.
 
 ## 📊 Status i Zarządzanie
 
