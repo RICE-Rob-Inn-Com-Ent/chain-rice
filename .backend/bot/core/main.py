@@ -8,29 +8,15 @@ Minimal FastAPI server for AI bot integrations.
 
 import logging
 import os
-import sys
 from typing import Dict
 
 import uvicorn  # noqa
 from fastapi import FastAPI, HTTPException  # noqa
 from fastapi.middleware.cors import CORSMiddleware  # noqa
 
-# Add parent directory to path for imports
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
-
-# Import integrations
-from integration.huggingface import HuggingFaceIntegration  # noqa: E402
-from integration.openai import OpenAIIntegration  # noqa: E402
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-
-# Initialize integrations
-hf_integration = HuggingFaceIntegration()
-openai_integration = OpenAIIntegration()
 
 # FastAPI application
 app = FastAPI(
