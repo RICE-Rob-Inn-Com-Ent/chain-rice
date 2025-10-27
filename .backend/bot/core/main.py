@@ -41,7 +41,7 @@ async def root():
     return {
         "message": "AI Bot Core API",
         "version": "1.0.0",
-        "integrations": ["huggingface", "openai"],
+        "status": "operational",
     }
 
 
@@ -49,43 +49,6 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}
-
-
-@app.post("/huggingface/query")
-async def huggingface_query(request: Dict[str, str]):
-    """Query Hugging Face models."""
-    text = request.get("text", "")
-    model = request.get("model", "gpt2")
-
-    if not text:
-        raise HTTPException(status_code=400, detail="Text is required")
-
-    try:
-        # Update model if specified
-        if model != "gpt2":
-            hf_integration.model = model
-
-        response = hf_integration.query(text)
-        return {"response": response}
-    except Exception as e:
-        logger.error(f"HuggingFace query error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/openai/query")
-async def openai_query(request: Dict[str, str]):
-    """Query OpenAI models."""
-    prompt = request.get("prompt", "")
-
-    if not prompt:
-        raise HTTPException(status_code=400, detail="Prompt is required")
-
-    try:
-        response = openai_integration.query(prompt)
-        return {"response": response}
-    except Exception as e:
-        logger.error(f"OpenAI query error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 def main():
