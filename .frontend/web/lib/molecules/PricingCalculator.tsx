@@ -1,6 +1,6 @@
-'use client';
-import React, { useMemo, useState } from 'react';
-import { Button } from '../atoms/ui/Button';
+"use client";
+import React, { useMemo, useState } from "react";
+import { Button } from "../atoms/Button";
 
 export default function PricingCalculator() {
   const [features, setFeatures] = useState(6);
@@ -49,7 +49,7 @@ export default function PricingCalculator() {
       </div>
       <div className="mt-4 flex items-center justify-between">
         <div className="text-slate-300">Szacunkowy koszt</div>
-        <div className="text-2xl font-semibold gradient-text">~ {estimate.toLocaleString('pl-PL')} PLN</div>
+        <div className="text-2xl font-semibold gradient-text">~ {estimate.toLocaleString("pl-PL")} PLN</div>
       </div>
       <div className="mt-3 text-right">
         <a href="#contact">

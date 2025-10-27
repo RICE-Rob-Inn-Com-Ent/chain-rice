@@ -1,29 +1,29 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import { MessageSquare, X } from 'lucide-react';
-import { Button } from '../atoms/ui/Button';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { MessageSquare, X } from "lucide-react";
+import { Button } from "../atoms/Button";
 
 type ChatMsg = {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   text: string;
   links?: Array<{ url: string; text: string }>;
 };
 
 const ChatWidget: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [selectedGod, setSelectedGod] = useState<string>('thoth');
+  const [selectedGod, setSelectedGod] = useState<string>("thoth");
   const [messages, setMessages] = useState<ChatMsg[]>([
     {
-      role: 'assistant',
-      text: '𓅝 Witaj! Jestem Thoth, twój przewodnik po RICE. Pytaj o usługi, ceny, projekty!',
+      role: "assistant",
+      text: "𓅝 Witaj! Jestem Thoth, twój przewodnik po RICE. Pytaj o usługi, ceny, projekty!",
       links: [
-        { url: '/services', text: 'Usługi' },
-        { url: '/pricing', text: 'Cennik' },
-        { url: '/contact', text: 'Kontakt' },
+        { url: "/services", text: "Usługi" },
+        { url: "/pricing", text: "Cennik" },
+        { url: "/contact", text: "Kontakt" },
       ],
     },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [showLoRAUpload, setShowLoRAUpload] = useState(false);
   const [loraFile, setLoraFile] = useState<File | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
@@ -34,19 +34,19 @@ const ChatWidget: React.FC = () => {
 
   async function send() {
     if (!input.trim()) return;
-    const userMsg: ChatMsg = { role: 'user', text: input.trim() };
+    const userMsg: ChatMsg = { role: "user", text: input.trim() };
     setMessages((m: any) => [...m, userMsg]);
-    setInput('');
+    setInput("");
 
     try {
       // Dodaj wiadomość "thinking" z oszacowanym czasem
-      setMessages((m: any) => [...m, { role: 'assistant', text: '🤔 Thoth myśli... (~30 sekund na CPU)' }]);
+      setMessages((m: any) => [...m, { role: "assistant", text: "🤔 Thoth myśli... (~30 sekund na CPU)" }]);
 
       // Wywołaj API z całą historią konwersacji
       const response = await fetch(`/api/gods/${selectedGod}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           messages: [...messages, userMsg].map((msg) => ({
@@ -57,7 +57,7 @@ const ChatWidget: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response');
+        throw new Error("Failed to get response");
       }
 
       const data = await response.json();
@@ -71,19 +71,19 @@ const ChatWidget: React.FC = () => {
       setMessages((m: any) => {
         const newMessages = [...m];
         newMessages[newMessages.length - 1] = {
-          role: 'assistant',
+          role: "assistant",
           text: cleanContent,
           links: links,
         };
         return newMessages;
       });
     } catch (error) {
-      console.error('Chat error:', error);
+      console.error("Chat error:", error);
       setMessages((m: any) => {
         const newMessages = [...m];
         newMessages[newMessages.length - 1] = {
-          role: 'assistant',
-          text: 'Przepraszam, wystąpił błąd. Spróbuj ponownie.',
+          role: "assistant",
+          text: "Przepraszam, wystąpił błąd. Spróbuj ponownie.",
         };
         return newMessages;
       });
@@ -108,7 +108,7 @@ const ChatWidget: React.FC = () => {
 
   // Usuń linki z treści (zostaw czysty tekst)
   const removeLinksFromContent = (content: string): string => {
-    return content.replace(/\[link:[^\|]+\|[^\]]+\]/g, '').trim();
+    return content.replace(/\[link:[^\|]+\|[^\]]+\]/g, "").trim();
   };
 
   const handleLoRAUpload = async () => {
@@ -116,11 +116,11 @@ const ChatWidget: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append('file', loraFile);
-      formData.append('godId', selectedGod);
+      formData.append("file", loraFile);
+      formData.append("godId", selectedGod);
 
-      const response = await fetch('/api/lora/upload', {
-        method: 'POST',
+      const response = await fetch("/api/lora/upload", {
+        method: "POST",
         body: formData,
       });
 
@@ -128,7 +128,7 @@ const ChatWidget: React.FC = () => {
         setMessages((m) => [
           ...m,
           {
-            role: 'assistant',
+            role: "assistant",
             text: `✅ LoRA adapter "${loraFile.name}" załadowany! Thoth jest teraz dostrojony.`,
           },
         ]);
@@ -136,7 +136,7 @@ const ChatWidget: React.FC = () => {
         setShowLoRAUpload(false);
       }
     } catch (error) {
-      console.error('LoRA upload error:', error);
+      console.error("LoRA upload error:", error);
     }
   };
 
@@ -165,10 +165,10 @@ const ChatWidget: React.FC = () => {
             {messages.length === 1 && (
               <div className="mb-3 flex flex-wrap gap-2">
                 {[
-                  { text: '📦 Pakiety AI', action: 'Jakie macie pakiety AI models?' },
-                  { text: '💼 Portfolio', action: 'Jakie macie projekty?' },
-                  { text: '💰 Cennik', action: 'Ile kosztują usługi?' },
-                  { text: '📞 Kontakt', action: 'Gdzie was znaleźć?' },
+                  { text: "📦 Pakiety AI", action: "Jakie macie pakiety AI models?" },
+                  { text: "💼 Portfolio", action: "Jakie macie projekty?" },
+                  { text: "💰 Cennik", action: "Ile kosztują usługi?" },
+                  { text: "📞 Kontakt", action: "Gdzie was znaleźć?" },
                 ].map((btn, idx) => (
                   <button
                     key={idx}
@@ -182,15 +182,15 @@ const ChatWidget: React.FC = () => {
             )}
 
             {messages.map((m: any, i: number) => (
-              <div key={i} className={`mb-3 flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={i} className={`mb-3 flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`${
-                    m.role === 'user' ? 'bg-white text-black' : 'bg-white/5 text-slate-100'
+                    m.role === "user" ? "bg-white text-black" : "bg-white/5 text-slate-100"
                   } rounded-md px-3 py-2 text-sm max-w-[85%]`}
                 >
                   <div className="whitespace-pre-wrap">{m.text}</div>
                   {/* Links as buttons */}
-                  {m.role === 'assistant' && m.links && m.links.length > 0 && (
+                  {m.role === "assistant" && m.links && m.links.length > 0 && (
                     <div className="mt-2 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
                       {m.links.map((link: any, idx: number) => (
                         <a
@@ -270,14 +270,14 @@ const ChatWidget: React.FC = () => {
                 className="text-xs text-purple-400 hover:text-purple-300 transition-colors font-semibold"
                 title="Fine-tune z własnym LoRA"
               >
-                🔮 {showLoRAUpload ? 'Ukryj' : 'LoRA'}
+                🔮 {showLoRAUpload ? "Ukryj" : "LoRA"}
               </button>
             </div>
             <div className="flex items-center gap-2">
               <input
                 value={input}
                 onChange={(e: any) => setInput(e.target.value)}
-                onKeyDown={(e: any) => e.key === 'Enter' && (e.preventDefault(), send())}
+                onKeyDown={(e: any) => e.key === "Enter" && (e.preventDefault(), send())}
                 placeholder="Pytaj o usługi, ceny..."
                 className="h-10 flex-1 rounded-md border border-white/10 bg-white/5 px-3 text-slate-100 text-sm placeholder:text-slate-400 outline-none focus:border-white/30"
               />

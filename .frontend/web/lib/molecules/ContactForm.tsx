@@ -1,33 +1,33 @@
-'use client';
-import React, { useState } from 'react';
-import { Input } from '../atoms/ui/Input';
-import { Textarea } from '../atoms/ui/Textarea';
-import { Button } from '../atoms/ui/Button';
+"use client";
+import React, { useState } from "react";
+import { Input } from "../atoms/Input";
+import { Textarea } from "../atoms/Textarea";
+import { Button } from "../atoms/Button";
 
 export default function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData((e as any).currentTarget);
-    setStatus('sending');
+    setStatus("sending");
     setError(null);
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
+      const res = await fetch("/api/contact", {
+        method: "POST",
         body: JSON.stringify({
-          name: formData.get('name'),
-          email: formData.get('email'),
-          message: formData.get('message'),
+          name: formData.get("name"),
+          email: formData.get("email"),
+          message: formData.get("message"),
         }),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
-      if (!res.ok) throw new Error('Błąd wysyłki');
-      setStatus('success');
+      if (!res.ok) throw new Error("Błąd wysyłki");
+      setStatus("success");
     } catch (e: any) {
-      setError(e.message ?? 'Wystąpił błąd');
-      setStatus('error');
+      setError(e.message ?? "Wystąpił błąd");
+      setStatus("error");
     }
   }
 
@@ -44,10 +44,10 @@ export default function ContactForm() {
       {error && <div className="text-sm text-rose-400">{error}</div>}
       <div className="flex items-center justify-end">
         <Button type="submit" size="lg" variant="gradient" className="rounded-full px-6">
-          {status === 'sending' ? 'Wysyłanie…' : 'Wyślij wiadomość'}
+          {status === "sending" ? "Wysyłanie…" : "Wyślij wiadomość"}
         </Button>
       </div>
-      {status === 'success' && (
+      {status === "success" && (
         <div className="rounded-md border border-emerald-400/40 bg-emerald-400/10 p-3 text-emerald-200">
           Dziękujemy! Skontaktujemy się z Tobą wkrótce.
         </div>
