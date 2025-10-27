@@ -1,5 +1,3 @@
-version: "3.9"
-
 # Rice Mono - Unified Docker Compose
 # All services: Frontend (UI Kit + Next.js) + Backend (Data, Bot, GraphQL, Gods)
 
