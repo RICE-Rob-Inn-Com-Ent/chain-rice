@@ -519,9 +519,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.rule=Host(`grafana.rice.local`)"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
-    profiles:
-      - monitoring
-      - all
 
   # Elasticsearch - Search & Analytics
   elasticsearch:
@@ -581,9 +578,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jaeger.rule=Host(`jaeger.rice.local`)"
       - "traefik.http.services.jaeger.loadbalancer.server.port=16686"
-    profiles:
-      - monitoring
-      - all
 
 # ========================================
 # VOLUMES
