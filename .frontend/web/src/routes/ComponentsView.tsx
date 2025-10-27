@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Footer, Navbar } from '../../lib/molecules';
+import { Header, Footer } from '../../lib/molecules';
 import { Button, Card, Input, Textarea, GradientText, Section, Reveal } from '../../lib/atoms';
 
 export default function ComponentsView() {
