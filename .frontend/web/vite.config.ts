@@ -7,10 +7,16 @@ import autoprefixer from 'autoprefixer';
 export default defineConfig({
   plugins: [react()],
   root: '.',
+  publicDir: 'public',
   server: {
     port: 3001,
-    strictPort: true,
+    strictPort: false,
     open: true,
+  },
+  resolve: {
+    alias: {
+      '@': '/home/mrDinkelman/rice-mono/.frontend/web',
+    },
   },
   css: {
     postcss: {
