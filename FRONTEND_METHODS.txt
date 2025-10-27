@@ -1,0 +1,132 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║  🎨  TRI SPOSOBY URUCHAMIANIA FRONTENDU  🎨                         ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1️⃣  LOKALNIE (yarn dev) - make web-dev
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Komenda:
+   make web-dev
+
+Co robi:
+   ✅ yarn install
+   ✅ yarn dev
+   ✅ UI Kit (Vite) - Port 5173
+   ✅ Next.js - Port 3002
+   ❌ BEZ Dockera!
+   ❌ BEZ Dockerfile!
+
+Środowisko:
+   Host (lokalnie na Twoim kompie)
+
+Szybkość:
+   ⚡⚡⚡ NAJSZYBSZE - natywny hot reload
+
+Kiedy używać:
+   👨‍💻 Development frontend
+   🎨 Szybkie zmiany w UI
+   🐛 Debugowanie React/Next.js
+   📝 Praca nad komponentami
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2️⃣  W DOCKERZE (profile web) - make web-docker
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Komenda:
+   make web-docker
+   # LUB
+   docker-compose --profile web up -d
+
+Co robi:
+   ✅ Buduje z .frontend/web/Dockerfile
+   ✅ Buduje z .project/web/Dockerfile
+   ✅ Uruchamia kontenery Docker
+   ✅ UI Kit - Port 5173
+   ✅ Next.js - Port 3001
+   ✅ W DOCKERZE!
+
+Środowisko:
+   Docker containers (izolowane)
+
+Szybkość:
+   🐌 Wolniejsze - Docker overhead + polling
+
+Kiedy używać:
+   🧪 Testing w środowisku production-like
+   🤖 CI/CD pipelines
+   📦 Chcesz mieć wszystko w Docker
+   🚀 Deployment testing
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3️⃣  WSZYSTKO W DOCKERZE - make all
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Komenda:
+   make all
+
+Co robi:
+   ✅ Backend (6 serwisów)
+   ✅ Gods (6 serwisów)
+   ✅ Monitoring (7 serwisów)
+   ✅ Frontend w Docker (2 serwisy)
+   = 21 SERWISÓW w Docker!
+
+Środowisko:
+   Wszystko w Docker containers
+
+Szybkość:
+   🐢 Najwolniejsze - 21 kontenerów
+
+Kiedy używać:
+   🏭 Production setup
+   🎭 Full stack testing
+   🚢 Deployment simulation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 PORÓWNANIE:
+
+┌──────────────┬─────────────┬──────────────┬──────────────┐
+│ Feature      │ make        │ make         │ make all     │
+│              │ web-dev     │ web-docker   │              │
+├──────────────┼─────────────┼──────────────┼──────────────┤
+│ Dockerfile   │ ❌ NIE      │ ✅ TAK       │ ✅ TAK       │
+│ Docker       │ ❌ NIE      │ ✅ TAK       │ ✅ TAK       │
+│ Szybkość     │ ⚡⚡⚡       │ 🐌           │ 🐢           │
+│ Hot Reload   │ ✅ Natywny  │ ⚠️ Polling   │ ⚠️ Polling   │
+│ Debugowanie  │ ✅ Łatwe    │ ⚠️ Trudne    │ ⚠️ Trudne    │
+│ Development  │ ⭐⭐⭐      │ ⭐           │ ⭐           │
+│ Production   │ ❌          │ ⭐⭐         │ ⭐⭐⭐       │
+│ Backend      │ Osobno      │ Osobno       │ ✅ Razem     │
+└──────────────┴─────────────┴──────────────┴──────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 ZALECENIA:
+
+Development Frontend:
+   make up          # Backend w Docker
+   make web-dev     # Frontend lokalnie
+   ⭐ RECOMMENDED!
+
+Testing w Docker:
+   make all         # Wszystko w Docker
+   
+CI/CD:
+   make all         # Full Docker setup
+
+Production:
+   make all         # Wszystko w Docker
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 PROTIP:
+
+Backend zawsze w Docker (make up), frontend wybierz metodę:
+• Development → make web-dev (lokalnie)
+• Testing     → make web-docker (Docker)
+• Production  → make all (wszystko)
+

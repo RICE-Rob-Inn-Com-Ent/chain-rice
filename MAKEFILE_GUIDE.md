@@ -3,10 +3,13 @@
 ## 🎯 Trzy Sposoby Uruchamiania Frontendu
 
 ### 1. 🎨 Frontend Lokalnie (BEZ Dockera) - `make web-dev`
+
 ```bash
 make web-dev
 ```
+
 **Co robi:**
+
 - Odpala `yarn dev` lokalnie
 - UI Kit (Vite) na porcie 5173
 - Next.js na porcie 3002
@@ -15,6 +18,7 @@ make web-dev
 - **BEZ DOCKERA!**
 
 **Kiedy używać:**
+
 - Development frontend
 - Szybkie zmiany w UI
 - Debugowanie React/Next.js
@@ -22,12 +26,15 @@ make web-dev
 ---
 
 ### 2. 🐳 Frontend w Dockerze - `make web-docker` lub `--profile web`
+
 ```bash
 make web-docker
 # LUB
 docker-compose --profile web up -d
 ```
+
 **Co robi:**
+
 - Buduje obrazy z **Dockerfile**
 - `.frontend/web/Dockerfile` dla UI Kit
 - `.project/web/Dockerfile` dla Next.js
@@ -35,6 +42,7 @@ docker-compose --profile web up -d
 - **W DOCKERZE!**
 
 **Kiedy używać:**
+
 - Testing w środowisku podobnym do production
 - CI/CD pipelines
 - Chcesz mieć WSZYSTKO w Dockerze
@@ -42,10 +50,13 @@ docker-compose --profile web up -d
 ---
 
 ### 3. 🚀 Wszystko w Dockerze - `make all`
+
 ```bash
 make all
 ```
+
 **Co robi:**
+
 - Backend + Gods + Monitoring + **Frontend w Dockerze**
 - Wszystkie 21 serwisów
 - Production-like setup
@@ -55,6 +66,7 @@ make all
 ## 📦 Podstawowe Komendy
 
 ### Docker Management
+
 ```bash
 make up          # Backend + Gods + Monitoring (19 serwisów)
 make down        # Stop wszystko
@@ -65,6 +77,7 @@ make clean       # Usuń wszystko + wolumeny
 ```
 
 ### Frontend
+
 ```bash
 make web-dev     # Frontend lokalnie (yarn dev) ← NAJCZĘŚCIEJ
 make web-build   # Build lokalnie
@@ -72,6 +85,7 @@ make web-docker  # Frontend w Dockerze
 ```
 
 ### Profiles (konkretne grupy)
+
 ```bash
 make backend     # Tylko backend (6 serwisów)
 make gods        # Tylko Gods AI (6 serwisów)
@@ -80,6 +94,7 @@ make all         # WSZYSTKO (21 serwisów)
 ```
 
 ### Utilities
+
 ```bash
 make build           # Rebuild wszystko
 make build-nocache   # Rebuild bez cache
@@ -91,6 +106,7 @@ make prune           # Wyczyść Docker system
 ## 🎨 Typowy Workflow
 
 ### Development (zalecane)
+
 ```bash
 # 1. Uruchom backend w Dockerze
 make up
@@ -106,6 +122,7 @@ make logs
 ```
 
 ### Testing w Docker
+
 ```bash
 # Wszystko w Dockerze (jak production)
 make all
@@ -118,6 +135,7 @@ make down
 ```
 
 ### Production Deploy
+
 ```bash
 # Build bez cache
 make build-nocache
@@ -133,16 +151,16 @@ make ps
 
 ## 🔍 Różnice: web-dev vs web-docker
 
-| Feature | `make web-dev` | `make web-docker` |
-|---------|----------------|-------------------|
-| Środowisko | Lokalnie (host) | Docker kontenery |
-| Szybkość | ⚡ Bardzo szybkie | 🐢 Wolniejsze |
-| Hot Reload | ✅ Natywny | ⚠️ Przez polling |
-| Dockerfile | ❌ Nie używa | ✅ Używa |
-| Porty | 5173, 3002 | 5173, 3001 |
-| Zależności | Lokalne node_modules | Docker volumes |
-| Debugowanie | 🎯 Łatwe | 🔧 Trudniejsze |
-| Production-like | ❌ Nie | ✅ Tak |
+| Feature         | `make web-dev`       | `make web-docker` |
+| --------------- | -------------------- | ----------------- |
+| Środowisko      | Lokalnie (host)      | Docker kontenery  |
+| Szybkość        | ⚡ Bardzo szybkie    | 🐢 Wolniejsze     |
+| Hot Reload      | ✅ Natywny           | ⚠️ Przez polling  |
+| Dockerfile      | ❌ Nie używa         | ✅ Używa          |
+| Porty           | 5173, 3002           | 5173, 3001        |
+| Zależności      | Lokalne node_modules | Docker volumes    |
+| Debugowanie     | 🎯 Łatwe             | 🔧 Trudniejsze    |
+| Production-like | ❌ Nie               | ✅ Tak            |
 
 ---
 
@@ -180,7 +198,5 @@ docker-compose logs -f thoth
 
 ---
 
-**Domyślnie (`make up`)**: Backend + Gods + Monitoring = 19 serwisów
-**Profile web**: Frontend w Docker = +2 serwisy = 21 total
-**Local dev (`make web-dev`)**: Frontend poza Dockerem (0 serwisów Docker)
-
+**Domyślnie (`make up`)**: Backend + Gods + Monitoring = 19 serwisów **Profile web**: Frontend w Docker = +2 serwisy =
+21 total **Local dev (`make web-dev`)**: Frontend poza Dockerem (0 serwisów Docker)
