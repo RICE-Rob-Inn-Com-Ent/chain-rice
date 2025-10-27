@@ -1,5 +1,5 @@
-# Rice Mono - Unified Docker Compose
-# All services: Frontend (UI Kit + Next.js) + Backend (Data, Bot, GraphQL, Gods)
+# Rice Mono - Complete Docker Compose
+# All services: Frontend, Backend, Gods, Monitoring & Observability
 
 services:
   # ========================================
@@ -26,6 +26,10 @@ services:
     networks:
       - rice-frontend
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ui-kit.rule=Host(`ui.rice.local`)"
+      - "traefik.http.services.ui-kit.loadbalancer.server.port=5173"
 
   # Next.js Web Application
   nextjs-web:
@@ -54,6 +58,10 @@ services:
       - graphql
       - ui-kit
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextjs.rule=Host(`app.rice.local`)"
+      - "traefik.http.services.nextjs.loadbalancer.server.port=3001"
 
   # ========================================
   # DATABASE LAYER
@@ -146,6 +154,10 @@ services:
       - rice-backend
       - rice-frontend
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.graphql.rule=Host(`api.rice.local`)"
+      - "traefik.http.services.graphql.loadbalancer.server.port=4000"
 
   # ========================================
   # BOT SERVICES
@@ -188,126 +200,416 @@ services:
   # GODS - AI SPECIALIZED SERVICES
   # ========================================
 
-  # Thoth - God of Knowledge (Text Processing)
+  # ⚱️ Thoth - God of Knowledge (Text Processing)
   thoth:
     build:
       context: .backend/bot/core/gods/thoth
       dockerfile: Dockerfile
+    image: thoth:1
     container_name: rice-god-thoth
+    labels:
+      - "god.name=Thoth"
+      - "god.icon=📜"
+      - "god.domain=Knowledge & Text"
+      - "god.description=Mistral 7B Q4 + OCR + Translation"
+      - "traefik.enable=true"
+      - "traefik.http.routers.thoth.rule=Host(`thoth.rice.local`)"
+      - "traefik.http.services.thoth.loadbalancer.server.port=8000"
     ports:
       - "8001:8000"
       - "11434:11434"
     volumes:
-      - ollama-thoth:/root/.ollama
+      - thoth-models:/root/.ollama
+      - thoth-lora:/lora-adapters
+      - model-cache:/cache/models:rw
     environment:
       - GOD_NAME=Thoth
       - GOD_ID=thoth
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
       - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
+      - OLLAMA_NUM_PARALLEL=2
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_KEEP_ALIVE=3m
+      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
     networks:
       - rice-backend
+      - pantheon
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
 
-  # Ra - God of Light (Graphics & Image Generation)
+  # ☀️ Ra - God of Light (Graphics & Image Generation)
   ra:
     build:
       context: .backend/bot/core/gods/ra
       dockerfile: Dockerfile
+    image: ra:1
     container_name: rice-god-ra
+    labels:
+      - "god.name=Ra"
+      - "god.icon=☀️"
+      - "god.domain=Graphics & Images"
+      - "god.description=Stable Diffusion 2.1 + RealESRGAN"
+      - "traefik.enable=true"
+      - "traefik.http.routers.ra.rule=Host(`ra.rice.local`)"
+      - "traefik.http.services.ra.loadbalancer.server.port=8000"
     ports:
       - "8002:8000"
     volumes:
-      - models-ra:/models
-      - lora-ra:/lora-adapters
+      - ra-models:/models
+      - ra-lora:/lora-adapters
+      - model-cache:/cache/models:rw
     environment:
       - GOD_NAME=Ra
       - GOD_ID=ra
+      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
     networks:
       - rice-backend
+      - pantheon
     restart: unless-stopped
+    profiles:
+      - gods
+      - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 180s
 
-  # Isis - Goddess of Healing (Medical AI)
+  # ✨ Isis - Goddess of Healing (Medical AI)
   isis:
     build:
       context: .backend/bot/core/gods/isis
       dockerfile: Dockerfile
+    image: isis:1
     container_name: rice-god-isis
+    labels:
+      - "god.name=Isis"
+      - "god.icon=✨"
+      - "god.domain=Medical & Healing"
+      - "god.description=Monai + Medical Imaging"
+      - "traefik.enable=true"
+      - "traefik.http.routers.isis.rule=Host(`isis.rice.local`)"
+      - "traefik.http.services.isis.loadbalancer.server.port=8000"
     ports:
       - "8003:8000"
     volumes:
-      - models-isis:/models
-      - lora-isis:/lora-adapters
+      - isis-models:/models
+      - isis-lora:/lora-adapters
+      - model-cache:/cache/models:rw
     environment:
       - GOD_NAME=Isis
       - GOD_ID=isis
+      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
     networks:
       - rice-backend
+      - pantheon
     restart: unless-stopped
+    profiles:
+      - gods
+      - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
 
-  # Bastet - Goddess of Vision (Computer Vision)
+  # 🐱 Bastet - Goddess of Vision (Computer Vision)
   bastet:
     build:
       context: .backend/bot/core/gods/bastet
       dockerfile: Dockerfile
+    image: bastet:1
     container_name: rice-god-bastet
+    labels:
+      - "god.name=Bastet"
+      - "god.icon=🐱"
+      - "god.domain=Computer Vision"
+      - "god.description=InsightFace + Pose + Detection"
+      - "traefik.enable=true"
+      - "traefik.http.routers.bastet.rule=Host(`bastet.rice.local`)"
+      - "traefik.http.services.bastet.loadbalancer.server.port=8000"
     ports:
       - "8004:8000"
     volumes:
-      - models-bastet:/models
-      - lora-bastet:/lora-adapters
+      - bastet-models:/models
+      - bastet-lora:/lora-adapters
+      - model-cache:/cache/models:rw
     environment:
       - GOD_NAME=Bastet
       - GOD_ID=bastet
+      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
     networks:
       - rice-backend
+      - pantheon
     restart: unless-stopped
+    profiles:
+      - gods
+      - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
 
-  # Maat - Goddess of Justice (Legal Analysis)
+  # ⚖️ Maat - Goddess of Justice (Legal Analysis)
   maat:
     build:
       context: .backend/bot/core/gods/maat
       dockerfile: Dockerfile
+    image: maat:1
     container_name: rice-god-maat
+    labels:
+      - "god.name=Maat"
+      - "god.icon=⚖️"
+      - "god.domain=Legal & Justice"
+      - "god.description=Mistral 7B Q4 + Legal Analysis"
+      - "traefik.enable=true"
+      - "traefik.http.routers.maat.rule=Host(`maat.rice.local`)"
+      - "traefik.http.services.maat.loadbalancer.server.port=8000"
     ports:
       - "8005:8000"
       - "11438:11434"
     volumes:
-      - ollama-maat:/root/.ollama
-      - models-maat:/models
-      - lora-maat:/lora-adapters
+      - maat-models:/root/.ollama
+      - maat-lora:/lora-adapters
+      - model-cache:/cache/models:rw
     environment:
       - GOD_NAME=Maat
       - GOD_ID=maat
+      - OLLAMA_HOST=0.0.0.0
       - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
+      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
     networks:
       - rice-backend
+      - pantheon
     restart: unless-stopped
+    profiles:
+      - gods
+      - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
 
-  # Khnum - God of Wealth (Financial Analysis)
+  # 💰 Khnum - God of Wealth (Financial Analysis)
   khnum:
     build:
       context: .backend/bot/core/gods/khnum
       dockerfile: Dockerfile
+    image: khnum:1
     container_name: rice-god-khnum
+    labels:
+      - "god.name=Khnum"
+      - "god.icon=💰"
+      - "god.domain=Finance & Wealth"
+      - "god.description=Mistral 7B Q4 + Financial Analysis"
+      - "traefik.enable=true"
+      - "traefik.http.routers.khnum.rule=Host(`khnum.rice.local`)"
+      - "traefik.http.services.khnum.loadbalancer.server.port=8000"
     ports:
       - "8006:8000"
       - "11439:11434"
     volumes:
-      - ollama-khnum:/root/.ollama
-      - models-khnum:/models
-      - lora-khnum:/lora-adapters
+      - khnum-models:/root/.ollama
+      - khnum-lora:/lora-adapters
+      - model-cache:/cache/models:rw
     environment:
       - GOD_NAME=Khnum
       - GOD_ID=khnum
+      - OLLAMA_HOST=0.0.0.0
       - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
+      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
     networks:
       - rice-backend
+      - pantheon
     restart: unless-stopped
+    profiles:
+      - gods
+      - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
+
+  # ========================================
+  # MONITORING & OBSERVABILITY STACK
+  # ========================================
+
+  # Traefik - Reverse Proxy & Load Balancer
+  traefik:
+    image: traefik:v2.11
+    container_name: rice-traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./.devcontainer/config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+    networks:
+      - rice-frontend
+      - rice-backend
+      - pantheon
+    restart: unless-stopped
+    profiles:
+      - monitoring
+      - all
+
+  # Prometheus - Metrics Collection
+  prometheus:
+    image: prom/prometheus:v2.49.1
+    container_name: rice-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./.devcontainer/config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - rice-backend
+      - pantheon
+    restart: unless-stopped
+    profiles:
+      - monitoring
+      - all
+
+  # Loki - Log Aggregation
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: rice-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./.devcontainer/config/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - rice-backend
+      - pantheon
+    restart: unless-stopped
+    profiles:
+      - monitoring
+      - all
+
+  # Grafana - Visualization & Dashboards
+  grafana:
+    image: grafana/grafana:10.3.1
+    container_name: rice-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.devcontainer/config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    networks:
+      - rice-backend
+      - pantheon
+    depends_on:
+      - prometheus
+      - loki
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.rice.local`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    profiles:
+      - monitoring
+      - all
+
+  # Elasticsearch - Search & Analytics
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: rice-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - rice-backend
+    restart: unless-stopped
+    profiles:
+      - monitoring
+      - all
+
+  # Logstash - Log Processing Pipeline
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.0
+    container_name: rice-logstash
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    volumes:
+      - ./.devcontainer/config/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./.devcontainer/config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    networks:
+      - rice-backend
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+    profiles:
+      - monitoring
+      - all
+
+  # Jaeger - Distributed Tracing
+  jaeger:
+    image: jaegertracing/all-in-one:1.54
+    container_name: rice-jaeger
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+    networks:
+      - rice-backend
+      - pantheon
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jaeger.rule=Host(`jaeger.rice.local`)"
+      - "traefik.http.services.jaeger.loadbalancer.server.port=16686"
+    profiles:
+      - monitoring
+      - all
 
 # ========================================
 # VOLUMES
@@ -321,35 +623,49 @@ volumes:
     driver: local
 
   # Ollama model volumes for gods with Ollama
-  ollama-thoth:
+  thoth-models:
     driver: local
-  ollama-maat:
+  maat-models:
     driver: local
-  ollama-khnum:
+  khnum-models:
     driver: local
 
   # Model storage for each god
-  models-ra:
+  ra-models:
     driver: local
-  models-isis:
+  isis-models:
     driver: local
-  models-bastet:
-    driver: local
-  models-maat:
-    driver: local
-  models-khnum:
+  bastet-models:
     driver: local
 
   # LoRA adapter storage for each god
-  lora-ra:
+  thoth-lora:
     driver: local
-  lora-isis:
+  ra-lora:
     driver: local
-  lora-bastet:
+  isis-lora:
     driver: local
-  lora-maat:
+  bastet-lora:
     driver: local
-  lora-khnum:
+  maat-lora:
+    driver: local
+  khnum-lora:
+    driver: local
+
+  # Shared caches
+  bazel-cache:
+    driver: local
+  model-cache:
+    driver: local
+
+  # Monitoring volumes
+  prometheus-data:
+    driver: local
+  loki-data:
+    driver: local
+  grafana-data:
+    driver: local
+  elasticsearch-data:
     driver: local
 
 # ========================================
@@ -363,3 +679,6 @@ networks:
   rice-backend:
     driver: bridge
     name: rice-backend
+  pantheon:
+    driver: bridge
+    name: pantheon
