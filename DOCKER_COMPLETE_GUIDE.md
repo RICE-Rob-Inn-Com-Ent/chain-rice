@@ -85,8 +85,7 @@ Docker Compose używa profili:
 - **Bez profilu** (`up -d`): Backend + Gods + Monitoring = **19 serwisów** (WSZYSTKO poza frontendem)
 - **`--profile web`**: Tylko Frontend (UI Kit + Next.js) = **2 serwisy**
 
-**Dlaczego frontend osobno?**
-Frontend często odpalasz lokalnie (yarn dev), więc domyślnie jest wyłączony z Docker.
+**Dlaczego frontend osobno?** Frontend często odpalasz lokalnie (yarn dev), więc domyślnie jest wyłączony z Docker.
 
 ## 📊 Status i Zarządzanie
 
