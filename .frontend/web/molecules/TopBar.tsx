@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ThemeToggle from "../atoms/ThemeToggle";
+import ThemeToggle from "../components/ThemeToggle";
 
 /**
  * Navbar - Responsive navigation bar
