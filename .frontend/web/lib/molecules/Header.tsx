@@ -13,9 +13,9 @@ interface HeaderProps {
  */
 const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
-    <div className="flex min-h-screen flex-col">
+    <header className="flex min-h-screen flex-col">
       <Navbar />
-    </div>
+    </header>
   );
 };
 
