@@ -6,3 +6,12 @@ function App() {
 }
 
 export default App;
+
+const rootEl = document.getElementById("root");
+if (!rootEl) throw new Error("Root element not found");
+
+createRoot(rootEl).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
