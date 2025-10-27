@@ -1,12 +1,8 @@
 import React from "react";
-import { Header } from "@rice/ui-kit/lib";
-
+import Header from "./lib/molecules/Header";
 
 function App() {
-  return (
-    <Header>
-    </Header>
-  );
+  return <Header />;
 }
 
 export default App;
