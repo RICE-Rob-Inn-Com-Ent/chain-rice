@@ -1,6 +1,6 @@
-'use client';
-import React from 'react';
-import { ThemeToggle } from '@atoms';
+"use client";
+import React from "react";
+import ThemeToggle from "../atoms/ThemeToggle";
 
 /**
  * Navbar - Responsive navigation bar
@@ -13,7 +13,10 @@ const Navbar: React.FC = () => {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="/" className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <a
+              href="/"
+              className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent"
+            >
               Rice Mono
             </a>
           </div>

@@ -1,0 +1,46 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║  ✅  BŁĄD NAPRAWIONY - Cannot find module '@atoms/ThemeToggle'     ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+🔍 PROBLEM:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Next.js próbował zaimportować @atoms/ThemeToggle ale:
+• Next.js używa aliasu @atoms w next.config.mjs
+• UI Kit (.frontend/web) NIE ma aliasu @atoms
+• Brakował komponent Navbar.tsx
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ROZWIĄZANIE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Utworzono Navbar.tsx:
+   .frontend/web/lib/molecules/Navbar.tsx
+
+2. Zmieniono import w Navbar:
+   ❌ import { ThemeToggle } from '@atoms';
+   ✅ import ThemeToggle from '../atoms/ThemeToggle';
+
+3. Dodano eksport Navbar w index.ts:
+   .frontend/web/lib/molecules/index.ts
+
+4. Dodano Navbar do Header.tsx:
+   .frontend/web/lib/molecules/Header.tsx
+
+5. Wyczyszczono cache Next.js:
+   rm -rf .project/web/.next
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 TERAZ DZIAŁA:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+make web-dev
+
+✅ UI Kit (Vite) na porcie 5173
+✅ Next.js na porcie 3002
+✅ Navbar z ThemeToggle działa!
+
