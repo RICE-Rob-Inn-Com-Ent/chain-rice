@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import Header from "./molecules/Header";
+import Footer from "./molecules/Footer";
 import "./index.css";
 
 function App() {
