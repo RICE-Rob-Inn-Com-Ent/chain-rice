@@ -3,9 +3,9 @@
  * Export all god model UI components
  */
 
-export { default as Bastet } from './BastetModel';
-export { default as Isis } from './IsisModel';
-export { default as Khnum } from './KhnumModel';
-export { default as Maat } from './MaatModel';
-export { default as RaModel } from './RaModel';
-export { default as ThothModel } from './ThothModel';
+export { default as Bastet } from './Bastet';
+export { default as Isis } from './Isis';
+export { default as Khnum } from './Khnum';
+export { default as Maat } from './Maat';
+export { default as Ra } from './Ra';
+export { default as Thoth } from './Thoth';
