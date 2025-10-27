@@ -8,6 +8,13 @@ function App() {
   return (
     <>
       <Header />
+      <main>
+        <HomePage />
+        <AboutPage />
+        <ServicesPage />
+        <TeamPage />
+        <ContactPage />
+      </main>
       <Footer />
     </>
   );
