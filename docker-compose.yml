@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 # Rice Mono - Unified Docker Compose
 # All services: Frontend (UI Kit + Next.js) + Backend (Data, Bot, GraphQL, Gods)
@@ -321,7 +321,7 @@ volumes:
     driver: local
   postgres-data:
     driver: local
-  
+
   # Ollama model volumes for gods with Ollama
   ollama-thoth:
     driver: local
@@ -329,7 +329,7 @@ volumes:
     driver: local
   ollama-khnum:
     driver: local
-  
+
   # Model storage for each god
   models-ra:
     driver: local
@@ -341,7 +341,7 @@ volumes:
     driver: local
   models-khnum:
     driver: local
-  
+
   # LoRA adapter storage for each god
   lora-ra:
     driver: local
@@ -365,4 +365,3 @@ networks:
   rice-backend:
     driver: bridge
     name: rice-backend
-
