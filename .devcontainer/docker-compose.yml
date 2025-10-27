@@ -1,13 +1,11 @@
-version: "3.8"
-
 services:
   # ⚱️ Thoth - God of Knowledge (Mistral + OCR + Translation + Document Analysis)
   thoth:
     build:
       context: ./gods/thoth
       dockerfile: Dockerfile
-    image: ai-god-thoth:latest
-    container_name: ai-god-thoth
+    image: thoth:1
+    container_name: thoth
     labels:
       - "god.name=Thoth"
       - "god.icon=📜"
@@ -41,18 +39,18 @@ services:
       retries: 3
       start_period: 120s
 
-  # ☀️ Ra - God of Light (Graphics Generation: SD 2.1, FLUX, RealESRGAN, RVM)
+  # ☀️ Ra - God of Light (Graphics Generation: Stable Diffusion 2.1 - 6GB VRAM)
   ra:
     build:
       context: ./gods/ra
       dockerfile: Dockerfile
-    image: ai-god-ra:latest
-    container_name: ai-god-ra
+    image: ra:1
+    container_name: ra
     labels:
       - "god.name=Ra"
       - "god.icon=☀️"
       - "god.domain=Graphics & Images"
-      - "god.description=Stable Diffusion + Upscaling"
+      - "god.description=Stable Diffusion 2.1 FP16 + RealESRGAN + RVM (6GB VRAM)"
     ports:
       - "8002:8000"
     volumes:
@@ -80,8 +78,8 @@ services:
     build:
       context: ./gods/isis
       dockerfile: Dockerfile
-    image: ai-god-isis:latest
-    container_name: ai-god-isis
+    image: isis:1
+    container_name: isis
     labels:
       - "god.name=Isis"
       - "god.icon=✨"
@@ -114,8 +112,8 @@ services:
     build:
       context: ./gods/bastet
       dockerfile: Dockerfile
-    image: ai-god-bastet:latest
-    container_name: ai-god-bastet
+    image: bastet:1
+    container_name: bastet
     labels:
       - "god.name=Bastet"
       - "god.icon=🐱"
@@ -148,8 +146,8 @@ services:
     build:
       context: ./gods/maat
       dockerfile: Dockerfile
-    image: ai-god-maat:latest
-    container_name: ai-god-maat
+    image: maat:1
+    container_name: maat
     labels:
       - "god.name=Maat"
       - "god.icon=⚖️"
@@ -185,8 +183,8 @@ services:
     build:
       context: ./gods/khnum
       dockerfile: Dockerfile
-    image: ai-god-khnum:latest
-    container_name: ai-god-khnum
+    image: khnum:1
+    container_name: khnum
     labels:
       - "god.name=Khnum"
       - "god.icon=💰"

@@ -1,0 +1,324 @@
+'use client';
+import { useState, useRef, useEffect } from 'react';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  links?: Array<{ url: string; text: string }>;
+}
+
+export default function ThothUI() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  // Login handler
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginEmail && loginPassword) {
+      setIsLoggedIn(true);
+    }
+  };
+
+  // If not logged in - show login screen
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="text-7xl mb-4">📜</div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 bg-clip-text text-transparent mb-2">
+              Thoth Document App
+            </h1>
+            <p className="text-gray-400 text-sm">Analiza dokumentów i asystent tekstowy</p>
+          </div>
+
+          {/* Login Form */}
+          <div className="bg-gray-900/80 backdrop-blur rounded-2xl border border-gray-700 p-8">
+            <h2 className="text-xl font-bold mb-6 text-center">Zaloguj się</h2>
+            <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-2">Email</label>
+                <input
+                  type="text"
+                  name="demo-email"
+                  autoComplete="off"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  placeholder="alex@example.com"
+                  className="w-full bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Hasło</label>
+                <input
+                  type="password"
+                  name="demo-password"
+                  autoComplete="new-password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white py-3 rounded-lg font-bold transition-all"
+              >
+                🔐 Zaloguj się
+              </button>
+            </form>
+            <div className="mt-6 text-center text-sm text-gray-500">
+              🎮 Demo mode - wpisz dowolny email i hasło aby wejść
+            </div>
+          </div>
+
+          {/* Info */}
+          <div className="mt-6 bg-cyan-900/20 rounded-lg p-4 border border-cyan-500/30 text-sm text-gray-300">
+            <div className="font-semibold text-cyan-400 mb-2">💡 Co możesz zrobić:</div>
+            <ul className="space-y-1">
+              <li>• Analizować dokumenty (TXT, PDF)</li>
+              <li>• OCR - wyciąganie tekstu z obrazów</li>
+              <li>• Tłumaczenia wielojęzyczne</li>
+              <li>• AI asystent tekstowy</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Main app (after login)
+  return <ThothApp />;
+}
+
+function ThothApp() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize welcome message on client side only (prevents hydration mismatch)
+  useEffect(() => {
+    setMessages([
+      {
+        role: 'assistant',
+        content:
+          '𓅝 Witaj! Jestem Thoth, twój przewodnik po RICE.\n\nPomagam w:\n• Nawigacji po stronie\n• Informacjach o usługach i cenach\n• Kontakcie z zespołem\n• Poznaniu naszych projektów\n\nO co chcesz zapytać?\n\n───────\n📋 Przydatne linki:',
+        timestamp: new Date(),
+        links: [
+          { url: '/services', text: 'Nasze usługi' },
+          { url: '/pricing', text: 'Cennik' },
+          { url: '/portfolio', text: 'Portfolio' },
+          { url: '/contact', text: 'Kontakt' },
+        ],
+      },
+    ]);
+  }, []);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userMessage: Message = {
+      role: 'user',
+      content: input,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // Wywołaj prawdziwe API Thoth
+      const response = await fetch('/api/gods/thoth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Wyekstraktuj linki z odpowiedzi
+      const content = data.message.content;
+      const links = extractLinks(content);
+      const cleanContent = removeLinksFromContent(content);
+
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: cleanContent,
+        timestamp: new Date(),
+        links: links,
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error: any) {
+      console.error('Error:', error);
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: `❌ Błąd: ${error.message}. Czekaj ~30 sekund na odpowiedź (Thoth na CPU).`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Funkcja do wyciągania linków z formatu [link:URL|Text]
+  const extractLinks = (content: string): Array<{ url: string; text: string }> => {
+    const linkRegex = /\[link:([^\|]+)\|([^\]]+)\]/g;
+    const links: Array<{ url: string; text: string }> = [];
+    let match;
+
+    while ((match = linkRegex.exec(content)) !== null) {
+      links.push({
+        url: match[1].trim(),
+        text: match[2].trim(),
+      });
+    }
+
+    return links;
+  };
+
+  // Usuń linki z treści (zostaw czysty tekst)
+  const removeLinksFromContent = (content: string): string => {
+    return content.replace(/\[link:[^\|]+\|[^\]]+\]/g, '').trim();
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white p-4">
+      {/* Header */}
+      <div className="max-w-5xl mx-auto mb-6">
+        <div className="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-2xl p-6 border border-cyan-500/30">
+          <div className="flex items-center gap-4">
+            <div className="text-6xl">📜</div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+                Thoth - Bóg Wiedzy
+              </h1>
+              <p className="text-sm text-gray-400 mt-1">Mistral 7B Q4_K_M (Quantized)</p>
+              <div className="flex gap-4 mt-2 text-xs text-cyan-400">
+                <span>✓ Sales Assistant</span>
+                <span>✓ Site Navigator</span>
+                <span>✓ Product Expert</span>
+                <span>✓ Link Provider</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Chat Container */}
+      <div
+        className="max-w-5xl mx-auto bg-gray-900/50 backdrop-blur rounded-2xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col"
+        style={{ height: 'calc(100vh - 200px)' }}
+      >
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div
+                className={`max-w-[70%] rounded-2xl p-4 ${
+                  msg.role === 'user'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
+                    : 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-100 border border-cyan-500/30'
+                }`}
+              >
+                <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
+                <div className="text-xs opacity-50 mt-2" suppressHydrationWarning>
+                  {msg.timestamp.toLocaleTimeString()}
+                </div>
+
+                {/* Links */}
+                {msg.role === 'assistant' && msg.links && msg.links.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-gray-600/30">
+                    <div className="flex flex-wrap gap-2">
+                      {msg.links.map((link, idx) => (
+                        <a
+                          key={idx}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-cyan-500/50 font-semibold flex items-center gap-1"
+                        >
+                          {link.text}
+                          <span className="text-[10px]">→</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-4 border border-cyan-500/30">
+                <div className="flex gap-2">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-100"></div>
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-200"></div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <form onSubmit={handleSubmit} className="border-t border-gray-700 p-4 bg-gray-900/80">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Pytaj o usługi, ceny, portfolio... Thoth ci pomoże!"
+              className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"
+              disabled={isLoading}
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 disabled:from-gray-700 disabled:to-gray-800 text-white px-6 py-2 rounded-lg font-semibold transition-all disabled:cursor-not-allowed"
+            >
+              {isLoading ? '⏳' : '📤'}
+            </button>
+          </div>
+          <div className="mt-2 text-xs text-gray-500">
+            💡 Przykłady: "Gdzie was znaleźć?", "Ile kosztują usługi?", "Jakie macie projekty?"
+          </div>
+        </form>
+      </div>
+
+      {/* Footer */}
+      <div className="max-w-5xl mx-auto mt-4 text-center text-xs text-gray-500">
+        𓅝 Thoth Sales Agent • Mistral 7B Q4_K_M • Twój przewodnik po RICE
+      </div>
+    </div>
+  );
+}

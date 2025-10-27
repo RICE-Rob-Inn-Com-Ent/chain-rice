@@ -1,0 +1,20 @@
+{
+  "name": "rice-mono",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rice Monorepo - UI Kit & Next.js Web Application",
+  "workspaces": [".frontend/web", ".project/web"],
+  "scripts": {
+    "dev": "concurrently -n \"ui-kit,next\" -c \"cyan,magenta\" \"yarn workspace @rice-mono/ui-kit dev\" \"yarn workspace rice-web dev\"",
+    "build": "yarn workspaces run build",
+    "clean": "yarn workspaces run clean",
+    "lint": "yarn workspaces run lint",
+    "typecheck": "yarn workspaces run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

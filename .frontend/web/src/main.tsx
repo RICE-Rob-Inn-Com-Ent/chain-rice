@@ -1,19 +1,13 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import './styles.css';
-import { ComponentGallery } from './ComponentGallery';
+import App from './App.tsx';
+import '../index.css';
 
-function App() {
-  return (
-    <main className="p-8">
-      <ComponentGallery />
-    </main>
-  );
-}
+const rootEl = document.getElementById('root');
+if (!rootEl) throw new Error('Root element not found');
 
-const rootEl = document.getElementById('root')!;
-createRoot(rootEl).render(<App />);
-
-if (import.meta && (import.meta as any).hot) {
-  (import.meta as any).hot.accept();
-}
+createRoot(rootEl).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

@@ -1,23 +1,29 @@
 {
-  "name": "@rice-mono/next-components",
+  "name": "@rice-mono/ui-kit",
   "version": "1.0.0",
-  "description": "SEO-optimized Next.js components library with full app structure for rice-mono projects",
-  "main": "index.ts",
-  "types": "index.ts",
+  "description": "Rice UI Kit - Reusable React components library with AI model demos and benchmarks",
+  "main": "./lib/index.ts",
+  "types": "./lib/index.ts",
   "exports": {
-    ".": "./index.ts",
-    "./app": "./app/index.ts",
-    "./components": "./components/index.ts",
-    "./styles": "./style.css"
+    ".": "./lib/index.ts",
+    "./lib": "./lib/index.ts",
+    "./models": "./models/index.ts",
+    "./benchmark": "./benchmark/index.ts",
+    "./styles": "./index.css",
+    "./tailwind": "./tailwind.config.ts",
+    "./postcss": "./postcss.config.ts"
   },
   "files": [
-    "components/",
-    "app/",
     "lib/",
+    "models/",
+    "benchmark/",
+    "src/",
     "*.ts",
     "*.tsx",
     "*.css",
-    "*.json"
+    "*.json",
+    "tailwind.config.ts",
+    "postcss.config.ts"
   ],
   "scripts": {
     "dev": "vite",

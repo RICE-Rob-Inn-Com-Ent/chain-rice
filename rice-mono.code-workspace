@@ -15,54 +15,50 @@
     // === TOP: Root Directory (Always First) ===
     {
       "name": "🏠 ROOT",
-      "path": "."
+      "path": ".",
     },
     {
       "name": "📂 PROJECT",
-      "path": ".project"
+      "path": ".project",
     },
 
     // === HIGH PRIORITY: Daily Development ===
     {
       "name": "🧠 BACKEND",
-      "path": ".backend"
+      "path": ".backend",
     },
     {
       "name": "🎨 FRONTEND",
-      "path": ".frontend"
-    },
-    {
-      "name": "🤖 BOT",
-      "path": ".bot"
+      "path": ".frontend",
     },
 
     // === MEDIUM PRIORITY: Regular Updates ===
     {
       "name": "📐 SCHEMA",
-      "path": ".schema"
+      "path": ".schema",
     },
     {
       "name": "📝 DOCUMENTATION",
-      "path": ".document"
+      "path": ".document",
     },
 
     // === LOW PRIORITY: Occasional Access ===
     {
       "name": "🐳 CONTAINER",
-      "path": ".devcontainer"
+      "path": ".devcontainer",
     },
     {
       "name": "🏗️ INFRA",
-      "path": ".dev"
+      "path": ".dev",
     },
     {
       "name": "🔁 CI/CD",
-      "path": ".github"
+      "path": ".github",
     },
     {
       "name": "⚙️ IDE",
-      "path": ".vscode"
-    }
+      "path": ".vscode",
+    },
   ],
 
   // ============================================================================
@@ -92,13 +88,13 @@
     "java.configuration.runtimes": [
       {
         "name": "JavaSE-17",
-        "path": "/usr/lib/jvm/java-17-openjdk"
+        "path": "/usr/lib/jvm/java-17-openjdk",
       },
       {
         "name": "JavaSE-21",
         "path": "/usr/lib/jvm/java-21-openjdk",
-        "default": true
-      }
+        "default": true,
+      },
     ],
     "java.silentNotification": true,
     "java.recommendations.enabled": false,
@@ -112,11 +108,11 @@
         "name": "Code-Rice",
         "group": "RICE",
         "database": "rice_db",
-        "username": "rice_user"
-      }
+        "username": "rice_user",
+      },
     ],
     "java.project.explorer.showNonJavaResources": false,
     "projectManager.git.baseFolders": [".project"],
-    "liveServer.settings.multiRootWorkspaceName": "🧠 BACKEND"
-  }
+    "liveServer.settings.multiRootWorkspaceName": "🧠 BACKEND",
+  },
 }

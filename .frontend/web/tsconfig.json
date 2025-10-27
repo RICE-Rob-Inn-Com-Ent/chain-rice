@@ -43,7 +43,8 @@
     "shared/**/*",
     "src/**/*",
     "svelte/**/*",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../.project/web/main.tsx"
   ],
   "exclude": ["node_modules", "dist", "build", ".next", ".nuxt", ".svelte-kit", "coverage"]
 }

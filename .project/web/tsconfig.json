@@ -21,11 +21,14 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./*"],
-      "@shared/*": ["../.frontend/next/components/*"],
+      "@rice-mono/ui-kit": ["../../.frontend/web"],
+      "@rice-mono/ui-kit/*": ["../../.frontend/web/*"],
+      "@atoms": ["../../.frontend/web/lib/atoms"],
+      "@atoms/*": ["../../.frontend/web/lib/atoms/*"],
+      "@molecules": ["../../.frontend/web/lib/molecules"],
+      "@molecules/*": ["../../.frontend/web/lib/molecules/*"],
       "@web/*": ["./*"],
-      "@atoms/*": ["./lib/atoms/*"],
-      "@molecules/*": ["./lib/molecules/*"],
-      "@pages/*": ["./pages/*"]
+      "@pages/*": ["app/pages/*"]
     },
     "incremental": true
   },

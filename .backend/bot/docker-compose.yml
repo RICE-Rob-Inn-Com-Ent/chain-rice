@@ -1,0 +1,62 @@
+services:
+  core:
+    build:
+      context: ./core
+      dockerfile: Dockerfile
+    image: core:latest
+    container_name: bot-core
+    ports:
+      - "8100:8100"
+    environment:
+      - BOT_MODE=core
+      - LOG_LEVEL=info
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  integrations:
+    build:
+      context: ./in
+      dockerfile: Dockerfile
+    image: in:latest
+    container_name: bot-integrations
+    ports:
+      - "8200:8200"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - ./in/.env
+    restart: unless-stopped
+
+  ollama:
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    image: ollama:latest
+    container_name: bot-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  ollama-models:
+    driver: local
+
+networks:
+  default:
+    name: bot-network
+    driver: bridge

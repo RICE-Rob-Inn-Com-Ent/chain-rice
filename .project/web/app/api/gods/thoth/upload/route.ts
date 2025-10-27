@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       fileName: file.name,
       fileSize: file.size,
       fileType: file.type,
-      content: content.substring(0, 10000), // Limit to 10k chars
+      content: content.substring(0, 10000),
       preview: content.substring(0, 500) + (content.length > 500 ? "..." : ""),
     });
   } catch (error: any) {

@@ -17,6 +17,7 @@
 SHELL := /usr/bin/env bash
 
 .PHONY: help prepare asdf-install asdf-plugins deps-install deps-update dev-start dev-stop \
+        frontend frontend-stop frontend-logs frontend-clean \
         blockchain-install blockchain-build blockchain-start blockchain-proto \
         blockchain-test blockchain-test-race blockchain-test-cover \
         blockchain-lint blockchain-lint-fix blockchain-clean blockchain-reset
@@ -276,6 +277,65 @@ dev-stop: ## Stop development environment and clean up containers
 	@echo ""
 	@echo "$(YELLOW)💡 To remove volumes (databases, caches):$(NC)"
 	@echo "  cd .devcontainer && docker-compose down -v"
+	@echo ""
+
+# ==============================================================================
+# FRONTEND DEVELOPMENT
+# ==============================================================================
+frontend: ## Start both frontend servers (Vite UI Kit + Next.js App) with Docker
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Starting Frontend Development Servers                        $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)🚀 Starting services:$(NC)"
+	@echo "  • Vite UI Kit    (port 5173) - http://localhost:5173"
+	@echo "  • Next.js App    (port 3002) - http://localhost:3002"
+	@echo ""
+	@docker-compose -f docker-compose.frontend.yml up -d --build
+	@echo ""
+	@echo "$(GREEN)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(GREEN)║$(NC)  ✅ Frontend servers are starting!                            $(GREEN)║$(NC)"
+	@echo "$(GREEN)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)🔗 Service URLs:$(NC)"
+	@echo "  • Vite UI Kit:    http://localhost:5173"
+	@echo "  • Next.js App:    http://localhost:3002"
+	@echo ""
+	@echo "$(YELLOW)📊 View Logs:$(NC)"
+	@echo "  make frontend-logs"
+	@echo ""
+	@echo "$(YELLOW)🛑 Stop Servers:$(NC)"
+	@echo "  make frontend-stop"
+	@echo ""
+
+frontend-stop: ## Stop frontend development servers
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Stopping Frontend Development Servers                        $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@docker-compose -f docker-compose.frontend.yml down
+	@echo ""
+	@echo "$(GREEN)✅ Frontend servers stopped$(NC)"
+	@echo ""
+
+frontend-logs: ## View logs from frontend containers
+	@echo "$(YELLOW)📊 Showing frontend logs (Ctrl+C to exit)...$(NC)"
+	@echo ""
+	@docker-compose -f docker-compose.frontend.yml logs -f
+
+frontend-clean: ## Clean frontend containers, images and caches
+	@echo "$(BLUE)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(BLUE)║$(NC)  Cleaning Frontend Docker Resources                            $(BLUE)║$(NC)"
+	@echo "$(BLUE)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)🧹 Stopping and removing containers...$(NC)"
+	@docker-compose -f docker-compose.frontend.yml down -v
+	@echo "$(YELLOW)🧹 Removing frontend images...$(NC)"
+	@docker rmi rice-ui-kit rice-nextjs 2>/dev/null || true
+	@echo "$(YELLOW)🧹 Cleaning Next.js cache...$(NC)"
+	@rm -rf .project/web/.next
+	@echo ""
+	@echo "$(GREEN)✅ Frontend resources cleaned$(NC)"
 	@echo ""
 
 # ==============================================================================

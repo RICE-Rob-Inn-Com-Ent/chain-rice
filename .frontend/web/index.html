@@ -1,9 +1,151 @@
 <!doctype html>
 <html lang="pl">
   <head>
+    <!-- Basic Meta Tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web Components Lab</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary Meta Tags -->
+    <title>RICE — AI, Web Development, Blockchain, Cloud & Automatyzacja | Nowoczesne Rozwiązania IT</title>
+    <meta name="title" content="RICE — AI, Web Development, Blockchain, Cloud & Automatyzacja" />
+    <meta name="description" content="RICE to nowoczesna firma technologiczna oferująca kompleksowe rozwiązania: sztuczna inteligencja (AI), tworzenie aplikacji web i mobile, blockchain, automatyzacja procesów biznesowych, infrastruktura cloud. Eksperci w Next.js, React, Python, Go, Smart Contracts." />
+    <meta name="keywords" content="AI, sztuczna inteligencja, machine learning, web development, aplikacje mobilne, blockchain, smart contracts, automatyzacja, cloud computing, DevOps, Next.js, React, Python, Go, Ollama, LLM, LoRA fine-tuning, Computer Vision, NLP, API development, microservices, infrastruktura IT, hosting GPU, modele AI" />
+    <meta name="author" content="RICE" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="language" content="Polish" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="general" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://rice.pl/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rice.pl/" />
+    <meta property="og:title" content="RICE — AI, Web Development, Blockchain, Cloud & Automatyzacja" />
+    <meta property="og:description" content="Nowoczesne rozwiązania technologiczne: AI, web development, blockchain, automatyzacja i cloud computing. Budujemy systemy które realnie odciążają zespół." />
+    <meta property="og:image" content="https://rice.pl/img/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="RICE" />
+    <meta property="og:locale" content="pl_PL" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://rice.pl/" />
+    <meta name="twitter:title" content="RICE — AI, Web Development, Blockchain, Cloud & Automatyzacja" />
+    <meta name="twitter:description" content="Nowoczesne rozwiązania technologiczne: AI, web development, blockchain, automatyzacja i cloud computing. Budujemy systemy które realnie odciążają zespół." />
+    <meta name="twitter:image" content="https://rice.pl/img/twitter-card.png" />
+    <meta name="twitter:creator" content="@rice_tech" />
+
+    <!-- Favicons & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#0b0f1a" />
+    <meta name="msapplication-TileColor" content="#0b0f1a" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "RICE",
+      "legalName": "RICE Sp. z o.o.",
+      "url": "https://rice.pl",
+      "logo": "https://rice.pl/img/company_logo_static.svg",
+      "foundingDate": "2024",
+      "description": "Nowoczesna firma technologiczna specjalizująca się w AI, web development, blockchain, automatyzacji i cloud computing",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "PL",
+        "addressLocality": "Warszawa"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Obsługa klienta",
+        "email": "kontakt@rice.pl",
+        "availableLanguage": ["Polish", "English"]
+      },
+      "sameAs": [
+        "https://github.com/rice-tech",
+        "https://linkedin.com/company/rice-tech",
+        "https://twitter.com/rice_tech"
+      ],
+      "offers": {
+        "@type": "AggregateOffer",
+        "offerCount": "6",
+        "offers": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Sztuczna Inteligencja (AI)",
+              "description": "Implementacja modeli AI, Computer Vision, NLP, LoRA fine-tuning, hosting GPU"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Web & Mobile Development",
+              "description": "Aplikacje web (Next.js, React), mobile (Flutter, Swift, Kotlin), SSR/SEO"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Blockchain & Smart Contracts",
+              "description": "Tworzenie smart contracts, DeFi, NFT, integracje blockchain"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Automatyzacja Procesów",
+              "description": "Automatyzacja workflow, integracje API, orkiestracja systemów"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Cloud & DevOps",
+              "description": "Infrastruktura cloud, Kubernetes, CI/CD, monitoring, skalowanie"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Hosting Modeli AI",
+              "description": "Hosting i zarządzanie modelami LLM (7B-70B), GPU on-demand, API access"
+            }
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- Additional SEO -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="RICE" />
   </head>
   <body>
     <div id="root"></div>
