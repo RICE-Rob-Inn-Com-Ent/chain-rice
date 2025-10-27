@@ -1,0 +1,81 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "RICE",
+  "legalName": "RICE Sp. z o.o.",
+  "url": "https://rice.pl",
+  "logo": "https://rice.pl/img/company_logo_static.svg",
+  "foundingDate": "2024",
+  "description": "Nowoczesna firma technologiczna specjalizująca się w AI, web development, blockchain, automatyzacji i cloud computing",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "PL",
+    "addressLocality": "Warszawa"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Obsługa klienta",
+    "email": "kontakt@rice.pl",
+    "availableLanguage": ["Polish", "English"]
+  },
+  "sameAs": [
+    "https://github.com/rice-tech",
+    "https://linkedin.com/company/rice-tech",
+    "https://twitter.com/rice_tech"
+  ],
+  "offers": {
+    "@type": "AggregateOffer",
+    "offerCount": "6",
+    "offers": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Sztuczna Inteligencja (AI)",
+          "description": "Implementacja modeli AI, Computer Vision, NLP, LoRA fine-tuning, hosting GPU"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Web & Mobile Development",
+          "description": "Aplikacje web (Next.js, React), mobile (Flutter, Swift, Kotlin), SSR/SEO"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Blockchain & Smart Contracts",
+          "description": "Tworzenie smart contracts, DeFi, NFT, integracje blockchain"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Automatyzacja Procesów",
+          "description": "Automatyzacja workflow, integracje API, orkiestracja systemów"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Cloud & DevOps",
+          "description": "Infrastruktura cloud, Kubernetes, CI/CD, monitoring, skalowanie"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Hosting Modeli AI",
+          "description": "Hosting i zarządzanie modelami LLM (7B-70B), GPU on-demand, API access"
+        }
+      }
+    ]
+  }
+}
+
