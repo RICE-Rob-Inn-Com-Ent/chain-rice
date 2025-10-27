@@ -4,7 +4,7 @@ import Header from "./molecules/Header";
 import Footer from "./molecules/Footer";
 import "./index.css";
 
-function App({ children }: { children: React.ReactNode } & React.HTMLAttributes<HTMLMainElement>) {
+function App({ children }: { children: React.ReactNode }  ) {
   return (
     <>
       <Header />
