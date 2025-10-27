@@ -1,0 +1,87 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║  🎯  DOCKER PROFILES - NOWA LOGIKA  🎯                              ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+📦 TERAZ DZIAŁA TAK:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ docker-compose up -d
+   → Odpala 19 SERWISÓW (WSZYSTKO POZA FRONTENDEM)
+
+   Backend Core (6):
+   • MongoDB, PostgreSQL, Data, GraphQL, Bot Core, Bot Integrations
+
+   Gods AI (6):
+   • Thoth, Ra, Isis, Bastet, Maat, Khnum
+
+   Monitoring (7):
+   • Traefik, Prometheus, Loki, Grafana, Elasticsearch, Logstash, Jaeger
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ docker-compose --profile web up -d
+   → Dodaje 2 SERWISY FRONTENDOWE
+
+   Frontend (2):
+   • UI Kit (Vite) - Port 5173
+   • Next.js Web - Port 3001
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 DLACZEGO TAK?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend często odpalasz lokalnie (yarn dev) podczas developmentu,
+więc domyślnie jest WYŁĄCZONY z Dockera.
+
+Backend + Gods + Monitoring chcesz mieć zawsze w Dockerze,
+więc są w domyślnym profilu.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 TYPOWE UŻYCIE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Development (frontend lokalnie):
+   
+   docker-compose up -d              # Backend + Gods + Monitoring
+   yarn dev                          # Frontend lokalnie
+
+2. Development (wszystko w Docker):
+   
+   docker-compose up -d              # Backend + Gods + Monitoring
+   docker-compose --profile web up -d # Frontend w Docker
+
+3. Production (wszystko w Docker):
+   
+   docker-compose --profile web up -d # Wszystko naraz
+
+4. Stop wszystko:
+   
+   docker-compose --profile web down
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 SZYBKIE SPRAWDZENIE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Ile serwisów odpali bez profilu?
+docker-compose config --services | wc -l
+→ 19
+
+# Ile serwisów z profilem web?
+docker-compose --profile web config --services | wc -l  
+→ 21
+
+# Lista serwisów bez profilu
+docker-compose config --services
+
+# Lista serwisów z profilem web
+docker-compose --profile web config --services
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ Prosty i logiczny! ✨
+
