@@ -14,14 +14,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Navigation bar at the top */}
       <Navbar />
-
-      {/* Main content area with top padding to account for fixed navbar */}
-      <main className="flex-1 pt-24">{children}</main>
-
-      {/* Footer at the bottom */}
-      <Footer />
     </div>
   );
 };
