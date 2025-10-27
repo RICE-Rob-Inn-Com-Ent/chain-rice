@@ -5,14 +5,13 @@ import Footer from "./molecules/Footer";
 import "./index.css";
 
 function App({ children }: { children: React.ReactNode } & React.HTMLAttributes<HTMLMainElement>) {
-  const { className, ...props } = props;
-  return <main className={className} {...props}>
+  return (
     <>
       <Header />
-      {children}
+      <main>{children}</main>
       <Footer />
     </>
-  </main>;
+  );
 }
 
 export default App;
