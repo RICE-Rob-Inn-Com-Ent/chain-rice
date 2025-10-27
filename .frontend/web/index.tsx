@@ -4,14 +4,15 @@ import Header from "./molecules/Header";
 import Footer from "./molecules/Footer";
 import "./index.css";
 
-function App({ children }: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
-  return (
+function App({ children }: { children: React.ReactNode } & React.HTMLAttributes<HTMLMainElement>) {
+  const { className, ...props } = props;
+  return <main className={className} {...props}>
     <>
       <Header />
-      <main>{children}</main>
+      {children}
       <Footer />
     </>
-  );
+  </main>;
 }
 
 export default App;
