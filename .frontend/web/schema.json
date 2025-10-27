@@ -18,11 +18,7 @@
     "email": "kontakt@rice.pl",
     "availableLanguage": ["Polish", "English"]
   },
-  "sameAs": [
-    "https://github.com/rice-tech",
-    "https://linkedin.com/company/rice-tech",
-    "https://twitter.com/rice_tech"
-  ],
+  "sameAs": ["https://github.com/rice-tech", "https://linkedin.com/company/rice-tech", "https://twitter.com/rice_tech"],
   "offers": {
     "@type": "AggregateOffer",
     "offerCount": "6",
@@ -78,4 +74,3 @@
     ]
   }
 }
-

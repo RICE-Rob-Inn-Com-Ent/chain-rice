@@ -13,9 +13,7 @@ function App() {
 
     return () => {
       // Cleanup on unmount
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
+      script.remove();
     };
   }, []);
 
