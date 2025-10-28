@@ -5,7 +5,7 @@ import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
 import { resolve } from "node:path";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [react()],
   root: ".",
   publicDir: "public",
