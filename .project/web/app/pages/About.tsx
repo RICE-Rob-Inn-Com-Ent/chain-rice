@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Section, Card, TechStackGrid } from "@rice-mono/ui-kit/lib";
 
