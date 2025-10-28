@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { generateImage, checkSDHealth, upscaleImage, generateVariations } from '../../lib/services/stableDiffusion';
 
 interface GenerationParams {
   prompt: string;
