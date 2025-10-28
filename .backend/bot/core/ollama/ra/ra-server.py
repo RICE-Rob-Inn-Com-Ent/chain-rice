@@ -114,11 +114,23 @@ async def generate_image(request: ImageGenRequest):
         height=request.height,
     ).images[0]
 
-    # Save to temp
+    # Convert to base64
+    import base64
+    from io import BytesIO
+    
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode()
+    
+    # Also save to temp for debugging
     temp_path = f"/tmp/ra_output_{os.urandom(8).hex()}.png"
     image.save(temp_path)
 
-    return {"image_path": temp_path, "prompt": request.prompt}
+    return {
+        "image": f"data:image/png;base64,{img_base64}",
+        "image_path": temp_path,
+        "prompt": request.prompt
+    }
 
 
 if __name__ == "__main__":

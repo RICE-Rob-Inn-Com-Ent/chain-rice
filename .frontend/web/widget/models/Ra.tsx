@@ -281,9 +281,7 @@ export default function RaUI() {
 
             {/* Steps */}
             <div>
-              <label className="block text-sm font-semibold text-orange-300 mb-2">
-                Sampling Steps: {params.steps}
-              </label>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">Sampling Steps: {params.steps}</label>
               <input
                 type="range"
                 min="10"
@@ -296,9 +294,7 @@ export default function RaUI() {
 
             {/* CFG Scale */}
             <div>
-              <label className="block text-sm font-semibold text-orange-300 mb-2">
-                CFG Scale: {params.cfgScale}
-              </label>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">CFG Scale: {params.cfgScale}</label>
               <input
                 type="range"
                 min="1"
@@ -461,7 +457,9 @@ export default function RaUI() {
                     key={img.id}
                     onClick={() => setSelectedImage(img)}
                     className={`relative aspect-square bg-black/50 rounded-lg overflow-hidden border-2 transition ${
-                      selectedImage?.id === img.id ? "border-orange-500" : "border-orange-500/20 hover:border-orange-500/50"
+                      selectedImage?.id === img.id
+                        ? "border-orange-500"
+                        : "border-orange-500/20 hover:border-orange-500/50"
                     }`}
                   >
                     <img src={img.url} alt={img.prompt} className="w-full h-full object-cover" />
