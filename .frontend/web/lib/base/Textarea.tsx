@@ -1,5 +1,5 @@
-import React from 'react';
-import clsx from 'clsx';
+import React from "react";
+import clsx from "clsx";
 
 type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string;
@@ -21,12 +21,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           <textarea
             id={inputId}
             ref={ref}
-            placeholder={typeof placeholder === 'string' ? ' ' : ' '}
+            placeholder={typeof placeholder === "string" ? " " : " "}
             className={clsx(
-              'peer w-full rounded-md border border-white/15 bg-white/5 px-3 py-3 text-slate-100 placeholder-transparent outline-none transition-colors duration-200',
+              "peer w-full rounded-md border border-white/15 bg-white/5 px-3 py-3 text-slate-100 placeholder-transparent outline-none transition-colors duration-200",
               neutralFocus
-                ? 'focus:border-white/30 focus:ring-0'
-                : 'focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/50',
+                ? "focus:border-white/30 focus:ring-0"
+                : "focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/50",
               className
             )}
             {...props}
@@ -35,11 +35,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             <label
               htmlFor={inputId}
               className={clsx(
-                'pointer-events-none absolute left-3 top-3 text-[13px] text-slate-400 transition-all duration-200 ease-out',
+                "pointer-events-none absolute left-3 top-3 text-[13px] text-slate-400 transition-all duration-200 ease-out",
                 neutralFocus
-                  ? 'peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-slate-200'
-                  : 'peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-cyan-100',
-                'peer-[&:not(:placeholder-shown)]:top-1.5 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:text-slate-300'
+                  ? "peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-slate-200"
+                  : "peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-cyan-100",
+                "peer-[&:not(:placeholder-shown)]:top-1.5 peer-[&:not(:placeholder-shown)]:text-xs peer-[&:not(:placeholder-shown)]:text-slate-300"
               )}
             >
               {label}
@@ -60,10 +60,10 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={inputId}
           ref={ref}
           className={clsx(
-            'rounded-md border border-white/10 bg-white/5 px-3 py-2 text-slate-100 placeholder:text-slate-400 outline-none',
+            "rounded-md border border-white/10 bg-white/5 px-3 py-2 text-slate-100 placeholder:text-slate-400 outline-none",
             neutralFocus
-              ? 'focus:border-white/30 focus:ring-0'
-              : 'focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/50',
+              ? "focus:border-white/30 focus:ring-0"
+              : "focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/50",
             className
           )}
           placeholder={placeholder}
@@ -73,6 +73,6 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     );
   }
 );
-Textarea.displayName = 'Textarea';
+Textarea.displayName = "Textarea";
 
 export default Textarea;
