@@ -29,8 +29,8 @@ COPY --from=deps /app/.project/web/node_modules ./.project/web/node_modules
 # Copy source code
 COPY . .
 
-# Create startup script
-RUN cat > /app/start-dual.sh << 'EOF'
+# Create entrypoint script in /usr/local/bin (not affected by volume mounts)
+RUN cat > /usr/local/bin/start-dual.sh << 'EOF'
 #!/bin/sh
 set -e
 
@@ -51,9 +51,9 @@ yarn dev --port ${NEXT_PORT:-3002}
 kill $VITE_PID 2>/dev/null || true
 EOF
 
-RUN chmod +x /app/start-dual.sh
+RUN chmod +x /usr/local/bin/start-dual.sh
 
 EXPOSE 3001 3002
 
-CMD ["/bin/sh", "/app/start-dual.sh"]
+CMD ["/bin/sh", "/usr/local/bin/start-dual.sh"]
 
