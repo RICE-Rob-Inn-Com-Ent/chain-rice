@@ -14,3 +14,9 @@ export { Button } from "./Button";
 export { Card } from "./Card";
 export { Input } from "./Input";
 export { Textarea } from "./Textarea";
+
+// Headers
+export * from "./headers";
+
+// Buttons
+export * from "./buttons";
