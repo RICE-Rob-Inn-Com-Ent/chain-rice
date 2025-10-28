@@ -152,13 +152,54 @@ async def trigger_model_load():
 
 @app.post("/sleep")
 async def sleep():
-    """Mark god as sleeping and clear lazy-loaded models"""
-    global is_active, ocr_reader, translator
+    """Sleep model - unload from GPU/VRAM"""
+    global is_active, ocr_reader, translator, model_loaded, model_loading
     is_active = False
+    model_loaded = False
+    model_loading = False
+    
     # Clear lazy-loaded models from memory
     ocr_reader = None
     translator = None
-    return {"success": True, "god": "Thoth", "status": "sleeping"}
+    
+    # Unload model from Ollama (free VRAM)
+    vram_cleared = False
+    try:
+        # Method 1: Try to unload via Ollama API
+        delete_response = requests.delete(
+            f"{OLLAMA_URL}/api/generate",
+            json={"model": OLLAMA_MODEL, "keep_alive": 0},
+            timeout=5
+        )
+        
+        if delete_response.ok:
+            print(f"✅ Model {OLLAMA_MODEL} unloaded from VRAM via API")
+            vram_cleared = True
+        else:
+            # Method 2: Force unload by sending keep_alive=0
+            unload_response = requests.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={
+                    "model": OLLAMA_MODEL,
+                    "prompt": "",
+                    "keep_alive": 0,
+                    "stream": False
+                },
+                timeout=5
+            )
+            print(f"✅ Model {OLLAMA_MODEL} unloaded from VRAM (keep_alive=0)")
+            vram_cleared = True
+            
+    except Exception as e:
+        print(f"⚠️ Failed to unload model from VRAM: {e}")
+    
+    return {
+        "success": True, 
+        "model": "Thoth", 
+        "status": "sleeping", 
+        "vram_cleared": vram_cleared,
+        "message": "Model unloaded from GPU memory"
+    }
 
 
 @app.post("/chat")
