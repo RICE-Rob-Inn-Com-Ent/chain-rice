@@ -197,4 +197,3 @@ volumes:
 networks:
   rice-ai:
     driver: bridge
-
