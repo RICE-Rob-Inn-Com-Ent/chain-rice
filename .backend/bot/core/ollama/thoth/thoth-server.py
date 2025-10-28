@@ -104,7 +104,7 @@ async def health():
 async def get_status():
     """Get detailed loading status including download progress"""
     download_progress = None
-    
+
     # Try to get download progress from Ollama
     try:
         # Check if model is being pulled
@@ -115,7 +115,7 @@ async def get_status():
             text=True,
             timeout=2
         )
-        
+
         # If model not in list, it's still downloading
         if OLLAMA_MODEL not in result.stdout:
             download_progress = {
@@ -124,7 +124,7 @@ async def get_status():
             }
     except:
         pass
-    
+
     return {
         "loading": model_loading,
         "loaded": model_loaded,

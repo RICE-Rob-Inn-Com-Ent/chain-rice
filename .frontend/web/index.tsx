@@ -368,9 +368,31 @@ function App() {
       {/* AI Models Section */}
       <section id="modele" className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-white text-center mb-4">Nasze Modele AI</h2>
-        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+        <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
           Każdy model jest zoptymalizowany pod kątem wydajności i działa na GPU z 6-8GB VRAM
         </p>
+        
+        {/* Download Progress Info Banner */}
+        {wakingModel === "thoth" && (
+          <div className="mb-8 bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-xl p-4 border border-yellow-500/30 max-w-4xl mx-auto">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">📥</div>
+              <div className="flex-1">
+                <h3 className="text-yellow-400 font-bold mb-2">Thoth Model Downloading...</h3>
+                <p className="text-sm text-gray-300 mb-3">
+                  Mistral 7B is being downloaded (~4.4GB). First wake takes longer. Subsequent loads will be instant.
+                </p>
+                <div className="bg-black/30 rounded-lg p-3 font-mono text-xs">
+                  <div className="text-gray-400 mb-1">Check live progress:</div>
+                  <code className="text-cyan-400 select-all">docker logs rice-thoth --tail 50 --follow</code>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  💡 Copy command above and run in terminal to see real-time download progress
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {aiModels.map((model) => (
@@ -458,9 +480,7 @@ function App() {
                         </div>
                         {/* Show if model needs download */}
                         {model.id === "thoth" && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Mistral 7B • ~4.4GB download required
-                          </div>
+                          <div className="text-xs text-gray-500 mt-1">Mistral 7B • ~4.4GB download required</div>
                         )}
                       </div>
                     )}
