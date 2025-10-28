@@ -49,9 +49,7 @@ export const PricingCalculator: React.FC = () => {
 
         <div className="mt-8 rounded-lg border border-green-500/30 bg-green-900/20 p-6 text-center">
           <div className="text-sm text-gray-400">Szacowany koszt:</div>
-          <div className="mt-2 text-4xl font-bold text-green-400">
-            {total.toLocaleString("pl-PL")} PLN
-          </div>
+          <div className="mt-2 text-4xl font-bold text-green-400">{total.toLocaleString("pl-PL")} PLN</div>
           <div className="mt-1 text-xs text-gray-500">
             ({hours}h × {developers} dev × {hourlyRate} PLN/h)
           </div>
@@ -64,4 +62,3 @@ export const PricingCalculator: React.FC = () => {
 };
 
 export default PricingCalculator;
-
