@@ -15,8 +15,9 @@ services:
       - GOD_ID=thoth
       - OLLAMA_MODEL=mistral:7b-instruct-q4_K_M
       - PYTHONUNBUFFERED=1
+      - OLLAMA_HOST=0.0.0.0:11434
     volumes:
-      - thoth-models:/models
+      - thoth-models:/root/.ollama
       - thoth-lora:/lora-adapters
     restart: unless-stopped
     healthcheck:
@@ -24,6 +25,14 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 120s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
     networks:
       - rice-ai
 

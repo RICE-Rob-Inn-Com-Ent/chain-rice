@@ -37,6 +37,9 @@ translator = None
 
 # God state management
 is_active = False
+model_loading = False
+model_loaded = False
+loading_progress = {"status": "initializing", "percent": 0, "message": "Starting..."}
 
 
 class ChatMessage(BaseModel):
@@ -62,14 +65,48 @@ class LoRAConfig(BaseModel):
 @app.get("/health")
 async def health():
     """Health check"""
+    # Check if Ollama is responding
+    ollama_status = "offline"
+    try:
+        resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=2)
+        if resp.status_code == 200:
+            ollama_status = "online"
+            # Check if model is actually loaded
+            try:
+                test_resp = requests.post(
+                    f"{OLLAMA_URL}/api/generate",
+                    json={"model": OLLAMA_MODEL, "prompt": "test", "stream": False},
+                    timeout=5
+                )
+                if test_resp.status_code == 200:
+                    global model_loaded
+                    model_loaded = True
+            except:
+                pass
+    except:
+        pass
+    
     return {
-        "status": "active" if is_active else "sleeping",
+        "status": "loading" if model_loading else ("online" if model_loaded else "starting"),
         "god": "Thoth",
+        "ollama": ollama_status,
+        "model_loaded": model_loaded,
+        "loading": loading_progress if model_loading else None,
         "models": {
             "llm": OLLAMA_MODEL,
             "ocr": "PaddleOCR (lazy)",
             "translation": "EasyNMT (lazy)",
         },
+    }
+
+
+@app.get("/status")
+async def get_status():
+    """Get detailed loading status"""
+    return {
+        "loading": model_loading,
+        "loaded": model_loaded,
+        "progress": loading_progress,
     }
 
 
