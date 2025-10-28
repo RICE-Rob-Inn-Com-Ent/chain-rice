@@ -277,16 +277,18 @@ function App() {
 
                 <div className="pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-500 mb-3">{model.tech}</p>
-                  <button
-                    disabled={!modelStatus[model.id]}
-                    className={`w-full font-semibold py-2 px-4 rounded-lg transition ${
+                  <a
+                    href={modelStatus[model.id] ? `/demo/${model.id}` : undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block w-full text-center font-semibold py-2 px-4 rounded-lg transition ${
                       modelStatus[model.id]
                         ? "bg-purple-600 hover:bg-purple-700 text-white cursor-pointer"
-                        : "bg-gray-700 text-gray-500 cursor-not-allowed opacity-50"
+                        : "bg-gray-700 text-gray-500 cursor-not-allowed opacity-50 pointer-events-none"
                     }`}
                   >
-                    {modelStatus[model.id] ? `Wypróbuj ${model.name}` : `${model.name} Niedostępny`}
-                  </button>
+                    {modelStatus[model.id] ? `Wypróbuj ${model.name} →` : `${model.name} Niedostępny`}
+                  </a>
                 </div>
               </div>
             </div>
