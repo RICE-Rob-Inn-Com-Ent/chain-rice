@@ -29,6 +29,16 @@ export default defineConfig({
           return newPath;
         },
       },
+      "/api/sd": {
+        target: "http://localhost:7860",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => {
+          const newPath = path.replace(/^\/api\/sd/, "");
+          console.log(`[Vite Proxy SD] Rewrite: ${path} → ${newPath}`);
+          return newPath;
+        },
+      },
     },
   },
   resolve: {

@@ -23,6 +23,7 @@ export * from "./hooks/useOllama";
 
 // Services
 export * from "./services/ollama";
+export * from "./services/stableDiffusion";
 
 // Utils
 export * from "./utils/errorHandler";
