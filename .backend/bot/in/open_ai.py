@@ -12,9 +12,8 @@ Comprehensive GPT-4 wrapper with:
 import os
 import time
 import json
-from typing import List, Dict, Any, Optional, AsyncGenerator
+from collections.abc import AsyncGenerator
 from openai import OpenAI, AsyncOpenAI
-import asyncio
 
 # Initialize clients
 api_key = os.getenv("OPENAI_API_KEY", "")
@@ -28,13 +27,14 @@ async_client = AsyncOpenAI(api_key=api_key)
 
 async def chat_superborowka(
     message: str,
-    system_prompt: str = "You are a helpful AI assistant for Superborówki IoT project.",
+    system_prompt: str = "You are a helpful AI assistant.",
     model: str = "gpt-4-turbo-preview",
     max_tokens: int = 2000,
     temperature: float = 0.7,
+    *,
     stream: bool = False,
-    functions: Optional[List[Dict]] = None,
-) -> Dict[str, Any]:
+    functions: list[dict] | None = None,
+) -> dict[str, Any]:
     """
     🫐 Superborówki AI Assistant - Main chat function
     
@@ -114,11 +114,11 @@ async def chat_superborowka(
         }
 
 
-async def stream_chat_openai(params: Dict, start_time: float) -> AsyncGenerator:
-    """Stream chat response"""
+async def stream_chat_openai(params: dict) -> AsyncGenerator:
+    """Stream chat response."""
     try:
         stream = await async_client.chat.completions.create(**params)
-        
+
         async for chunk in stream:
             if chunk.choices[0].delta.content:
                 yield {
