@@ -14,9 +14,7 @@ services:
       target: development
     image: ui-kit:1
     container_name: rice-ui-kit
-    ports:
-      - "3001:3001" # Vite dev server
-      - "3002:3002" # Next.js production
+    network_mode: host
     volumes:
       - .:/app
       - /app/node_modules
@@ -31,11 +29,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NEXT_TELEMETRY_DISABLED=1
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - rice-frontend
-      - rice-backend
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
