@@ -213,7 +213,7 @@ services:
   # ⚱️ Thoth - God of Knowledge (Text Processing)
   thoth:
     build:
-      context: .backend/bot/core/gods/thoth
+      context: .backend/bot/core/ollama/thoth
       dockerfile: Dockerfile
     image: thoth:1
     container_name: thot-jeden
@@ -257,7 +257,7 @@ services:
   # ☀️ Ra - God of Light (Graphics & Image Generation)
   ra:
     build:
-      context: .backend/bot/core/gods/ra
+      context: .backend/bot/core/ollama/ra
       dockerfile: Dockerfile
     image: ra:1
     container_name: rice-god-ra
