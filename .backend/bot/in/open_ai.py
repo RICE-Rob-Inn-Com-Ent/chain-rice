@@ -74,7 +74,8 @@ async def chat_superborowka(
 
         if stream:
             # Streaming response
-            return await stream_chat_openai(params, start_time)
+            return await stream_chat_openai(params)
+
         else:
             # Regular response
             response = await async_client.chat.completions.create(**params)
@@ -139,7 +140,7 @@ async def generate_image(
     size: str = "1024x1024",
     quality: str = "standard",
     style: str = "vivid",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Generate image with DALL-E 3
     
@@ -180,8 +181,8 @@ async def generate_image(
 async def transcribe_audio(
     audio_file_path: str,
     model: str = "whisper-1",
-    language: Optional[str] = None,
-) -> Dict[str, Any]:
+    language: str | None = None,
+) -> dict[str, Any]:
     """
     Transcribe audio with Whisper
     
@@ -216,9 +217,9 @@ async def transcribe_audio(
 # ============================================================
 
 async def get_embeddings(
-    texts: List[str],
+    texts: list[str],
     model: str = "text-embedding-3-large",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Generate embeddings for text
     
@@ -260,7 +261,7 @@ async def analyze_image(
     prompt: str = "What's in this image?",
     model: str = "gpt-4-turbo",
     max_tokens: int = 500,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Analyze image with GPT-4 Vision
     
@@ -304,8 +305,10 @@ async def analyze_image(
 # 🛠️ Legacy - Backward Compatibility
 # ============================================================
 
-async def chat_openai(message: str, max_tokens: int = 1000, temperature: float = 0.7):
-    """Legacy function - use chat_superborowka instead"""
+async def chat_openai(
+    message: str, max_tokens: int = 1000, temperature: float = 0.7
+) -> dict[str, Any]:
+    """Legacy function - use chat_superborowka instead."""
     return await chat_superborowka(
         message=message,
         max_tokens=max_tokens,
