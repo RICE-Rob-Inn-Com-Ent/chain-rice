@@ -22,17 +22,11 @@ export default defineConfig({
         target: "http://localhost:11434",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api\/ollama/, ""),
-        configure: (proxy, _options) => {
-          proxy.on("error", (err, _req, _res) => {
-            console.log("[Ollama Proxy] ❌ Error:", err.message);
-          });
-          proxy.on("proxyReq", (proxyReq, req, _res) => {
-            console.log("[Ollama Proxy] 📤 Request:", req.method, req.url, "→", proxyReq.path);
-          });
-          proxy.on("proxyRes", (proxyRes, req, _res) => {
-            console.log("[Ollama Proxy] 📥 Response:", proxyRes.statusCode, req.url);
-          });
+        ws: true,
+        rewrite: (path) => {
+          const newPath = path.replace(/^\/api\/ollama/, "");
+          console.log(`[Vite Proxy] Rewrite: ${path} → ${newPath}`);
+          return newPath;
         },
       },
     },
