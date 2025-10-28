@@ -19,7 +19,7 @@ export default defineConfig({
     open: true,
     proxy: {
       "/api/ollama": {
-        target: "http://172.19.0.1:11434",
+        target: "http://192.168.0.200:11434",
         changeOrigin: true,
         secure: false,
         ws: true,
