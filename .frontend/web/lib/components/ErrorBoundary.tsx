@@ -63,7 +63,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <p className="text-gray-300 font-mono text-sm">{this.state.error?.message || "Unknown error"}</p>
             </div>
 
-            {process.env.NODE_ENV === "development" && this.state.errorInfo && (
+            {import.meta.env.DEV && this.state.errorInfo && (
               <details className="mb-6">
                 <summary className="text-white cursor-pointer hover:text-gray-300 mb-2">
                   Stack Trace (Development Only)
