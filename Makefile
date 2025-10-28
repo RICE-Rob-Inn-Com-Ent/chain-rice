@@ -60,12 +60,20 @@ clean:
 # Start frontend locally with yarn dev + AI models
 web-dev:
 	@echo "🎨 Starting frontend locally (yarn dev + AI models)..."
-	@echo "🤖 Starting AI models in Docker..."
-	@docker-compose up -d thoth ra isis bastet maat khnum
+	@echo "🤖 Checking AI models..."
+	@if docker images | grep -q "rice-mono-thoth"; then \
+		echo "✅ Docker images found, starting containers..."; \
+		docker-compose up -d thoth ra isis bastet maat khnum; \
+	else \
+		echo "⚠️  Docker images not built yet. Building (this takes 15-20 min)..."; \
+		echo "💡 Meanwhile, starting mock AI servers..."; \
+		cd .frontend/web && node mock-models.js & \
+		echo ""; \
+		echo "📦 Building Docker images in background..."; \
+		docker-compose build thoth ra isis bastet maat khnum & \
+	fi
 	@echo "📦 Installing dependencies..."
 	@cd . && yarn install
-	@echo ""
-	@echo "✅ AI Models started in Docker!"
 	@echo "🚀 Starting UI Kit (Vite) and Next.js..."
 	@cd . && yarn dev
 
