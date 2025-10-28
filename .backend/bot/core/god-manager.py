@@ -60,22 +60,22 @@ async def root():
 async def list_gods() -> List[GodStatus]:
     """List all gods with their current status"""
     statuses = []
-    
+
     async with httpx.AsyncClient(timeout=5.0) as client:
         for god_id, god_info in GODS.items():
             try:
                 response = await client.get(f"{god_info['url']}/health")
                 data = response.json()
-                
+
                 # Determine actual status based on GPU allocation
                 raw_status = data.get("status", "unknown")
-                
+
                 # Map status properly:
                 # - If this god has GPU → "gpu"
-                # - If model is loading → "loading"  
+                # - If model is loading → "loading"
                 # - If god is responsive but no GPU → "cpu"
                 # - Otherwise → "offline"
-                
+
                 if god_id == current_gpu_god and raw_status in ["active", "online"]:
                     actual_status = "gpu"
                 elif raw_status == "loading":
@@ -84,7 +84,7 @@ async def list_gods() -> List[GodStatus]:
                     actual_status = "cpu"
                 else:
                     actual_status = "offline"
-                
+
                 status = GodStatus(
                     god_id=god_id,
                     name=god_info["name"],
@@ -105,7 +105,7 @@ async def list_gods() -> List[GodStatus]:
                         gpu_allocated=False,
                     )
                 )
-    
+
     return statuses
 
 
@@ -116,12 +116,12 @@ async def wake_god(god_id: str):
     AUTOMATICALLY sleeps other gods if GPU is allocated.
     """
     global current_gpu_god
-    
+
     if god_id not in GODS:
         raise HTTPException(status_code=404, detail=f"God {god_id} not found")
-    
+
     god_info = GODS[god_id]
-    
+
     # CRITICAL: If another god has GPU, sleep it FIRST
     # This ensures only ONE model on GPU at a time
     if current_gpu_god and current_gpu_god != god_id:
@@ -139,7 +139,7 @@ async def wake_god(god_id: str):
             print(f"⚠️ Error sleeping {current_gpu_god}: {e}")
             # Force clear GPU allocation even if sleep failed
             current_gpu_god = None
-    
+
     # Wake the requested god with GPU
     print(f"⚡ Waking {god_id} and loading to GPU...")
     try:
@@ -148,7 +148,7 @@ async def wake_god(god_id: str):
                 f"{god_info['url']}/wake",
                 json={"use_gpu": True}
             )
-            
+
             if response.status_code == 200:
                 current_gpu_god = god_id
                 return {

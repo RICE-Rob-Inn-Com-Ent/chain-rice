@@ -275,25 +275,25 @@
         }
       }
 
-       async function wakeGod(godId) {
-         try {
-           const response = await fetch(`${API_URL}/wake/${godId}`, {
-             method: "POST",
-           });
- 
-           if (response.ok) {
-             // Start polling immediately for progress
-             startProgressPolling(godId);
-             loadGods();
-           } else {
-             const data = await response.json();
-             alert("Failed to wake god: " + (data.detail || "Unknown error"));
-           }
-         } catch (error) {
-           alert("Error: " + error.message);
-           loadGods();
-         }
-       }
+      async function wakeGod(godId) {
+        try {
+          const response = await fetch(`${API_URL}/wake/${godId}`, {
+            method: "POST",
+          });
+
+          if (response.ok) {
+            // Start polling immediately for progress
+            startProgressPolling(godId);
+            loadGods();
+          } else {
+            const data = await response.json();
+            alert("Failed to wake god: " + (data.detail || "Unknown error"));
+          }
+        } catch (error) {
+          alert("Error: " + error.message);
+          loadGods();
+        }
+      }
 
       async function sleepGod(godId) {
         try {
@@ -311,23 +311,23 @@
         }
       }
 
-       function openDemo(godId) {
-         // Open demo in new tab - integrate with your actual demo URLs
-         const demoUrls = {
-           thoth: 'http://localhost:8001',  // Thoth API
-           ra: 'http://localhost:8002',      // Ra API
-           isis: 'http://localhost:8003',    // Isis API
-           bastet: 'http://localhost:8004',  // Bastet API
-           maat: 'http://localhost:8005',    // Maat API
-           khnum: 'http://localhost:8006',   // Khnum API
-         };
-         
-         if (demoUrls[godId]) {
-           window.open(demoUrls[godId], '_blank');
-         } else {
-           alert(`Demo UI for ${godId} - integrate with your frontend!`);
-         }
-       }
+      function openDemo(godId) {
+        // Open demo in new tab - integrate with your actual demo URLs
+        const demoUrls = {
+          thoth: "http://localhost:8001", // Thoth API
+          ra: "http://localhost:8002", // Ra API
+          isis: "http://localhost:8003", // Isis API
+          bastet: "http://localhost:8004", // Bastet API
+          maat: "http://localhost:8005", // Maat API
+          khnum: "http://localhost:8006", // Khnum API
+        };
+
+        if (demoUrls[godId]) {
+          window.open(demoUrls[godId], "_blank");
+        } else {
+          alert(`Demo UI for ${godId} - integrate with your frontend!`);
+        }
+      }
 
       function startProgressPolling(godId) {
         // Poll every 2 seconds for progress updates
