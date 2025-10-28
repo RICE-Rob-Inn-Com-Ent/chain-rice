@@ -26,9 +26,10 @@
     "postcss.config.ts"
   ],
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3001 --host 0.0.0.0",
+    "dev:debug": "vite --port 3001 --host 0.0.0.0 --debug",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --port 3001",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "typecheck": "tsc --noEmit",
     "test": "vitest",

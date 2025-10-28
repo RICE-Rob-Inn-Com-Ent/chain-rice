@@ -11,3 +11,18 @@ export * from "./layouts";
 export * from "./organisms";
 // Widgets
 export * from "./widgets";
+
+// Contexts
+export * from "./contexts/ThemeContext";
+
+// Components
+export * from "./components/ErrorBoundary";
+
+// Hooks
+export * from "./hooks/useOllama";
+
+// Services
+export * from "./services/ollama";
+
+// Utils
+export * from "./utils/errorHandler";
