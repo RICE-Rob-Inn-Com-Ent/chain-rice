@@ -39,6 +39,7 @@ services:
     build:
       context: .
       dockerfile: .project/web/Dockerfile
+    image: nextjs-web:1
     container_name: rice-nextjs-web
     ports:
       - "3001:3001"
@@ -122,6 +123,7 @@ services:
     build:
       context: .backend/data
       dockerfile: Dockerfile
+    image: data:1
     container_name: rice-data
     ports:
       - "8080:8080"
@@ -146,6 +148,7 @@ services:
     build:
       context: .backend/graphql
       dockerfile: Dockerfile
+    image: graphql:1
     container_name: rice-graphql
     ports:
       - "4000:4000"
@@ -173,6 +176,7 @@ services:
     build:
       context: .backend/bot/core
       dockerfile: Dockerfile
+    image: bot-core:1
     container_name: rice-bot-core
     ports:
       - "8100:8100"
@@ -189,6 +193,7 @@ services:
     build:
       context: .backend/bot/in
       dockerfile: Dockerfile
+    image: bot-integrations:1
     container_name: rice-bot-integrations
     ports:
       - "8200:8200"
