@@ -284,6 +284,187 @@ function App() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="cennik" className="max-w-7xl mx-auto px-4 py-20">
+        <h2 className="text-4xl font-bold text-white text-center mb-4">Cennik</h2>
+        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+          Wybierz pakiet dopasowany do Twoich potrzeb • Wszystkie plany z dostępem API
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Free Plan */}
+          <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl p-8 border border-gray-700">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">Free</h3>
+              <p className="text-gray-400 text-sm mb-4">Modele 7B dla testów</p>
+              <div className="mb-4">
+                <span className="text-4xl font-bold text-white">0 zł</span>
+                <span className="text-gray-400">/miesiąc</span>
+              </div>
+            </div>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-300">Mistral 7B Q4</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-300">SD 2.1 (512x512)</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-300">100 requests/dzień</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-300">API access</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-gray-600 mt-1">✗</span>
+                <span className="text-gray-500">Priority support</span>
+              </li>
+            </ul>
+            <button className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
+              Rozpocznij
+            </button>
+          </div>
+
+          {/* Simple Plan */}
+          <div className="bg-gradient-to-b from-blue-900 to-blue-950 rounded-2xl p-8 border border-blue-500/50 relative">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
+                Popularne
+              </span>
+            </div>
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">Simple</h3>
+              <p className="text-gray-300 text-sm mb-4">Modele 13B + więcej features</p>
+              <div className="mb-4">
+                <span className="text-4xl font-bold text-white">299 zł</span>
+                <span className="text-gray-300">/miesiąc</span>
+              </div>
+            </div>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Wszystko z Free +</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Mistral 13B</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">LLaVa 13B (Visual QA)</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">5,000 requests/dzień</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Priority support</span>
+              </li>
+            </ul>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+              Wybierz Simple
+            </button>
+          </div>
+
+          {/* Premium Plan */}
+          <div className="bg-gradient-to-b from-purple-900 to-purple-950 rounded-2xl p-8 border border-purple-500/50">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">Premium</h3>
+              <p className="text-gray-300 text-sm mb-4">Pełny dostęp do AI Stack</p>
+              <div className="mb-4">
+                <span className="text-4xl font-bold text-white">999 zł</span>
+                <span className="text-gray-300">/miesiąc</span>
+              </div>
+            </div>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Wszystko z Simple +</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Wszystkie 6 modeli AI</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Fine-tuning (LoRA)</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">50,000 requests/dzień</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Dedicated support 24/7</span>
+              </li>
+            </ul>
+            <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition">
+              Wybierz Premium
+            </button>
+          </div>
+
+          {/* Enterprise Plan */}
+          <div className="bg-gradient-to-b from-amber-900 to-amber-950 rounded-2xl p-8 border border-amber-500/50">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
+              <p className="text-gray-300 text-sm mb-4">Dedykowana infrastruktura</p>
+              <div className="mb-4">
+                <span className="text-3xl font-bold text-white">Indywidualnie</span>
+              </div>
+            </div>
+            <ul className="space-y-3 mb-6">
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Wszystko z Premium +</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Dedykowane GPU</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Custom models & LoRA</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">Unlimited requests</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm">
+                <span className="text-green-400 mt-1">✓</span>
+                <span className="text-gray-200">SLA 99.9%</span>
+              </li>
+            </ul>
+            <button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition">
+              Skontaktuj się
+            </button>
+          </div>
+        </div>
+
+        {/* Pricing Features */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <div className="text-3xl mb-3">💰</div>
+            <h3 className="text-lg font-bold text-white mb-2">Brak ukrytych kosztów</h3>
+            <p className="text-gray-400 text-sm">Transparentne ceny, bez dodatkowych opłat za transfer danych</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <div className="text-3xl mb-3">🔒</div>
+            <h3 className="text-lg font-bold text-white mb-2">Twoje dane są bezpieczne</h3>
+            <p className="text-gray-400 text-sm">Modele działają w Polsce, pełna zgodność z RODO</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <div className="text-3xl mb-3">⚡</div>
+            <h3 className="text-lg font-bold text-white mb-2">Zoptymalizowane dla 6GB VRAM</h3>
+            <p className="text-gray-400 text-sm">Wszystkie modele działają wydajnie nawet na podstawowym sprzęcie</p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section id="uslugi" className="max-w-7xl mx-auto px-4 py-20">
         <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-3xl p-12 border border-purple-500/30 text-center">
