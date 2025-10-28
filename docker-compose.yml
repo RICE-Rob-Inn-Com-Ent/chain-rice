@@ -216,7 +216,7 @@ services:
       context: .backend/bot/core/ollama/thoth
       dockerfile: Dockerfile
     image: thoth:1
-    container_name: thot-jeden
+    container_name: rice-thot
     labels:
       - "god.name=Thoth"
       - "god.icon=📜"
