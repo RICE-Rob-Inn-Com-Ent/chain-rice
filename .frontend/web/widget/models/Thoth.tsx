@@ -277,15 +277,29 @@ function ThothApp() {
           <div className="flex items-center gap-4">
             <div className="text-6xl">📜</div>
             <div className="flex-1">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
-                Thoth - Bóg Wiedzy
-              </h1>
-              <p className="text-sm text-gray-400 mt-1">Mistral 7B Q4_K_M (Quantized)</p>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+                  Thoth AI Model
+                </h1>
+                
+                {/* Wake/Sleep Button */}
+                {modelStatus === 'offline' && (
+                  <button
+                    onClick={wakeModel}
+                    disabled={isWaking}
+                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white text-xs px-3 py-1 rounded-lg font-semibold transition"
+                  >
+                    {isWaking ? '⏳ Waking...' : '▶️ Wake Model'}
+                  </button>
+                )}
+              </div>
+              
+              <p className="text-sm text-gray-400 mt-1">Mistral 7B Q4_K_M • NLP & Chat Assistant</p>
               <div className="flex gap-4 mt-2 text-xs text-cyan-400">
-                <span>✓ Sales Assistant</span>
-                <span>✓ Site Navigator</span>
-                <span>✓ Product Expert</span>
-                <span>✓ Link Provider</span>
+                <span>✓ Natural Language</span>
+                <span>✓ Context Aware</span>
+                <span>✓ Fast Response</span>
+                <span>✓ Local Inference</span>
               </div>
 
               {/* Loading Progress Bar */}
