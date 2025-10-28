@@ -1,6 +1,12 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { generateImage, checkSDHealth, upscaleImage, generateVariations, getSDModels } from '../../lib/services/stableDiffusion';
+"use client";
+import { useState, useEffect } from "react";
+import {
+  generateImage,
+  checkSDHealth,
+  upscaleImage,
+  generateVariations,
+  getSDModels,
+} from "../../lib/services/stableDiffusion";
 
 interface GenerationParams {
   prompt: string;
@@ -25,16 +31,16 @@ interface GeneratedImage {
 }
 
 export default function RaUI() {
-  const [activeTab, setActiveTab] = useState<'txt2img' | 'img2img' | 'extras'>('txt2img');
+  const [activeTab, setActiveTab] = useState<"txt2img" | "img2img" | "extras">("txt2img");
   const [params, setParams] = useState<GenerationParams>({
-    prompt: '',
-    negativePrompt: 'blurry, low quality, distorted, ugly, bad anatomy',
+    prompt: "",
+    negativePrompt: "blurry, low quality, distorted, ugly, bad anatomy",
     steps: 30,
     cfgScale: 7.5,
     width: 512,
     height: 512,
     seed: -1,
-    samplerName: 'DPM++ 2M Karras',
+    samplerName: "DPM++ 2M Karras",
     batchSize: 1,
     batchCount: 1,
     restoreFaces: false,
@@ -48,12 +54,23 @@ export default function RaUI() {
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [availableModels, setAvailableModels] = useState<any[]>([]);
-  const [generationInfo, setGenerationInfo] = useState<string>('');
+  const [generationInfo, setGenerationInfo] = useState<string>("");
 
   const samplers = [
-    'Euler a', 'Euler', 'LMS', 'Heun', 'DPM2', 'DPM2 a',
-    'DPM++ 2S a', 'DPM++ 2M', 'DPM++ SDE', 'DPM++ 2M Karras',
-    'DPM++ SDE Karras', 'DDIM', 'PLMS', 'UniPC'
+    "Euler a",
+    "Euler",
+    "LMS",
+    "Heun",
+    "DPM2",
+    "DPM2 a",
+    "DPM++ 2S a",
+    "DPM++ 2M",
+    "DPM++ SDE",
+    "DPM++ 2M Karras",
+    "DPM++ SDE Karras",
+    "DDIM",
+    "PLMS",
+    "UniPC",
   ];
 
   useEffect(() => {
@@ -70,7 +87,7 @@ export default function RaUI() {
 
   const handleGenerate = async () => {
     if (!params.prompt.trim()) {
-      alert('Wprowadź prompt!');
+      alert("Wprowadź prompt!");
       return;
     }
 
@@ -97,12 +114,12 @@ export default function RaUI() {
             url: `data:image/png;base64,${img}`,
             params: { ...params },
             timestamp: Date.now(),
-            info: result.info || '',
+            info: result.info || "",
           }));
 
           setImageHistory([...newImages, ...imageHistory]);
           setSelectedImage(newImages[0]);
-          setGenerationInfo(result.info || '');
+          setGenerationInfo(result.info || "");
         }
       } else {
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -110,14 +127,14 @@ export default function RaUI() {
           url: `https://picsum.photos/${params.width}/${params.height}?random=${Date.now()}`,
           params: { ...params },
           timestamp: Date.now(),
-          info: 'Placeholder mode - WebUI not connected',
+          info: "Placeholder mode - WebUI not connected",
         };
         setImageHistory([placeholderImg, ...imageHistory]);
         setSelectedImage(placeholderImg);
-        setError('Stable Diffusion WebUI not running. Using placeholder. Start WebUI on port 7860.');
+        setError("Stable Diffusion WebUI not running. Using placeholder. Start WebUI on port 7860.");
       }
     } catch (error: any) {
-      console.error('[Ra] Generation error:', error);
+      console.error("[Ra] Generation error:", error);
       setError(`Generation failed: ${error.message}`);
     } finally {
       setIsGenerating(false);
@@ -131,13 +148,13 @@ export default function RaUI() {
     setError(null);
 
     try {
-      const base64 = selectedImage.url.replace(/^data:image\/\w+;base64,/, '');
-      const result = await upscaleImage(base64, 'RealESRGAN_x4plus', 4);
+      const base64 = selectedImage.url.replace(/^data:image\/\w+;base64,/, "");
+      const result = await upscaleImage(base64, "RealESRGAN_x4plus", 4);
       const upscaledImg: GeneratedImage = {
         url: `data:image/png;base64,${result.image}`,
         params: selectedImage.params,
         timestamp: Date.now(),
-        info: 'Upscaled 4x with RealESRGAN',
+        info: "Upscaled 4x with RealESRGAN",
       };
       setImageHistory([upscaledImg, ...imageHistory]);
       setSelectedImage(upscaledImg);
@@ -154,14 +171,14 @@ export default function RaUI() {
     setError(null);
 
     try {
-      const base64 = selectedImage.url.replace(/^data:image\/\w+;base64,/, '');
+      const base64 = selectedImage.url.replace(/^data:image\/\w+;base64,/, "");
       const result = await generateVariations(base64, params.prompt, 0.5);
       if (result.images && result.images.length > 0) {
         const varImg: GeneratedImage = {
           url: `data:image/png;base64,${result.images[0]}`,
           params: { ...params },
           timestamp: Date.now(),
-          info: result.info || 'Variation',
+          info: result.info || "Variation",
         };
         setImageHistory([varImg, ...imageHistory]);
         setSelectedImage(varImg);
@@ -189,18 +206,22 @@ export default function RaUI() {
                   <span>Stable Diffusion 2.1 FP16</span>
                   <span>•</span>
                   <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${sdAvailable ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                    <span>{sdAvailable ? 'WebUI Connected (7860)' : 'WebUI Offline'}</span>
+                    <div
+                      className={`w-2 h-2 rounded-full ${sdAvailable ? "bg-green-500 animate-pulse" : "bg-red-500"}`}
+                    />
+                    <span>{sdAvailable ? "WebUI Connected (7860)" : "WebUI Offline"}</span>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             {/* Model Selector */}
             {sdAvailable && availableModels.length > 0 && (
               <select className="bg-gray-800 border border-amber-500/30 rounded-lg px-3 py-2 text-sm">
                 {availableModels.map((model, idx) => (
-                  <option key={idx} value={model.title}>{model.model_name}</option>
+                  <option key={idx} value={model.title}>
+                    {model.model_name}
+                  </option>
                 ))}
               </select>
             )}
@@ -213,31 +234,25 @@ export default function RaUI() {
         {/* Tabs */}
         <div className="flex gap-2 mb-4">
           <button
-            onClick={() => setActiveTab('txt2img')}
+            onClick={() => setActiveTab("txt2img")}
             className={`px-6 py-2 rounded-t-lg font-semibold transition ${
-              activeTab === 'txt2img'
-                ? 'bg-amber-600 text-white'
-                : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800'
+              activeTab === "txt2img" ? "bg-amber-600 text-white" : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
             }`}
           >
             txt2img
           </button>
           <button
-            onClick={() => setActiveTab('img2img')}
+            onClick={() => setActiveTab("img2img")}
             className={`px-6 py-2 rounded-t-lg font-semibold transition ${
-              activeTab === 'img2img'
-                ? 'bg-amber-600 text-white'
-                : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800'
+              activeTab === "img2img" ? "bg-amber-600 text-white" : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
             }`}
           >
             img2img
           </button>
           <button
-            onClick={() => setActiveTab('extras')}
+            onClick={() => setActiveTab("extras")}
             className={`px-6 py-2 rounded-t-lg font-semibold transition ${
-              activeTab === 'extras'
-                ? 'bg-amber-600 text-white'
-                : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800'
+              activeTab === "extras" ? "bg-amber-600 text-white" : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
             }`}
           >
             Extras
@@ -258,7 +273,7 @@ export default function RaUI() {
                 placeholder="masterpiece, highly detailed Egyptian pyramid at sunset, golden hour lighting..."
                 className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[100px] resize-y font-mono"
               />
-              
+
               <h3 className="text-sm font-bold text-amber-400 mb-3 mt-4 flex items-center gap-2">
                 <span>🚫</span> Negative Prompt
               </h3>
@@ -272,7 +287,7 @@ export default function RaUI() {
             {/* Sampling Parameters */}
             <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4">
               <h3 className="text-sm font-bold text-amber-400 mb-3">⚙️ Sampling</h3>
-              
+
               <div className="space-y-3">
                 {/* Sampler */}
                 <div>
@@ -283,7 +298,9 @@ export default function RaUI() {
                     className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
                   >
                     {samplers.map((sampler) => (
-                      <option key={sampler} value={sampler}>{sampler}</option>
+                      <option key={sampler} value={sampler}>
+                        {sampler}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -467,7 +484,7 @@ export default function RaUI() {
           <div className="col-span-5">
             <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4 h-full">
               <h3 className="text-sm font-bold text-amber-400 mb-3">🖼️ Preview</h3>
-              
+
               {/* Error */}
               {error && (
                 <div className="mb-4 bg-red-900/30 border border-red-500/50 rounded-lg p-3 text-sm text-red-300">
@@ -476,7 +493,10 @@ export default function RaUI() {
               )}
 
               {/* Image Display */}
-              <div className="bg-black rounded-lg overflow-hidden border-2 border-amber-500/30 mb-4" style={{ minHeight: '512px' }}>
+              <div
+                className="bg-black rounded-lg overflow-hidden border-2 border-amber-500/30 mb-4"
+                style={{ minHeight: "512px" }}
+              >
                 {selectedImage ? (
                   <img src={selectedImage.url} alt="Generated" className="w-full h-full object-contain" />
                 ) : (
@@ -495,7 +515,7 @@ export default function RaUI() {
                 <div className="grid grid-cols-4 gap-2">
                   <button
                     onClick={() => {
-                      const link = document.createElement('a');
+                      const link = document.createElement("a");
                       link.href = selectedImage.url;
                       link.download = `ra-${selectedImage.timestamp}.png`;
                       link.click();
@@ -545,7 +565,7 @@ export default function RaUI() {
           <div className="col-span-3">
             <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4">
               <h3 className="text-sm font-bold text-amber-400 mb-3">🎨 Gallery ({imageHistory.length})</h3>
-              
+
               <div className="grid grid-cols-2 gap-2 max-h-[800px] overflow-y-auto">
                 {imageHistory.map((img, idx) => (
                   <div
@@ -553,14 +573,16 @@ export default function RaUI() {
                     onClick={() => setSelectedImage(img)}
                     className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition ${
                       selectedImage === img
-                        ? 'border-amber-500 ring-2 ring-amber-500/50'
-                        : 'border-gray-700 hover:border-amber-500/50'
+                        ? "border-amber-500 ring-2 ring-amber-500/50"
+                        : "border-gray-700 hover:border-amber-500/50"
                     }`}
                   >
                     <img src={img.url} alt={`Generated ${idx}`} className="w-full h-full object-cover" />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
                       <p className="text-xs text-white truncate">{img.params.prompt.substring(0, 30)}...</p>
-                      <p className="text-xs text-gray-400">{img.params.width}x{img.params.height}</p>
+                      <p className="text-xs text-gray-400">
+                        {img.params.width}x{img.params.height}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -580,7 +602,7 @@ export default function RaUI() {
       {/* Footer */}
       <div className="border-t border-amber-500/20 bg-gray-900/50 backdrop-blur mt-6 py-3">
         <div className="max-w-[2000px] mx-auto px-6 text-center text-xs text-gray-500">
-          𓇳 Ra Image Generation Studio • Powered by Stable Diffusion 2.1 • {sdAvailable ? '🟢 Connected' : '🔴 Offline'}
+          𓇳 Ra Image Generation Studio • Powered by Stable Diffusion 2.1 • {sdAvailable ? "🟢 Connected" : "🔴 Offline"}
         </div>
       </div>
     </div>
