@@ -85,7 +85,7 @@ async def health():
                 pass
     except:
         pass
-    
+
     return {
         "status": "loading" if model_loading else ("online" if model_loaded else "starting"),
         "god": "Thoth",
@@ -133,7 +133,7 @@ async def sleep():
 async def chat(request: ChatRequest):
     """Main chat endpoint using Mistral"""
     global model_loaded
-    
+
     # Check if model is loaded
     if not model_loaded:
         raise HTTPException(
@@ -145,7 +145,7 @@ async def chat(request: ChatRequest):
                 "retry_after": 30
             }
         )
-    
+
     try:
         # Call Ollama
         response = requests.post(
@@ -165,10 +165,10 @@ async def chat(request: ChatRequest):
         if response.status_code == 404:
             model_loaded = False
             raise HTTPException(
-                status_code=503, 
+                status_code=503,
                 detail="Model not found. Loading to GPU... Please wait 30 seconds and try again."
             )
-        
+
         if response.status_code != 200:
             raise HTTPException(status_code=response.status_code, detail="Ollama error")
 

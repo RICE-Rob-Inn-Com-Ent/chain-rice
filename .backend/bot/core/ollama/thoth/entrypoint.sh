@@ -24,19 +24,19 @@ done
 (
   echo "📥 Loading Mistral 7B Q4_K_M to GPU..."
   echo "   This will take ~30 seconds on first run"
-  
+
   # Pull model if needed
   OLLAMA_HOST=0.0.0.0:11434 ollama pull ${OLLAMA_MODEL:-mistral:7b-instruct-q4_K_M} 2>&1 | while read line; do
     echo "   $line"
   done
-  
+
   # Warm up model (load to GPU)
   echo "🔥 Warming up model on GPU..."
   curl -s -X POST http://localhost:11434/api/generate \
     -H "Content-Type: application/json" \
     -d "{\"model\": \"${OLLAMA_MODEL:-mistral:7b-instruct-q4_K_M}\", \"prompt\": \"Hello\", \"stream\": false}" \
     > /dev/null 2>&1
-  
+
   echo "✅ Model loaded to GPU and ready!"
 ) &
 

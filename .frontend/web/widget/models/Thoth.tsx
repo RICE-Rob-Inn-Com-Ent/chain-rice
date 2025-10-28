@@ -100,25 +100,74 @@ function ThothApp() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [modelStatus, setModelStatus] = useState<'checking' | 'loading' | 'ready' | 'error'>('checking');
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Check model status on mount
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:8001/health');
+        const data = await response.json();
+        
+        if (data.model_loaded) {
+          setModelStatus('ready');
+        } else if (data.status === 'loading' || data.ollama === 'online') {
+          setModelStatus('loading');
+          // Start polling for status
+          const interval = setInterval(async () => {
+            try {
+              const statusResp = await fetch('http://localhost:8001/health');
+              const statusData = await statusResp.json();
+              
+              if (statusData.model_loaded) {
+                setModelStatus('ready');
+                clearInterval(interval);
+              } else {
+                // Estimate progress (0-100% over ~30 seconds)
+                setLoadingProgress(prev => Math.min(prev + 3, 95));
+              }
+            } catch (err) {
+              console.error('Status check error:', err);
+            }
+          }, 1000);
+          
+          // Auto-clear after 40 seconds
+          setTimeout(() => {
+            clearInterval(interval);
+            setModelStatus('ready');
+            setLoadingProgress(100);
+          }, 40000);
+        }
+      } catch (error) {
+        console.error('Failed to check model status:', error);
+        setModelStatus('error');
+      }
+    };
+    
+    checkStatus();
+  }, []);
 
   // Initialize welcome message on client side only (prevents hydration mismatch)
   useEffect(() => {
-    setMessages([
-      {
-        role: 'assistant',
-        content:
-          '𓅝 Witaj! Jestem Thoth, twój przewodnik po RICE.\n\nPomagam w:\n• Nawigacji po stronie\n• Informacjach o usługach i cenach\n• Kontakcie z zespołem\n• Poznaniu naszych projektów\n\nO co chcesz zapytać?\n\n───────\n📋 Przydatne linki:',
-        timestamp: new Date(),
-        links: [
-          { url: '/services', text: 'Nasze usługi' },
-          { url: '/pricing', text: 'Cennik' },
-          { url: '/portfolio', text: 'Portfolio' },
-          { url: '/contact', text: 'Kontakt' },
-        ],
-      },
-    ]);
-  }, []);
+    if (modelStatus === 'ready') {
+      setMessages([
+        {
+          role: 'assistant',
+          content:
+            '𓅝 Witaj! Jestem Thoth, twój przewodnik po RICE.\n\nPomagam w:\n• Nawigacji po stronie\n• Informacjach o usługach i cenach\n• Kontakcie z zespołem\n• Poznaniu naszych projektów\n\nO co chcesz zapytać?\n\n───────\n📋 Przydatne linki:',
+          timestamp: new Date(),
+          links: [
+            { url: '/services', text: 'Nasze usługi' },
+            { url: '/pricing', text: 'Cennik' },
+            { url: '/portfolio', text: 'Portfolio' },
+            { url: '/contact', text: 'Kontakt' },
+          ],
+        },
+      ]);
+    }
+  }, [modelStatus]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
