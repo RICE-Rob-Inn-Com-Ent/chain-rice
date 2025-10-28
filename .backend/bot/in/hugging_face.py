@@ -11,8 +11,7 @@ Comprehensive HF wrapper with:
 
 import os
 import time
-import json
-from typing import Dict, Any, List, Optional
+from typing import Any
 import requests
 from huggingface_hub import (
     HfApi,
@@ -34,16 +33,20 @@ class HuggingFaceCloud:
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
         default_model: str = "mistralai/Mistral-7B-Instruct-v0.2",
     ):
-        self.api_key = api_key or os.getenv("HF_API_KEY", os.getenv("HUGGINGFACE_TOKEN"))
+        self.api_key = api_key or os.getenv(
+            "HF_API_KEY", os.getenv("HUGGINGFACE_TOKEN")
+        )
         self.default_model = default_model
-        self.headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
-        
+        auth = f"Bearer {self.api_key}" if self.api_key else ""
+        self.headers = {"Authorization": auth} if self.api_key else {}
+
         # Initialize HF API clients
         self.api = HfApi(token=self.api_key) if self.api_key else None
-        self.inference_client = InferenceClient(token=self.api_key) if self.api_key else None
+        client = InferenceClient(token=self.api_key) if self.api_key else None
+        self.inference_client = client
 
     # ============================================================
     # 🚀 SUPERBORÓWKI - Text Generation
@@ -52,13 +55,14 @@ class HuggingFaceCloud:
     async def chat_superborowka(
         self,
         message: str,
-        model: Optional[str] = None,
-        system_prompt: str = "You are a helpful AI assistant for Superborówki IoT project.",
+        model: str | None = None,
+        system_prompt: str = "You are a helpful AI assistant.",
         max_tokens: int = 1000,
         temperature: float = 0.7,
+        *,
         use_endpoint: bool = False,
-        endpoint_name: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        endpoint_name: str | None = None,
+    ) -> dict[str, Any]:
         """
         🫐 Superborówki AI Chat using Hugging Face
         
@@ -139,12 +143,12 @@ class HuggingFaceCloud:
         self,
         model: str,
         inputs: str,
-        parameters: Optional[Dict] = None,
-        task: Optional[str] = None,
+        parameters: dict | None = None,
+        task: str | None = None,
     ) -> Any:
-        """Query Hugging Face Inference API (free, rate-limited)"""
+        """Query Hugging Face Inference API (free, rate-limited)."""
         url = f"https://api-inference.huggingface.co/models/{model}"
-        
+
         payload = {"inputs": inputs}
         if parameters:
             payload["parameters"] = parameters
@@ -158,14 +162,15 @@ class HuggingFaceCloud:
                 json=payload,
                 timeout=30,
             )
-            
+
             if response.status_code == 503:
                 # Model is loading
-                return {"error": "Model is loading. Please retry in 20 seconds.", "loading": True}
-            
+                error_msg = "Model is loading. Retry in 20 seconds."
+                return {"error": error_msg, "loading": True}
+
             response.raise_for_status()
             return response.json()
-            
+
         except requests.exceptions.RequestException as e:
             return {"error": str(e)}
 
@@ -177,22 +182,25 @@ class HuggingFaceCloud:
         self,
         endpoint_name: str,
         inputs: str,
-        parameters: Optional[Dict] = None,
+        parameters: dict | None = None,
     ) -> Any:
-        """Query dedicated Inference Endpoint (paid, fast, no rate limit)"""
+        """Query dedicated Inference Endpoint (paid, no rate limit)."""
+        api_error = "HF API key required for Inference Endpoints"
         if not self.api_key:
-            return {"error": "HF API key required for Inference Endpoints"}
+            return {"error": api_error}
 
         try:
             # Get endpoint URL
             endpoints = list_inference_endpoints(token=self.api_key)
-            endpoint = next((e for e in endpoints if e.name == endpoint_name), None)
-            
+            endpoint = next(
+                (e for e in endpoints if e.name == endpoint_name), None
+            )
+
             if not endpoint:
                 return {"error": f"Endpoint '{endpoint_name}' not found"}
 
             endpoint_url = endpoint.url
-            
+
             payload = {"inputs": inputs}
             if parameters:
                 payload["parameters"] = parameters
@@ -203,10 +211,10 @@ class HuggingFaceCloud:
                 json=payload,
                 timeout=60,
             )
-            
+
             response.raise_for_status()
             return response.json()
-            
+
         except Exception as e:
             return {"error": str(e)}
 
