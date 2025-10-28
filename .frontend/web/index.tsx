@@ -123,7 +123,7 @@ function App() {
           });
 
           clearTimeout(timeoutId);
-          
+
           if (response.ok) {
             const data = await response.json();
             // Check if model is actually loaded (for models with Ollama)
@@ -372,7 +372,7 @@ function App() {
 
                 <div className="pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-500 mb-3">{model.tech}</p>
-                  
+
                   <div className="flex gap-2">
                     {/* Wake/Sleep Button */}
                     {modelStatus[model.id] === "checking" ? (
