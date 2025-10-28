@@ -372,37 +372,58 @@ function App() {
 
                 <div className="pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-500 mb-3">{model.tech}</p>
-
+                  
+                  {/* Status Badge */}
+                  <div className="mb-3">
+                    {modelStatus[model.id] === "online" ? (
+                      <div className="flex items-center gap-2 text-xs">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-400 font-semibold">● ONLINE (GPU Loaded)</span>
+                      </div>
+                    ) : wakingModel === model.id ? (
+                      <div className="flex items-center gap-2 text-xs">
+                        <div className="animate-spin">⏳</div>
+                        <span className="text-yellow-400 font-semibold">Loading to GPU...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-xs">
+                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                        <span className="text-gray-400">● Offline</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Action Buttons */}
                   <div className="flex gap-2">
-                    {/* Wake/Sleep Button */}
-                    {modelStatus[model.id] === "checking" ? (
-                      <button
-                        disabled
-                        className="flex-1 bg-gray-700 text-gray-500 py-2 px-3 rounded-lg text-sm font-semibold cursor-not-allowed"
-                      >
-                        ⏳ Checking...
-                      </button>
-                    ) : modelStatus[model.id] === "online" ? (
+                    {modelStatus[model.id] === "online" ? (
                       <>
                         <button
                           onClick={() => handleSleepModel(model.id)}
-                          className="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg text-sm font-semibold transition flex items-center gap-1"
+                          className="bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg text-sm font-semibold transition"
                         >
-                          💤 Sleep
+                          💤 Sleep Model
                         </button>
                         <a
                           href={`/demo/${model.id}.html`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-center py-2 px-3 rounded-lg text-sm font-semibold transition"
+                          className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-center py-2 px-4 rounded-lg text-sm font-semibold transition"
                         >
-                          Try {model.name} →
+                          Try Demo →
                         </a>
                       </>
+                    ) : wakingModel === model.id ? (
+                      <button
+                        disabled
+                        className="flex-1 bg-gray-700 text-gray-400 py-2 px-4 rounded-lg text-sm font-semibold cursor-not-allowed"
+                      >
+                        ⏳ Waking up...
+                      </button>
                     ) : (
                       <button
                         onClick={() => handleWakeModel(model.id)}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded-lg text-sm font-semibold transition"
+                        disabled={wakingModel !== null}
+                        className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:text-gray-500 text-white py-2 px-4 rounded-lg text-sm font-semibold transition disabled:cursor-not-allowed"
                       >
                         ▶️ Wake Model
                       </button>
