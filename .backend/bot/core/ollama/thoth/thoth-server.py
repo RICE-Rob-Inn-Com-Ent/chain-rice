@@ -132,6 +132,20 @@ async def sleep():
 @app.post("/chat")
 async def chat(request: ChatRequest):
     """Main chat endpoint using Mistral"""
+    global model_loaded
+    
+    # Check if model is loaded
+    if not model_loaded:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "Model is loading to GPU",
+                "message": "Please wait ~30 seconds. The model is being loaded to GPU for the first time.",
+                "loading": loading_progress,
+                "retry_after": 30
+            }
+        )
+    
     try:
         # Call Ollama
         response = requests.post(
@@ -148,6 +162,13 @@ async def chat(request: ChatRequest):
             timeout=120,
         )
 
+        if response.status_code == 404:
+            model_loaded = False
+            raise HTTPException(
+                status_code=503, 
+                detail="Model not found. Loading to GPU... Please wait 30 seconds and try again."
+            )
+        
         if response.status_code != 200:
             raise HTTPException(status_code=response.status_code, detail="Ollama error")
 
@@ -155,7 +176,9 @@ async def chat(request: ChatRequest):
         return {"message": data["message"], "model": data["model"]}
 
     except requests.exceptions.Timeout:
-        raise HTTPException(status_code=504, detail="Timeout - model is loading or slow (CPU)")
+        raise HTTPException(status_code=504, detail="Timeout - model is loading to GPU or request is too slow")
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
