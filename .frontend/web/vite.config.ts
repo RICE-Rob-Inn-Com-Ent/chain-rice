@@ -19,7 +19,10 @@ export default defineConfig({
     open: true,
     proxy: {
       "/api/ollama": {
-        target: "http://localhost:11434",
+        // Use host.docker.internal for Docker, localhost for local dev
+        target: process.env.DOCKER_ENV 
+          ? "http://host.docker.internal:11434" 
+          : "http://localhost:11434",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api\/ollama/, ""),

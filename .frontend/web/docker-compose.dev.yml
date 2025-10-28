@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  vite-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: egyptian-ai-dashboard
+    ports:
+      - "3001:3001"
+    volumes:
+      # Mount source code for hot reload
+      - ./app:/app/app
+      - ./lib:/app/lib
+      - ./themes:/app/themes
+      - ./index.tsx:/app/index.tsx
+      - ./index.css:/app/index.css
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tailwind.config.ts:/app/tailwind.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      # Exclude node_modules from volume (use container's)
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=3001
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    networks:
+      - dashboard-network
+    # Connect to host network to access Ollama on localhost:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    stdin_open: true
+    tty: true
+    command: yarn dev
+
+networks:
+  dashboard-network:
+    driver: bridge
+
