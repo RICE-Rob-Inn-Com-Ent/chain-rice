@@ -19,20 +19,19 @@ export default defineConfig({
     open: true,
     proxy: {
       "/api/ollama": {
-        // Use host.docker.internal for Docker, localhost for local dev
-        target: process.env.DOCKER_ENV === "true" ? "http://host.docker.internal:11434" : "http://localhost:11434",
+        target: "http://localhost:11434",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api\/ollama/, ""),
         configure: (proxy, _options) => {
           proxy.on("error", (err, _req, _res) => {
-            console.log("[Ollama Proxy] Error:", err.message);
+            console.log("[Ollama Proxy] ❌ Error:", err.message);
           });
-          proxy.on("proxyReq", (_proxyReq, req, _res) => {
-            console.log("[Ollama Proxy] Request:", req.method, req.url);
+          proxy.on("proxyReq", (proxyReq, req, _res) => {
+            console.log("[Ollama Proxy] 📤 Request:", req.method, req.url, "→", proxyReq.path);
           });
           proxy.on("proxyRes", (proxyRes, req, _res) => {
-            console.log("[Ollama Proxy] Response:", proxyRes.statusCode, req.url);
+            console.log("[Ollama Proxy] 📥 Response:", proxyRes.statusCode, req.url);
           });
         },
       },
