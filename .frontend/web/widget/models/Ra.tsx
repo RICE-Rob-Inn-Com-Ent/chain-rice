@@ -127,6 +127,12 @@ export default function RaUI() {
               </h1>
               <p className="text-sm text-gray-400 mt-1">Stable Diffusion 2.1 FP16 • RealESRGAN • RVM</p>
               <p className="text-xs text-amber-400/70 mt-1">Optimized for 6GB VRAM</p>
+              <div className="flex items-center gap-2 mt-2">
+                <div className={`w-2 h-2 rounded-full ${sdAvailable ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                <span className="text-xs text-gray-400">
+                  {sdAvailable ? 'WebUI Connected (port 7860)' : 'WebUI Offline - Using placeholders'}
+                </span>
+              </div>
               <div className="flex gap-4 mt-2 text-xs text-amber-400">
                 <span>✓ Image Generation (SD 2.1)</span>
                 <span>✓ Upscaling (4x)</span>
