@@ -324,7 +324,10 @@ function App() {
                 <p className="text-xs text-gray-500">Docker images, dokumentacja, updates</p>
               </div>
             </div>
-            <a href="#kontakt" className="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center font-semibold py-3 rounded-lg transition">
+            <a
+              href="#kontakt"
+              className="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center font-semibold py-3 rounded-lg transition"
+            >
               Zapytaj o ofertę
             </a>
           </div>
@@ -332,7 +335,9 @@ function App() {
           {/* Development Services */}
           <div className="bg-gradient-to-b from-blue-900/30 to-blue-950/30 rounded-2xl p-8 border border-blue-500/30 relative">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">Najpopularniejsze</span>
+              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
+                Najpopularniejsze
+              </span>
             </div>
             <div className="text-4xl mb-4">💻</div>
             <h3 className="text-2xl font-bold text-white mb-3">Usługi Programistyczne</h3>
@@ -360,7 +365,10 @@ function App() {
                 <p className="text-xs text-gray-500">Docker, K8s, AWS, Azure, GCP</p>
               </div>
             </div>
-            <a href="#kontakt" className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition">
+            <a
+              href="#kontakt"
+              className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition"
+            >
               Zamów konsultację
             </a>
           </div>
@@ -393,7 +401,10 @@ function App() {
                 <p className="text-xs text-gray-500">Fine-tuning na własnych danych</p>
               </div>
             </div>
-            <a href="#kontakt" className="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-semibold py-3 rounded-lg transition">
+            <a
+              href="#kontakt"
+              className="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-semibold py-3 rounded-lg transition"
+            >
               Wycena projektu
             </a>
           </div>
@@ -405,7 +416,7 @@ function App() {
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <span className="text-2xl">☁️</span>
-              Cloud & Infrastruktura
+              <span>Cloud & Infrastruktura</span>
             </h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
@@ -431,7 +442,7 @@ function App() {
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <span className="text-2xl">🔒</span>
-              Security & Optymalizacja
+              <span>Security & Optymalizacja</span>
             </h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
@@ -542,7 +553,7 @@ function App() {
         <div className="mt-12 bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-6">
           <h4 className="text-lg font-bold text-yellow-400 mb-3 flex items-center gap-2">
             <span className="text-2xl">⚠️</span>
-            Ważne informacje
+            <span>Ważne informacje</span>
           </h4>
           <ul className="space-y-2 text-sm text-gray-300">
             <li>• Ceny podane są orientacyjne - każdy projekt wyceniamy indywidualnie po analizie wymagań</li>
