@@ -1,3 +1,5 @@
+"use client";
+
 import { GodsPanel, LoRaTrainingPanel, GradientText, Reveal, Section } from "@rice-mono/ui-kit/lib";
 
 export default function HomePage() {
