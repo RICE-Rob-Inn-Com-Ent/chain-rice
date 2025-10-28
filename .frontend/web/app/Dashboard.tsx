@@ -166,9 +166,7 @@ export const Dashboard: React.FC = () => {
         {/* Ollama Status */}
         <div className="mt-4 flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${isHealthy ? "bg-green-500" : "bg-red-500"} animate-pulse`} />
-          <span className="text-white font-medium">
-            Ollama: {isHealthy ? "Connected" : "Disconnected"}
-          </span>
+          <span className="text-white font-medium">Ollama: {isHealthy ? "Connected" : "Disconnected"}</span>
           {loading && <Icon icon="svg-spinners:90-ring-with-bg" width={20} className="text-white" />}
         </div>
 
@@ -262,35 +260,53 @@ export const Dashboard: React.FC = () => {
               )}
 
               {/* Actions */}
-              <div className="flex gap-2">
-                {status === "idle" && (
-                  <button
-                    onClick={() => handleWakeGod(god)}
-                    className="flex-1 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg font-semibold transition"
-                  >
-                    Wake Model
-                  </button>
-                )}
-                {status === "active" && (
-                  <button className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition">
-                    Try Demo →
-                  </button>
-                )}
-                {status === "loading" && (
-                  <button disabled className="flex-1 px-4 py-2 bg-white/10 text-gray-400 rounded-lg font-semibold cursor-not-allowed">
-                    Loading...
-                  </button>
-                )}
-                {status === "downloading" && (
-                  <button disabled className="flex-1 px-4 py-2 bg-white/10 text-gray-400 rounded-lg font-semibold cursor-not-allowed">
-                    Downloading...
-                  </button>
-                )}
-                {status === "error" && (
-                  <button className="flex-1 px-4 py-2 bg-red-500/30 hover:bg-red-500/50 text-red-300 rounded-lg font-semibold transition">
-                    Install Models
-                  </button>
-                )}
+              <div className="space-y-2">
+                {/* Primary Action */}
+                <div className="flex gap-2">
+                  {status === "idle" && (
+                    <button
+                      onClick={() => handleWakeGod(god)}
+                      className="flex-1 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg font-semibold transition"
+                    >
+                      Wake Model
+                    </button>
+                  )}
+                  {status === "active" && (
+                    <button className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition">
+                      Try Demo →
+                    </button>
+                  )}
+                  {status === "loading" && (
+                    <button
+                      disabled
+                      className="flex-1 px-4 py-2 bg-white/10 text-gray-400 rounded-lg font-semibold cursor-not-allowed"
+                    >
+                      Loading...
+                    </button>
+                  )}
+                  {status === "downloading" && (
+                    <button
+                      disabled
+                      className="flex-1 px-4 py-2 bg-white/10 text-gray-400 rounded-lg font-semibold cursor-not-allowed"
+                    >
+                      Downloading...
+                    </button>
+                  )}
+                  {status === "error" && (
+                    <button className="flex-1 px-4 py-2 bg-red-500/30 hover:bg-red-500/50 text-red-300 rounded-lg font-semibold transition">
+                      Install Models
+                    </button>
+                  )}
+                </div>
+
+                {/* Train LoRA Button - Always visible */}
+                <button
+                  onClick={() => setTrainingGod(god.id)}
+                  className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2"
+                >
+                  <Icon icon="mdi:brain" width={20} />
+                  Train LoRA
+                </button>
               </div>
             </div>
           );
@@ -311,4 +327,3 @@ export const Dashboard: React.FC = () => {
     </div>
   );
 };
-

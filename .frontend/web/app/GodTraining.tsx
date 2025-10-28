@@ -30,4 +30,3 @@ export const GodTraining: React.FC<GodTrainingProps> = ({ godId, onBack }) => {
     </div>
   );
 };
-
