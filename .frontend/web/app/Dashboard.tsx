@@ -136,6 +136,12 @@ export const Dashboard: React.FC = () => {
     }, 3000);
   };
 
+  const handleTryDemo = (god: AIGod) => {
+    // Open demo page in new tab
+    const demoUrl = `/demo/${god.id}.html`;
+    window.open(demoUrl, "_blank");
+  };
+
   const getProgressForGod = (god: AIGod): number | null => {
     for (const modelName of god.ollamaModels) {
       const progress = downloadProgress.get(modelName);
@@ -264,15 +270,26 @@ export const Dashboard: React.FC = () => {
                 {/* Primary Action */}
                 <div className="flex gap-2">
                   {status === "idle" && (
-                    <button
-                      onClick={() => handleWakeGod(god)}
-                      className="flex-1 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg font-semibold transition"
-                    >
-                      Wake Model
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleWakeGod(god)}
+                        className="flex-1 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg font-semibold transition"
+                      >
+                        Wake Model
+                      </button>
+                      <button 
+                        onClick={() => handleTryDemo(god)}
+                        className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition"
+                      >
+                        Try Demo →
+                      </button>
+                    </>
                   )}
                   {status === "active" && (
-                    <button className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition">
+                    <button 
+                      onClick={() => handleTryDemo(god)}
+                      className="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition"
+                    >
                       Try Demo →
                     </button>
                   )}
