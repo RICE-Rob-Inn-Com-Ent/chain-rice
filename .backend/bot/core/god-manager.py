@@ -69,20 +69,26 @@ async def list_gods() -> List[GodStatus]:
 
                 # Determine actual status based on GPU allocation
                 raw_status = data.get("status", "unknown")
-
+                
                 # Map status properly:
-                # - If this god has GPU → "gpu"
-                # - If model is loading → "loading"
-                # - If god is responsive but no GPU → "cpu"
-                # - Otherwise → "offline"
-
-                if god_id == current_gpu_god and raw_status in ["active", "online"]:
-                    actual_status = "gpu"
+                # - If this god has GPU → "gpu" (green)
+                # - If model is loading → "loading" (blue)  
+                # - If god is responsive but no GPU → "cpu" (yellow)
+                # - Otherwise → "offline" (red)
+                
+                if god_id == current_gpu_god:
+                    # This god owns the GPU
+                    if raw_status == "loading":
+                        actual_status = "loading"
+                    else:
+                        actual_status = "gpu"
                 elif raw_status == "loading":
                     actual_status = "loading"
-                elif raw_status in ["active", "sleeping", "online"]:
+                elif raw_status in ["active", "sleeping", "online", "starting"]:
+                    # God is online but not on GPU = CPU mode
                     actual_status = "cpu"
                 else:
+                    # God is not responding or error
                     actual_status = "offline"
 
                 status = GodStatus(
