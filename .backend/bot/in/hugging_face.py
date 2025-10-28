@@ -226,23 +226,23 @@ class HuggingFaceCloud:
         region: str = "us-east-1",
         min_replica: int = 1,
         max_replica: int = 1,
-    ) -> Dict[str, Any]:
-        """
-        Create dedicated Inference Endpoint
-        
+    ) -> dict[str, Any]:
+        """Create dedicated Inference Endpoint.
+
         Args:
             endpoint_name: Unique name for endpoint
             model: HF model to deploy
-            instance_type: cpu-medium, cpu-large, gpu-small, gpu-medium, gpu-large
+            instance_type: cpu/gpu type
             region: us-east-1, eu-west-1, etc.
             min_replica: Min instances (scaling)
             max_replica: Max instances (scaling)
-        
+
         Returns:
-            Endpoint details and URL
+            Endpoint details and URL.
         """
+        api_error = "HF API key required"
         if not self.api_key:
-            return {"error": "HF API key required"}
+            return {"error": api_error}
 
         try:
             endpoint = create_inference_endpoint(
@@ -271,10 +271,11 @@ class HuggingFaceCloud:
         except Exception as e:
             return {"error": str(e)}
 
-    async def list_inference_endpoints(self) -> Dict[str, Any]:
-        """List all active Inference Endpoints"""
+    async def list_inference_endpoints(self) -> dict[str, Any]:
+        """List all active Inference Endpoints."""
+        api_error = "HF API key required"
         if not self.api_key:
-            return {"error": "HF API key required"}
+            return {"error": api_error}
 
         try:
             endpoints = list_inference_endpoints(token=self.api_key)
@@ -304,26 +305,26 @@ class HuggingFaceCloud:
         self,
         space_name: str,
         app_file: str,
-        requirements: List[str],
+        requirements: list[str],
         hardware: str = "cpu-basic",
         sdk: str = "gradio",
-    ) -> Dict[str, Any]:
-        """
-        Deploy app to Hugging Face Spaces
-        
+    ) -> dict[str, Any]:
+        """Deploy app to Hugging Face Spaces.
+
         Args:
             space_name: Space name (username/space-name)
             app_file: Path to app.py
             requirements: List of Python packages
-            hardware: cpu-basic, cpu-upgrade, t4-small, t4-medium, a10g-small, a10g-large
+            hardware: cpu-basic, t4-small, etc.
             sdk: gradio, streamlit, docker, static
         """
+        api_error = "HF API key required"
         if not self.api_key:
-            return {"error": "HF API key required"}
+            return {"error": api_error}
 
         try:
             # Create Space
-            space = self.api.create_repo(
+            self.api.create_repo(
                 repo_id=space_name,
                 repo_type="space",
                 space_sdk=sdk,
@@ -372,10 +373,10 @@ class HuggingFaceCloud:
         self,
         prompt: str,
         model: str = "stabilityai/stable-diffusion-xl-base-1.0",
-        negative_prompt: Optional[str] = None,
+        negative_prompt: str | None = None,
         num_inference_steps: int = 50,
-    ) -> Dict[str, Any]:
-        """Generate image with Stable Diffusion"""
+    ) -> dict[str, Any]:
+        """Generate image with Stable Diffusion."""
         parameters = {
             "negative_prompt": negative_prompt,
             "num_inference_steps": num_inference_steps,
@@ -392,10 +393,10 @@ class HuggingFaceCloud:
 
     async def generate_embeddings(
         self,
-        texts: List[str],
+        texts: list[str],
         model: str = "sentence-transformers/all-MiniLM-L6-v2",
-    ) -> Dict[str, Any]:
-        """Generate text embeddings"""
+    ) -> dict[str, Any]:
+        """Generate text embeddings."""
         start_time = time.time()
 
         try:
@@ -425,8 +426,8 @@ class HuggingFaceCloud:
         self,
         text: str,
         model: str = "distilbert-base-uncased-finetuned-sst-2-english",
-    ) -> Dict[str, Any]:
-        """Analyze text sentiment"""
+    ) -> dict[str, Any]:
+        """Analyze text sentiment."""
         result = await self._query_inference_api(
             model=model,
             inputs=text,
