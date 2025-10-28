@@ -1,9 +1,7 @@
-"use client";
 import React from "react";
-import Link from "next/link";
 
 /**
- * TopBar - Navigation bar displayed at the top of the page
+ * TopBar - Navigation bar (Legacy - use app/Layout.tsx sidebar instead)
  */
 const TopBar: React.FC = () => {
   return (
@@ -17,27 +15,18 @@ const TopBar: React.FC = () => {
 
       {/* Navigation Links */}
       <div className="hidden space-x-6 md:flex">
-        <Link href="/" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
+        <a href="/" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
           Home
-        </Link>
-        <Link
-          href="/models"
-          className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400"
-        >
+        </a>
+        <a href="/models" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
           Modele AI
-        </Link>
-        <Link
-          href="/pricing"
-          className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400"
-        >
+        </a>
+        <a href="/pricing" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
           Cennik
-        </Link>
-        <Link
-          href="/contact"
-          className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400"
-        >
+        </a>
+        <a href="/contact" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
           Kontakt
-        </Link>
+        </a>
       </div>
 
       {/* CTA Button */}
