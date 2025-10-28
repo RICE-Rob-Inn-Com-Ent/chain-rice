@@ -112,10 +112,42 @@ async def get_status():
 
 @app.post("/wake")
 async def wake():
-    """Mark god as active"""
-    global is_active
+    """Wake model - trigger loading to GPU"""
+    global is_active, model_loading, loading_progress
     is_active = True
-    return {"success": True, "god": "Thoth", "status": "active"}
+    model_loading = True
+    loading_progress = {"status": "waking", "percent": 0, "message": "Starting model load..."}
+    
+    # Trigger model load by making a test request
+    try:
+        import asyncio
+        asyncio.create_task(trigger_model_load())
+    except:
+        pass
+    
+    return {"success": True, "model": "Thoth", "status": "waking"}
+
+async def trigger_model_load():
+    """Background task to load model"""
+    global model_loaded, model_loading, loading_progress
+    try:
+        loading_progress = {"status": "loading", "percent": 20, "message": "Pulling model..."}
+        
+        # Make a test request to load model to GPU
+        response = requests.post(
+            f"{OLLAMA_URL}/api/generate",
+            json={"model": OLLAMA_MODEL, "prompt": "Hello", "stream": False},
+            timeout=120
+        )
+        
+        if response.status_code == 200:
+            model_loaded = True
+            model_loading = False
+            loading_progress = {"status": "ready", "percent": 100, "message": "Model loaded successfully!"}
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        model_loading = False
+        loading_progress = {"status": "error", "percent": 0, "message": str(e)}
 
 
 @app.post("/sleep")

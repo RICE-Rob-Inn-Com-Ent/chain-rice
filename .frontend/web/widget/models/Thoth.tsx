@@ -1,8 +1,8 @@
-"use client";
-import { useState, useRef, useEffect } from "react";
+'use client';
+import { useState, useRef, useEffect } from 'react';
 
 interface Message {
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
   links?: Array<{ url: string; text: string }>;
@@ -10,8 +10,8 @@ interface Message {
 
 export default function ThothUI() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   // Login handler
   const handleLogin = (e: React.FormEvent) => {
@@ -30,14 +30,14 @@ export default function ThothUI() {
           <div className="text-center mb-8">
             <div className="text-7xl mb-4">📜</div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 bg-clip-text text-transparent mb-2">
-              Thoth Document App
+              Thoth AI Model
             </h1>
-            <p className="text-gray-400 text-sm">Analiza dokumentów i asystent tekstowy</p>
+            <p className="text-gray-400 text-sm">NLP & Chat Assistant • Mistral 7B</p>
           </div>
 
           {/* Login Form */}
           <div className="bg-gray-900/80 backdrop-blur rounded-2xl border border-gray-700 p-8">
-            <h2 className="text-xl font-bold mb-6 text-center">Zaloguj się</h2>
+            <h2 className="text-xl font-bold mb-6 text-center">Login</h2>
             <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold mb-2">Email</label>
@@ -47,13 +47,13 @@ export default function ThothUI() {
                   autoComplete="off"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="alex@example.com"
+                  placeholder="demo@example.com"
                   className="w-full bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2">Hasło</label>
+                <label className="block text-sm font-semibold mb-2">Password</label>
                 <input
                   type="password"
                   name="demo-password"
@@ -69,23 +69,18 @@ export default function ThothUI() {
                 type="submit"
                 className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white py-3 rounded-lg font-bold transition-all"
               >
-                🔐 Zaloguj się
+                🔐 Login
               </button>
             </form>
             <div className="mt-6 text-center text-sm text-gray-500">
-              🎮 Demo mode - wpisz dowolny email i hasło aby wejść
+              🎮 Demo mode - enter any credentials to access
             </div>
           </div>
 
           {/* Info */}
-          <div className="mt-6 bg-cyan-900/20 rounded-lg p-4 border border-cyan-500/30 text-sm text-gray-300">
-            <div className="font-semibold text-cyan-400 mb-2">💡 Co możesz zrobić:</div>
-            <ul className="space-y-1">
-              <li>• Analizować dokumenty (TXT, PDF)</li>
-              <li>• OCR - wyciąganie tekstu z obrazów</li>
-              <li>• Tłumaczenia wielojęzyczne</li>
-              <li>• AI asystent tekstowy</li>
-            </ul>
+          <div className="mt-8 text-center text-xs text-gray-600">
+            <p>Thoth AI Model Demo • Mistral 7B Q4_K_M</p>
+            <p className="mt-1">Natural Language Processing & Chat</p>
           </div>
         </div>
       </div>
@@ -100,11 +95,12 @@ function ThothApp() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [modelStatus, setModelStatus] = useState<"checking" | "loading" | "ready" | "error">("checking");
+  const [modelStatus, setModelStatus] = useState<"checking" | "loading" | "ready" | "offline" | "error">("checking");
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isWaking, setIsWaking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Check model status on mount
+  // Check model status on mount and periodically
   useEffect(() => {
     const checkStatus = async () => {
       try {
@@ -113,32 +109,11 @@ function ThothApp() {
 
         if (data.model_loaded) {
           setModelStatus("ready");
+          setLoadingProgress(100);
         } else if (data.status === "loading" || data.ollama === "online") {
           setModelStatus("loading");
-          // Start polling for status
-          const interval = setInterval(async () => {
-            try {
-              const statusResp = await fetch("http://localhost:8001/health");
-              const statusData = await statusResp.json();
-
-              if (statusData.model_loaded) {
-                setModelStatus("ready");
-                clearInterval(interval);
-              } else {
-                // Estimate progress (0-100% over ~30 seconds)
-                setLoadingProgress((prev) => Math.min(prev + 3, 95));
-              }
-            } catch (err) {
-              console.error("Status check error:", err);
-            }
-          }, 1000);
-
-          // Auto-clear after 40 seconds
-          setTimeout(() => {
-            clearInterval(interval);
-            setModelStatus("ready");
-            setLoadingProgress(100);
-          }, 40000);
+        } else {
+          setModelStatus("offline");
         }
       } catch (error) {
         console.error("Failed to check model status:", error);
@@ -147,27 +122,75 @@ function ThothApp() {
     };
 
     checkStatus();
+
+    // Poll every 3 seconds
+    const pollInterval = setInterval(checkStatus, 3000);
+
+    return () => clearInterval(pollInterval);
   }, []);
+
+  // Progress bar animation when loading
+  useEffect(() => {
+    if (modelStatus === "loading") {
+      const progressInterval = setInterval(() => {
+        setLoadingProgress((prev) => Math.min(prev + 2, 95));
+      }, 1000);
+
+      return () => clearInterval(progressInterval);
+    }
+  }, [modelStatus]);
+
+  // Wake model function
+  const wakeModel = async () => {
+    setIsWaking(true);
+    setModelStatus("loading");
+    setLoadingProgress(0);
+
+    try {
+      await fetch("http://localhost:8001/wake", { method: "POST" });
+
+      // Start polling for ready status
+      let attempts = 0;
+      const checkReady = setInterval(async () => {
+        attempts++;
+        try {
+          const resp = await fetch("http://localhost:8001/health");
+          const data = await resp.json();
+
+          if (data.model_loaded) {
+            setModelStatus("ready");
+            setLoadingProgress(100);
+            setIsWaking(false);
+            clearInterval(checkReady);
+          } else if (attempts > 60) {
+            // Timeout after 60 seconds
+            setIsWaking(false);
+            clearInterval(checkReady);
+          }
+        } catch (err) {
+          console.error("Wake check error:", err);
+        }
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to wake model:", error);
+      setIsWaking(false);
+      setModelStatus("error");
+    }
+  };
 
   // Initialize welcome message on client side only (prevents hydration mismatch)
   useEffect(() => {
-    if (modelStatus === "ready") {
+    if (modelStatus === "ready" && messages.length === 0) {
       setMessages([
         {
           role: "assistant",
           content:
-            "𓅝 Witaj! Jestem Thoth, twój przewodnik po RICE.\n\nPomagam w:\n• Nawigacji po stronie\n• Informacjach o usługach i cenach\n• Kontakcie z zespołem\n• Poznaniu naszych projektów\n\nO co chcesz zapytać?\n\n───────\n📋 Przydatne linki:",
+            "📜 Hello! I'm Thoth AI - your intelligent assistant.\n\nI can help with:\n• Natural language queries\n• Context-aware responses\n• Information retrieval\n• Technical Q&A\n\nWhat would you like to know?",
           timestamp: new Date(),
-          links: [
-            { url: "/services", text: "Nasze usługi" },
-            { url: "/pricing", text: "Cennik" },
-            { url: "/portfolio", text: "Portfolio" },
-            { url: "/contact", text: "Kontakt" },
-          ],
         },
       ]);
     }
-  }, [modelStatus]);
+  }, [modelStatus, messages.length]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -192,8 +215,8 @@ function ThothApp() {
     setIsLoading(true);
 
     try {
-      // Wywołaj prawdziwe API Thoth
-      const response = await fetch("/api/gods/thoth", {
+      // Call Thoth API directly
+      const response = await fetch("http://localhost:8001/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -207,12 +230,13 @@ function ThothApp() {
       });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`API error: ${response.status} - ${JSON.stringify(errorData)}`);
       }
 
       const data = await response.json();
 
-      // Wyekstraktuj linki z odpowiedzi
+      // Extract links from response
       const content = data.message.content;
       const links = extractLinks(content);
       const cleanContent = removeLinksFromContent(content);
@@ -253,7 +277,7 @@ function ThothApp() {
     }
   };
 
-  // Funkcja do wyciągania linków z formatu [link:URL|Text]
+  // Function to extract links from format [link:URL|Text]
   const extractLinks = (content: string): Array<{ url: string; text: string }> => {
     const linkRegex = /\[link:([^\|]+)\|([^\]]+)\]/g;
     const links: Array<{ url: string; text: string }> = [];
@@ -269,7 +293,7 @@ function ThothApp() {
     return links;
   };
 
-  // Usuń linki z treści (zostaw czysty tekst)
+  // Remove links from content (keep clean text)
   const removeLinksFromContent = (content: string): string => {
     return content.replace(/\[link:[^\|]+\|[^\]]+\]/g, "").trim();
   };
@@ -373,40 +397,30 @@ function ThothApp() {
                     : "bg-gradient-to-r from-gray-800 to-gray-700 text-gray-100 border border-cyan-500/30"
                 }`}
               >
-                <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
-                <div className="text-xs opacity-50 mt-2" suppressHydrationWarning>
-                  {msg.timestamp.toLocaleTimeString()}
-                </div>
-
-                {/* Links */}
-                {msg.role === "assistant" && msg.links && msg.links.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-600/30">
-                    <div className="flex flex-wrap gap-2">
-                      {msg.links.map((link, idx) => (
-                        <a
-                          key={idx}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-4 py-2 rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-cyan-500/50 font-semibold flex items-center gap-1"
-                        >
-                          {link.text}
-                          <span className="text-[10px]">→</span>
-                        </a>
-                      ))}
-                    </div>
+                <p className="whitespace-pre-wrap">{msg.content}</p>
+                {msg.links && msg.links.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {msg.links.map((link, linkIdx) => (
+                      <a
+                        key={linkIdx}
+                        href={link.url}
+                        className="inline-block bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 px-3 py-1 rounded-lg text-sm transition"
+                      >
+                        🔗 {link.text}
+                      </a>
+                    ))}
                   </div>
                 )}
+                <div className="text-xs text-gray-500 mt-2">{msg.timestamp.toLocaleTimeString()}</div>
               </div>
             </div>
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-4 border border-cyan-500/30">
-                <div className="flex gap-2">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-100"></div>
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-200"></div>
+              <div className="max-w-[70%] rounded-2xl p-4 bg-gradient-to-r from-gray-800 to-gray-700 border border-cyan-500/30">
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin text-xl">⏳</div>
+                  <span className="text-gray-400">Thinking...</span>
                 </div>
               </div>
             </div>
@@ -414,35 +428,28 @@ function ThothApp() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
-        <form onSubmit={handleSubmit} className="border-t border-gray-700 p-4 bg-gray-900/80">
-          <div className="flex gap-2">
+        {/* Input */}
+        <div className="p-4 border-t border-gray-700 bg-gray-900/70">
+          <form onSubmit={handleSubmit} className="flex gap-2">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Pytaj o usługi, ceny, portfolio... Thoth ci pomoże!"
-              className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"
-              disabled={isLoading}
+              placeholder={modelStatus === "ready" ? "Ask me anything..." : "Model is loading..."}
+              disabled={isLoading || modelStatus !== "ready"}
+              className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50"
             />
             <button
               type="submit"
-              disabled={isLoading || !input.trim()}
-              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 disabled:from-gray-700 disabled:to-gray-800 text-white px-6 py-2 rounded-lg font-semibold transition-all disabled:cursor-not-allowed"
+              disabled={isLoading || !input.trim() || modelStatus !== "ready"}
+              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 disabled:from-gray-700 disabled:to-gray-800 text-white px-6 py-3 rounded-lg font-semibold transition disabled:cursor-not-allowed"
             >
-              {isLoading ? "⏳" : "📤"}
+              {isLoading ? "⏳" : "Send"}
             </button>
-          </div>
-          <div className="mt-2 text-xs text-gray-500">
-            💡 Przykłady: "Gdzie was znaleźć?", "Ile kosztują usługi?", "Jakie macie projekty?"
-          </div>
-        </form>
-      </div>
-
-      {/* Footer */}
-      <div className="max-w-5xl mx-auto mt-4 text-center text-xs text-gray-500">
-        𓅝 Thoth Sales Agent • Mistral 7B Q4_K_M • Twój przewodnik po RICE
+          </form>
+        </div>
       </div>
     </div>
   );
 }
+
