@@ -198,4 +198,3 @@ export async function interruptGeneration(): Promise<void> {
     console.error("[SD] Failed to interrupt:", error);
   }
 }
-
