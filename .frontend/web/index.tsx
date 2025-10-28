@@ -296,180 +296,262 @@ function App() {
 
       {/* Pricing Section */}
       <section id="cennik" className="max-w-7xl mx-auto px-4 py-20">
-        <h2 className="text-4xl font-bold text-white text-center mb-4">Cennik</h2>
-        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-          Wybierz pakiet dopasowany do Twoich potrzeb • Wszystkie plany z dostępem API
+        <h2 className="text-4xl font-bold text-white text-center mb-4">Cennik Usług</h2>
+        <p className="text-gray-400 text-center mb-12 max-w-3xl mx-auto">
+          Programujemy wszystko • Full-Stack Web Development • AI Integration • Cloud Infrastructure
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Free Plan */}
-          <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl p-8 border border-gray-700">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-white mb-2">Free</h3>
-              <p className="text-gray-400 text-sm mb-4">Modele 7B dla testów</p>
-              <div className="mb-4">
-                <span className="text-4xl font-bold text-white">0 zł</span>
-                <span className="text-gray-400">/miesiąc</span>
+        {/* Main Service Categories */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          {/* AI Models Subscription */}
+          <div className="bg-gradient-to-b from-purple-900/30 to-purple-950/30 rounded-2xl p-8 border border-purple-500/30">
+            <div className="text-4xl mb-4">🤖</div>
+            <h3 className="text-2xl font-bold text-white mb-3">Subskrypcja Modeli AI</h3>
+            <p className="text-gray-400 text-sm mb-6">Dostęp do modeli w chmurze lub lokalnie</p>
+            <div className="space-y-4 mb-6">
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">Cloud (Managed)</span>
+                  <span className="text-purple-400 font-bold">od 499 zł/msc</span>
+                </div>
+                <p className="text-xs text-gray-500">Hosting w Polsce, API ready, auto-scaling</p>
+              </div>
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">Self-Hosted</span>
+                  <span className="text-purple-400 font-bold">od 199 zł/msc</span>
+                </div>
+                <p className="text-xs text-gray-500">Docker images, dokumentacja, updates</p>
               </div>
             </div>
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-300">Mistral 7B Q4</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-300">SD 2.1 (512x512)</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-300">100 requests/dzień</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-300">API access</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-gray-600 mt-1">✗</span>
-                <span className="text-gray-500">Priority support</span>
-              </li>
-            </ul>
-            <button className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition">
-              Rozpocznij
-            </button>
+            <a href="#kontakt" className="block w-full bg-purple-600 hover:bg-purple-700 text-white text-center font-semibold py-3 rounded-lg transition">
+              Zapytaj o ofertę
+            </a>
           </div>
 
-          {/* Simple Plan */}
-          <div className="bg-gradient-to-b from-blue-900 to-blue-950 rounded-2xl p-8 border border-blue-500/50 relative">
+          {/* Development Services */}
+          <div className="bg-gradient-to-b from-blue-900/30 to-blue-950/30 rounded-2xl p-8 border border-blue-500/30 relative">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">Popularne</span>
+              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">Najpopularniejsze</span>
             </div>
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-white mb-2">Simple</h3>
-              <p className="text-gray-300 text-sm mb-4">Modele 13B + więcej features</p>
-              <div className="mb-4">
-                <span className="text-4xl font-bold text-white">299 zł</span>
-                <span className="text-gray-300">/miesiąc</span>
+            <div className="text-4xl mb-4">💻</div>
+            <h3 className="text-2xl font-bold text-white mb-3">Usługi Programistyczne</h3>
+            <p className="text-gray-400 text-sm mb-6">Senior developers • Stawki godzinowe</p>
+            <div className="space-y-4 mb-6">
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">Full-Stack Developer</span>
+                  <span className="text-blue-400 font-bold">300-400 zł/h</span>
+                </div>
+                <p className="text-xs text-gray-500">React, Next.js, Node, Python, Go</p>
+              </div>
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">AI/ML Engineer</span>
+                  <span className="text-blue-400 font-bold">350-450 zł/h</span>
+                </div>
+                <p className="text-xs text-gray-500">Model training, fine-tuning, deployment</p>
+              </div>
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">DevOps Engineer</span>
+                  <span className="text-blue-400 font-bold">280-380 zł/h</span>
+                </div>
+                <p className="text-xs text-gray-500">Docker, K8s, AWS, Azure, GCP</p>
               </div>
             </div>
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Wszystko z Free +</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Mistral 13B</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">LLaVa 13B (Visual QA)</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">5,000 requests/dzień</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Priority support</span>
-              </li>
-            </ul>
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
-              Wybierz Simple
-            </button>
+            <a href="#kontakt" className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg transition">
+              Zamów konsultację
+            </a>
           </div>
 
-          {/* Premium Plan */}
-          <div className="bg-gradient-to-b from-purple-900 to-purple-950 rounded-2xl p-8 border border-purple-500/50">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-white mb-2">Premium</h3>
-              <p className="text-gray-300 text-sm mb-4">Pełny dostęp do AI Stack</p>
-              <div className="mb-4">
-                <span className="text-4xl font-bold text-white">999 zł</span>
-                <span className="text-gray-300">/miesiąc</span>
+          {/* Integration & Support */}
+          <div className="bg-gradient-to-b from-amber-900/30 to-amber-950/30 rounded-2xl p-8 border border-amber-500/30">
+            <div className="text-4xl mb-4">🔧</div>
+            <h3 className="text-2xl font-bold text-white mb-3">Integracja & Wsparcie</h3>
+            <p className="text-gray-400 text-sm mb-6">Kompleksowa integracja z Twoim systemem</p>
+            <div className="space-y-4 mb-6">
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">Instalacja lokalna</span>
+                  <span className="text-amber-400 font-bold">od 3,000 zł</span>
+                </div>
+                <p className="text-xs text-gray-500">Setup, konfiguracja, szkolenie zespołu</p>
+              </div>
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">Integracja API</span>
+                  <span className="text-amber-400 font-bold">od 5,000 zł</span>
+                </div>
+                <p className="text-xs text-gray-500">WhatsApp, Slack, custom webhooks</p>
+              </div>
+              <div>
+                <div className="flex justify-between items-baseline mb-2">
+                  <span className="text-white font-semibold">Custom LoRA Training</span>
+                  <span className="text-amber-400 font-bold">od 8,000 zł</span>
+                </div>
+                <p className="text-xs text-gray-500">Fine-tuning na własnych danych</p>
               </div>
             </div>
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Wszystko z Simple +</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Wszystkie 6 modeli AI</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Fine-tuning (LoRA)</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">50,000 requests/dzień</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Dedicated support 24/7</span>
-              </li>
-            </ul>
-            <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition">
-              Wybierz Premium
-            </button>
-          </div>
-
-          {/* Enterprise Plan */}
-          <div className="bg-gradient-to-b from-amber-900 to-amber-950 rounded-2xl p-8 border border-amber-500/50">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
-              <p className="text-gray-300 text-sm mb-4">Dedykowana infrastruktura</p>
-              <div className="mb-4">
-                <span className="text-3xl font-bold text-white">Indywidualnie</span>
-              </div>
-            </div>
-            <ul className="space-y-3 mb-6">
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Wszystko z Premium +</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Dedykowane GPU</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Custom models & LoRA</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">Unlimited requests</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-gray-200">SLA 99.9%</span>
-              </li>
-            </ul>
-            <button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition">
-              Skontaktuj się
-            </button>
+            <a href="#kontakt" className="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-semibold py-3 rounded-lg transition">
+              Wycena projektu
+            </a>
           </div>
         </div>
 
-        {/* Pricing Features */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Additional Services */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          {/* Cloud & Infrastructure */}
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <div className="text-3xl mb-3">💰</div>
-            <h3 className="text-lg font-bold text-white mb-2">Brak ukrytych kosztów</h3>
-            <p className="text-gray-400 text-sm">Transparentne ceny, bez dodatkowych opłat za transfer danych</p>
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className="text-2xl">☁️</span>
+              Cloud & Infrastruktura
+            </h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-300">Dockerizacja projektu</span>
+                <span className="text-purple-400 font-semibold">od 2,500 zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Setup AWS/Azure/GCP</span>
+                <span className="text-purple-400 font-semibold">od 4,000 zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">CI/CD Pipeline</span>
+                <span className="text-purple-400 font-semibold">od 3,500 zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Kubernetes deployment</span>
+                <span className="text-purple-400 font-semibold">od 6,000 zł</span>
+              </div>
+            </div>
           </div>
+
+          {/* Security & Optimization */}
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <div className="text-3xl mb-3">🔒</div>
-            <h3 className="text-lg font-bold text-white mb-2">Twoje dane są bezpieczne</h3>
-            <p className="text-gray-400 text-sm">Modele działają w Polsce, pełna zgodność z RODO</p>
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className="text-2xl">🔒</span>
+              Security & Optymalizacja
+            </h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-300">Security audit</span>
+                <span className="text-purple-400 font-semibold">od 5,000 zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Optymalizacja SEO</span>
+                <span className="text-purple-400 font-semibold">od 3,000 zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Performance optimization</span>
+                <span className="text-purple-400 font-semibold">od 4,000 zł</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">RODO compliance</span>
+                <span className="text-purple-400 font-semibold">od 3,500 zł</span>
+              </div>
+            </div>
           </div>
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <div className="text-3xl mb-3">⚡</div>
-            <h3 className="text-lg font-bold text-white mb-2">Zoptymalizowane dla 6GB VRAM</h3>
-            <p className="text-gray-400 text-sm">Wszystkie modele działają wydajnie nawet na podstawowym sprzęcie</p>
+        </div>
+
+        {/* System Requirements */}
+        <div className="bg-gradient-to-r from-gray-900 to-black rounded-2xl p-8 border border-gray-700 mb-12">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">💻 Wymagania Systemowe (Self-Hosted)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h4 className="text-lg font-semibold text-purple-400 mb-3">Minimum (7B models)</h4>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li>• GPU: 6GB VRAM (GTX 1660, RTX 3050)</li>
+                <li>• RAM: 16GB</li>
+                <li>• CPU: 4 cores</li>
+                <li>• Storage: 50GB SSD</li>
+                <li>• OS: Ubuntu 22.04 / Docker</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold text-blue-400 mb-3">Recommended (13B models)</h4>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li>• GPU: 12GB VRAM (RTX 3060, RTX 4060)</li>
+                <li>• RAM: 32GB</li>
+                <li>• CPU: 8 cores</li>
+                <li>• Storage: 100GB NVMe SSD</li>
+                <li>• OS: Ubuntu 22.04 / Docker</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold text-amber-400 mb-3">Production (All models)</h4>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li>• GPU: 24GB VRAM (RTX 3090, RTX 4090)</li>
+                <li>• RAM: 64GB</li>
+                <li>• CPU: 16 cores</li>
+                <li>• Storage: 500GB NVMe SSD</li>
+                <li>• OS: Ubuntu 22.04 / K8s</li>
+              </ul>
+            </div>
           </div>
+        </div>
+
+        {/* Tech Stack */}
+        <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border border-purple-500/30">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">🛠️ Nasz Stack Technologiczny</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">⚛️</div>
+              <div className="text-sm font-semibold text-white">Frontend</div>
+              <div className="text-xs text-gray-400 mt-1">React, Next.js, Vue, Svelte</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">🔧</div>
+              <div className="text-sm font-semibold text-white">Backend</div>
+              <div className="text-xs text-gray-400 mt-1">Node, Python, Go, Rust</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">🤖</div>
+              <div className="text-sm font-semibold text-white">AI/ML</div>
+              <div className="text-xs text-gray-400 mt-1">PyTorch, TensorFlow, Ollama</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">☁️</div>
+              <div className="text-sm font-semibold text-white">Cloud</div>
+              <div className="text-xs text-gray-400 mt-1">AWS, Azure, GCP, Docker</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">🗄️</div>
+              <div className="text-sm font-semibold text-white">Databases</div>
+              <div className="text-xs text-gray-400 mt-1">PostgreSQL, MongoDB, Redis</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">⛓️</div>
+              <div className="text-sm font-semibold text-white">Blockchain</div>
+              <div className="text-xs text-gray-400 mt-1">Solidity, Web3, Smart Contracts</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">📱</div>
+              <div className="text-sm font-semibold text-white">Mobile</div>
+              <div className="text-xs text-gray-400 mt-1">Flutter, React Native, Swift</div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <div className="text-2xl mb-2">🔐</div>
+              <div className="text-sm font-semibold text-white">Security</div>
+              <div className="text-xs text-gray-400 mt-1">OAuth, JWT, Encryption, RODO</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Important Notes */}
+        <div className="mt-12 bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-6">
+          <h4 className="text-lg font-bold text-yellow-400 mb-3 flex items-center gap-2">
+            <span className="text-2xl">⚠️</span>
+            Ważne informacje
+          </h4>
+          <ul className="space-y-2 text-sm text-gray-300">
+            <li>• Ceny podane są orientacyjne - każdy projekt wyceniamy indywidualnie po analizie wymagań</li>
+            <li>• Integracje z systemami zewnętrznymi (WhatsApp, AWS, Azure) wyceniane oddzielnie</li>
+            <li>• Legacy systems mogą wymagać dodatkowych prac modernizacyjnych</li>
+            <li>• Hosting modeli w chmurze - koszty infrastruktury doliczane do faktury</li>
+            <li>• Training custom LoRA - wymaga dostarczenia datasetu (min. 1000 przykładów)</li>
+            <li>• Wsparcie 24/7 dostępne w pakietach Enterprise (wycena indywidualna)</li>
+          </ul>
         </div>
       </section>
 
