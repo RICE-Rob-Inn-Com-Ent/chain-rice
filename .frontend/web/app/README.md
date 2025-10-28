@@ -18,12 +18,14 @@ This directory contains the main application pages and routing logic for the Egy
 ## Features
 
 ### Ollama Integration
+
 - Real-time model status monitoring
 - Download progress tracking
 - GPU memory management (6-8GB VRAM limit)
 - Wake/sleep functionality for models
 
 ### LoRA Training
+
 - Stack multiple models together
 - CPU/GPU training modes
 - Demo conversation builder
@@ -31,12 +33,14 @@ This directory contains the main application pages and routing logic for the Egy
 - Container deployment
 
 ### Theme System
+
 - 5 built-in themes (default, dark-purple, cyber-blue, forest-green, sunset-orange)
 - Live theme switching
 - CSS variable-based theming
 - Persistent theme selection
 
 ### Component Library
+
 - 5 header variants
 - 10 button variants
 - Copy-to-clipboard code examples
@@ -45,6 +49,7 @@ This directory contains the main application pages and routing logic for the Egy
 ## Navigation
 
 The app uses a simple state-based routing system:
+
 - Dashboard (🏠)
 - Models (🤖)
 - LoRA Training (🧬)
@@ -67,12 +72,14 @@ yarn preview
 ## Ollama Connection
 
 The app connects to Ollama on `localhost:11434` via Vite proxy:
+
 - Endpoint: `/api/ollama` (proxied to `http://localhost:11434`)
 - Functions: Model listing, status checking, pull/load operations
 
 ## GPU Management
 
 Only ONE god model can be active at a time:
+
 - **ACTIVE** = Loaded on GPU, ready for inference
 - **IDLE** = Not loaded, available to wake
 - **LOADING** = Currently loading to GPU
@@ -80,4 +87,3 @@ Only ONE god model can be active at a time:
 - **ERROR** = Not installed or failed to load
 
 Waking a new model automatically sleeps the currently active one to free VRAM.
-
