@@ -51,9 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onNavigat
               key={item.id}
               onClick={() => onNavigate(item.id)}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition ${
-                currentPage === item.id
-                  ? "bg-white/20 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                currentPage === item.id ? "bg-white/20 text-white" : "text-white/70 hover:bg-white/10 hover:text-white"
               }`}
               title={sidebarCollapsed ? item.label : ""}
             >
@@ -84,4 +82,3 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onNavigat
     </div>
   );
 };
-
