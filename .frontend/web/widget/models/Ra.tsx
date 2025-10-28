@@ -1,12 +1,12 @@
-"use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Icon } from "@iconify/react";
 import {
-  generateImage,
-  checkSDHealth,
-  upscaleImage,
-  generateVariations,
-  getSDModels,
-} from "../../lib/services/stableDiffusion";
+  checkRaHealth,
+  wakeRa,
+  generateImageWithRa,
+  type RaImageGenRequest,
+  type RaHealthResponse,
+} from "../../lib/services/ra";
 
 interface GenerationParams {
   prompt: string;
@@ -24,10 +24,11 @@ interface GenerationParams {
 }
 
 interface GeneratedImage {
+  id: string;
   url: string;
-  params: GenerationParams;
+  prompt: string;
+  params: Partial<GenerationParams>;
   timestamp: number;
-  info: string;
 }
 
 export default function RaUI() {
@@ -50,44 +51,35 @@ export default function RaUI() {
   const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
   const [selectedImage, setSelectedImage] = useState<GeneratedImage | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sdAvailable, setSdAvailable] = useState(false);
+  const [raStatus, setRaStatus] = useState<RaHealthResponse | null>(null);
+  const [raAvailable, setRaAvailable] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [availableModels, setAvailableModels] = useState<any[]>([]);
   const [generationInfo, setGenerationInfo] = useState<string>("");
 
-  const samplers = [
-    "Euler a",
-    "Euler",
-    "LMS",
-    "Heun",
-    "DPM2",
-    "DPM2 a",
-    "DPM++ 2S a",
-    "DPM++ 2M",
-    "DPM++ SDE",
-    "DPM++ 2M Karras",
-    "DPM++ SDE Karras",
-    "DDIM",
-    "PLMS",
-    "UniPC",
-  ];
-
+  // Check Ra health on mount
   useEffect(() => {
     const checkHealth = async () => {
-      const healthy = await checkSDHealth();
-      setSdAvailable(healthy);
-      if (healthy) {
-        const models = await getSDModels();
-        setAvailableModels(models);
+      try {
+        const health = await checkRaHealth();
+        setRaStatus(health);
+        setRaAvailable(true);
+        console.log("Ra status:", health);
+      } catch (err) {
+        console.error("Ra health check failed:", err);
+        setRaAvailable(false);
+        setError("Ra kontener nie działa. Uruchom: docker-compose up rice-ra");
       }
     };
+
     checkHealth();
+    const interval = setInterval(checkHealth, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleGenerate = async () => {
-    if (!params.prompt.trim()) {
-      alert("Wprowadź prompt!");
+    if (!raAvailable) {
+      setError("Ra is not available. Check if the container is running.");
       return;
     }
 
@@ -96,383 +88,317 @@ export default function RaUI() {
     setProgress(0);
 
     try {
-      if (sdAvailable) {
-        const result = await generateImage({
-          prompt: params.prompt,
-          negative_prompt: params.negativePrompt,
+      // Wake Ra if sleeping
+      if (raStatus?.status === "sleeping") {
+        console.log("Waking Ra...");
+        await wakeRa();
+        setProgress(10);
+      }
+
+      // Simulate progress (SD takes time)
+      const progressInterval = setInterval(() => {
+        setProgress((prev) => Math.min(prev + 5, 90));
+      }, 500);
+
+      // Generate image
+      const imagePath = await generateImageWithRa({
+        prompt: params.prompt,
+        negative_prompt: params.negativePrompt,
+        steps: params.steps,
+        cfg_scale: params.cfgScale,
+        width: params.width,
+        height: params.height,
+      });
+
+      clearInterval(progressInterval);
+      setProgress(100);
+
+      // For now, use placeholder since we don't have image serving endpoint yet
+      // TODO: Add endpoint to Ra API to serve images
+      const placeholderUrl = `https://fastly.picsum.photos/id/${Math.floor(
+        Math.random() * 1000
+      )}/${params.width}/${params.height}.jpg?hmac=qTw1WejMMjJJhkUkTOnk9KVwVkMmo24gSYhpAAIZwr0`;
+
+      const newImage: GeneratedImage = {
+        id: Date.now().toString(),
+        url: placeholderUrl,
+        prompt: params.prompt,
+        params: {
           steps: params.steps,
-          cfg_scale: params.cfgScale,
+          cfgScale: params.cfgScale,
           width: params.width,
           height: params.height,
-          seed: params.seed,
-          sampler_name: params.samplerName,
-          batch_size: params.batchSize,
-        });
+        },
+        timestamp: Date.now(),
+      };
 
-        if (result.images && result.images.length > 0) {
-          const newImages: GeneratedImage[] = result.images.map((img: string) => ({
-            url: `data:image/png;base64,${img}`,
-            params: { ...params },
-            timestamp: Date.now(),
-            info: result.info || "",
-          }));
+      setImageHistory((prev) => [newImage, ...prev]);
+      setSelectedImage(newImage);
+      setGenerationInfo(`Generated: ${params.prompt}\nPath: ${imagePath}`);
 
-          setImageHistory([...newImages, ...imageHistory]);
-          setSelectedImage(newImages[0]);
-          setGenerationInfo(result.info || "");
-        }
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        const placeholderImg: GeneratedImage = {
-          url: `https://picsum.photos/${params.width}/${params.height}?random=${Date.now()}`,
-          params: { ...params },
-          timestamp: Date.now(),
-          info: "Placeholder mode - WebUI not connected",
-        };
-        setImageHistory([placeholderImg, ...imageHistory]);
-        setSelectedImage(placeholderImg);
-        setError("Stable Diffusion WebUI not running. Using placeholder. Start WebUI on port 7860.");
-      }
-    } catch (error: any) {
-      console.error("[Ra] Generation error:", error);
-      setError(`Generation failed: ${error.message}`);
+      console.log("Image generated:", imagePath);
+    } catch (err: any) {
+      console.error("Generation failed:", err);
+      setError(err.message || "Failed to generate image");
     } finally {
       setIsGenerating(false);
       setProgress(0);
     }
   };
 
-  const handleUpscale = async () => {
-    if (!selectedImage || !sdAvailable) return;
-    setIsGenerating(true);
-    setError(null);
-
-    try {
-      const base64 = selectedImage.url.replace(/^data:image\/\w+;base64,/, "");
-      const result = await upscaleImage(base64, "RealESRGAN_x4plus", 4);
-      const upscaledImg: GeneratedImage = {
-        url: `data:image/png;base64,${result.image}`,
-        params: selectedImage.params,
-        timestamp: Date.now(),
-        info: "Upscaled 4x with RealESRGAN",
-      };
-      setImageHistory([upscaledImg, ...imageHistory]);
-      setSelectedImage(upscaledImg);
-    } catch (error: any) {
-      setError(`Upscale failed: ${error.message}`);
-    } finally {
-      setIsGenerating(false);
-    }
+  const handleRandomize = () => {
+    const randomPrompts = [
+      "a majestic Egyptian pyramid at sunset, golden hour, dramatic lighting",
+      "ancient Egyptian pharaoh wearing golden crown, photorealistic",
+      "cyberpunk Cairo cityscape, neon lights, futuristic pyramids",
+      "Ra god of sun, glowing aura, divine presence, epic scale",
+      "Egyptian hieroglyphs glowing with magical energy",
+    ];
+    setParams((prev) => ({
+      ...prev,
+      prompt: randomPrompts[Math.floor(Math.random() * randomPrompts.length)],
+      seed: Math.floor(Math.random() * 1000000),
+    }));
   };
 
-  const handleVariations = async () => {
-    if (!selectedImage || !params.prompt || !sdAvailable) return;
-    setIsGenerating(true);
+  const handleClear = () => {
+    setParams({
+      prompt: "",
+      negativePrompt: "blurry, low quality, distorted, ugly, bad anatomy",
+      steps: 30,
+      cfgScale: 7.5,
+      width: 512,
+      height: 512,
+      seed: -1,
+      samplerName: "DPM++ 2M Karras",
+      batchSize: 1,
+      batchCount: 1,
+      restoreFaces: false,
+      tiling: false,
+    });
+    setSelectedImage(null);
     setError(null);
-
-    try {
-      const base64 = selectedImage.url.replace(/^data:image\/\w+;base64,/, "");
-      const result = await generateVariations(base64, params.prompt, 0.5);
-      if (result.images && result.images.length > 0) {
-        const varImg: GeneratedImage = {
-          url: `data:image/png;base64,${result.images[0]}`,
-          params: { ...params },
-          timestamp: Date.now(),
-          info: result.info || "Variation",
-        };
-        setImageHistory([varImg, ...imageHistory]);
-        setSelectedImage(varImg);
-      }
-    } catch (error: any) {
-      setError(`Variations failed: ${error.message}`);
-    } finally {
-      setIsGenerating(false);
-    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-900/20 via-black to-red-900/20 text-white">
-      {/* Header - Egyptian Theme */}
-      <div className="border-b border-amber-500/30 bg-gradient-to-r from-amber-900/30 to-orange-900/30 backdrop-blur">
-        <div className="max-w-[2000px] mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="text-5xl">☀️</div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent">
-                  Ra - Image Generation Studio
-                </h1>
-                <div className="flex items-center gap-3 text-xs text-gray-400 mt-1">
-                  <span>Stable Diffusion 2.1 FP16</span>
-                  <span>•</span>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`w-2 h-2 rounded-full ${sdAvailable ? "bg-green-500 animate-pulse" : "bg-red-500"}`}
-                    />
-                    <span>{sdAvailable ? "WebUI Connected (7860)" : "WebUI Offline"}</span>
-                  </div>
-                </div>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-orange-900 via-amber-900 to-yellow-900 text-white">
+      {/* Header */}
+      <div className="bg-black/30 backdrop-blur-lg border-b border-orange-500/30 p-4">
+        <div className="max-w-[2000px] mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="text-5xl">☀️</div>
+            <div>
+              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">
+                Ra - God of Light & Creation
+              </h1>
+              <p className="text-orange-300 text-sm">Stable Diffusion 2.1 FP16 • 6GB VRAM Optimized</p>
             </div>
+          </div>
 
-            {/* Model Selector */}
-            {sdAvailable && availableModels.length > 0 && (
-              <select className="bg-gray-800 border border-amber-500/30 rounded-lg px-3 py-2 text-sm">
-                {availableModels.map((model, idx) => (
-                  <option key={idx} value={model.title}>
-                    {model.model_name}
-                  </option>
-                ))}
-              </select>
+          {/* Ra Status */}
+          <div className="flex items-center gap-3">
+            {raAvailable ? (
+              <>
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    raStatus?.status === "active" ? "bg-green-500" : "bg-yellow-500"
+                  } animate-pulse`}
+                />
+                <span className="text-white font-medium">
+                  Ra: {raStatus?.status === "active" ? "Active (GPU)" : "Sleeping (CPU)"}
+                </span>
+              </>
+            ) : (
+              <>
+                <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-red-400 font-medium">Ra: Disconnected</span>
+              </>
             )}
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[2000px] mx-auto p-4">
-        {/* Tabs */}
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => setActiveTab("txt2img")}
-            className={`px-6 py-2 rounded-t-lg font-semibold transition ${
-              activeTab === "txt2img" ? "bg-amber-600 text-white" : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
-            }`}
-          >
-            txt2img
-          </button>
-          <button
-            onClick={() => setActiveTab("img2img")}
-            className={`px-6 py-2 rounded-t-lg font-semibold transition ${
-              activeTab === "img2img" ? "bg-amber-600 text-white" : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
-            }`}
-          >
-            img2img
-          </button>
-          <button
-            onClick={() => setActiveTab("extras")}
-            className={`px-6 py-2 rounded-t-lg font-semibold transition ${
-              activeTab === "extras" ? "bg-amber-600 text-white" : "bg-gray-800/50 text-gray-400 hover:bg-gray-800"
-            }`}
-          >
-            Extras
-          </button>
+      <div className="max-w-[2000px] mx-auto p-6">
+        {/* Error Display */}
+        {error && (
+          <div className="mb-4 bg-red-900/30 border border-red-500/50 rounded-lg p-4 flex items-start gap-3">
+            <Icon icon="mdi:alert-circle" width={24} className="text-red-400 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-red-300 font-semibold">Error</p>
+              <p className="text-red-200 text-sm">{error}</p>
+            </div>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">
+              <Icon icon="mdi:close" width={20} />
+            </button>
+          </div>
+        )}
+
+        {/* Tab Navigation */}
+        <div className="mb-6 flex gap-2">
+          {(["txt2img", "img2img", "extras"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-3 rounded-lg font-semibold transition ${
+                activeTab === tab
+                  ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20"
+              }`}
+            >
+              {tab === "txt2img" ? "Text to Image" : tab === "img2img" ? "Image to Image" : "Extras"}
+            </button>
+          ))}
         </div>
 
-        <div className="grid grid-cols-12 gap-4">
-          {/* Left Panel - Parameters */}
-          <div className="col-span-4 space-y-4">
-            {/* Prompt Card */}
-            <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4">
-              <h3 className="text-sm font-bold text-amber-400 mb-3 flex items-center gap-2">
-                <span>📝</span> Prompt
-              </h3>
+        {/* 3 Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* LEFT: Parameters */}
+          <div className="bg-black/30 backdrop-blur-lg rounded-xl border border-orange-500/30 p-6 space-y-4 h-fit">
+            <h2 className="text-xl font-bold text-orange-300 mb-4">Parameters</h2>
+
+            {/* Prompt */}
+            <div>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">Prompt</label>
               <textarea
                 value={params.prompt}
-                onChange={(e) => setParams({ ...params, prompt: e.target.value })}
-                placeholder="masterpiece, highly detailed Egyptian pyramid at sunset, golden hour lighting..."
-                className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[100px] resize-y font-mono"
-              />
-
-              <h3 className="text-sm font-bold text-amber-400 mb-3 mt-4 flex items-center gap-2">
-                <span>🚫</span> Negative Prompt
-              </h3>
-              <textarea
-                value={params.negativePrompt}
-                onChange={(e) => setParams({ ...params, negativePrompt: e.target.value })}
-                className="w-full bg-gray-800 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[60px] resize-y font-mono"
+                onChange={(e) => setParams((prev) => ({ ...prev, prompt: e.target.value }))}
+                placeholder="Egyptian pyramid at sunset..."
+                className="w-full h-24 bg-black/40 border border-orange-500/30 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
 
-            {/* Sampling Parameters */}
-            <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4">
-              <h3 className="text-sm font-bold text-amber-400 mb-3">⚙️ Sampling</h3>
+            {/* Negative Prompt */}
+            <div>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">Negative Prompt</label>
+              <textarea
+                value={params.negativePrompt}
+                onChange={(e) => setParams((prev) => ({ ...prev, negativePrompt: e.target.value }))}
+                placeholder="blurry, low quality..."
+                className="w-full h-16 bg-black/40 border border-orange-500/30 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
 
-              <div className="space-y-3">
-                {/* Sampler */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5 text-gray-300">Sampling method</label>
-                  <select
-                    value={params.samplerName}
-                    onChange={(e) => setParams({ ...params, samplerName: e.target.value })}
-                    className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  >
-                    {samplers.map((sampler) => (
-                      <option key={sampler} value={sampler}>
-                        {sampler}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            {/* Steps */}
+            <div>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">
+                Sampling Steps: {params.steps}
+              </label>
+              <input
+                type="range"
+                min="10"
+                max="50"
+                value={params.steps}
+                onChange={(e) => setParams((prev) => ({ ...prev, steps: parseInt(e.target.value) }))}
+                className="w-full"
+              />
+            </div>
 
-                {/* Steps */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5 text-gray-300">
-                    Sampling steps: <span className="text-amber-400">{params.steps}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="150"
-                    value={params.steps}
-                    onChange={(e) => setParams({ ...params, steps: Number.parseInt(e.target.value) })}
-                    className="w-full accent-amber-500"
-                  />
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>1</span>
-                    <span>150</span>
-                  </div>
-                </div>
+            {/* CFG Scale */}
+            <div>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">
+                CFG Scale: {params.cfgScale}
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="20"
+                step="0.5"
+                value={params.cfgScale}
+                onChange={(e) => setParams((prev) => ({ ...prev, cfgScale: parseFloat(e.target.value) }))}
+                className="w-full"
+              />
+            </div>
 
-                {/* CFG Scale */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5 text-gray-300">
-                    CFG Scale: <span className="text-amber-400">{params.cfgScale}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="30"
-                    step="0.5"
-                    value={params.cfgScale}
-                    onChange={(e) => setParams({ ...params, cfgScale: Number.parseFloat(e.target.value) })}
-                    className="w-full accent-amber-500"
-                  />
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>1</span>
-                    <span>30</span>
-                  </div>
-                </div>
-
-                {/* Dimensions */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold mb-1.5 text-gray-300">Width</label>
-                    <select
-                      value={params.width}
-                      onChange={(e) => setParams({ ...params, width: Number.parseInt(e.target.value) })}
-                      className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm"
-                    >
-                      <option value="512">512</option>
-                      <option value="640">640</option>
-                      <option value="768">768</option>
-                      <option value="1024">1024</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold mb-1.5 text-gray-300">Height</label>
-                    <select
-                      value={params.height}
-                      onChange={(e) => setParams({ ...params, height: Number.parseInt(e.target.value) })}
-                      className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm"
-                    >
-                      <option value="512">512</option>
-                      <option value="640">640</option>
-                      <option value="768">768</option>
-                      <option value="1024">1024</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Batch */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold mb-1.5 text-gray-300">Batch count</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={params.batchCount}
-                      onChange={(e) => setParams({ ...params, batchCount: Number.parseInt(e.target.value) })}
-                      className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold mb-1.5 text-gray-300">Batch size</label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="8"
-                      value={params.batchSize}
-                      onChange={(e) => setParams({ ...params, batchSize: Number.parseInt(e.target.value) })}
-                      className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm"
-                    />
-                  </div>
-                </div>
-
-                {/* Seed */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5 text-gray-300">Seed</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      value={params.seed}
-                      onChange={(e) => setParams({ ...params, seed: Number.parseInt(e.target.value) })}
-                      className="flex-1 bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm"
-                      placeholder="-1 = random"
-                    />
-                    <button
-                      onClick={() => setParams({ ...params, seed: -1 })}
-                      className="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs"
-                    >
-                      🎲
-                    </button>
-                  </div>
-                </div>
-
-                {/* Checkboxes */}
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={params.restoreFaces}
-                      onChange={(e) => setParams({ ...params, restoreFaces: e.target.checked })}
-                      className="w-4 h-4 accent-amber-500"
-                    />
-                    <span className="text-sm text-gray-300">Restore faces</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={params.tiling}
-                      onChange={(e) => setParams({ ...params, tiling: e.target.checked })}
-                      className="w-4 h-4 accent-amber-500"
-                    />
-                    <span className="text-sm text-gray-300">Tiling</span>
-                  </label>
-                </div>
+            {/* Dimensions */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-semibold text-orange-300 mb-2">Width</label>
+                <select
+                  value={params.width}
+                  onChange={(e) => setParams((prev) => ({ ...prev, width: parseInt(e.target.value) }))}
+                  className="w-full bg-black/40 border border-orange-500/30 rounded-lg p-2 text-white"
+                >
+                  {[256, 384, 512, 640, 768, 896, 1024].map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-orange-300 mb-2">Height</label>
+                <select
+                  value={params.height}
+                  onChange={(e) => setParams((prev) => ({ ...prev, height: parseInt(e.target.value) }))}
+                  className="w-full bg-black/40 border border-orange-500/30 rounded-lg p-2 text-white"
+                >
+                  {[256, 384, 512, 640, 768, 896, 1024].map((h) => (
+                    <option key={h} value={h}>
+                      {h}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            {/* Generate Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 disabled:from-gray-700 disabled:to-gray-800 text-white py-3 rounded-lg font-bold text-lg transition-all disabled:cursor-not-allowed shadow-lg hover:shadow-amber-500/50 flex items-center justify-center gap-2"
-            >
-              {isGenerating ? (
-                <>
-                  <div className="animate-spin text-2xl">☀️</div>
-                  <span>Generating...</span>
-                </>
-              ) : (
-                <>
-                  <span>✨</span>
-                  <span>Generate</span>
-                </>
-              )}
-            </button>
+            {/* Seed */}
+            <div>
+              <label className="block text-sm font-semibold text-orange-300 mb-2">Seed (-1 = random)</label>
+              <input
+                type="number"
+                value={params.seed}
+                onChange={(e) => setParams((prev) => ({ ...prev, seed: parseInt(e.target.value) }))}
+                className="w-full bg-black/40 border border-orange-500/30 rounded-lg p-2 text-white"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-2 pt-4">
+              <button
+                onClick={handleGenerate}
+                disabled={isGenerating || !params.prompt || !raAvailable}
+                className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold rounded-lg transition flex items-center justify-center gap-2"
+              >
+                {isGenerating ? (
+                  <>
+                    <Icon icon="svg-spinners:90-ring-with-bg" width={20} />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Icon icon="mdi:creation" width={20} />
+                    Generate
+                  </>
+                )}
+              </button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={handleRandomize}
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition"
+                >
+                  🎲 Randomize
+                </button>
+                <button
+                  onClick={handleClear}
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition"
+                >
+                  🗑️ Clear
+                </button>
+              </div>
+            </div>
 
             {/* Progress Bar */}
             {isGenerating && (
-              <div className="bg-gray-900/80 rounded-lg p-3">
-                <div className="flex justify-between text-xs text-gray-400 mb-2">
-                  <span>Progress</span>
+              <div className="pt-2">
+                <div className="flex justify-between text-xs text-orange-300 mb-1">
+                  <span>Generating...</span>
                   <span>{progress}%</span>
                 </div>
-                <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-black/50 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -480,129 +406,96 @@ export default function RaUI() {
             )}
           </div>
 
-          {/* Center - Preview */}
-          <div className="col-span-5">
-            <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4 h-full">
-              <h3 className="text-sm font-bold text-amber-400 mb-3">🖼️ Preview</h3>
+          {/* MIDDLE: Preview */}
+          <div className="bg-black/30 backdrop-blur-lg rounded-xl border border-orange-500/30 p-6">
+            <h2 className="text-xl font-bold text-orange-300 mb-4">Preview</h2>
 
-              {/* Error */}
-              {error && (
-                <div className="mb-4 bg-red-900/30 border border-red-500/50 rounded-lg p-3 text-sm text-red-300">
-                  ⚠️ {error}
-                </div>
-              )}
-
-              {/* Image Display */}
-              <div
-                className="bg-black rounded-lg overflow-hidden border-2 border-amber-500/30 mb-4"
-                style={{ minHeight: "512px" }}
-              >
-                {selectedImage ? (
+            {selectedImage ? (
+              <div className="space-y-4">
+                <div className="relative aspect-square bg-black/50 rounded-lg overflow-hidden border-2 border-orange-500/50">
                   <img src={selectedImage.url} alt="Generated" className="w-full h-full object-contain" />
-                ) : (
-                  <div className="flex items-center justify-center h-full min-h-[512px]">
-                    <div className="text-center">
-                      <div className="text-6xl mb-4 opacity-30">☀️</div>
-                      <p className="text-gray-500">No image generated yet</p>
-                      <p className="text-xs text-gray-600 mt-2">Enter a prompt and click Generate</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
 
-              {/* Action Buttons */}
-              {selectedImage && (
-                <div className="grid grid-cols-4 gap-2">
-                  <button
-                    onClick={() => {
-                      const link = document.createElement("a");
-                      link.href = selectedImage.url;
-                      link.download = `ra-${selectedImage.timestamp}.png`;
-                      link.click();
-                    }}
-                    className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition"
-                  >
-                    💾 Save
+                <div className="bg-black/40 rounded-lg p-3 space-y-2">
+                  <p className="text-xs text-gray-400">Prompt:</p>
+                  <p className="text-sm text-white">{selectedImage.prompt}</p>
+
+                  {generationInfo && (
+                    <>
+                      <p className="text-xs text-gray-400 mt-3">Info:</p>
+                      <p className="text-xs text-gray-300 whitespace-pre-wrap font-mono">{generationInfo}</p>
+                    </>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2">
+                    <Icon icon="mdi:download" width={16} />
+                    Download
                   </button>
-                  <button
-                    onClick={() => setParams({ ...params, prompt: selectedImage.params.prompt })}
-                    className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition"
-                  >
-                    📋 Copy
-                  </button>
-                  <button
-                    onClick={handleVariations}
-                    disabled={!sdAvailable || isGenerating}
-                    className="px-3 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-semibold transition"
-                  >
-                    🔄 Vary
-                  </button>
-                  <button
-                    onClick={handleUpscale}
-                    disabled={!sdAvailable || isGenerating}
-                    className="px-3 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-semibold transition"
-                  >
-                    ⬆️ 4x
+                  <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center justify-center gap-2">
+                    <Icon icon="mdi:image-multiple" width={16} />
+                    Variations
                   </button>
                 </div>
-              )}
-
-              {/* Generation Info */}
-              {generationInfo && (
-                <details className="mt-4">
-                  <summary className="text-xs text-gray-400 cursor-pointer hover:text-amber-400">
-                    Generation parameters
-                  </summary>
-                  <pre className="mt-2 bg-gray-800 rounded p-2 text-xs text-gray-300 overflow-auto max-h-32">
-                    {generationInfo}
-                  </pre>
-                </details>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="aspect-square bg-black/50 rounded-lg flex items-center justify-center border-2 border-dashed border-orange-500/30">
+                <div className="text-center text-gray-400">
+                  <Icon icon="mdi:image-off" width={64} className="mx-auto mb-2 opacity-50" />
+                  <p>No image generated yet</p>
+                  <p className="text-sm mt-1">Enter a prompt and click Generate</p>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Right Panel - Gallery */}
-          <div className="col-span-3">
-            <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-amber-500/20 p-4">
-              <h3 className="text-sm font-bold text-amber-400 mb-3">🎨 Gallery ({imageHistory.length})</h3>
+          {/* RIGHT: Gallery */}
+          <div className="bg-black/30 backdrop-blur-lg rounded-xl border border-orange-500/30 p-6">
+            <h2 className="text-xl font-bold text-orange-300 mb-4">Gallery ({imageHistory.length})</h2>
 
-              <div className="grid grid-cols-2 gap-2 max-h-[800px] overflow-y-auto">
-                {imageHistory.map((img, idx) => (
-                  <div
-                    key={idx}
+            {imageHistory.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3 max-h-[600px] overflow-y-auto">
+                {imageHistory.map((img) => (
+                  <button
+                    key={img.id}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition ${
-                      selectedImage === img
-                        ? "border-amber-500 ring-2 ring-amber-500/50"
-                        : "border-gray-700 hover:border-amber-500/50"
+                    className={`relative aspect-square bg-black/50 rounded-lg overflow-hidden border-2 transition ${
+                      selectedImage?.id === img.id ? "border-orange-500" : "border-orange-500/20 hover:border-orange-500/50"
                     }`}
                   >
-                    <img src={img.url} alt={`Generated ${idx}`} className="w-full h-full object-cover" />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                      <p className="text-xs text-white truncate">{img.params.prompt.substring(0, 30)}...</p>
-                      <p className="text-xs text-gray-400">
-                        {img.params.width}x{img.params.height}
-                      </p>
-                    </div>
-                  </div>
+                    <img src={img.url} alt={img.prompt} className="w-full h-full object-cover" />
+                  </button>
                 ))}
               </div>
-
-              {imageHistory.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <p className="text-sm">No images yet</p>
-                  <p className="text-xs mt-1">Generated images will appear here</p>
+            ) : (
+              <div className="flex items-center justify-center h-[400px] text-gray-400 text-sm">
+                <div className="text-center">
+                  <Icon icon="mdi:image-multiple-outline" width={48} className="mx-auto mb-2 opacity-50" />
+                  <p>No images yet</p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <div className="border-t border-amber-500/20 bg-gray-900/50 backdrop-blur mt-6 py-3">
-        <div className="max-w-[2000px] mx-auto px-6 text-center text-xs text-gray-500">
-          𓇳 Ra Image Generation Studio • Powered by Stable Diffusion 2.1 • {sdAvailable ? "🟢 Connected" : "🔴 Offline"}
+        {/* Info Section */}
+        <div className="mt-6 bg-black/30 backdrop-blur-lg rounded-xl border border-orange-500/30 p-6">
+          <h3 className="text-xl font-bold text-orange-300 mb-3">ℹ️ About Ra</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-300">
+            <div>
+              <p className="font-semibold text-orange-400 mb-1">Model</p>
+              <p>Stable Diffusion 2.1 FP16</p>
+            </div>
+            <div>
+              <p className="font-semibold text-orange-400 mb-1">Optimizations</p>
+              <p>Attention Slicing • VAE Slicing</p>
+            </div>
+            <div>
+              <p className="font-semibold text-orange-400 mb-1">VRAM</p>
+              <p>6GB optimized (lazy loading)</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
