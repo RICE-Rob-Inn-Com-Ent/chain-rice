@@ -12,7 +12,20 @@ export default defineConfig({
   server: {
     port: 3001,
     strictPort: false,
+    host: "0.0.0.0",
     open: true,
+    proxy: {
+      "/api/ollama": {
+        target: "http://localhost:11434",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/ollama/, ""),
+        configure: (proxy, _options) => {
+          proxy.on("error", (err, _req, _res) => {
+            console.log("Ollama proxy error:", err);
+          });
+        },
+      },
+    },
   },
   resolve: {
     alias: {
