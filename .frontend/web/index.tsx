@@ -186,9 +186,9 @@ function App() {
         }
       }
 
-      // Step 2: Wait for GPU to clear
-      console.log(`⏳ Waiting 3 seconds for GPU to clear...`);
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Step 2: Wait for GPU/VRAM to clear (critical for memory management)
+      console.log(`⏳ Waiting 5 seconds for VRAM to clear...`);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
       // Step 3: Wake the selected model
       const targetModel = aiModels.find((m) => m.id === modelId);

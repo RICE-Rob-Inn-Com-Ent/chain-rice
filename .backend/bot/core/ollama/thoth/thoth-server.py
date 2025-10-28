@@ -157,11 +157,11 @@ async def sleep():
     is_active = False
     model_loaded = False
     model_loading = False
-    
+
     # Clear lazy-loaded models from memory
     ocr_reader = None
     translator = None
-    
+
     # Unload model from Ollama (free VRAM)
     vram_cleared = False
     try:
@@ -171,7 +171,7 @@ async def sleep():
             json={"model": OLLAMA_MODEL, "keep_alive": 0},
             timeout=5
         )
-        
+
         if delete_response.ok:
             print(f"✅ Model {OLLAMA_MODEL} unloaded from VRAM via API")
             vram_cleared = True
@@ -189,14 +189,14 @@ async def sleep():
             )
             print(f"✅ Model {OLLAMA_MODEL} unloaded from VRAM (keep_alive=0)")
             vram_cleared = True
-            
+
     except Exception as e:
         print(f"⚠️ Failed to unload model from VRAM: {e}")
-    
+
     return {
-        "success": True, 
-        "model": "Thoth", 
-        "status": "sleeping", 
+        "success": True,
+        "model": "Thoth",
+        "status": "sleeping",
         "vram_cleared": vram_cleared,
         "message": "Model unloaded from GPU memory"
     }
