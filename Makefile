@@ -13,7 +13,7 @@ help:
 	@echo "  make clean        - Stop and remove everything (including volumes)"
 	@echo ""
 	@echo "🎨 Frontend Commands:"
-	@echo "  make web-dev      - Start frontend locally (yarn dev)"
+	@echo "  make web-dev      - Start frontend locally (yarn dev) + AI models"
 	@echo "  make web-build    - Build frontend locally"
 	@echo "  make web-docker   - Start frontend in Docker (--profile web)"
 	@echo ""
@@ -57,11 +57,15 @@ clean:
 	docker-compose --profile web down -v
 	@echo "✅ Cleaned!"
 
-# Start frontend locally with yarn dev
+# Start frontend locally with yarn dev + AI models
 web-dev:
-	@echo "🎨 Starting frontend locally (yarn dev)..."
+	@echo "🎨 Starting frontend locally (yarn dev + AI models)..."
+	@echo "🤖 Starting AI models in Docker..."
+	@docker-compose up -d thoth ra isis bastet maat khnum
 	@echo "📦 Installing dependencies..."
 	@cd . && yarn install
+	@echo ""
+	@echo "✅ AI Models started in Docker!"
 	@echo "🚀 Starting UI Kit (Vite) and Next.js..."
 	@cd . && yarn dev
 
