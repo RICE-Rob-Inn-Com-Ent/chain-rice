@@ -48,7 +48,12 @@ const aiModels = [
     icon: "🐱",
     gradient: "from-yellow-900 to-amber-900",
     description: "Computer Vision • Analiza obrazu w czasie rzeczywistym",
-    features: ["Face Recognition (InsightFace)", "Pose Estimation (MMPose)", "Object Detection (MMDetection)", "Visual QA (LLaVa 7B)"],
+    features: [
+      "Face Recognition (InsightFace)",
+      "Pose Estimation (MMPose)",
+      "Object Detection (MMDetection)",
+      "Visual QA (LLaVa 7B)",
+    ],
     tech: "InsightFace • MMDetection • LLaVa 7B",
     port: 8004,
   },
@@ -70,7 +75,12 @@ const aiModels = [
     icon: "🏺",
     gradient: "from-emerald-900 to-teal-900",
     description: "3D & Game AI • Modelowanie i rekomendacje",
-    features: ["3D Modeling (Tripo SR)", "System Recommendations (RecBole)", "Code Generation (StarCoder 7B)", "Game AI"],
+    features: [
+      "3D Modeling (Tripo SR)",
+      "System Recommendations (RecBole)",
+      "Code Generation (StarCoder 7B)",
+      "Game AI",
+    ],
     tech: "Tripo SR • RecBole • StarCoder 7B",
     port: 8006,
   },
@@ -332,9 +342,7 @@ function App() {
           {/* Simple Plan */}
           <div className="bg-gradient-to-b from-blue-900 to-blue-950 rounded-2xl p-8 border border-blue-500/50 relative">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                Popularne
-              </span>
+              <span className="bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-semibold">Popularne</span>
             </div>
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold text-white mb-2">Simple</h3>
