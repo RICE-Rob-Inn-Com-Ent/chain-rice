@@ -112,7 +112,8 @@ function App() {
 
           clearTimeout(timeoutId);
           status[model.id] = response.ok;
-        } catch (error) {
+        } catch {
+          // Model is offline or unreachable
           status[model.id] = false;
         }
       }
@@ -226,20 +227,28 @@ function App() {
               <div className="relative p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="text-6xl">{model.icon}</div>
-                  {isChecking ? (
-                    <div className="bg-gray-600/20 text-gray-400 text-xs px-3 py-1 rounded-full border border-gray-500/30 animate-pulse">
-                      Sprawdzam...
-                    </div>
-                  ) : modelStatus[model.id] ? (
-                    <div className="bg-green-600/20 text-green-400 text-xs px-3 py-1 rounded-full border border-green-500/30 flex items-center gap-1">
-                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                      Online
-                    </div>
-                  ) : (
-                    <div className="bg-red-600/20 text-red-400 text-xs px-3 py-1 rounded-full border border-red-500/30">
-                      Offline
-                    </div>
-                  )}
+                  {(() => {
+                    if (isChecking) {
+                      return (
+                        <div className="bg-gray-600/20 text-gray-400 text-xs px-3 py-1 rounded-full border border-gray-500/30 animate-pulse">
+                          Sprawdzam...
+                        </div>
+                      );
+                    }
+                    if (modelStatus[model.id]) {
+                      return (
+                        <div className="bg-green-600/20 text-green-400 text-xs px-3 py-1 rounded-full border border-green-500/30 flex items-center gap-1">
+                          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                          <span>Online</span>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="bg-red-600/20 text-red-400 text-xs px-3 py-1 rounded-full border border-red-500/30">
+                        Offline
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <h3 className="text-2xl font-bold text-white mb-1">{model.name}</h3>
