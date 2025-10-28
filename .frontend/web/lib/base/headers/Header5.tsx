@@ -56,4 +56,3 @@ export const Header5: React.FC<HeaderProps> = ({ logo, title = "Dashboard", menu
     </header>
   );
 };
-

@@ -21,4 +21,3 @@ export const Button7: React.FC<ButtonProps> = ({ children, loading = false, clas
     </button>
   );
 };
-

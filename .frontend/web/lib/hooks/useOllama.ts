@@ -123,4 +123,3 @@ export function useOllama(pollingInterval = 2000): OllamaState & OllamaActions {
     load,
   };
 }
-

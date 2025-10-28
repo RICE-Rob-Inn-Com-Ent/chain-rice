@@ -24,4 +24,3 @@ export const Header3: React.FC<HeaderProps> = ({ logo, title = "Dashboard", acti
     </header>
   );
 };
-

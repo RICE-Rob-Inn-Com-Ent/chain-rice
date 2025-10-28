@@ -19,4 +19,3 @@ export const Button6: React.FC<ButtonProps> = ({ children, icon, className = "",
     </button>
   );
 };
-

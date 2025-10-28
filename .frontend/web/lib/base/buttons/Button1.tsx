@@ -17,4 +17,3 @@ export const Button1: React.FC<ButtonProps> = ({ children, className = "", ...pr
     </button>
   );
 };
-

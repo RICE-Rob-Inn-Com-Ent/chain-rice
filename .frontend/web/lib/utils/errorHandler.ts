@@ -8,16 +8,8 @@ export interface RetryOptions {
 /**
  * Retry a function with exponential backoff
  */
-export async function retryWithBackoff<T>(
-  fn: () => Promise<T>,
-  options: RetryOptions = {}
-): Promise<T> {
-  const {
-    maxAttempts = 3,
-    initialDelay = 1000,
-    maxDelay = 10000,
-    backoffMultiplier = 2,
-  } = options;
+export async function retryWithBackoff<T>(fn: () => Promise<T>, options: RetryOptions = {}): Promise<T> {
+  const { maxAttempts = 3, initialDelay = 1000, maxDelay = 10000, backoffMultiplier = 2 } = options;
 
   let lastError: Error | null = null;
   let delay = initialDelay;
@@ -105,4 +97,3 @@ export async function handleAsyncError<T>(
     return null;
   }
 }
-

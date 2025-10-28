@@ -22,4 +22,3 @@ export const Header1: React.FC<HeaderProps> = ({ logo, title = "Dashboard", acti
     </header>
   );
 };
-
