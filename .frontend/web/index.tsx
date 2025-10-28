@@ -5,7 +5,7 @@ import "./index.css";
 import schemaData from "./schema.json";
 
 interface ModelStatus {
-  [key: string]: boolean;
+  [key: string]: "checking" | "online" | "offline";
 }
 
 const aiModels = [
@@ -90,6 +90,7 @@ const aiModels = [
 function App() {
   const [modelStatus, setModelStatus] = useState<ModelStatus>({});
   const [isChecking, setIsChecking] = useState(true);
+  const [wakingModel, setWakingModel] = useState<string | null>(null);
 
   useEffect(() => {
     // Add JSON-LD schema to head
@@ -122,10 +123,23 @@ function App() {
           });
 
           clearTimeout(timeoutId);
-          status[model.id] = response.ok;
+          
+          if (response.ok) {
+            const data = await response.json();
+            // Check if model is actually loaded (for models with Ollama)
+            if (data.model_loaded !== undefined) {
+              status[model.id] = data.model_loaded ? "online" : "offline";
+            } else if (data.status === "active") {
+              status[model.id] = "online";
+            } else {
+              status[model.id] = "online"; // Default to online if health check passes
+            }
+          } else {
+            status[model.id] = "offline";
+          }
         } catch {
           // Model is offline or unreachable
-          status[model.id] = false;
+          status[model.id] = "offline";
         }
       }
 
@@ -135,11 +149,91 @@ function App() {
 
     checkModels();
 
-    // Refresh status every 30 seconds
-    const interval = setInterval(checkModels, 30000);
+    // Refresh status every 5 seconds
+    const interval = setInterval(checkModels, 5000);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Wake model - sleep others first to free GPU
+  const handleWakeModel = async (modelId: string) => {
+    setWakingModel(modelId);
+    setModelStatus((prev) => ({ ...prev, [modelId]: "checking" }));
+
+    try {
+      // Sleep all other online models first to free GPU
+      const otherModels = aiModels.filter((m) => m.id !== modelId && modelStatus[m.id] === "online");
+
+      for (const model of otherModels) {
+        try {
+          await fetch(`http://localhost:${model.port}/sleep`, { method: "POST" });
+          console.log(`Sleeping ${model.id}...`);
+          setModelStatus((prev) => ({ ...prev, [model.id]: "offline" }));
+        } catch (err) {
+          console.error(`Failed to sleep ${model.id}:`, err);
+        }
+      }
+
+      // Wait for models to unload from GPU
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Wake the selected model
+      const targetModel = aiModels.find((m) => m.id === modelId);
+      if (targetModel) {
+        const response = await fetch(`http://localhost:${targetModel.port}/wake`, {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          // Poll for status for up to 60 seconds
+          let attempts = 0;
+          const checkInterval = setInterval(async () => {
+            attempts++;
+            try {
+              const healthResp = await fetch(`http://localhost:${targetModel.port}/health`);
+              if (healthResp.ok) {
+                const healthData = await healthResp.json();
+
+                if (healthData.model_loaded || healthData.status === "active") {
+                  setModelStatus((prev) => ({ ...prev, [modelId]: "online" }));
+                  clearInterval(checkInterval);
+                  setWakingModel(null);
+                } else if (attempts > 60) {
+                  clearInterval(checkInterval);
+                  setWakingModel(null);
+                }
+              }
+            } catch (err) {
+              if (attempts > 60) {
+                clearInterval(checkInterval);
+                setWakingModel(null);
+              }
+            }
+          }, 1000);
+        } else {
+          setWakingModel(null);
+          setModelStatus((prev) => ({ ...prev, [modelId]: "offline" }));
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to wake ${modelId}:`, error);
+      setWakingModel(null);
+      setModelStatus((prev) => ({ ...prev, [modelId]: "offline" }));
+    }
+  };
+
+  // Sleep model
+  const handleSleepModel = async (modelId: string) => {
+    const targetModel = aiModels.find((m) => m.id === modelId);
+    if (!targetModel) return;
+
+    try {
+      await fetch(`http://localhost:${targetModel.port}/sleep`, { method: "POST" });
+      setModelStatus((prev) => ({ ...prev, [modelId]: "offline" }));
+    } catch (error) {
+      console.error(`Failed to sleep ${modelId}:`, error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
