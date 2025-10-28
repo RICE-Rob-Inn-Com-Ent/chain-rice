@@ -206,6 +206,29 @@ services:
       - rice-backend
     restart: unless-stopped
 
+  # God Manager - AI Orchestrator & GPU Manager
+  god-manager:
+    build:
+      context: .backend/bot/core
+      dockerfile: Dockerfile.god-manager
+    image: god-manager:1
+    container_name: rice-god-manager
+    ports:
+      - "8100:8100"
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - rice-backend
+      - pantheon
+    depends_on:
+      - thoth
+      - ra
+      - isis
+      - bastet
+      - maat
+      - khnum
+    restart: unless-stopped
+
   # ========================================
   # GODS - AI SPECIALIZED SERVICES
   # ========================================
