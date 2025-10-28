@@ -210,7 +210,7 @@ services:
       context: .backend/bot/core/gods/thoth
       dockerfile: Dockerfile
     image: thoth:1
-    container_name: rice-god-thoth
+    container_name: thot-jeden
     labels:
       - "god.name=Thoth"
       - "god.icon=📜"
