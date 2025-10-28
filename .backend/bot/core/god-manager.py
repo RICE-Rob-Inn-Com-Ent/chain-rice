@@ -61,7 +61,7 @@ async def list_gods() -> List[GodStatus]:
     """List all gods with their current status"""
     statuses = []
 
-    async with httpx.AsyncClient(timeout=5.0) as client:
+    async with httpx.AsyncClient(timeout=15.0) as client:  # Increased timeout for slow Ollama
         for god_id, god_info in GODS.items():
             try:
                 response = await client.get(f"{god_info['url']}/health")
