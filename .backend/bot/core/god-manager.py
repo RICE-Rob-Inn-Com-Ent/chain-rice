@@ -60,20 +60,38 @@ async def root():
 async def list_gods() -> List[GodStatus]:
     """List all gods with their current status"""
     statuses = []
-
+    
     async with httpx.AsyncClient(timeout=5.0) as client:
         for god_id, god_info in GODS.items():
             try:
                 response = await client.get(f"{god_info['url']}/health")
                 data = response.json()
-
+                
+                # Determine actual status based on GPU allocation
+                raw_status = data.get("status", "unknown")
+                
+                # Map status properly:
+                # - If this god has GPU → "gpu"
+                # - If model is loading → "loading"  
+                # - If god is responsive but no GPU → "cpu"
+                # - Otherwise → "offline"
+                
+                if god_id == current_gpu_god and raw_status in ["active", "online"]:
+                    actual_status = "gpu"
+                elif raw_status == "loading":
+                    actual_status = "loading"
+                elif raw_status in ["active", "sleeping", "online"]:
+                    actual_status = "cpu"
+                else:
+                    actual_status = "offline"
+                
                 status = GodStatus(
                     god_id=god_id,
                     name=god_info["name"],
                     icon=god_info["icon"],
-                    status=data.get("status", "unknown"),
+                    status=actual_status,
                     gpu_allocated=(god_id == current_gpu_god),
-                    progress=data.get("progress"),
+                    progress=data.get("loading", {}).get("percent") if isinstance(data.get("loading"), dict) else data.get("progress"),
                     estimated_time=data.get("estimated_time"),
                 )
                 statuses.append(status)
@@ -87,7 +105,7 @@ async def list_gods() -> List[GodStatus]:
                         gpu_allocated=False,
                     )
                 )
-
+    
     return statuses
 
 
