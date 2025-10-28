@@ -17,10 +17,7 @@ const TopBar: React.FC = () => {
 
       {/* Navigation Links */}
       <div className="hidden space-x-6 md:flex">
-        <Link
-          href="/"
-          className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400"
-        >
+        <Link href="/" className="text-gray-700 hover:text-green-600 dark:text-gray-300 dark:hover:text-green-400">
           Home
         </Link>
         <Link
@@ -54,4 +51,3 @@ const TopBar: React.FC = () => {
 };
 
 export default TopBar;
-
