@@ -227,15 +227,16 @@ function ThothApp() {
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error: any) {
       console.error("Error:", error);
-      
+
       let errorContent = `❌ Błąd: ${error.message}`;
-      
+
       // Check if it's a 503 (model loading) error
       if (error.message.includes("503")) {
         setModelStatus("loading");
-        errorContent = "⏳ Model jest ładowany na GPU. Proszę poczekać ~30 sekund i spróbować ponownie.\n\nModel zostanie załadowany do pamięci GPU przy pierwszym użyciu. Kolejne zapytania będą natychmiastowe.";
+        errorContent =
+          "⏳ Model jest ładowany na GPU. Proszę poczekać ~30 sekund i spróbować ponownie.\n\nModel zostanie załadowany do pamięci GPU przy pierwszym użyciu. Kolejne zapytania będą natychmiastowe.";
       }
-      
+
       const errorMessage: Message = {
         role: "assistant",
         content: errorContent,
@@ -286,9 +287,9 @@ function ThothApp() {
                 <span>✓ Product Expert</span>
                 <span>✓ Link Provider</span>
               </div>
-              
+
               {/* Loading Progress Bar */}
-              {modelStatus === 'loading' && (
+              {modelStatus === "loading" && (
                 <div className="mt-4">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="animate-spin text-xl">⏳</div>
@@ -297,7 +298,7 @@ function ThothApp() {
                     </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-cyan-500 to-blue-500 h-full transition-all duration-300 ease-out"
                       style={{ width: `${loadingProgress}%` }}
                     />
@@ -307,17 +308,17 @@ function ThothApp() {
                   </p>
                 </div>
               )}
-              
+
               {/* Ready Status */}
-              {modelStatus === 'ready' && (
+              {modelStatus === "ready" && (
                 <div className="mt-3 flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-xs text-green-400">Model załadowany i gotowy</span>
                 </div>
               )}
-              
+
               {/* Error Status */}
-              {modelStatus === 'error' && (
+              {modelStatus === "error" && (
                 <div className="mt-3 text-xs text-red-400">
                   ⚠️ Nie można połączyć się z modelem. Sprawdź czy kontener jest uruchomiony.
                 </div>
