@@ -15,8 +15,8 @@ services:
     image: ui-kit:1
     container_name: rice-ui-kit
     ports:
-      - "3001:3001"  # Vite dev server
-      - "3002:3002"  # Next.js production
+      - "3001:3001" # Vite dev server
+      - "3002:3002" # Next.js production
     volumes:
       - .:/app
       - /app/node_modules
