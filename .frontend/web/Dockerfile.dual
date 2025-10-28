@@ -55,5 +55,5 @@ RUN chmod +x /app/start-dual.sh
 
 EXPOSE 3001 3002
 
-CMD ["/app/start-dual.sh"]
+CMD ["/bin/sh", "/app/start-dual.sh"]
 
