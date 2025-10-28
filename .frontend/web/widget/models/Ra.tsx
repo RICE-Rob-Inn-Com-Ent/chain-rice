@@ -24,6 +24,13 @@ export default function RaUI() {
   });
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [sdAvailable, setSdAvailable] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Check if Stable Diffusion is available
+  useEffect(() => {
+    checkSDHealth().then(setSdAvailable);
+  }, []);
 
   const handleGenerate = async () => {
     if (!params.prompt.trim()) {
@@ -32,13 +39,76 @@ export default function RaUI() {
     }
 
     setIsGenerating(true);
+    setError(null);
+
     try {
-      // Symulacja generacji - w rzeczywistości wywołaj API
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      // Placeholder image
+      if (sdAvailable) {
+        // Use real Stable Diffusion API
+        const result = await generateImage({
+          prompt: params.prompt,
+          negative_prompt: params.negativePrompt,
+          steps: params.steps,
+          cfg_scale: params.cfgScale,
+          width: params.width,
+          height: params.height,
+          seed: params.seed,
+        });
+
+        // Convert base64 to data URL
+        if (result.images && result.images.length > 0) {
+          setGeneratedImage(`data:image/png;base64,${result.images[0]}`);
+        }
+      } else {
+        // Fallback to placeholder if SD not available
+        console.warn('[Ra] Stable Diffusion not available, using placeholder');
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setGeneratedImage(`https://picsum.photos/${params.width}/${params.height}?random=${Date.now()}`);
+        setError('Stable Diffusion WebUI not running. Using placeholder. Start WebUI on port 7860.');
+      }
+    } catch (error: any) {
+      console.error('[Ra] Generation error:', error);
+      setError(`Generation failed: ${error.message}`);
+      // Fallback to placeholder on error
       setGeneratedImage(`https://picsum.photos/${params.width}/${params.height}?random=${Date.now()}`);
-    } catch (error) {
-      console.error('Error:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleUpscale = async () => {
+    if (!generatedImage) return;
+
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      // Extract base64 from data URL
+      const base64 = generatedImage.replace(/^data:image\/\w+;base64,/, '');
+      const result = await upscaleImage(base64, 'RealESRGAN_x4plus', 4);
+      setGeneratedImage(`data:image/png;base64,${result.image}`);
+    } catch (error: any) {
+      console.error('[Ra] Upscale error:', error);
+      setError(`Upscale failed: ${error.message}`);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleVariations = async () => {
+    if (!generatedImage || !params.prompt) return;
+
+    setIsGenerating(true);
+    setError(null);
+
+    try {
+      const base64 = generatedImage.replace(/^data:image\/\w+;base64,/, '');
+      const result = await generateVariations(base64, params.prompt, 0.5);
+      if (result.images && result.images.length > 0) {
+        setGeneratedImage(`data:image/png;base64,${result.images[0]}`);
+      }
+    } catch (error: any) {
+      console.error('[Ra] Variations error:', error);
+      setError(`Variations failed: ${error.message}`);
     } finally {
       setIsGenerating(false);
     }
