@@ -61,16 +61,16 @@ clean:
 web-dev:
 	@echo "🎨 Starting frontend locally (yarn dev + AI models)..."
 	@echo "🤖 Checking AI models..."
-	@if docker images | grep -q "rice-mono-thoth"; then \
+	@if docker images | grep -q "rice-thoth"; then \
 		echo "✅ Docker images found, starting containers..."; \
-		docker-compose up -d thoth ra isis bastet maat khnum; \
+		cd .backend/bot/core/ollama && docker-compose up -d; \
 	else \
 		echo "⚠️  Docker images not built yet. Building (this takes 15-20 min)..."; \
 		echo "💡 Meanwhile, starting mock AI servers..."; \
 		cd .frontend/web && node mock-models.js & \
 		echo ""; \
 		echo "📦 Building Docker images in background..."; \
-		docker-compose build thoth ra isis bastet maat khnum & \
+		cd .backend/bot/core/ollama && docker-compose build & \
 	fi
 	@echo "📦 Installing dependencies..."
 	@cd . && yarn install
