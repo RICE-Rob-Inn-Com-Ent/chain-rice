@@ -371,7 +371,7 @@ function App() {
         <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
           Każdy model jest zoptymalizowany pod kątem wydajności i działa na GPU z 6-8GB VRAM
         </p>
-        
+
         {/* Download Progress Info Banner */}
         {wakingModel === "thoth" && (
           <div className="mb-8 bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-xl p-4 border border-yellow-500/30 max-w-4xl mx-auto">
