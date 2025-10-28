@@ -6,7 +6,8 @@ import Footer from "@molecules/Footer";
 import { Poppins, Orbitron, Inter } from "next/font/google";
 import dynamic from "next/dynamic";
 
-const ChatWidget = dynamic(() => import("@molecules/ChatWidget"), { ssr: false });
+// TODO: Create ChatWidget component
+// const ChatWidget = dynamic(() => import("@molecules/ChatWidget"), { ssr: false });
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-poppins" });
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["500", "700"], variable: "--font-orbitron" });
@@ -86,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* padding-top kompensuje wysokość stałego nagłówka */}
         <main className="relative pt-24 md:pt-24 lg:pt-24">{children}</main>
         <Footer />
-        <ChatWidget />
+        {/* <ChatWidget /> */}
       </body>
     </html>
   );
