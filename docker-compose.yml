@@ -297,7 +297,7 @@ services:
       context: .backend/bot/core/ollama/isis
       dockerfile: Dockerfile
     image: isis:1
-    container_name: rice-god-isis
+    container_name: rice-isis
     labels:
       - "god.name=Isis"
       - "god.icon=✨"
@@ -334,7 +334,7 @@ services:
       context: .backend/bot/core/ollama/bastet
       dockerfile: Dockerfile
     image: bastet:1
-    container_name: rice-god-bastet
+    container_name: rice-bastet
     labels:
       - "god.name=Bastet"
       - "god.icon=🐱"
@@ -371,7 +371,7 @@ services:
       context: .backend/bot/core/ollama/maat
       dockerfile: Dockerfile
     image: maat:1
-    container_name: rice-god-maat
+    container_name: rice-maat
     labels:
       - "god.name=Maat"
       - "god.icon=⚖️"
@@ -411,7 +411,7 @@ services:
       context: .backend/bot/core/ollama/khnum
       dockerfile: Dockerfile
     image: khnum:1
-    container_name: rice-god-khnum
+    container_name: rice-khnum
     labels:
       - "god.name=Khnum"
       - "god.icon=💰"
