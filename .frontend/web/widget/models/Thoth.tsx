@@ -227,9 +227,18 @@ function ThothApp() {
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error: any) {
       console.error("Error:", error);
+      
+      let errorContent = `❌ Błąd: ${error.message}`;
+      
+      // Check if it's a 503 (model loading) error
+      if (error.message.includes("503")) {
+        setModelStatus("loading");
+        errorContent = "⏳ Model jest ładowany na GPU. Proszę poczekać ~30 sekund i spróbować ponownie.\n\nModel zostanie załadowany do pamięci GPU przy pierwszym użyciu. Kolejne zapytania będą natychmiastowe.";
+      }
+      
       const errorMessage: Message = {
         role: "assistant",
-        content: `❌ Błąd: ${error.message}. Czekaj ~30 sekund na odpowiedź (Thoth na CPU).`,
+        content: errorContent,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
