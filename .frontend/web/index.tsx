@@ -278,18 +278,42 @@ function App() {
 
                 <div className="pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-500 mb-3">{model.tech}</p>
-                  <a
-                    href={modelStatus[model.id] ? `/demo/${model.id}` : undefined}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block w-full text-center font-semibold py-2 px-4 rounded-lg transition ${
-                      modelStatus[model.id]
-                        ? "bg-purple-600 hover:bg-purple-700 text-white cursor-pointer"
-                        : "bg-gray-700 text-gray-500 cursor-not-allowed opacity-50 pointer-events-none"
-                    }`}
-                  >
-                    {modelStatus[model.id] ? `Wypróbuj ${model.name} →` : `${model.name} Niedostępny`}
-                  </a>
+                  
+                  <div className="flex gap-2">
+                    {/* Wake/Sleep Button */}
+                    {modelStatus[model.id] === "checking" ? (
+                      <button
+                        disabled
+                        className="flex-1 bg-gray-700 text-gray-500 py-2 px-3 rounded-lg text-sm font-semibold cursor-not-allowed"
+                      >
+                        ⏳ Checking...
+                      </button>
+                    ) : modelStatus[model.id] === "online" ? (
+                      <>
+                        <button
+                          onClick={() => handleSleepModel(model.id)}
+                          className="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg text-sm font-semibold transition flex items-center gap-1"
+                        >
+                          💤 Sleep
+                        </button>
+                        <a
+                          href={`/demo/${model.id}.html`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-center py-2 px-3 rounded-lg text-sm font-semibold transition"
+                        >
+                          Try {model.name} →
+                        </a>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => handleWakeModel(model.id)}
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded-lg text-sm font-semibold transition"
+                      >
+                        ▶️ Wake Model
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
