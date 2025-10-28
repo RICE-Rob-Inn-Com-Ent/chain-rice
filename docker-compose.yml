@@ -260,7 +260,7 @@ services:
       context: .backend/bot/core/ollama/ra
       dockerfile: Dockerfile
     image: ra:1
-    container_name: rice-god-ra
+    container_name: rice-ra
     labels:
       - "god.name=Ra"
       - "god.icon=☀️"
