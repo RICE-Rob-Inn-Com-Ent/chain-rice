@@ -46,8 +46,12 @@ export const ComponentLibrary: React.FC = () => {
           title="Dashboard"
           nav={
             <div className="flex gap-4 text-white">
-              <button onClick={() => {}} className="hover:opacity-80">Home</button>
-              <button onClick={() => {}} className="hover:opacity-80">About</button>
+              <button onClick={() => {}} className="hover:opacity-80">
+                Home
+              </button>
+              <button onClick={() => {}} className="hover:opacity-80">
+                About
+              </button>
             </div>
           }
         />
