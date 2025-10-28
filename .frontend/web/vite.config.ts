@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import postcssPresetEnv from "postcss-preset-env";
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
+import { resolve } from "node:path";
 
 export default defineConfig({
   plugins: [react()],
@@ -37,5 +38,16 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        thoth: resolve(__dirname, "demo/thoth.html"),
+        ra: resolve(__dirname, "demo/ra.html"),
+        isis: resolve(__dirname, "demo/isis.html"),
+        bastet: resolve(__dirname, "demo/bastet.html"),
+        maat: resolve(__dirname, "demo/maat.html"),
+        khnum: resolve(__dirname, "demo/khnum.html"),
+      },
+    },
   },
 });
