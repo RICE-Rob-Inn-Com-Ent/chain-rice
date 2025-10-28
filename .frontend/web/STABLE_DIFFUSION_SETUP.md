@@ -2,7 +2,8 @@
 
 ## Quick Start
 
-Ra używa **Automatic1111 Stable Diffusion WebUI** przez API. Aby używać prawdziwej generacji obrazów (zamiast placeholderów), musisz uruchomić WebUI lokalnie.
+Ra używa **Automatic1111 Stable Diffusion WebUI** przez API. Aby używać prawdziwej generacji obrazów (zamiast
+placeholderów), musisz uruchomić WebUI lokalnie.
 
 ## 📥 Instalacja Stable Diffusion WebUI
 
@@ -43,6 +44,7 @@ cd stable-diffusion-webui
 ```
 
 **Flags explanation:**
+
 - `--api` - Enables REST API (required!)
 - `--listen` - Makes API accessible from outside
 - `--xformers` - Memory optimization (faster generation)
@@ -75,29 +77,32 @@ Should return list of available models in JSON.
 ## 🚀 Features
 
 ### Text-to-Image
+
 - Enter prompt: "A beautiful sunset over Egyptian pyramids"
 - Negative prompt: "blurry, low quality"
 - Adjust steps (10-100), CFG Scale (1-20)
 - Select dimensions (512, 768, 1024)
 
 ### Upscaling (RealESRGAN)
+
 - Click "⬆️ Upscale 4x" on generated image
 - Uses RealESRGAN_x4plus model
 - Increases resolution 4x (512 → 2048)
 
 ### Variations
+
 - Click "🔄 Variations" to create similar images
 - Uses img2img with same prompt
 - Denoising strength: 0.5
 
 ## 📊 Performance
 
-| GPU | Resolution | Steps | Time |
-|-----|------------|-------|------|
-| RTX 3060 (6GB) | 512x512 | 30 | ~15s |
-| RTX 3060 (6GB) | 768x768 | 30 | ~30s |
-| RTX 3060 (6GB) | 1024x1024 | 30 | ~60s |
-| RTX 4090 | 512x512 | 30 | ~3s |
+| GPU            | Resolution | Steps | Time |
+| -------------- | ---------- | ----- | ---- |
+| RTX 3060 (6GB) | 512x512    | 30    | ~15s |
+| RTX 3060 (6GB) | 768x768    | 30    | ~30s |
+| RTX 3060 (6GB) | 1024x1024  | 30    | ~60s |
+| RTX 4090       | 512x512    | 30    | ~3s  |
 
 ## 🔧 Troubleshooting
 
@@ -106,6 +111,7 @@ Should return list of available models in JSON.
 **Problem**: Ra can't connect to Stable Diffusion WebUI
 
 **Solutions**:
+
 1. Check if WebUI is running: `curl http://localhost:7860/sdapi/v1/sd-models`
 2. Start WebUI with `--api --listen` flags
 3. Check firewall blocking port 7860
@@ -122,6 +128,7 @@ Vite proxy should handle CORS automatically. If you see CORS errors:
 ### Out of Memory (CUDA OOM)
 
 **Solutions**:
+
 1. Reduce image size (1024 → 768 or 512)
 2. Reduce steps (30 → 20)
 3. Use `--lowvram` or `--medvram` flags
@@ -130,6 +137,7 @@ Vite proxy should handle CORS automatically. If you see CORS errors:
 ### Slow Generation
 
 **Solutions**:
+
 1. Install xformers: `pip install xformers`
 2. Use `--xformers` flag when starting WebUI
 3. Reduce steps to 20-25 (still good quality)
@@ -138,12 +146,15 @@ Vite proxy should handle CORS automatically. If you see CORS errors:
 ## 📦 Recommended Models
 
 ### For 6GB VRAM:
+
 - **Stable Diffusion 2.1 Base** (default) - 512-768 optimal
 - **Realistic Vision V5.1** - Great for realistic images
 - **Dreamshaper 8** - Artistic, good quality
 
 ### Download Models:
+
 Place `.safetensors` files in:
+
 ```
 stable-diffusion-webui/models/Stable-diffusion/
 ```
@@ -153,23 +164,26 @@ Or use WebUI UI: Settings → Stable Diffusion → Download Model
 ## 🎨 Example Prompts
 
 ### Egyptian Theme (for Ra):
+
 ```
-masterpiece, highly detailed Egyptian pyramid at sunset, 
-golden hour lighting, palm trees, desert sand, 
+masterpiece, highly detailed Egyptian pyramid at sunset,
+golden hour lighting, palm trees, desert sand,
 ancient architecture, volumetric lighting, 4k, photorealistic
 ```
 
 ### Fantasy Art:
+
 ```
-fantasy landscape, floating islands, magical waterfalls, 
-glowing crystals, ethereal lighting, concept art, 
+fantasy landscape, floating islands, magical waterfalls,
+glowing crystals, ethereal lighting, concept art,
 detailed, trending on artstation
 ```
 
 ### Portrait:
+
 ```
-portrait of a beautiful woman, Egyptian queen, 
-golden jewelry, detailed face, cinematic lighting, 
+portrait of a beautiful woman, Egyptian queen,
+golden jewelry, detailed face, cinematic lighting,
 realistic skin texture, professional photography
 ```
 
@@ -196,4 +210,3 @@ Ra uses these WebUI endpoints:
 **Status**: ✅ Integration Complete | 🎨 Ra Demo Ready  
 **Port**: 7860 (Stable Diffusion WebUI)  
 **Frontend**: 3001 (Vite Dashboard)
-

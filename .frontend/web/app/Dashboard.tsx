@@ -36,7 +36,7 @@ const aiGods: AIGod[] = [
     description: "Image & Video Generation • Kreacja wizualna",
     features: ["Image Generation (SD 2.1)", "Image Editing", "Upscaling (RealESRGAN)", "Style Transfer"],
     tech: "SD 2.1 FP16 • RealESRGAN • RVM",
-    ollamaModels: ["stable-diffusion"],
+    ollamaModels: [], // Ra uses Stable Diffusion WebUI, not Ollama
   },
   {
     id: "isis",
@@ -102,6 +102,9 @@ export const Dashboard: React.FC = () => {
   const getGodStatus = (god: AIGod): "active" | "idle" | "loading" | "downloading" | "error" => {
     if (loadingGod === god.id) return "loading";
 
+    // Special case for Ra - uses external Stable Diffusion WebUI, always idle
+    if (god.id === "ra") return "idle";
+
     // Check if any of this god's models are downloading
     for (const modelName of god.ollamaModels) {
       if (downloadProgress.has(modelName)) {
@@ -118,7 +121,7 @@ export const Dashboard: React.FC = () => {
       models.some((m) => m.name.startsWith(modelName.split(":")[0]))
     );
 
-    if (!hasModels && isHealthy) return "error"; // Models not downloaded
+    if (!hasModels && isHealthy && god.ollamaModels.length > 0) return "error"; // Models not downloaded
     return "idle";
   };
 
