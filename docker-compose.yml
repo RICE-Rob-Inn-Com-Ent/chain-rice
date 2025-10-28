@@ -294,7 +294,7 @@ services:
   # ✨ Isis - Goddess of Healing (Medical AI)
   isis:
     build:
-      context: .backend/bot/core/gods/isis
+      context: .backend/bot/core/ollama/isis
       dockerfile: Dockerfile
     image: isis:1
     container_name: rice-god-isis
@@ -331,7 +331,7 @@ services:
   # 🐱 Bastet - Goddess of Vision (Computer Vision)
   bastet:
     build:
-      context: .backend/bot/core/gods/bastet
+      context: .backend/bot/core/ollama/bastet
       dockerfile: Dockerfile
     image: bastet:1
     container_name: rice-god-bastet
@@ -368,7 +368,7 @@ services:
   # ⚖️ Maat - Goddess of Justice (Legal Analysis)
   maat:
     build:
-      context: .backend/bot/core/gods/maat
+      context: .backend/bot/core/ollama/maat
       dockerfile: Dockerfile
     image: maat:1
     container_name: rice-god-maat
@@ -408,7 +408,7 @@ services:
   # 💰 Khnum - God of Wealth (Financial Analysis)
   khnum:
     build:
-      context: .backend/bot/core/gods/khnum
+      context: .backend/bot/core/ollama/khnum
       dockerfile: Dockerfile
     image: khnum:1
     container_name: rice-god-khnum
