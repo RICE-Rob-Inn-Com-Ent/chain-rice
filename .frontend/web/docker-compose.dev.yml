@@ -27,6 +27,7 @@ services:
       - VITE_PORT=3001
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - DOCKER_ENV=true
     networks:
       - dashboard-network
     # Connect to host network to access Ollama on localhost:11434

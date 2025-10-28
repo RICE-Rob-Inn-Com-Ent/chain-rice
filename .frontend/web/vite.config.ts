@@ -5,7 +5,7 @@ import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
 import { resolve } from "node:path";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   root: ".",
   publicDir: "public",
@@ -20,7 +20,7 @@ export default defineConfig({
     proxy: {
       "/api/ollama": {
         // Use host.docker.internal for Docker, localhost for local dev
-        target: process.env.DOCKER_ENV 
+        target: process.env.DOCKER_ENV === "true"
           ? "http://host.docker.internal:11434" 
           : "http://localhost:11434",
         changeOrigin: true,
@@ -76,4 +76,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
