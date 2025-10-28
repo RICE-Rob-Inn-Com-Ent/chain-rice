@@ -9,6 +9,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  transpilePackages: ["@rice-mono/ui-kit"],
   experimental: {
     // allow importing files from outside the project directory
     externalDir: true,
