@@ -90,12 +90,21 @@ function App() {
             <span className="text-2xl font-bold text-white">RICE</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#modele" className="text-gray-300 hover:text-white transition">Modele AI</a>
-            <a href="#uslugi" className="text-gray-300 hover:text-white transition">Usługi</a>
-            <a href="#cennik" className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition">
+            <a href="#modele" className="text-gray-300 hover:text-white transition">
+              Modele AI
+            </a>
+            <a href="#uslugi" className="text-gray-300 hover:text-white transition">
+              Usługi
+            </a>
+            <a
+              href="#cennik"
+              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+            >
               Cennik
             </a>
-            <a href="#kontakt" className="text-gray-300 hover:text-white transition">Kontakt</a>
+            <a href="#kontakt" className="text-gray-300 hover:text-white transition">
+              Kontakt
+            </a>
           </nav>
           <button className="md:hidden text-white text-2xl">☰</button>
         </div>
@@ -103,9 +112,7 @@ function App() {
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
-          Egipskie Bóstwa AI
-        </h1>
+        <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">Egipskie Bóstwa AI</h1>
         <h2 className="text-2xl md:text-3xl font-semibold text-purple-300 mb-6">
           6 Potężnych Modeli AI dla Twojego Biznesu
         </h2>
@@ -113,10 +120,16 @@ function App() {
           Od generowania obrazów po analizę 3D - kompletny zestaw narzędzi AI zoptymalizowanych dla wydajności
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
-          <a href="#modele" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-10 rounded-lg transition text-lg shadow-lg hover:shadow-purple-500/50">
+          <a
+            href="#modele"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-10 rounded-lg transition text-lg shadow-lg hover:shadow-purple-500/50"
+          >
             Poznaj Modele
           </a>
-          <a href="#cennik" className="bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-10 rounded-lg backdrop-blur-sm transition text-lg border border-white/20">
+          <a
+            href="#cennik"
+            className="bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-10 rounded-lg backdrop-blur-sm transition text-lg border border-white/20"
+          >
             Zobacz Cennik
           </a>
         </div>
@@ -128,7 +141,7 @@ function App() {
         <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
           Każdy model jest zoptymalizowany pod kątem wydajności i działa na GPU z 6-8GB VRAM
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {aiModels.map((model) => (
             <div
@@ -136,8 +149,10 @@ function App() {
               className="group relative bg-gradient-to-br from-gray-900 to-black rounded-2xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
             >
               {/* Gradient Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${model.gradient} opacity-20 group-hover:opacity-30 transition-opacity`}></div>
-              
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${model.gradient} opacity-20 group-hover:opacity-30 transition-opacity`}
+              ></div>
+
               {/* Content */}
               <div className="relative p-6">
                 <div className="flex items-start justify-between mb-4">
@@ -146,21 +161,21 @@ function App() {
                     Live
                   </div>
                 </div>
-                
+
                 <h3 className="text-2xl font-bold text-white mb-1">{model.name}</h3>
                 <p className="text-sm text-gray-400 mb-4">{model.subtitle}</p>
-                
+
                 <p className="text-gray-300 mb-4 text-sm leading-relaxed">{model.description}</p>
-                
+
                 <div className="space-y-2 mb-4">
-                  {model.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs text-gray-400">
+                  {model.features.map((feature) => (
+                    <div key={feature} className="flex items-center gap-2 text-xs text-gray-400">
                       <span className="text-purple-400">✓</span>
                       <span>{feature}</span>
                     </div>
                   ))}
                 </div>
-                
+
                 <div className="pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-500 mb-3">{model.tech}</p>
                   <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition">
@@ -181,10 +196,16 @@ function App() {
             Rozpocznij od 99 zł/miesiąc i uzyskaj dostęp do wszystkich 6 modeli AI
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a href="#cennik" className="bg-white text-purple-900 hover:bg-gray-100 font-bold py-4 px-10 rounded-lg transition text-lg">
+            <a
+              href="#cennik"
+              className="bg-white text-purple-900 hover:bg-gray-100 font-bold py-4 px-10 rounded-lg transition text-lg"
+            >
               Zobacz Cennik
             </a>
-            <a href="#kontakt" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-10 rounded-lg transition text-lg">
+            <a
+              href="#kontakt"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-10 rounded-lg transition text-lg"
+            >
               Kontakt
             </a>
           </div>
