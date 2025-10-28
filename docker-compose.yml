@@ -12,6 +12,7 @@ services:
       context: .
       dockerfile: .frontend/web/Dockerfile
       target: development
+    image: ui-kit:1
     container_name: rice-ui-kit
     ports:
       - "5173:5173"
