@@ -329,12 +329,12 @@ function App() {
             <div className="flex gap-3">
               <div className="bg-green-600/20 px-4 py-2 rounded-full border border-green-500/30">
                 <span className="text-green-400 text-sm font-semibold">
-                  {Object.values(modelStatus).filter(s => s === "online").length} Online (GPU)
+                  {Object.values(modelStatus).filter((s) => s === "online").length} Online (GPU)
                 </span>
               </div>
               <div className="bg-gray-600/20 px-4 py-2 rounded-full border border-gray-500/30">
                 <span className="text-gray-400 text-sm font-semibold">
-                  {Object.values(modelStatus).filter(s => s === "offline").length} Offline
+                  {Object.values(modelStatus).filter((s) => s === "offline").length} Offline
                 </span>
               </div>
             </div>
