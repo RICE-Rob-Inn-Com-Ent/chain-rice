@@ -219,6 +219,7 @@ function App() {
           try {
             const healthResp = await fetch(`http://localhost:${targetModel.port}/health`, {
               headers: { Accept: "application/json" },
+              mode: "cors",
             });
 
             if (healthResp.ok) {
@@ -239,7 +240,10 @@ function App() {
               }
             }
           } catch (err) {
-            console.log(`⏳ ${modelId} not responding yet... (${attempts}/${maxAttempts})`);
+            // Suppress frequent CORS errors - only log every 10 attempts
+            if (attempts % 10 === 0) {
+              console.log(`⏳ ${modelId} not responding yet... (${attempts}/${maxAttempts})`);
+            }
           }
 
           // Timeout after max attempts
