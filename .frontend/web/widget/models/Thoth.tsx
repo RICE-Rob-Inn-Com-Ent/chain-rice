@@ -228,13 +228,18 @@ function ThothApp() {
     } catch (error: any) {
       console.error("Error:", error);
 
-      let errorContent = `❌ Błąd: ${error.message}`;
+      let errorContent = `❌ Error: ${error.message}`;
 
       // Check if it's a 503 (model loading) error
       if (error.message.includes("503")) {
         setModelStatus("loading");
+        setLoadingProgress(0);
         errorContent =
-          "⏳ Model jest ładowany na GPU. Proszę poczekać ~30 sekund i spróbować ponownie.\n\nModel zostanie załadowany do pamięci GPU przy pierwszym użyciu. Kolejne zapytania będą natychmiastowe.";
+          "⏳ Model is loading to GPU. Please wait ~30-60 seconds and try again.\n\nThe model loads to GPU memory on first use. Subsequent requests will be instant.";
+      } else if (error.message.includes("404")) {
+        setModelStatus("offline");
+        errorContent =
+          "⚠️ Model is offline or not loaded yet.\n\nPlease click the 'Wake Model' button in the header to start the model, then wait ~30 seconds for it to load to GPU.";
       }
 
       const errorMessage: Message = {
@@ -281,19 +286,19 @@ function ThothApp() {
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
                   Thoth AI Model
                 </h1>
-                
+
                 {/* Wake/Sleep Button */}
-                {modelStatus === 'offline' && (
+                {modelStatus === "offline" && (
                   <button
                     onClick={wakeModel}
                     disabled={isWaking}
                     className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white text-xs px-3 py-1 rounded-lg font-semibold transition"
                   >
-                    {isWaking ? '⏳ Waking...' : '▶️ Wake Model'}
+                    {isWaking ? "⏳ Waking..." : "▶️ Wake Model"}
                   </button>
                 )}
               </div>
-              
+
               <p className="text-sm text-gray-400 mt-1">Mistral 7B Q4_K_M • NLP & Chat Assistant</p>
               <div className="flex gap-4 mt-2 text-xs text-cyan-400">
                 <span>✓ Natural Language</span>
@@ -308,7 +313,7 @@ function ThothApp() {
                   <div className="flex items-center gap-2 mb-2">
                     <div className="animate-spin text-xl">⏳</div>
                     <span className="text-sm text-yellow-400 font-semibold">
-                      Ładowanie modelu na GPU... {Math.round(loadingProgress)}%
+                      Loading model to GPU... {Math.round(loadingProgress)}%
                     </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
@@ -318,7 +323,7 @@ function ThothApp() {
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Pierwszy raz może potrwać ~30 sekund. Model ładuje się do pamięci GPU...
+                    First load: ~30-60 seconds • Loading Mistral 7B to GPU memory...
                   </p>
                 </div>
               )}
@@ -327,14 +332,24 @@ function ThothApp() {
               {modelStatus === "ready" && (
                 <div className="mt-3 flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-400">Model załadowany i gotowy</span>
+                  <span className="text-xs text-green-400 font-semibold">● Online</span>
+                  <span className="text-xs text-gray-500">• Model loaded on GPU</span>
+                </div>
+              )}
+              
+              {/* Offline Status */}
+              {modelStatus === "offline" && (
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                  <span className="text-xs text-gray-400">● Offline</span>
+                  <span className="text-xs text-gray-500">• Click "Wake Model" to start</span>
                 </div>
               )}
 
               {/* Error Status */}
               {modelStatus === "error" && (
                 <div className="mt-3 text-xs text-red-400">
-                  ⚠️ Nie można połączyć się z modelem. Sprawdź czy kontener jest uruchomiony.
+                  ⚠️ Cannot connect to model API. Check if container is running on port 8001.
                 </div>
               )}
             </div>
