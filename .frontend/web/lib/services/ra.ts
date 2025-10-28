@@ -93,7 +93,7 @@ export async function generateImageWithRa(params: RaImageGenRequest): Promise<st
   }
 
   const data: RaImageResponse = await response.json();
-  
+
   // Ra returns image_path, but we need to convert it to base64 or URL
   // For now, return a placeholder that frontend can handle
   return data.image_path;
@@ -111,4 +111,3 @@ export async function isRaAvailable(): Promise<boolean> {
     return false;
   }
 }
-
