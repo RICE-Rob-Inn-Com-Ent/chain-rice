@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rice Mono - AI Gods Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .gods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .god-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .god-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .god-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .god-icon {
+            font-size: 3em;
+        }
+        .god-info h2 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .god-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .status-offline { background: #ff4444; }
+        .status-cpu { background: #ffaa00; }
+        .status-loading { background: #44aaff; }
+        .status-gpu { background: #44ff44; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-container.active {
+            display: block;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #44ff44, #44aaff);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .progress-text {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin: 5px;
+        }
+        .btn-wake {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-wake:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn-sleep {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .btn-sleep:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .btn-demo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .btn-demo:hover {
+            transform: scale(1.05);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .gpu-status {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .gpu-status h3 {
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Rice Mono - AI Gods</h1>
+        
+        <div class="gpu-status" id="gpuStatus">
+            <h3>GPU Status</h3>
+            <p id="gpuInfo">Loading...</p>
+        </div>
+        
+        <div class="gods-grid" id="godsGrid">
+            <!-- Gods will be populated here -->
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8100';
+        let updateInterval;
+
+        async function loadGods() {
+            try {
+                const response = await fetch(`${API_URL}/gods`);
+                const gods = await response.json();
+                
+                const grid = document.getElementById('godsGrid');
+                grid.innerHTML = gods.map(god => `
+                    <div class="god-card" data-god-id="${god.god_id}">
+                        <div class="god-header">
+                            <div class="god-icon">${god.icon}</div>
+                            <div class="god-info">
+                                <h2>${god.name}</h2>
+                                <div class="god-status">
+                                    <div class="status-indicator status-${god.status}"></div>
+                                    <span>${god.status.toUpperCase()}</span>
+                                    ${god.gpu_allocated ? ' 🎮 GPU' : ''}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-container ${god.status === 'loading' ? 'active' : ''}" id="progress-${god.god_id}">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${god.progress || 0}%">
+                                    ${god.progress || 0}%
+                                </div>
+                            </div>
+                            <div class="progress-text">
+                                ${god.estimated_time ? `Est. ${god.estimated_time}s remaining` : 'Loading model...'}
+                            </div>
+                        </div>
+                        
+                        <div class="controls">
+                            <button class="btn btn-wake" onclick="wakeGod('${god.god_id}')" 
+                                ${god.status === 'loading' || god.gpu_allocated ? 'disabled' : ''}>
+                                ⚡ Wake Model
+                            </button>
+                            <button class="btn btn-sleep" onclick="sleepGod('${god.god_id}')"
+                                ${!god.gpu_allocated ? 'disabled' : ''}>
+                                💤 Sleep Model
+                            </button>
+                            <button class="btn btn-demo" onclick="tryDemo('${god.god_id}')"
+                                ${god.status !== 'gpu' ? 'disabled' : ''}>
+                                ▶️ Try Demo
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                await updateGPUStatus();
+            } catch (error) {
+                console.error('Error loading gods:', error);
+                document.getElementById('godsGrid').innerHTML = '<p>Error loading gods. Make sure God Manager is running on port 8100.</p>';
+            }
+        }
+
+        async function updateGPUStatus() {
+            try {
+                const response = await fetch(`${API_URL}/gpu`);
+                const data = await response.json();
+                const gpuInfo = document.getElementById('gpuInfo');
+                
+                if (data.allocated) {
+                    gpuInfo.innerHTML = `🎮 GPU Allocated to: <strong>${data.current_god}</strong>`;
+                } else {
+                    gpuInfo.innerHTML = '✅ GPU Available - No model loaded';
+                }
+            } catch (error) {
+                console.error('Error updating GPU status:', error);
+            }
+        }
+
+        async function wakeGod(godId) {
+            try {
+                const button = event.target;
+                button.disabled = true;
+                button.textContent = '⏳ Waking...';
+                
+                const response = await fetch(`${API_URL}/wake/${godId}`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    alert(`${godId} is waking up! This may take 30-60 seconds.`);
+                    // Start polling for progress
+                    startProgressPolling(godId);
+                } else {
+                    alert('Failed to wake god');
+                }
+                
+                setTimeout(() => loadGods(), 2000);
+            } catch (error) {
+                alert('Error: ' + error.message);
+                loadGods();
+            }
+        }
+
+        async function sleepGod(godId) {
+            try {
+                const response = await fetch(`${API_URL}/sleep/${godId}`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    alert(`${godId} is going to sleep`);
+                }
+                
+                setTimeout(() => loadGods(), 1000);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function tryDemo(godId) {
+            alert(`Demo for ${godId} would open here!\nIntegrate with your UI components.`);
+        }
+
+        function startProgressPolling(godId) {
+            // Poll every 2 seconds for progress updates
+            const pollInterval = setInterval(async () => {
+                await loadGods();
+                
+                // Check if loading is complete
+                const gods = await fetch(`${API_URL}/gods`).then(r => r.json());
+                const god = gods.find(g => g.god_id === godId);
+                
+                if (god && god.status !== 'loading') {
+                    clearInterval(pollInterval);
+                }
+            }, 2000);
+        }
+
+        // Auto-refresh every 5 seconds
+        updateInterval = setInterval(loadGods, 5000);
+        
+        // Initial load
+        loadGods();
+    </script>
+</body>
+</html>
+
