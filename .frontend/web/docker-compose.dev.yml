@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   vite-dashboard:
@@ -40,4 +40,3 @@ services:
 networks:
   dashboard-network:
     driver: bridge
-

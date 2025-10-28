@@ -30,7 +30,7 @@ docker-compose -f docker-compose.dev.yml down
 ✅ **Port 3001** - Consistent with local development  
 ✅ **Volume Mounts** - Real-time code sync  
 ✅ **Ollama Integration** - Connects to host Ollama (localhost:11434)  
-✅ **Fast Startup** - Cached dependencies in container  
+✅ **Fast Startup** - Cached dependencies in container
 
 ## File Structure
 
@@ -45,18 +45,22 @@ docker-compose -f docker-compose.dev.yml down
 ## How Hot Reload Works
 
 ### Volume Mounts
+
 The following directories are mounted from host → container:
+
 - `./app` - All dashboard pages
 - `./lib` - Components, hooks, services
 - `./themes` - Theme configurations
 - `*.tsx`, `*.ts`, `*.css` - Config files
 
 ### File Watching
+
 - `CHOKIDAR_USEPOLLING=true` - Enable polling for file changes
 - `WATCHPACK_POLLING=true` - Webpack polling (backup)
 - Vite automatically detects changes and hot-reloads
 
 ### What Triggers Reload
+
 - ✅ Editing `.tsx` files
 - ✅ Editing `.ts` files
 - ✅ Editing `.css` files
@@ -68,6 +72,7 @@ The following directories are mounted from host → container:
 ### Option 1: Ollama on Host (Recommended)
 
 Start Ollama on your host machine:
+
 ```bash
 ollama serve
 ```
@@ -77,6 +82,7 @@ The container connects via `host.docker.internal:11434`
 ### Option 2: Ollama in Container
 
 Add Ollama service to `docker-compose.dev.yml`:
+
 ```yaml
 services:
   ollama:
@@ -97,6 +103,7 @@ Then update Vite proxy to target `ollama:11434` instead of `localhost:11434`.
 ## Commands
 
 ### View Logs
+
 ```bash
 # Follow logs
 docker-compose -f docker-compose.dev.yml logs -f
@@ -106,17 +113,20 @@ docker-compose -f docker-compose.dev.yml logs -f vite-dashboard
 ```
 
 ### Restart Container
+
 ```bash
 docker-compose -f docker-compose.dev.yml restart
 ```
 
 ### Rebuild After Dependency Changes
+
 ```bash
 # If you add new packages to package.json
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
 ### Execute Commands in Container
+
 ```bash
 # Open shell
 docker-compose -f docker-compose.dev.yml exec vite-dashboard sh
@@ -132,6 +142,7 @@ docker-compose -f docker-compose.dev.yml exec vite-dashboard yarn add some-packa
 **Problem:** Changes don't trigger refresh
 
 **Solution:**
+
 ```bash
 # Increase polling interval (edit docker-compose.dev.yml)
 environment:
@@ -147,6 +158,7 @@ docker-compose -f docker-compose.dev.yml restart
 **Problem:** Dashboard shows "Ollama: Disconnected"
 
 **Solution 1 - Check host Ollama:**
+
 ```bash
 # On host machine
 curl http://localhost:11434/api/tags
@@ -155,8 +167,8 @@ curl http://localhost:11434/api/tags
 ollama serve
 ```
 
-**Solution 2 - Update proxy target:**
-Edit `vite.config.ts`:
+**Solution 2 - Update proxy target:** Edit `vite.config.ts`:
+
 ```typescript
 proxy: {
   "/api/ollama": {
@@ -172,6 +184,7 @@ proxy: {
 **Problem:** Error: "port is already allocated"
 
 **Solution:**
+
 ```bash
 # Find and kill process on port 3001
 lsof -ti:3001 | xargs kill -9
@@ -186,6 +199,7 @@ ports:
 **Problem:** Container fails to build
 
 **Solution:**
+
 ```bash
 # Clean build
 docker-compose -f docker-compose.dev.yml down -v
@@ -198,6 +212,7 @@ docker-compose -f docker-compose.dev.yml up --build
 **Problem:** New package not found
 
 **Solution:**
+
 ```bash
 # Rebuild to install new dependencies
 docker-compose -f docker-compose.dev.yml up --build
@@ -210,16 +225,21 @@ docker-compose -f docker-compose.dev.yml restart
 ## Performance Tips
 
 ### 1. Use .dockerignore
+
 Exclude unnecessary files from build context (already configured).
 
 ### 2. Layer Caching
+
 Dependencies are cached. Only source code changes trigger rebuilds.
 
 ### 3. Volume Performance
+
 On Mac/Windows, use Docker Desktop's latest version for better volume performance.
 
 ### 4. Memory Allocation
+
 Increase Docker memory if builds are slow:
+
 ```bash
 # Docker Desktop → Settings → Resources → Memory
 # Set to at least 4GB
@@ -228,6 +248,7 @@ Increase Docker memory if builds are slow:
 ## Development Workflow
 
 ### Day-to-day Development
+
 ```bash
 # Morning: Start container
 docker-compose -f docker-compose.dev.yml up -d
@@ -240,6 +261,7 @@ docker-compose -f docker-compose.dev.yml down
 ```
 
 ### Adding New Dependencies
+
 ```bash
 # Add package
 docker-compose -f docker-compose.dev.yml exec vite-dashboard yarn add package-name
@@ -249,6 +271,7 @@ docker-compose -f docker-compose.dev.yml up --build
 ```
 
 ### Testing Production Build
+
 ```bash
 # Use main Dockerfile (not Dockerfile.dev)
 docker build -t egyptian-dashboard:prod .
@@ -258,6 +281,7 @@ docker run -p 8080:80 egyptian-dashboard:prod
 ## Environment Variables
 
 Available in container:
+
 - `NODE_ENV=development`
 - `VITE_HOST=0.0.0.0`
 - `VITE_PORT=3001`
@@ -265,6 +289,7 @@ Available in container:
 - `WATCHPACK_POLLING=true`
 
 Add custom variables in `docker-compose.dev.yml`:
+
 ```yaml
 environment:
   - VITE_API_URL=http://api.example.com
@@ -272,21 +297,22 @@ environment:
 ```
 
 Access in code:
+
 ```typescript
 const apiUrl = import.meta.env.VITE_API_URL;
 ```
 
 ## Comparison: Docker vs Local
 
-| Feature | Docker Dev | Local Dev |
-|---------|-----------|-----------|
-| Port | 3001 | 3001 |
-| Hot Reload | ✅ Yes | ✅ Yes |
-| Ollama Access | Via host | Direct |
-| Startup Time | ~10-15s | ~3-5s |
-| Isolation | ✅ Complete | Shares host |
-| Consistency | ✅ Same everywhere | Depends on host |
-| Resource Usage | Higher | Lower |
+| Feature        | Docker Dev         | Local Dev       |
+| -------------- | ------------------ | --------------- |
+| Port           | 3001               | 3001            |
+| Hot Reload     | ✅ Yes             | ✅ Yes          |
+| Ollama Access  | Via host           | Direct          |
+| Startup Time   | ~10-15s            | ~3-5s           |
+| Isolation      | ✅ Complete        | Shares host     |
+| Consistency    | ✅ Same everywhere | Depends on host |
+| Resource Usage | Higher             | Lower           |
 
 ## Summary
 
@@ -294,12 +320,12 @@ const apiUrl = import.meta.env.VITE_API_URL;
 ✅ **docker-compose.dev.yml** - Orchestration with volumes  
 ✅ **Port 3001** - Matches local development  
 ✅ **Ollama Integration** - Connects to host or container  
-✅ **Hot Reload** - Real-time code changes  
+✅ **Hot Reload** - Real-time code changes
 
 **Start developing:**
+
 ```bash
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
 Open: http://localhost:3001 🚀
-
