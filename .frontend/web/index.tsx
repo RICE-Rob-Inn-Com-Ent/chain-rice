@@ -28,6 +28,7 @@ const aiModels = [
     description: "Computer Vision • Analiza obrazu w czasie rzeczywistym",
     features: ["Face Recognition", "Pose Estimation", "Object Detection"],
     tech: "InsightFace • MMDetection",
+    port: 8002,
   },
   {
     id: "thoth",
@@ -38,6 +39,7 @@ const aiModels = [
     description: "NLP • Przetwarzanie języka naturalnego",
     features: ["Text Generation", "Q&A", "Summarization"],
     tech: "Llama 3.1 70B • RAG",
+    port: 8003,
   },
   {
     id: "isis",
@@ -48,6 +50,7 @@ const aiModels = [
     description: "Audio Processing • Synteza i analiza dźwięku",
     features: ["Speech-to-Text", "Text-to-Speech", "Audio Enhancement"],
     tech: "Whisper • Bark • RVC",
+    port: 8004,
   },
   {
     id: "khnum",
@@ -58,6 +61,7 @@ const aiModels = [
     description: "3D Modeling • Generowanie modeli 3D",
     features: ["Text-to-3D", "Image-to-3D", "3D Enhancement"],
     tech: "Zero123 • TripoSR",
+    port: 8005,
   },
   {
     id: "maat",
@@ -68,10 +72,14 @@ const aiModels = [
     description: "AI Moderation • Analiza treści i moderacja",
     features: ["Content Moderation", "Fact Checking", "Bias Detection"],
     tech: "CLIP • BERT • Custom",
+    port: 8006,
   },
 ];
 
 function App() {
+  const [modelStatus, setModelStatus] = useState<ModelStatus>({});
+  const [isChecking, setIsChecking] = useState(true);
+
   useEffect(() => {
     // Add JSON-LD schema to head
     const script = document.createElement("script");
@@ -83,6 +91,42 @@ function App() {
       // Cleanup on unmount
       script.remove();
     };
+  }, []);
+
+  // Check model status
+  useEffect(() => {
+    const checkModels = async () => {
+      setIsChecking(true);
+      const status: ModelStatus = {};
+
+      for (const model of aiModels) {
+        try {
+          // Try to fetch health endpoint with timeout
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+          const response = await fetch(`http://localhost:${model.port}/health`, {
+            signal: controller.signal,
+            method: "GET",
+          });
+
+          clearTimeout(timeoutId);
+          status[model.id] = response.ok;
+        } catch (error) {
+          status[model.id] = false;
+        }
+      }
+
+      setModelStatus(status);
+      setIsChecking(false);
+    };
+
+    checkModels();
+
+    // Refresh status every 30 seconds
+    const interval = setInterval(checkModels, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
