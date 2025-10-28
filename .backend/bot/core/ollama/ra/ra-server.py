@@ -82,21 +82,27 @@ async def generate_image(request: ImageGenRequest):
         from diffusers import StableDiffusionPipeline
         import torch
 
-        sd_pipeline = StableDiffusionPipeline.from_pretrained(
-            "stabilityai/stable-diffusion-2-1",
-            torch_dtype=torch.float16,
-        )
-
-        # 6GB VRAM optimizations
-        sd_pipeline.enable_attention_slicing(slice_size="auto")
-        sd_pipeline.enable_vae_slicing()
-
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        sd_pipeline.to(device)
-
+        
+        # Use FP16 only if CUDA is available
         if device == "cuda":
-            # Clear cache before generating
+            sd_pipeline = StableDiffusionPipeline.from_pretrained(
+                "stabilityai/stable-diffusion-2-1",
+                torch_dtype=torch.float16,
+            )
+            # 6GB VRAM optimizations
+            sd_pipeline.enable_attention_slicing(slice_size="auto")
+            sd_pipeline.enable_vae_slicing()
+            sd_pipeline.to(device)
             torch.cuda.empty_cache()
+        else:
+            # CPU mode - use FP32
+            sd_pipeline = StableDiffusionPipeline.from_pretrained(
+                "stabilityai/stable-diffusion-2-1",
+                torch_dtype=torch.float32,
+            )
+            sd_pipeline.enable_attention_slicing(slice_size="auto")
+            sd_pipeline.to(device)
 
     # Generate
     image = sd_pipeline(
