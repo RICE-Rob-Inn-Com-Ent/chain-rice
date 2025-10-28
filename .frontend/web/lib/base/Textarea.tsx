@@ -4,6 +4,7 @@ import clsx from 'clsx';
 type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string;
   floating?: boolean;
+  neutralFocus?: boolean;
 };
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
