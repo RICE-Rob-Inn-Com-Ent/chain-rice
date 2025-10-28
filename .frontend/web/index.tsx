@@ -470,7 +470,7 @@ function App() {
         <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-3xl p-12 border border-purple-500/30 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">Gotowy na moc AI?</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Rozpocznij od 99 zł/miesiąc i uzyskaj dostęp do wszystkich 6 modeli AI
+            Rozpocznij za darmo lub wybierz plan Premium za 999 zł/miesiąc
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
