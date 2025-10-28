@@ -124,7 +124,7 @@ function App() {
           });
 
           clearTimeout(timeoutId);
-          
+
           if (response.ok) {
             const data = await response.json();
             // Check if model is actually loaded (for models with Ollama)
