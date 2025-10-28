@@ -19,8 +19,6 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@atoms": path.resolve(__dirname, "../../.frontend/web/lib/atoms"),
-      "@molecules": path.resolve(__dirname, "../../.frontend/web/lib/molecules"),
       "@rice-mono/ui-kit": path.resolve(__dirname, "../../.frontend/web"),
     };
     // Ensure webpack resolves index files
