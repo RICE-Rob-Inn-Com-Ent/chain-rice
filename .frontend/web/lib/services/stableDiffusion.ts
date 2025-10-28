@@ -21,7 +21,8 @@ export interface SDGenerationResponse {
   info: string;
 }
 
-const SD_API_BASE = import.meta.env.VITE_SD_API_URL || "http://localhost:7860";
+// Use Vite proxy to avoid CORS issues
+const SD_API_BASE = "/api/sd";
 
 /**
  * Check if Stable Diffusion WebUI is running
