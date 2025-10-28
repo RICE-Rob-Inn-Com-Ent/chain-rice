@@ -65,7 +65,7 @@ class HuggingFaceCloud:
     ) -> dict[str, Any]:
         """
         🫐 Superborówki AI Chat using Hugging Face
-        
+
         Args:
             message: User message
             model: HF model to use (default: Mistral-7B)
@@ -279,7 +279,7 @@ class HuggingFaceCloud:
 
         try:
             endpoints = list_inference_endpoints(token=self.api_key)
-            
+
             return {
                 "endpoints": [
                     {
@@ -381,14 +381,14 @@ class HuggingFaceCloud:
             "negative_prompt": negative_prompt,
             "num_inference_steps": num_inference_steps,
         }
-        
+
         result = await self._query_inference_api(
             model=model,
             inputs=prompt,
             parameters=parameters,
             task="text-to-image",
         )
-        
+
         return result
 
     async def generate_embeddings(

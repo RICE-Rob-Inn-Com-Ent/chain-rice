@@ -37,7 +37,7 @@ async def chat_superborowka(
 ) -> dict[str, Any]:
     """
     🫐 Superborówki AI Assistant - Main chat function
-    
+
     Args:
         message: User message
         system_prompt: System instructions
@@ -46,7 +46,7 @@ async def chat_superborowka(
         temperature: Creativity (0-2)
         stream: Enable streaming
         functions: Optional function definitions for function calling
-    
+
     Returns:
         Response with metrics and content
     """
@@ -143,7 +143,7 @@ async def generate_image(
 ) -> dict[str, Any]:
     """
     Generate image with DALL-E 3
-    
+
     Args:
         prompt: Image description
         model: dall-e-3 or dall-e-2
@@ -185,7 +185,7 @@ async def transcribe_audio(
 ) -> dict[str, Any]:
     """
     Transcribe audio with Whisper
-    
+
     Args:
         audio_file_path: Path to audio file
         model: whisper-1
@@ -222,11 +222,11 @@ async def get_embeddings(
 ) -> dict[str, Any]:
     """
     Generate embeddings for text
-    
+
     Args:
         texts: List of texts to embed
         model: text-embedding-3-large or text-embedding-3-small
-    
+
     Returns:
         List of embeddings (vectors)
     """
@@ -264,7 +264,7 @@ async def analyze_image(
 ) -> dict[str, Any]:
     """
     Analyze image with GPT-4 Vision
-    
+
     Args:
         image_url: URL or base64 image
         prompt: Question about the image
