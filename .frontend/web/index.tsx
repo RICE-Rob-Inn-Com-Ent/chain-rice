@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import schemaData from "./schema.json";
+import App from "./app/App";
 
 interface ModelStatus {
   [key: string]: "checking" | "online" | "offline";
