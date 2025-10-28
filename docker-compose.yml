@@ -10,39 +10,13 @@ services:
   ui-kit:
     build:
       context: .
-      dockerfile: .frontend/web/Dockerfile
+      dockerfile: .frontend/web/Dockerfile.dual
       target: development
     image: ui-kit:1
     container_name: rice-ui-kit
     ports:
-      - "5173:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.frontend/web/node_modules
-    environment:
-      - NODE_ENV=development
-      - VITE_HOST=0.0.0.0
-      - CHOKIDAR_USEPOLLING=true
-    networks:
-      - rice-frontend
-    restart: unless-stopped
-    profiles:
-      - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ui-kit.rule=Host(`ui.rice.local`)"
-      - "traefik.http.services.ui-kit.loadbalancer.server.port=5173"
-
-  # Next.js Web Application
-  nextjs-web:
-    build:
-      context: .
-      dockerfile: .project/web/Dockerfile
-    image: nextjs-web:1
-    container_name: rice-nextjs-web
-    ports:
-      - "3001:3001"
+      - "3001:3001"  # Vite dev server
+      - "3002:3002"  # Next.js production
     volumes:
       - .:/app
       - /app/node_modules
@@ -51,23 +25,25 @@ services:
       - /app/.project/web/.next
     environment:
       - NODE_ENV=development
-      - NEXT_TELEMETRY_DISABLED=1
-      - WATCHPACK_POLLING=true
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=3001
+      - NEXT_PORT=3002
       - CHOKIDAR_USEPOLLING=true
-      - NEXT_PUBLIC_API_URL=http://localhost:4000
+      - WATCHPACK_POLLING=true
+      - NEXT_TELEMETRY_DISABLED=1
     networks:
       - rice-frontend
       - rice-backend
-    depends_on:
-      - graphql
-      - ui-kit
     restart: unless-stopped
-    profiles:
-      - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextjs.rule=Host(`app.rice.local`)"
-      - "traefik.http.services.nextjs.loadbalancer.server.port=3001"
+      - "traefik.http.routers.ui-kit-vite.rule=Host(`ui.rice.local`)"
+      - "traefik.http.services.ui-kit-vite.loadbalancer.server.port=3001"
+      - "traefik.http.routers.ui-kit-next.rule=Host(`app.rice.local`)"
+      - "traefik.http.services.ui-kit-next.loadbalancer.server.port=3002"
+
+  # Next.js Web Application - MERGED INTO ui-kit
+  # nextjs-web service is now part of ui-kit container (port 3002)
 
   # ========================================
   # DATABASE LAYER
