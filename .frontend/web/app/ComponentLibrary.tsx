@@ -89,10 +89,30 @@ export const ComponentLibrary: React.FC = () => {
   ];
 
   const buttonExamples = [
-    { id: "btn1", name: "Button 1 - Solid", component: <Button1>Click Me</Button1>, code: `<Button1>Click Me</Button1>` },
-    { id: "btn2", name: "Button 2 - Outline", component: <Button2>Click Me</Button2>, code: `<Button2>Click Me</Button2>` },
-    { id: "btn3", name: "Button 3 - Ghost", component: <Button3>Click Me</Button3>, code: `<Button3>Click Me</Button3>` },
-    { id: "btn4", name: "Button 4 - Gradient", component: <Button4>Click Me</Button4>, code: `<Button4>Click Me</Button4>` },
+    {
+      id: "btn1",
+      name: "Button 1 - Solid",
+      component: <Button1>Click Me</Button1>,
+      code: `<Button1>Click Me</Button1>`,
+    },
+    {
+      id: "btn2",
+      name: "Button 2 - Outline",
+      component: <Button2>Click Me</Button2>,
+      code: `<Button2>Click Me</Button2>`,
+    },
+    {
+      id: "btn3",
+      name: "Button 3 - Ghost",
+      component: <Button3>Click Me</Button3>,
+      code: `<Button3>Click Me</Button3>`,
+    },
+    {
+      id: "btn4",
+      name: "Button 4 - Gradient",
+      component: <Button4>Click Me</Button4>,
+      code: `<Button4>Click Me</Button4>`,
+    },
     {
       id: "btn5",
       name: "Button 5 - Icon Left",
@@ -118,7 +138,12 @@ export const ComponentLibrary: React.FC = () => {
       code: `<Button8>Success</Button8>`,
     },
     { id: "btn9", name: "Button 9 - Error", component: <Button9>Delete</Button9>, code: `<Button9>Delete</Button9>` },
-    { id: "btn10", name: "Button 10 - Pill", component: <Button10>Get Started</Button10>, code: `<Button10>Get Started</Button10>` },
+    {
+      id: "btn10",
+      name: "Button 10 - Pill",
+      component: <Button10>Get Started</Button10>,
+      code: `<Button10>Get Started</Button10>`,
+    },
   ];
 
   return (
@@ -187,7 +212,10 @@ export const ComponentLibrary: React.FC = () => {
 
         <div className="space-y-6">
           {headerExamples.map((example) => (
-            <div key={example.id} className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 overflow-hidden">
+            <div
+              key={example.id}
+              className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 overflow-hidden"
+            >
               <div className="p-4 border-b border-white/10 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-white">{example.name}</h3>
                 <button
@@ -233,7 +261,10 @@ export const ComponentLibrary: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {buttonExamples.map((example) => (
-            <div key={example.id} className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 overflow-hidden">
+            <div
+              key={example.id}
+              className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 overflow-hidden"
+            >
               <div className="p-4 border-b border-white/10 flex items-center justify-between">
                 <h3 className="text-base font-semibold text-white">{example.name}</h3>
                 <button
@@ -268,21 +299,22 @@ export const ComponentLibrary: React.FC = () => {
         </h3>
         <div className="space-y-2 text-sm text-gray-300">
           <p>
-            <strong>Import:</strong> All components are available from <code className="bg-black/30 px-2 py-1 rounded">lib/base</code>
+            <strong>Import:</strong> All components are available from{" "}
+            <code className="bg-black/30 px-2 py-1 rounded">lib/base</code>
           </p>
           <pre className="bg-black/30 p-3 rounded text-xs overflow-x-auto mt-2">
             <code>{`import { Header1, Button1 } from '../lib/base';`}</code>
           </pre>
           <p className="mt-4">
-            <strong>Theming:</strong> Components use CSS variables from the theme system. Colors automatically update when
-            you switch themes.
+            <strong>Theming:</strong> Components use CSS variables from the theme system. Colors automatically update
+            when you switch themes.
           </p>
           <p className="mt-2">
-            <strong>Customization:</strong> All components accept standard HTML props and className for additional styling.
+            <strong>Customization:</strong> All components accept standard HTML props and className for additional
+            styling.
           </p>
         </div>
       </div>
     </div>
   );
 };
-

@@ -411,18 +411,21 @@ export const LoRaTraining: React.FC = () => {
             <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6">
               <h2 className="text-xl font-bold text-white mb-4">Training Metrics</h2>
               <div className="space-y-2 max-h-64 overflow-y-auto">
-                {trainingSteps.slice(-10).reverse().map((step, idx) => (
-                  <div key={idx} className="bg-black/20 rounded p-3 text-xs">
-                    <div className="flex justify-between text-gray-400 mb-1">
-                      <span>Step {step.step}</span>
-                      <span>{step.timestamp}</span>
+                {trainingSteps
+                  .slice(-10)
+                  .reverse()
+                  .map((step, idx) => (
+                    <div key={idx} className="bg-black/20 rounded p-3 text-xs">
+                      <div className="flex justify-between text-gray-400 mb-1">
+                        <span>Step {step.step}</span>
+                        <span>{step.timestamp}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-red-400">Loss: {step.loss.toFixed(4)}</span>
+                        <span className="text-green-400">Acc: {(step.accuracy * 100).toFixed(2)}%</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-red-400">Loss: {step.loss.toFixed(4)}</span>
-                      <span className="text-green-400">Acc: {(step.accuracy * 100).toFixed(2)}%</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           )}
@@ -431,4 +434,3 @@ export const LoRaTraining: React.FC = () => {
     </div>
   );
 };
-

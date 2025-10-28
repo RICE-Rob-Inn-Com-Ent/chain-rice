@@ -104,7 +104,7 @@ export const Prices: React.FC = () => {
                 <span className="text-amber-400 font-bold">od 8,000 zł</span>
               </div>
               <p className="text-xs text-gray-500">Fine-tuning na własnych danych</p>
-              </div>
+            </div>
           </div>
           <button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition">
             Wycena projektu
@@ -283,4 +283,3 @@ export const Prices: React.FC = () => {
     </div>
   );
 };
-
