@@ -171,11 +171,11 @@ function App() {
         const model = aiModels.find((m) => m.id === id);
         if (model) {
           try {
-            const sleepResp = await fetch(`http://localhost:${model.port}/sleep`, { 
+            const sleepResp = await fetch(`http://localhost:${model.port}/sleep`, {
               method: "POST",
-              headers: { "Content-Type": "application/json" }
+              headers: { "Content-Type": "application/json" },
             });
-            
+
             if (sleepResp.ok) {
               console.log(`✅ ${id} is now sleeping`);
               setModelStatus((prev) => ({ ...prev, [id]: "offline" }));
@@ -201,31 +201,32 @@ function App() {
       console.log(`🚀 Waking ${modelId}...`);
       const wakeResp = await fetch(`http://localhost:${targetModel.port}/wake`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
 
       if (wakeResp.ok) {
         console.log(`✅ Wake command sent to ${modelId}`);
-        
+
         // Step 4: Poll for confirmation (up to 90 seconds for model download + load)
         let attempts = 0;
         const maxAttempts = 90; // 90 seconds
-        
+
         const checkInterval = setInterval(async () => {
           attempts++;
-          
+
           try {
             const healthResp = await fetch(`http://localhost:${targetModel.port}/health`, {
-              headers: { "Accept": "application/json" }
+              headers: { Accept: "application/json" },
             });
-            
+
             if (healthResp.ok) {
               const healthData = await healthResp.json();
-              
+
               // Check if model is actually loaded on GPU
-              const isLoaded = healthData.model_loaded === true || 
-                              (healthData.status === "active" && healthData.model_loaded !== false);
-              
+              const isLoaded =
+                healthData.model_loaded === true ||
+                (healthData.status === "active" && healthData.model_loaded !== false);
+
               if (isLoaded) {
                 console.log(`✅ ${modelId} is now ONLINE (loaded on GPU)`);
                 setModelStatus((prev) => ({ ...prev, [modelId]: "online" }));
@@ -238,7 +239,7 @@ function App() {
           } catch (err) {
             console.log(`⏳ ${modelId} not responding yet... (${attempts}/${maxAttempts})`);
           }
-          
+
           // Timeout after max attempts
           if (attempts >= maxAttempts) {
             console.error(`❌ ${modelId} failed to wake after ${maxAttempts} seconds`);
@@ -266,12 +267,12 @@ function App() {
 
     try {
       console.log(`💤 Putting ${modelId} to sleep...`);
-      
-      const response = await fetch(`http://localhost:${targetModel.port}/sleep`, { 
+
+      const response = await fetch(`http://localhost:${targetModel.port}/sleep`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
-      
+
       if (response.ok) {
         console.log(`✅ ${modelId} is now sleeping (unloaded from GPU)`);
         setModelStatus((prev) => ({ ...prev, [modelId]: "offline" }));
@@ -328,12 +329,12 @@ function App() {
             <div className="flex gap-3">
               <div className="bg-green-600/20 px-4 py-2 rounded-full border border-green-500/30">
                 <span className="text-green-400 text-sm font-semibold">
-                  {Object.values(modelStatus).filter(Boolean).length} Online
+                  {Object.values(modelStatus).filter(s => s === "online").length} Online (GPU)
                 </span>
               </div>
-              <div className="bg-red-600/20 px-4 py-2 rounded-full border border-red-500/30">
-                <span className="text-red-400 text-sm font-semibold">
-                  {Object.values(modelStatus).filter((s) => !s).length} Offline
+              <div className="bg-gray-600/20 px-4 py-2 rounded-full border border-gray-500/30">
+                <span className="text-gray-400 text-sm font-semibold">
+                  {Object.values(modelStatus).filter(s => s === "offline").length} Offline
                 </span>
               </div>
             </div>
