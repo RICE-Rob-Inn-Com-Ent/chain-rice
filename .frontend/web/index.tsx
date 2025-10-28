@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Icon } from "@iconify/react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import schemaData from "./schema.json";
@@ -504,52 +505,219 @@ function App() {
           </div>
         </div>
 
-        {/* Tech Stack */}
-        <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border border-purple-500/30">
-          <h3 className="text-2xl font-bold text-white mb-6 text-center">🛠️ Nasz Stack Technologiczny</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">⚛️</div>
-              <div className="text-sm font-semibold text-white">Frontend</div>
-              <div className="text-xs text-gray-400 mt-1">React, Next.js, Vue, Svelte</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">🔧</div>
-              <div className="text-sm font-semibold text-white">Backend</div>
-              <div className="text-xs text-gray-400 mt-1">Node, Python, Go, Rust</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">🤖</div>
-              <div className="text-sm font-semibold text-white">AI/ML</div>
-              <div className="text-xs text-gray-400 mt-1">PyTorch, TensorFlow, Ollama</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">☁️</div>
-              <div className="text-sm font-semibold text-white">Cloud</div>
-              <div className="text-xs text-gray-400 mt-1">AWS, Azure, GCP, Docker</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">🗄️</div>
-              <div className="text-sm font-semibold text-white">Databases</div>
-              <div className="text-xs text-gray-400 mt-1">PostgreSQL, MongoDB, Redis</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">⛓️</div>
-              <div className="text-sm font-semibold text-white">Blockchain</div>
-              <div className="text-xs text-gray-400 mt-1">Solidity, Web3, Smart Contracts</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">📱</div>
-              <div className="text-sm font-semibold text-white">Mobile</div>
-              <div className="text-xs text-gray-400 mt-1">Flutter, React Native, Swift</div>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <div className="text-2xl mb-2">🔐</div>
-              <div className="text-sm font-semibold text-white">Security</div>
-              <div className="text-xs text-gray-400 mt-1">OAuth, JWT, Encryption, RODO</div>
+          {/* Tech Stack */}
+          <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border border-purple-500/30">
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">🛠️ Nasz Stack Technologiczny</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {/* Frontend */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:react" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">React</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:nextjs-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Next.js</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:vue" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Vue.js</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:svelte-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Svelte</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:tailwindcss-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Tailwind</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:typescript-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">TypeScript</div>
+              </div>
+
+              {/* Backend */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:nodejs-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Node.js</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:python" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Python</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:go" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Go</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:rust" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Rust</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:fastapi" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">FastAPI</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:nestjs" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">NestJS</div>
+              </div>
+
+              {/* AI/ML */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:pytorch-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">PyTorch</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:tensorflow" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">TensorFlow</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="simple-icons:ollama" width="40" height="40" className="text-white" />
+                <div className="text-xs font-semibold text-white">Ollama</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="simple-icons:openai" width="40" height="40" className="text-white" />
+                <div className="text-xs font-semibold text-white">OpenAI</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="simple-icons:huggingface" width="40" height="40" className="text-yellow-500" />
+                <div className="text-xs font-semibold text-white">HuggingFace</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:langchain-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">LangChain</div>
+              </div>
+
+              {/* Cloud */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:aws" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">AWS</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:microsoft-azure" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Azure</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:google-cloud" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">GCP</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:docker-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Docker</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:kubernetes" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Kubernetes</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:terraform-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Terraform</div>
+              </div>
+
+              {/* Databases */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:postgresql" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">PostgreSQL</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:mongodb-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">MongoDB</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:redis" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Redis</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:elasticsearch" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Elastic</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:mysql" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">MySQL</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:sqlite" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">SQLite</div>
+              </div>
+
+              {/* Blockchain */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:ethereum" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Ethereum</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:solidity" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Solidity</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:web3js" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Web3.js</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="simple-icons:hardhat" width="40" height="40" className="text-yellow-500" />
+                <div className="text-xs font-semibold text-white">Hardhat</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="simple-icons:ipfs" width="40" height="40" className="text-cyan-400" />
+                <div className="text-xs font-semibold text-white">IPFS</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="simple-icons:chainlink" width="40" height="40" className="text-blue-500" />
+                <div className="text-xs font-semibold text-white">Chainlink</div>
+              </div>
+
+              {/* Mobile */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:flutter" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Flutter</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:react" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">React Native</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:swift" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Swift</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:kotlin-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Kotlin</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:android-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Android</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:apple" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">iOS</div>
+              </div>
+
+              {/* DevOps & Tools */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:git-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Git</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:github-icon" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">GitHub</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:gitlab" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">GitLab</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:nginx" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Nginx</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:grafana" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Grafana</div>
+              </div>
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10 flex flex-col items-center gap-2">
+                <Icon icon="logos:prometheus" width="40" height="40" />
+                <div className="text-xs font-semibold text-white">Prometheus</div>
+              </div>
             </div>
           </div>
-        </div>
 
         {/* Important Notes */}
         <div className="mt-12 bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-6">
