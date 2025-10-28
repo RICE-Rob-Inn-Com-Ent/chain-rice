@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "../lib/contexts/ThemeContext";
-import { ThemeName, themeNames, themes } from "../themes";
+import { themeNames, themes } from "../themes";
 import {
   Header1,
   Header2,
@@ -46,8 +46,8 @@ export const ComponentLibrary: React.FC = () => {
           title="Dashboard"
           nav={
             <div className="flex gap-4 text-white">
-              <a href="#">Home</a>
-              <a href="#">About</a>
+              <button onClick={() => {}} className="hover:opacity-80">Home</button>
+              <button onClick={() => {}} className="hover:opacity-80">About</button>
             </div>
           }
         />
