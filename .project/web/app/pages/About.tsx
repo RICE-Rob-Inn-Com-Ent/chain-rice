@@ -43,16 +43,18 @@ export default function AboutPage() {
 
       {/* Tech Stack Section */}
       <Section id="tech-stack" className="pt-0">
-        <TechStackGrid items={[
-          { name: "React", category: "Frontend", icon: "⚛️" },
-          { name: "Next.js", category: "Framework", icon: "▲" },
-          { name: "TypeScript", category: "Language", icon: "📘" },
-          { name: "Tailwind", category: "Styling", icon: "🎨" },
-          { name: "Python", category: "Backend", icon: "🐍" },
-          { name: "Go", category: "Backend", icon: "🐹" },
-          { name: "Docker", category: "DevOps", icon: "🐳" },
-          { name: "Kubernetes", category: "DevOps", icon: "☸️" },
-        ]} />
+        <TechStackGrid
+          items={[
+            { name: "React", category: "Frontend", icon: "⚛️" },
+            { name: "Next.js", category: "Framework", icon: "▲" },
+            { name: "TypeScript", category: "Language", icon: "📘" },
+            { name: "Tailwind", category: "Styling", icon: "🎨" },
+            { name: "Python", category: "Backend", icon: "🐍" },
+            { name: "Go", category: "Backend", icon: "🐹" },
+            { name: "Docker", category: "DevOps", icon: "🐳" },
+            { name: "Kubernetes", category: "DevOps", icon: "☸️" },
+          ]}
+        />
       </Section>
     </>
   );
