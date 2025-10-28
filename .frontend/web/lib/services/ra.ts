@@ -27,6 +27,7 @@ export interface RaHealthResponse {
 }
 
 export interface RaImageResponse {
+  image: string; // base64 data URL
   image_path: string;
   prompt: string;
 }
@@ -71,7 +72,7 @@ export async function sleepRa(): Promise<{ success: boolean; god: string; status
 /**
  * Generate image using Ra's Stable Diffusion
  */
-export async function generateImageWithRa(params: RaImageGenRequest): Promise<string> {
+export async function generateImageWithRa(params: RaImageGenRequest): Promise<RaImageResponse> {
   const response = await fetch(`${RA_API_BASE}/generate`, {
     method: "POST",
     headers: {
@@ -93,10 +94,7 @@ export async function generateImageWithRa(params: RaImageGenRequest): Promise<st
   }
 
   const data: RaImageResponse = await response.json();
-
-  // Ra returns image_path, but we need to convert it to base64 or URL
-  // For now, return a placeholder that frontend can handle
-  return data.image_path;
+  return data;
 }
 
 /**

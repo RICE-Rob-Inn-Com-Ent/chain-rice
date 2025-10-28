@@ -101,7 +101,7 @@ export default function RaUI() {
       }, 500);
 
       // Generate image
-      const imagePath = await generateImageWithRa({
+      const result = await generateImageWithRa({
         prompt: params.prompt,
         negative_prompt: params.negativePrompt,
         steps: params.steps,
@@ -113,15 +113,10 @@ export default function RaUI() {
       clearInterval(progressInterval);
       setProgress(100);
 
-      // For now, use placeholder since we don't have image serving endpoint yet
-      // TODO: Add endpoint to Ra API to serve images
-      const placeholderUrl = `https://fastly.picsum.photos/id/${Math.floor(
-        Math.random() * 1000
-      )}/${params.width}/${params.height}.jpg?hmac=qTw1WejMMjJJhkUkTOnk9KVwVkMmo24gSYhpAAIZwr0`;
-
+      // Use base64 image from Ra
       const newImage: GeneratedImage = {
         id: Date.now().toString(),
-        url: placeholderUrl,
+        url: result.image, // base64 data URL
         prompt: params.prompt,
         params: {
           steps: params.steps,
@@ -134,9 +129,9 @@ export default function RaUI() {
 
       setImageHistory((prev) => [newImage, ...prev]);
       setSelectedImage(newImage);
-      setGenerationInfo(`Generated: ${params.prompt}\nPath: ${imagePath}`);
+      setGenerationInfo(`✅ Generated successfully!\nPrompt: ${params.prompt}\nSteps: ${params.steps} | CFG: ${params.cfgScale}\nSize: ${params.width}x${params.height}`);
 
-      console.log("Image generated:", imagePath);
+      console.log("Image generated:", result.image_path);
     } catch (err: any) {
       console.error("Generation failed:", err);
       setError(err.message || "Failed to generate image");
