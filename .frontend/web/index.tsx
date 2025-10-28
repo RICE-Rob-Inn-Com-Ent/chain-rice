@@ -120,10 +120,11 @@ function App() {
           const response = await fetch(`http://localhost:${model.port}/health`, {
             signal: controller.signal,
             method: "GET",
+            mode: "cors", // Explicitly set CORS mode
           });
 
           clearTimeout(timeoutId);
-
+          
           if (response.ok) {
             const data = await response.json();
             // Check if model is actually loaded (for models with Ollama)
@@ -137,8 +138,9 @@ function App() {
           } else {
             status[model.id] = "offline";
           }
-        } catch {
-          // Model is offline or unreachable
+        } catch (error) {
+          // Model is offline, unreachable, or CORS blocked (container not running)
+          // Silently mark as offline without logging CORS errors
           status[model.id] = "offline";
         }
       }
