@@ -24,6 +24,7 @@ export * from "./hooks/useOllama";
 // Services
 export * from "./services/ollama";
 export * from "./services/stableDiffusion";
+export * from "./services/ra";
 
 // Utils
 export * from "./utils/errorHandler";
