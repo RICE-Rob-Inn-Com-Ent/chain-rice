@@ -165,6 +165,26 @@ function App() {
         <h2 className="text-2xl md:text-3xl font-semibold text-purple-300 mb-6">
           6 Potężnych Modeli AI dla Twojego Biznesu
         </h2>
+        <div className="flex items-center justify-center gap-3 mb-6">
+          {isChecking ? (
+            <div className="bg-gray-800/50 px-4 py-2 rounded-full border border-gray-600/50">
+              <span className="text-gray-400 text-sm">Sprawdzam status modeli...</span>
+            </div>
+          ) : (
+            <div className="flex gap-3">
+              <div className="bg-green-600/20 px-4 py-2 rounded-full border border-green-500/30">
+                <span className="text-green-400 text-sm font-semibold">
+                  {Object.values(modelStatus).filter(Boolean).length} Online
+                </span>
+              </div>
+              <div className="bg-red-600/20 px-4 py-2 rounded-full border border-red-500/30">
+                <span className="text-red-400 text-sm font-semibold">
+                  {Object.values(modelStatus).filter((s) => !s).length} Offline
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
         <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto mb-12">
           Od generowania obrazów po analizę 3D - kompletny zestaw narzędzi AI zoptymalizowanych dla wydajności
         </p>
@@ -206,9 +226,20 @@ function App() {
               <div className="relative p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="text-6xl">{model.icon}</div>
-                  <div className="bg-purple-600/20 text-purple-300 text-xs px-3 py-1 rounded-full border border-purple-500/30">
-                    Live
-                  </div>
+                  {isChecking ? (
+                    <div className="bg-gray-600/20 text-gray-400 text-xs px-3 py-1 rounded-full border border-gray-500/30 animate-pulse">
+                      Sprawdzam...
+                    </div>
+                  ) : modelStatus[model.id] ? (
+                    <div className="bg-green-600/20 text-green-400 text-xs px-3 py-1 rounded-full border border-green-500/30 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                      Online
+                    </div>
+                  ) : (
+                    <div className="bg-red-600/20 text-red-400 text-xs px-3 py-1 rounded-full border border-red-500/30">
+                      Offline
+                    </div>
+                  )}
                 </div>
 
                 <h3 className="text-2xl font-bold text-white mb-1">{model.name}</h3>
@@ -227,8 +258,15 @@ function App() {
 
                 <div className="pt-4 border-t border-white/10">
                   <p className="text-xs text-gray-500 mb-3">{model.tech}</p>
-                  <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition">
-                    Wypróbuj {model.name}
+                  <button
+                    disabled={!modelStatus[model.id]}
+                    className={`w-full font-semibold py-2 px-4 rounded-lg transition ${
+                      modelStatus[model.id]
+                        ? "bg-purple-600 hover:bg-purple-700 text-white cursor-pointer"
+                        : "bg-gray-700 text-gray-500 cursor-not-allowed opacity-50"
+                    }`}
+                  >
+                    {modelStatus[model.id] ? `Wypróbuj ${model.name}` : `${model.name} Niedostępny`}
                   </button>
                 </div>
               </div>
