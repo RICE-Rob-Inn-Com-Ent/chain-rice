@@ -7,5 +7,7 @@
 export * from "./base";
 // Layouts
 export * from "./layouts";
+// Organisms
+export * from "./organisms";
 // Widgets
 export * from "./widgets";
