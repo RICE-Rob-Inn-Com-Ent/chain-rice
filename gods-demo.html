@@ -232,20 +232,20 @@
                             </div>
                         </div>
 
-                        <div class="controls">
-                            <button class="btn btn-wake" onclick="wakeGod('${god.god_id}')"
-                                ${god.status === "loading" || god.gpu_allocated ? "disabled" : ""}>
-                                ⚡ Wake Model
-                            </button>
-                            <button class="btn btn-sleep" onclick="sleepGod('${god.god_id}')"
-                                ${!god.gpu_allocated ? "disabled" : ""}>
-                                💤 Sleep Model
-                            </button>
-                            <button class="btn btn-demo" onclick="tryDemo('${god.god_id}')"
-                                ${god.status !== "gpu" ? "disabled" : ""}>
-                                ▶️ Try Demo
-                            </button>
-                        </div>
+                         <div class="controls">
+                             <button class="btn btn-wake" onclick="wakeGod('${god.god_id}')"
+                                 ${god.status === "loading" || god.status === "gpu" ? "disabled" : ""}>
+                                 ⚡ Wake & Load to GPU
+                             </button>
+                             <button class="btn btn-sleep" onclick="sleepGod('${god.god_id}')"
+                                 ${god.status !== "gpu" ? "disabled" : ""}>
+                                 💤 Sleep & Free GPU
+                             </button>
+                             <button class="btn btn-demo" onclick="openDemo('${god.god_id}')"
+                                 ${god.status !== "gpu" ? "disabled" : ""}>
+                                 🚀 Open Demo
+                             </button>
+                         </div>
                     </div>
                 `
             )
@@ -275,30 +275,25 @@
         }
       }
 
-      async function wakeGod(godId) {
-        try {
-          const button = event.target;
-          button.disabled = true;
-          button.textContent = "⏳ Waking...";
-
-          const response = await fetch(`${API_URL}/wake/${godId}`, {
-            method: "POST",
-          });
-
-          if (response.ok) {
-            alert(`${godId} is waking up! This may take 30-60 seconds.`);
-            // Start polling for progress
-            startProgressPolling(godId);
-          } else {
-            alert("Failed to wake god");
-          }
-
-          setTimeout(() => loadGods(), 2000);
-        } catch (error) {
-          alert("Error: " + error.message);
-          loadGods();
-        }
-      }
+       async function wakeGod(godId) {
+         try {
+           const response = await fetch(`${API_URL}/wake/${godId}`, {
+             method: "POST",
+           });
+ 
+           if (response.ok) {
+             // Start polling immediately for progress
+             startProgressPolling(godId);
+             loadGods();
+           } else {
+             const data = await response.json();
+             alert("Failed to wake god: " + (data.detail || "Unknown error"));
+           }
+         } catch (error) {
+           alert("Error: " + error.message);
+           loadGods();
+         }
+       }
 
       async function sleepGod(godId) {
         try {
@@ -316,9 +311,23 @@
         }
       }
 
-      function tryDemo(godId) {
-        alert(`Demo for ${godId} would open here!\nIntegrate with your UI components.`);
-      }
+       function openDemo(godId) {
+         // Open demo in new tab - integrate with your actual demo URLs
+         const demoUrls = {
+           thoth: 'http://localhost:8001',  // Thoth API
+           ra: 'http://localhost:8002',      // Ra API
+           isis: 'http://localhost:8003',    // Isis API
+           bastet: 'http://localhost:8004',  // Bastet API
+           maat: 'http://localhost:8005',    // Maat API
+           khnum: 'http://localhost:8006',   // Khnum API
+         };
+         
+         if (demoUrls[godId]) {
+           window.open(demoUrls[godId], '_blank');
+         } else {
+           alert(`Demo UI for ${godId} - integrate with your frontend!`);
+         }
+       }
 
       function startProgressPolling(godId) {
         // Poll every 2 seconds for progress updates

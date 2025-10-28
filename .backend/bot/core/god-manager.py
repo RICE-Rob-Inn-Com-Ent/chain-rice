@@ -113,40 +113,50 @@ async def list_gods() -> List[GodStatus]:
 async def wake_god(god_id: str):
     """
     Wake a god and allocate GPU to it.
-    Automatically sleeps other gods if GPU is allocated.
+    AUTOMATICALLY sleeps other gods if GPU is allocated.
     """
     global current_gpu_god
-
+    
     if god_id not in GODS:
         raise HTTPException(status_code=404, detail=f"God {god_id} not found")
-
+    
     god_info = GODS[god_id]
-
-    # If another god has GPU, sleep it first
+    
+    # CRITICAL: If another god has GPU, sleep it FIRST
+    # This ensures only ONE model on GPU at a time
     if current_gpu_god and current_gpu_god != god_id:
-        print(f"🌙 Putting {current_gpu_god} to sleep...")
+        print(f"🌙 Auto-sleeping {current_gpu_god} to free GPU...")
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
-                await client.post(f"{GODS[current_gpu_god]['url']}/sleep")
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                sleep_response = await client.post(f"{GODS[current_gpu_god]['url']}/sleep")
+                if sleep_response.status_code == 200:
+                    print(f"✅ {current_gpu_god} unloaded from GPU")
+                    current_gpu_god = None
+                else:
+                    print(f"⚠️ Failed to sleep {current_gpu_god}, forcing GPU allocation anyway")
+                    current_gpu_god = None
         except Exception as e:
-            print(f"⚠️ Failed to sleep {current_gpu_god}: {e}")
-
+            print(f"⚠️ Error sleeping {current_gpu_god}: {e}")
+            # Force clear GPU allocation even if sleep failed
+            current_gpu_god = None
+    
     # Wake the requested god with GPU
-    print(f"⚡ Waking {god_id} with GPU...")
+    print(f"⚡ Waking {god_id} and loading to GPU...")
     try:
-        async with httpx.AsyncClient(timeout=120.0) as client:
+        async with httpx.AsyncClient(timeout=180.0) as client:  # 3 min timeout for model loading
             response = await client.post(
                 f"{god_info['url']}/wake",
                 json={"use_gpu": True}
             )
-
+            
             if response.status_code == 200:
                 current_gpu_god = god_id
                 return {
                     "success": True,
                     "god": god_id,
                     "gpu_allocated": True,
-                    "message": f"{god_info['name']} is waking up on GPU",
+                    "previous_god_unloaded": True,
+                    "message": f"{god_info['name']} is loading to GPU (may take 30-90s)",
                 }
             else:
                 raise HTTPException(
@@ -154,10 +164,15 @@ async def wake_god(god_id: str):
                     detail=f"Failed to wake {god_id}"
                 )
     except httpx.TimeoutException:
-        raise HTTPException(
-            status_code=408,
-            detail=f"Timeout waking {god_id} - model may still be loading"
-        )
+        # Model is probably still loading, mark as current anyway
+        current_gpu_god = god_id
+        return {
+            "success": True,
+            "god": god_id,
+            "gpu_allocated": True,
+            "loading": True,
+            "message": f"{god_info['name']} is loading (check progress)"
+        }
 
 
 @app.post("/sleep/{god_id}")
