@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Section, ContactForm } from "@rice-mono/ui-kit/lib";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Section, Card } from "@rice-mono/ui-kit/lib";
 import { Cpu, Smartphone, Blocks, Network, Cloud, Database } from "lucide-react";
