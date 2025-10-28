@@ -436,14 +436,32 @@ function App() {
                         <span className="text-green-400 font-semibold">● ONLINE (GPU Loaded)</span>
                       </div>
                     ) : wakingModel === model.id ? (
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className="animate-spin">⏳</div>
-                        <span className="text-yellow-400 font-semibold">Loading to GPU...</span>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs mb-2">
+                          <div className="animate-spin">⏳</div>
+                          <span className="text-yellow-400 font-semibold">Loading to GPU...</span>
+                        </div>
+                        {/* Show download info if Thoth */}
+                        {model.id === "thoth" && (
+                          <div className="text-xs text-gray-500">
+                            First time: Model downloading in background
+                            <br />
+                            Check progress: <code className="text-cyan-400">docker logs rice-thoth</code>
+                          </div>
+                        )}
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                        <span className="text-gray-400">● Offline</span>
+                      <div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                          <span className="text-gray-400">● Offline</span>
+                        </div>
+                        {/* Show if model needs download */}
+                        {model.id === "thoth" && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            Mistral 7B • ~4.4GB download required
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

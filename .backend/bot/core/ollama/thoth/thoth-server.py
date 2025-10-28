@@ -102,11 +102,34 @@ async def health():
 
 @app.get("/status")
 async def get_status():
-    """Get detailed loading status"""
+    """Get detailed loading status including download progress"""
+    download_progress = None
+    
+    # Try to get download progress from Ollama
+    try:
+        # Check if model is being pulled
+        import subprocess
+        result = subprocess.run(
+            ["ollama", "list"],
+            capture_output=True,
+            text=True,
+            timeout=2
+        )
+        
+        # If model not in list, it's still downloading
+        if OLLAMA_MODEL not in result.stdout:
+            download_progress = {
+                "status": "downloading",
+                "message": "Model is being downloaded in background. Check Docker logs for progress."
+            }
+    except:
+        pass
+    
     return {
         "loading": model_loading,
         "loaded": model_loaded,
         "progress": loading_progress,
+        "download": download_progress,
     }
 
 
