@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useOllama } from "../lib/hooks/useOllama";
+import { GodTraining } from "./GodTraining";
 
 interface AIGod {
   id: string;
@@ -96,6 +97,7 @@ const aiGods: AIGod[] = [
 export const Dashboard: React.FC = () => {
   const { models, runningModels, isHealthy, loading, error, downloadProgress } = useOllama(3000);
   const [loadingGod, setLoadingGod] = useState<string | null>(null);
+  const [trainingGod, setTrainingGod] = useState<string | null>(null);
 
   const getGodStatus = (god: AIGod): "active" | "idle" | "loading" | "downloading" | "error" => {
     if (loadingGod === god.id) return "loading";
@@ -143,6 +145,16 @@ export const Dashboard: React.FC = () => {
     }
     return null;
   };
+
+  // If training interface is open, show it instead of dashboard
+  if (trainingGod) {
+    return (
+      <GodTraining
+        godId={trainingGod as "thoth" | "ra" | "isis" | "bastet" | "maat" | "khnum"}
+        onBack={() => setTrainingGod(null)}
+      />
+    );
+  }
 
   return (
     <div className="p-8">
