@@ -265,6 +265,13 @@ export default function RaUI() {
           <div className="bg-gray-900/80 backdrop-blur rounded-xl border border-gray-700 p-6 min-h-[600px] flex flex-col">
             <h3 className="text-lg font-bold mb-4 text-amber-400">Preview</h3>
 
+            {/* Error Display */}
+            {error && (
+              <div className="mb-4 bg-red-900/30 border border-red-500/50 rounded-lg p-3 text-sm text-red-300">
+                ⚠️ {error}
+              </div>
+            )}
+
             {isGenerating ? (
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
@@ -279,14 +286,30 @@ export default function RaUI() {
                   <img src={generatedImage} alt="Generated" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex gap-2">
-                  <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-semibold transition-all">
+                  <button 
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = generatedImage;
+                      link.download = `ra-${Date.now()}.png`;
+                      link.click();
+                    }}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-semibold transition-all"
+                  >
                     💾 Save
                   </button>
-                  <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all">
+                  <button 
+                    onClick={handleVariations}
+                    disabled={isGenerating || !sdAvailable}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-semibold transition-all"
+                  >
                     🔄 Variations
                   </button>
-                  <button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-semibold transition-all">
-                    ⬆️ Upscale
+                  <button 
+                    onClick={handleUpscale}
+                    disabled={isGenerating || !sdAvailable}
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-2 px-4 rounded-lg font-semibold transition-all"
+                  >
+                    ⬆️ Upscale 4x
                   </button>
                 </div>
               </div>
