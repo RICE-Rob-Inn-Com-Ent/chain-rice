@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import schemaData from "./schema.json";
+
+interface ModelStatus {
+  [key: string]: boolean;
+}
 
 const aiModels = [
   {
@@ -13,6 +17,7 @@ const aiModels = [
     description: "Stable Diffusion 2.1 • Generowanie obrazów AI",
     features: ["Image Generation", "4x Upscaling", "Background Removal"],
     tech: "SD 2.1 FP16 • 6GB VRAM",
+    port: 8001,
   },
   {
     id: "bastet",
