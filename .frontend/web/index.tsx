@@ -112,7 +112,7 @@ function App() {
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">Egipskie Bóstwa AI</h1>
+        <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">GiPT-1</h1>
         <h2 className="text-2xl md:text-3xl font-semibold text-purple-300 mb-6">
           6 Potężnych Modeli AI dla Twojego Biznesu
         </h2>
