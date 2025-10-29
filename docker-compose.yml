@@ -40,6 +40,33 @@ services:
   # Next.js Web Application - MERGED INTO ui-kit
   # nextjs-web service is now part of ui-kit container (port 3002)
 
+  # Marketing Website (Port 3002)
+  marketing-site:
+    build:
+      context: .frontend/web-marketing
+      dockerfile: Dockerfile.dev
+    image: rice-marketing:1
+    container_name: rice-marketing
+    ports:
+      - "3002:3002"
+    volumes:
+      - .frontend/web-marketing/src:/app/src
+      - .frontend/web-marketing/index.tsx:/app/index.tsx
+      - .frontend/web-marketing/index.html:/app/index.html
+      - .frontend/web-marketing/vite.config.ts:/app/vite.config.ts
+      - .frontend/web/lib:/app/node_modules/@rice-mono/ui-kit/lib
+      - .frontend/web/themes:/app/node_modules/@rice-mono/ui-kit/themes
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - rice-backend
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.marketing.rule=Host(`rice.local`)"
+      - "traefik.http.services.marketing.loadbalancer.server.port=3002"
+
   # ========================================
   # DATABASE LAYER
   # ========================================
