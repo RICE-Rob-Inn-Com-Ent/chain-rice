@@ -1,6 +1,6 @@
 {
   "name": "@rice-mono/ui-kit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Rice UI Kit - Reusable React components library with AI model demos and benchmarks",
   "main": "./lib/index.ts",
   "types": "./lib/index.ts",
@@ -81,8 +81,20 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "sideEffects": ["**/*.css"],
-  "keywords": ["nextjs", "react", "components", "seo", "tailwindcss", "typescript", "rice-mono", "ai", "ui-kit"],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "keywords": [
+    "nextjs",
+    "react",
+    "components",
+    "seo",
+    "tailwindcss",
+    "typescript",
+    "rice-mono",
+    "ai",
+    "ui-kit"
+  ],
   "author": "Rice-Mono Team",
   "license": "MIT",
   "repository": {
