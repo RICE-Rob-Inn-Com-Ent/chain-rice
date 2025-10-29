@@ -33,8 +33,14 @@ export default function GodsPanel() {
       setGods(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-      console.error("Error fetching gods:", err);
+      // Graceful error handling - don't crash if backend is down
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      setError(`Backend not available: ${errorMessage}`);
+      
+      // Only log in development, don't spam console
+      if (process.env.NODE_ENV === "development") {
+        console.warn("GodsPanel: Backend API not available at", GOD_MANAGER_API);
+      }
     } finally {
       setLoading(false);
     }
