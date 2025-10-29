@@ -382,6 +382,250 @@ export const Dashboard: React.FC = () => {
           <li>• Models are managed through Ollama (localhost:11434)</li>
         </ul>
       </div>
+
+      {/* Divider */}
+      <div className="my-12 border-t border-white/10" />
+
+      {/* Models Management Section */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
+          <Icon icon="mdi:robot" width={40} />
+          Model Management
+        </h1>
+        <p className="text-gray-300">Monitor and control Ollama models and Ra (Stable Diffusion)</p>
+      </div>
+
+      {/* Ra Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <Icon icon="mdi:weather-sunny" width={28} className="text-orange-400" />
+          Ra - Stable Diffusion
+        </h2>
+
+        <div className="bg-gradient-to-br from-orange-900/30 to-amber-900/30 rounded-xl border border-orange-500/30 p-6">
+          <div className="flex items-start gap-6">
+            <div className="flex-1">
+              {/* Ra Info */}
+              <div className="flex items-center gap-3 mb-4">
+                <Icon icon="mdi:image-auto-adjust" width={40} className="text-orange-400" />
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Stable Diffusion 2.1 FP16</h3>
+                  <p className="text-orange-300 text-sm">FastAPI Backend • Port 8002 • 6GB VRAM Optimized</p>
+                </div>
+              </div>
+
+              {/* Status Badge */}
+              <div className="mb-4">
+                {raAvailable ? (
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`w-3 h-3 rounded-full ${raStatus?.status === "active" ? "bg-green-500" : "bg-yellow-500"} animate-pulse`}
+                    />
+                    <span className="text-white font-semibold">
+                      Status: {raStatus?.status === "active" ? "Active (GPU)" : "Sleeping (CPU)"}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-red-400 font-semibold">Disconnected</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Models Grid */}
+              {raStatus && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-black/30 rounded-lg p-4">
+                    <div className="text-xs text-orange-300 mb-1">Image Generation</div>
+                    <div className="text-white font-semibold">{raStatus.models.image_gen}</div>
+                  </div>
+
+                  <div className="bg-black/30 rounded-lg p-4">
+                    <div className="text-xs text-orange-300 mb-1">Upscaler</div>
+                    <div className="text-white font-semibold">{raStatus.models.upscaler}</div>
+                  </div>
+
+                  <div className="bg-black/30 rounded-lg p-4">
+                    <div className="text-xs text-orange-300 mb-1">Background Removal</div>
+                    <div className="text-white font-semibold">{raStatus.models.bg_removal}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Optimizations */}
+              {raStatus && (
+                <div className="mt-4 bg-black/30 rounded-lg p-4">
+                  <div className="text-xs text-orange-300 mb-2">Optimizations</div>
+                  <div className="flex flex-wrap gap-2">
+                    {raStatus.optimizations.map((opt) => (
+                      <span
+                        key={opt}
+                        className="px-3 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded-full text-xs font-semibold"
+                      >
+                        {opt}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-2 ml-4">
+              <button
+                onClick={() => window.open("/demo/ra.html", "_blank")}
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2"
+              >
+                <Icon icon="mdi:play" width={20} />
+                Try Demo
+              </button>
+
+              <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2">
+                <Icon icon="mdi:cog" width={20} />
+                Settings
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Note */}
+        <div className="mt-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <Icon icon="mdi:information" width={24} className="text-blue-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-200">
+              <p className="font-semibold mb-1">ℹ️ Ra uses its own FastAPI backend, not Ollama</p>
+              <p>
+                Ra runs on port 8002 with Stable Diffusion 2.1 FP16. It has lazy loading and 6GB VRAM optimizations.
+                Check health: <code className="bg-black/30 px-2 py-0.5 rounded">curl http://localhost:8002/health</code>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Ollama Models Section */}
+      <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+        <Icon icon="simple-icons:ollama" width={28} className="text-white" />
+        Ollama Models
+      </h2>
+
+      {/* Models Grid */}
+      {models.length === 0 && isHealthy && (
+        <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-12 text-center">
+          <Icon icon="mdi:database-off" width={64} className="text-gray-500 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">No Models Installed</h3>
+          <p className="text-gray-400 mb-4">Install Ollama models to get started</p>
+          <code className="bg-black/30 px-4 py-2 rounded-lg text-sm text-gray-300">
+            ollama pull mistral:7b-instruct
+          </code>
+        </div>
+      )}
+
+      {models.length > 0 && (
+        <div className="space-y-4">
+          {models.map((model) => {
+            const isRunning = runningModels.includes(model.name);
+            const progress = downloadProgress.get(model.name);
+
+            return (
+              <div
+                key={model.name}
+                className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6 hover:border-white/20 transition"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    {/* Model Name */}
+                    <div className="flex items-center gap-3 mb-2">
+                      <Icon icon="mdi:robot" width={32} className={isRunning ? "text-green-400" : "text-gray-400"} />
+                      <div>
+                        <h3 className="text-xl font-bold text-white">{model.name}</h3>
+                        {model.details && (
+                          <p className="text-sm text-gray-400">
+                            {model.details.family} • {model.details.parameter_size} • {model.details.quantization_level}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Details Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                      <div className="bg-black/20 rounded-lg p-3">
+                        <div className="text-xs text-gray-400 mb-1">Size</div>
+                        <div className="text-white font-semibold">{formatBytes(model.size)}</div>
+                      </div>
+
+                      <div className="bg-black/20 rounded-lg p-3">
+                        <div className="text-xs text-gray-400 mb-1">Format</div>
+                        <div className="text-white font-semibold">{model.details?.format || "N/A"}</div>
+                      </div>
+
+                      <div className="bg-black/20 rounded-lg p-3">
+                        <div className="text-xs text-gray-400 mb-1">Modified</div>
+                        <div className="text-white font-semibold text-xs">{formatDate(model.modified_at)}</div>
+                      </div>
+
+                      <div className="bg-black/20 rounded-lg p-3">
+                        <div className="text-xs text-gray-400 mb-1">Status</div>
+                        <div className="flex items-center gap-2">
+                          {isRunning ? (
+                            <>
+                              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                              <span className="text-green-400 font-semibold text-sm">Running</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="w-2 h-2 bg-gray-500 rounded-full" />
+                              <span className="text-gray-400 font-semibold text-sm">Idle</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Digest */}
+                    <div className="mt-4 bg-black/20 rounded-lg p-3">
+                      <div className="text-xs text-gray-400 mb-1">Digest</div>
+                      <div className="text-xs text-gray-300 font-mono break-all">{model.digest}</div>
+                    </div>
+
+                    {/* Progress Bar (if downloading) */}
+                    {progress && progress.total > 0 && (
+                      <div className="mt-4">
+                        <div className="flex justify-between text-sm text-gray-300 mb-2">
+                          <span>Downloading...</span>
+                          <span>
+                            {formatBytes(progress.completed)} / {formatBytes(progress.total)} (
+                            {Math.round((progress.completed / progress.total) * 100)}%)
+                          </span>
+                        </div>
+                        <div className="w-full h-2 bg-black/30 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+                            style={{ width: `${(progress.completed / progress.total) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="ml-6 flex flex-col gap-2">
+                    <button className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2">
+                      <Icon icon="mdi:play" width={20} />
+                      Run
+                    </button>
+                    <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2">
+                      <Icon icon="mdi:cog" width={20} />
+                      Config
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
