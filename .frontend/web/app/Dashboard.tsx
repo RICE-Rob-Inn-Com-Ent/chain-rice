@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import { useOllama } from "../lib/hooks/useOllama";
 import { GodTraining } from "./GodTraining";
 import { checkRaHealth, type RaHealthResponse } from "../lib/services/ra";
+import { checkBesHealth, type BesHealthResponse } from "../lib/services/bes";
 
 interface AIGod {
   id: string;
@@ -112,6 +113,8 @@ export const Dashboard: React.FC = () => {
   const [trainingGod, setTrainingGod] = useState<string | null>(null);
   const [raStatus, setRaStatus] = useState<RaHealthResponse | null>(null);
   const [raAvailable, setRaAvailable] = useState(false);
+  const [besStatus, setBesStatus] = useState<BesHealthResponse | null>(null);
+  const [besAvailable, setBesAvailable] = useState(false);
 
   // Check Ra health
   useEffect(() => {
@@ -129,6 +132,25 @@ export const Dashboard: React.FC = () => {
 
     checkRa();
     const interval = setInterval(checkRa, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Check Bes health
+  useEffect(() => {
+    const checkBes = async () => {
+      try {
+        const health = await checkBesHealth();
+        setBesStatus(health);
+        setBesAvailable(true);
+      } catch (err) {
+        console.warn("Bes API not available at", "http://localhost:8007");
+        setBesAvailable(false);
+        setBesStatus(null);
+      }
+    };
+
+    checkBes();
+    const interval = setInterval(checkBes, 5000);
     return () => clearInterval(interval);
   }, []);
 
