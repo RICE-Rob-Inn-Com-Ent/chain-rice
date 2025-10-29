@@ -29,10 +29,7 @@ COPY requirements.txt .
 # Upgrade pip
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Install PyTorch with CUDA support
-RUN pip install --no-cache-dir torch==2.1.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
-
-# Install other requirements
+# Install requirements (TTS will install compatible torch/torchaudio)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Create output directory

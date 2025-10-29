@@ -1,24 +1,21 @@
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-python-multipart==0.0.6
-pydantic==2.5.3
-pydantic-settings==2.1.0
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
 
-# Audio Processing
-torch==2.1.2
-torchaudio==2.1.2
-numpy==1.24.3
-scipy==1.11.4
-librosa==0.10.1
-soundfile==0.12.1
-pydub==0.25.1
+# Audio Processing (let TTS install compatible versions)
+numpy
+scipy
+librosa
+soundfile
+pydub
 
-# Coqui TTS (includes XTTS and Tortoise variants)
-TTS==0.22.0
-
-# Note: TTS package includes both XTTS and Tortoise-like models
+# Coqui TTS (includes XTTS and Tortoise-like models)
+# Will install torch/torchaudio as dependencies
+TTS>=0.22.0
 
 # MusicGen
-transformers==4.36.2
-accelerate==0.25.0
+transformers>=4.36.0
+accelerate>=0.25.0
 
