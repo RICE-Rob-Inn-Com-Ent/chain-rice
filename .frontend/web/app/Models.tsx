@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useOllama } from "../lib/hooks/useOllama";
+import { checkRaHealth, type RaHealthResponse } from "../lib/services/ra";
 
 export const Models: React.FC = () => {
   const { models, runningModels, isHealthy, loading, error, downloadProgress } = useOllama(2000);
+  const [raStatus, setRaStatus] = useState<RaHealthResponse | null>(null);
+  const [raAvailable, setRaAvailable] = useState(false);
+
+  // Check Ra health
+  useEffect(() => {
+    const checkRa = async () => {
+      try {
+        const health = await checkRaHealth();
+        setRaStatus(health);
+        setRaAvailable(true);
+      } catch (err) {
+        setRaAvailable(false);
+        setRaStatus(null);
+      }
+    };
+
+    checkRa();
+    const interval = setInterval(checkRa, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const formatBytes = (bytes: number): string => {
     if (bytes === 0) return "0 B";
