@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useOllama } from "../lib/hooks/useOllama";
 import { GodTraining } from "./GodTraining";
+import { checkRaHealth, type RaHealthResponse } from "../lib/services/ra";
 
 interface AIGod {
   id: string;
