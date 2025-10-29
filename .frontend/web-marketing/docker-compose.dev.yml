@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  marketing-site:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: rice-marketing
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./src:/app/src
+      - ./index.tsx:/app/index.tsx
+      - ./index.html:/app/index.html
+      - ./index.css:/app/index.css
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tailwind.config.ts:/app/tailwind.config.ts
+      - ./postcss.config.ts:/app/postcss.config.ts
+      - ../web/lib:/app/node_modules/@rice-mono/ui-kit/lib  # Link to shared lib
+      - ../web/themes:/app/node_modules/@rice-mono/ui-kit/themes
+      - ../web/index.css:/app/node_modules/@rice-mono/ui-kit/styles.css
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - rice-network
+
+networks:
+  rice-network:
+    driver: bridge
+
