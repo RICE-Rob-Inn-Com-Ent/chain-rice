@@ -78,16 +78,17 @@ class HealthResponse(BaseModel):
 # ============================================================================
 
 def load_tortoise_tts():
-    """Load Tortoise TTS model (lazy loading)"""
+    """Load TTS model (Coqui TTS) (lazy loading)"""
     global tortoise_model
     if tortoise_model is None:
-        print("🎵 Loading Tortoise TTS...")
+        print("🎵 Loading Coqui TTS (Tortoise-like model)...")
         try:
-            from tortoise.api import TextToSpeech
-            tortoise_model = TextToSpeech(device=device)
-            print("✅ Tortoise TTS loaded!")
+            from TTS.api import TTS
+            # Using tts_models/en/vctk/vits for high-quality multi-speaker TTS
+            tortoise_model = TTS("tts_models/en/vctk/vits").to(device)
+            print("✅ TTS model loaded!")
         except Exception as e:
-            print(f"❌ Error loading Tortoise TTS: {e}")
+            print(f"❌ Error loading TTS: {e}")
             raise
     return tortoise_model
 

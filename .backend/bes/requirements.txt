@@ -13,12 +13,10 @@ librosa==0.10.1
 soundfile==0.12.1
 pydub==0.25.1
 
-# Tortoise TTS
+# Coqui TTS (includes XTTS and Tortoise variants)
 TTS==0.22.0
-tortoise-tts==2.8.0
 
-# XTTS (Coqui TTS)
-# Already included in TTS package
+# Note: TTS package includes both XTTS and Tortoise-like models
 
 # MusicGen
 transformers==4.36.2
