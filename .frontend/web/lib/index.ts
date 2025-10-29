@@ -28,3 +28,6 @@ export * from "./services/ra";
 
 // Utils
 export * from "./utils/errorHandler";
+
+// Themes (re-export for npm package)
+export * from "../themes";
