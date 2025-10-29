@@ -16,6 +16,7 @@ export const Models: React.FC = () => {
         setRaStatus(health);
         setRaAvailable(true);
       } catch (err) {
+        console.error("Failed to check Ra health:", err);
         setRaAvailable(false);
         setRaStatus(null);
       }
