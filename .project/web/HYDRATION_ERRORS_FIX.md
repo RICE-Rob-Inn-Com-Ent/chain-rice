@@ -208,8 +208,9 @@ Masz hydration error?
 
 ## 🔧 Jak Naprawiono Ten Projekt
 
-### Przed:
+### Problem 1: Pages z fetch w useEffect
 
+**Przed:**
 ```tsx
 // page.tsx
 "use client";
@@ -221,23 +222,57 @@ export default function Page() {
 }
 ```
 
-### Po:
-
+**Po (próba #1):**
 ```tsx
-// page.tsx
+"use client";
+
+import dynamic from "next/dynamic";
+import { Header } from "@rice-mono/ui-kit/lib";
+
+const HomePage = dynamic(() => import("./pages/Home"), { ssr: false });
+
+export default function Page() {
+  return (
+    <Header>
+      <HomePage />
+    </Header>
+  );
+}
+```
+
+**Błąd nadal występował!** 
+
+### Problem 2: Normal import + Dynamic children = Mismatch
+
+Header był importowany NORMALNIE, ale children były DYNAMIC.
+
+- Server renderował: `<Header><PageLoader /></Header>`
+- Client renderował: `<Header><HomePage full /></Header>`
+- Mismatch! ❌
+
+**Rozwiązanie finalne:**
+```tsx
 "use client";
 
 import dynamic from "next/dynamic";
 
-const HomePage = dynamic(() => import("./pages/Home"), { 
-  ssr: false,
-  loading: () => <div>Loading...</div>
-});
+const HomePage = dynamic(() => import("./pages/Home"), { ssr: false });
 
 export default function Page() {
-  return <HomePage />; // ✅ Renderuje tylko na kliencie!
+  return (
+    <div className="flex min-h-screen flex-col">
+      <main className="flex-1">
+        <HomePage />
+      </main>
+    </div>
+  );
 }
 ```
+
+**Kluczowe:**
+- ❌ Nie mieszaj normal imports z dynamic children
+- ✅ Albo wszystko dynamic, albo wszystko normal
+- ✅ Wrapper HTML może być inline (statyczny)
 
 **Pliki zmienione:**
 - `.project/web/app/page.tsx` ✓
