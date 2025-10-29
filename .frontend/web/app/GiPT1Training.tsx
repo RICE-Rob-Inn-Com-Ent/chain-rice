@@ -129,6 +129,8 @@ export const GiPT1Training: React.FC = () => {
   });
 
   const hasImageGen = selectedGods.has("ra");
+  
+  const hasAudio = selectedGods.has("bes");
 
   const handleStartTraining = async () => {
     setIsTraining(true);
@@ -138,6 +140,7 @@ export const GiPT1Training: React.FC = () => {
       config,
       textDataset: textDataset?.name,
       imageDataset: imageDataset?.name,
+      audioDataset: audioDataset?.name,
     });
 
     // Simulate training progress
@@ -145,10 +148,12 @@ export const GiPT1Training: React.FC = () => {
       setTrainingProgress((prev) => ({
         llm: Math.min(prev.llm + 2, 100),
         sd: Math.min(prev.sd + 1.5, 100),
+        audio: Math.min(prev.audio + 1.8, 100),
       }));
       setTrainingLoss((prev) => ({
         llm: Math.max(0.1, prev.llm - 0.01),
         sd: Math.max(0.2, prev.sd - 0.015),
+        audio: Math.max(0.15, prev.audio - 0.012),
       }));
     }, 1000);
 
