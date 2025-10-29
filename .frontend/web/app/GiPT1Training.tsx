@@ -300,7 +300,7 @@ export const GiPT1Training: React.FC = () => {
 
             {/* Image Dataset */}
             {hasImageGen && (
-              <div>
+              <div className="mb-4">
                 <label className="block text-sm font-semibold text-gray-300 mb-2">
                   Image Dataset (ZIP)
                 </label>
@@ -316,6 +316,30 @@ export const GiPT1Training: React.FC = () => {
                     {imageDataset.name} ({(imageDataset.size / 1024 / 1024).toFixed(1)} MB)
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Audio Dataset */}
+            {hasAudio && (
+              <div>
+                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                  Audio Dataset (ZIP - WAV/MP3)
+                </label>
+                <input
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setAudioDataset(e.target.files?.[0] || null)}
+                  className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500 file:text-white hover:file:bg-indigo-600"
+                />
+                {audioDataset && (
+                  <div className="mt-2 flex items-center gap-2 text-sm text-green-400">
+                    <Icon icon="mdi:check-circle" width={16} />
+                    {audioDataset.name} ({(audioDataset.size / 1024 / 1024).toFixed(1)} MB)
+                  </div>
+                )}
+                <p className="mt-2 text-xs text-gray-400">
+                  💡 Include paired audio-text files for voice cloning or music generation training
+                </p>
               </div>
             )}
           </div>
