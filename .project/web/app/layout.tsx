@@ -1,3 +1,4 @@
+// cSpell:ignore Automatyzacja nowoczesna technologiczna oferująca kompleksowe rozwiązania sztuczna inteligencja tworzenie aplikacji mobilne procesów biznesowych infrastruktura Ollama Budujemy systemy które realnie odciążają zespół Nowoczesne technologiczne
 import type { Metadata } from "next";
 import { Inter, Poppins, Orbitron } from "next/font/google";
 import "../index.css";
@@ -91,11 +92,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" }
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
+    ],
   },
   manifest: "/manifest.webmanifest",
 };

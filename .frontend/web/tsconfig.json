@@ -37,12 +37,20 @@
     ]
   },
   "include": [
+    "src/**/*",
+    "app/**/*",
+    "lib/**/*",
+    "themes/**/*",
+    "shared/**/*",
     "angular/**/*",
     "next/**/*",
     "nuxt/**/*",
-    "shared/**/*",
-    "src/**/*",
     "svelte/**/*",
+    "index.tsx",
+    "index.css",
+    "tailwind.config.ts",
+    "postcss.config.ts",
+    "vite.config.ts",
     ".next/types/**/*.ts",
     "../../.project/web/main.tsx"
   ],

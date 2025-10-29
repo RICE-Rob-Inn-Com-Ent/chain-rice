@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import { Section, Button, PricingCalculator } from "@rice-mono/ui-kit/lib";
+import Section from "@rice-mono/ui-kit/lib/base/Section";
+import { Button } from "@rice-mono/ui-kit/lib/base/Button";
+import PricingCalculator from "@rice-mono/ui-kit/lib/organisms/PricingCalculator";
 
 export default function PricingPage() {
   return (
