@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Header } from "@rice-mono/ui-kit/lib";
 
 // Loading component
 const PageLoader = () => (
@@ -19,12 +18,14 @@ const PricingPage = dynamic(() => import("./pages/Pricing"), { ssr: false, loadi
 
 export default function Page() {
   return (
-    <Header>
-      <HomePage />
-      <AboutPage />
-      <ServicePage />
-      <ContactPage />
-      <PricingPage />
-    </Header>
+    <div className="flex min-h-screen flex-col">
+      <main className="flex-1">
+        <HomePage />
+        <AboutPage />
+        <ServicePage />
+        <ContactPage />
+        <PricingPage />
+      </main>
+    </div>
   );
 }
