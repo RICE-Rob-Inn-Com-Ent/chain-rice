@@ -181,7 +181,7 @@ export const GiPT1Training: React.FC = () => {
             <div className="text-sm text-purple-200">
               <p className="font-semibold mb-1">What is GiPT-1?</p>
               <p>
-                GiPT-1 (General intelligence Pantheon Transformer) is a unified model combining all 6 Egyptian AI gods. It can handle text, vision, code, and image generation in a single model using LoRA fusion.
+                GiPT-1 (General intelligence Pantheon Transformer) is a unified model combining all 7 Egyptian AI gods. It can handle text, vision, code, image generation, and audio (TTS/voice cloning) in a single model using LoRA fusion.
               </p>
             </div>
           </div>
@@ -482,7 +482,7 @@ export const GiPT1Training: React.FC = () => {
 
               {/* SD Progress */}
               {hasImageGen && (
-                <div>
+                <div className="mb-4">
                   <div className="flex justify-between text-sm text-gray-300 mb-2">
                     <span className="flex items-center gap-2">
                       <Icon icon="mdi:image-auto-adjust" width={16} />
@@ -500,11 +500,31 @@ export const GiPT1Training: React.FC = () => {
                 </div>
               )}
 
+              {/* Audio Progress */}
+              {hasAudio && (
+                <div>
+                  <div className="flex justify-between text-sm text-gray-300 mb-2">
+                    <span className="flex items-center gap-2">
+                      <Icon icon="mdi:music" width={16} />
+                      Audio AI Training (TTS/Voice)
+                    </span>
+                    <span>{trainingProgress.audio}%</span>
+                  </div>
+                  <div className="w-full h-3 bg-black/50 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500"
+                      style={{ width: `${trainingProgress.audio}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 text-xs text-gray-400">Loss: {trainingLoss.audio.toFixed(3)}</div>
+                </div>
+              )}
+
               {/* ETA */}
               <div className="mt-4 bg-black/30 rounded-lg p-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">ETA:</span>
-                  <span className="text-white font-semibold">~{Math.max(0, 60 - Math.max(trainingProgress.llm, trainingProgress.sd) * 0.6).toFixed(0)} min</span>
+                  <span className="text-white font-semibold">~{Math.max(0, 60 - Math.max(trainingProgress.llm, trainingProgress.sd, trainingProgress.audio) * 0.6).toFixed(0)} min</span>
                 </div>
               </div>
             </div>
