@@ -29,6 +29,7 @@
     "dev": "vite --port 3001 --host 0.0.0.0",
     "dev:debug": "vite --port 3001 --host 0.0.0.0 --debug",
     "build": "vite build",
+    "build:lib": "tsc --project tsconfig.lib.json && cp package.json dist/ && cp README_NPM.md dist/README.md",
     "preview": "vite preview --port 3001",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "typecheck": "tsc --noEmit",
@@ -36,7 +37,8 @@
     "test:watch": "vitest --watch",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "rm -rf node_modules dist"
+    "clean": "rm -rf node_modules dist",
+    "prepublishOnly": "yarn build:lib"
   },
   "dependencies": {
     "@iconify/react": "6.0.2",
@@ -80,11 +82,15 @@
     "react-dom": ">=18.0.0"
   },
   "sideEffects": ["**/*.css"],
-  "keywords": ["nextjs", "react", "components", "seo", "tailwindcss", "typescript", "rice-mono"],
+  "keywords": ["nextjs", "react", "components", "seo", "tailwindcss", "typescript", "rice-mono", "ai", "ui-kit"],
   "author": "Rice-Mono Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rice-mono/frontend-next"
+    "url": "https://github.com/rice-mono/ui-kit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
