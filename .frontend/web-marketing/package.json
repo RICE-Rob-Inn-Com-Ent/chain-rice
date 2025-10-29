@@ -11,18 +11,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@rice-mono/ui-kit": "workspace:*",
     "@iconify/react": "^5.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
+    "postcss-preset-env": "^9.3.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3",
     "vite": "^5.1.0"
