@@ -5,7 +5,7 @@ interface GodModel {
   id: string;
   name: string;
   icon: string;
-  type: "llm" | "vision" | "image-gen";
+  type: "llm" | "vision" | "image-gen" | "audio";
   ollamaModel?: string;
   vramUsage: number; // GB
   description: string;
@@ -30,13 +30,21 @@ const availableGods: GodModel[] = [
     description: "Image generation (Stable Diffusion 2.1)",
   },
   {
+    id: "bes",
+    name: "Bes",
+    icon: "🎵",
+    type: "audio",
+    vramUsage: 4.5,
+    description: "Audio AI - TTS, Voice Cloning, Music Generation",
+  },
+  {
     id: "isis",
     name: "Isis",
     icon: "✨",
     type: "llm",
     ollamaModel: "llama2:7b",
     vramUsage: 3.8,
-    description: "Audio, medical AI",
+    description: "Medical AI - diagnostics, imaging",
   },
   {
     id: "bastet",
@@ -83,9 +91,10 @@ export const GiPT1Training: React.FC = () => {
   const [selectedGods, setSelectedGods] = useState<Set<string>>(new Set(["thoth", "ra"]));
   const [textDataset, setTextDataset] = useState<File | null>(null);
   const [imageDataset, setImageDataset] = useState<File | null>(null);
+  const [audioDataset, setAudioDataset] = useState<File | null>(null);
   const [isTraining, setIsTraining] = useState(false);
-  const [trainingProgress, setTrainingProgress] = useState({ llm: 0, sd: 0 });
-  const [trainingLoss, setTrainingLoss] = useState({ llm: 0, sd: 0 });
+  const [trainingProgress, setTrainingProgress] = useState({ llm: 0, sd: 0, audio: 0 });
+  const [trainingLoss, setTrainingLoss] = useState({ llm: 0, sd: 0, audio: 0 });
   
   const [config, setConfig] = useState<TrainingConfig>({
     mode: "hybrid",
