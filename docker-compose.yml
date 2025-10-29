@@ -221,6 +221,7 @@ services:
     depends_on:
       - thoth
       - ra
+      - bes
       - isis
       - bastet
       - maat
@@ -665,6 +666,10 @@ volumes:
 
   # Model storage for each god
   ra-models:
+    driver: local
+  bes-models:
+    driver: local
+  bes-output:
     driver: local
   isis-models:
     driver: local
