@@ -1,11 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Header } from "@rice-mono/ui-kit/lib";
-import HomePage from "./pages/Home";
-import AboutPage from "./pages/About";
-import ServicePage from "./pages/Service";
-import ContactPage from "./pages/Contact";
-import PricingPage from "./pages/Pricing";
+
+// Dynamic imports with SSR disabled for components that use browser APIs or fetch data
+const HomePage = dynamic(() => import("./pages/Home"), { ssr: false });
+const AboutPage = dynamic(() => import("./pages/About"), { ssr: false });
+const ServicePage = dynamic(() => import("./pages/Service"), { ssr: false });
+const ContactPage = dynamic(() => import("./pages/Contact"), { ssr: false });
+const PricingPage = dynamic(() => import("./pages/Pricing"), { ssr: false });
 
 export default function Page() {
   return (
