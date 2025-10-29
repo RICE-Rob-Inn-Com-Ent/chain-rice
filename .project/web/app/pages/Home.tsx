@@ -117,7 +117,7 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 px-4">
+      <section id="services" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <Reveal>
             <h2 className="text-4xl font-bold text-center mb-12">
@@ -127,7 +127,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <Reveal delay={0.1}>
-              <div className="bg-gradient-to-br from-cyan-900/30 to-gray-900 p-8 rounded-2xl border border-cyan-500/30">
+              <div className="bg-gradient-to-br from-cyan-900/30 to-gray-900 p-8 rounded-2xl border border-cyan-500/30 hover:border-cyan-500/50 transition">
                 <div className="text-5xl mb-4">🤖</div>
                 <h3 className="text-2xl font-bold mb-4 text-cyan-400">Sztuczna Inteligencja</h3>
                 <p className="text-gray-400">
@@ -137,7 +137,7 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <div className="bg-gradient-to-br from-purple-900/30 to-gray-900 p-8 rounded-2xl border border-purple-500/30">
+              <div className="bg-gradient-to-br from-purple-900/30 to-gray-900 p-8 rounded-2xl border border-purple-500/30 hover:border-purple-500/50 transition">
                 <div className="text-5xl mb-4">💻</div>
                 <h3 className="text-2xl font-bold mb-4 text-purple-400">Web & Mobile</h3>
                 <p className="text-gray-400">
@@ -147,7 +147,7 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={0.3}>
-              <div className="bg-gradient-to-br from-amber-900/30 to-gray-900 p-8 rounded-2xl border border-amber-500/30">
+              <div className="bg-gradient-to-br from-amber-900/30 to-gray-900 p-8 rounded-2xl border border-amber-500/30 hover:border-amber-500/50 transition">
                 <div className="text-5xl mb-4">☁️</div>
                 <h3 className="text-2xl font-bold mb-4 text-amber-400">Cloud & DevOps</h3>
                 <p className="text-gray-400">
@@ -158,6 +158,111 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* LoRA Training Section */}
+      <section id="lora-training" className="py-20 px-4 bg-gradient-to-b from-black via-purple-900/10 to-black">
+        <div className="max-w-7xl mx-auto">
+          <Reveal>
+            <h2 className="text-4xl font-bold text-center mb-4">
+              <GradientText>LoRA Training Service</GradientText>
+            </h2>
+            <p className="text-center text-gray-400 mb-12 max-w-3xl mx-auto">
+              Specjalizujemy się w fine-tuningu modeli AI za pomocą technologii LoRA (Low-Rank Adaptation).
+              Dostosowujemy modele do Twoich specyficznych potrzeb bez astronomicznych kosztów.
+            </p>
+          </Reveal>
+
+          <LoRaTrainingPanel />
+
+          {/* Benefits */}
+          <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Reveal delay={0.1}>
+              <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6">
+                <div className="text-4xl mb-3">⚡</div>
+                <h4 className="text-xl font-bold text-white mb-2">Szybkie Trenowanie</h4>
+                <p className="text-gray-400 text-sm">
+                  LoRA pozwala na szybszy trening niż tradycyjny fine-tuning - oszczędzasz czas i pieniądze.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.2}>
+              <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6">
+                <div className="text-4xl mb-3">💾</div>
+                <h4 className="text-xl font-bold text-white mb-2">Niskie Wymagania</h4>
+                <p className="text-gray-400 text-sm">
+                  Trenuj na GPU z 8GB VRAM. LoRA adaptery są małe (kilkaset MB) i łatwe do wdrożenia.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6">
+                <div className="text-4xl mb-3">🎯</div>
+                <h4 className="text-xl font-bold text-white mb-2">Precyzyjne Dostosowanie</h4>
+                <p className="text-gray-400 text-sm">
+                  Trenujemy modele na Twoich danych, zachowując ogólną wiedzę bazowego modelu.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.4}>
+              <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6">
+                <div className="text-4xl mb-3">🔄</div>
+                <h4 className="text-xl font-bold text-white mb-2">Łatwe Zarządzanie</h4>
+                <p className="text-gray-400 text-sm">
+                  Przełączaj między różnymi adapterami bez przeładowywania bazowego modelu.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <h2 className="text-4xl font-bold text-center mb-8">
+              <GradientText>O RICE</GradientText>
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-8 md:p-12">
+              <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                RICE (Revolutionary Intelligence & Cognitive Engineering) to firma technologiczna specjalizująca się 
+                w tworzeniu zaawansowanych rozwiązań AI, aplikacji web/mobile oraz infrastruktury cloud.
+              </p>
+              <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                Naszą misją jest budowanie technologii, która pracuje za Ciebie - automatyzując procesy, 
+                analizując dane i wspierając decyzje biznesowe. Łączymy pasję do kodu z wrażliwością projektową 
+                i mocą sztucznej inteligencji.
+              </p>
+              <p className="text-gray-300 text-lg leading-relaxed">
+                Oferujemy kompleksowe usługi od designu interfejsu po wydajne, skalowalne mikroserwisy w chmurze.
+                Każde rozwiązanie powstaje pod cele biznesowe i mierzalne efekty.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-12">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="text-2xl">🏺</span>
+            <span className="text-xl font-bold text-white">RICE</span>
+          </div>
+          <p className="text-gray-400 text-sm mb-4">
+            Revolutionary Intelligence & Cognitive Engineering
+          </p>
+          <p className="text-gray-500 text-xs">
+            © 2025 RICE. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
