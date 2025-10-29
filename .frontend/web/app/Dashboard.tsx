@@ -40,14 +40,25 @@ const aiGods: AIGod[] = [
     ollamaModels: [], // Ra uses Stable Diffusion WebUI, not Ollama
   },
   {
+    id: "bes",
+    name: "Bes",
+    subtitle: "Bóg Muzyki i Głosu",
+    icon: "🎵",
+    gradient: "from-indigo-900 to-purple-900",
+    description: "Audio AI • Synteza głosu, klonowanie i generacja muzyki",
+    features: ["TTS (Tortoise TTS)", "Voice Cloning (XTTS)", "Music Generation (MusicGen)", "Audio Enhancement"],
+    tech: "Tortoise TTS • XTTS • MusicGen",
+    ollamaModels: [], // Uses own container on port 8003
+  },
+  {
     id: "isis",
     name: "Isis",
-    subtitle: "Bogini Uzdrawiania i Audio",
+    subtitle: "Bogini Uzdrawiania",
     icon: "✨",
     gradient: "from-purple-900 to-pink-900",
-    description: "Medical & Audio AI • Diagnostyka i synteza głosu",
-    features: ["Medical Imaging (MONAI)", "Speech Synthesis (XTTS)", "Voice Cloning", "Music Generation"],
-    tech: "MONAI • XTTS • MusicGen",
+    description: "Medical AI • Diagnostyka obrazów medycznych",
+    features: ["Medical Imaging (MONAI)", "Disease Detection", "X-Ray Analysis", "MRI Processing"],
+    tech: "MONAI • Med-SAM • RadImageNet",
     ollamaModels: ["llama2:7b"],
   },
   {
@@ -126,6 +137,9 @@ export const Dashboard: React.FC = () => {
 
     // Special case for Ra - uses external Stable Diffusion WebUI, always idle
     if (god.id === "ra") return "idle";
+    
+    // Special case for Bes - uses external Tortoise TTS container, always idle
+    if (god.id === "bes") return "idle";
 
     // Check if any of this god's models are downloading
     for (const modelName of god.ollamaModels) {
