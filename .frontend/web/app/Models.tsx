@@ -89,6 +89,113 @@ export const Models: React.FC = () => {
         )}
       </div>
 
+      {/* Ra (Stable Diffusion) Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <span className="text-3xl">☀️</span>
+          Ra - Stable Diffusion (Non-Ollama)
+        </h2>
+        
+        <div className="bg-gradient-to-br from-orange-900 to-amber-900 rounded-xl border border-orange-500/30 p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              {/* Ra Info */}
+              <div className="flex items-center gap-3 mb-4">
+                <Icon icon="mdi:image-auto-adjust" width={40} className="text-orange-400" />
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Stable Diffusion 2.1 FP16</h3>
+                  <p className="text-orange-300 text-sm">FastAPI Backend • Port 8002 • 6GB VRAM Optimized</p>
+                </div>
+              </div>
+
+              {/* Status Badge */}
+              <div className="mb-4">
+                {raAvailable ? (
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${raStatus?.status === "active" ? "bg-green-500" : "bg-yellow-500"} animate-pulse`} />
+                    <span className="text-white font-semibold">
+                      Status: {raStatus?.status === "active" ? "Active (GPU)" : "Sleeping (CPU)"}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-red-400 font-semibold">Disconnected</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Models Grid */}
+              {raStatus && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-black/30 rounded-lg p-4">
+                    <div className="text-xs text-orange-300 mb-1">Image Generation</div>
+                    <div className="text-white font-semibold">{raStatus.models.image_gen}</div>
+                  </div>
+                  
+                  <div className="bg-black/30 rounded-lg p-4">
+                    <div className="text-xs text-orange-300 mb-1">Upscaler</div>
+                    <div className="text-white font-semibold">{raStatus.models.upscaler}</div>
+                  </div>
+                  
+                  <div className="bg-black/30 rounded-lg p-4">
+                    <div className="text-xs text-orange-300 mb-1">Background Removal</div>
+                    <div className="text-white font-semibold">{raStatus.models.bg_removal}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Optimizations */}
+              {raStatus && (
+                <div className="mt-4 bg-black/30 rounded-lg p-4">
+                  <div className="text-xs text-orange-300 mb-2">Optimizations</div>
+                  <div className="flex flex-wrap gap-2">
+                    {raStatus.optimizations.map((opt) => (
+                      <span key={opt} className="px-3 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded-full text-xs font-semibold">
+                        {opt}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-2 ml-4">
+              <button 
+                onClick={() => window.open('/demo/ra.html', '_blank')}
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2"
+              >
+                <Icon icon="mdi:play" width={20} />
+                Try Demo
+              </button>
+              
+              <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2">
+                <Icon icon="mdi:cog" width={20} />
+                Settings
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Note */}
+        <div className="mt-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <Icon icon="mdi:information" width={24} className="text-blue-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-200">
+              <p className="font-semibold mb-1">ℹ️ Ra uses its own FastAPI backend, not Ollama</p>
+              <p>Ra runs on port 8002 with Stable Diffusion 2.1 FP16. It has lazy loading and 6GB VRAM optimizations. Check health: <code className="bg-black/30 px-2 py-0.5 rounded">curl http://localhost:8002/health</code></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Ollama Models Section */}
+      <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+        <Icon icon="simple-icons:ollama" width={28} className="text-white" />
+        Ollama Models
+      </h2>
+
       {/* Models Grid */}
       {models.length === 0 && isHealthy && (
         <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-12 text-center">
