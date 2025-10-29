@@ -6,7 +6,7 @@ import {
   generateImageWithRa,
   type RaImageGenRequest,
   type RaHealthResponse,
-} from "../../lib/services/ra";
+} from "../../services/ra";
 
 interface GenerationParams {
   prompt: string;
