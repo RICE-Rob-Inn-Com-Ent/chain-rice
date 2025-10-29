@@ -99,6 +99,27 @@ export const Dashboard: React.FC = () => {
   const { models, runningModels, isHealthy, loading, error, downloadProgress } = useOllama(3000);
   const [loadingGod, setLoadingGod] = useState<string | null>(null);
   const [trainingGod, setTrainingGod] = useState<string | null>(null);
+  const [raStatus, setRaStatus] = useState<RaHealthResponse | null>(null);
+  const [raAvailable, setRaAvailable] = useState(false);
+
+  // Check Ra health
+  useEffect(() => {
+    const checkRa = async () => {
+      try {
+        const health = await checkRaHealth();
+        setRaStatus(health);
+        setRaAvailable(true);
+      } catch (err) {
+        console.error("Failed to check Ra health:", err);
+        setRaAvailable(false);
+        setRaStatus(null);
+      }
+    };
+
+    checkRa();
+    const interval = setInterval(checkRa, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const getGodStatus = (god: AIGod): "active" | "idle" | "loading" | "downloading" | "error" => {
     if (loadingGod === god.id) return "loading";
@@ -154,6 +175,22 @@ export const Dashboard: React.FC = () => {
       }
     }
     return null;
+  };
+
+  const formatBytes = (bytes: number): string => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
+  };
+
+  const formatDate = (dateStr: string): string => {
+    try {
+      return new Date(dateStr).toLocaleString();
+    } catch {
+      return dateStr;
+    }
   };
 
   // If training interface is open, show it instead of dashboard
