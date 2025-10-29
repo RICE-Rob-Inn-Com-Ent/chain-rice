@@ -158,34 +158,29 @@ async def health_check():
 
 @app.post("/tts")
 async def text_to_speech(request: TTSRequest):
-    """Generate speech from text using Tortoise TTS"""
+    """Generate speech from text using Coqui TTS"""
     try:
         model = load_tortoise_tts()
         
         # Generate speech
         print(f"🎵 Generating speech: '{request.text[:50]}...'")
         
-        # Get reference audio clips
-        voice_samples = None
-        conditioning_latents = None
-        
-        # Generate audio
-        gen = model.tts_with_preset(
-            request.text,
-            voice_samples=voice_samples,
-            conditioning_latents=conditioning_latents,
-            preset=request.preset
-        )
-        
         # Save to file
         output_path = OUTPUT_DIR / f"tts_{int(time.time())}.wav"
-        import torchaudio
-        torchaudio.save(str(output_path), gen.squeeze(0).cpu(), 24000)
+        
+        # Generate audio using Coqui TTS
+        # speaker_idx can be changed for different voices (VCTK has multiple speakers)
+        speaker_idx = 0 if request.voice == "default" else int(request.voice)
+        model.tts_to_file(
+            text=request.text,
+            speaker=f"p{226 + speaker_idx}",  # VCTK speaker IDs
+            file_path=str(output_path)
+        )
         
         return {
             "status": "success",
-            "file": str(output_path),
-            "duration": len(gen[0]) / 24000
+            "file": str(output_path.name),
+            "path": f"/audio/{output_path.name}"
         }
         
     except Exception as e:
