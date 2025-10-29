@@ -54,9 +54,7 @@ export const Models: React.FC = () => {
         <div className="mt-4 flex items-center gap-6 bg-white/5 backdrop-blur-lg rounded-lg border border-white/10 p-4">
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded-full ${isHealthy ? "bg-green-500" : "bg-red-500"} animate-pulse`} />
-            <span className="text-white font-medium">
-              {isHealthy ? "Ollama Connected" : "Ollama Disconnected"}
-            </span>
+            <span className="text-white font-medium">{isHealthy ? "Ollama Connected" : "Ollama Disconnected"}</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -96,7 +94,7 @@ export const Models: React.FC = () => {
           <span className="text-3xl">☀️</span>
           Ra - Stable Diffusion (Non-Ollama)
         </h2>
-        
+
         <div className="bg-gradient-to-br from-orange-900 to-amber-900 rounded-xl border border-orange-500/30 p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -113,7 +111,9 @@ export const Models: React.FC = () => {
               <div className="mb-4">
                 {raAvailable ? (
                   <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${raStatus?.status === "active" ? "bg-green-500" : "bg-yellow-500"} animate-pulse`} />
+                    <div
+                      className={`w-3 h-3 rounded-full ${raStatus?.status === "active" ? "bg-green-500" : "bg-yellow-500"} animate-pulse`}
+                    />
                     <span className="text-white font-semibold">
                       Status: {raStatus?.status === "active" ? "Active (GPU)" : "Sleeping (CPU)"}
                     </span>
@@ -133,12 +133,12 @@ export const Models: React.FC = () => {
                     <div className="text-xs text-orange-300 mb-1">Image Generation</div>
                     <div className="text-white font-semibold">{raStatus.models.image_gen}</div>
                   </div>
-                  
+
                   <div className="bg-black/30 rounded-lg p-4">
                     <div className="text-xs text-orange-300 mb-1">Upscaler</div>
                     <div className="text-white font-semibold">{raStatus.models.upscaler}</div>
                   </div>
-                  
+
                   <div className="bg-black/30 rounded-lg p-4">
                     <div className="text-xs text-orange-300 mb-1">Background Removal</div>
                     <div className="text-white font-semibold">{raStatus.models.bg_removal}</div>
@@ -152,7 +152,10 @@ export const Models: React.FC = () => {
                   <div className="text-xs text-orange-300 mb-2">Optimizations</div>
                   <div className="flex flex-wrap gap-2">
                     {raStatus.optimizations.map((opt) => (
-                      <span key={opt} className="px-3 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded-full text-xs font-semibold">
+                      <span
+                        key={opt}
+                        className="px-3 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded-full text-xs font-semibold"
+                      >
                         {opt}
                       </span>
                     ))}
@@ -163,14 +166,14 @@ export const Models: React.FC = () => {
 
             {/* Actions */}
             <div className="flex flex-col gap-2 ml-4">
-              <button 
-                onClick={() => window.open('/demo/ra.html', '_blank')}
+              <button
+                onClick={() => window.open("/demo/ra.html", "_blank")}
                 className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2"
               >
                 <Icon icon="mdi:play" width={20} />
                 Try Demo
               </button>
-              
+
               <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2">
                 <Icon icon="mdi:cog" width={20} />
                 Settings
@@ -185,7 +188,10 @@ export const Models: React.FC = () => {
             <Icon icon="mdi:information" width={24} className="text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-blue-200">
               <p className="font-semibold mb-1">ℹ️ Ra uses its own FastAPI backend, not Ollama</p>
-              <p>Ra runs on port 8002 with Stable Diffusion 2.1 FP16. It has lazy loading and 6GB VRAM optimizations. Check health: <code className="bg-black/30 px-2 py-0.5 rounded">curl http://localhost:8002/health</code></p>
+              <p>
+                Ra runs on port 8002 with Stable Diffusion 2.1 FP16. It has lazy loading and 6GB VRAM optimizations.
+                Check health: <code className="bg-black/30 px-2 py-0.5 rounded">curl http://localhost:8002/health</code>
+              </p>
             </div>
           </div>
         </div>
@@ -224,11 +230,7 @@ export const Models: React.FC = () => {
                   <div className="flex-1">
                     {/* Model Name */}
                     <div className="flex items-center gap-3 mb-2">
-                      <Icon
-                        icon="mdi:robot"
-                        width={32}
-                        className={isRunning ? "text-green-400" : "text-gray-400"}
-                      />
+                      <Icon icon="mdi:robot" width={32} className={isRunning ? "text-green-400" : "text-gray-400"} />
                       <div>
                         <h3 className="text-xl font-bold text-white">{model.name}</h3>
                         {model.details && (
@@ -351,4 +353,3 @@ export const Models: React.FC = () => {
     </div>
   );
 };
-
