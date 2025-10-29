@@ -630,6 +630,14 @@ export const Dashboard: React.FC = () => {
                 API Docs
               </button>
 
+              <button
+                onClick={() => setTrainingGod("bes")}
+                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2"
+              >
+                <Icon icon="mdi:brain" width={20} />
+                🧠 Train LoRA
+              </button>
+
               <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold text-sm transition flex items-center gap-2">
                 <Icon icon="mdi:cog" width={20} />
                 Settings

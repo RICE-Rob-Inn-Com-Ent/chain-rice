@@ -1,8 +1,8 @@
 import React from "react";
-import { ThothTraining, RaTraining, IsisTraining, BastetTraining, MaatTraining, KhnumTraining } from "./training";
+import { ThothTraining, RaTraining, BesTraining, IsisTraining, BastetTraining, MaatTraining, KhnumTraining } from "./training";
 
 interface GodTrainingProps {
-  godId: "thoth" | "ra" | "isis" | "bastet" | "maat" | "khnum";
+  godId: "thoth" | "ra" | "bes" | "isis" | "bastet" | "maat" | "khnum";
   onBack: () => void;
 }
 
@@ -23,6 +23,7 @@ export const GodTraining: React.FC<GodTrainingProps> = ({ godId, onBack }) => {
       {/* Render appropriate training interface */}
       {godId === "thoth" && <ThothTraining />}
       {godId === "ra" && <RaTraining />}
+      {godId === "bes" && <BesTraining />}
       {godId === "isis" && <IsisTraining />}
       {godId === "bastet" && <BastetTraining />}
       {godId === "maat" && <MaatTraining />}
