@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "Rice Monorepo - UI Kit & Next.js Web Application",
-  "workspaces": [".frontend/web", ".frontend/web-marketing", ".project/web"],
+  "workspaces": [
+    ".frontend/web",
+    ".frontend/web-marketing",
+    ".project/web"
+  ],
   "scripts": {
     "dev": "concurrently -n \"admin,marketing\" -c \"cyan,magenta\" \"yarn workspace @rice-mono/ui-kit dev\" \"yarn workspace @rice-mono/marketing dev\"",
     "dev:admin": "yarn workspace @rice-mono/ui-kit dev",
