@@ -3,12 +3,12 @@ import { Layout } from "./Layout";
 import { Dashboard } from "./Dashboard";
 import { Models } from "./Models";
 import { LoRaTraining } from "./LoRaTraining";
-import { Prices } from "./Prices";
 import { ComponentLibrary } from "./ComponentLibrary";
+import { GiPT1Training } from "./GiPT1Training";
 import { ThemeProvider } from "../lib/contexts/ThemeContext";
 import { ErrorBoundary } from "../lib/components/ErrorBoundary";
 
-export type Page = "dashboard" | "models" | "lora" | "prices" | "components";
+export type Page = "dashboard" | "models" | "gipt1-training" | "lora" | "components";
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>("dashboard");
@@ -19,10 +19,10 @@ const App: React.FC = () => {
         return <Dashboard />;
       case "models":
         return <Models />;
+      case "gipt1-training":
+        return <GiPT1Training />;
       case "lora":
         return <LoRaTraining />;
-      case "prices":
-        return <Prices />;
       case "components":
         return <ComponentLibrary />;
       default:
