@@ -1,6 +1,6 @@
 "use client";
 
-import { GodsPanel, LoRaTrainingPanel, GradientText, Reveal, Section } from "@rice-mono/ui-kit/lib";
+import { GradientText, Reveal, Section } from "@rice-mono/ui-kit/lib";
 
 export default function HomePage() {
   return (
@@ -78,55 +78,49 @@ export default function HomePage() {
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 mb-8">Revolutionary Intelligence & Cognitive Engineering</p>
             <p className="text-lg text-gray-500 max-w-3xl mx-auto">
-              Egipskie bóstwo AI wspierające Twoją podróż przez świat technologii. Każdy bóg reprezentuje unikalny model
-              AI z własną domeną wiedzy.
+              Nowoczesna firma technologiczna specjalizująca się w sztucznej inteligencji, 
+              web development, blockchain i cloud computing. Tworzymy rozwiązania, które napędzają biznes.
             </p>
           </Reveal>
         </div>
       </section>
-
-      {/* Gods Panel */}
-      <GodsPanel />
-
-      {/* LoRa Training */}
-      <LoRaTrainingPanel />
 
       {/* Features */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <Reveal>
             <h2 className="text-4xl font-bold text-center mb-12">
-              <GradientText>Dlaczego Panteon Bogów?</GradientText>
+              <GradientText>Nasze Usługi</GradientText>
             </h2>
           </Reveal>
 
           <div className="grid md:grid-cols-3 gap-8">
             <Reveal delay={0.1}>
               <div className="bg-gradient-to-br from-cyan-900/30 to-gray-900 p-8 rounded-2xl border border-cyan-500/30">
-                <div className="text-5xl mb-4">⚡</div>
-                <h3 className="text-2xl font-bold mb-4 text-cyan-400">Lazy Loading</h3>
+                <div className="text-5xl mb-4">🤖</div>
+                <h3 className="text-2xl font-bold mb-4 text-cyan-400">Sztuczna Inteligencja</h3>
                 <p className="text-gray-400">
-                  Modele ładują się tylko gdy są potrzebne. Oszczędzaj VRAM i przełączaj między bogami bez opóźnień.
+                  Wdrażamy modele AI i machine learning, które automatyzują procesy, analizują dane i wspierają decyzje biznesowe.
                 </p>
               </div>
             </Reveal>
 
             <Reveal delay={0.2}>
               <div className="bg-gradient-to-br from-purple-900/30 to-gray-900 p-8 rounded-2xl border border-purple-500/30">
-                <div className="text-5xl mb-4">🎨</div>
-                <h3 className="text-2xl font-bold mb-4 text-purple-400">LoRa Training</h3>
+                <div className="text-5xl mb-4">💻</div>
+                <h3 className="text-2xl font-bold mb-4 text-purple-400">Web & Mobile</h3>
                 <p className="text-gray-400">
-                  Trenuj własne adaptery bez kosztownego fine-tuningu. Dodaj specjalizację w kilka minut.
+                  Tworzymy nowoczesne aplikacje web i mobile z pięknym UI/UX, które użytkownicy uwielbiają.
                 </p>
               </div>
             </Reveal>
 
             <Reveal delay={0.3}>
               <div className="bg-gradient-to-br from-amber-900/30 to-gray-900 p-8 rounded-2xl border border-amber-500/30">
-                <div className="text-5xl mb-4">🔮</div>
-                <h3 className="text-2xl font-bold mb-4 text-amber-400">Proto & Bazel</h3>
+                <div className="text-5xl mb-4">☁️</div>
+                <h3 className="text-2xl font-bold mb-4 text-amber-400">Cloud & DevOps</h3>
                 <p className="text-gray-400">
-                  Protokoły Protocol Buffers i Bazel cache zapewniają błyskawiczną komunikację i build.
+                  Budujemy skalowalną infrastrukturę cloud, automatyzujemy deployment i monitorujemy aplikacje 24/7.
                 </p>
               </div>
             </Reveal>
