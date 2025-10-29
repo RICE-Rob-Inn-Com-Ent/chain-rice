@@ -9,9 +9,7 @@ export interface LayoutProps {
 
 const navItems = [
   { id: "dashboard", icon: "mdi:view-dashboard", label: "Dashboard" },
-  { id: "models", icon: "mdi:robot", label: "Models" },
   { id: "gipt1-training", icon: "mdi:brain", label: "GiPT-1 Training" },
-  { id: "lora", icon: "mdi:dna", label: "LoRA Training" },
   { id: "components", icon: "mdi:palette", label: "Components" },
 ];
 
