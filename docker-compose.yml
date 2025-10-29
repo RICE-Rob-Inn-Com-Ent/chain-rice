@@ -312,6 +312,44 @@ services:
       retries: 3
       start_period: 180s
 
+  # 🎵 Bes - God of Music (Audio AI & TTS)
+  bes:
+    build:
+      context: .backend/bes
+      dockerfile: Dockerfile
+    image: bes:1
+    container_name: rice-bes
+    labels:
+      - "god.name=Bes"
+      - "god.icon=🎵"
+      - "god.domain=Music & Voice"
+      - "god.description=Tortoise TTS + XTTS + MusicGen"
+      - "traefik.enable=true"
+      - "traefik.http.routers.bes.rule=Host(`bes.rice.local`)"
+      - "traefik.http.services.bes.loadbalancer.server.port=8007"
+    ports:
+      - "8007:8007"
+    volumes:
+      - bes-models:/root/.cache
+      - bes-output:/tmp/bes_output
+      - model-cache:/cache/models:rw
+    environment:
+      - GOD_NAME=Bes
+      - GOD_ID=bes
+      - CUDA_VISIBLE_DEVICES=0
+      - PYTHONUNBUFFERED=1
+      - NUMBA_CACHE_DIR=/tmp
+    networks:
+      - rice-backend
+      - pantheon
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 180s
+
   # ✨ Isis - Goddess of Healing (Medical AI)
   isis:
     build:

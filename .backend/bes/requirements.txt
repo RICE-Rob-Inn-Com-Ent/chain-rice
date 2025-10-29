@@ -1,0 +1,26 @@
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Audio Processing
+torch==2.1.2
+torchaudio==2.1.2
+numpy==1.24.3
+scipy==1.11.4
+librosa==0.10.1
+soundfile==0.12.1
+pydub==0.25.1
+
+# Tortoise TTS
+TTS==0.22.0
+tortoise-tts==2.8.0
+
+# XTTS (Coqui TTS)
+# Already included in TTS package
+
+# MusicGen
+transformers==4.36.2
+accelerate==0.25.0
+
