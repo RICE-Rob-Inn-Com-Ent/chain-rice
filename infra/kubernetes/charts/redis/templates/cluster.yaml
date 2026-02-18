@@ -1,0 +1,47 @@
+{{- if .Values.redis.enabled }}
+apiVersion: databases.spotahome.com/v1
+kind: RedisCluster
+metadata:
+  name: {{ .Values.redis.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  clusterReplicas: {{ .Values.redis.nodes }}
+  podTemplate:
+    spec:
+      containers:
+      - name: redis
+        image: redis:{{ .Values.redis.version }}
+        resources:
+          requests:
+            cpu: {{ .Values.redis.resources.requests.cpu }}
+            memory: {{ .Values.redis.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.redis.resources.limits.cpu }}
+            memory: {{ .Values.redis.resources.limits.memory }}
+        command:
+        - redis-server
+        - --cluster-enabled
+        - "yes"
+        - --cluster-config-file
+        - /data/nodes.conf
+        - --cluster-node-timeout
+        - "5000"
+        - --appendonly
+        - "yes"
+        {{- range $key, $value := .Values.redis.config }}
+        - --{{ $key }}
+        - {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        - name: data
+          mountPath: /data
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes: [{{ .Values.redis.storage.accessMode }}]
+        storageClassName: {{ .Values.redis.storage.storageClass | default "" }}
+        resources:
+          requests:
+            storage: {{ .Values.redis.storage.size }}
+{{- end }}
+

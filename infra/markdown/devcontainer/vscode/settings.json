@@ -1,0 +1,298 @@
+{
+  "sonarlint.connectedMode.connections.sonarcloud": [
+    {
+      "organizationKey": "rice-rob-inn-com-ent",
+      "connectionId": "rice-mono",
+      "region": "EU"
+    }
+  ],
+  "sonarlint.focusOnNewCode": false,
+
+  // === CSS/SCSS/LESS ===
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+
+  // === Editor Formatting ===
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "editor.minimap.enabled": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "editor.semanticHighlighting.enabled": true,
+    "editor.syntaxHighlighting": true
+  },
+
+  // === Python Language Server ===
+  "python.languageServer": "Pylance",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.stubPath": "./typings",
+
+  // === Semantic Highlighting for Python ===
+  "editor.semanticTokenColorCustomizations": {
+    "[*]": {
+      "rules": {
+        "namespace": "#569cd6",
+        "class": "#4ec9b0",
+        "enum": "#4ec9b0",
+        "interface": "#4ec9b0",
+        "struct": "#4ec9b0",
+        "typeParameter": "#4ec9b0",
+        "type": "#4ec9b0",
+        "parameter": "#9cdcfe",
+        "variable": "#9cdcfe",
+        "property": "#9cdcfe",
+        "enumMember": "#4fc1ff",
+        "event": "#4fc1ff",
+        "function": "#dcdcaa",
+        "method": "#dcdcaa",
+        "macro": "#c586c0",
+        "keyword": "#569cd6",
+        "modifier": "#569cd6",
+        "comment": "#6a9955",
+        "string": "#ce9178",
+        "number": "#b5cea8",
+        "regexp": "#d16969",
+        "operator": "#d4d4d4"
+      }
+    },
+    "[Default Dark+]": {
+      "rules": {
+        "namespace": "#4ec9b0",
+        "class": "#4ec9b0",
+        "enum": "#4ec9b0",
+        "interface": "#4ec9b0",
+        "struct": "#4ec9b0",
+        "typeParameter": "#4ec9b0",
+        "type": "#4ec9b0",
+        "parameter": "#9cdcfe",
+        "variable": "#9cdcfe",
+        "property": "#9cdcfe",
+        "enumMember": "#4fc1ff",
+        "event": "#4fc1ff",
+        "function": "#dcdcaa",
+        "method": "#dcdcaa",
+        "macro": "#c586c0",
+        "keyword": "#569cd6",
+        "modifier": "#569cd6",
+        "comment": "#6a9955",
+        "string": "#ce9178",
+        "number": "#b5cea8",
+        "regexp": "#d16969",
+        "operator": "#d4d4d4"
+      }
+    }
+  },
+
+  // === File Associations ===
+  "files.associations": {
+    ".secrets.baseline": "json",
+    "CODEOWNERS": "plaintext",
+    "ARCHITECTURE": "markdown",
+    "TODO": "markdown",
+    ".bazelignore": "ignore",
+    ".tool-versions": "ini",
+    "*.html": "html",
+    ".env": "dotenv",
+    "*.example": "dotenv"
+  },
+  "files.autoSave": "afterDelay",
+
+  // === Git ===
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "always",
+
+  // === Explorer ===
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmPasteNative": false,
+
+  // === JavaScript/TypeScript ===
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // === GitHub ===
+  "githubIssues.queries": [
+    {
+      "label": "My Issues",
+      "query": "is:open assignee:${user} repo:${owner}/${repository}",
+      "groupBy": ["milestone"]
+    },
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    },
+    {
+      "label": "Recent Issues",
+      "query": "state:open repo:${owner}/${repository} sort:updated-desc"
+    }
+  ],
+  "githubPullRequests.createOnPublishBranch": "never",
+
+  // === Project Manager ===
+  "projectManager.git.baseFolders": [".project"],
+  "projectManager.git.ignoredFolders": ["./"],
+  "projectManager.sortList": "Saved",
+
+  // === Makefile ===
+  "makefile.makefilePath": "Makefile",
+  "makefile.configureOnOpen": true,
+
+  // === Bazel ===
+  "bazel.executable": "/usr/bin/bazel",
+  "bazel.buildifierExecutable": "/home/mrDinkelman/.local/bin/buildifier",
+  "bazel.buildifierFixOnFormat": true,
+  "bazel.enableCodeLens": true,
+  "bazel.queriesShareServer": true,
+  "bazel.commandLine.startupOptions": ["--enable_bzlmod"],
+
+  // === Direnv ===
+  "direnv.restart.automatic": true,
+
+  // === Java ===
+  "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk",
+  "java.project.explorer.showNonJavaResources": false,
+  "java.silentNotification": true,
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-21",
+      "path": "/usr/lib/jvm/java-21-openjdk",
+      "default": true
+    }
+  ],
+
+  // === SQL Tools ===
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Code-Rice",
+      "group": "RICE",
+      "database": "rice_db",
+      "username": "rice_user"
+    }
+  ],
+
+  // === Snyk ===
+  // Testy tylko w CI/CD lub manualnie z IDE; w IDE skanuj po kolei (1 na raz), żeby nie obciążyć RAM
+  "snyk.scanMode": "manual",
+  "snyk.code.enableAutoScan": false,
+  "snyk.openSource.enableAutoScan": false,
+  "snyk.advanced.cliPath": "/home/mrDinkelman/.local/share/snyk/vscode-cli/snyk-linux",
+  "snyk.folderConfigs": [
+    {
+      "folderPath": "/home/mrDinkelman/rice-mono",
+      "baseBranch": "main",
+      "localBranches": ["v.0.1.0"]
+    }
+  ],
+  "snyk.trustedFolders": [
+    "/home/mrDinkelman/rice-mono",
+    "/home/mrDinkelman/rice-mono/.vscode",
+    "/home/mrDinkelman/rice-mono/.backend",
+    "/home/mrDinkelman/rice-mono/.frontend",
+    "/home/mrDinkelman/rice-mono/.bot",
+    "/home/mrDinkelman/rice-mono/.doc",
+    "/home/mrDinkelman/rice-mono/.schema",
+    "/home/mrDinkelman/rice-mono/.devcontainer",
+    "/home/mrDinkelman/rice-mono/.dev",
+    "/home/mrDinkelman/rice-mono/.github",
+    "/home/mrDinkelman/rice-mono/.project"
+  ],
+  "snyk.yesWelcomeNotification": false,
+
+  // === OpenAPI ===
+  "openapi.platformUrl": "https://platform.42crunch.com",
+  "openapi.platformAuthType": "anond-token",
+  "openapi.securityAuditToken": "CiBBmX3noRZQaJMG11FBnRXew3cXSdkxnJBg7aGrvCAo8BIY/yKsOQrh6XCRxtXDZ6a8yVUvxoWStMcHGnUWdAIZtonoE+D68EfUaMrJOjdowgLopdOmkUB0eJBLkC3DO/I+3NYpr3P5Pu+Wtd/4xSYDvBMFQ5qRkhEUPYKKhSYL98/J4cijwhSpYqx+AvKdJDVU4BHRbV/tUT3+Re5VAk3BC4L6T9jZ2dl5Naqvq6CzFUo=",
+  "openapi.platformServices": "",
+  "openapi.platformScandManager": {
+    "url": "",
+    "auth": "none",
+    "timeout": 300,
+    "header": {
+      "name": "",
+      "value": ""
+    }
+  },
+  "openapi.docker": {
+    "replaceLocalhost": true,
+    "useHostNetwork": true
+  },
+  "openapi.platformAuditRuntime": "platform",
+  "openapi.platformConformanceScanRuntime": "cli",
+  "openapi.platformConformanceScanImage": "42crunch/scand-agent:v2",
+  "openapi.platformRepository": "https://repo.42crunch.com/downloads",
+  "openapi.cliDirectoryOverride": "",
+  "openapi.platformTemporaryCollectionName": "IDE Temp Collection",
+  "openapi.platformMandatoryTags": "",
+  "openapi.approvedHostnames": [],
+
+  // === Other Tools ===
+  "quokka.automaticRestart": true,
+  "rust-analyzer.workspace.discoverConfig": null,
+  "redhat.telemetry.enabled": true,
+  "vsicons.dontShowNewVersionMessage": true,
+  "vs-kubernetes": {
+    "vscode-kubernetes.kubectl-path-linux": "/home/mrDinkelman/.local/state/vs-kubernetes/tools/kubectl/kubectl",
+    "vscode-kubernetes.helm-path-linux": "/home/mrDinkelman/.local/state/vs-kubernetes/tools/helm/linux-amd64/helm",
+    "vscode-kubernetes.minikube-path-linux": "/home/mrDinkelman/.local/state/vs-kubernetes/tools/minikube/linux-amd64/minikube"
+  },
+  "lldb.launch.expressions": "native"
+}

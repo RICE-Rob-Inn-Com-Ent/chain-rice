@@ -1,0 +1,13 @@
+apiVersion: v2
+name: cluster-autoscaler
+description: Cluster Autoscaler for Kubernetes (AWS EKS, GCP GKE, Azure AKS)
+type: application
+version: 1.0.0
+appVersion: "1.29"
+
+dependencies:
+  - name: cluster-autoscaler
+    version: "9.29.0"
+    repository: "https://kubernetes.github.io/autoscaler"
+    condition: clusterAutoscaler.enabled
+

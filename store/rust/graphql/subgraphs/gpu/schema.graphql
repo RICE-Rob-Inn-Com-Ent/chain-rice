@@ -1,0 +1,109 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key", "@shareable"])
+
+type User @key(fields: "id") {
+  id: ID! @external
+  gpuResources: [GPUResource!]!
+  contribution: ComputeContribution
+}
+
+type GPUResource @key(fields: "id") {
+  id: ID!
+  ownerId: ID!
+  owner: User!
+  spec: GPUSpec!
+  availability: GPUAvailability!
+  location: String!
+  isShared: Boolean!
+  utilization: Float!
+  lastHeartbeat: String!
+  registeredAt: String!
+}
+
+type GPUSpec {
+  type: GPUType!
+  modelName: String!
+  vramMb: Int!
+  computeCapability: Int!
+  driverVersion: String!
+}
+
+type GPUAllocation @key(fields: "id") {
+  id: ID!
+  gpuId: ID!
+  gpu: GPUResource!
+  jobId: ID!
+  userId: ID!
+  user: User!
+  allocatedAt: String!
+  expectedRelease: String
+}
+
+type ComputeContribution {
+  id: ID!
+  userId: ID!
+  user: User!
+  gpuId: ID!
+  totalHours: Int!
+  tasksCompleted: Int!
+  creditsEarned: Float!
+  firstContribution: String!
+  lastContribution: String!
+}
+
+enum GPUType {
+  NVIDIA_RTX_3060
+  NVIDIA_RTX_3070
+  NVIDIA_RTX_3080
+  NVIDIA_RTX_3090
+  NVIDIA_RTX_4060
+  NVIDIA_RTX_4070
+  NVIDIA_RTX_4080
+  NVIDIA_RTX_4090
+  NVIDIA_A100
+  NVIDIA_H100
+  AMD_RX_6800
+  AMD_RX_6900
+  AMD_RX_7900
+  APPLE_M1
+  APPLE_M2
+  APPLE_M3
+  OTHER
+}
+
+enum GPUAvailability {
+  AVAILABLE
+  IN_USE
+  OFFLINE
+  MAINTENANCE
+}
+
+type Query {
+  gpuResource(id: ID!): GPUResource
+  gpuResources(limit: Int, offset: Int, userId: ID, availability: GPUAvailability): [GPUResource!]!
+  availableGPUs(requiredVramMb: Int!, includeShared: Boolean): [GPUResource!]!
+  myContribution: ComputeContribution
+  allocation(id: ID!): GPUAllocation
+}
+
+type Mutation {
+  registerGPU(input: RegisterGPUInput!): GPUResource!
+  unregisterGPU(id: ID!): Boolean!
+  updateGPUStatus(id: ID!, availability: GPUAvailability!, utilization: Float!): Boolean!
+  sendHeartbeat(id: ID!, utilization: Float!, temperature: Float!): Boolean!
+}
+
+input RegisterGPUInput {
+  spec: GPUSpecInput!
+  location: String!
+  isShared: Boolean!
+}
+
+input GPUSpecInput {
+  type: GPUType!
+  modelName: String!
+  vramMb: Int!
+  computeCapability: Int!
+  driverVersion: String!
+}
+

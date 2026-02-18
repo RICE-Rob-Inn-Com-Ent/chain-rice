@@ -1,0 +1,67 @@
+# Traefik Configuration
+# Reverse proxy for subdomain routing
+
+api:
+  dashboard: true
+  insecure: true  # For development only
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        # Use default certificate (self-signed for development)
+        options: default
+  traefik:
+    address: ":8080"
+  metrics:
+    address: ":9101"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: crice
+    watch: true
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
+  ecs:
+    # Auto-discover ECS clusters in the specified region
+    autoDiscoverClusters: true
+    # AWS region (can be overridden via AWS_REGION env var)
+    region: "us-east-1"
+    # Refresh interval for ECS service discovery
+    refreshSeconds: 15
+    # Expose services by default (set to false to require explicit labels)
+    exposedByDefault: false
+    # Cluster names (optional - if not specified, autoDiscoverClusters will find all)
+    # clusters:
+    #   - my-cluster-1
+    #   - my-cluster-2
+
+log:
+  level: INFO
+
+accessLog: {}
+
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+    entryPoint: metrics
+
+tracing:
+  serviceName: "traefik"
+  otlp:
+    grpc:
+      endpoint: "127.0.0.1:4317"
+      insecure: true
+

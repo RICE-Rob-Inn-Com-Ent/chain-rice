@@ -1,0 +1,293 @@
+name: Format Check
+
+on:
+    push:
+        branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+    merge_group:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    project-metadata:
+        name: Discover Frontend Projects
+        runs-on: ubuntu-latest
+        outputs:
+            active_project: ${{ steps.context.outputs.active_project }}
+            active_project_name: ${{ steps.context.outputs.active_project_name }}
+            frontends: ${{ steps.context.outputs.frontends }}
+            npm_projects: ${{ steps.context.outputs.npm_projects }}
+        steps:
+            - name: Checkout configuration
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Load project context
+              id: context
+              uses: ./.github/actions/project-context
+
+    python-format:
+        name: Python Format Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install formatters
+              run: pip install black isort ruff
+
+            - name: Run Black
+              working-directory: .bot
+              run: black --check --diff --color .
+
+            - name: Run isort
+              working-directory: .bot
+              run: isort --check-only --diff --color .
+
+            - name: Run Ruff format
+              working-directory: .bot
+              run: ruff format --check --diff .
+
+    go-format:
+        name: Go Format Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        strategy:
+            matrix:
+                component: [db, token]
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.22"
+
+            - name: Run gofmt
+              working-directory: .backend/${{ matrix.component }}
+              run: |
+                  if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+                    echo "Go files are not formatted:"
+                    gofmt -s -l .
+                    exit 1
+                  fi
+
+            - name: Run goimports
+              working-directory: .backend/${{ matrix.component }}
+              run: |
+                  go install golang.org/x/tools/cmd/goimports@latest
+                  if [ "$(goimports -l . | wc -l)" -gt 0 ]; then
+                    echo "Go imports are not organized:"
+                    goimports -l .
+                    exit 1
+                  fi
+
+    typescript-format:
+        name: TypeScript Format Check
+        needs: project-metadata
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+                  cache-dependency-path: .frontend/web/package-lock.json
+
+            - name: Run Prettier across frontend projects
+              env:
+                  FRONTENDS: ${{ needs.project-metadata.outputs.frontends }}
+              run: |
+                  set -eo pipefail
+                  FRONTENDS="${FRONTENDS:-[]}"
+                  if [ "$FRONTENDS" = "[]" ]; then
+                    echo "No frontend projects detected; skipping."
+                    exit 0
+                  fi
+                  echo "$FRONTENDS" | jq -c '.[]' | while read -r project; do
+                    id=$(echo "$project" | jq -r '.id')
+                    path=$(echo "$project" | jq -r '.path')
+                    pm=$(echo "$project" | jq -r '.packageManager // "npm"')
+                    name=$(echo "$project" | jq -r '.name')
+                    echo "::group::Formatting $name ($path)"
+                    if [ ! -d "$path" ]; then
+                      echo "Skipping $name (missing $path)"
+                      echo "::endgroup::"
+                      continue
+                    fi
+                    case "$pm" in
+                      yarn)
+                        corepack enable >/dev/null 2>&1 || true
+                        (cd "$path" && yarn install --immutable && yarn prettier --check --loglevel warn .)
+                        ;;
+                      npm|*)
+                        (cd "$path" && npm ci && npx prettier --check --log-level warn .)
+                        ;;
+                    esac
+                    echo "::endgroup::"
+                  done
+
+    rust-format:
+        name: Rust Format Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Rust
+              uses: dtolnay/rust-toolchain@stable
+              with:
+                  toolchain: 1.76.0
+                  components: rustfmt
+
+            - name: Run rustfmt
+              working-directory: .devcontainer/contract
+              run: cargo fmt --all -- --check
+
+    solidity-format:
+        name: Solidity Format Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+                  cache-dependency-path: .backend/contract/solidity/package-lock.json
+
+            - name: Install dependencies
+              working-directory: .backend/contract/solidity
+              run: npm ci
+
+            - name: Run Prettier (Solidity)
+              working-directory: .backend/contract/solidity
+              run: npx prettier --check 'contracts/**/*.sol'
+
+    proto-format:
+        name: Protocol Buffers Format Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Buf
+              uses: bufbuild/buf-setup-action@v1
+              with:
+                  github_token: ${{ github.token }}
+
+            - name: Run Buf format check
+              working-directory: .schema
+              run: buf format --diff --exit-code
+
+    toml-format:
+        name: TOML Format Check
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Install taplo
+              run: cargo install taplo-cli
+
+            - name: Run taplo format check
+              run: taplo format --check --diff
+
+    format-summary:
+        name: Format Check Summary
+        runs-on: ubuntu-latest
+        needs:
+            - project-metadata
+            - python-format
+            - go-format
+            - typescript-format
+            - rust-format
+            - solidity-format
+            - proto-format
+            - toml-format
+        if: always()
+
+        steps:
+            - name: Generate summary
+              run: |
+                  echo "## Format Check Summary" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "| Language | Status |" >> $GITHUB_STEP_SUMMARY
+                  echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+                  echo "| Python | ${{ needs.python-format.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Go | ${{ needs.go-format.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| TypeScript | ${{ needs.typescript-format.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Rust | ${{ needs.rust-format.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Solidity | ${{ needs.solidity-format.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| Protocol Buffers | ${{ needs.proto-format.result }} |" >> $GITHUB_STEP_SUMMARY
+                  echo "| TOML | ${{ needs.toml-format.result }} |" >> $GITHUB_STEP_SUMMARY
+
+                  FAILED=0
+                  [ "${{ needs.python-format.result }}" != "success" ] && FAILED=1
+                  [ "${{ needs.go-format.result }}" != "success" ] && FAILED=1
+                  [ "${{ needs.typescript-format.result }}" != "success" ] && FAILED=1
+                  [ "${{ needs.rust-format.result }}" != "success" ] && FAILED=1
+                  [ "${{ needs.solidity-format.result }}" != "success" ] && FAILED=1
+                  [ "${{ needs.proto-format.result }}" != "success" ] && FAILED=1
+                  [ "${{ needs.toml-format.result }}" != "success" ] && FAILED=1
+
+                  if [ $FAILED -eq 1 ]; then
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "❌ Format checks failed!" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "**To fix formatting issues locally:**" >> $GITHUB_STEP_SUMMARY
+                    echo '```bash' >> $GITHUB_STEP_SUMMARY
+                    echo "# Python" >> $GITHUB_STEP_SUMMARY
+                    echo "black ." >> $GITHUB_STEP_SUMMARY
+                    echo "isort ." >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "# Go" >> $GITHUB_STEP_SUMMARY
+                    echo "gofmt -s -w ." >> $GITHUB_STEP_SUMMARY
+                    echo "goimports -w ." >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "# TypeScript/JavaScript" >> $GITHUB_STEP_SUMMARY
+                    echo "prettier --write ." >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "# Rust" >> $GITHUB_STEP_SUMMARY
+                    echo "cargo fmt" >> $GITHUB_STEP_SUMMARY
+                    echo '```' >> $GITHUB_STEP_SUMMARY
+                    exit 1
+                  else
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "✅ All format checks passed!" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "### Active Project" >> $GITHUB_STEP_SUMMARY
+                    echo "- Name: **${{ needs.project-metadata.outputs.active_project_name || needs.project-metadata.outputs.active_project || 'n/a' }}**" >> $GITHUB_STEP_SUMMARY
+                  fi

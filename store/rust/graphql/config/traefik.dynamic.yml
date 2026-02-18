@@ -1,0 +1,24 @@
+# Dynamic Traefik Configuration
+# Routing with authentication for panel.ituproject.ltd/{project}
+
+http:
+  middlewares:
+    # Authentication middleware (JWT + OAuth2)
+    auth-jwt:
+      forwardAuth:
+        address: "http://auth-service:3001/auth/verify"
+        authResponseHeaders:
+          - "X-User-Id"
+          - "X-User-Email"
+          - "X-User-Role"
+        trustForwardHeader: true
+    
+    # OAuth2 redirect middleware
+    auth-oauth2:
+      forwardAuth:
+        address: "http://auth-service:3001/auth/oauth2"
+        authResponseHeaders:
+          - "X-User-Id"
+          - "X-User-Email"
+        trustForwardHeader: true
+    

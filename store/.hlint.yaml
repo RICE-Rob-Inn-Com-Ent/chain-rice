@@ -1,0 +1,13 @@
+# HLint – Haskell linter | Rice monorepo
+# https://github.com/ndmitchell/hlint
+
+- ignore: { name: "Use camelCase" }
+- ignore: { name: "Reduce duplication" }
+- hint: { lhs: "concat (map f x)", rhs: "concatMap f x", note: "Use concatMap" }
+- hint: { lhs: "concat $ map f x", rhs: "concatMap f x", note: "Use concatMap" }
+- hint: { lhs: "map f (map g x)", rhs: "map (f . g) x", note: "Use function composition" }
+- hint: { lhs: "f $ g x", rhs: "f (g x)", note: "Unnecessary $" }
+- group: { name: "general", enabled: true }
+- group: { name: "brittany", enabled: false }
+- group: { name: "camelCase", enabled: false }
+- group: { name: "unused", enabled: true }

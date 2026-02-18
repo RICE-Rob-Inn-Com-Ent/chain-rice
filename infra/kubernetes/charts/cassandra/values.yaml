@@ -1,0 +1,62 @@
+# Apache Cassandra 4.x with K8ssandra operator
+# Open-source Cassandra deployment on Kubernetes
+
+k8ssandra-operator:
+  enabled: true
+
+# Cassandra Cluster Configuration
+cassandra:
+  enabled: true
+  name: "cassandra-cluster"
+  
+  # Cassandra version
+  version: "4.1"
+  
+  # Cluster size
+  size: 3
+  
+  # Resources
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "4000m"
+      memory: "8Gi"
+  
+  # Storage
+  storage:
+    size: "100Gi"
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  
+  # Cassandra configuration
+  config:
+    heap:
+      newGenSize: "800M"
+      heapSize: "2048M"
+    jvmOptions:
+      - "-XX:+UseG1GC"
+      - "-XX:+UseStringDeduplication"
+  
+  # Reaper for repairs
+  reaper:
+    enabled: true
+  
+  # Medusa for backups
+  medusa:
+    enabled: true
+    retention: "7d"
+    schedule: "0 2 * * *"  # Daily at 2 AM
+  
+  # Stargate API gateway
+  stargate:
+    enabled: true
+    replicas: 2
+  
+  # Monitoring
+  monitoring:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+

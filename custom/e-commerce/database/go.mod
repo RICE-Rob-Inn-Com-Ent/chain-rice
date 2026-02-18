@@ -1,0 +1,6 @@
+module meowtopia-database
+
+go 1.23
+
+
+

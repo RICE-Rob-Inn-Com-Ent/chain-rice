@@ -1,0 +1,78 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate configuration for Rice Monorepo - Automated dependency updates",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":preserveSemverRanges",
+    "group:monorepos",
+    "group:recommended",
+    "replacements:all",
+    "workarounds:all"
+  ],
+  "timezone": "UTC",
+  "schedule": ["before 6am on Monday"],
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 5,
+  "rebaseWhen": "conflicted",
+  "automerge": false,
+  "platformAutomerge": false,
+  "rangeStrategy": "bump",
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore(deps):",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+  "labels": ["dependencies", "renovate"],
+  "assignees": ["@mrDinkelman"],
+  "reviewers": ["@mrDinkelman"],
+  "vulnerabilityAlerts": {
+    "labels": ["security", "dependencies"],
+    "automerge": false,
+    "schedule": ["at any time"]
+  },
+  "separateMajorMinor": true,
+  "separateMultipleMajor": true,
+  "separateMinorPatch": false,
+  "ignoreUnstable": true,
+  "respectLatest": true,
+  "packageRules": [
+    {"description": "Group all non-major updates together", "matchUpdateTypes": ["minor", "patch", "pin", "digest"], "groupName": "all non-major dependencies", "groupSlug": "all-minor-patch"},
+    {"description": "Automerge non-major updates", "matchUpdateTypes": ["minor", "patch", "pin", "digest"], "automerge": true, "automergeType": "pr", "platformAutomerge": true},
+    {"description": "Major updates require manual review", "matchUpdateTypes": ["major"], "automerge": false, "labels": ["dependencies", "major-update"]},
+    {"description": "Bun - Frontend/JS packages", "matchManagers": ["bun"], "matchPaths": ["**/package.json"], "groupName": "frontend dependencies", "schedule": ["before 6am on Monday"], "labels": ["dependencies", "frontend"]},
+    {"description": "Python - Bot packages", "matchManagers": ["pip_requirements", "pip_setup", "pipenv", "poetry"], "matchPaths": [".bot/*"], "groupName": "bots dependencies", "labels": ["dependencies", "bots", "python"]},
+    {"description": "Go - Backend packages", "matchManagers": ["gomod"], "matchPaths": [".backend/*"], "groupName": "backend dependencies", "labels": ["dependencies", "backend", "go"]},
+    {"description": "Rust - Smart contracts", "matchManagers": ["cargo"], "matchPaths": [".backend/contract/rust/*"], "groupName": "rust contract dependencies", "labels": ["dependencies", "rust", "smart-contracts"]},
+    {"description": "Solidity - EVM contracts", "matchManagers": ["bun"], "matchPaths": [".backend/contract/solidity/*"], "groupName": "solidity dependencies", "labels": ["dependencies", "solidity", "smart-contracts"]},
+    {"description": "Terraform - Infrastructure", "matchManagers": ["terraform"], "matchPaths": [".devcontainer/terraform/*"], "groupName": "terraform dependencies", "labels": ["dependencies", "terraform", "infrastructure"]},
+    {"description": "Kubernetes - Container orchestration", "matchManagers": ["helm-values", "helmv3", "kubernetes"], "matchPaths": [".devcontainer/kubernetes/*"], "groupName": "kubernetes dependencies", "labels": ["dependencies", "kubernetes"]},
+    {"description": "Dart/Flutter - Mobile", "matchManagers": ["pub"], "matchPaths": [".project/*/desktop/**", ".project/*/mobile/**"], "groupName": "dart/flutter dependencies", "labels": ["dependencies", "dart", "flutter"]},
+    {"description": "DevOps tools - High priority", "matchPackageNames": ["docker", "kubernetes", "terraform", "ansible", "helm"], "priority": 10},
+    {"description": "Security packages - Immediate", "matchPackagePatterns": ["^security-", "^@security/"], "schedule": ["at any time"], "automerge": false, "labels": ["security", "dependencies"]},
+    {"description": "TypeScript and related", "matchPackageNames": ["typescript", "@types/node"], "groupName": "typescript", "labels": ["dependencies", "typescript"]},
+    {"description": "React ecosystem", "matchPackagePatterns": ["^react", "^@types/react"], "groupName": "react", "labels": ["dependencies", "react"]},
+    {"description": "Testing packages", "matchPackagePatterns": ["jest", "vitest", "playwright", "cypress", "^@testing-library/"], "groupName": "testing", "labels": ["dependencies", "testing"]},
+    {"description": "Linting and formatting", "matchPackagePatterns": ["eslint", "prettier", "^@typescript-eslint/", "^eslint-"], "groupName": "linting", "labels": ["dependencies", "linting"]},
+    {"description": "Pixi - root toolchain (pixi.toml)", "matchManagers": ["pixi"], "matchPaths": ["pixi.toml"], "groupName": "pixi toolchain", "labels": ["dependencies", "tool-versions", "pixi"], "schedule": ["before 6am on Monday"], "automerge": false, "commitMessagePrefix": "chore(tools):"},
+    {"description": "Pin action digests", "matchManagers": ["github-actions"], "pinDigests": true},
+    {"description": "GitHub Actions", "matchManagers": ["github-actions"], "groupName": "github-actions", "labels": ["dependencies", "github-actions"], "schedule": ["before 6am on Monday"]}
+  ],
+  "regexManagers": [
+    {"description": "Update _VERSION variables in Dockerfiles", "fileMatch": ["(^|/)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"], "matchStrings": ["# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s(ARG|ENV) .*?_VERSION=(?<currentValue>.*)\\s"], "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"}
+  ],
+  "docker": {"enabled": true, "pinDigests": true, "major": {"enabled": true}},
+  "hostRules": [],
+  "prBodyColumns": ["Package", "Type", "Update", "Change", "Pending"],
+  "prBodyDefinitions": {
+    "Age": "[![age](https://developer.mend.io/api/mc/badges/age/{{datasource}}/{{replace '/' '%2f' depName}}/{{newVersion}}?slim=true)](https://docs.renovatebot.com/merge-confidence/)",
+    "Adoption": "[![adoption](https://developer.mend.io/api/mc/badges/adoption/{{datasource}}/{{replace '/' '%2f' depName}}/{{newVersion}}?slim=true)](https://docs.renovatebot.com/merge-confidence/)",
+    "Passing": "[![passing](https://developer.mend.io/api/mc/badges/compatibility/{{datasource}}/{{replace '/' '%2f' depName}}/{{currentVersion}}/{{newVersion}}?slim=true)](https://docs.renovatebot.com/merge-confidence/)",
+    "Confidence": "[![confidence](https://developer.mend.io/api/mc/badges/confidence/{{datasource}}/{{replace '/' '%2f' depName}}/{{currentVersion}}/{{newVersion}}?slim=true)](https://docs.renovatebot.com/merge-confidence/)"
+  },
+  "prBodyNotes": [
+    "This PR was generated by [Renovate](https://github.com/renovatebot/renovate).",
+    "🔒 To stop Renovate from automatically updating this dependency, add it to the `ignoreDeps` array of your `renovate.json`."
+  ]
+}

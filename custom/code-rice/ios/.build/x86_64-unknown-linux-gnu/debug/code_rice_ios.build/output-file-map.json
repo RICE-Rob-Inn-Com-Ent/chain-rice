@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/home/mrDinkelman/rice-mono/.project/code-rice/ios/.build/x86_64-unknown-linux-gnu/debug/code_rice_ios.build/master.swiftdeps"
+  },
+  "/home/mrDinkelman/rice-mono/.project/code-rice/ios/Sources/code-rice-ios/main.swift": {
+    "dependencies": "/home/mrDinkelman/rice-mono/.project/code-rice/ios/.build/x86_64-unknown-linux-gnu/debug/code_rice_ios.build/main.d",
+    "object": "/home/mrDinkelman/rice-mono/.project/code-rice/ios/.build/x86_64-unknown-linux-gnu/debug/code_rice_ios.build/main.swift.o",
+    "swiftmodule": "/home/mrDinkelman/rice-mono/.project/code-rice/ios/.build/x86_64-unknown-linux-gnu/debug/code_rice_ios.build/main~partial.swiftmodule",
+    "swift-dependencies": "/home/mrDinkelman/rice-mono/.project/code-rice/ios/.build/x86_64-unknown-linux-gnu/debug/code_rice_ios.build/main.swiftdeps"
+  }
+}

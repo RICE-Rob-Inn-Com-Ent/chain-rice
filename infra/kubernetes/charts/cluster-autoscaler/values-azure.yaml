@@ -1,0 +1,31 @@
+# Azure AKS Cluster Autoscaler Configuration
+
+clusterAutoscaler:
+  enabled: true
+  cloudProvider: "azure"
+  
+  autoDiscovery:
+    clusterName: "" # Will be set from values
+  
+  extraArgs:
+    scale-down-delay-after-add: "10m"
+    scale-down-unneeded-time: "10m"
+    scale-down-utilization-threshold: "0.5"
+    skip-nodes-with-local-storage: "false"
+    skip-nodes-with-system-pods: "false"
+    max-node-provision-time: "15m"
+    max-nodes-total: 100
+  
+  azure:
+    resourceGroup: ""
+    nodeResourceGroup: ""
+    subscriptionId: ""
+    tenantId: ""
+  
+  rbac:
+    create: true
+    serviceAccount:
+      create: true
+      name: "cluster-autoscaler"
+      annotations: {}
+

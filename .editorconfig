@@ -1,0 +1,54 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{py,js,ts,jsx,tsx}]
+indent_style = space
+indent_size = 2
+max_line_length = 79
+
+[*.{go,rust}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.{yaml,yml}]
+indent_style = space
+indent_size = 2
+
+[*.{json,jsonc}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{tf,tfvars}]
+indent_style = space
+indent_size = 2
+
+[*.{proto}]
+indent_style = space
+indent_size = 2
+
+[*.{dockerfile,Dockerfile}]
+indent_style = space
+indent_size = 2
+
+[*.{toml}]
+indent_style = space
+indent_size = 2
+
+[*.{dart}]
+indent_style = space
+indent_size = 2
+max_line_length = 120
+
+[*.{erl,ex}]
+indent_style = space
+indent_size = 2
+max_line_length = 120

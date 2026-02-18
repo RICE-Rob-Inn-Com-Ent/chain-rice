@@ -1,0 +1,95 @@
+name: Deploy Documentation
+
+on:
+    push:
+        branches: [main]
+        paths:
+            - ".doc/**"
+            - ".github/workflows/docs-deploy.yml"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+concurrency:
+    group: "pages"
+    cancel-in-progress: false
+
+jobs:
+    build:
+        name: Build Documentation
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+
+            - name: Install MkDocs and dependencies
+              run: |
+                  pip install \
+                    mkdocs \
+                    mkdocs-material \
+                    mkdocs-mermaid2-plugin \
+                    mkdocs-git-revision-date-localized-plugin \
+                    mkdocs-minify-plugin \
+                    pymdown-extensions \
+                    mkdocs-awesome-pages-plugin
+
+            - name: Setup Pages
+              uses: actions/configure-pages@v4
+
+            - name: Build documentation
+              working-directory: .doc
+              run: |
+                  mkdocs build --strict --verbose
+
+            - name: Generate API documentation
+              run: |
+                  # Generate Go documentation
+                  echo "Generating Go API docs..."
+                  # Add godoc generation here
+
+                  # Generate Python documentation
+                  echo "Generating Python API docs..."
+                  # Add sphinx/pydoc generation here
+
+                  # Generate TypeScript documentation
+                  echo "Generating TypeScript API docs..."
+                  # Add typedoc generation here
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: .doc/site
+
+    deploy:
+        name: Deploy to GitHub Pages
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        needs: build
+
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
+
+            - name: Create deployment summary
+              run: |
+                  echo "## 📚 Documentation Deployed" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "🔗 **URL**: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+                  echo "✅ Documentation successfully deployed to GitHub Pages!" >> $GITHUB_STEP_SUMMARY

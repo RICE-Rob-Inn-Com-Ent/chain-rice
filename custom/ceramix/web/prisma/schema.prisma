@@ -1,0 +1,99 @@
+// Prisma Schema for Ceramix
+// Unified schema for PostgreSQL and MongoDB synchronization
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model - PostgreSQL
+model User {
+  id                String   @id @default(uuid()) @db.Uuid
+  email             String   @unique @db.VarChar(255)
+  passwordHash      String   @map("password_hash") @db.VarChar(255)
+  displayName       String   @map("display_name") @db.VarChar(255)
+  firstName         String?  @map("first_name") @db.VarChar(100)
+  lastName          String?  @map("last_name") @db.VarChar(100)
+  avatarUrl         String?  @map("avatar_url") @db.Text
+  timezone          String   @default("UTC") @db.VarChar(50)
+  preferredLanguage String   @default("en") @map("preferred_language") @db.VarChar(10)
+  accountState      String   @default("ACTIVE") @map("account_state") @db.VarChar(50)
+  active            Boolean  @default(true)
+  emailVerified     Boolean  @default(false) @map("email_verified")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  lastLoginAt       DateTime? @map("last_login_at") @db.Timestamp(6)
+  lastLoginIp       String?  @map("last_login_ip") @db.Inet
+  lastLoginLocation Json?    @map("last_login_location") @db.JsonB
+  metadata          Json     @default("{}") @db.JsonB
+  
+  // Relations
+  roles             UserRole[]
+  patientProfile    PatientProfile?
+  
+  @@map("users")
+}
+
+// User Role model
+model UserRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  role      String   @db.VarChar(50)
+  grantedAt DateTime @default(now()) @map("granted_at") @db.Timestamp(6)
+  grantedBy String?  @map("granted_by") @db.Uuid
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, role])
+  @@map("user_roles")
+}
+
+// Patient Profile model - PostgreSQL
+model PatientProfile {
+  userId                        String   @id @map("user_id") @db.Uuid
+  peselStatus                   String?  @map("pesel_status") @db.VarChar(50)
+  childNumber                   String?  @map("child_number") @db.VarChar(50)
+  gender                        String?  @db.VarChar(20)
+  nfzBranch                     String?  @map("nfz_branch") @db.VarChar(150)
+  insuranceEntitlement           String?  @map("insurance_entitlement") @db.VarChar(150)
+  insuranceConfirmationStatus    String?  @map("insurance_confirmation_status") @db.VarChar(50)
+  insuranceAdditionalEntitlements String? @map("insurance_additional_entitlements") @db.VarChar(150)
+  ekuNumber                     String?  @map("eku_number") @db.VarChar(150)
+  euPatientNumber               String?  @map("eu_patient_number") @db.VarChar(150)
+  documentsInfo                 String?  @map("documents_info") @db.Text
+  maidenName                    String?  @map("maiden_name") @db.VarChar(150)
+  fatherName                    String?  @map("father_name") @db.VarChar(150)
+  motherName                    String?  @map("mother_name") @db.VarChar(150)
+  authorizedPerson              String?  @map("authorized_person") @db.VarChar(200)
+  consentAccepted               Boolean  @default(false) @map("consent_accepted")
+  
+  // Medical history
+  allergies                     String?  @db.Text
+  asthma                        Boolean  @default(false)
+  jaundice                      String?  @db.VarChar(100)
+  hypertension                  String?  @db.VarChar(100)
+  heartDiseases                 Boolean  @default(false) @map("heart_diseases")
+  kidneyDiseases                Boolean  @default(false) @map("kidney_diseases")
+  diabetes                      Boolean  @default(false)
+  tuberculosis                  Boolean  @default(false)
+  rheumaticDisease              Boolean  @default(false) @map("rheumatic_disease")
+  bloodClottingDisorders        Boolean  @default(false) @map("blood_clotting_disorders")
+  hormonalDisorders             Boolean  @default(false) @map("hormonal_disorders")
+  porphyria                     Boolean  @default(false)
+  thyroidDiseases               Boolean  @default(false) @map("thyroid_diseases")
+  otherDiseases                 String?  @map("other_diseases") @db.Text
+  currentMedications            String?  @map("current_medications") @db.Text
+  treatmentConsent              Boolean  @default(false) @map("treatment_consent")
+  
+  rawPayload                    Json?    @map("raw_payload") @db.JsonB
+  createdAt                     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  
+  user                          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@map("patient_profiles")
+}

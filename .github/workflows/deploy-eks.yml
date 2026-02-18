@@ -1,0 +1,108 @@
+name: Deploy to AWS EKS
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - ".devcontainer/auto/terraform/**"
+      - ".devcontainer/auto/kubernetes/**"
+      - ".github/workflows/deploy-eks.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+env:
+  AWS_REGION: us-west-2
+  TERRAFORM_VERSION: 1.9.0
+  HELM_VERSION: 3.14.0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Terraform Init
+        working-directory: .devcontainer/auto/terraform
+        run: |
+          terraform init
+
+      - name: Terraform Plan
+        working-directory: .devcontainer/auto/terraform
+        run: |
+          terraform plan \
+            -var="enable_aws=true" \
+            -var="enable_kubernetes=true" \
+            -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: .devcontainer/auto/terraform
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        run: |
+          terraform apply -auto-approve tfplan
+
+      - name: Configure kubectl for EKS
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Deploy Serverless Stack
+        working-directory: .devcontainer/auto/kubernetes
+        run: |
+          helm dependency update
+          helm upgrade --install rice-mono . \
+            --namespace rice-mono \
+            --create-namespace \
+            --set databases.postgresql.enabled=true \
+            --set databases.mongodb.enabled=true \
+            --set databases.redis.enabled=true \
+            --set databases.cockroachdb.enabled=true \
+            --set databases.cassandra.enabled=true \
+            --set monitoring.enabled=true \
+            --set serverless.enabled=true \
+            --set serverless.clusterAutoscaler.enabled=true \
+            --set serverless.clusterAutoscaler.cloudProvider=aws \
+            --set serverless.clusterAutoscaler.autoDiscovery.clusterName=${{ secrets.EKS_CLUSTER_NAME }} \
+            --set serverless.clusterAutoscaler.aws.region=${{ env.AWS_REGION }} \
+            --set serverless.knative.enabled=true \
+            --set serverless.keda.enabled=true
+
+      - name: Health Check
+        run: |
+          kubectl wait --for=condition=ready pod -l app=postgresql-cluster -n rice-mono --timeout=300s || true
+          kubectl wait --for=condition=ready pod -l app=mongodb-replica-set -n rice-mono --timeout=300s || true
+          kubectl wait --for=condition=ready pod -l app=cluster-autoscaler -n kube-system --timeout=300s || true
+          kubectl wait --for=condition=ready pod -l app=knative-serving -n knative-serving --timeout=300s || true
+          kubectl wait --for=condition=ready pod -l app=keda-operator -n keda --timeout=300s || true

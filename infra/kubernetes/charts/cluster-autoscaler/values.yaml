@@ -1,0 +1,68 @@
+# Cluster Autoscaler - Infrastructure Layer
+# Automatically scales nodes based on pending pods
+
+clusterAutoscaler:
+  enabled: true
+  
+  # Cloud provider (aws, gcp, azure)
+  cloudProvider: "aws"
+  
+  # Auto-discovery settings
+  autoDiscovery:
+    clusterName: ""
+    tags:
+      - "k8s.io/cluster-autoscaler/enabled"
+      - "k8s.io/cluster-autoscaler/{{ .Values.clusterAutoscaler.autoDiscovery.clusterName }}"
+  
+  # Scaling configuration
+  extraArgs:
+    scale-down-delay-after-add: "10m"
+    scale-down-unneeded-time: "10m"
+    scale-down-utilization-threshold: "0.5"
+    skip-nodes-with-local-storage: "false"
+    skip-nodes-with-system-pods: "false"
+    max-node-provision-time: "15m"
+    max-nodes-total: 100
+    min-replica-count: 0
+  
+  # AWS-specific configuration
+  aws:
+    region: ""
+    instanceTypes:
+      - "t3.medium"
+      - "t3.large"
+      - "t3.xlarge"
+    nodeGroups: []
+  
+  # GCP-specific configuration (GKE has built-in autoscaler)
+  gcp:
+    projectId: ""
+    nodePools: []
+    minNodes: 1
+    maxNodes: 10
+  
+  # Azure-specific configuration
+  azure:
+    resourceGroup: ""
+    nodeResourceGroup: ""
+    subscriptionId: ""
+    tenantId: ""
+    nodePools: []
+  
+  # Resources
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "300Mi"
+    limits:
+      cpu: "100m"
+      memory: "300Mi"
+  
+  # RBAC
+  rbac:
+    create: true
+    serviceAccount:
+      create: true
+      name: "cluster-autoscaler"
+      annotations: {}
+

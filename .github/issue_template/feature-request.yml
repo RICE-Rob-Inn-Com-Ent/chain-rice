@@ -1,0 +1,296 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement for Rice Monorepo
+title: "[FEATURE] "
+labels: ["enhancement", "needs-triage"]
+assignees:
+  - mrDinkelman
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎉 Thanks for suggesting a new feature!
+
+        We love hearing ideas from the community. Please fill out this form to help us understand your feature request.
+
+        **Before submitting**, please:
+        - ✅ Search existing feature requests to avoid duplicates
+        - ✅ Check the [roadmap](../../discussions/categories/roadmap) for planned features
+        - ✅ Review [documentation](../../tree/main/.doc/docs) to ensure the feature doesn't already exist
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 🎯 Component
+      description: Which part of the monorepo should this feature be added to?
+      options:
+        - Backend - Database Service (Go)
+        - Backend - Token Chain (Go/Cosmos)
+        - Backend - Rust Smart Contracts
+        - Backend - Solidity Smart Contracts
+        - Frontend - Web (TypeScript)
+        - Frontend - Flutter (Dart)
+        - Frontend - Android (Kotlin)
+        - Frontend - iOS (Swift)
+        - Bot - Core (Python)
+        - Bot - Integrations (Python)
+        - Schema - Protocol Buffers
+        - Infrastructure - Docker/K8s
+        - Infrastructure - Terraform/Ansible
+        - DevContainer - Development Environment
+        - CI/CD - GitHub Actions
+        - Documentation
+        - Build System - Bazel
+        - Cross-cutting - Multiple components
+        - New Component
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: 🏗️ Feature Type
+      description: What type of feature is this?
+      options:
+        - New Feature - Adds new functionality
+        - Enhancement - Improves existing functionality
+        - Developer Experience - Improves DX
+        - Performance - Improves performance
+        - Security - Enhances security
+        - Documentation - Improves documentation
+        - Accessibility - Improves accessibility
+        - Testing - Improves testing
+        - Refactoring - Code quality improvement
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 🤔 Problem Statement
+      description: What problem does this feature solve? What's the current pain point?
+      placeholder: |
+        Example: Currently, users have to manually refresh the page to see new notifications. This creates a poor user experience and makes the application feel outdated.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 💡 Proposed Solution
+      description: Describe your proposed solution in detail
+      placeholder: |
+        Example: Implement real-time notifications using WebSockets. When a new notification occurs, the server pushes it to connected clients, and the UI updates automatically without requiring a page refresh.
+
+        Technical approach:
+        - Use WebSocket connections for bidirectional communication
+        - Implement reconnection logic for reliability
+        - Add notification queue on the backend
+        - Create a notification component on the frontend
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considered
+      description: What alternative solutions have you considered?
+      placeholder: |
+        Example:
+        1. Polling: Request new notifications every 30 seconds (but this increases server load)
+        2. Server-Sent Events (SSE): One-way push (but less flexible than WebSockets)
+        3. Long polling: (but has higher latency)
+
+  - type: textarea
+    id: user-stories
+    attributes:
+      label: 👥 User Stories
+      description: Describe how users will interact with this feature
+      placeholder: |
+        As a [user type], I want to [action] so that [benefit].
+
+        Examples:
+        - As a developer, I want to receive real-time build notifications so that I can quickly respond to failures
+        - As an admin, I want to see live system alerts so that I can take immediate action
+      value: |
+        - As a [...], I want to [...] so that [...]
+        - As a [...], I want to [...] so that [...]
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: What defines this feature as "done"?
+      placeholder: |
+        - [ ] User receives notifications in real-time without page refresh
+        - [ ] Notifications persist across browser tabs
+        - [ ] Reconnection happens automatically if connection drops
+        - [ ] Performance impact is minimal (< 1% CPU usage)
+        - [ ] Feature works on all supported browsers
+        - [ ] Documentation is updated
+        - [ ] Tests are written and passing
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups/Wireframes
+      description: Visual representation of the feature (if applicable)
+      placeholder: |
+        Drag and drop images, paste links to Figma/Excalidraw, or describe the UI.
+
+  - type: textarea
+    id: technical-details
+    attributes:
+      label: 🔧 Technical Details
+      description: Technical implementation details, APIs, libraries, or architectural considerations
+      placeholder: |
+        Example:
+        - Backend: Use `gorilla/websocket` library for Go WebSocket server
+        - Frontend: Use native WebSocket API with automatic reconnection
+        - Database: Add `notifications` table with schema:
+          ```sql
+          CREATE TABLE notifications (
+            id UUID PRIMARY KEY,
+            user_id UUID NOT NULL,
+            message TEXT NOT NULL,
+            read BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT NOW()
+          );
+          ```
+        - Message format: JSON with `type`, `payload`, `timestamp`
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🚦 Priority
+      description: How important is this feature to you?
+      options:
+        - Nice to have
+        - Would be useful
+        - Important for my use case
+        - Critical for my project
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 📊 Impact Assessment
+      description: Who will benefit from this feature and how much?
+      placeholder: |
+        - **User Impact**: All users will benefit from real-time updates
+        - **Performance Impact**: Minimal, WebSocket connections are lightweight
+        - **Maintenance Impact**: Low, using well-established protocols
+        - **Breaking Changes**: None, this is purely additive
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 🔗 Dependencies
+      description: Are there any dependencies, prerequisites, or related issues?
+      placeholder: |
+        - Depends on: #123
+        - Blocks: #456
+        - Related to: #789
+        - Requires: Authentication system to be implemented first
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: ⚠️ Risks & Challenges
+      description: What could go wrong? What challenges might we face?
+      placeholder: |
+        - Scaling: WebSocket connections consume server resources
+        - Compatibility: Older browsers might not support WebSockets
+        - Security: Need to ensure WebSocket connections are authenticated
+        - Complexity: Adds state management complexity
+
+  - type: dropdown
+    id: breaking-changes
+    attributes:
+      label: 💥 Breaking Changes
+      description: Will this feature introduce breaking changes?
+      options:
+        - "No - Fully backwards compatible"
+        - "Yes - Minor breaking changes"
+        - "Yes - Major breaking changes"
+        - "I don't know"
+    validations:
+      required: true
+
+  - type: textarea
+    id: migration-path
+    attributes:
+      label: 🚶 Migration Path
+      description: If this introduces breaking changes, how will users migrate?
+      placeholder: |
+        Describe the migration strategy, deprecation timeline, and upgrade path.
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 🤝 Contribution
+      description: Would you like to contribute this feature?
+      options:
+        - label: I'm willing to implement this feature and submit a PR
+        - label: I'm willing to help with design/planning
+        - label: I'm willing to help with testing
+        - label: I'm willing to help with documentation
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 📚 References
+      description: Links to relevant documentation, libraries, or examples
+      placeholder: |
+        - [WebSocket RFC 6455](https://tools.ietf.org/html/rfc6455)
+        - [gorilla/websocket](https://github.com/gorilla/websocket)
+        - [Example implementation](https://github.com/example/repo)
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📎 Additional Context
+      description: Any other information that might be helpful
+      placeholder: |
+        - Market research
+        - Competitive analysis
+        - User feedback
+        - Analytics data
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm you've completed these steps
+      options:
+        - label: I have searched for similar feature requests and found none
+          required: true
+        - label: I have clearly described the problem and solution
+          required: true
+        - label: I have considered alternatives and trade-offs
+          required: true
+        - label: I have checked that this aligns with the project's goals
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🙏 Thank you for suggesting a feature!
+
+        Your ideas help shape the future of Rice Monorepo.
+
+        **What happens next?**
+        1. We'll review your feature request and label it appropriately
+        2. The community will discuss and provide feedback
+        3. If approved, we'll add it to the roadmap
+        4. Implementation will be scheduled based on priority
+        5. You'll be notified of updates via GitHub notifications
+
+        **Want to discuss this further?** Start a [discussion](../../discussions) to gather community feedback!

@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  cerai-lora:
+    build:
+      context: /home/mrDinkelman/rice-mono/.project/ceramix/bot/core/cerai-lora
+      dockerfile: Dockerfile
+    container_name: cerai-lora
+    image: cerai-lora:latest
+    profiles: ["ceramix"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=0
+      - TRANSFORMERS_CACHE=/app/models/.cache
+      - HF_HOME=/app/models/.cache
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+      - WANDB_PROJECT=cerai-lora
+      - MODEL_NAME_BIELIK=${MODEL_NAME_BIELIK:-allegro/herbert-base-cased}
+      - MODEL_NAME_FORMATTER=${MODEL_NAME_FORMATTER:-Qwen/Qwen2.5-3B-Instruct}
+      - LORA_R=8
+      - LORA_ALPHA=16
+      - LORA_DROPOUT=0.1
+      - BATCH_SIZE=4
+      - GRADIENT_ACCUMULATION_STEPS=4
+      - LEARNING_RATE=2e-4
+      - NUM_EPOCHS=3
+      - MAX_LENGTH=512
+    ports:
+      - "8007:8007"
+    volumes:
+      # Models cache (persistent)
+      - cerai-lora-models:/app/models
+      # LoRA adapters (persistent)
+      - cerai-lora-adapters:/app/adapters
+      # Training data
+      - cerai-lora-data:/app/data
+      # Source code for development
+      - /home/mrDinkelman/rice-mono/.project/ceramix/bot/core/cerai-lora:/app
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - crice
+    restart: unless-stopped
+    labels:
+      - "com.rice.project=ceramix"
+      - "com.rice.service=cerai-lora"
+      - "com.rice.port=8007"
+
+volumes:
+  cerai-lora-models:
+    driver: local
+  cerai-lora-adapters:
+    driver: local
+  cerai-lora-data:
+    driver: local
+
+networks:
+  crice:
+    external: true
+    name: crice
+
+
+

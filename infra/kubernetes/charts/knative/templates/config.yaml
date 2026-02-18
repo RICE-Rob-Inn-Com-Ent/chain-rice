@@ -1,0 +1,41 @@
+{{- if .Values.knative.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-autoscaler
+  namespace: knative-serving
+data:
+  enable-scale-to-zero: {{ .Values.knative.serving.scaleToZero.enabled | quote }}
+  scale-to-zero-grace-period: {{ .Values.knative.serving.scaleToZero.gracePeriod | quote }}
+  scale-to-zero-pod-retention-period: "0s"
+  stable-window: "60s"
+  panic-window-percentage: "10.0"
+  panic-threshold-percentage: "200.0"
+  max-scale-up-rate: "1000.0"
+  max-scale-down-rate: "2.0"
+  container-concurrency-target-percentage: {{ .Values.knative.serving.concurrency.targetUtilization | quote }}
+  container-concurrency-target-default: {{ .Values.knative.serving.concurrency.target | quote }}
+  requests-per-second-target-default: "200"
+  target-burst-capacity: "211"
+  allow-zero-initial-scale: "true"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-defaults
+  namespace: knative-serving
+data:
+  revision-timeout-seconds: {{ .Values.knative.serving.revisionTimeout | default "300" | quote }}
+  max-revisions-per-service: {{ .Values.knative.serving.revisions.maxRevisions | quote }}
+  container-name: "user-container"
+  container-concurrency: {{ .Values.knative.serving.concurrency.limit | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-domain
+  namespace: knative-serving
+data:
+  {{ .Values.knative.serving.domain.defaultDomain }}: ""
+{{- end }}
+

@@ -1,0 +1,33 @@
+{
+  "version": "0.2",
+  "language": "en,pl",
+  "languageSettings": [
+    {
+      "languageId": "html,typescript,typescriptreact,javascript,javascriptreact",
+      "locale": "pl",
+      "dictionaries": ["polish-custom"]
+    }
+  ],
+  "dictionaries": ["technical-terms", "polish-custom"],
+  "dictionaryDefinitions": [
+    {
+      "name": "polish-custom",
+      "path": "./cspell-polish.txt",
+      "description": "Polish words used in the project"
+    },
+    {
+      "name": "technical-terms",
+      "path": "./cspell-technical.txt",
+      "description": "Technical terms and acronyms"
+    }
+  ],
+  "ignorePaths": [
+    "node_modules",
+    ".git",
+    "dist",
+    "build",
+    "*.min.js",
+    "*.lock"
+  ]
+}
+

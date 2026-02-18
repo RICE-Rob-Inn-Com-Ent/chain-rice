@@ -1,0 +1,42 @@
+{{- if .Values.argocd.enabled }}
+{{- range .Values.argocd.projects }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .name }}
+  namespace: argocd
+  labels:
+    {{- with $.Values.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: {{ .description | default "ArgoCD Project" }}
+
+  sourceRepos:
+    {{- range .sourceRepos }}
+    - {{ . }}
+    {{- end }}
+
+  destinations:
+    {{- range .destinations }}
+    - namespace: {{ .namespace }}
+      server: {{ .server }}
+    {{- end }}
+
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+  {{- with .roles }}
+  roles:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

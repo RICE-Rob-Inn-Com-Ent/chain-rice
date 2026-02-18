@@ -1,0 +1,31 @@
+{{- if and .Values.keda.enabled .Values.keda.examples.enabled }}
+{{- range .Values.keda.examples.scaledObjects }}
+{{- if eq .type "rabbitmq" }}
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace | default "default" }}
+spec:
+  scaleTargetRef:
+    name: {{ .deployment }}
+    kind: Deployment
+  minReplicaCount: {{ .minReplicas | default 0 }}
+  maxReplicaCount: {{ .maxReplicas | default 10 }}
+  cooldownPeriod: {{ .cooldownPeriod | default 300 }}
+  pollingInterval: {{ .pollingInterval | default 30 }}
+  triggers:
+  - type: rabbitmq
+    metadata:
+      host: {{ .rabbitmq.host | quote }}
+      queueName: {{ .rabbitmq.queueName | quote }}
+      queueLength: {{ .rabbitmq.queueLength | default "5" | quote }}
+      vhost: {{ .rabbitmq.vhost | default "/" | quote }}
+      protocol: {{ .rabbitmq.protocol | default "amqp" | quote }}
+      username: {{ .rabbitmq.username | default "guest" | quote }}
+      passwordFromEnv: {{ .rabbitmq.passwordEnv | default "RABBITMQ_PASSWORD" | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+

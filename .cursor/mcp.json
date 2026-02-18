@@ -1,0 +1,298 @@
+{
+  // ============================================================================
+  // MODEL CONTEXT PROTOCOL (MCP) SERVERS CONFIGURATION
+  // ============================================================================
+  // MCP servers provide additional context and capabilities to Cursor's AI
+  // This allows Cursor to interact with external services, databases, and APIs
+  // directly from your development environment.
+  //
+  // USAGE EXAMPLES:
+  // - Query databases: "Show me all users in the database"
+  // - Deploy to cloud: "Deploy this app to AWS"
+  // - Check API status: "What's the status of my GitHub repos?"
+  // - Manage infrastructure: "List all running Docker containers"
+  // - Access cloud resources: "Show me my S3 buckets"
+  // ============================================================================
+
+  "mcpServers": {
+    // ============================================================================
+    // ☁️ CLOUD PROVIDERS
+    // ============================================================================
+
+    // AWS (Amazon Web Services)
+    "aws": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-aws"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${env:AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${env:AWS_SECRET_ACCESS_KEY}",
+        "AWS_REGION": "${env:AWS_REGION:-us-east-1}"
+      }
+    },
+
+    // Azure (Microsoft Cloud)
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"],
+      "env": {
+        "AZURE_CLIENT_ID": "${env:AZURE_CLIENT_ID}",
+        "AZURE_CLIENT_SECRET": "${env:AZURE_CLIENT_SECRET}",
+        "AZURE_TENANT_ID": "${env:AZURE_TENANT_ID}",
+        "AZURE_SUBSCRIPTION_ID": "${env:AZURE_SUBSCRIPTION_ID}"
+      }
+    },
+
+    // Google Cloud Platform (GCP)
+    "gcp": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gcp"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${env:GOOGLE_APPLICATION_CREDENTIALS}",
+        "GCP_PROJECT_ID": "${env:GCP_PROJECT_ID}"
+      }
+    },
+
+    // ============================================================================
+    // 🔗 VERSION CONTROL & COLLABORATION
+    // ============================================================================
+
+    // GitHub
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}",
+        "GITHUB_API_URL": "${env:GITHUB_API_URL:-https://api.github.com}"
+      }
+    },
+
+    // ============================================================================
+    // 🐳 CONTAINERS & ORCHESTRATION
+    // ============================================================================
+
+    // Docker (Local)
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"],
+      "env": {
+        "DOCKER_HOST": "${env:DOCKER_HOST:-unix:///var/run/docker.sock}"
+      }
+    },
+
+    // Kubernetes
+    "kubernetes": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-kubernetes"],
+      "env": {
+        "KUBECONFIG": "${env:KUBECONFIG:-~/.kube/config}"
+      }
+    },
+
+    // ============================================================================
+    // 🗄️ DATABASES (Localhost)
+    // ============================================================================
+
+    // PostgreSQL (Localhost)
+    "postgres-local": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": "${env:POSTGRES_CONNECTION_STRING:-postgresql://rice_user:${env:POSTGRES_PASSWORD}@localhost:5432/rice_db}"
+      }
+    },
+
+    // MongoDB (Localhost)
+    "mongodb-local": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-mongodb"],
+      "env": {
+        "MONGODB_URI": "${env:MONGODB_URI:-mongodb://localhost:27017}"
+      }
+    },
+
+    // Redis (Localhost)
+    "redis-local": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-redis"],
+      "env": {
+        "REDIS_URL": "${env:REDIS_URL:-redis://localhost:6379}"
+      }
+    },
+
+    // SQLite (Local)
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sqlite"],
+      "env": {
+        "SQLITE_DB_PATH": "${env:SQLITE_DB_PATH:-./data/database.db}"
+      }
+    },
+
+    // ============================================================================
+    // 🌐 API SERVICES
+    // ============================================================================
+
+    // REST API Server (Your local API)
+    "local-api": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "env": {
+        "API_BASE_URL": "${env:API_BASE_URL:-http://localhost:8080}",
+        "API_KEY": "${env:LOCAL_API_KEY}"
+      }
+    },
+
+    // OpenWeatherMap
+    "weather": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "env": {
+        "OPENWEATHER_API_KEY": "${env:OPENWEATHER_API_KEY}"
+      }
+    },
+
+    // Stripe (Payment Processing)
+    "stripe": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-stripe"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${env:STRIPE_SECRET_KEY}"
+      }
+    },
+
+    // OpenAI (if you want to use OpenAI APIs)
+    "openai": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-openai"],
+      "env": {
+        "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
+      }
+    },
+
+    // Anthropic Claude
+    "anthropic": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-anthropic"],
+      "env": {
+        "ANTHROPIC_API_KEY": "${env:ANTHROPIC_API_KEY}"
+      }
+    },
+
+    // ============================================================================
+    // 📊 MONITORING & ANALYTICS
+    // ============================================================================
+
+    // Sentry (Error Tracking)
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sentry"],
+      "env": {
+        "SENTRY_AUTH_TOKEN": "${env:SENTRY_AUTH_TOKEN}",
+        "SENTRY_ORG": "${env:SENTRY_ORG}"
+      }
+    },
+
+    // Datadog
+    "datadog": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-datadog"],
+      "env": {
+        "DATADOG_API_KEY": "${env:DATADOG_API_KEY}",
+        "DATADOG_APP_KEY": "${env:DATADOG_APP_KEY}"
+      }
+    },
+
+    // ============================================================================
+    // 🔐 SECURITY & SECRETS
+    // ============================================================================
+
+    // HashiCorp Vault
+    "vault": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-vault"],
+      "env": {
+        "VAULT_ADDR": "${env:VAULT_ADDR:-http://localhost:8200}",
+        "VAULT_TOKEN": "${env:VAULT_TOKEN}"
+      }
+    },
+
+    // AWS Secrets Manager
+    "aws-secrets": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-aws-secrets"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${env:AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${env:AWS_SECRET_ACCESS_KEY}",
+        "AWS_REGION": "${env:AWS_REGION:-us-east-1}"
+      }
+    },
+
+    // ============================================================================
+    // 📝 DOCUMENTATION & WIKI
+    // ============================================================================
+
+    // Confluence
+    "confluence": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-confluence"],
+      "env": {
+        "CONFLUENCE_URL": "${env:CONFLUENCE_URL}",
+        "CONFLUENCE_EMAIL": "${env:CONFLUENCE_EMAIL}",
+        "CONFLUENCE_API_TOKEN": "${env:CONFLUENCE_API_TOKEN}"
+      }
+    },
+
+    // Notion
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-notion"],
+      "env": {
+        "NOTION_API_KEY": "${env:NOTION_API_KEY}"
+      }
+    },
+
+    // ============================================================================
+    // 🛠️ DEVELOPMENT TOOLS
+    // ============================================================================
+
+    // File System (for local file operations)
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "${env:ALLOWED_DIRECTORIES:-/home/mrDinkelman/rice-mono}"
+      }
+    },
+
+    // Git (for Git operations)
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "env": {}
+    },
+
+    // ============================================================================
+    // 🧪 TESTING & CI/CD
+    // ============================================================================
+
+    // GitHub Actions
+    "github-actions": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github-actions"],
+      "env": {
+        "GITHUB_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+
+    // Jenkins (if running locally)
+    "jenkins": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-jenkins"],
+      "env": {
+        "JENKINS_URL": "${env:JENKINS_URL:-http://localhost:8080}",
+        "JENKINS_USER": "${env:JENKINS_USER}",
+        "JENKINS_TOKEN": "${env:JENKINS_TOKEN}"
+      }
+    }
+  }
+}

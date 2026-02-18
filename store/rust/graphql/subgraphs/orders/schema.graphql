@@ -1,0 +1,68 @@
+scrypt make configextend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
+
+# Reference to User from users subgraph
+type User @key(fields: "id", resolvable: false) {
+  id: ID!
+}
+
+# Reference to Product from products subgraph
+type Product @key(fields: "id", resolvable: false) {
+  id: ID!
+}
+
+type Order @key(fields: "id") {
+  id: ID!
+  user: User!
+  items: [OrderItem!]!
+  status: OrderStatus!
+  total: Float!
+  currency: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type OrderItem {
+  id: ID!
+  product: Product!
+  quantity: Int!
+  unitPrice: Float!
+  totalPrice: Float!
+}
+
+enum OrderStatus {
+  DRAFT
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+type Query {
+  order(id: ID!): Order
+  orders(userId: ID, status: OrderStatus, limit: Int = 10, offset: Int = 0): [Order!]!
+  myOrders: [Order!]!
+}
+
+type Mutation {
+  createOrder(input: CreateOrderInput!): Order!
+  addOrderItem(orderId: ID!, input: AddOrderItemInput!): Order!
+  removeOrderItem(orderId: ID!, itemId: ID!): Order!
+  submitOrder(orderId: ID!): Order!
+  cancelOrder(orderId: ID!): Order!
+}
+
+input CreateOrderInput {
+  userId: ID!
+  items: [OrderItemInput!]!
+}
+
+input OrderItemInput {
+  productId: ID!
+  quantity: Int!
+}
+
+input AddOrderItemInput {
+  productId: ID!
+  quantity: Int!
+}

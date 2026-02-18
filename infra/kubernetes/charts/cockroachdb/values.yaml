@@ -1,0 +1,51 @@
+# CockroachDB Core (open-source) on Kubernetes
+# Self-hosted CockroachDB deployment
+
+cockroachdb:
+  enabled: true
+  name: "cockroachdb"
+  
+  # CockroachDB version
+  version: "23.2.0"
+  
+  # Cluster size
+  replicas: 3
+  
+  # Resources
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "2Gi"
+    limits:
+      cpu: "2000m"
+      memory: "4Gi"
+  
+  # Storage
+  storage:
+    size: "100Gi"
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  
+  # Multi-region configuration
+  multiRegion:
+    enabled: false
+    regions: []
+  
+  # SQL gateway service
+  sqlGateway:
+    enabled: true
+    type: ClusterIP
+    port: 26257
+  
+  # Certificate management
+  certificates:
+    enabled: true
+    caSecret: "cockroachdb-ca"
+    nodeSecret: "cockroachdb-node"
+  
+  # Monitoring
+  monitoring:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+

@@ -1,0 +1,39 @@
+name: Build
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  make-build:
+    name: make build
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip jq
+          pip3 install --user poetry
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Docker
+        run: docker info
+
+      - name: Prepare environment
+        run: just config-workspace || true
+
+      - name: Execute build
+        env:
+          CI: "true"
+        run: just install && just c full || true
+

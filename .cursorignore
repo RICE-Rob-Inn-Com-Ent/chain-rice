@@ -1,0 +1,126 @@
+# ============================================================================
+# CURSOR IGNORE PATTERNS
+# ============================================================================
+# Files and directories that Cursor should ignore during codebase indexing
+# and AI features. Uses .gitignore syntax.
+# ============================================================================
+
+# Build outputs
+**/dist/
+**/build/
+**/target/
+**/out/
+**/.next/
+**/.nuxt/
+**/.output/
+**/.cache/
+**/node_modules/
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# IDE
+**/.idea/
+**/.vscode/
+**/.cursor/
+**/.vs/
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+**/.directory
+
+# Logs
+**/*.log
+**/logs/
+**/.logs/
+
+# Temporary files
+**/*.tmp
+**/*.temp
+**/.tmp/
+**/.temp/
+
+# Database
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# Environment
+**/.env
+**/.env.local
+**/.env.*.local
+**/.secrets/
+
+# Generated files
+**/generated/
+**/gen/
+**/*_generated.*
+**/*.pb.go
+**/*.pb.py
+**/*_pb2.py
+**/*_pb2_grpc.py
+
+# Coverage
+**/coverage/
+**/.coverage
+**/htmlcov/
+**/.nyc_output/
+
+# Documentation builds
+**/_build/
+**/.doctrees/
+**/site/
+
+# Large binary files
+**/*.zip
+**/*.tar.gz
+**/*.rar
+**/*.7z
+**/*.iso
+**/*.dmg
+**/*.deb
+**/*.rpm
+
+# Media files (usually too large for indexing)
+**/*.mp4
+**/*.avi
+**/*.mov
+**/*.mkv
+**/*.mp3
+**/*.wav
+**/*.flac
+
+# Archives
+**/*.jar
+**/*.war
+**/*.ear
+
+# Lock files (usually too large and not useful for AI)
+**/package-lock.json
+**/Cargo.lock
+
+# Vendor dependencies
+**/vendor/
+**/third_party/
+**/external/
+
+# Test outputs
+**/.pytest_cache/
+**/.tox/
+**/.hypothesis/
+
+# Profiling
+**/*.prof
+**/*.pprof
+
+# Compiled
+**/*.class
+**/*.o
+**/*.so
+**/*.dylib
+**/*.dll
+**/*.exe

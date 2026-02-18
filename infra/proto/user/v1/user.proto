@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package user.v1;
+
+option go_package = "github.com/rice-mono/service/gen/user/v1;userv1";
+
+// UserService is consumed by the BFF (Go service).
+service UserService {
+  rpc GetUser(GetUserRequest) returns (User);
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string display_name = 3;
+  string created_at = 4;
+}

@@ -1,0 +1,191 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key", "@shareable"])
+
+type User @key(fields: "id") {
+  id: ID! @external
+  trainingJobs: [TrainingJob!]!
+  datasets: [Dataset!]!
+  benchmarkResults: [BenchmarkResult!]!
+}
+
+type TrainingJob @key(fields: "id") {
+  id: ID!
+  name: String!
+  modelId: ID!
+  datasetId: ID!
+  dataset: Dataset!
+  geneIds: [ID!]!
+  config: TrainingConfig!
+  status: TrainingStatus!
+  metrics: TrainingMetrics!
+  ownerId: ID!
+  owner: User!
+  gpuId: ID
+  outputModelId: ID
+  errorMessage: String
+  createdAt: String!
+  startedAt: String
+  completedAt: String
+}
+
+type TrainingConfig {
+  epochs: Int!
+  batchSize: Int!
+  learningRate: Float!
+  warmupRatio: Float!
+  maxSeqLength: Int!
+  optimizer: String!
+  loraConfig: JSON
+  additionalParams: JSON
+}
+
+type TrainingMetrics {
+  loss: Float!
+  learningRate: Float!
+  currentEpoch: Int!
+  totalEpochs: Int!
+  currentStep: Int!
+  totalSteps: Int!
+  progressPercentage: Float!
+  lastUpdate: String!
+  customMetrics: JSON
+}
+
+type Dataset @key(fields: "id") {
+  id: ID!
+  name: String!
+  description: String!
+  sizeBytes: Int!
+  sampleCount: Int!
+  storagePath: String!
+  format: String!
+  createdAt: String!
+  createdBy: ID!
+  creator: User!
+}
+
+type BenchmarkResult @key(fields: "id") {
+  id: ID!
+  modelId: ID!
+  name: String!
+  config: BenchmarkConfig!
+  status: BenchmarkStatus!
+  performance: PerformanceMetrics!
+  quality: QualityMetrics!
+  ownerId: ID!
+  owner: User!
+  createdAt: String!
+  completedAt: String
+}
+
+type BenchmarkConfig {
+  testType: String!
+  sampleCount: Int!
+  maxTokens: Int!
+  temperature: Float!
+  prompts: [String!]!
+  parameters: JSON
+}
+
+type PerformanceMetrics {
+  tokensPerSecond: Float!
+  latencyMs: Float!
+  memoryUsageMb: Float!
+  gpuUtilization: Float!
+  maxContextLength: Int!
+  customMetrics: JSON
+}
+
+type QualityMetrics {
+  accuracy: Float!
+  perplexity: Float!
+  bleuScore: Float!
+  rougeScore: Float!
+  customScores: JSON
+}
+
+enum TrainingStatus {
+  PENDING
+  INITIALIZING
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum BenchmarkStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+scalar JSON
+
+type Query {
+  trainingJob(id: ID!): TrainingJob
+  trainingJobs(limit: Int, offset: Int, userId: ID, status: TrainingStatus): [TrainingJob!]!
+  dataset(id: ID!): Dataset
+  datasets(limit: Int, offset: Int, userId: ID): [Dataset!]!
+  benchmarkResult(id: ID!): BenchmarkResult
+  benchmarkResults(limit: Int, offset: Int, modelId: ID, userId: ID): [BenchmarkResult!]!
+}
+
+type Mutation {
+  startTraining(input: StartTrainingInput!): TrainingJob!
+  stopTraining(id: ID!): Boolean!
+  pauseTraining(id: ID!): Boolean!
+  resumeTraining(id: ID!): Boolean!
+  
+  createDataset(input: CreateDatasetInput!): Dataset!
+  updateDataset(id: ID!, input: UpdateDatasetInput!): Dataset!
+  deleteDataset(id: ID!): Boolean!
+  
+  runBenchmark(input: RunBenchmarkInput!): BenchmarkResult!
+  deleteBenchmarkResult(id: ID!): Boolean!
+}
+
+input StartTrainingInput {
+  name: String!
+  modelId: ID!
+  datasetId: ID!
+  geneIds: [ID!]!
+  config: TrainingConfigInput!
+}
+
+input TrainingConfigInput {
+  epochs: Int!
+  batchSize: Int!
+  learningRate: Float!
+  warmupRatio: Float
+  maxSeqLength: Int!
+  optimizer: String!
+  loraConfig: JSON
+}
+
+input CreateDatasetInput {
+  name: String!
+  description: String!
+  format: String!
+}
+
+input UpdateDatasetInput {
+  name: String
+  description: String
+}
+
+input RunBenchmarkInput {
+  name: String!
+  modelId: ID!
+  config: BenchmarkConfigInput!
+}
+
+input BenchmarkConfigInput {
+  testType: String!
+  sampleCount: Int!
+  maxTokens: Int!
+  temperature: Float!
+  prompts: [String!]!
+}
+

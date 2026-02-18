@@ -1,0 +1,232 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior in Rice Monorepo
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees:
+  - mrDinkelman
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 👋 Thanks for taking the time to report a bug!
+
+        Please fill out this form as completely as possible. The more information you provide, the faster we can identify and fix the issue.
+
+        **Before submitting**, please:
+        - ✅ Search existing issues to avoid duplicates
+        - ✅ Verify you're using the latest version
+        - ✅ Check the [documentation](../../tree/main/.doc/docs) for solutions
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 🎯 Component
+      description: Which part of the monorepo is affected?
+      options:
+        - Backend - Database Service (Go)
+        - Backend - Token Chain (Go/Cosmos)
+        - Backend - Rust Smart Contracts
+        - Backend - Solidity Smart Contracts
+        - Frontend - Web (TypeScript)
+        - Frontend - Flutter (Dart)
+        - Bot - Core (Python)
+        - Bot - Integrations (Python)
+        - Schema - Protocol Buffers
+        - Infrastructure - Docker/K8s
+        - Infrastructure - Terraform/Ansible
+        - DevContainer - Development Environment
+        - CI/CD - GitHub Actions
+        - Documentation
+        - Build System - Bazel
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🚨 Severity
+      description: How severe is this bug?
+      options:
+        - Critical - System unusable, data loss, security issue
+        - High - Major functionality broken, workaround exists
+        - Medium - Feature not working as expected
+        - Low - Minor issue, cosmetic problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Description
+      description: A clear and concise description of what the bug is
+      placeholder: |
+        Example: When I try to authenticate using OAuth, the application crashes with a 500 error.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 🔄 Steps to Reproduce
+      description: Step-by-step instructions to reproduce the bug
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Expected Behavior
+      description: What did you expect to happen?
+      placeholder: The authentication should succeed and redirect to the dashboard.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: ❌ Actual Behavior
+      description: What actually happened?
+      placeholder: The application crashed with a 500 Internal Server Error.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ Environment
+      description: Information about your environment
+      value: |
+        - **OS**: (e.g., Ubuntu 22.04, macOS 14, Windows 11)
+        - **Architecture**: (e.g., x86_64, ARM64)
+        - **Component Version**: (e.g., backend v1.2.3)
+        - **Language/Runtime Version**:
+          - Go:
+          - Python:
+          - Node.js:
+          - Rust:
+          - Other:
+        - **Browser** (if frontend): (e.g., Chrome 120, Firefox 121)
+        - **Container Runtime** (if applicable): (e.g., Docker 24.0.7, Podman 4.8)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📋 Logs & Error Messages
+      description: Paste relevant logs, error messages, or stack traces
+      render: shell
+      placeholder: |
+        Paste your logs here. Include:
+        - Error messages
+        - Stack traces
+        - Relevant log context
+
+        Tip: Use `bazel build --verbose_failures` for detailed build errors
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: ⚙️ Configuration
+      description: Relevant configuration files or environment variables
+      render: yaml
+      placeholder: |
+        # Paste relevant configuration here
+        # Remove sensitive information (API keys, passwords, etc.)
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots/Videos
+      description: If applicable, add screenshots or videos to help explain the problem
+      placeholder: |
+        Drag and drop images or videos here, or paste links.
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: 🔧 Workaround
+      description: Have you found a temporary workaround?
+      placeholder: Describe any workaround you've found, if applicable.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📎 Additional Context
+      description: Any other context about the problem
+      placeholder: |
+        - Related issues: #123
+        - Stack Overflow links
+        - External references
+        - Impact on your project
+
+  - type: dropdown
+    id: regression
+    attributes:
+      label: 🔙 Is this a regression?
+      description: Did this work in a previous version?
+      options:
+        - "No - This never worked"
+        - "Yes - This worked in a previous version"
+        - "I don't know"
+    validations:
+      required: false
+
+  - type: input
+    id: last-working-version
+    attributes:
+      label: Last Working Version
+      description: If this is a regression, what was the last version where it worked?
+      placeholder: e.g., v1.2.0
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 🤝 Contribution
+      description: Would you like to contribute a fix?
+      options:
+        - label: I'm willing to submit a PR to fix this issue
+        - label: I'm willing to help test the fix
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm you've completed these steps
+      options:
+        - label: I have searched for similar issues and found none
+          required: true
+        - label: I have provided all requested information
+          required: true
+        - label: I have removed any sensitive information from logs/configs
+          required: true
+        - label: I am using the latest version or have verified the bug exists in the latest version
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🙏 Thank you for helping improve Rice Monorepo!
+
+        Your bug report helps us build better software for everyone.
+
+        **What happens next?**
+        1. We'll triage your issue and assign appropriate labels
+        2. A maintainer will review and may ask for more information
+        3. Once confirmed, we'll prioritize and schedule a fix
+        4. You'll be notified of updates via GitHub notifications
+
+        **Need faster support?** Check our [documentation](../../tree/main/.doc/docs) or join our [discussions](../../discussions).

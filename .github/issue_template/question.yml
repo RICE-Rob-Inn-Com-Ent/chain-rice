@@ -1,0 +1,228 @@
+name: ❓ Question / Discussion
+description: Ask a question or start a discussion about Rice Monorepo
+title: "[QUESTION] "
+labels: ["question"]
+assignees:
+  - mrDinkelman
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 👋 Welcome! We're happy to help!
+
+        Use this template for:
+        - 🤔 Questions about how to use the project
+        - 💬 General discussions
+        - 🎓 Seeking advice or best practices
+        - 🔍 Clarification on documentation
+        - 🗺️ Understanding project architecture
+
+        **Before asking**, please:
+        - ✅ Check the [documentation](../../tree/main/.doc/docs)
+        - ✅ Search [existing discussions](../../discussions)
+        - ✅ Review [closed issues](../../issues?q=is%3Aissue+is%3Aclosed)
+
+        **For bugs**, use the [Bug Report](./bug-report.yml) template instead.
+        **For features**, use the [Feature Request](./feature-request.yml) template instead.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 📂 Category
+      description: What is this question about?
+      options:
+        - Getting Started - Setup and installation
+        - Development - How to build/develop
+        - Architecture - Understanding design decisions
+        - Best Practices - How to use effectively
+        - Configuration - How to configure
+        - Deployment - How to deploy
+        - Troubleshooting - Something isn't working
+        - Performance - Optimization questions
+        - Security - Security-related questions
+        - Testing - How to test
+        - Documentation - Docs clarification
+        - Integration - Integrating with other tools
+        - Migration - Upgrading or migrating
+        - Community - Project governance/contribution
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 🎯 Component
+      description: Which component is your question about? (if applicable)
+      options:
+        - General - Not specific to one component
+        - Backend - Database Service (Go)
+        - Backend - Token Chain (Go/Cosmos)
+        - Backend - Rust Smart Contracts
+        - Backend - Solidity Smart Contracts
+        - Frontend - Web (TypeScript)
+        - Frontend - Flutter (Dart)
+        - Frontend - Android (Kotlin)
+        - Frontend - iOS (Swift)
+        - Bot - Core (Python)
+        - Bot - Integrations (Python)
+        - Schema - Protocol Buffers
+        - Infrastructure - Docker/K8s
+        - Infrastructure - Terraform/Ansible
+        - DevContainer - Development Environment
+        - CI/CD - GitHub Actions
+        - Documentation
+        - Build System - Bazel
+    validations:
+      required: false
+
+  - type: textarea
+    id: question
+    attributes:
+      label: ❓ Your Question
+      description: What would you like to know? Be as specific as possible.
+      placeholder: |
+        Example: How do I configure the backend database service to use PostgreSQL instead of MySQL?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 📋 Context
+      description: Provide context about what you're trying to accomplish
+      placeholder: |
+        Example: I'm trying to deploy the backend service to production, and my company requires PostgreSQL for compliance reasons. I've looked at the configuration files but I'm not sure which values need to be changed.
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: 🔍 What Have You Tried?
+      description: What have you already attempted? What resources have you consulted?
+      placeholder: |
+        - Read the database configuration documentation
+        - Tried changing `DB_TYPE=postgres` in .env file
+        - Searched for PostgreSQL in the codebase
+        - Looked at docker-compose.yml
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ Environment (if relevant)
+      description: Information about your environment
+      value: |
+        - **OS**:
+        - **Version**:
+        - **Deployment**: (local, Docker, Kubernetes, etc.)
+        - **Other tools**:
+      placeholder: Only fill this out if it's relevant to your question
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: 📝 Code Example (if relevant)
+      description: Share code snippets that help illustrate your question
+      render: code
+      placeholder: |
+        // Paste relevant code here
+        // This helps us understand your question better
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: 🎯 Expected Outcome
+      description: What are you hoping to achieve?
+      placeholder: |
+        Example: I want to successfully connect the backend service to a PostgreSQL database and be able to run migrations.
+
+  - type: textarea
+    id: documentation-checked
+    attributes:
+      label: 📚 Documentation Checked
+      description: Which documentation pages have you already read?
+      placeholder: |
+        - README.md
+        - .doc/docs/ARCHITECTURE.md
+        - .backend/db/README.md
+        - Searched for "postgres" in docs
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: ⏰ Urgency
+      description: How urgent is this for you?
+      options:
+        - Just curious
+        - Would like to know when convenient
+        - Blocking my development
+        - Critical for production deployment
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 📎 Additional Information
+      description: Any other information that might help us answer your question
+      placeholder: |
+        - Screenshots
+        - Error messages
+        - Links to related resources
+        - Specific requirements or constraints
+
+  - type: checkboxes
+    id: help-others
+    attributes:
+      label: 🤝 Help Improve Documentation
+      description: If your question reveals a gap in our documentation
+      options:
+        - label: This question reveals a gap in the documentation
+        - label: I'd be willing to help improve the docs based on the answer
+        - label: I'd like this answer added to an FAQ section
+
+  - type: textarea
+    id: helpful-resources
+    attributes:
+      label: 🔗 Helpful Resources You've Found
+      description: Share any helpful resources you've discovered (helps others with similar questions!)
+      placeholder: |
+        - [Stack Overflow post](https://stackoverflow.com/...)
+        - [Blog article](https://example.com/...)
+        - [Official documentation](https://docs.example.com/...)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Pre-submission Checklist
+      description: Please confirm you've completed these steps
+      options:
+        - label: I have searched for similar questions and found no answer
+          required: true
+        - label: I have provided enough context for others to understand my question
+          required: true
+        - label: I have checked the relevant documentation
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        ## 🙏 Thank you for your question!
+
+        Our community is here to help!
+
+        **What happens next?**
+        1. Community members and maintainers will review your question
+        2. Someone will provide an answer or ask for clarification
+        3. Once answered, consider:
+           - Marking the issue as resolved
+           - Contributing to documentation if there's a gap
+           - Sharing your solution with others
+
+        **Response time**: Most questions are answered within 24-48 hours. For urgent issues, consider:
+        - [GitHub Discussions](../../discussions) for broader community input
+        - [Stack Overflow](https://stackoverflow.com/questions/tagged/rice-mono) with the `rice-mono` tag
+
+        **Found your answer?** Please share it below to help others!

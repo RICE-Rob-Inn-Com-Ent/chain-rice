@@ -1,0 +1,24 @@
+include = ["**/*.toml"]
+exclude = ["target/**", "node_modules/**", ".venv/**", "venv/**", "dist/**", "build/**", "bazel-*/**"]
+[formatting]
+align_entries = true
+align_comments = true
+array_trailing_comma = true
+column_width = 120
+trailing_newline = true
+crlf = false
+[schema]
+enabled = true
+[[rule]]
+include = ["**/Cargo.toml"]
+keys = ["dependencies", "dev-dependencies", "build-dependencies"]
+[rule.formatting]
+reorder_keys = true
+[[rule]]
+include = ["**/pyproject.toml"]
+keys = ["tool.poetry.dependencies", "tool.poetry.dev-dependencies"]
+[rule.formatting]
+reorder_keys = false
+[[rule]]
+include = ["**/Cargo.lock", "**/poetry.lock"]
+formatting = false

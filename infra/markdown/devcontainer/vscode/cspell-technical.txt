@@ -1,0 +1,12 @@
+# Technical Terms Dictionary - Słownik terminów technicznych
+# Sorted alphabetically
+
+GiPT
+VRAM
+Llama
+Whisper
+webmanifest
+msapplication
+crossorigin
+browserconfig
+

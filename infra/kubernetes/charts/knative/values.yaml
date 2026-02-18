@@ -1,0 +1,58 @@
+# Knative Serving - Request-driven scaling for HTTP/gRPC
+# For API, Frontend, and synchronous services
+
+knative:
+  enabled: true
+  
+  # Knative Serving configuration
+  serving:
+    # Scale-to-zero settings
+    scaleToZero:
+      enabled: true
+      gracePeriod: "30s"
+      revisionTimeout: "300s"
+    
+    # Concurrency settings
+    concurrency:
+      target: "100"
+      limit: "1000"
+      targetUtilization: "70"
+    
+    # Autoscaling
+    autoscaling:
+      minScale: "0"
+      maxScale: "10"
+      target: "100"
+      scaleDownDelay: "0s"
+      scaleToZeroGracePeriod: "30s"
+    
+    # Revision management
+    revisions:
+      maxRevisions: 10
+      revisionTimeout: "300s"
+    
+    # Domain configuration
+    domain:
+      enabled: true
+      template: "{{.Name}}.{{.Namespace}}.{{.Domain}}"
+      defaultDomain: "knative.local"
+    
+    # Networking (Kourier - lightweight, or Istio)
+    networking:
+      provider: "kourier"  # kourier or istio
+      kourier:
+        enabled: true
+        serviceType: "LoadBalancer"
+      istio:
+        enabled: false
+    
+    # High availability
+    highAvailability:
+      enabled: true
+      replicas: 2
+  
+  # Example service template
+  examples:
+    enabled: false
+    services: []
+

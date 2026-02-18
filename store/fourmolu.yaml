@@ -1,0 +1,21 @@
+# Fourmolu – Haskell formatter | Rice monorepo
+# https://github.com/fourmolu/fourmolu
+
+indentation: 4
+column-limit: 100
+function-arrows: leading
+comma-style: leading
+import-export-style: leading
+record-brace-space: true
+indent-wheres: true
+record-style: mixed
+newlines-between-decls: 1
+haddock-style: single-line
+haddock-style-module: single-line
+let-style: auto
+in-style: right-align
+single-constraint-parens: always
+unicode: never
+respectful: true
+fixity-declarations: inline
+reexport-style: mixed

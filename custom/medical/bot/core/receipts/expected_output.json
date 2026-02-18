@@ -1,0 +1,112 @@
+{
+  "receipt_1": {
+    "document_type": "receipt",
+    "date": "2024-12-07",
+    "receipt_number": "FV/2024/123",
+    "vendor": {
+      "name": "Apteka Zdrowie",
+      "nip": "1234567890",
+      "address": "ul. Główna 10, 44-200 Rybnik"
+    },
+    "items": [
+      {
+        "name": "Aspiryna 500mg",
+        "quantity": 1,
+        "price": 15.99,
+        "total": 15.99
+      },
+      {
+        "name": "Syrop na kaszel",
+        "quantity": 1,
+        "price": 24.50,
+        "total": 24.50
+      }
+    ],
+    "totals": {
+      "subtotal": 40.49,
+      "vat": 7.29,
+      "total": 47.78
+    },
+    "payment_method": "karta"
+  },
+  "receipt_2": {
+    "document_type": "receipt",
+    "date": "2024-12-07",
+    "receipt_number": "PAR/2024/456",
+    "vendor": {
+      "name": "Gabinet Stomatologiczny Ceramix",
+      "nip": "9876543210",
+      "address": "ul. Dentystyczna 5, 44-200 Rybnik"
+    },
+    "items": [
+      {
+        "name": "Konsultacja",
+        "quantity": 1,
+        "price": 150.00,
+        "total": 150.00
+      },
+      {
+        "name": "RTG zęba",
+        "quantity": 1,
+        "price": 80.00,
+        "total": 80.00
+      },
+      {
+        "name": "Plomba światłoutwardzalna",
+        "quantity": 1,
+        "price": 120.00,
+        "total": 120.00
+      }
+    ],
+    "totals": {
+      "subtotal": 350.00,
+      "vat": 63.00,
+      "total": 413.00
+    },
+    "payment_method": "gotówka"
+  },
+  "invoice_1": {
+    "document_type": "invoice",
+    "invoice_number": "FV/2024/789",
+    "issue_date": "2024-12-01",
+    "due_date": "2024-12-31",
+    "seller": {
+      "name": "Ceramix Sp. z o.o.",
+      "nip": "1234567890",
+      "address": "ul. Stomatologiczna 15, 44-200 Rybnik"
+    },
+    "buyer": {
+      "name": "Jan Kowalski",
+      "pesel": "12345678901",
+      "address": "ul. Przykładowa 1, 44-200 Rybnik"
+    },
+    "items": [
+      {
+        "name": "Wizyta kontrolna",
+        "quantity": 1,
+        "unit_price": 200.00,
+        "vat_rate": 23,
+        "total": 200.00,
+        "vat_amount": 46.00
+      },
+      {
+        "name": "Czyszczenie zębów",
+        "quantity": 1,
+        "unit_price": 300.00,
+        "vat_rate": 23,
+        "total": 300.00,
+        "vat_amount": 69.00
+      }
+    ],
+    "totals": {
+      "subtotal": 500.00,
+      "vat_total": 115.00,
+      "total": 615.00
+    },
+    "payment_method": "przelew"
+  }
+}
+
+
+
+

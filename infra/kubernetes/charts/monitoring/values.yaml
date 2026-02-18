@@ -1,0 +1,68 @@
+# Monitoring Stack: Prometheus, Grafana, Loki
+# Open-source monitoring and logging
+
+# Prometheus Stack
+kube-prometheus-stack:
+  enabled: true
+  
+  prometheus:
+    enabled: true
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: ""
+          resources:
+            requests:
+              storage: 50Gi
+  
+  grafana:
+    enabled: true
+    adminPassword: "" # Set via secret
+    persistence:
+      enabled: true
+      size: 10Gi
+    dashboards:
+      default:
+        postgresql:
+          gnetId: 9628
+          revision: 1
+          datasource: Prometheus
+        mongodb:
+          gnetId: 2583
+          revision: 1
+          datasource: Prometheus
+        redis:
+          gnetId: 11835
+          revision: 1
+          datasource: Prometheus
+        cockroachdb:
+          gnetId: 11099
+          revision: 1
+          datasource: Prometheus
+        cassandra:
+          gnetId: 11406
+          revision: 1
+          datasource: Prometheus
+  
+  prometheusOperator:
+    enabled: true
+
+# Loki Stack
+loki-stack:
+  enabled: true
+  
+  loki:
+    enabled: true
+    persistence:
+      enabled: true
+      size: 50Gi
+      storageClass: ""
+  
+  promtail:
+    enabled: true
+  
+  grafana:
+    enabled: false  # Use Grafana from kube-prometheus-stack
+

@@ -1,0 +1,30 @@
+pre-commit:
+  parallel: true
+  commands:
+    python-lint:
+      root: "."
+      run: pixi run ruff check python/ && pixi run ruff format --check python/
+    biome:
+      root: "."
+      run: pixi run biome check --write .
+    rust-fmt:
+      root: "."
+      run: cargo fmt -- --check
+    rust-clippy:
+      root: "."
+      run: cargo clippy --all-targets -- -D warnings
+    buf-lint:
+      root: "."
+      run: pixi run buf lint proto/
+    terraform-fmt:
+      root: ".terraform"
+      run: pixi run terraform fmt -check -recursive
+    markdown:
+      root: "."
+      run: pixi run markdownlint-cli2 "**/*.md" "!**/node_modules/**" "!.git/**"
+
+commit-msg:
+  commands:
+    convco:
+      run: pixi run convco check --no-version-restriction < {1}
+      stage_fixed: true

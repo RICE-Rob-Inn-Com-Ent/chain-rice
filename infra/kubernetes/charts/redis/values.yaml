@@ -1,0 +1,51 @@
+# Redis 7.x OSS Cluster with Redis Operator
+# Open-source Redis deployment on Kubernetes
+
+redis-operator:
+  enabled: true
+
+# Redis Cluster Configuration
+redis:
+  enabled: true
+  name: "redis-cluster"
+  
+  # Redis version
+  version: "7.2"
+  
+  # Cluster configuration (minimum 6 nodes for cluster mode)
+  nodes: 6
+  
+  # Resources per node
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  
+  # Storage per node
+  storage:
+    size: "10Gi"
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  
+  # Redis configuration
+  config:
+    maxmemory: "200mb"
+    maxmemory-policy: "allkeys-lru"
+    save: "900 1 300 10 60 10000"
+    appendonly: "yes"
+    appendfsync: "everysec"
+  
+  # Sentinel configuration (optional)
+  sentinel:
+    enabled: false
+    quorum: 2
+  
+  # Monitoring
+  monitoring:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+

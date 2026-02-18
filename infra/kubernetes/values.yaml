@@ -1,0 +1,695 @@
+# Default values for Rice-Mono Kubernetes deployment
+# This is a YAML-formatted file.
+
+# Global settings
+global:
+  environment: dev
+  domain: rice-mono.local
+  registry: docker.io/rice-mono
+  imagePullSecrets: []
+
+  # Storage class
+  storageClass: standard
+
+  # Monitoring
+  monitoring:
+    enabled: true
+    prometheus: true
+    grafana: true
+
+  # Security
+  podSecurityPolicy:
+    enabled: false
+  networkPolicy:
+    enabled: true
+
+# Namespace configuration
+namespaceOverride: ""
+
+# Common labels
+commonLabels:
+  app.kubernetes.io/part-of: rice-mono
+  app.kubernetes.io/managed-by: helm
+
+# Common annotations
+commonAnnotations: {}
+
+# Backend API Service
+backend:
+  enabled: true
+  name: rice-backend
+
+  replicaCount: 3
+
+  image:
+    repository: rice-mono/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    annotations: {}
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/rate-limit: "100"
+    hosts:
+      - host: api.rice-mono.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: backend-tls  # pragma: allowlist secret
+        hosts:
+          - api.rice-mono.local
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  env:
+    - name: ENVIRONMENT
+      value: "dev"
+    - name: LOG_LEVEL
+      value: "info"
+    - name: PORT
+      value: "8080"
+
+  envFrom:
+    - configMapRef:
+        name: backend-config
+    - secretRef:
+        name: backend-secrets
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 5
+
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+
+# Frontend Web Service
+frontend:
+  enabled: true
+  name: ceramix-web
+
+  replicaCount: 2
+
+  image:
+    repository: ceramix-web
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: ceramix.ltd
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: frontend-tls  # pragma: allowlist secret
+        hosts:
+          - ceramix.ltd
+
+  env:
+    - name: NEXT_PUBLIC_CERAI_API_URL
+      value: "http://ceramix-bot:8000"
+    - name: NEXT_PUBLIC_CERAI_LORA_URL
+      value: "http://cerai-lora:8007"
+    - name: NEXT_PUBLIC_LANGGRAPH_STUDIO_URL
+      value: "http://devcontainer-langgraph-studio:8123"
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+
+# Bot Service
+bot:
+  enabled: true
+  name: ceramix-bot
+
+  replicaCount: 1
+
+  image:
+    repository: ceramix-bot
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+  env:
+    - name: CERAI_LORA_URL
+      value: "http://cerai-lora:8007"
+    - name: CERAI_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: ceramix-secrets
+          key: cerai-api-key
+
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: 8000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /api/health
+      port: 8000
+    initialDelaySeconds: 10
+    periodSeconds: 5
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+
+# CerAI LoRA Service
+ceraiLora:
+  enabled: true
+  name: cerai-lora
+
+  replicaCount: 1
+
+  image:
+    repository: cerai-lora
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8007
+    targetPort: 8007
+
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 8Gi
+    limits:
+      cpu: 4000m
+      memory: 16Gi
+
+  nodeSelector:
+    accelerator: nvidia-tesla-t4  # GPU nodes
+
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
+
+  env:
+    - name: MODEL_NAME_BIELIK
+      value: "allegro/herbert-base-cased"
+    - name: MODEL_NAME_FORMATTER
+      value: "Qwen/Qwen2.5-3B-Instruct"
+    - name: WANDB_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: ceramix-secrets
+          key: wandb-api-key
+          optional: true
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8007
+    initialDelaySeconds: 60
+    periodSeconds: 30
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8007
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  persistence:
+    enabled: true
+    size: 50Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    # Mount paths for models, adapters, and training data
+    mountPaths:
+      - name: models
+        path: /app/models
+        size: 30Gi
+      - name: adapters
+        path: /app/adapters
+        size: 10Gi
+      - name: data
+        path: /app/data
+        size: 10Gi
+
+# Token Chain Service
+token:
+  enabled: true
+  name: rice-token
+
+  replicaCount: 1
+
+  image:
+    repository: rice-mono/token
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 26657
+    targetPort: 26657
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+  persistence:
+    enabled: true
+    size: 50Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+
+# Database Operators Configuration
+databases:
+  # PostgreSQL 16 with CloudNativePG
+  postgresql:
+    enabled: true
+    clusterName: "postgresql-cluster"
+    instances: 3
+    storage:
+      size: "50Gi"
+      storageClass: ""
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+    pgbouncer:
+      enabled: true
+    backup:
+      enabled: true
+      retention: "7d"
+      schedule: "0 2 * * *"
+  
+  # MongoDB Community 7.x
+  mongodb:
+    enabled: true
+    name: "mongodb-replica-set"
+    version: "7.0"
+    members: 3
+    storage:
+      size: "50Gi"
+      storageClass: ""
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+    backup:
+      enabled: true
+      retention: "7d"
+      schedule: "0 2 * * *"
+  
+  # Redis 7.x OSS Cluster
+  redis:
+    enabled: true
+    name: "redis-cluster"
+    version: "7.2"
+    nodes: 6
+    storage:
+      size: "10Gi"
+      storageClass: ""
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+  
+  # CockroachDB Core
+  cockroachdb:
+    enabled: true
+    name: "cockroachdb"
+    version: "23.2.0"
+    replicas: 3
+    storage:
+      size: "100Gi"
+      storageClass: ""
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "2Gi"
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+    sqlGateway:
+      enabled: true
+  
+  # Apache Cassandra 4.x (K8ssandra)
+  cassandra:
+    enabled: true
+    name: "cassandra-cluster"
+    version: "4.1"
+    size: 3
+    storage:
+      size: "100Gi"
+      storageClass: ""
+    resources:
+      requests:
+        cpu: "1000m"
+        memory: "2Gi"
+      limits:
+        cpu: "4000m"
+        memory: "8Gi"
+    reaper:
+      enabled: true
+    medusa:
+      enabled: true
+      retention: "7d"
+      schedule: "0 2 * * *"
+    stargate:
+      enabled: true
+      replicas: 2
+
+# Database (PostgreSQL) - Legacy support
+database:
+  enabled: false
+  external: false
+
+# Redis Cache
+redis:
+  enabled: true
+
+  architecture: standalone
+  # or 'replication' for master-slave
+
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  replica:
+    replicaCount: 2
+    persistence:
+      enabled: true
+      size: 8Gi
+
+# Monitoring Stack (Prometheus, Grafana, Loki)
+monitoring:
+  enabled: true
+
+  prometheus:
+    enabled: true
+    retention: 15d
+    storage:
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+
+  grafana:
+    enabled: true
+    adminPassword: "" # Set via secret
+    persistence:
+      enabled: true
+      size: 10Gi
+
+    dashboards:
+      - rice-mono-overview
+      - kubernetes-cluster
+      - application-metrics
+      - postgresql
+      - mongodb
+      - redis
+      - cockroachdb
+      - cassandra
+
+  alertmanager:
+    enabled: true
+    config:
+      receivers:
+        - name: "slack"
+          slack_configs:
+            - api_url: "" # Set via secret
+              channel: "#alerts"
+  
+  loki:
+    enabled: true
+    persistence:
+      enabled: true
+      size: 50Gi
+    promtail:
+      enabled: true
+
+# Serverless Stack (Cluster Autoscaler, Knative, KEDA)
+serverless:
+  enabled: true
+  
+  # Cluster Autoscaler - Infrastructure layer (always enabled with Kubernetes)
+  clusterAutoscaler:
+    enabled: true
+    cloudProvider: "aws"  # aws, gcp, azure
+    autoDiscovery:
+      clusterName: ""  # Will be set from Terraform output
+    extraArgs:
+      scale-down-delay-after-add: "10m"
+      scale-down-unneeded-time: "10m"
+      scale-down-utilization-threshold: "0.5"
+      max-node-provision-time: "15m"
+      max-nodes-total: 100
+    aws:
+      region: "us-west-2"
+    gcp:
+      projectId: ""
+    azure:
+      resourceGroup: ""
+  
+  # Knative Serving - Request-driven scaling (HTTP/gRPC)
+  knative:
+    enabled: true
+    serving:
+      scaleToZero:
+        enabled: true
+        gracePeriod: "30s"
+      concurrency:
+        target: "100"
+        limit: "1000"
+      autoscaling:
+        minScale: "0"
+        maxScale: "10"
+        target: "100"
+      domain:
+        defaultDomain: "knative.local"
+      networking:
+        provider: "kourier"
+      examples:
+        enabled: false
+  
+  # KEDA - Event-driven scaling (Queues, Metrics)
+  keda:
+    enabled: true
+    operator:
+      replicaCount: 2
+    metricsApiServer:
+      enabled: true
+      replicaCount: 2
+    prometheus:
+      metricServer:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+    examples:
+      enabled: false
+
+# Service Mesh (Istio)
+serviceMesh:
+  enabled: false
+  mtls:
+    enabled: true
+
+  virtualServices:
+    - name: backend
+      hosts:
+        - api.rice-mono.local
+      gateways:
+        - rice-gateway
+
+  destinationRules:
+    - name: backend
+      trafficPolicy:
+        loadBalancer:
+          simple: ROUND_ROBIN
+
+# Cert Manager
+certManager:
+  enabled: true
+  email: admin@rice-mono.com
+
+  clusterIssuer:
+    production:
+      server: https://acme-v02.api.letsencrypt.org/directory
+    staging:
+      server: https://acme-staging-v02.api.letsencrypt.org/directory
+
+# ArgoCD Configuration
+argocd:
+  enabled: true
+
+  projects:
+    - name: rice-mono
+      description: "Rice Mono Applications"
+      sourceRepos:
+        - "*"
+      destinations:
+        - namespace: "*"
+          server: https://kubernetes.default.svc
+
+  applications:
+    - name: backend
+      project: rice-mono
+      source:
+        repoURL: https://github.com/rice-mono/rice-mono.git
+        targetRevision: main
+        path: .dev/k8s/charts/backend
+    - name: frontend
+      project: rice-mono
+      source:
+        repoURL: https://github.com/rice-mono/rice-mono.git
+        targetRevision: main
+        path: .dev/k8s/charts/frontend
+
+# Network Policies
+networkPolicies:
+  enabled: true
+
+  policies:
+    - name: deny-all-ingress
+      podSelector: {}
+      policyTypes:
+        - Ingress
+
+    - name: allow-backend
+      podSelector:
+        matchLabels:
+          app: rice-backend
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: rice-frontend
+          ports:
+            - protocol: TCP
+              port: 8080
+
+# Resource Quotas
+resourceQuotas:
+  enabled: true
+
+  hard:
+    requests.cpu: "10"
+    requests.memory: 20Gi
+    persistentvolumeclaims: "10"
+    services.loadbalancers: "2"
+
+# Secrets Management
+secrets:
+  # Use external secrets operator
+  externalSecrets:
+    enabled: false
+    backend: aws-secrets-manager
+
+  # Or sealed secrets
+  sealedSecrets:
+    enabled: true
+    namespace: kube-system

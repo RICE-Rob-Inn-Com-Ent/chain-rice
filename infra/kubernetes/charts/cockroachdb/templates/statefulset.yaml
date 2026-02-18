@@ -1,0 +1,80 @@
+{{- if .Values.cockroachdb.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.cockroachdb.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  serviceName: {{ .Values.cockroachdb.name }}
+  replicas: {{ .Values.cockroachdb.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.cockroachdb.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.cockroachdb.name }}
+    spec:
+      containers:
+      - name: cockroachdb
+        image: cockroachdb/cockroach:{{ .Values.cockroachdb.version }}
+        command:
+        - /cockroach/cockroach
+        - start
+        - --join
+        - {{ .Values.cockroachdb.name }}-0.{{ .Values.cockroachdb.name }}.{{ .Release.Namespace }}.svc.cluster.local
+        - {{ .Values.cockroachdb.name }}-1.{{ .Values.cockroachdb.name }}.{{ .Release.Namespace }}.svc.cluster.local
+        - {{ .Values.cockroachdb.name }}-2.{{ .Values.cockroachdb.name }}.{{ .Release.Namespace }}.svc.cluster.local
+        - --insecure
+        - --http-addr=:8080
+        - --listen-addr=:26257
+        - --advertise-addr=$(HOSTNAME).{{ .Values.cockroachdb.name }}.{{ .Release.Namespace }}.svc.cluster.local:26257
+        ports:
+        - containerPort: 26257
+          name: grpc
+        - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            cpu: {{ .Values.cockroachdb.resources.requests.cpu }}
+            memory: {{ .Values.cockroachdb.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.cockroachdb.resources.limits.cpu }}
+            memory: {{ .Values.cockroachdb.resources.limits.memory }}
+        volumeMounts:
+        - name: datadir
+          mountPath: /cockroach/cockroach-data
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [{{ .Values.cockroachdb.storage.accessMode }}]
+      storageClassName: {{ .Values.cockroachdb.storage.storageClass | default "" }}
+      resources:
+        requests:
+          storage: {{ .Values.cockroachdb.storage.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.cockroachdb.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: {{ .Values.cockroachdb.sqlGateway.type }}
+  ports:
+  - port: {{ .Values.cockroachdb.sqlGateway.port }}
+    targetPort: 26257
+    name: grpc
+  - port: 8080
+    targetPort: 8080
+    name: http
+  clusterIP: None
+  selector:
+    app: {{ .Values.cockroachdb.name }}
+{{- end }}
+

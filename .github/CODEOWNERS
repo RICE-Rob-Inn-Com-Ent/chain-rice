@@ -1,0 +1,140 @@
+# CODEOWNERS file for Rice Monorepo
+
+# Defines code ownership for automated review requests
+
+# See: <https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners>
+
+# Default owner for everything (unless overridden below)
+
+- @mrDinkelman
+
+# Documentation files
+
+\*.md @mrDinkelman
+/docs/ @mrDinkelman
+README @mrDinkelman
+CONTRIBUTING @mrDinkelman
+CODE_OF_CONDUCT @mrDinkelman
+SECURITY @mrDinkelman
+ARCHITECTURE @mrDinkelman
+CHANGELOG @mrDinkelman
+
+# Root configuration files
+
+/.editorconfig @mrDinkelman
+/.gitignore @mrDinkelman
+/.gitattributes @mrDinkelman
+/.devcontainer/node/.prettierrc* @mrDinkelman
+/.eslintrc* @mrDinkelman
+/.devcontainer/node/.releaserc.js @mrDinkelman
+/renovate.json @mrDinkelman
+/.devcontainer/node/tsconfig.json @mrDinkelman
+
+# Bazel build system
+
+/BUILD.bazel @mrDinkelman
+/MODULE.bazel @mrDinkelman
+/WORKSPACE @mrDinkelman
+/.bazelrc @mrDinkelman
+/rules/ @mrDinkelman
+
+# CI/CD and DevOps
+
+/.github/ @mrDinkelman
+/.circleci/ @mrDinkelman
+/.gitlab-ci.yml @mrDinkelman
+/Makefile @mrDinkelman
+/docker-compose.yml @mrDinkelman
+/Dockerfile @mrDinkelman
+/dev/terraform/ @mrDinkelman
+/dev/k8s/ @mrDinkelman
+/dev/ansible/ @mrDinkelman
+
+# Backend - Go services
+
+/backend/**/\*.go @mrDinkelman
+/backend/**/go.mod @mrDinkelman
+/backend/\*\*/go.sum @mrDinkelman
+/backend/db/ @mrDinkelman
+/backend/token/ @mrDinkelman
+
+# Backend - Rust smart contracts
+
+/backend/contract/rust/ @mrDinkelman
+/backend/contract/rust/**/\*.rs @mrDinkelman
+/backend/contract/rust/**/Cargo.toml @mrDinkelman
+
+# Backend - Solidity smart contracts
+
+/backend/contract/solidity/ @mrDinkelman
+/backend/contract/solidity/**/\*.sol @mrDinkelman
+/backend/contract/solidity/**/hardhat.config.js @mrDinkelman
+
+# Frontend - Node.js/TypeScript applications
+
+/frontend/node/ @mrDinkelman
+/frontend/node/**/\*.ts @mrDinkelman
+/frontend/node/**/_.tsx @mrDinkelman
+/frontend/node/\*\*/_.js @mrDinkelman
+/frontend/node/\*_/_.jsx @mrDinkelman
+/frontend/node/angular/ @mrDinkelman
+/frontend/node/next/ @mrDinkelman
+/frontend/node/nuxt/ @mrDinkelman
+/frontend/node/svelte/ @mrDinkelman
+/frontend/node/shared/ @mrDinkelman
+
+# Frontend - Dart/Flutter
+
+/frontend/dart/ @mrDinkelman
+/frontend/dart/**/\*.dart @mrDinkelman
+/frontend/dart/**/pubspec.yaml @mrDinkelman
+
+# Bots and AI services
+
+/bots/core/ @mrDinkelman
+/bots/core/**/\*.py @mrDinkelman
+/bots/integration/ @mrDinkelman
+/bots/integration/**/\*.py @mrDinkelman
+/bots/**/pyproject.toml @mrDinkelman
+/bots/**/poetry.lock @mrDinkelman
+/bots/\*\*/requirements.txt @mrDinkelman
+
+# Protocol Buffers
+
+/proto/ @mrDinkelman
+/proto/\*_/_.proto @mrDinkelman
+
+# Security and compliance files
+
+SECURITY @mrDinkelman
+/.secrets.baseline @mrDinkelman
+/.snyk @mrDinkelman
+/.pre-commit-config.yaml @mrDinkelman
+
+# Dependency lock files
+
+package.json @mrDinkelman
+package-lock.json @mrDinkelman
+yarn.lock @mrDinkelman
+pnpm-lock.yaml @mrDinkelman
+**/pyproject.toml @mrDinkelman
+**/poetry.lock @mrDinkelman
+**/requirements.txt @mrDinkelman
+**/go.mod @mrDinkelman
+**/go.sum @mrDinkelman
+**/Cargo.toml @mrDinkelman
+**/Cargo.lock @mrDinkelman
+**/pubspec.yaml @mrDinkelman
+**/pubspec.lock @mrDinkelman
+
+# Test files
+
+**/_.test._ @mrDinkelman
+**/_.spec._ @mrDinkelman
+**/test/ @mrDinkelman
+**/tests/ @mrDinkelman
+
+# License and security policy
+
+/LICENSE @mrDinkelman
+/SECURITY.md @mrDinkelman

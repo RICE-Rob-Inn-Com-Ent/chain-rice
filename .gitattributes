@@ -1,0 +1,36 @@
+* text=auto
+*.go text eol=lf diff=go
+*.py text eol=lf diff=python
+*.rs text eol=lf diff=rust
+*.toml text eol=lf
+*.js *.jsx *.ts *.tsx *.mjs *.cjs text eol=lf
+*.java *.kt *.kts text eol=lf
+*.swift text eol=lf diff=swift
+*.dart text eol=lf
+*.proto text eol=lf
+*.html *.css *.scss *.yaml *.yml *.json *.jsonc text eol=lf
+*.md text eol=lf diff=markdown
+Dockerfile *.dockerfile .dockerignore text eol=lf
+*.tf *.tfvars text eol=lf
+*.sh *.bash *.zsh *.fish text eol=lf
+*.ps1 text eol=crlf
+*.txt *.sql text eol=lf
+LICENSE README *README* text eol=lf
+*.png *.jpg *.jpeg *.gif *.ico binary
+*.svg text
+*.ttf *.otf *.woff *.woff2 binary
+*.zip *.tar *.gz binary
+*.exe *.dll *.so *.dylib binary
+*.pyc binary
+*.jar binary
+*.pdf binary -diff
+bun.lockb Cargo.lock go.sum pubspec.lock -diff
+bazel-* linguist-generated
+*.pb.go linguist-generated
+vendor/** node_modules/** Pods/** linguist-vendored
+*.bat *.cmd text eol=crlf
+CHANGELOG.md merge=union
+*.go diff=golang
+*.rs diff=rust
+.gitattributes .gitignore .github .vscode .idea export-ignore
+tests test *.test.* *.spec.* export-ignore

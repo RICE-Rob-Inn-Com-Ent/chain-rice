@@ -1,0 +1,47 @@
+# KEDA - Event-driven Autoscaling
+# For Workers, Background jobs, Queue processing
+
+keda:
+  enabled: true
+  
+  # KEDA operator configuration
+  operator:
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "100Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1000Mi"
+  
+  # Metrics API server
+  metricsApiServer:
+    enabled: true
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "100Mi"
+      limits:
+        cpu: "1000m"
+        memory: "1000Mi"
+  
+  # Webhooks
+  webhooks:
+    enabled: true
+    replicaCount: 2
+  
+  # Service monitor for Prometheus
+  prometheus:
+    metricServer:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        interval: "30s"
+  
+  # ScaledObject examples
+  examples:
+    enabled: false
+    scaledObjects: []
+

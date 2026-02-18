@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import głównego pliku stylów Ceramix z opisami wszystkich elementów */
+@import url('/ceramix-styles.css');
+
+/* CSS base styles - using only supported vendor prefixes */
+@layer base {
+  html {
+    /* Text size adjust - use only supported prefixes */
+    -webkit-text-size-adjust: 100%;
+    /* text-size-adjust is not widely supported yet, so we only use webkit prefix */
+  }
+  
+  body.antialiased,
+  .antialiased {
+    /* Font smoothing - WebKit only (Safari, Chrome) */
+    -webkit-font-smoothing: antialiased;
+    /* Note: -moz-osx-font-smoothing is not a standard property and causes warnings */
+    /* Firefox uses font-smooth CSS property when available */
+  }
+}
+
+@layer components {
+  .marble-card {
+    @apply bg-gradient-to-br from-[#0f0f0f]/80 to-[#171717]/60 backdrop-blur-sm border border-[#f8f3e7]/10 rounded-xl shadow-[0_25px_50px_rgba(132,37,12,0.3)];
+  }
+  
+  .btn-primary {
+    @apply px-8 py-4 bg-gradient-to-r from-[#eb520a] to-[#cb3906] text-white font-semibold rounded-lg hover:from-[#cb3906] hover:to-[#a42d09] transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-[#eb520a]/50 transform hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply px-8 py-4 bg-[#171717]/50 border-2 border-[#eb520a]/50 text-[#fed0a8] font-semibold rounded-lg hover:bg-[#eb520a]/10 hover:border-[#f6823c] transition-all duration-300;
+  }
+
+}
+

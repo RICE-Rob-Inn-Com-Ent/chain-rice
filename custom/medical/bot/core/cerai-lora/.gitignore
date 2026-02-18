@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Models and adapters (large files)
+models/
+adapters/
+*.bin
+*.safetensors
+*.gguf
+
+# Data
+data/*.json
+data/*.csv
+!data/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Cache
+.cache/
+*.cache
+
+
+

@@ -1,0 +1,53 @@
+name: meowtopia_desktop
+description: Meowtopia Flutter desktop application
+version: 1.0.0+1
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^8.1.2
+  hooks_riverpod: ^2.4.0
+  flutter_hooks: ^0.20.5
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # UI Components
+  responsive_framework: ^1.2.0
+  animations: ^2.0.8
+  rive: ^0.12.3
+  lottie: ^3.1.2
+  flutter_staggered_grid_view: ^0.7.0
+  fl_chart: ^0.65.0
+  getwidget: ^4.0.0
+  velocity_x: ^3.6.0
+
+  # Themes & Graphics
+  flex_color_scheme: ^7.3.1
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.10+1
+
+  # Localization & Utilities
+  intl: ^0.17.0
+  flutter_native_splash: ^2.4.0
+  flutter_launcher_icons: ^0.13.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+

@@ -1,0 +1,57 @@
+version: 1
+
+# Database configuration
+db:
+  postgres:
+    default_host: localhost
+    default_port: 5432
+    default_user: postgres
+    default_password: postgres
+    default_database: postgres
+  cockroach:
+    default_host: localhost
+    default_port: 26257
+    default_user: root
+    default_password: ""
+    default_database: defaultdb
+    default_sslmode: require
+    default_cluster_id: ""
+    default_region: ""
+    default_multi_region: false
+  redis:
+    default_host: localhost
+    default_port: 6379
+    default_db: 0
+  mongodb:
+    default_host: localhost
+    default_port: 27017
+
+# Token chain configuration
+token:
+  validation: sovereign
+  default_denom: stake
+  accounts:
+  - name: alice
+    coins:
+    - 20000token
+    - 200000000stake
+  - name: bob
+    coins:
+    - 10000token
+    - 100000000stake
+  client:
+    openapi:
+      path: docs/static/openapi.json
+  faucet:
+    name: bob
+    coins:
+    - 5token
+    - 100000stake
+  validators:
+  - name: alice
+    bonded: 100000000stake
+  - name: validator1
+    bonded: 200000000stake
+  - name: validator2
+    bonded: 100000000stake
+

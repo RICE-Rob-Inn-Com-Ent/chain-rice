@@ -1,0 +1,12 @@
+apiVersion: v2
+name: cassandra
+description: Apache Cassandra 4.x with K8ssandra operator
+type: application
+version: 1.0.0
+appVersion: "4.1"
+
+dependencies:
+  - name: k8ssandra-operator
+    version: "1.10.0"
+    repository: "https://helm.k8ssandra.io/"
+

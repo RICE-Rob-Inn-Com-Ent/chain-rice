@@ -1,0 +1,50 @@
+{{- range $service := list "backend" "frontend" }}
+{{- $config := index $.Values $service }}
+{{- if and $config.enabled $config.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $config.name | default (printf "rice-%s" $service) }}
+  namespace: {{ $.Values.namespaceOverride | default $.Release.Namespace }}
+  labels:
+    app: {{ $config.name | default (printf "rice-%s" $service) }}
+    component: {{ $service }}
+    {{- with $.Values.commonLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $config.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if $config.ingress.className }}
+  ingressClassName: {{ $config.ingress.className }}
+  {{- end }}
+  {{- if $config.ingress.tls }}
+  tls:
+    {{- range $config.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range $config.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ $config.name | default (printf "rice-%s" $service) }}
+                port:
+                  number: {{ $config.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
