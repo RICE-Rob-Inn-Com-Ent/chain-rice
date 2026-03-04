@@ -1,0 +1,112 @@
+# Migrated from BARD (frontend/codemagic.yaml) to KING root.
+# When running from repo root: .project = frontend (BARD).
+# Reference for Dagger pipeline: Flutter iOS/macOS builds.
+
+workflows:
+  # Flutter iOS builds for all mobile projects
+  flutter-ios-builds:
+    name: Flutter iOS Builds
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get Flutter dependencies
+        script: |
+          find .project -name "pubspec.yaml" -path "*/mobile/*" -exec sh -c 'cd $(dirname {}) && flutter pub get' \;
+      - name: Build Flutter iOS apps
+        script: |
+          for dir in .project/*/mobile; do
+            if [ -f "$dir/pubspec.yaml" ]; then
+              echo "Building iOS app in $dir"
+              cd "$dir"
+              flutter build ios --release --no-codesign || echo "Build failed for $dir, continuing..."
+              cd - > /dev/null
+            fi
+          done
+    artifacts:
+      - .project/*/mobile/build/ios/**/*.app
+      - .project/*/mobile/build/ios/**/*.ipa
+    publishing:
+      email:
+        notify:
+          success: true
+          failure: true
+
+  # Flutter macOS builds for all desktop projects
+  flutter-macos-builds:
+    name: Flutter macOS Builds
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Get Flutter dependencies
+        script: |
+          find .project -name "pubspec.yaml" -path "*/desktop/*" -exec sh -c 'cd $(dirname {}) && flutter pub get' \;
+      - name: Build Flutter macOS apps
+        script: |
+          for dir in .project/*/desktop; do
+            if [ -f "$dir/pubspec.yaml" ]; then
+              echo "Building macOS app in $dir"
+              cd "$dir"
+              flutter build macos --release || echo "Build failed for $dir, continuing..."
+              cd - > /dev/null
+            fi
+          done
+    artifacts:
+      - .project/*/desktop/build/macos/**/*.app
+      - .project/*/desktop/build/macos/**/*.dmg
+    publishing:
+      email:
+        notify:
+          success: true
+          failure: true
+
+  # Combined workflow - builds everything
+  build-all-ios-macos:
+    name: Build All iOS/macOS Apps
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get Flutter dependencies
+        script: |
+          find .project -name "pubspec.yaml" -path "*/mobile/*" -exec sh -c 'cd $(dirname {}) && flutter pub get' \;
+          find .project -name "pubspec.yaml" -path "*/desktop/*" -exec sh -c 'cd $(dirname {}) && flutter pub get' \;
+      - name: Build Flutter iOS apps
+        script: |
+          for dir in .project/*/mobile; do
+            if [ -f "$dir/pubspec.yaml" ]; then
+              echo "Building iOS app in $dir"
+              cd "$dir"
+              flutter build ios --release --no-codesign || echo "Build failed for $dir, continuing..."
+              cd - > /dev/null
+            fi
+          done
+      - name: Build Flutter macOS apps
+        script: |
+          for dir in .project/*/desktop; do
+            if [ -f "$dir/pubspec.yaml" ]; then
+              echo "Building macOS app in $dir"
+              cd "$dir"
+              flutter build macos --release || echo "Build failed for $dir, continuing..."
+              cd - > /dev/null
+            fi
+          done
+    artifacts:
+      - .project/*/mobile/build/ios/**/*.app
+      - .project/*/mobile/build/ios/**/*.ipa
+      - .project/*/desktop/build/macos/**/*.app
+      - .project/*/desktop/build/macos/**/*.dmg
+    publishing:
+      email:
+        notify:
+          success: true
+          failure: true

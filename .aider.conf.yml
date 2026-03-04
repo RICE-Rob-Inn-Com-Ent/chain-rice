@@ -1,0 +1,59 @@
+# .aider.conf.yml — Aider configuration for .rice monorepo
+
+# Model
+model: claude-sonnet-4-6
+
+# Context files — loaded at startup so Aider knows the ecosystem
+read:
+  - CLAUDE.md
+  - README.md
+  - pixi.toml
+  - Justfile
+  - .github/copilot-instructions.md
+  - .github/instructions/king.md
+  - .github/instructions/mason.md
+  - .github/instructions/bard.md
+  - .github/instructions/smith.md
+  - .github/instructions/sage.md
+  - .github/instructions/clerk.md
+  - .github/instructions/chief.md
+
+# Documentation urls — Aider will fetch these when asked about a library
+# Use: /web <url> inside aider session to pull docs on demand
+# Or reference them in your prompt: "check https://pkg.go.dev for the correct API"
+
+# Git
+auto-commits: false
+dirty-commits: false
+commit-prompt: "conventional"
+
+# Output
+pretty: true
+stream: true
+
+# Editor
+editor-model: claude-sonnet-4-6
+
+# Linting — runs after every edit
+lint-cmd:
+  - "just lint"
+
+# Testing — runs after every edit
+test-cmd:
+  - "just test"
+
+# Files to never touch
+exclude:
+  - "infra/cue.mod/**"
+  - ".pixi/**"
+  - "**/.git/**"
+  - "**/node_modules/**"
+  - "**/__pycache__/**"
+  - "**/.dart_tool/**"
+  - "**/.flutter/**"
+  - "**/target/**"
+  - "**/.zig-cache/**"
+  - "**/_build/**"
+
+# Watch mode
+watch-files: true

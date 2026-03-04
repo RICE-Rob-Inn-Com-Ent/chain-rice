@@ -1,4 +1,0 @@
-# Zgodne z pixi.toml: rust = "1.84"
-[toolchain]
-channel = "1.84"
-components = ["rustfmt", "clippy", "rust-analyzer"]

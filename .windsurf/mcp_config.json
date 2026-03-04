@@ -9,8 +9,7 @@
         "--bun",
         "@modelcontextprotocol/server-fetch"
       ],
-      "description": "Fetches online documentation from URL on demand.",
-      "enabled": true
+      "description": "Fetches online documentation from any URL on demand."
     },
     "context7": {
       "command": "pixi",
@@ -21,8 +20,7 @@
         "--bun",
         "@upstash/context7-mcp"
       ],
-      "description": "Auto-resolves library docs: Go, Rust, Elixir, TS, Flutter, Zig, Mojo, etc.",
-      "enabled": true
+      "description": "Auto-resolves up-to-date library docs: Go, Rust, Elixir, TS, Flutter, Zig, Mojo, Ruby, Haskell, Python, Terraform, Kubernetes, and more."
     },
     "filesystem": {
       "command": "pixi",
@@ -34,8 +32,7 @@
         "@modelcontextprotocol/server-filesystem",
         "."
       ],
-      "description": "Read-only access to repo root only. Cannot escape outside '.'.",
-      "enabled": true
+      "description": "Read-only access to repo root. Enables agents to inspect project structure, configs, and source files without escaping the repo."
     }
   }
 }

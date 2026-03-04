@@ -1,0 +1,11 @@
+{
+  "name": "rice",
+  "engineVersion": "v0.15.0",
+  "sdk": {
+    "source": "go"
+  },
+  "source": ".",
+  "include": [
+    "frontend"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "experimental": {
+    "modelContextProtocolServers": [
+      {
+        "name": "fetch",
+        "description": "Fetches online documentation from any URL on demand.",
+        "transport": {
+          "type": "stdio",
+          "command": "pixi",
+          "args": [
+            "run",
+            "bun",
+            "x",
+            "--bun",
+            "@modelcontextprotocol/server-fetch"
+          ]
+        }
+      },
+      {
+        "name": "context7",
+        "description": "Auto-resolves up-to-date library docs: Go, Rust, Elixir, TS, Flutter, Zig, Mojo, Ruby, Haskell, Python, Terraform, Kubernetes, and more.",
+        "transport": {
+          "type": "stdio",
+          "command": "pixi",
+          "args": [
+            "run",
+            "bun",
+            "x",
+            "--bun",
+            "@upstash/context7-mcp"
+          ]
+        }
+      },
+      {
+        "name": "filesystem",
+        "description": "Read-only access to repo root. Enables agents to inspect project structure, configs, and source files without escaping the repo.",
+        "transport": {
+          "type": "stdio",
+          "command": "pixi",
+          "args": [
+            "run",
+            "bun",
+            "x",
+            "--bun",
+            "@modelcontextprotocol/server-filesystem",
+            "."
+          ]
+        }
+      }
+    ]
+  }
+}

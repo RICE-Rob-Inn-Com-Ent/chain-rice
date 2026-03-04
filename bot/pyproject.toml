@@ -125,18 +125,23 @@ package = true # Treat this project as an installable package
 [tool.hatch.build.targets.wheel]
 packages = ["src/rice_bot"] # Explicitly define package source directory
 
+# Pytest – Python & Mojo tests | Rice monorepo (python/, mojo/, .devcontainer/bot)
 [tool.pytest.ini_options]
-testpaths = ["test"]
-python_files = ["test_*.py"]
+testpaths = ["test", "python/test", ".devcontainer/bot"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = "test_*"
 asyncio_mode = "auto"
-# Custom markers for granular test execution (e.g., pytest -m gpu)
+addopts = "-v --strict-markers --tb=short"
 markers = [
     "slow: marks tests as slow",
     "integration: tests requiring external services",
     "gpu: tests requiring CUDA/GPU",
     "quantum: tests requiring Qiskit/PennyLane",
 ]
-addopts = "-v --strict-markers --tb=short"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
 
 [tool.ruff]
 line-length = 100

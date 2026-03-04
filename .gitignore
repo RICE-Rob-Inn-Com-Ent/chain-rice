@@ -13,9 +13,6 @@ dist/
 build/
 out/
 .next/
-.nuxt/
-.angular/
-.svelte-kit/
 .cache/
 *.tsbuildinfo
 .dart_tool/

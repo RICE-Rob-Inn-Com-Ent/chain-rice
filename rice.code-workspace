@@ -1,1 +1,72 @@
-{"folders":[{"name":"👨‍🍳CHIEF","path":"custom"},{"name":"🧑‍🔬SAGE","path":"bot"},{"name":"🧑‍🎤BARD","path":"frontend"},{"name":"👨‍💼CLERK","path":"store"},{"name":"🧑‍🏭SMITH","path":"service"},{"name":"👷MASON","path":"infra"},{"name":"🫅KING","path":"."}],"settings":{"workbench.colorTheme":"Tokyo Night","workbench.iconTheme":"material-icon-theme","material-icon-theme.activeIconPack":"react_redux","material-icon-theme.folders.theme":"specific","material-icon-theme.folders.associations":{"🍚":"folder-root","📦":"folder-package"},"material-icon-theme.saturation":1,"material-icon-theme.opacity":1,"vscode-pets.petSize":"medium","vscode-pets.theme":"winter","vscode-pets.throwBallWithMouse":true,"editor.cursorSmoothCaretAnimation":"on","editor.cursorBlinking":"smooth","editor.smoothScrolling":true,"editor.fontFamily":"'Fira Code', 'JetBrains Mono', monospace","editor.fontLigatures":true,"editor.minimap.enabled":false,"editor.scrollbar.vertical":"hidden","editor.renderLineHighlight":"all","editor.letterSpacing":0.33,"editor.lineHeight":25,"npm.enableScriptExplorer":false,"git.openRepositoryInParentFolders":"always","explorer.confirmDragAndDrop":false,"outline.showVariables":false,"outline.showFields":false,"scm.diffDecorations":"gutter","editor.linkedEditing":true,"editor.formatOnSave":true,"files.trimTrailingWhitespace":true,"files.insertFinalNewline":true,"editor.bracketPairColorization.enabled":true,"editor.guides.bracketPairs":"active","errorLens.enabledDiagnosticLevels":["error","warning"],"errorLens.fontStyleItalic":true,"[python]":{"editor.defaultFormatter":"charliermarsh.ruff","editor.codeActionsOnSave":{"source.organizeImports":"explicit"}},"[typescript][javascript][json][jsonc]":{"editor.defaultFormatter":"biomejs.biome"},"[rust]":{"editor.defaultFormatter":"rust-lang.rust-analyzer"},"[terraform]":{"editor.formatOnSave":false},"[ruby]":{"editor.defaultFormatter":"shopify.ruby-lsp","editor.formatOnSave":true},"[glsl]":{"editor.defaultFormatter":"slevesque.vscode-glsl"},"todo-tree.highlights.defaultHighlight":{"type":"text","fontWeight":"bold","borderRadius":"4px"},"files.associations":{"Justfile":"just","*.mojo":"mojo","*.bacon":"toml",".envrc":"shellscript","*.cue":"cue","*.tf.json":"json","*.frag":"glsl","*.vert":"glsl","*.glsl":"glsl","*.rb":"ruby"},"emeraldwalk.runonsave":{"commands":[{"match":"infra/config/.*\\.cue$","cmd":"cd ${workspaceFolder}/.. && cue cmd gen ./infra"}]}},"tasks":{"version":"2.0.0","tasks":[{"label":"King: generate root from CUE","type":"shell","command":"cue cmd gen ./infra","options":{"cwd":"${workspaceFolder:🫅KING}"},"group":"build","presentation":{"reveal":"silent","panel":"shared"}}]},"extensions":{"recommendations":["emeraldwalk.runonsave","enkia.tokyo-night","pkief.material-icon-theme","usernamehw.errorlens","tonybaloney.vscode-pets","oderwat.indent-rainbow","aaron-bond.better-comments","gruntfuggly.todo-tree","rust-lang.rust-analyzer","ziglang.vscode-zig","modular-mojotools.mojo","charliermarsh.ruff","biomejs.biome","cuelangorg.vscode-cue","golang.go","elixir-lsp.elixir-ls","haskell.haskell","dart-code.flutter","rebornix.ruby","shopify.ruby-lsp","slevesque.vscode-glsl","circledev.glsl-canvas","iden3.circom","mkhl.direnv","skellock.just","signageos.signageos-vscode-sops","tamasfe.even-better-toml","hashicorp.terraform","redhat.vscode-yaml","zxh404.vscode-proto3","bierner.markdown-mermaid","antfu.browse-lite","aquasecurity.trivy-vulnerability-scanner","github.vscode-github-actions"]}}
+{
+  "folders": [
+    {"name": "👨‍🍳CHIEF", "path": "custom"},
+    {"name": "🧑‍🔬SAGE", "path": "bot"},
+    {"name": "🧑‍🎤BARD", "path": "frontend"},
+    {"name": "👨‍💼CLERK", "path": "store"},
+    {"name": "🧑‍🏭SMITH", "path": "service"},
+    {"name": "👷MASON", "path": "infra"},
+    {"name": "🫅KING", "path": "."}
+  ],
+  "settings": {
+    "workbench.colorTheme": "Tokyo Night",
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.activeIconPack": "react_redux",
+    "material-icon-theme.folders.theme": "specific",
+    "material-icon-theme.folders.associations": {"🍚": "folder-root", "📦": "folder-package"},
+    "material-icon-theme.saturation": 1,
+    "material-icon-theme.opacity": 1,
+    "vscode-pets.petSize": "medium",
+    "vscode-pets.theme": "winter",
+    "vscode-pets.throwBallWithMouse": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorBlinking": "smooth",
+    "editor.smoothScrolling": true,
+    "editor.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
+    "editor.fontLigatures": true,
+    "editor.minimap.enabled": false,
+    "editor.scrollbar.vertical": "hidden",
+    "editor.renderLineHighlight": "all",
+    "editor.letterSpacing": 0.33,
+    "editor.lineHeight": 25,
+    "npm.enableScriptExplorer": false,
+    "git.openRepositoryInParentFolders": "always",
+    "explorer.confirmDragAndDrop": false,
+    "outline.showVariables": false,
+    "outline.showFields": false,
+    "scm.diffDecorations": "gutter",
+    "editor.linkedEditing": true,
+    "editor.formatOnSave": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+    "errorLens.fontStyleItalic": true,
+    "[python]": {"editor.defaultFormatter": "charliermarsh.ruff", "editor.codeActionsOnSave": {"source.organizeImports": "explicit"}},
+    "[typescript][javascript][json][jsonc]": {"editor.defaultFormatter": "biomejs.biome"},
+    "[rust]": {"editor.defaultFormatter": "rust-lang.rust-analyzer"},
+    "[terraform]": {"editor.formatOnSave": false},
+    "[ruby]": {"editor.defaultFormatter": "shopify.ruby-lsp", "editor.formatOnSave": true},
+    "[glsl]": {"editor.defaultFormatter": "slevesque.vscode-glsl"},
+    "todo-tree.highlights.defaultHighlight": {"type": "text", "fontWeight": "bold", "borderRadius": "4px"},
+    "files.associations": {"Justfile": "just", "*.mojo": "mojo", "*.bacon": "toml", ".envrc": "shellscript", "*.cue": "cue", "*.tf.json": "json", "*.frag": "glsl", "*.vert": "glsl", "*.glsl": "glsl", "*.rb": "ruby"},
+    "emeraldwalk.runonsave": {"commands": [{"match": "infra/config/.*[.]cue$", "cmd": "cd "${workspaceFolder}" && cue cmd gen ./infra"}]}
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [{"label": "King: generate root from CUE", "type": "shell", "command": "cue cmd gen ./infra", "options": {"cwd": "${workspaceFolder:🫅KING}"}, "group": "build", "presentation": {"reveal": "silent", "panel": "shared"}}]
+  },
+  "extensions": {
+    "recommendations": [
+      "emeraldwalk.runonsave", "enkia.tokyo-night", "pkief.material-icon-theme", "usernamehw.errorlens",
+      "tonybaloney.vscode-pets", "oderwat.indent-rainbow", "aaron-bond.better-comments", "gruntfuggly.todo-tree",
+      "rust-lang.rust-analyzer", "ziglang.vscode-zig", "modular-mojotools.mojo", "charliermarsh.ruff",
+      "biomejs.biome", "cuelangorg.vscode-cue", "golang.go", "elixir-lsp.elixir-ls", "haskell.haskell",
+      "dart-code.flutter", "rebornix.ruby", "shopify.ruby-lsp", "slevesque.vscode-glsl", "circledev.glsl-canvas",
+      "iden3.circom", "mkhl.direnv", "skellock.just", "signageos.signageos-vscode-sops", "tamasfe.even-better-toml",
+      "hashicorp.terraform", "redhat.vscode-yaml", "zxh404.vscode-proto3", "bierner.markdown-mermaid",
+      "antfu.browse-lite", "aquasecurity.trivy-vulnerability-scanner", "github.vscode-github-actions"
+    ]
+  }
+}

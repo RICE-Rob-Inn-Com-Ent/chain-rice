@@ -1,4 +1,4 @@
-package king
+package config
 
 // =============================================================================
 // KINGS ROOT (STATIC)
@@ -17,7 +17,7 @@ package king
 //   - workspace:    VS Code / Cursor workspace object (folders, settings,
 //                   extensions). This is what `.envrc` exports to
 //                     rice.code-workspace  via:
-//                       cue export infra/config/king_files.cue -e workspace --out json
+//                       cue export infra/config/king_root_files.cue -e 'king_content["rice.code-workspace"]' --out text
 //
 // Manifest (infra/manifest.cue) + cue cmd gen (manifest_tool.cue) generują pliki roota z order i king_content
 // (including the string version of `rice.code-workspace` stored in
@@ -1156,49 +1156,63 @@ king_content: {
 
 	// --- Community & legal docs ---
 	"CODE_OF_CONDUCT.md": """
-		# Code of Conduct: .rice OS (NOT READY)
+		# 📜 Code of Conduct | .rice OS Protocol
+
+		Version: 1.0.0-Stable
+
+		Scope: Universal Runtime Environment
 
 		## 0. The Root Philosophy 🧠
 
-		.rice is about Maximum Performance and Zero Friction. We are here to merge many
-		languages into one masterpiece. If your behavior causes latency or
-		system-instability in the community, you will be rm -rf-ed.
+		.rice is about Maximum Performance and Zero Friction. We are here to merge the world's most powerful low-level and high-level logic into a single near-metal masterpiece.
 
-		## 1. High-Performance Standards ⚡
+		In this ecosystem, human interaction is treated like system-bus communication: it must be High-Bandwidth, Low-Latency, and Type-Safe. If your behavior causes social-bloat or community-instability, you will be rm -rf-ed from the kingdom.
 
-		- Be a senior-contributor to everyone – Even if you're a pro, treat newcomers
-		  with empathy. We all started with a hello world.
-		- Logic > Ego – Attacks on code are welcome (keep it optimized!). Attacks on
-		  people are deprecated.
-		- Radical Clarity – Be direct. Be honest. Be concise. High-bandwidth
-		  communication only.
-		- Stay Collaborative – We use Rust, Zig, Mojo, and Ruby. Respect the stack,
-		  respect the dev.
+		## 1. The Stack Ethics (Guild Standards) ⚡
+
+		Every contributor must embody the spirit of the roles they serve. Respect the technology, respect the dev:
+
+		    SMITH Resilience (Go/Elixir): Be the healer. If you see a junior's "logic-error," don't just point it out—provide the patch. Empathy is our failover mechanism.
+
+		    CLERK Precision (Rust/Zig/Haskell): Logic > Ego. Attacks on code are welcome (keep it optimized!). Attacks on humans are unhandled exceptions. Be mathematically precise in your feedback.
+
+		    SAGE Intelligence (Python/Mojo): Be a mentor. Share your wisdom. We don't gatekeep knowledge; we distribute it to optimize the collective mind.
+
+		    BARD Expression (Ruby/TS/Flutter): Maintain the Vibe. Communication should be as clean and elegant as our UI. No messy drama, just high-fidelity interaction.
+
+		    MASON Integrity (CUE): Respect the boundaries. Follow the King's conventions. Consistency in the community is as vital as consistency in the infrastructure.
 
 		## 2. Unacceptable Behavior (exit 1) 🚫
 
-		- Trolling & Harassment – Any attempt to cause mental-bloat or drama.
-		- Doxing – Sharing private data is a critical-vulnerability. Instant permanent
-		  ban.
-		- Spam & Noise – Keep it tech-focused. We don't have time for off-topic
-		  garbage.
+		The following actions are considered Critical Vulnerabilities and will trigger an immediate system-override:
+
+		    Trolling & Harassment: Any attempt to inject mental-bloat or emotional-noise into the workspace.
+
+		    Data Leakage (Doxing): Sharing private data is a zero-day exploit. Instant and permanent de-authentication from the ecosystem.
+
+		    Discriminatory Logic: We don't care about your hardware specs, only your output. Discrimination based on identity is a core-corruption that will be purged.
+
+		    Spam & Latency: Keep it tech-focused. Off-topic garbage is considered a DDoS attack on our collective productivity.
 
 		## 3. Enforcement Logic 🛠️
 
-		If someone is violating the protocol, the Maintainers will act:
+		The KING (Maintainers) will act as the kernel-level process for dispute resolution. We follow a linear escalation path:
 
-		- WARN – A private message to fix your logic-error.
-		- REFRESH – Temporary ban to cool down your CPU.
-		- PURGE – Permanent removal from the .rice ecosystem.
+		    WARN (Log.Info): A private notification to refactor your behavior and fix your logic-error.
 
-		Report issues to: [infocoderice@gmail.com](mailto:infocoderice@gmail.com)
-		(Handle with Priority: High).
+		    REFRESH (SIGSTOP): A temporary suspension to cool down your CPU and prevent system-wide heat.
 
-		## 4. Attribution 📜
+		    PURGE (SIGKILL): Permanent removal from the .rice organization, repos, and communication channels.
 
-		Optimized from the Contributor Covenant and Mozilla's Ladder.
+		Report Vulnerabilities to: infocoderice@gmail.com
 
-		.rice – Architecture, Imagination, Sound, and Code.
+		(Priority: High | Encryption: Required)
+
+		## 4. Attribution & Integrity 📜
+
+		This protocol is optimized from the Contributor Covenant and Mozilla's Ladder, then stripped of all non-essential bloat to fit the .rice architecture.
+
+		    Final Instruction: Work with the speed of FLOW, the wisdom of MIND, and the precision of SAFE. Let's cook the future.
 		"""
 
 	"CONTRIBUTING.md": """
@@ -1406,8 +1420,80 @@ king_content: {
 		"""
 
 	// VS Code / Cursor multi-root workspace: folders (custom, bot, frontend, …), settings, extensions.
+	// Zapis wieloliniowy – wygenerowany rice.code-workspace będzie czytelny (nie jedna długa linia).
 	"rice.code-workspace": """
-		{"folders":[{"name":"👨‍🍳CHIEF","path":"custom"},{"name":"🧑‍🔬SAGE","path":"bot"},{"name":"🧑‍🎤BARD","path":"frontend"},{"name":"👨‍💼CLERK","path":"store"},{"name":"🧑‍🏭SMITH","path":"service"},{"name":"👷MASON","path":"infra"},{"name":"🫅KING","path":"."}],"settings":{"workbench.colorTheme":"Tokyo Night","workbench.iconTheme":"material-icon-theme","material-icon-theme.activeIconPack":"react_redux","material-icon-theme.folders.theme":"specific","material-icon-theme.folders.associations":{"🍚":"folder-root","📦":"folder-package"},"material-icon-theme.saturation":1,"material-icon-theme.opacity":1,"vscode-pets.petSize":"medium","vscode-pets.theme":"winter","vscode-pets.throwBallWithMouse":true,"editor.cursorSmoothCaretAnimation":"on","editor.cursorBlinking":"smooth","editor.smoothScrolling":true,"editor.fontFamily":"'Fira Code', 'JetBrains Mono', monospace","editor.fontLigatures":true,"editor.minimap.enabled":false,"editor.scrollbar.vertical":"hidden","editor.renderLineHighlight":"all","editor.letterSpacing":0.33,"editor.lineHeight":25,"npm.enableScriptExplorer":false,"git.openRepositoryInParentFolders":"always","explorer.confirmDragAndDrop":false,"outline.showVariables":false,"outline.showFields":false,"scm.diffDecorations":"gutter","editor.linkedEditing":true,"editor.formatOnSave":true,"files.trimTrailingWhitespace":true,"files.insertFinalNewline":true,"editor.bracketPairColorization.enabled":true,"editor.guides.bracketPairs":"active","errorLens.enabledDiagnosticLevels":["error","warning"],"errorLens.fontStyleItalic":true,"[python]":{"editor.defaultFormatter":"charliermarsh.ruff","editor.codeActionsOnSave":{"source.organizeImports":"explicit"}},"[typescript][javascript][json][jsonc]":{"editor.defaultFormatter":"biomejs.biome"},"[rust]":{"editor.defaultFormatter":"rust-lang.rust-analyzer"},"[terraform]":{"editor.formatOnSave":false},"[ruby]":{"editor.defaultFormatter":"shopify.ruby-lsp","editor.formatOnSave":true},"[glsl]":{"editor.defaultFormatter":"slevesque.vscode-glsl"},"todo-tree.highlights.defaultHighlight":{"type":"text","fontWeight":"bold","borderRadius":"4px"},"files.associations":{"Justfile":"just","*.mojo":"mojo","*.bacon":"toml",".envrc":"shellscript","*.cue":"cue","*.tf.json":"json","*.frag":"glsl","*.vert":"glsl","*.glsl":"glsl","*.rb":"ruby"},"emeraldwalk.runonsave":{"commands":[{"match":"infra/config/.*\\.cue$","cmd":"cd ${workspaceFolder}/.. && cue cmd gen ./infra"}]}},"tasks":{"version":"2.0.0","tasks":[{"label":"King: generate root from CUE","type":"shell","command":"cue cmd gen ./infra","options":{"cwd":"${workspaceFolder:🫅KING}"},"group":"build","presentation":{"reveal":"silent","panel":"shared"}}]},"extensions":{"recommendations":["emeraldwalk.runonsave","enkia.tokyo-night","pkief.material-icon-theme","usernamehw.errorlens","tonybaloney.vscode-pets","oderwat.indent-rainbow","aaron-bond.better-comments","gruntfuggly.todo-tree","rust-lang.rust-analyzer","ziglang.vscode-zig","modular-mojotools.mojo","charliermarsh.ruff","biomejs.biome","cuelangorg.vscode-cue","golang.go","elixir-lsp.elixir-ls","haskell.haskell","dart-code.flutter","rebornix.ruby","shopify.ruby-lsp","slevesque.vscode-glsl","circledev.glsl-canvas","iden3.circom","mkhl.direnv","skellock.just","signageos.signageos-vscode-sops","tamasfe.even-better-toml","hashicorp.terraform","redhat.vscode-yaml","zxh404.vscode-proto3","bierner.markdown-mermaid","antfu.browse-lite","aquasecurity.trivy-vulnerability-scanner","github.vscode-github-actions"]}}
+		{
+		  "folders": [
+		    {"name": "👨‍🍳CHIEF", "path": "custom"},
+		    {"name": "🧑‍🔬SAGE", "path": "bot"},
+		    {"name": "🧑‍🎤BARD", "path": "frontend"},
+		    {"name": "👨‍💼CLERK", "path": "store"},
+		    {"name": "🧑‍🏭SMITH", "path": "service"},
+		    {"name": "👷MASON", "path": "infra"},
+		    {"name": "🫅KING", "path": "."}
+		  ],
+		  "settings": {
+		    "workbench.colorTheme": "Tokyo Night",
+		    "workbench.iconTheme": "material-icon-theme",
+		    "material-icon-theme.activeIconPack": "react_redux",
+		    "material-icon-theme.folders.theme": "specific",
+		    "material-icon-theme.folders.associations": {"🍚": "folder-root", "📦": "folder-package"},
+		    "material-icon-theme.saturation": 1,
+		    "material-icon-theme.opacity": 1,
+		    "vscode-pets.petSize": "medium",
+		    "vscode-pets.theme": "winter",
+		    "vscode-pets.throwBallWithMouse": true,
+		    "editor.cursorSmoothCaretAnimation": "on",
+		    "editor.cursorBlinking": "smooth",
+		    "editor.smoothScrolling": true,
+		    "editor.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
+		    "editor.fontLigatures": true,
+		    "editor.minimap.enabled": false,
+		    "editor.scrollbar.vertical": "hidden",
+		    "editor.renderLineHighlight": "all",
+		    "editor.letterSpacing": 0.33,
+		    "editor.lineHeight": 25,
+		    "npm.enableScriptExplorer": false,
+		    "git.openRepositoryInParentFolders": "always",
+		    "explorer.confirmDragAndDrop": false,
+		    "outline.showVariables": false,
+		    "outline.showFields": false,
+		    "scm.diffDecorations": "gutter",
+		    "editor.linkedEditing": true,
+		    "editor.formatOnSave": true,
+		    "files.trimTrailingWhitespace": true,
+		    "files.insertFinalNewline": true,
+		    "editor.bracketPairColorization.enabled": true,
+		    "editor.guides.bracketPairs": "active",
+		    "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+		    "errorLens.fontStyleItalic": true,
+		    "[python]": {"editor.defaultFormatter": "charliermarsh.ruff", "editor.codeActionsOnSave": {"source.organizeImports": "explicit"}},
+		    "[typescript][javascript][json][jsonc]": {"editor.defaultFormatter": "biomejs.biome"},
+		    "[rust]": {"editor.defaultFormatter": "rust-lang.rust-analyzer"},
+		    "[terraform]": {"editor.formatOnSave": false},
+		    "[ruby]": {"editor.defaultFormatter": "shopify.ruby-lsp", "editor.formatOnSave": true},
+		    "[glsl]": {"editor.defaultFormatter": "slevesque.vscode-glsl"},
+		    "todo-tree.highlights.defaultHighlight": {"type": "text", "fontWeight": "bold", "borderRadius": "4px"},
+		    "files.associations": {"Justfile": "just", "*.mojo": "mojo", "*.bacon": "toml", ".envrc": "shellscript", "*.cue": "cue", "*.tf.json": "json", "*.frag": "glsl", "*.vert": "glsl", "*.glsl": "glsl", "*.rb": "ruby"},
+		    "emeraldwalk.runonsave": {"commands": [{"match": "infra/config/.*[.]cue$", "cmd": "cd \"${workspaceFolder}\" && cue cmd gen ./infra"}]}
+		  },
+		  "tasks": {
+		    "version": "2.0.0",
+		    "tasks": [{"label": "King: generate root from CUE", "type": "shell", "command": "cue cmd gen ./infra", "options": {"cwd": "${workspaceFolder:🫅KING}"}, "group": "build", "presentation": {"reveal": "silent", "panel": "shared"}}]
+		  },
+		  "extensions": {
+		    "recommendations": [
+		      "emeraldwalk.runonsave", "enkia.tokyo-night", "pkief.material-icon-theme", "usernamehw.errorlens",
+		      "tonybaloney.vscode-pets", "oderwat.indent-rainbow", "aaron-bond.better-comments", "gruntfuggly.todo-tree",
+		      "rust-lang.rust-analyzer", "ziglang.vscode-zig", "modular-mojotools.mojo", "charliermarsh.ruff",
+		      "biomejs.biome", "cuelangorg.vscode-cue", "golang.go", "elixir-lsp.elixir-ls", "haskell.haskell",
+		      "dart-code.flutter", "rebornix.ruby", "shopify.ruby-lsp", "slevesque.vscode-glsl", "circledev.glsl-canvas",
+		      "iden3.circom", "mkhl.direnv", "skellock.just", "signageos.signageos-vscode-sops", "tamasfe.even-better-toml",
+		      "hashicorp.terraform", "redhat.vscode-yaml", "zxh404.vscode-proto3", "bierner.markdown-mermaid",
+		      "antfu.browse-lite", "aquasecurity.trivy-vulnerability-scanner", "github.vscode-github-actions"
+		    ]
+		  }
+		}
 		"""
 
 	// --- Taplo: TOML formatting ---

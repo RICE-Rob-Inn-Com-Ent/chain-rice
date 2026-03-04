@@ -359,6 +359,44 @@ generate-dashboards:
     '
 
 # ------------------------------------------------------------------------------
+# 👁️ WATCH - Per-role watchers (hot reload / lint watch)
+# Narzędzia: Go→air, Rust→bacon/clippy+test, Python→ruff, Bun/TS→biome, CUE→cue vet, Elixir→mix compile --watch
+# ------------------------------------------------------------------------------
+
+watch-all:
+    # Run all role watchers in parallel, then wait
+    just watch-smith & \
+    just watch-clerk & \
+    just watch-sage & \
+    just watch-bard & \
+    just watch-mason & \
+    wait
+
+watch-smith:
+    # 🧑‍🏭 SMITH (service): Go air (hot reload)
+    pixi run air -C service/
+
+watch-smith-elixir:
+    # 🧑‍🏭 SMITH (service): Elixir mix compile --watch
+    cd service && pixi run mix compile --watch
+
+watch-clerk:
+    # 👨‍💼 CLERK (store): Rust – clippy + test (ex bacon.toml)
+    pixi run watchexec -w store -e rs,toml -- bash -c 'cd store && cargo clippy --all-targets -- -D warnings && cargo test'
+
+watch-sage:
+    # 🧑‍🔬 SAGE (bot): Python ruff check --watch
+    pixi run ruff check --watch bot/
+
+watch-bard:
+    # 🧑‍🎤 BARD (frontend): biome check --watch
+    pixi run biome check --watch frontend/
+
+watch-mason:
+    # 👷 MASON (infra): CUE vet
+    pixi run cue vet ./infra/...
+
+# ------------------------------------------------------------------------------
 # 🔥 HOT-RELOAD - CUE watcher
 # ------------------------------------------------------------------------------
 

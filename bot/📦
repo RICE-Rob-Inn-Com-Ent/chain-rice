@@ -1,0 +1,7 @@
+KING   → Qwen3-8B         orkiestrator
+CHIEF  → Qwen2.5-Coder-7B tłumaczy na .rice
+BARD   → Qwen2.5-VL-7B    widzi + frontend + audio
+SAGE   → Qwen2.5-Coder-7B Python + Mojo + Qiskit
+SMITH  → Qwen2.5-Coder-7B Go + Elixir
+CLERK  → Qwen2.5-Coder-7B Rust + Zig + Haskell + compliance
+MASON  → Qwen2.5-Coder-7B CUE + Proto + infra
