@@ -1,0 +1,22 @@
+# KING TODO map
+# .github/workflows/infra/tofu-apply.yml — OpenTofu apply (soft-coded)
+# TODO:
+# [ ] gated on main + manual approval; workspace from RICE_TOFU_WORKSPACE
+# [ ] apply only after tofu-plan artifact / policy check; notify RICE_CI_SLACK_WEBHOOK on failure (secret ref)
+
+name: Infra — OpenTofu apply
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    environment: tofu-apply
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder (implement tofu apply above)
+        run: "true"

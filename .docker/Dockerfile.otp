@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.otp.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM erlang:${OTP_VERSION}-slim — OTP release base for Elixir services
 # [ ] ARG MIX_ENV=prod — default prod, override to dev via docker-compose profile

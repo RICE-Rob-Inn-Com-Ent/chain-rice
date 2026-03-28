@@ -1,3 +1,5 @@
+# KING TODO map
+# .github/workflows/release/deploy.k8s.yml — CUE mirror: infra/configs/github/github__workflows__release__deploy.k8s_yml.cue
 # TODO:
 # [ ] trigger on workflow_run(publish) completed
 # [ ] tofu apply .opentofu/ with -var-file environments/${RICE_K8S_ENV}/terraform.tfvars

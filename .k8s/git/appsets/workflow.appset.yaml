@@ -1,1 +1,15 @@
+# KING TODO map
+# .k8s/git/appsets/workflow.appset.yaml — Temporal / workflow plane ApplicationSet (soft-coded)
+# CUE mirror: infra/configs/kubernetes/k8s__git__appsets__workflow.appset_yaml.cue
+# TODO:
+# [ ] Temporal chart values from RICE_TEMPORAL_* env vars; visibility store from RICE_DB_URL pattern
+# [ ] Worker connections use RICE_TEMPORAL_HOST / RICE_TEMPORAL_NAMESPACE (no hardcoded service DNS unless templated)
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: king-stub-appset-workflow
+  namespace: default
+  annotations:
+    rice.king/source-cue: infra/configs/kubernetes/k8s__git__appsets__workflow.appset_yaml.cue
+data: {}

@@ -1,0 +1,16 @@
+# KING TODO map
+# .k8s/data/yugabyte-install.yaml — distributed SQL (soft-coded)
+# CUE mirror: infra/configs/kubernetes/k8s__data__yugabyte-install_yaml.cue
+# TODO:
+# [ ] YugabyteDB helm/operator; replication from RICE_YUGABYTE_RF, storage from RICE_YUGABYTE_STORAGE_CLASS
+# [ ] SQL connection string composed at runtime from RICE_YUGABYTE_HOST, RICE_YUGABYTE_PORT, RICE_YUGABYTE_DB
+# [ ] Credentials via ExternalSecrets — RICE_YUGABYTE_USER / RICE_YUGABYTE_PASSWORD from secret refs only
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: king-placeholder-yugabyte-install
+  namespace: default
+  annotations:
+    rice.king/source-cue: infra/configs/kubernetes/k8s__data__yugabyte-install_yaml.cue
+data: {}

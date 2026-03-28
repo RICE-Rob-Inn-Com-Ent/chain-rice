@@ -1,0 +1,78 @@
+# KING TODO map
+# .github/workflows/meta/meta-stale.yml — CUE mirror: infra/configs/github/github__workflows__meta__meta-stale_yml.cue
+# TODO:
+# [ ] align stale exempt labels with rice-core taxonomy; RICE_STALE_EXEMPT_ISSUES / RICE_STALE_EXEMPT_PRS from org vars if needed
+# [ ] optional: post to RICE_CI_SLACK_WEBHOOK on mass-close (secret ref)
+
+name: Meta — Stale Issues and PRs
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # daily at midnight UTC
+  workflow_dispatch: # manual trigger from GitHub Actions UI
+
+permissions:
+  issues: write # required to label and close issues
+  pull-requests: write # required to label and close PRs
+
+jobs:
+  stale:
+    name: Mark Stale Issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # ── Issues ────────────────────────────────────────────
+          # Issue is marked stale after 90 days of inactivity.
+          # Issue is closed 7 days after being marked stale.
+          # To prevent closing — comment, update, or remove the stale label.
+
+          stale-issue-message: |
+            This issue has been automatically marked as stale due to 90 days of inactivity.
+            It will be closed in 7 days unless there is new activity.
+
+            If this is still relevant — comment, update, or remove the `stale` label.
+          close-issue-message: |
+            This issue has been automatically closed due to inactivity.
+            Feel free to reopen if it is still relevant to `.rice OS`.
+          stale-issue-label: "stale"
+          exempt-issue-labels: "pinned,security,bug,enhancement,rice-core,blocked"
+          days-before-issue-stale: 90
+          days-before-issue-close: 7
+
+          # ── Pull Requests ─────────────────────────────────────
+          # PR is marked stale after 30 days of inactivity.
+          # PR is closed 7 days after being marked stale.
+          # All PRs must pass `rice audit` before merge.
+          # To prevent closing — comment, update, or remove the stale label.
+
+          stale-pr-message: |
+            This pull request has been automatically marked as stale due to 30 days of inactivity.
+            It will be closed in 7 days unless there is new activity.
+
+            If you are still working on this — comment or remove the `stale` label.
+            Remember: all PRs must pass `rice audit` before merge.
+          close-pr-message: |
+            This pull request has been automatically closed due to inactivity.
+            Feel free to reopen when ready — `rice audit` must be green before merge.
+          stale-pr-label: "stale"
+          exempt-pr-labels: "pinned,security,work-in-progress,rice-core,blocked"
+          days-before-pr-stale: 30
+          days-before-pr-close: 7
+
+          # ── General ───────────────────────────────────────────
+          # operations-per-run limits GitHub API calls per execution.
+          # remove-stale-when-updated removes stale label on new activity.
+          # ascending processes oldest items first.
+
+          operations-per-run: 100
+          remove-stale-when-updated: true
+          ascending: false
+
+          # ── Owner exempt ──────────────────────────────────────
+          # Issues and PRs assigned to the owner never go stale.
+
+          exempt-issue-assignees: "mrDInkelman185"
+          exempt-pr-assignees: "mrDInkelman185"

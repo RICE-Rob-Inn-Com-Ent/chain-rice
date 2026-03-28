@@ -1,1 +1,15 @@
+# KING TODO map
+# .k8s/git/appsets/obs.appset.yaml — observability stack ApplicationSet (soft-coded)
+# CUE mirror: infra/configs/kubernetes/k8s__git__appsets__obs.appset_yaml.cue
+# TODO:
+# [ ] Victoria/Loki/Tempo/Grafana wiring; retention from RICE_OBS_RETENTION_*
+# [ ] Remote write endpoints from RICE_PROM_REMOTE_WRITE_URL (if applicable)
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: king-stub-appset-obs
+  namespace: default
+  annotations:
+    rice.king/source-cue: infra/configs/kubernetes/k8s__git__appsets__obs.appset_yaml.cue
+data: {}

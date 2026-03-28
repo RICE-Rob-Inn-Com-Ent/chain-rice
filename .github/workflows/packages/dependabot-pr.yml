@@ -1,0 +1,25 @@
+# KING TODO map
+# .github/workflows/packages/dependabot-pr.yml — Dependabot PR helpers (soft-coded)
+# TODO:
+# [ ] auto-approve semver-patch for devDeps when RICE_DEPENDABOT_AUTO_APPROVE=true (org var)
+# [ ] run rice audit / buck test on dependabot branches; RICE_CI_NODE_VERSION / RICE_CI_GO_VERSION from vars
+
+name: Packages — Dependabot PR
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependabot:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder (implement dependabot helpers above)
+        run: "true"

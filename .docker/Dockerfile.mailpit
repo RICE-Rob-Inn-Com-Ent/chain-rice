@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.mailpit.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM axllent/mailpit:${MAILPIT_VERSION}
 # [ ] COPY .docker/conf/mailpit.conf /etc/mailpit/mailpit.conf

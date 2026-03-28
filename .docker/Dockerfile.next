@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.next.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM node:22-alpine as runner — minimal Next.js standalone runner
 # [ ] COPY buck-out/gen/frontend/browser/.next/standalone /app

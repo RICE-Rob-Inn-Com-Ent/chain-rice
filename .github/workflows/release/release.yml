@@ -1,3 +1,5 @@
+# KING TODO map
+# .github/workflows/release/release.yml — CUE mirror: infra/configs/github/github__workflows__release__release_yml.cue
 # TODO:
 # [ ] trigger on push tags matching v[0-9]*.*
 # [ ] steps: rice audit → git cliff changelog → convco version → create GH release

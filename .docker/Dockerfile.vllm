@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.vllm.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM vllm/vllm-openai:${VLLM_VERSION} — OpenAI-compatible server
 # [ ] ARG BASE_FROM — switch to nvidia/cuda base when RICE_VLLM_CUDA_BASE=true

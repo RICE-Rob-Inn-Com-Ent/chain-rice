@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.temporal.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM temporalio/auto-setup:${TEMPORAL_VERSION} — auto-setup handles schema init
 # [ ] COPY .docker/conf/temporal.conf /etc/temporal/config/development.yaml

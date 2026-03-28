@@ -1,3 +1,5 @@
+# KING TODO map
+# .github/workflows/ci/test.yml — CUE mirror: infra/configs/github/github__workflows__ci__test_yml.cue
 # TODO:
 # [ ] replace all workflow_dispatch + push triggers with:
 #     branches: [main, 'feat/**', 'fix/**'] — match convco scope branches

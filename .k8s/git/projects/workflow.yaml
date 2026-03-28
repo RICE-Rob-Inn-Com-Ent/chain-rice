@@ -1,1 +1,14 @@
+# KING TODO map
+# .k8s/git/projects/workflow.yaml — Argo CD AppProject for workflow stack (soft-coded)
+# CUE mirror: infra/configs/kubernetes/k8s__git__projects__workflow_yaml.cue
+# TODO:
+# [ ] Destination namespaces for Temporal web/frontend; secrets policy aligned with RICE_TEMPORAL_TLS_* 
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: king-stub-project-workflow
+  namespace: default
+  annotations:
+    rice.king/source-cue: infra/configs/kubernetes/k8s__git__projects__workflow_yaml.cue
+data: {}

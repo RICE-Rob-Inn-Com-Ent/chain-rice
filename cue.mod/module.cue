@@ -1,3 +1,11 @@
-// Module path must be lowercase (OCI/Go convention); uppercase causes "bad module" on format.
-module: "github.com/rice-rob-inn-com-ent/rice-mono"
-language: version: "v0.9.0"
+module: "github.com/rice-rob-inn-com-ent/rice"
+language: {
+	version: "v0.9.0"
+}
+custom: {
+	legacy: {
+		language: {
+			version: "v0.1.0"
+		}
+	}
+}

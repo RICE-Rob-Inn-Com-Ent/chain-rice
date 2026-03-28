@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.postal.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM ghcr.io/postalserver/postal:${POSTAL_VERSION}
 # [ ] COPY .docker/conf/postal.conf /opt/postal/config/postal.yml

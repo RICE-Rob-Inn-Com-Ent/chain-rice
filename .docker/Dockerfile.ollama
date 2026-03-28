@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.ollama.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM ollama/ollama:${OLLAMA_VERSION}
 # [ ] COPY .docker/etc/model.json /etc/ollama/model.json

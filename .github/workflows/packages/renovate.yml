@@ -1,0 +1,23 @@
+# KING TODO map
+# .github/workflows/packages/renovate.yml — Renovate bot workflow (soft-coded)
+# TODO:
+# [ ] self-hosted or github app renovate; RICE_RENOVATE_CONFIG_FILE (renovate.json) already at repo root
+# [ ] secrets: RICE_RENOVATE_GITHUB_COM_TOKEN with repo+workflow scope if needed — never commit tokens
+
+name: Packages — Renovate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder (wire renovate action or dispatch above)
+        run: "true"

@@ -1,7 +1,7 @@
 package rice
 
 // Import: config (pliki king, dotfoldery).
-import config "github.com/rice-rob-inn-com-ent/rice-mono/infra/config"
+import config "github.com/rice-rob-inn-com-ent/rice/infra/configs"
 
 import "tool/exec"
 

@@ -1,0 +1,27 @@
+# KING TODO map
+# .github/workflows/infra/cue-validate.yml — validate CUE (soft-coded)
+# TODO:
+# [ ] checkout + setup cue; run cue vet ./infra/configs and cue export ./infra -e order (matches rice manifest)
+# [ ] env: RICE_GITHUB_ORG, RICE_GITHUB_REPO from github context vars — never hardcoded org/repo strings
+# [ ] optional: fail if infra/configs/kubernetes paths drift from .k8s (diff gate)
+
+name: Infra — CUE validate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "infra/**"
+      - "cue.mod/**"
+      - ".github/workflows/infra/cue-validate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  cue-vet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder (implement vet steps above)
+        run: "true"

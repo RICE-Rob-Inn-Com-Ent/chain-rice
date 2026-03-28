@@ -1,0 +1,24 @@
+# KING TODO map
+# .github/workflows/meta/meta-labels.yml — PR/issue label automation (soft-coded)
+# TODO:
+# [ ] paths-based labels (frontend/**, service/**, …); config from RICE_LABEL_RULES_PATH or inline mapping
+# [ ] use GITHUB_TOKEN only; optional label bot app via RICE_GITHUB_APP_ID (no raw PEM in repo)
+
+name: Meta — Labels
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder (implement label rules above)
+        run: "true"

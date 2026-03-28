@@ -1,0 +1,23 @@
+# KING TODO map
+# .github/workflows/meta/meta-size.yml — PR size / diff stats (soft-coded)
+# TODO:
+# [ ] comment size (xs/s/m/l) based on lines changed; thresholds from RICE_PR_SIZE_THRESHOLDS_JSON or env
+# [ ] exclude generated paths (buck-out, node_modules) via RICE_PR_SIZE_IGNORE_GLOBS
+
+name: Meta — PR size
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder (implement size comment above)
+        run: "true"

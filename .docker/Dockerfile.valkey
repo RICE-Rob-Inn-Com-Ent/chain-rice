@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.valkey.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM valkey/valkey:${VALKEY_VERSION}-alpine — version via ARG
 # [ ] COPY .docker/conf/valkey.conf /etc/valkey/valkey.conf

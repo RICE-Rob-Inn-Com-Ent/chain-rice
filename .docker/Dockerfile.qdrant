@@ -1,3 +1,5 @@
+# CUE source: infra/configs/docker/docker__Dockerfile.qdrant.cue (package docker; aggregator infra/configs/config.cue)
+# KING TODO map
 # TODO:
 # [ ] FROM qdrant/qdrant:${QDRANT_VERSION}
 # [ ] COPY .docker/conf/qdrant.conf /qdrant/config/production.yaml

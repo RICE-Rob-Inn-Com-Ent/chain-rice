@@ -1,0 +1,16 @@
+# KING TODO map
+# .k8s/data/qdrant-install.yaml — vector store (soft-coded)
+# CUE mirror: infra/configs/kubernetes/k8s__data__qdrant-install_yaml.cue
+# TODO:
+# [ ] Helm or operator install; image tag from RICE_QDRANT_IMAGE_TAG / RICE_REGISTRY
+# [ ] Persistence: RICE_QDRANT_STORAGE_SIZE, RICE_QDRANT_STORAGE_CLASS
+# [ ] API key / TLS via ExternalSecrets; reference RICE_QDRANT_API_KEY_SECRET_NAME (not inline secrets)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: king-placeholder-qdrant-install
+  namespace: default
+  annotations:
+    rice.king/source-cue: infra/configs/kubernetes/k8s__data__qdrant-install_yaml.cue
+data: {}
