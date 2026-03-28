@@ -1,11 +1,64 @@
+// TODO:
+// [ ] write service/ci/main.go — Dagger pipeline implementation in Go SDK
+//     pipeline: format → lint → test → build → push (mirrors rice audit steps)
+//     each step is a Dagger Function — composable, cacheable, parallelized
+//     format(): runs all formatters across all role containers in parallel
+//     lint(): runs all linters, fails fast on first error
+//     test(): unit tests only — integration tests gated behind RICE_CI_FULL=true
+//     build(): buck2 build //... → produces all role binaries
+//     push(): cosign sign + push 🚚 bundle to ${RICE_REGISTRY}
+// [ ] write service/ci/containers.go — role-specific container builders
+//     each role gets its own Dagger Container with exact pixi env reproduced
+//     no internet access during build — all deps from pixi.lock + Cargo.lock
+// [ ] expose as GitHub Actions workflow via dagger call
+//     trigger: push to main, PR — reads from .github/workflows/ci/dagger.yml
+// [ ] add dagger module dependency: github.com/dagger/dagger/modules/elixir
+//     when official Elixir module available — currently use system_toolchain
+// [ ] RICE_DAGGER_CACHE_SERVICE: point to persistent cache backend
+//     local: .buck-cache/ (default), remote: RICE_BUCK_CACHE_URL
 {
   "name": "rice",
-  "engineVersion": "v0.15.0",
-  "sdk": {
-    "source": "go"
-  },
-  "source": ".",
+  "engineVersion": "v0.15.3",
+  "sdk": "go",
+  "source": "service/ci/",
   "include": [
-    "frontend"
+    "base/",
+    "service/",
+    "frontend/",
+    "function/",
+    "infra/",
+    "custom/",
+    "justfile",
+    ".buckconfig",
+    "pixi.toml",
+    "pixi.lock"
+  ],
+  "exclude": [
+    "buck-out/",
+    ".buck-cache/",
+    "node_modules/",
+    "__pycache__/",
+    ".dart_tool/",
+    "_build/",
+    "deps/",
+    ".pixi/",
+    "*.enc.env",
+    ".rice-model",
+    ".rice-hardware.json",
+    ".rice-compute.json"
+  ],
+  "dependencies": [
+    {
+      "name": "golang",
+      "source": "github.com/dagger/dagger/modules/golang@v0.15.3"
+    },
+    {
+      "name": "python",
+      "source": "github.com/dagger/dagger/modules/python@v0.15.3"
+    },
+    {
+      "name": "docker",
+      "source": "github.com/dagger/dagger/modules/docker@v0.15.3"
+    }
   ]
 }

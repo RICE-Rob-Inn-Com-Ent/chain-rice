@@ -1,30 +1,50 @@
 {
   "folders": [
-    {"name": "👨‍🍳CHIEF", "path": "custom"},
-    {"name": "🧑‍🔬SAGE", "path": "bot"},
-    {"name": "🧑‍🎤BARD", "path": "frontend"},
-    {"name": "👨‍💼CLERK", "path": "store"},
-    {"name": "🧑‍🏭SMITH", "path": "service"},
-    {"name": "👷MASON", "path": "infra"},
-    {"name": "🫅KING", "path": "."}
+    {
+      "name": "👨‍🍳CHIEF",
+      "path": "custom"
+    },
+    {
+      "name": "🧑‍🔬SAGE",
+      "path": "function"
+    },
+    {
+      "name": "🧑‍🎤BARD",
+      "path": "frontend"
+    },
+    {
+      "name": "👨‍💼CLERK",
+      "path": "base"
+    },
+    {
+      "name": "🧑‍🏭SMITH",
+      "path": "service"
+    },
+    {
+      "name": "👷MASON",
+      "path": "infra"
+    },
+    {
+      "name": "🫅KING",
+      "path": "."
+    }
   ],
   "settings": {
-    "workbench.colorTheme": "Tokyo Night",
+    "workbench.colorTheme": "Cursor Dark Midnight",
     "workbench.iconTheme": "material-icon-theme",
     "material-icon-theme.activeIconPack": "react_redux",
     "material-icon-theme.folders.theme": "specific",
-    "material-icon-theme.folders.associations": {"🍚": "folder-root", "📦": "folder-package"},
     "material-icon-theme.saturation": 1,
     "material-icon-theme.opacity": 1,
     "vscode-pets.petSize": "medium",
-    "vscode-pets.theme": "winter",
+    "vscode-pets.theme": "forest",
     "vscode-pets.throwBallWithMouse": true,
     "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorBlinking": "smooth",
     "editor.smoothScrolling": true,
     "editor.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
     "editor.fontLigatures": true,
-    "editor.minimap.enabled": false,
+    "editor.minimap.enabled": true,
     "editor.scrollbar.vertical": "hidden",
     "editor.renderLineHighlight": "all",
     "editor.letterSpacing": 0.33,
@@ -41,32 +61,128 @@
     "files.insertFinalNewline": true,
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
-    "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+    "errorLens.enabledDiagnosticLevels": [
+      "error",
+      "warning"
+    ],
     "errorLens.fontStyleItalic": true,
-    "[python]": {"editor.defaultFormatter": "charliermarsh.ruff", "editor.codeActionsOnSave": {"source.organizeImports": "explicit"}},
-    "[typescript][javascript][json][jsonc]": {"editor.defaultFormatter": "biomejs.biome"},
-    "[rust]": {"editor.defaultFormatter": "rust-lang.rust-analyzer"},
-    "[terraform]": {"editor.formatOnSave": false},
-    "[ruby]": {"editor.defaultFormatter": "shopify.ruby-lsp", "editor.formatOnSave": true},
-    "[glsl]": {"editor.defaultFormatter": "slevesque.vscode-glsl"},
-    "todo-tree.highlights.defaultHighlight": {"type": "text", "fontWeight": "bold", "borderRadius": "4px"},
-    "files.associations": {"Justfile": "just", "*.mojo": "mojo", "*.bacon": "toml", ".envrc": "shellscript", "*.cue": "cue", "*.tf.json": "json", "*.frag": "glsl", "*.vert": "glsl", "*.glsl": "glsl", "*.rb": "ruby"},
-    "emeraldwalk.runonsave": {"commands": [{"match": "infra/config/.*[.]cue$", "cmd": "cd "${workspaceFolder}" && cue cmd gen ./infra"}]}
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      }
+    },
+    "[typescript][javascript][json][jsonc]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[rust]": {
+      "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    },
+    "[opentofu]": {
+      "editor.formatOnSave": false
+    },
+    "[glsl]": {
+      "editor.defaultFormatter": "slevesque.vscode-glsl"
+    },
+    "todo-tree.highlights.defaultHighlight": {
+      "type": "text",
+      "fontWeight": "bold",
+      "borderRadius": "4px"
+    },
+    // TODO:
+    // [ ] add todo-tree tag configurations for all rice TODO categories:
+    //     "TODO" (white), "FIXME" (red), "HACK" (orange), "NOTE" (blue)
+    //     tag regex should match `# [ ]` and `# [x]` patterns from Justfile TODOs
+    // [ ] add "remote.SSH.remotePlatform" if dev happens on remote Linux machine
+    //     reads RICE_REMOTE_HOST from .envrc — not hardcoded
+    // [ ] add "terminal.integrated.env.linux" pointing to pixi-activated PATH
+    //     reads from .envrc via direnv — not hardcoded
+    // [ ] add language-specific LSP settings for OLS (Odin Language Server):
+    //     "ols.server.path": reads from pixi env bin path
+    // [ ] add "cue.path" extension setting — reads cue binary from pixi env
+    // [ ] add Haskell LSP settings: "haskell.toolchain": "stack"
+    "files.associations": {
+      "Justfile": "just",
+      "*.mojo": "mojo",
+      "*.bacon": "toml",
+      ".envrc": "shellscript",
+      "*.cue": "cue",
+      "*.tf.json": "json",
+      "*.frag": "glsl",
+      "*.vert": "glsl",
+      "*.glsl": "glsl",
+      "*.odin": "odin"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
   },
   "tasks": {
     "version": "2.0.0",
-    "tasks": [{"label": "King: generate root from CUE", "type": "shell", "command": "cue cmd gen ./infra", "options": {"cwd": "${workspaceFolder:🫅KING}"}, "group": "build", "presentation": {"reveal": "silent", "panel": "shared"}}]
+    "tasks": [
+      {
+        "label": "King: generate root from CUE",
+        "type": "shell",
+        "command": "cue cmd gen ./infra",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+        }
+      },
+      // TODO:
+      // [ ] add task: "Rice: pour" — runs `rice pour` via just, group: build
+      // [ ] add task: "Rice: forge" — runs `rice forge`, group: build, isDefault
+      // [ ] add task: "Rice: audit" — runs `rice audit`, group: test, isDefault
+      // [ ] add task: "Rice: cook ${input:project}" — runs `rice cook ${input:project}`
+      //     with input variable prompting for project name
+      // [ ] add task: "Rice: rule ${input:role} ${input:task}" — rice rule delegation
+      //     with input variables for role and task description
+      // [ ] all tasks: "presentation": {"reveal": "always", "panel": "dedicated"}
+      //     each rice command gets its own terminal panel
+    ]
   },
   "extensions": {
     "recommendations": [
-      "emeraldwalk.runonsave", "enkia.tokyo-night", "pkief.material-icon-theme", "usernamehw.errorlens",
-      "tonybaloney.vscode-pets", "oderwat.indent-rainbow", "aaron-bond.better-comments", "gruntfuggly.todo-tree",
-      "rust-lang.rust-analyzer", "ziglang.vscode-zig", "modular-mojotools.mojo", "charliermarsh.ruff",
-      "biomejs.biome", "cuelangorg.vscode-cue", "golang.go", "elixir-lsp.elixir-ls", "haskell.haskell",
-      "dart-code.flutter", "rebornix.ruby", "shopify.ruby-lsp", "slevesque.vscode-glsl", "circledev.glsl-canvas",
-      "iden3.circom", "mkhl.direnv", "skellock.just", "signageos.signageos-vscode-sops", "tamasfe.even-better-toml",
-      "hashicorp.terraform", "redhat.vscode-yaml", "zxh404.vscode-proto3", "bierner.markdown-mermaid",
-      "antfu.browse-lite", "aquasecurity.trivy-vulnerability-scanner", "github.vscode-github-actions"
+      "emeraldwalk.runonsave",
+      "enkia.tokyo-night",
+      "pkief.material-icon-theme",
+      "usernamehw.errorlens",
+      "tonybaloney.vscode-pets",
+      "oderwat.indent-rainbow",
+      "aaron-bond.better-comments",
+      "gruntfuggly.todo-tree",
+      "DanielGavin.ols",
+      "rust-lang.rust-analyzer",
+      "ziglang.vscode-zig",
+      "modular-mojotools.mojo",
+      "charliermarsh.ruff",
+      "biomejs.biome",
+      "cuelangorg.vscode-cue",
+      "golang.go",
+      "elixir-lsp.elixir-ls",
+      "haskell.haskell",
+      "dart-code.flutter",
+      "slevesque.vscode-glsl",
+      "circledev.glsl-canvas",
+      "iden3.circom",
+      "mkhl.direnv",
+      "skellock.just",
+      "signageos.signageos-vscode-sops",
+      "tamasfe.even-better-toml",
+      "gamunu.vscode-opentofu",
+      "redhat.vscode-yaml",
+      "zxh404.vscode-proto3",
+      "bierner.markdown-mermaid",
+      "antfu.browse-lite",
+      "aquasecurity.trivy-vulnerability-scanner",
+      "github.vscode-github-actions"
     ]
   }
 }

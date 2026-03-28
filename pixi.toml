@@ -1,102 +1,158 @@
 [project]
 name = "rice"
 version = "0.1.0"
-description = "Rice tool management system"
+description = ".rice OS — sovereign programming language and enterprise operating system"
 channels = ["conda-forge", "modular-channels"]
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 
+# ============================================================
+# 🫅 KING — ROOT
+# ============================================================
 [dependencies]
-cue = "0.9"
-timoni = "0.22"
-dagger = "0.13"
-gomplate = "3.11"
-fvm = "3.1"
-spider = "4.2"
-elixir = "1.18"
-erlang = "27"
-lexical = "0.7"
-go = "1.23"
-govulncheck = "1.1"
-golangci-lint = "1.60"
-gofumpt = "0.7"
-air = "1.52"
-ghc = "9.6"
-stack = "2.15"
-haskell-language-server = "2.9"
-fourmolu = "0.14"
-hlint = "3.8"
-stan = "0.0.1"
-markdownlint-cli2 = "0.13"
-mkdocs = "1.6"
-mkdocs-material = "9.7"
-python = "3.13"
-mojo = "0.26.1"
-uv = "0.5"
-ruff = "0.8"
-mypy = "1.13"
-pytest = "8"
-bandit = "1.8"
-bun = "1.2"
-biome = "1.9"
-rust = "1.84"
-cargo = "1.84"
-bacon = "2.18"
-rust-analyzer = "2025.01"
-clippy = "1.84"
-rustfmt = "1.84"
-cargo-expand = "0.6"
-cargo-audit = "0.20"
-cargo-nextest = "0.9"
-terraform = "1.10"
-terraform-ls = "0.34"
-tflint = "0.55"
-checkov = "3.2"
-trivy = "0.58"
-zig = "0.13.0"
-zls = "0.13.0"
-buf = "2.5"
-ruby = "3.4"
-solargraph = "0.51"
-awscli = "2.22"
-google-cloud-sdk = "507"
-azure-cli = "2.68"
-semgrep = "1.95"
-docker = "29"
-cosign = "2.4"
-kubernetes = "1.32"
-helm = "3.16"
-kubectl = "1.32"
-k9s = "0.32"
-atlas = "0.30"
-sqlc = "1.27"
-jq = "1.7"
-yq = "4.44"
-just = "1.42"
-direnv = "3.2"
-watchexec = "2.1"
-inotify-tools = "4.23"
-lychee = "0.15"
-vale = "3.4"
-openapi-generator-cli = "7.8"
-swagger-cli = "4.0"
-vhs = "0.7"
-ttyd = "1.7"
-ffmpeg = "7.0"
-curl = "8.0"
-grclib = "0.20"
-foundry = "0.2"
-anchor-cli = "0.30"
-substrate-contracts-node = "0.40"
-cargo-stylus = "0.5"
-stellar-cli = "21.5"
-convco = "0.6"
-reuse = "4.0"
-git-cliff = "2.4"
-lefthook = "1.10"
-sops = "3.9"
-age = "1.2"
-trufflehog = "3.82"
-axe-core-cli = "4.10"
-redoc-cli = "0.13"
-tailwindcss = "4.0"
-lightningcss = "1.28"
+just = "1.42"          # task runner — all rice commands
+direnv = "3.1"         # auto-loads .envrc on cd
+sops = "3.9"           # encrypted secrets
+age = "1.2"            # encryption backend for sops
+git-cliff = "2.4"      # changelog generation
+lefthook = "1.10"      # git hooks
+convco = "0.6"         # conventional commits
+reuse = "4.0"          # license compliance
+trufflehog = "3.82"    # secrets scanner
+vhs = "0.7"            # terminal recordings for docs
+ttyd = "1.7"           # terminal sharing
+jq = "1.7"             # JSON processor
+yq = "4.44"            # YAML processor
+watchexec = "2.1"      # file watcher
+lychee = "0.15"        # broken link checker
+cosign = "2.4"         # container signing
+semgrep = "1.95"       # SAST multi-language
+trivy = "0.58"         # CVE scanner — containers + code
+docker = "27.0"        # container runtime
+curl = "8.0"           # HTTP client
+
+# ============================================================
+# 🫅 KING — additional root tooling
+#
+# TODO:
+# [ ] add syft — SBOM generation for 🚚 bundle before registry push
+#     syft = "*"
+# [ ] add grype — CVE scan of SBOM (complement to trivy)
+#     grype = "*"
+# [ ] add osquery — host integrity queries (rice audit → _audit-security)
+#     osquery = "*"
+# [ ] add nuclei — HTTP vulnerability scanner (rice audit → _audit-penetration)
+#     nuclei = "*"
+# [ ] add suricata — IDS rules engine (rice audit → _audit-penetration)
+#     suricata = "*" (linux-64 only)
+# [ ] add nmap — port scanner (rice audit → _audit-penetration)
+#     nmap = "*"
+# [ ] add dagger — already in dagger.json but expose as pixi task too
+#     dagger = "0.13"
+# ============================================================
+
+[target.linux-64.dependencies]
+inotify-tools = "4.23" # Linux file events
+
+# ============================================================
+# 👷 MASON — infra/
+# ============================================================
+cue = "0.9"            # CUE templates — generates all configs
+buf = "2.5"            # Protobuf linting and code generation
+timoni = "0.22"        # CUE-based package manager
+dagger = "0.13"        # CI/CD pipelines
+opentofu = "*"         # infrastructure as code
+kubectl = "1.32"       # Kubernetes CLI
+kubernetes = "1.32"    # Kubernetes tools
+k9s = "0.32"           # Kubernetes TUI
+awscli = "2.22"        # AWS cloud provider
+google-cloud-sdk = "507" # GCP cloud provider
+azure-cli = "2.68"     # Azure cloud provider
+mkdocs = "1.6"         # documentation site generator
+mkdocs-material = "9.5" # MkDocs theme
+vale = "3.4"           # prose linter for Markdown
+markdownlint-cli2 = "0.13" # Markdown linter
+openapi-generator-cli = "7.8" # OpenAPI client/server generation
+checkov = "3.2"        # infrastructure security scanner
+
+# ============================================================
+# 🧑‍🏭 SMITH — service/
+# ============================================================
+go = "1.23"            # Go runtime
+golangci-lint = "1.60" # Go linter
+gofumpt = "0.7"        # Go formatter (stricter gofmt)
+govulncheck = "1.1"    # Go vulnerability scanner
+air = "1.52"           # Go hot reload
+sqlc = "1.27"          # SQL → Go type-safe codegen
+atlas = "0.30"         # database schema migrations
+# TODO:
+# [ ] add sqlc — Go type-safe SQL codegen
+#     sqlc = "1.27" — generates service/*/sqlc/*.go from *.sql
+# [ ] add migrate — lightweight DB migration runner (complements Atlas)
+#     golang-migrate = "*"
+# [ ] add suricata rules via pixi task (linux-64 target only)
+elixir = "1.18"        # Elixir runtime
+erlang = "27"          # OTP runtime
+lexical = "0.7"        # Elixir LSP server
+
+# ============================================================
+# 👨‍💼 CLERK — base/
+# ============================================================
+rust = "1.84"          # Rust toolchain
+cargo = "1.84"         # Rust package manager
+rust-analyzer = "2025.01" # Rust LSP
+clippy = "1.84"        # Rust linter
+rustfmt = "1.84"       # Rust formatter
+bacon = "2.18"         # Rust background code checker
+cargo-expand = "0.6"   # macro expansion viewer
+cargo-audit = "0.20"   # Rust CVE scanner
+cargo-nextest = "0.9"  # faster Rust test runner
+ghc = "9.6"            # Haskell compiler
+stack = "2.15"         # Haskell build tool
+haskell-language-server = "2.9" # Haskell LSP
+fourmolu = "0.14"      # Haskell formatter
+hlint = "3.8"          # Haskell linter
+stan = "0.0.1"         # Haskell static analyzer
+zig = "0.13.0"         # Zig compiler
+zls = "0.13.0"         # Zig LSP
+
+# ============================================================
+# 🧑‍🔬 SAGE — function/
+# ============================================================
+python = "3.13"        # Python runtime
+mojo = "0.26.1"        # Mojo runtime — near-metal kernels
+max = "24.4.0"         # Data processing & ML framework
+uv = "0.5"             # Python package manager
+ruff = "0.8"           # Python linter + formatter
+bandit = "1.8"         # Python SAST
+pytest = "8"           # Python test runner
+# TODO:
+# [ ] add pip-audit — Python dependency CVE scan (rice audit → _audit-security)
+#     pip-audit = "*"
+# [ ] verify MAX Engine (max, mojo) listed here — NOT in pyproject.toml
+#     max and mojo belong in pixi.toml under [dependencies] with modular-channels
+#     they must NOT appear in function/pyproject.toml
+
+# ============================================================
+# 🧑‍🎤 BARD — frontend/
+# ============================================================
+bun = "1.2"            # JavaScript runtime and package manager
+biome = "1.9"          # TypeScript linter + formatter
+fvm = "3.1"            # Flutter version manager
+tailwindcss = "4.0"    # CSS utility framework
+lightningcss = "1.28"  # CSS transformer and minifier
+axe-core-cli = "4.10"  # accessibility testing CLI
+ffmpeg = "7.0"         # video/audio processing — vendor/ffmpeg
+ols = "*"              # Odin Language Server
+
+[tasks]
+install-buck2 = "curl --proto '=https' --tlsv1.2 -sSf https://github.com/facebook/buck2/releases/latest/download/buck2-x86_64-unknown-linux-musl.zst | zstd -d > ~/.local/bin/buck2 && chmod +x ~/.local/bin/buck2"
+install-odin = "git clone https://github.com/odin-lang/Odin && cd Odin && make"
+# TODO:
+# [ ] add task: install-cosign — cosign for signing 🚚 bundle
+# [ ] add task: install-syft — SBOM generator
+# [ ] add task: setup-age — generate age keypair to ~/.config/sops/age/keys.txt
+#     prompts for dev vs ci key, writes public key placeholder back to .sops.yaml
+# [ ] add task: rice-geo-audit — GEO audit across SMITH + BARD
+#     runs content freshness check, structured-data validation, crawlability report
+#     reads RICE_GEO_TARGETS from env — list of URLs to audit
+#     outputs: infra/docs/geo-report.md

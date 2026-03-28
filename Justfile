@@ -1,543 +1,766 @@
-# The Rice Framework - Emoji-Driven Orchestration
-# Senior Polyglot Architect Implementation
+# .rice OS — task runner
+# rice <command> → .bin/rice <command> → just <command>
+# Usage: rice <command> [args]
 
-set shell := ["bash", "-cu"]
+KING_MODEL  := "rice-king"     # Qwen3-8B              r=64  α=128
+MASON_MODEL := "rice-mason"    # Qwen2.5-Coder-7B      r=64  α=128
+SMITH_MODEL := "rice-smith"    # Qwen2.5-Coder-7B      r=32  α=64
+CLERK_MODEL := "rice-clerk"    # Qwen2.5-Coder-7B      r=128 α=256
+SAGE_MODEL  := "rice-sage"     # Qwen2.5-Coder-7B      r=64  α=128
+CHIEF_MODEL := "rice-chief"    # Qwen2.5-Coder-7B      r=128 α=256
+BARD_MODEL  := "rice-bard"     # Qwen2.5-VL-7B         r=64  α=128
 
-# ------------------------------------------------------------------------------
-# Super short aliases
-# ------------------------------------------------------------------------------
+BACKEND  := env_var_or_default("RICE_BACKEND", "ollama")
+VLLM_URL := env_var_or_default("RICE_VLLM_URL", "http://localhost:8000")
+RICE_AI := env_var_or_default("RICE_AI", "cursor")
 
-alias i := install
-alias u := update
-alias s := start
-alias x := stop
-alias c := config
-alias l := lint
-alias d := deploy
-alias h := check
+RULES_DIR := if RICE_AI == "cursor"      { ".cursor/rules" }
+        else if RICE_AI == "windsurf"    { ".windsurf/rules" }
+        else if RICE_AI == "claude"      { ".claude/rules" }
+        else if RICE_AI == "copilot"     { ".github/instructions" }
+        else                             { ".cursor/rules" }
 
-# ------------------------------------------------------------------------------
-# Helper variables
-# ------------------------------------------------------------------------------
+KING_READS := "--read " + RULES_DIR + "/KING.mdc"   + \
+             " --read " + RULES_DIR + "/MASON.mdc"  + \
+             " --read " + RULES_DIR + "/SMITH.mdc"  + \
+             " --read " + RULES_DIR + "/CLERK.mdc"  + \
+             " --read " + RULES_DIR + "/BARD.mdc"   + \
+             " --read " + RULES_DIR + "/SAGE.mdc"   + \
+             " --read " + RULES_DIR + "/CHIEF.mdc"
 
-cue_dir := "cue"
-cue_workspace := "{{ cue_dir }}/workspace"
-cue_config := "{{ cue_dir }}/config"
-cue_infra := "{{ cue_dir }}/infra"
-cue_app := "{{ cue_dir }}/app"
+# ============================================================
+# 🫅 KING — rice bin (the 🚚 bundle)
+# Buck2 collects the entire kingdom into a single deployable artifact.
+# The 🚚 file IS the OS — one binary, every role, every runtime.
+#
+# TODO:
+# [ ] write infra/platforms/BUILD — execution platform definition for Buck2
+# [ ] write infra/toolchains/BUILD — toolchain declarations for all 7 roles
+#     Go toolchain (go_toolchain), Rust toolchain (rust_toolchain),
+#     Python toolchain (python_bootstrap_binary), Elixir (system_toolchain),
+#     Haskell (haskell_toolchain), Zig (system_toolchain), Odin (system_toolchain)
+# [ ] write base/mint/BUCK — rust_binary target for the .rice compiler
+#     srcs = glob(["src/**/*.rs"]),
+#     deps = [logos, chumsky, rowan, salsa, miette, minijinja, tower-lsp, petgraph]
+#     visibility = ["PUBLIC"]
+# [ ] write service/BUCK — go_binary targets: web, auth, token, database, queue, bench
+#     go_binary per service, srcs + deps declared, no compilation inside Docker
+# [ ] write service/BUCK — mix_binary targets: core, pipeline, cluster, guard, connection
+#     elixir_library + elixir_release rules — releases bundled with OTP
+# [ ] write frontend/BUCK — bun_bundle target for browser/
+#     bun_run rule → produces dist/ artifact
+# [ ] write frontend/BUCK — flutter_build target for screen/
+#     flutter_binary → produces APK + web bundle + desktop binary
+# [ ] write frontend/BUCK — odin_binary targets for vendor/ hardware daemon
+#     odin_binary, srcs = vendor/**/*.odin, flags = ["-vet", "-strict-style"]
+# [ ] write function/BUCK — python_binary target for SAGE FastAPI service
+#     python_binary, main = function/main.py, deps = pyproject deps via pixi
+# [ ] write function/BUCK — mojo_binary targets for kernel/ compute files
+#     mojo_binary per kernel, max-engine linked
+# [ ] write ROOT BUCK or BUILD_RICE — 🚚 bundle target
+#     filegroup collecting all role binaries + config exports + model registry
+#     output: buck-out/gen/rice/🚚 — the sovereign binary
+#     cosign signs the bundle on `rice audit → deploy`
+#     buck2 build //:rice produces the complete artifact
+# ============================================================
 
-# ------------------------------------------------------------------------------
-# Default
-# ------------------------------------------------------------------------------
+rule role task="":
+    @just _rule-{{role}} "{{task}}"
+
+_model-load model:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    BACKEND="${RICE_BACKEND:-ollama}"
+    MODEL="{{model}}"
+    CURRENT=$(cat .rice-model 2>/dev/null || echo "none")
+
+    if [ "$BACKEND" = "ollama" ]; then
+        echo "🔄 swapping model: $CURRENT → $MODEL"
+        [ "$CURRENT" != "none" ] && ollama stop "$CURRENT" 2>/dev/null || true
+        ollama run "$MODEL" --keepalive 0 &
+        # Czekaj na gotowość
+        until ollama list | grep -q "$MODEL"; do sleep 1; done
+        echo "$MODEL" > .rice-model
+        echo "✅ $MODEL ready (Ollama)"
+
+    elif [ "$BACKEND" = "vllm" ]; then
+        echo "🔄 loading LoRA adapter: $MODEL"
+        curl -sf -X POST "${RICE_VLLM_URL:-http://localhost:8000}/v1/load_lora_adapter" \
+          -H "Content-Type: application/json" \
+          -d "{\"lora_name\": \"$MODEL\", \"lora_path\": \"function/model/lora/$MODEL\"}" \
+          || (echo "❌ vLLM not running — run rice think first" && exit 1)
+        echo "$MODEL" > .rice-model
+        echo "✅ $MODEL adapter loaded (vLLM)"
+    fi
+
+_king-model:
+    #!/usr/bin/env bash
+    BACKEND="${RICE_BACKEND:-ollama}"
+    if [ "$BACKEND" = "ollama" ]; then
+        echo "ollama/{{KING_MODEL}}"
+    else
+        echo "openai/{{KING_MODEL}}"
+    fi
+
+_editor-model model:
+    #!/usr/bin/env bash
+    BACKEND="${RICE_BACKEND:-ollama}"
+    if [ "$BACKEND" = "ollama" ]; then
+        echo "ollama/{{model}}"
+    else
+        echo "openai/{{model}}"
+    fi
+
+_rule-mason task="":
+    @just _model-load "{{MASON_MODEL}}"
+    aider \
+      --architect \
+      --model $(just _king-model) \
+      --editor-model $(just _editor-model "{{MASON_MODEL}}") \
+      {{KING_READS}} \
+      infra/configs/ infra/schemas/ \
+      --message "{{task}}"
+
+_rule-smith task="":
+    @just _model-load "{{SMITH_MODEL}}"
+    aider \
+      --architect \
+      --model $(just _king-model) \
+      --editor-model $(just _editor-model "{{SMITH_MODEL}}") \
+      {{KING_READS}} \
+      service/ \
+      --message "{{task}}"
+
+_rule-clerk task="":
+    @just _model-load "{{CLERK_MODEL}}"
+    aider \
+      --architect \
+      --model $(just _king-model) \
+      --editor-model $(just _editor-model "{{CLERK_MODEL}}") \
+      {{KING_READS}} \
+      base/ \
+      --message "{{task}}"
+
+_rule-sage task="":
+    @just _model-load "{{SAGE_MODEL}}"
+    aider \
+      --architect \
+      --model $(just _king-model) \
+      --editor-model $(just _editor-model "{{SAGE_MODEL}}") \
+      {{KING_READS}} \
+      function/ \
+      --message "{{task}}"
+
+_rule-chief task="":
+    @just _model-load "{{CHIEF_MODEL}}"
+    aider \
+      --architect \
+      --model $(just _king-model) \
+      --editor-model $(just _editor-model "{{CHIEF_MODEL}}") \
+      {{KING_READS}} \
+      base/mint/ custom/ \
+      --message "{{task}}"
+
+_rule-bard task="":
+    @just _model-load "{{BARD_MODEL}}"
+    aider \
+      --architect \
+      --model $(just _king-model) \
+      --editor-model $(just _editor-model "{{BARD_MODEL}}") \
+      {{KING_READS}} \
+      frontend/ \
+      --message "{{task}}"
 
 default:
     @just --list
 
-# ------------------------------------------------------------------------------
-# 📦 INSTALL - Full toolchain initialization
-# ------------------------------------------------------------------------------
+# ============================================================
+# 👷 MASON — rice pour
+# Pours the kingdom foundation.
+#
+# TODO:
+# [ ] write infra/configs/cursor.cue
+# [ ] write infra/configs/windsurf.cue
+# [ ] write infra/configs/vscode.cue
+# [ ] write infra/configs/claude.cue
+# [ ] write infra/configs/copilot.cue
+# [ ] write infra/configs/cursor-ai.cue
+# [ ] write infra/configs/windsurf-ai.cue
+# [ ] write infra/configs/aws.cue
+# [ ] write infra/configs/gcp.cue
+# [ ] write infra/configs/azure.cue
+# [ ] write infra/schemas/*.proto for all roles
+# [ ] write infra/docs/ mkdocs content
+# [ ] write infra/configs/envoy.cue — Envoy Gateway config (replaced Traefik)
+#     listeners, routes, virtual hosts, rate limits, CORS, JWT filter — all templated
+#     RICE_ENVOY_PORT, RICE_ENVOY_ADMIN_PORT read from env
+# [ ] write infra/configs/victoriametrics.cue — VictoriaMetrics scrape config
+#     scrape_interval, retention_period, storage_data_path all soft-coded
+# [ ] write infra/configs/tempo.cue — Grafana Tempo config (replaced Jaeger)
+#     ingestion: otlp_http + otlp_grpc, storage: s3 OR local depending on RICE_TRACE_BACKEND
+# [ ] write infra/configs/grafana.cue — Grafana datasources + dashboard provisioning
+#     datasources: VictoriaMetrics, Tempo, Qdrant — auto-provisioned
+# [ ] add observability services to docker-compose.yml via CUE:
+#     victoriametrics (port soft-coded), tempo (port soft-coded), grafana (port soft-coded)
+#     all on `kingdom` network, all with healthchecks
+# [ ] write infra/configs/envrc.cue — generate .envrc from CUE template
+#     RICE_BACKEND, RICE_AI, RICE_RENDER, RICE_AUDIO, RICE_TRACE_BACKEND,
+#     RICE_REGISTRY, RICE_K8S_CONTEXT — all with safe defaults
+# ============================================================
 
-install:
-    # Install all toolchains: Pixi + Rust + Haskell + Elixir
-    # Usage: just install | just i | just 📦
-    @bash -c ' \
-        set -e; \
-        echo "📦 Installing Rice Framework toolchain..."; \
-        \
-        # Install Pixi if missing \
-        if ! command -v pixi >/dev/null 2>&1; then \
-            echo "📥 Installing Pixi..."; \
-            curl -fsSL https://pixi.sh/install.sh | sh; \
-            export PATH="$$HOME/.pixi/bin:$$PATH"; \
-        fi; \
-        \
-        # Install via Pixi \
-        echo "📦 Installing dependencies from pixi.toml..."; \
-        pixi install || (echo "⚠️  Run: curl -fsSL https://pixi.sh/install.sh | sh  then  just install" && exit 1); \
-        \
-        # Initialize Rust toolchain \
-        if ! command -v rustup >/dev/null 2>&1; then \
-            echo "🦀 Initializing Rust toolchain..."; \
-            curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
-            export PATH="$$HOME/.cargo/bin:$$PATH"; \
-        fi; \
-        rustup toolchain install stable || true; \
-        \
-        # Initialize Haskell (Stack) \
-        if ! command -v stack >/dev/null 2>&1; then \
-            echo "🏔️  Installing Stack for Haskell..."; \
-            curl -sSL https://get.haskellstack.org/ | sh; \
-        fi; \
-        \
-        # Initialize Elixir (Mix) \
-        if command -v mix >/dev/null 2>&1; then \
-            echo "💧 Elixir/Mix already available"; \
-        else \
-            echo "💧 Elixir will be available via pixi (elixir package)"; \
-        fi; \
-        \
-        echo "✅ Rice Framework installation complete!"; \
-        echo "   Run: just c  (config menu)"; \
-    '
+pour:
+    @echo "👷 pouring foundation..."
+    pixi install
+    @just _setup-ide
+    @just _setup-ai
+    @just _setup-cloud
+    cue vet infra/configs/*.cue
+    cue export infra/configs/*.cue
+    buf generate
+    cd service && go mod tidy
+    cd service && mix deps.get
+    cd base && cargo fetch
+    cd base && hpack
+    cd frontend/browser && bun install
+    cd frontend/screen && flutter pub get
+    cd function && uv sync
+    mkdocs build
+    @echo "✅ foundation ready"
 
-# ------------------------------------------------------------------------------
-# c CONFIG - Interactive configuration menu
-# ------------------------------------------------------------------------------
+_setup-ide:
+    #!/usr/bin/env bash
+    echo "Which IDE? (cursor/windsurf/vscode/all/skip)"
+    read -r ide
+    case $ide in
+        cursor)   cue export infra/configs/cursor.cue ;;
+        windsurf) cue export infra/configs/windsurf.cue ;;
+        vscode)   cue export infra/configs/vscode.cue ;;
+        all)      cue export infra/configs/cursor.cue
+                  cue export infra/configs/windsurf.cue
+                  cue export infra/configs/vscode.cue ;;
+        skip)     echo "skipping IDE setup" ;;
+    esac
 
-config mode="":
-    # Interactive configuration menu
-    # Usage: just c | just c full | just c infra | just c app
-    @bash -c ' \
-        MODE="{{ mode }}"; \
-        if [ -z "$MODE" ]; then \
-            if command -v fzf >/dev/null 2>&1; then \
-                MODE=$(echo -e "full\ninfra\napp" | fzf --prompt "Select config mode: "); \
-            else \
-                echo "🔧 Configuration Menu:"; \
-                echo "  1) full  - Generate everything (YAML, JSON, TF, K8s) from CUE"; \
-                echo "  2) infra - Only Terraform + Atlas (DB migrations)"; \
-                echo "  3) app   - Only API (Proto + OpenAPI)"; \
-                read -p "Select [1-3]: " choice; \
-                case "$choice" in \
-                    1) MODE=full ;; \
-                    2) MODE=infra ;; \
-                    3) MODE=app ;; \
-                    *) echo "❌ Invalid choice"; exit 1 ;; \
-                esac; \
-            fi; \
-        fi; \
-        \
-        case "$MODE" in \
-            full) \
-                echo "🔧 Generating full configuration from CUE..."; \
-                just config-cue-all; \
-                ;; \
-            infra) \
-                echo "🌱 Generating infrastructure configuration..."; \
-                just config-infra; \
-                ;; \
-            app) \
-                echo "📦 Generating API configuration..."; \
-                just config-app; \
-                ;; \
-            *) \
-                echo "❌ Invalid mode: $MODE (use: full, infra, app)"; \
-                exit 1; \
-                ;; \
-        esac; \
-    '
+_setup-ai:
+    #!/usr/bin/env bash
+    echo "Which AI agent? (claude/copilot/cursor-ai/windsurf-ai/all/skip)"
+    read -r ai
+    case $ai in
+        claude)      cue export infra/configs/claude.cue ;;
+        copilot)     cue export infra/configs/copilot.cue ;;
+        cursor-ai)   cue export infra/configs/cursor-ai.cue ;;
+        windsurf-ai) cue export infra/configs/windsurf-ai.cue ;;
+        all)         cue export infra/configs/claude.cue
+                     cue export infra/configs/copilot.cue
+                     cue export infra/configs/cursor-ai.cue
+                     cue export infra/configs/windsurf-ai.cue ;;
+        skip)        echo "skipping AI setup" ;;
+    esac
 
-config-workspace:
-    # Generate root config and dotfolders from CUE (tylko cue cmd, bez .sh)
-    @cue cmd gen ./infra
+_setup-cloud:
+    #!/usr/bin/env bash
+    echo "Cloud provider? (aws/gcp/azure/all/skip)"
+    read -r cloud
+    case $cloud in
+        aws)   cue export infra/configs/aws.cue ;;
+        gcp)   cue export infra/configs/gcp.cue ;;
+        azure) cue export infra/configs/azure.cue ;;
+        all)   cue export infra/configs/aws.cue
+               cue export infra/configs/gcp.cue
+               cue export infra/configs/azure.cue ;;
+        skip)  echo "skipping cloud setup" ;;
+    esac
 
-config-cue-all:
-    # Generate all configs from CUE: workspace (root + dotfolders) then config/infra/app
-    @bash -c ' \
-        set -e; \
-        echo "🔧 Generating all configurations from CUE..."; \
-        just config-workspace; \
-        \
-        # Generate biome.json from CUE \
-        if [ -f "{{ cue_config }}/biome.cue" ]; then \
-            echo "  → Generating biome.json..."; \
-            cue export {{ cue_config }}/biome.cue --out json > biome.json || true; \
-        fi; \
-        \
-        # Generate tsconfig.base.json from CUE \
-        if [ -f "{{ cue_config }}/tsconfig.cue" ]; then \
-            echo "  → Generating tsconfig.base.json..."; \
-            cue export {{ cue_config }}/tsconfig.cue --out json > tsconfig.base.json || true; \
-        fi; \
-        \
-        # Generate buf.yaml from CUE \
-        if [ -f "{{ cue_config }}/buf.cue" ]; then \
-            echo "  → Generating buf.yaml..."; \
-            cue export {{ cue_config }}/buf.cue --out yaml > buf.yaml || true; \
-        fi; \
-        \
-        # Generate Terraform from CUE \
-        just config-infra; \
-        \
-        # Generate API configs \
-        just config-app; \
-        \
-        echo "✅ All configurations generated!"; \
-    '
+# ============================================================
+# 🧑‍🎤 BARD — rice perform
+# Performs the machine — scans hardware, installs drivers,
+# selects rendering and audio profile, starts watcher daemon.
+#
+# TODO:
+# [ ] implement _scan-hardware in Odin — frontend/vendor/
+#     detect CPU model, cores, threads, clock, instruction sets
+#     detect all GPUs + VRAM + Vulkan/CUDA/ROCm capability
+#     detect all audio devices + sample rates + audio API
+#     detect all displays + resolution + refresh + HDR + gamut
+#     detect all cameras + resolution + frame rate + IR/depth
+#     detect all network interfaces + speeds
+#     detect all storage drives + speeds + available space
+#     detect all USB/Bluetooth + game controllers + MIDI
+#     write hardware profile to .rice-hardware.json
+# [ ] implement _install-drivers in Odin — frontend/vendor/
+#     GPU: check installed vs latest, install silently
+#     GPU: install Vulkan runtime if missing
+#     GPU: install CUDA runtime if NVIDIA detected
+#     GPU: install ROCm runtime if AMD detected
+#     audio: install PipeWire/PulseAudio if Linux + missing
+#     camera: check installed vs latest, install silently
+#     network: check installed vs latest, install silently
+#     codecs: check ffmpeg availability, install missing
+#     codecs: install media foundation codecs on Windows
+#     on fail: continue with current, log warning to SMITH bench/
+#     on reboot required: notify developer, continue without reboot
+# [ ] implement _start-daemon in Odin — frontend/vendor/
+#     watch GPU state — AI using GPU? switch wgpu to WebGL
+#     watch audio devices — new device? activate automatically
+#     watch cameras — new camera? activate automatically
+#     watch displays — new monitor? configure automatically
+#     watch USB/Bluetooth — new device? detect + activate
+#     expose live state as typed message structs — no proto
+#     supervised restart only — Guard catches crashes
+#     daemon must run as long as machine is on
+# ============================================================
 
-config-infra:
-    # Generate Terraform + Atlas from CUE
-    @bash -c ' \
-        set -e; \
-        echo "🌱 Generating infrastructure (Terraform + Atlas)..."; \
-        \
-        # Export CUE infra to Terraform JSON \
-        if [ -f "{{ cue_infra }}/main.cue" ]; then \
-            echo "  → Exporting CUE infra to terraform/*.tf.json..."; \
-            mkdir -p terraform/generated; \
-            cue export {{ cue_infra }}/main.cue --out json > terraform/generated/main.tf.json || true; \
-        fi; \
-        \
-        # Run Terraform plan \
-        if [ -f "terraform/main.tf" ] || [ -f "terraform/generated/main.tf.json" ]; then \
-            echo "  → Running terraform plan..."; \
-            cd terraform && terraform init -upgrade && terraform plan -out=tfplan || true; \
-        fi; \
-        \
-        # Sync secrets via sops + age \
-        if command -v sops >/dev/null 2>&1 && [ -f ".secrets.yaml" ]; then \
-            echo "  → Syncing secrets via sops..."; \
-            sops -d .secrets.yaml > .secrets.decrypted.yaml || true; \
-        fi; \
-        \
-        echo "✅ Infrastructure configuration ready!"; \
-    '
+perform:
+    @echo "🧑‍🎤 performing machine..."
+    @just _scan-hardware
+    @just _install-drivers
+    @just _setup-rendering
+    @just _setup-audio
+    @just _start-daemon
+    @echo "✅ machine ready"
 
-config-app:
-    # Generate API configs (Proto + OpenAPI)
-    @bash -c ' \
-        set -e; \
-        echo "📦 Generating API configuration (Proto + OpenAPI)..."; \
-        \
-        # Generate buf.yaml from CUE if exists \
-        if [ -f "{{ cue_config }}/buf.cue" ]; then \
-            echo "  → Updating buf.yaml from CUE..."; \
-            cue export {{ cue_config }}/buf.cue --out yaml > buf.yaml || true; \
-        fi; \
-        \
-        # Generate Proto code \
-        if command -v buf >/dev/null 2>&1 && [ -f "buf.yaml" ]; then \
-            echo "  → Generating Proto code (Go, TS, Python)..."; \
-            buf generate || true; \
-        fi; \
-        \
-        # Generate OpenAPI from CUE if exists \
-        if [ -f "{{ cue_app }}/openapi.cue" ]; then \
-            echo "  → Generating openapi.json from CUE..."; \
-            cue export {{ cue_app }}/openapi.cue --out json > openapi.json || true; \
-        fi; \
-        \
-        echo "✅ API configuration ready!"; \
-    '
+_scan-hardware:
+    #!/usr/bin/env bash
+    echo "reading the machine — CPU, GPU, audio, displays, cameras, network, storage, peripherals..."
+    # TODO: implement in Odin — frontend/vendor/
+    # output: .rice-hardware.json
+    # [ ] expose hardware profile via NATS subject hardware.state.> — typed structs
+    #     CHIEF reads hardware.state.gpu, hardware.state.audio on every rice cook
+    #     schema: typed Odin struct → serialized to msgpack, no proto contract
+    # [ ] write .rice-hardware.json schema — versioned, validated by CUE on read
+    #     fields: cpu{model,cores,threads,avx512}, gpu[]{vendor,vram_mb,cuda,rocm,vulkan},
+    #             audio[]{api,sample_rate}, display[]{res,hz,hdr}, storage[]{path,free_gb}
 
-# ------------------------------------------------------------------------------
-# 🚀 DEPLOY - CI/CD + K8s deployment
-# ------------------------------------------------------------------------------
+_install-drivers:
+    #!/usr/bin/env bash
+    echo "installing latest drivers silently..."
+    # TODO: implement in Odin — frontend/vendor/
+    # GPU — Vulkan, CUDA if NVIDIA, ROCm if AMD
+    # audio — PipeWire if Linux
+    # camera, network, codecs
 
-deploy target="":
-    # Deploy via Dagger CI/CD + Timoni K8s
-    # Usage: just deploy | just d | just 🚀
-    @bash -c ' \
-        TARGET="{{ target }}"; \
-        if [ -z "$$TARGET" ]; then \
-            TARGET="all"; \
-        fi; \
-        \
-        echo "🚀 Deploying Rice Framework (target: $$TARGET)..."; \
-        \
-        # Run Dagger pipeline \
-        if command -v dagger >/dev/null 2>&1 && [ -f "dagger.json" ]; then \
-            echo "  → Running Dagger CI/CD pipeline..."; \
-            dagger run || true; \
-        fi; \
-        \
-        # Apply Timoni K8s manifests \
-        if command -v timoni >/dev/null 2>&1 && [ -d "cue/k8s" ]; then \
-            echo "  → Applying Timoni K8s manifests..."; \
-            timoni apply -f cue/k8s || true; \
-        fi; \
-        \
-        echo "✅ Deployment complete!"; \
-    '
+_setup-rendering:
+    #!/usr/bin/env bash
+    echo "Rendering mode? (vulkan/metal/dx12/webgl/auto/skip)"
+    read -r mode
+    case $mode in
+        vulkan)   echo "RICE_RENDER=vulkan" >> .envrc ;;
+        metal)    echo "RICE_RENDER=metal" >> .envrc ;;
+        dx12)     echo "RICE_RENDER=dx12" >> .envrc ;;
+        webgl)    echo "RICE_RENDER=webgl" >> .envrc ;;
+        auto)     echo "RICE_RENDER=auto" >> .envrc ;;
+        skip)     echo "skipping rendering setup" ;;
+    esac
 
-# ------------------------------------------------------------------------------
-# 🩺 CHECK - Health check & status
-# ------------------------------------------------------------------------------
+_setup-audio:
+    #!/usr/bin/env bash
+    echo "Audio profile? (wasapi/coreaudio/pipewire/alsa/auto/skip)"
+    read -r audio
+    case $audio in
+        wasapi)    echo "RICE_AUDIO=wasapi" >> .envrc ;;
+        coreaudio) echo "RICE_AUDIO=coreaudio" >> .envrc ;;
+        pipewire)  echo "RICE_AUDIO=pipewire" >> .envrc ;;
+        alsa)      echo "RICE_AUDIO=alsa" >> .envrc ;;
+        auto)      echo "RICE_AUDIO=auto" >> .envrc ;;
+        skip)      echo "skipping audio setup" ;;
+    esac
 
-check:
-    # Health check: VHS terminal recording or Python .rice parser
-    # Usage: just check | just h | just 🩺
-    @bash -c ' \
-        echo "🩺 Running Rice Framework health check..."; \
-        \
-        # Option 1: VHS terminal recording \
-        if command -v vhs >/dev/null 2>&1 && [ -f "vhs.tape" ]; then \
-            echo "  → Recording terminal status with VHS..."; \
-            vhs vhs.tape || true; \
-        fi; \
-        \
-        # Option 2: Python .rice parser \
-        if command -v python >/dev/null 2>&1 && [ -f "python/app/main.py" ]; then \
-            echo "  → Parsing .rice files with Python..."; \
-            cd python && python -m app.main --check || true; \
-        fi; \
-        \
-        # General status \
-        echo "  → Checking toolchain status..."; \
-        command -v pixi >/dev/null 2>&1 && echo "    ✅ Pixi: $$(pixi --version 2>/dev/null || echo 'installed')" || echo "    ❌ Pixi: not found"; \
-        command -v cue >/dev/null 2>&1 && echo "    ✅ CUE: $$(cue version 2>/dev/null || echo 'installed')" || echo "    ❌ CUE: not found"; \
-        command -v terraform >/dev/null 2>&1 && echo "    ✅ Terraform: $$(terraform version 2>/dev/null | head -1)" || echo "    ❌ Terraform: not found"; \
-        command -v buf >/dev/null 2>&1 && echo "    ✅ Buf: $$(buf --version 2>/dev/null || echo 'installed')" || echo "    ❌ Buf: not found"; \
-        \
-        echo "✅ Health check complete!"; \
-    '
+_start-daemon:
+    #!/usr/bin/env bash
+    echo "starting hardware watcher daemon..."
+    # TODO: implement in Odin — frontend/vendor/
+    # supervised restarts via SMITH guard/
 
-# ------------------------------------------------------------------------------
-# 📚 DOCS - Documentation generation
-# ------------------------------------------------------------------------------
+# ============================================================
+# 🧑‍🏭 SMITH — rice forge
+# Builds all binaries via Buck2, then loads them into Docker.
+# Hot reload: Buck2 rebuilds → Docker swaps binary, no restart.
+#
+# TODO:
+# [ ] write service/BUCK — Go + Elixir targets
+# [ ] write frontend/BUCK — Bun + Dart targets
+# [ ] write function/BUCK — Python targets
+# [ ] write base/BUCK — Rust + Haskell + Zig targets
+# [ ] write all .docker/Dockerfile.* — copy Buck2 binaries, no compilation
+# [ ] write docker-compose.yml — all services with volumes + healthchecks
+# [ ] write .docker/conf/yugabyte.conf
+# [ ] write .docker/conf/redis.conf
+# [ ] write .docker/conf/nats.conf
+# [ ] write .docker/conf/temporal.conf
+# [ ] write .docker/conf/qdrant.conf
+# [ ] write .docker/conf/postal.conf
+# [ ] write .docker/conf/mailpit.conf
+# [ ] write .docker/etc/init.sql
+# [ ] write .docker/etc/pull.sh — pulls GGUF model files
+# [ ] write .docker/etc/model.json — model registry
+# ============================================================
 
-doc:
-    # Generate and copy validated docs to /docs
-    # Usage: just doc
-    @bash -c ' \
-        set -e; \
-        echo "📚 Generating documentation..."; \
-        \
-        # Validate markdown files \
-        if command -v markdownlint-cli2 >/dev/null 2>&1; then \
-            echo "  → Validating markdown files..."; \
-            markdownlint-cli2 "markdown/**/*.md" || true; \
-        fi; \
-        \
-        # Generate docs with MkDocs \
-        if command -v mkdocs >/dev/null 2>&1 && [ -f "mkdocs.yml" ]; then \
-            echo "  → Building MkDocs site..."; \
-            mkdocs build --site-dir docs || true; \
-        fi; \
-        \
-        # Generate index.tpl dashboards \
-        if command -v gomplate >/dev/null 2>&1; then \
-            echo "  → Generating index.tpl dashboards..."; \
-            just generate-dashboards || true; \
-        fi; \
-        \
-        echo "✅ Documentation generated in /docs!"; \
-    '
+forge:
+    @echo "🧑‍🏭 forging environment..."
+    buck2 build //...
+    docker compose up -d
+    @echo "✅ environment ready"
 
-generate-dashboards:
-    # Generate all index.tpl dashboards from CUE data
-    @bash -c ' \
-        set -e; \
-        echo "📊 Generating dashboard interfaces..."; \
-        \
-        # Export CUE data for dashboards \
-        if [ -f "{{ cue_config }}/dashboards.cue" ]; then \
-            cue export {{ cue_config }}/dashboards.cue --out json > .dashboards.json || true; \
-        fi; \
-        \
-        # Generate markdown/index.html \
-        if [ -f "markdown/index.tpl" ] && [ -f ".dashboards.json" ]; then \
-            echo "  → Generating markdown/index.html..."; \
-            gomplate -f markdown/index.tpl -d data=.dashboards.json -o markdown/index.html || true; \
-        fi; \
-        \
-        # Generate python/index.html \
-        if [ -f "python/index.tpl" ] && [ -f ".dashboards.json" ]; then \
-            echo "  → Generating python/index.html..."; \
-            gomplate -f python/index.tpl -d data=.dashboards.json -o python/index.html || true; \
-        fi; \
-        \
-        # Generate elixir/index.html \
-        if [ -f "elixir/index.tpl" ] && [ -f ".dashboards.json" ]; then \
-            echo "  → Generating elixir/index.html..."; \
-            gomplate -f elixir/index.tpl -d data=.dashboards.json -o elixir/index.html || true; \
-        fi; \
-        \
-        # Generate rust/index.html \
-        if [ -f "rust/index.tpl" ] && [ -f ".dashboards.json" ]; then \
-            echo "  → Generating rust/index.html..."; \
-            gomplate -f rust/index.tpl -d data=.dashboards.json -o rust/index.html || true; \
-        fi; \
-        \
-        # Generate terraform/index.html \
-        if [ -f "terraform/index.tpl" ] && [ -f ".dashboards.json" ]; then \
-            echo "  → Generating terraform/index.html..."; \
-            gomplate -f terraform/index.tpl -d data=.dashboards.json -o terraform/index.html || true; \
-        fi; \
-        \
-        echo "✅ Dashboards generated!"; \
-    '
+# ============================================================
+# 🧑‍🔬 SAGE — rice think
+# Detects compute, routes models to best backend,
+# starts inference, training, simulation, or agents.
+#
+# TODO:
+# [ ] implement _detect-compute in Python — function/agent/
+#     detect all GPUs + VRAM per GPU via nvidia-smi / rocm-smi
+#     detect CUDA / ROCm capability
+#     detect available RAM
+#     detect cloud API keys presence in .envrc
+#     write compute profile to .rice-compute.json
+# [ ] implement _route-models in Python — function/model/
+#     discrete GPU + enough VRAM → start vLLM container
+#     limited VRAM → start Ollama container
+#     cloud API keys → configure LiteLLM cloud router
+#     CPU only → start Ollama Q4 container
+#     fallback: vLLM fail → Ollama automatically
+#     fallback: Ollama fail → cloud API only, warn developer
+# [ ] implement inference in Python — function/model/
+#     load GGUF base models from function/model/weights/
+#     load LoRA adapters per role from function/model/lora/
+#     start LiteLLM router pointing at loaded models
+#     expose model endpoints for all 7 roles
+# [ ] implement training in Python — function/model/
+#     load role-specific datasets from function/model/datasets/
+#     run LoRA fine-tuning for all 7 role models
+#     monitor GPU temperature — pause if overheats, resume after
+#     output: GGUF + LoRA adapter per role → function/model/weights/
+#     output: training logs → SMITH bench/ via OTel
+# [ ] implement simulation in Python — function/simulation/
+#     start Qiskit + PennyLane + JAX compute
+#     if training + simulation both selected → training first
+#     warn developer if no GPU for JAX acceleration
+# [ ] implement agents in Python — function/agent/
+#     start LangGraph multi-agent workflows
+#     workflows ready for CHIEF to invoke via .rice
+#     all outputs validated by guardrails-ai + instructor
+# ============================================================
 
-# ------------------------------------------------------------------------------
-# 👁️ WATCH - Per-role watchers (hot reload / lint watch)
-# Narzędzia: Go→air, Rust→bacon/clippy+test, Python→ruff, Bun/TS→biome, CUE→cue vet, Elixir→mix compile --watch
-# ------------------------------------------------------------------------------
+think:
+    @echo "🧑‍🔬 thinking..."
+    @just _check-forge
+    @just _detect-compute
+    @just _route-models
+    @just _setup-compute
+    @echo "✅ mind ready"
 
-watch-all:
-    # Run all role watchers in parallel, then wait
-    just watch-smith & \
-    just watch-clerk & \
-    just watch-sage & \
-    just watch-bard & \
-    just watch-mason & \
-    wait
+_check-forge:
+    #!/usr/bin/env bash
+    docker compose ps | grep -q "running" || (echo "❌ rice forge not running — run rice forge first" && exit 1)
 
-watch-smith:
-    # 🧑‍🏭 SMITH (service): Go air (hot reload)
-    pixi run air -C service/
+_detect-compute:
+    #!/usr/bin/env bash
+    echo "detecting available compute..."
+    # TODO: implement in Python — function/agent/
 
-watch-smith-elixir:
-    # 🧑‍🏭 SMITH (service): Elixir mix compile --watch
-    cd service && pixi run mix compile --watch
+_route-models:
+    #!/usr/bin/env bash
+    echo "routing models to best backend..."
+    # TODO: implement in Python — function/model/
+    # [ ] implement LiteLLM router config generation — function/model/litellm_config.yaml
+    #     generated by SAGE on startup — NOT hardcoded in repo
+    #     model_list entries: per-role endpoint, fallback chain, timeout, retry
+    #     RICE_LITELLM_MASTER_KEY, RICE_LITELLM_PORT read from env
+    # [ ] implement model registry — function/model/registry.json
+    #     per-role: {model_id, quantization, lora_path, vram_required_mb, backend}
+    #     CHIEF reads registry on every rice cook to match project domain → model
+    # [ ] implement GPU temperature watcher in Python — function/agent/gpu_watch.py
+    #     poll nvidia-smi / rocm-smi every RICE_GPU_POLL_INTERVAL_S (default: 30)
+    #     pause training if temp > RICE_GPU_MAX_TEMP_C (default: 83)
+    #     resume after temp < RICE_GPU_RESUME_TEMP_C (default: 75)
+    #     emit OTel metric gpu.temperature to bench/ on every poll
 
-watch-clerk:
-    # 👨‍💼 CLERK (store): Rust – clippy + test (ex bacon.toml)
-    pixi run watchexec -w store -e rs,toml -- bash -c 'cd store && cargo clippy --all-targets -- -D warnings && cargo test'
+_setup-compute:
+    #!/usr/bin/env bash
+    echo "What compute to start? (inference/training/simulation/agents/all/skip)"
+    read -r compute
+    case $compute in
+        inference)
+            echo "starting LiteLLM router + loading GGUF models..."
+            # TODO: implement in Python — function/model/
+            ;;
+        training)
+            echo "starting LoRA fine-tuning pipeline..."
+            # TODO: implement in Python — function/model/
+            ;;
+        simulation)
+            echo "starting quantum simulation..."
+            # TODO: implement in Python — function/simulation/
+            ;;
+        agents)
+            echo "starting LangGraph agent workflows..."
+            # TODO: implement in Python — function/agent/
+            ;;
+        all)
+            echo "starting all compute — sequence: training → inference → simulation → agents"
+            # TODO: implement in Python — function/
+            ;;
+        skip)
+            echo "skipping compute setup"
+            ;;
+    esac
 
-watch-sage:
-    # 🧑‍🔬 SAGE (bot): Python ruff check --watch
-    pixi run ruff check --watch bot/
+# ============================================================
+# 👨‍💼 CLERK — rice audit
+# Final gate before anything leaves the machine.
+# format → lint → test → verify → secrets → security
+# → penetration → infrastructure dry-run → decision gate
+#
+# TODO:
+# [ ] fix odin fmt command — verify correct CLI syntax
+# [ ] implement eBPF probe in Zig — base/security/
+# [ ] implement seccomp policy audit in Zig — base/security/
+# [ ] write pytest integration tests — function/test/
+# [ ] write QuickCheck property proofs — base/calc/
+# [ ] write ark-groth16 ZK proof tests — base/private/
+# [ ] write CosmWasm contract verification — base/contracts/
+# [ ] write guardrails-ai + instructor validation tests — function/test/
+# [ ] configure osquery for host integrity checks
+# [ ] configure suricata rules for .rice OS threat signatures
+# [ ] configure argocd app name for rice deployment
+# [ ] write release artifact build pipeline
+# [ ] write registry push pipeline
+# ============================================================
 
-watch-bard:
-    # 🧑‍🎤 BARD (frontend): biome check --watch
-    pixi run biome check --watch frontend/
+audit:
+    @echo "👨‍💼 auditing the kingdom..."
+    @just _audit-format
+    @just _audit-lint
+    @just _audit-test
+    @just _audit-verify
+    @just _audit-secrets
+    @just _audit-security
+    @just _audit-penetration
+    @just _audit-infra
+    @just _audit-gate
+    @echo "✅ kingdom audited"
 
-watch-mason:
-    # 👷 MASON (infra): CUE vet
-    pixi run cue vet ./infra/...
+_audit-format:
+    #!/usr/bin/env bash
+    echo "── format ──"
+    cue vet infra/configs/*.cue
+    buf lint infra/schemas/*.proto
+    cd base && rustfmt --check **/*.rs
+    cd base && fourmolu --mode check **/*.hs
+    cd base && zig fmt --check .
+    cd service && gofmt -l ./...
+    cd service && mix format --check-formatted
+    cd frontend/browser && biome format --write=false .
+    cd frontend/screen && dart format --set-exit-if-changed .
+    cd frontend/vendor && odin fmt -vet .
+    cd function && ruff format --check .
+    vale infra/docs/**/*.md
+    taplo fmt --check **/*.toml
 
-# ------------------------------------------------------------------------------
-# 🔥 HOT-RELOAD - CUE watcher
-# ------------------------------------------------------------------------------
+_audit-lint:
+    #!/usr/bin/env bash
+    echo "── lint ──"
+    buf breaking --against '.git#branch=main' infra/schemas/*.proto
+    cd base && cargo clippy -- -D warnings
+    cd base && hlint .
+    cd base && zig build
+    cd service && golangci-lint run
+    cd service && mix credo --strict
+    cd frontend/browser && biome lint .
+    cd frontend/screen && dart analyze
+    cd function && ruff check .
+    cd function && basedpyright
 
-watch-cue:
-    # Watch CUE files and rebuild configs automatically
-    # Usage: just watch-cue
-    @bash -c ' \
-        echo "🔥 Starting CUE hot-reload watcher..."; \
-        if command -v watchexec >/dev/null 2>&1; then \
-            watchexec -w {{ cue_dir }} -e cue -- just config-cue-all; \
-        else \
-            echo "⚠️  watchexec not found. Install via: pixi install watchexec"; \
-            echo "   Falling back to inotifywait..."; \
-            if command -v inotifywait >/dev/null 2>&1; then \
-                while inotifywait -r -e modify,create,delete {{ cue_dir }}; do \
-                    just config-cue-all; \
-                done; \
-            else \
-                echo "❌ No file watcher available. Install watchexec or inotify-tools."; \
-            fi; \
-        fi; \
-    '
+_audit-test:
+    #!/usr/bin/env bash
+    echo "── test ──"
+    cd base && cargo test
+    cd base && cargo test base/mint/
+    cd base && cabal test
+    cd base && zig build test
+    cd service && go test ./...
+    cd service && mix test
+    cd frontend/browser && bun run vitest
+    cd frontend/browser && bun run playwright test
+    cd frontend/screen && flutter test
+    cd frontend/screen && patrol test
+    cd function && pytest function/test/
+    cd function && pytest function/test/ --integration
 
-# ------------------------------------------------------------------------------
-# Lint (Trunk removed – use per-tool targets: ruff, biome, clippy, golangci, buf-*)
-# ------------------------------------------------------------------------------
+_audit-verify:
+    #!/usr/bin/env bash
+    echo "── verify ──"
+    cd base && cabal test calc
+    cd base && cargo test private
+    cd base && cargo test contracts
+    cd function && pytest function/test/ -k "guardrails or instructor"
 
-lint:
-    # Run linters individually: just ruff-check, just biome-check, just clippy, just buf-lint, etc.
-    @just --list | grep -E '^(ruff|biome|clippy|buf-|golangci)' || true
-    @echo "Run specific linters, e.g.: just ruff-check, just biome-check, just clippy, just buf-lint"
+_audit-secrets:
+    #!/usr/bin/env bash
+    echo "── secrets ──"
+    sops --decrypt --dry-run secrets.enc.env
+    trufflehog git file://. --only-verified
+    git log --all -p | grep -E "(api_key|secret|password|token)" && exit 1 || true
 
-lint-fix:
-    # Run per-tool formatters/fixers as needed (e.g. buf-format, pixi/ruff, etc.)
-    @echo "No Trunk. Use: just buf-format, or run ruff/biome/clippy --fix manually."
+_audit-security:
+    #!/usr/bin/env bash
+    echo "── security ──"
+    cd base && cargo audit
+    cd function && pip-audit
+    cd function && bandit -r function/
+    osquery
+    # [ ] implement osquery pack — infra/security/rice.conf
+    #     queries: process_open_sockets, listening_ports, users, kernel_modules
+    #     schedule: all queries every RICE_OSQUERY_INTERVAL_S (default: 60)
+    # [ ] implement seccomp profile — infra/security/seccomp.json
+    #     syscall allowlist per role binary — generated by Zig probe in base/security/
+    #     applied to all Docker containers via security_opt in docker-compose.yml
+    # [ ] implement eBPF probe — base/security/probe.zig
+    #     trace execve, connect, openat syscalls
+    #     emit events to NATS subject security.events.>
+    #     guard/ subscribes and alerts on policy violations
 
-# ------------------------------------------------------------------------------
-# Buf – Proto lint (standard), format, generate
-# ------------------------------------------------------------------------------
+_audit-penetration:
+    #!/usr/bin/env bash
+    echo "── penetration ──"
+    docker compose ps | grep -q "running" || (echo "⚠ rice forge not running — skipping penetration" && exit 0)
+    nmap -sV localhost
+    nuclei -u localhost
+    suricata -T
+    seccomp-tools
+    # TODO: eBPF probe — implement in Zig — base/security/
 
-buf-lint:
-    @pixi run buf-lint
+_audit-infra:
+    #!/usr/bin/env bash
+    echo "── infrastructure dry-run ──"
+    tofu validate .opentofu/
+    tofu plan .opentofu/
+    kubectl diff -f .k8s/
 
-buf-format:
-    @pixi run buf-format
+_audit-gate:
+    #!/usr/bin/env bash
+    echo "── decision gate ──"
+    # [ ] implement release artifact pipeline:
+    #     buck2 build //:rice → produces 🚚 bundle
+    #     cosign sign --key ${RICE_COSIGN_KEY} bundle
+    #     push signed bundle to ${RICE_REGISTRY}/${RICE_REGISTRY_REPO}:${version}
+    #     generate SBOM via syft → attach to release
+    # [ ] implement smoke tests against production:
+    #     curl ${RICE_PROD_URL}/health for every service endpoint
+    #     run function/test/smoke.py against production SAGE endpoints
+    #     rollback: argocd app rollback ${RICE_ARGOCD_APP} on any smoke failure
+    echo "Everything is green. What next? (commit/release/deploy/all/skip)"
+    read -r action
+    case $action in
+        commit)
+            git cliff --unreleased --prepend CHANGELOG.md
+            convco commit
+            git push
+            ;;
+        release)
+            # TODO: implement release artifact build + registry push
+            echo "❌ commit first — then release will build artifact + push to registry"
+            exit 1
+            ;;
+        deploy)
+            tofu apply .opentofu/
+            kubectl apply -f .k8s/
+            argocd app sync rice
+            ;;
+        all)
+            git cliff --unreleased --prepend CHANGELOG.md
+            convco commit
+            git push
+            tofu apply .opentofu/
+            kubectl apply -f .k8s/
+            argocd app sync rice
+            ;;
+        skip)
+            echo "nothing leaves the machine"
+            ;;
+    esac
 
-buf-generate:
-    @pixi run buf-generate
+# ============================================================
+# 👨‍🍳 CHIEF — rice prepare / cook / serve
+#
+# prepare — creates new project scaffold in custom/
+# cook    — compiles .rice manifest → all role languages, hot reload
+# serve   — runs rice audit, then deploys to production
+#
+# TODO prepare:
+# [ ] implement project scaffold generator in base/mint/
+#     create custom/{project}/{project}.rice — empty manifest template
+#     create custom/{project}/README.md — project description
+#     pre-fill manifest with domain, git, infra, services sections
+#     ask: which subsystems to activate (SMITH/BARD/SAGE/CLERK)?
+#     generate skeleton based on selection
+#
+# TODO cook:
+# [ ] implement .rice compiler in base/mint/ (Rust)
+#     parse custom/{project}/*.rice manifest
+#     read live hardware state from .rice-hardware.json (BARD daemon)
+#     read compute profile from .rice-compute.json (SAGE)
+#     transpile .rice → Go (SMITH microservices)
+#     transpile .rice → Rust (CLERK contracts + policies)
+#     transpile .rice → TypeScript (BARD browser skeletons)
+#     transpile .rice → Dart (BARD screen skeletons)
+#     transpile .rice → Python (SAGE pipelines + agent configs)
+#     transpile .rice → CUE (MASON infra configs)
+#     transpile .rice → Protobuf (MASON inter-role contracts)
+#     fill BARD browser/ skeletons with project content
+#     fill SAGE function/ pipelines with project intent
+#     load LoRA adapter for project domain via SAGE think
+#     start hot reload — watch custom/{project}/*.rice for changes
+#     on change: recompile only changed sections (salsa incremental)
+#     on error: miette reports beautiful compiler errors
+# [ ] implement .rice → CUE transpiler step in base/mint/
+#     extract infra{} block from .rice manifest
+#     render to infra/configs/{project}.cue via minijinja template
+#     cue export immediately — validate before any other transpilation
+# [ ] implement .rice → Proto transpiler step in base/mint/
+#     extract service{} block → generate service contracts in infra/schemas/{project}.proto
+#     buf lint + buf generate immediately after
+# [ ] implement hot reload watcher — base/mint/src/watch.rs
+#     salsa database invalidation on file change
+#     recompile only changed sections (dependency graph via petgraph)
+#     broadcast reload event to NATS subject cook.reload.{project}
+#     BARD browser dev server subscribes and hot-swaps components
+# [ ] implement CHIEF model loading in cook pipeline:
+#     read .rice-compute.json to find available backend
+#     call SAGE LiteLLM router to load rice-chief LoRA adapter
+#     adapter interprets .rice manifest intent for code generation
+#     RICE_CHIEF_TIMEOUT_S controls max wait for model load
+#
+# TODO serve:
+# [ ] implement production deploy in base/mint/ (Rust)
+#     run full rice audit gate — no bypass
+#     on audit pass: build production artifacts via Buck2
+#     push Docker images to registry via cosign-signed tags
+#     apply OpenTofu infrastructure changes
+#     apply Kubernetes manifests
+#     sync ArgoCD application
+#     run smoke tests against production endpoints
+#     on fail: rollback ArgoCD to previous version
+# ============================================================
 
-# ------------------------------------------------------------------------------
-# Docs – MkDocs
-# ------------------------------------------------------------------------------
+prepare project:
+    @echo "👨‍🍳 preparing ingredients for {{project}}..."
+    mkdir -p custom/{{project}}
+    touch custom/{{project}}/{{project}}.rice
+    @echo "✅ custom/{{project}} ready — write your .rice manifest"
+    @echo "   TODO: scaffold generator — implement in base/mint/"
 
-docs-serve:
-    @pixi run docs-serve
+cook project:
+    @echo "👨‍🍳 cooking {{project}}..."
+    @echo "TODO: .rice compiler not yet implemented"
+    @echo "      implement transpiler in base/mint/ (Rust)"
+    @echo "      lexer: logos → parser: chumsky → CST: rowan"
+    @echo "      incremental: salsa → codegen: minijinja"
+    @echo "      errors: miette → LSP: tower-lsp"
 
-docs-build:
-    @pixi run docs-build
-
-# ------------------------------------------------------------------------------
-# Update - Update all tools via Pixi
-# ------------------------------------------------------------------------------
-
-update:
-    # Update all tools (Pixi)
-    # Usage: just update | just u
-    @echo "🔄 Updating tools via Pixi..."
-    @pixi update || (echo "⚠️  Run: pixi install" && exit 1)
-
-# ------------------------------------------------------------------------------
-# Start/Stop - Project management (legacy support)
-# ------------------------------------------------------------------------------
-
-start target="":
-    # Start projects/components (legacy)
-    # Usage: just start | just start stack | just start ceramix | just s
-    @bash -c ' \
-        if [ -z "{{ target }}" ]; then \
-            echo "🚀 Starting all projects..."; \
-            for PROJECT_DIR in projects/*/; do \
-                if [ -d "$$PROJECT_DIR" ]; then \
-                    PROJECT=$$(basename "$$PROJECT_DIR"); \
-                    if [ "$$PROJECT" = ".vscode" ] || [ "$$PROJECT" = ".git" ]; then continue; fi; \
-                    echo "🚀 Starting project $$PROJECT..."; \
-                    docker compose -f "projects/$$PROJECT/docker-compose.$$PROJECT.yml" up -d 2>/dev/null || true; \
-                fi; \
-            done; \
-        else \
-            echo "🚀 Starting {{ target }}..."; \
-            docker compose -f "projects/{{ target }}/docker-compose.{{ target }}.yml" up -d 2>/dev/null || true; \
-        fi; \
-    '
-
-stop target="":
-    # Stop projects/components (legacy)
-    # Usage: just stop | just stop stack | just stop ceramix | just x
-    @bash -c ' \
-        if [ -z "{{ target }}" ]; then \
-            echo "🛑 Stopping all projects..."; \
-            for PROJECT_DIR in projects/*/; do \
-                if [ -d "$$PROJECT_DIR" ]; then \
-                    PROJECT=$$(basename "$$PROJECT_DIR"); \
-                    if [ "$$PROJECT" = ".vscode" ] || [ "$$PROJECT" = ".git" ]; then continue; fi; \
-                    echo "🛑 Stopping project $$PROJECT..."; \
-                    docker compose -f "projects/$$PROJECT/docker-compose.$$PROJECT.yml" down 2>/dev/null || true; \
-                fi; \
-            done; \
-        else \
-            echo "🛑 Stopping {{ target }}..."; \
-            docker compose -f "projects/{{ target }}/docker-compose.{{ target }}.yml" down 2>/dev/null || true; \
-        fi; \
-    '
-
-clean target="":
-    # Clean projects/components (legacy)
-    # Usage: just clean | just clean stack | just clean ceramix
-    @bash -c ' \
-        if [ -z "{{ target }}" ]; then \
-            echo "🧹 Cleaning all projects..."; \
-            for PROJECT_DIR in projects/*/; do \
-                if [ -d "$$PROJECT_DIR" ]; then \
-                    PROJECT=$$(basename "$$PROJECT_DIR"); \
-                    if [ "$$PROJECT" = ".vscode" ] || [ "$$PROJECT" = ".git" ]; then continue; fi; \
-                    echo "🧹 Cleaning project $$PROJECT..."; \
-                    docker compose -f "projects/$$PROJECT/docker-compose.$$PROJECT.yml" down --remove-orphans -v 2>/dev/null || true; \
-                    find "projects/$$PROJECT" -type d \( -name "node_modules" -o -name ".next" -o -name "dist" -o -name "build" -o -name "target" -o -name ".dart_tool" \) -prune -exec rm -rf {} + 2>/dev/null || true; \
-                fi; \
-            done; \
-            echo "✅ All projects cleaned"; \
-        else \
-            echo "🧹 Cleaning {{ target }}..."; \
-            docker compose -f "projects/{{ target }}/docker-compose.{{ target }}.yml" down --remove-orphans -v 2>/dev/null || true; \
-            find "projects/{{ target }}" -type d \( -name "node_modules" -o -name ".next" -o -name "dist" -o -name "build" -o -name "target" -o -name ".dart_tool" \) -prune -exec rm -rf {} + 2>/dev/null || true; \
-            echo "✅ Project {{ target }} cleaned"; \
-        fi; \
-    '
-
-# ------------------------------------------------------------------------------
-# Run a Pixi task from root
-# ------------------------------------------------------------------------------
-
-run task:
-    # Usage: just run <task>  (task from root pixi.toml)
-    @pixi run {{ task }}
+serve project:
+    @echo "👨‍🍳 serving {{project}} to production..."
+    just audit
+    @echo "TODO: production deploy not yet implemented"
+    @echo "      implement in base/mint/ (Rust)"
+    @echo "      Buck2 build → Docker push → tofu apply → kubectl apply → argocd sync"
