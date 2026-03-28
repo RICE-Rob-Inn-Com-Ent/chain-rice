@@ -1,0 +1,7 @@
+# KING TODO map
+# .k8s/stack/falco — soft-coded
+# TODO:
+# [ ] falcorules-smith.yaml: .rice OS rules — execve outside rice-*, SAGE net, KING rules read-only
+# [ ] nats-output.yaml: output → NATS security.falco.events — guard/ subscribes
+
+

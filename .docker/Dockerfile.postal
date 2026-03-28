@@ -1,0 +1,6 @@
+# TODO:
+# [ ] FROM ghcr.io/postalserver/postal:${POSTAL_VERSION}
+# [ ] COPY .docker/conf/postal.conf /opt/postal/config/postal.yml
+# [ ] ENV POSTAL_SMTP_HOST=${RICE_POSTAL_HOST}
+# [ ] EXPOSE RICE_POSTAL_SMTP_PORT RICE_POSTAL_UI_PORT
+# [ ] HEALTHCHECK postal status

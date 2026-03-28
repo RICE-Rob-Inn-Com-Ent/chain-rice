@@ -1,0 +1,8 @@
+# KING TODO map
+# .k8s/stack/kyverno — soft-coded
+# TODO:
+# [ ] policy-verify-image.yaml: cosign on rice-* images, RICE_COSIGN_PUBLIC_KEY in ConfigMap
+# [ ] policy-require-digest.yaml: prod only; RICE_K8S_ENV=dev skips
+# [ ] policy-resource-limits.yaml: limits from RICE_K8S_RESOURCE_MIN/MAX env vars
+
+

@@ -1,0 +1,5 @@
+# TODO:
+# [ ] FROM nats:${NATS_VERSION}-alpine — version via ARG
+# [ ] COPY .docker/conf/nats.conf /etc/nats/nats.conf
+# [ ] EXPOSE RICE_NATS_CLIENT_PORT RICE_NATS_MONITOR_PORT RICE_NATS_CLUSTER_PORT
+# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_NATS_MONITOR_PORT}/healthz

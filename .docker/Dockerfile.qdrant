@@ -1,0 +1,5 @@
+# TODO:
+# [ ] FROM qdrant/qdrant:${QDRANT_VERSION}
+# [ ] COPY .docker/conf/qdrant.conf /qdrant/config/production.yaml
+# [ ] EXPOSE RICE_QDRANT_HTTP_PORT RICE_QDRANT_GRPC_PORT
+# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_QDRANT_HTTP_PORT}/readyz

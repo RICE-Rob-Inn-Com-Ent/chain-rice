@@ -1,0 +1,8 @@
+# KING TODO map
+# .k8s/stack/karpenter — soft-coded
+# TODO:
+# [ ] nodepool-gpu.yaml: instanceTypes = RICE_GPU_INSTANCE_TYPES
+#     maxNodes = RICE_KARPENTER_GPU_MAX (default: 2)
+# [ ] nodepool-stateful.yaml: RICE_KARPENTER_STATEFUL_ZONES — AZ list
+
+

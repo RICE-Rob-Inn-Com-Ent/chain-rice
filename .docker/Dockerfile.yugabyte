@@ -1,0 +1,7 @@
+# TODO:
+# [ ] FROM yugabytedb/yugabyte:${YUGABYTE_VERSION} — version via ARG, renovate tracks
+# [ ] COPY .docker/etc/init.sql /docker-entrypoint-initdb.d/init.sql
+# [ ] COPY .docker/conf/yugabyte.conf /etc/yugabyte/yugabyte.conf
+# [ ] ENV YSQL_USER=${RICE_DB_USER} YSQL_DB=${RICE_DB_NAME}
+# [ ] EXPOSE RICE_YB_YSQL_PORT RICE_YB_MASTER_UI_PORT RICE_YB_TSERVER_UI_PORT
+# [ ] HEALTHCHECK yugabyted status with RICE_YB_HEALTH_INTERVAL

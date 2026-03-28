@@ -3,6 +3,15 @@ Thank you for contributing to Rice Monorepo! 🎉
 Please fill out this template to help us review your pull request efficiently.
 -->
 
+<!--
+TODO:
+- [ ] replace "Bazel build" checklist item → "rice audit" gate
+- [ ] add .rice checklist: custom/ changed → rice cook {project} passes; manifest soft-coded
+- [ ] add rice audit gate: format → lint → test → verify → secrets → security
+- [ ] add commit format: convco — see convco.toml
+- [ ] replace references to old stack (Solidity, Hardhat, Poetry) with rice stack
+-->
+
 ## 📝 Description
 
 <!-- Provide a clear and concise description of what this PR does -->

@@ -1,0 +1,4 @@
+# TODO:
+# [ ] trigger on push tags matching v[0-9]*.*
+# [ ] steps: rice audit → git cliff changelog → convco version → create GH release
+# [ ] attach 🚚 bundle as release asset — cosign signed

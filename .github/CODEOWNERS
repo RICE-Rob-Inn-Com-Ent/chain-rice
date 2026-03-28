@@ -1,3 +1,26 @@
+# Do not edit manually — edit infra/configs/github.cue instead
+
+# TODO:
+# [ ] replace all /backend/ paths → /service/ (SMITH domain)
+# [ ] replace all /frontend/node/ paths → /frontend/browser/ (BARD browser)
+# [ ] replace all /frontend/dart/ paths → /frontend/screen/ (BARD screen)
+# [ ] replace all /bots/ paths → /function/ (SAGE domain)
+# [ ] replace all /proto/ paths → /infra/schemas/ (MASON domain)
+# [ ] replace all /BUILD.bazel, /WORKSPACE, /.bazelrc → /justfile, /.buckconfig, /pixi.toml
+# [ ] replace /dev/terraform/ → /.opentofu/
+# [ ] replace /dev/k8s/ → /.k8s/
+# [ ] add ownership entries for new paths:
+#     /infra/ @mrDinkelman       — MASON: CUE templates + Proto + docs
+#     /service/ @mrDinkelman     — SMITH: Go + Elixir
+#     /base/ @mrDinkelman        — CLERK: Rust + Haskell + Zig + mint compiler
+#     /frontend/ @mrDinkelman    — BARD: TypeScript + Dart + Odin
+#     /function/ @mrDinkelman    — SAGE: Python + Mojo
+#     /custom/ @mrDinkelman      — CHIEF: .rice projects
+#     /.docker/ @mrDinkelman     — all Dockerfiles + configs
+#     /.k8s/ @mrDinkelman        — Kubernetes manifests
+#     /.opentofu/ @mrDinkelman   — OpenTofu infrastructure
+# [ ] add RICE_CODEOWNERS_TEAM env var support for team repos — not hardcoded here
+
 # CODEOWNERS file for Rice Monorepo
 
 # Defines code ownership for automated review requests

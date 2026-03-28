@@ -1,0 +1,8 @@
+# KING TODO map
+# .k8s/stack/harbor — soft-coded
+# TODO:
+# [ ] harborcluster.yaml: externalURL = https://${{RICE_HARBOR_HOST}}
+#     database.host = RICE_HARBOR_DB_HOST, storageClass = RICE_HARBOR_STORAGE_CLASS
+# [ ] robotaccount.yaml: rice-cicd, token in ExternalSecret → SOPS
+
+

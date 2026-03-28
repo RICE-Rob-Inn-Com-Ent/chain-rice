@@ -1,0 +1,10 @@
+# TODO:
+# [ ] FROM ollama/ollama:${OLLAMA_VERSION}
+# [ ] COPY .docker/etc/model.json /etc/ollama/model.json
+# [ ] COPY .docker/etc/pull.sh /docker-entrypoint-initdb.d/pull.sh
+# [ ] ENV OLLAMA_KEEP_ALIVE=${RICE_OLLAMA_KEEP_ALIVE} (default: -1)
+#     OLLAMA_NUM_PARALLEL=${RICE_OLLAMA_PARALLEL} (default: 1 for RTX 3060)
+#     OLLAMA_MAX_LOADED_MODELS=${RICE_OLLAMA_MAX_MODELS} (default: 1)
+#     OLLAMA_HOST=0.0.0.0:${RICE_OLLAMA_PORT}
+# [ ] deploy.resources.reservations.devices: driver=nvidia — conditional on RICE_GPU=nvidia
+# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_OLLAMA_PORT}/api/version

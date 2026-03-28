@@ -1,0 +1,8 @@
+# TODO:
+# [ ] FROM temporalio/auto-setup:${TEMPORAL_VERSION} — auto-setup handles schema init
+# [ ] COPY .docker/conf/temporal.conf /etc/temporal/config/development.yaml
+# [ ] ENV DB=postgresql DB_PORT=${RICE_TEMPORAL_DB_PORT}
+#     POSTGRES_USER=${RICE_TEMPORAL_DB_USER} — password via Docker secret
+#     POSTGRES_SEEDS=${RICE_TEMPORAL_DB_HOST}
+# [ ] EXPOSE RICE_TEMPORAL_GRPC_PORT RICE_TEMPORAL_UI_PORT
+# [ ] HEALTHCHECK temporal operator cluster health

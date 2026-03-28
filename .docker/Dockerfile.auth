@@ -1,0 +1,9 @@
+# TODO:
+# [ ] FROM gcr.io/distroless/base-debian12
+# [ ] COPY buck-out/gen/service/auth /usr/local/bin/rice-auth
+# [ ] ENV RICE_ROLE=auth
+#     DB_URL=${RICE_DB_URL} — composed from RICE_DB_USER, RICE_DB_PASS, RICE_DB_HOST at runtime
+#     VALKEY_URL=${RICE_VALKEY_URL}
+#     RICE_PASETO_SECRET_KEY_PATH — path to SOPS-decrypted key file
+# [ ] EXPOSE RICE_AUTH_PORT (default: 3001)
+# [ ] HEALTHCHECK CMD ["/usr/local/bin/rice-auth", "health"]

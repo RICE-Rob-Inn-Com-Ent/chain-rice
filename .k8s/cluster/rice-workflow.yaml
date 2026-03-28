@@ -1,0 +1,9 @@
+# KING TODO map
+# .k8s/cluster/rice-workflow.yaml — workflow Application
+# TODO:
+# [ ] ArgoCD Application for workflow stack:
+#     Temporal, NATS, KEDA, Knative serving + eventing
+# [ ] Knative serving: config-domain uses RICE_K8S_DOMAIN env var
+#     config-autoscaler: target-utilization-percentage = RICE_KNATIVE_SCALE_TARGET
+
+

@@ -1,0 +1,10 @@
+# KING TODO map
+# .k8s/stack/argocd — soft-coded via CUE/Timoni
+# TODO:
+# [ ] argocd-cm.yaml: add rice-{{role}} app names — read from RICE_ARGOCD_APP_{{ROLE}}
+# [ ] argocd-rbac-cm.yaml: policy.csv roles — read from RICE_ARGOCD_RBAC_POLICY
+# [ ] argocd-secret.yaml: admin password — external-secrets, never plaintext
+# [ ] cmp-plugin.yaml: CUE plugin for Timoni — rice-cue, timoni bundle apply
+# [ ] notifications-cm.yaml: RICE_ARGOCD_SLACK_WEBHOOK, RICE_ARGOCD_NOTIFY_EMAIL
+
+
