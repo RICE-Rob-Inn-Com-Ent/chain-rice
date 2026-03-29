@@ -4,6 +4,8 @@ use prost::Message;
 
 use crate::error::{RiceError, RiceResult};
 
+// [ ] https://docs.rs/prost/ — validation; well-known types; JSON bridge
+
 /// Encode a message to a fresh [`Vec<u8>`].
 #[inline]
 pub fn encode_to_vec<M: Message>(msg: &M) -> RiceResult<Vec<u8>> {

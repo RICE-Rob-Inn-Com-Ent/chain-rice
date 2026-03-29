@@ -1,5 +1,5 @@
 [package]
-name = "rice-contract"
+name = "clerk-contract"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -16,7 +16,7 @@ library = []
 post-quantum = ["dep:pqcrypto"]
 
 [dependencies]
-rice-util = { path = "../util" }
+clerk-util = { path = "../util" }
 cosmwasm-std.workspace = true
 cosmwasm-schema.workspace = true
 cw-storage-plus.workspace = true

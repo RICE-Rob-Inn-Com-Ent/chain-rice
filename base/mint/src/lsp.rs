@@ -5,6 +5,9 @@ use tower_lsp::jsonrpc::Result;
 use tower_lsp::lsp_types::*;
 use tower_lsp::{Client, LanguageServer, LspService, Server};
 
+// [ ] https://docs.rs/tower-lsp/
+// [ ] sync, hover, completion, goto def, refs, diagnostics push, workspace_symbol, code_action; tokio stdio
+
 /// Minimal LSP backend — extend with workspace symbols, hover, etc.
 pub struct RiceLanguageServer {
     client: Client,

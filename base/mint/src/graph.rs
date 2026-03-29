@@ -4,6 +4,9 @@ use petgraph::algo::is_cyclic_directed;
 use petgraph::graph::DiGraph;
 use petgraph::visit::Topo;
 
+// [ ] https://docs.rs/petgraph/
+// [ ] cycle detection; toposort; dead code; RICE_MINT_PARALLEL_BATCH
+
 pub type ModuleGraph = DiGraph<String, ()>;
 
 pub fn topo_sort(graph: &ModuleGraph) -> Option<Vec<petgraph::prelude::NodeIndex>> {

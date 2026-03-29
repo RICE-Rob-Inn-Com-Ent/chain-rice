@@ -2,6 +2,9 @@
 
 use chumsky::prelude::*;
 
+// [ ] https://docs.rs/chumsky/
+// [ ] full .rice grammar; recovery; pratt; spans for miette
+
 /// Parse whitespace-separated identifiers until end of input.
 pub fn parse_idents(src: &str) -> Result<Vec<String>, String> {
     let p = text::ident::<&str, extra::Default>()

@@ -6,6 +6,9 @@ use rice_mint::parser::parse_idents;
 use rice_mint::query::{token_count, SourceFile};
 use rice_mint::RiceDatabase;
 
+// [ ] https://docs.rs/criterion/ — logos, chumsky, salsa
+// [ ] lex, parse, check, lower, codegen targets; incremental salsa
+
 pub fn register(c: &mut Criterion) {
     let src: String = "fn main { a b c } x ".repeat(64);
     let db = RiceDatabase::default();

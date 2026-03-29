@@ -1,5 +1,8 @@
 //! RICE `.rice` compiler — lexer (`logos`), parser (`chumsky`), CST (`rowan`), incremental queries (`salsa`).
 
+// [ ] https://docs.rs/logos/ https://docs.rs/chumsky/ https://docs.rs/rowan/ https://docs.rs/salsa/
+// [ ] pub mod lexer..lsp, error; export Lexer, Parser, AstNode, Codegen, Database; features lsp, parallel
+
 pub mod ast;
 pub mod check;
 pub mod codegen;

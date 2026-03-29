@@ -2,6 +2,9 @@
 
 use rowan::{GreenNode, GreenNodeBuilder, Language, SyntaxKind};
 
+// [ ] https://docs.rs/rowan/
+// [ ] typed SyntaxNode wrappers; incremental reparsing; lossless round-trip
+
 /// `.rice` language marker for typed [`rowan::SyntaxNode`] / [`rowan::SyntaxToken`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct RiceLanguage;

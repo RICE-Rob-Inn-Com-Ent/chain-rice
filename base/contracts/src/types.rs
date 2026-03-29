@@ -6,6 +6,11 @@ use num_bigint::BigUint;
 use num_traits::Zero;
 use rust_decimal::Decimal;
 
+// [ ] https://docs.cosmwasm.com/ — cw_serde, JsonSchema
+// [ ] ContractConfig — admin, paused, max_supply, policy_engine, zk_enabled, pq_enabled
+// [ ] AuditEvent, ProofStatus, PolicyResult — serde from shared schema paths
+// [ ] amounts as Decimal — no f64
+
 /// Monotonic contract schema version (bump in `migration.rs` when storage layout changes).
 pub type ContractVersion = u64;
 

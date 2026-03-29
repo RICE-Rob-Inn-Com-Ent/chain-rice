@@ -2,6 +2,9 @@
 
 use thiserror::Error;
 
+// [ ] https://docs.rs/miette/ https://docs.rs/logos/ https://docs.rs/chumsky/
+// [ ] LexError, ParseError, CheckError, LowerError, CodegenError, GraphCycle, IoError, TemplateError
+
 #[derive(Debug, Error)]
 pub enum CompileError {
     #[error(transparent)]

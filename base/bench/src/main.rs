@@ -6,6 +6,9 @@ use std::time::Duration;
 
 use criterion::Criterion;
 
+// [ ] https://docs.rs/criterion/
+// [ ] criterion_group!/criterion_main! for contracts, zk, compiler, policies, crypto; RICE_BENCH_* timing; tracing RICE_BENCH_LOG_LEVEL
+
 mod compiler;
 mod contracts;
 mod crypto;

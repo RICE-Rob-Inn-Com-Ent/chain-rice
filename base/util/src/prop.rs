@@ -3,6 +3,8 @@ use proptest::collection::vec as vec_strategy;
 use proptest::prelude::*;
 use proptest::sample::select;
 
+// [ ] https://docs.rs/proptest/ — arb_decimal, arb_addr, arb_proof_id; RICE_PROP_CASES; prop_clerk!
+
 /// Arbitrary byte vectors up to `max_len` elements.
 pub fn vec_bytes(max_len: usize) -> impl Strategy<Value = Vec<u8>> {
     vec_strategy(any::<u8>(), 0..=max_len)

@@ -1,0 +1,13 @@
+# TODO:
+# [ ] rust_library target: name from RICE_BUCK_UTIL_NAME / cue — srcs = glob(["util/src/**/*.rs"])
+# [ ] deps: thiserror, prost, bytes, hex — versions from workspace lock, not pinned literals in Buck
+# [ ] rust_library: contracts — deps cosmwasm-std, cw-storage-plus, sylvia, serde, rice-util; feature library for rlib
+# [ ] rust_library: policies — cel-interpreter, fefix, chrono, serde, rice-util
+# [ ] rust_library: private — ark-groth16, ark curves, ark-ff, rice-util
+# [ ] rust_library: mint — logos, chumsky, rowan, salsa, miette, minijinja, rice-util
+# [ ] rust_binary: rice-lsp — mint bin + tower-lsp, tokio; paths from env
+# [ ] rust_binary: rice-bench — criterion, tracing; aggregates contracts, private, mint, policies
+# [ ] haskell_library: rice-calc — scientific, Decimal, hledger-lib, QuickCheck; srcs under calc/
+# [ ] haskell_test: rice-calc-test — hspec, QuickCheck
+# [ ] zig_library: rice-security — root_source_file from env/cue; link pcap/seccomp per target OS
+# [ ] genrule: rice-bundle — aggregate role binaries into bundle output path from RICE_BUNDLE_OUT

@@ -4,6 +4,9 @@ use logos::Logos;
 
 use crate::token::Token;
 
+// [ ] https://docs.rs/logos/
+// [ ] full .rice token set; extras line/col; error recovery; zero-copy slices
+
 /// Lex full source into `(token, byte range)` pairs.
 pub fn lex_all(src: &str) -> Vec<(Token, std::ops::Range<usize>)> {
     let mut lexer = Token::lexer(src);

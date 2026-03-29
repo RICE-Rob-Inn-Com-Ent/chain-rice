@@ -4,6 +4,9 @@ use rice_contract::types::uint128_to_decimal;
 use cosmwasm_std::Uint128;
 use criterion::{black_box, Criterion};
 
+// [ ] https://docs.rs/criterion/ — https://docs.cosmwasm.com/
+// [ ] transfer, mint, verify_proof, query_balance, query_all_balances, policy in contract
+
 pub fn register(c: &mut Criterion) {
     let mut g = c.benchmark_group("contracts");
     g.bench_function("sha256_digest", |b| {

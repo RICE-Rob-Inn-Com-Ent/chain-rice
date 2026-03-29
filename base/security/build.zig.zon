@@ -1,0 +1,12 @@
+.{
+    .name = .clerk_security,
+    .version = "0.1.0",
+    // Unique package id; regenerate if you fork or rename `.name` (see Zig 0.15 release notes).
+    .fingerprint = 0xc11e4ec84b005ec0,
+    .minimum_zig_version = "0.15.0",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig.zon",
+        "src",
+    },
+}

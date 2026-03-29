@@ -1,5 +1,7 @@
 //! Base error surface for `base/` crates — [`RiceError`] aggregates common failures and supports `?` via [`From`].
 
+// [ ] — Contract, Policy, Private, Mint, Calc, Security variants; NATS publish; context()
+
 /// Top-level error type for cross-crate boundaries in `base/` (contracts, private, mint, policies).
 #[derive(Debug, thiserror::Error)]
 pub enum RiceError {

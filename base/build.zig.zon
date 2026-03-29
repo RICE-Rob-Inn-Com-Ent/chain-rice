@@ -1,0 +1,20 @@
+// TODO: https://ziglang.org/documentation/master/std/
+// [ ] .name — package enum literal from cue export / env mapping, not ad-hoc string
+// [ ] .version — semver from release tooling / env
+// [ ] .minimum_zig_version — toolchain floor from infra matrix, not a single hardcoded patch
+// [ ] .fingerprint — regenerate when renaming package (Zig 0.15+)
+// [ ] optional dep zig-network when RICE_SECURITY_NETWORK — .url + .hash from zig fetch output
+// [ ] document libpcap: system path via pixi / NIX; linkSystemLibrary("pcap") in build.zig
+// [ ] .paths — include build.zig, build.zig.zon, security/, future modules via glob from cue
+.{
+    .name = .rice_clerk_base,
+    .version = "0.1.0",
+    .fingerprint = 0xe9f7b839cba0f758,
+    .minimum_zig_version = "0.15.0",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "security",
+    },
+}

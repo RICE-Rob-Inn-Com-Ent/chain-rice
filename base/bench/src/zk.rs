@@ -9,6 +9,9 @@ use rice_private::verify::verify_mul;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
+// [ ] https://docs.rs/criterion/ — https://docs.rs/ark-groth16/
+// [ ] prove, verify, batch, Poseidon, MSM, trusted setup load RICE_BENCH_SETUP_PATH
+
 pub fn register(c: &mut Criterion) {
     let mut rng = StdRng::from_seed([11u8; 32]);
     let (pk, vk) = trusted_setup::<Bn254, _>(&mut rng).expect("zk setup");

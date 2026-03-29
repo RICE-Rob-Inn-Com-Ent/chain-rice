@@ -2,6 +2,9 @@
 
 use logos::Logos;
 
+// [ ] https://docs.rs/logos/ — https://docs.rs/rowan/
+// [ ] SyntaxKind for rowan; From for rowan::SyntaxKind; miette Display; keyword set
+
 #[derive(Logos, Debug, Clone, PartialEq, Eq)]
 #[logos(skip r"[ \t\n\f]+")]
 #[logos(error = ())]

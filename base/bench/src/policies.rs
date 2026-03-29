@@ -3,6 +3,9 @@ use criterion::{black_box, Criterion};
 use rice_policies::engine::{compile, evaluate, root_context};
 use rice_policies::legal::root_element_name;
 
+// [ ] https://docs.rs/criterion/ — cel-interpreter, fefix, quick-xml
+// [ ] cel_eval, fix_parse, xml_parse, audit_publish, rule_load
+
 pub fn register(c: &mut Criterion) {
     let program = compile("true").expect("cel compile");
     let ctx = root_context();

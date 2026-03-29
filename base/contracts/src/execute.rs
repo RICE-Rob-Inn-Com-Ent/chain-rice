@@ -9,6 +9,14 @@ use crate::state::{Config, VersionState};
 use crate::types::ContractVersion;
 use crate::Contract;
 
+// [ ] https://docs.cosmwasm.com/ — rust_decimal for amounts
+// [ ] execute_transfer — balance checks; addr_validate; atomic Map updates; events
+// [ ] execute_mint / burn — admin + max supply from config; Decimal math
+// [ ] execute_set_policy — CEL string; policies/ validation before store
+// [ ] execute_evaluate_policy — policies engine + context from env/cue
+// [ ] execute_verify_proof — ark-groth16 verify via private/; proof status in state
+// [ ] all amounts: rust_decimal::Decimal — no f64
+
 pub fn instantiate(
     contract: &Contract,
     ctx: InstantiateCtx,

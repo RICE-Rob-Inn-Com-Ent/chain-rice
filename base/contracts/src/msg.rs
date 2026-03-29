@@ -8,6 +8,13 @@ pub type ExecuteMsg = ExecMsg;
 
 use cosmwasm_schema::cw_serde;
 
+// [ ] https://docs.cosmwasm.com/ — cw_serde, JsonSchema, schema export
+// [ ] InstantiateMsg — serde + JsonSchema; admin, config fields from types; addresses from validation, not literals
+// [ ] ExecuteMsg enum — Transfer, Burn, Mint, UpdateConfig, Freeze, Unfreeze, SetPolicy, EvaluatePolicy, VerifyProof, Migrate
+// [ ] QueryMsg — Balance, Config, Policy, ProofStatus, ContractInfo
+// [ ] MigrateMsg — version from RICE_* / contract version constant via env!("CARGO_PKG_VERSION")
+// [ ] cw_serde on all message types; JSON schema dir from RICE_SCHEMA_OUTPUT_DIR
+
 /// Query response for `config` — referenced from `#[sv::msg(query, resp = ...)]` in `contract.rs`.
 #[cw_serde]
 pub struct ConfigResponse {

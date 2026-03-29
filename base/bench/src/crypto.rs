@@ -9,6 +9,9 @@ use rand::rngs::StdRng;
 use rand::SeedableRng;
 use sha2::{Digest, Sha256};
 
+// [ ] https://docs.rs/criterion/
+// [ ] ed25519 sign/verify, aes-gcm, sha256 sizes; bench-pq feature
+
 pub fn register(c: &mut Criterion) {
     let mut rng = StdRng::from_seed([8u8; 32]);
     let signing_key = SigningKey::generate(&mut rng);

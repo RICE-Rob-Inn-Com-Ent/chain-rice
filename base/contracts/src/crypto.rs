@@ -6,6 +6,12 @@
 use cosmwasm_std::Binary;
 use sha2::{Digest, Sha256};
 
+// [ ] https://docs.cosmwasm.com/ — ed25519-dalek, aes-gcm, pqcrypto feature-gated
+// [ ] ed25519 verify — keys from state/config, not embedded literals
+// [ ] SHA256 — merkle / state commitments for private/
+// [ ] aes-gcm when RICE_ENCRYPT_STATE — key from SOPS / env path
+// [ ] post-quantum — Kyber/Dilithium per RICE_PQ_ALGORITHM when feature enabled
+
 /// Canonical 32-byte SHA-256 digest over arbitrary bytes.
 pub fn sha256_digest(data: &[u8]) -> [u8; 32] {
     let mut hasher = Sha256::new();

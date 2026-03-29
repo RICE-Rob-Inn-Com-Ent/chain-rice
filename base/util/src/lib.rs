@@ -3,6 +3,8 @@
 //! Wire `gen/` protobuf types from MASON through [`proto`] helpers; use [`prop`] for strategies
 //! aligned with domain types in contracts, private, mint, and policies.
 
+// [ ] — error, result, bytes, proto, prop exports; RICE_CLERK_NATS_URL on errors
+
 pub mod bytes;
 pub mod error;
 pub mod prop;

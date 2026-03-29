@@ -1,5 +1,8 @@
 //! Memoized compiler queries — inputs and tracked functions on [`crate::Db`](crate::Db).
 
+// [ ] https://docs.rs/salsa/
+// [ ] ParseQuery, CheckQuery, LowerQuery, CodegenQuery; cross-file; LSP queries hover/completion/defs/refs
+
 #[salsa::input]
 pub struct SourceFile {
     #[return_ref]

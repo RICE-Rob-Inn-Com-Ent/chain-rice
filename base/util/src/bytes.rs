@@ -3,6 +3,8 @@ use bytes::Bytes;
 
 use crate::error::RiceResult;
 
+// [ ] https://docs.rs/hex/ https://docs.rs/bytes/ — constant_time_eq
+
 /// Decode hex string to owned [`Vec<u8>`].
 #[inline]
 pub fn decode_hex(s: &str) -> RiceResult<Vec<u8>> {

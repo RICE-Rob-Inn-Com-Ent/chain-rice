@@ -2,6 +2,11 @@
 
 use cosmwasm_std::{Attribute, Response};
 
+// [ ] https://docs.cosmwasm.com/
+// [ ] constructors: transfer, mint, burn, policy_set, proof_verified, proof_failed — event type keys from consts / cue
+// [ ] attributes: block_height, contract_addr, timestamp via Env
+// [ ] stable event names for indexers — no inline string duplication
+
 /// Namespace prefix for this contract's events.
 pub const EVENT_NAMESPACE: &str = "rice/contract";
 

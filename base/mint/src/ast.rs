@@ -4,6 +4,9 @@ use rowan::{SyntaxNode, SyntaxToken};
 
 use crate::syntax::RiceLanguage;
 
+// [ ] https://docs.rs/rowan/
+// [ ] AST nodes for all constructs; visitor; pretty print; salsa hash
+
 pub type RiceNode = SyntaxNode<RiceLanguage>;
 pub type RiceToken = SyntaxToken<RiceLanguage>;
 

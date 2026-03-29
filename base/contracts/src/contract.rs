@@ -8,6 +8,13 @@ use crate::error::ContractError;
 use crate::msg::ConfigResponse;
 use crate::state::{Config, VersionState};
 
+// [ ] https://cosmwasm.github.io/sylvia/ — https://docs.cosmwasm.com/
+// [ ] CONTRACT_NAME / VERSION — cw2::set_contract_version; env!("CARGO_PKG_*") or cue-mapped constants
+// [ ] instantiate — deps.api.addr_validate; events; admin from PASETO / env-validated paths
+// [ ] #[contract] #[sv::msg(instantiate|execute|query)] — full Sylvia surface
+// [ ] pause/unpause — only admin; RICE_* token validation
+// [ ] sudo — governance-only; force_transfer, slash — gated by chain
+
 /// Contract storage — add `Map` / `IndexedMap` / `Deque` fields as needed.
 pub struct Contract {
     pub config: Item<Config>,

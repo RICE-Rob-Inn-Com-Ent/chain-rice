@@ -6,6 +6,13 @@ use cosmwasm_schema::cw_serde;
 
 use crate::types::ContractVersion;
 
+// [ ] https://docs.cosmwasm.com/ — cw-storage-plus Item, Map, SnapshotMap, IndexedMap, Deque
+// [ ] ContractConfig — cw_serde; admin, paused, version; validation before persist
+// [ ] Item<ContractConfig> — key from const CONFIG_KEY / env-driven prefix, no scattered string literals
+// [ ] Map<Addr, Uint128> balances; SnapshotMap audit trail when RICE_SNAPSHOT_ENABLED
+// [ ] IndexedMap for secondary indexes; Deque<AuditEvent> cap from RICE_AUDIT_LOG_MAX
+// [ ] BALANCES, POLICIES, PROOF_STATUS, CONFIG, AUDIT_LOG, TOTAL_SUPPLY — keys as consts from single module
+
 /// Storage key for global config singleton.
 pub const CONFIG_KEY: &str = "cfg";
 /// Storage key for schema / migration version counter.

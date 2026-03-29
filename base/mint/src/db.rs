@@ -1,5 +1,8 @@
 //! Incremental compiler database — `salsa` storage and [`salsa::Database`] impl.
 
+// [ ] https://docs.rs/salsa/
+// [ ] inputs SourceFile; tracked parse/check/lower/codegen; file watch; parallel queries
+
 /// Super-trait for all `.rice` compiler databases (inputs + tracked queries).
 #[salsa::db]
 pub trait Db: salsa::Database {}

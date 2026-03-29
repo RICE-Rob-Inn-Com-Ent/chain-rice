@@ -7,6 +7,11 @@ use crate::error::ContractError;
 use crate::state::VersionState;
 use crate::Contract;
 
+// [ ] https://docs.cosmwasm.com/ — cw2 ensure_from_older_version
+// [ ] migrate — version guards; MigratedEvent; atomic state transforms
+// [ ] RICE_MAX_VERSION_JUMP — env-driven max jump
+// [ ] schema migration paths for breaking storage changes
+
 pub fn migrate(
     contract: &Contract,
     ctx: MigrateCtx,

@@ -1,5 +1,5 @@
 [package]
-name = "rice-mint"
+name = "clerk-mint"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -15,7 +15,7 @@ name = "rice-lsp"
 path = "src/lsp.rs"
 
 [dependencies]
-rice-util = { path = "../util" }
+clerk-util = { path = "../util" }
 logos.workspace = true
 chumsky.workspace = true
 rowan.workspace = true

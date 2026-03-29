@@ -3,6 +3,8 @@ use std::fmt::Display;
 
 use crate::error::{RiceError, RiceResult};
 
+// [ ] — map_clerk_err, require, tracing::error log_err
+
 /// Extension trait for [`RiceResult`] — map errors while preserving [`RiceError`] wrapping.
 pub trait ResultExt<T> {
     /// Map the error with a prefix context string.

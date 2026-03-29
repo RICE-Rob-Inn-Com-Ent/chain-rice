@@ -1,5 +1,5 @@
 [package]
-name = "rice-util"
+name = "clerk-util"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

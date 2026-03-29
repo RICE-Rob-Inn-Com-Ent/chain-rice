@@ -8,15 +8,15 @@ repository.workspace = true
 description = "RICE criterion benchmarks — contracts, ZK, compiler, policies, crypto"
 
 [[bin]]
-name = "rice-bench"
+name = "clerk-bench"
 path = "src/main.rs"
 
 [dependencies]
-rice-util = { path = "../util" }
-rice-contract = { path = "../contracts" }
-rice-private = { path = "../private" }
-rice-mint = { path = "../mint" }
-rice-policies = { path = "../policies" }
+clerk-util = { path = "../util" }
+clerk-contract = { path = "../contracts" }
+clerk-private = { path = "../private" }
+clerk-mint = { path = "../mint" }
+clerk-policies = { path = "../policies" }
 criterion.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
