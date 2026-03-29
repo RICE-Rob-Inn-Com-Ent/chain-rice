@@ -1,0 +1,29 @@
+[package]
+name = "rice-mint"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "RICE .rice compiler — lexer, parser, rowan CST, salsa queries, LSP"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "rice-lsp"
+path = "src/lsp.rs"
+
+[dependencies]
+rice-util = { path = "../util" }
+logos.workspace = true
+chumsky.workspace = true
+rowan.workspace = true
+salsa.workspace = true
+miette.workspace = true
+minijinja.workspace = true
+tower-lsp.workspace = true
+petgraph.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+async-trait.workspace = true

@@ -1,0 +1,20 @@
+//! Module dependency graph — topological order, cycle detection, dead-code reachability.
+
+use petgraph::algo::is_cyclic_directed;
+use petgraph::graph::DiGraph;
+use petgraph::visit::Topo;
+
+pub type ModuleGraph = DiGraph<String, ()>;
+
+pub fn topo_sort(graph: &ModuleGraph) -> Option<Vec<petgraph::prelude::NodeIndex>> {
+    let mut topo = Topo::new(graph);
+    let mut out = Vec::new();
+    while let Some(n) = topo.next(graph) {
+        out.push(n);
+    }
+    Some(out)
+}
+
+pub fn has_cycle(graph: &ModuleGraph) -> bool {
+    is_cyclic_directed(graph)
+}
