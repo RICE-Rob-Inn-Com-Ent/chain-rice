@@ -1,0 +1,27 @@
+[project]
+name = "sage-agent"
+version = "0.1.0"
+description = "SAGE agent — LangGraph, LiteLLM, Instructor, Outlines, Guardrails"
+license = { text = "AGPL-3.0-only" }
+authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
+requires-python = ">=3.13"
+dependencies = [
+  "litellm>=1.60.0",
+  "langgraph>=0.5.0",
+  "instructor>=1.6.0",
+  "outlines>=0.1.0,<2.0.0",
+  "guardrails-ai>=0.5.0",
+  "pydantic>=2.10.0",
+  "loguru>=0.7.0",
+  "tenacity>=9.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.uv]
+package = true

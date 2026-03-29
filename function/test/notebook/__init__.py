@@ -1,0 +1,1 @@
+"""Notebooki Marimo — walidacja interaktywna."""
