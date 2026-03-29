@@ -25,7 +25,7 @@ import pytest
 _ROOT = Path(__file__).resolve().parents[1]
 
 
-def pytest_configure(_config: pytest.Config) -> None:
+def pytest_configure(config: pytest.Config) -> None:
     """Mapuje `<repo>/function/<member>/src` na `function.<member>` (importy w testach)."""
     if sys.modules.get("function", None) and getattr(
         sys.modules["function"], "_sage_namespace_registered", False
