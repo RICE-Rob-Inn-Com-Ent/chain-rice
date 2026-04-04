@@ -1,0 +1,26 @@
+# TODO:
+# [ ] keys: app.name placeholder; nav.*; auth.*; error.*; cook.* — overridden per project
+# [ ] locales: strings_pl.i18n.yaml, strings_uk.i18n.yaml, strings_en.i18n.yaml — https://pub.dev/packages/slang
+
+# yaml-language-server: $schema=https://raw.githubusercontent.com/slang-i18n/slang/master/slang.yaml
+base_locale: en
+namespaces: true
+
+en:
+  common:
+    ok: OK
+    cancel: Cancel
+    loading: Loading
+    error: Error
+  nav:
+    back: Back
+    home: Home
+    menu: Menu
+  form:
+    required: Required
+    invalid: Invalid
+    submit: Submit
+  feedback:
+    success: Success
+    error: Error
+    warning: Warning

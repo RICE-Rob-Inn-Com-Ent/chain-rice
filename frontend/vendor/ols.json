@@ -1,0 +1,20 @@
+{
+  "collections": [
+    { "name": "vendor", "path": "." },
+    { "name": "gpu", "path": "gpu" },
+    { "name": "audio", "path": "audio" },
+    { "name": "video", "path": "video" },
+    { "name": "vision", "path": "vision" },
+    { "name": "window", "path": "window" },
+    { "name": "physics", "path": "physics" }
+  ],
+  "thread_pool_count": 4,
+  "enable_format": true,
+  "enable_hover": true,
+  "enable_snippets": true,
+  "enable_procedure_context": true,
+  "enable_references": true,
+  "enable_rename": true,
+  "enable_inlay_hints": true,
+  "verbose": false
+}

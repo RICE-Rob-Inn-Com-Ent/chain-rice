@@ -1,0 +1,156 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignore": [
+      "node_modules",
+      ".next",
+      "dist",
+      "build",
+      "target",
+      "out",
+      "bazel-*",
+      "*.min.js",
+      "*.min.css",
+      ".git",
+      "**/vendor/",
+      "**/.venv/",
+      "**/venv/",
+      "**/Pods/",
+      "**/__pycache__/",
+      "**/.nuxt/",
+      "**/.angular/",
+      "**/.svelte-kit/",
+      "bun.lockb",
+      "poetry.lock",
+      "Cargo.lock",
+      "Pipfile.lock",
+      "pubspec.lock",
+      "go.sum",
+      "Gemfile.lock",
+      "**/*_pb.js",
+      "**/*_pb.ts",
+      "**/*_pb2.py",
+      "**/*_grpc_pb.js",
+      "**/*.generated.ts",
+      "**/*.generated.js",
+      "**/*.gen.ts",
+      "**/*.gen.js",
+      "**/*.bundle.js",
+      "**/*.bundle.css",
+      "**/coverage/",
+      "**/.nyc_output/",
+      "**/test-results/",
+      "junit.xml",
+      "**/.cache/",
+      "**/.temp/",
+      "**/.tmp/",
+      "**/.pytest_cache/",
+      "**/.mypy_cache/",
+      "**/.ruff_cache/",
+      "MODULE.bazel.lock",
+      "**/*.db",
+      "**/*.sqlite",
+      "**/*.sqlite3",
+      "**/*.log",
+      "**/logs/",
+      "**/docs/_build/",
+      "**/site/",
+      "**/.terraform/",
+      "**/*.tfstate",
+      "**/*.tfstate.backup",
+      "CHANGELOG.md",
+      "CHANGELOG",
+      "CHANGES",
+      "**/artifacts/",
+      "**/typechain/",
+      "**/typechain-types/",
+      "**/Flutter/App.framework",
+      "**/Flutter/Flutter.framework",
+      "**/android/app/build/",
+      "**/android/.gradle/",
+      "**/ios/Pods/",
+      "**/ios/build/"
+    ],
+    "include": [
+      "app/**/*.ts",
+      "app/**/*.tsx",
+      "lib/**/*.ts",
+      "lib/**/*.tsx",
+      "components/**/*.ts",
+      "components/**/*.tsx",
+      "hooks/**/*.ts",
+      "hooks/**/*.tsx",
+      "providers/**/*.ts",
+      "providers/**/*.tsx",
+      "stores/**/*.ts",
+      "stores/**/*.tsx",
+      "test/**/*.ts",
+      "test/**/*.tsx",
+      "types/**/*.ts",
+      "**/*.d.ts",
+      "**/*.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noUselessFragments": "warn",
+        "useOptionalChain": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useConst": "warn",
+        "useImportType": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "warn"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "es5"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "overrides": [
+    {
+      "include": ["**/*.test.ts", "**/*.spec.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
+}
