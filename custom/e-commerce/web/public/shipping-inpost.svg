@@ -1,9 +1,0 @@
-<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-  <rect width="120" height="120" rx="24" fill="#111111"/>
-  <path d="M80 20C65 40 65 65 80 85C55 90 30 80 20 60C35 40 55 30 80 20Z" fill="#FFC800"/>
-  <path d="M20 60C32 65 44 67 56 67" stroke="#FFC800" stroke-width="6" stroke-linecap="round"/>
-  <path d="M28 40C34 44 40 47 46 49" stroke="#FFC800" stroke-width="6" stroke-linecap="round"/>
-  <path d="M30 80C38 76 44 72 50 68" stroke="#FFC800" stroke-width="6" stroke-linecap="round"/>
-</svg>
-
-
