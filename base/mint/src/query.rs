@@ -1,5 +1,11 @@
 //! Memoized compiler queries — inputs and tracked functions on [`crate::Db`](crate::Db).
 
+// TODO(rice):
+// [ ] CLERK / base — cryptographic & policy correctness; no UI.
+// [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
+// [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
+// [ ] Stack surface: tokio, cosmwasm-std, serde, thiserror, k256, arkworks, etc. — extend per crate purpose.
+//
 // [ ] https://docs.rs/salsa/
 // [ ] ParseQuery, CheckQuery, LowerQuery, CodegenQuery; cross-file; LSP queries hover/completion/defs/refs
 

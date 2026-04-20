@@ -1,0 +1,51 @@
+[project]
+name = "bench"
+version = "0.1.0"
+description = "Bench — tests, benchmarks, Marimo notebooks, audit scripts"
+license = { text = "AGPL-3.0-only" }
+authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
+requires-python = ">=3.13"
+dependencies = [
+  "agent",
+  "helper",
+  "job",
+  "simulation",
+  "vector",
+  "basedpyright>=1.20.0",
+  "marimo>=0.10.0",
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.25.0",
+  "pytest-mock>=3.14.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+testpaths = ["src"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = "test_*"
+asyncio_mode = "auto"
+addopts = "-v --strict-markers --tb=short"
+markers = [
+  "slow: marks tests as slow (skip with -m 'not slow')",
+  "integration: requires running external services",
+  "gpu: requires CUDA/ROCm GPU",
+  "quantum: requires Qiskit/PennyLane",
+  "qdrant: requires running Qdrant",
+  "nats: requires running NATS JetStream",
+  "temporal: requires running Temporal",
+  "litellm: requires LiteLLM / API keys",
+  "marimo: marimo notebook tests",
+]
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "ignore::PendingDeprecationWarning",
+]

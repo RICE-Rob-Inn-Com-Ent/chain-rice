@@ -1,0 +1,19 @@
+genrule(
+    name = "check",
+    srcs = ["Cargo.toml"],
+    out = "check.stamp",
+    cmd = """set -euo pipefail
+cd "$SRCDIR"
+HERE=`pwd`
+REPO=`git rev-parse --show-toplevel`
+export CLERK_ARTIFACT_ROOT="$REPO/buck-out/clerk-artifacts"
+export CARGO_TARGET_DIR="$CLERK_ARTIFACT_ROOT/cargo-target"
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+mkdir -p "$CARGO_TARGET_DIR"
+cd "$REPO/base"
+cargo check -p bench --locked
+cd "$HERE"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)

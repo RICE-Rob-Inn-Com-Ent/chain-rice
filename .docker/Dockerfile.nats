@@ -1,7 +1,7 @@
-# CUE source: infra/configs/docker/docker__Dockerfile.nats.cue (package docker; aggregator infra/configs/config.cue)
-# KING TODO map
-# TODO:
-# [ ] FROM nats:${NATS_VERSION}-alpine — version via ARG
-# [ ] COPY .docker/conf/nats.conf /etc/nats/nats.conf
-# [ ] EXPOSE RICE_NATS_CLIENT_PORT RICE_NATS_MONITOR_PORT RICE_NATS_CLUSTER_PORT
-# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_NATS_MONITOR_PORT}/healthz
+# syntax=docker/dockerfile:1
+# NATS — official Alpine tag (small glibc-free userland). Scratch tags exist but omit shell; healthchecks use HTTP from host mesh.
+ARG NATS_VERSION=2.10
+FROM nats:${NATS_VERSION}-alpine
+COPY .docker/conf/nats.conf /etc/nats/nats.conf
+EXPOSE 4222 8222 6222
+CMD ["--config", "/etc/nats/nats.conf"]

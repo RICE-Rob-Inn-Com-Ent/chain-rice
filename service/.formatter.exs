@@ -4,7 +4,7 @@
 
 [
   import_deps: [:phoenix, :ecto_sql, :plug_cowboy],
-  inputs: ["*.{ex,exs}", "{config,lib,test}/**/*.{ex,exs}"],
-  subdirectories: ["config", "lib", "test"],
+  inputs: ["*.{ex,exs}", "{config,core,pipeline,cluster,guard,connection,test}/**/*.{ex,exs}"],
+  subdirectories: ["config", "core", "pipeline", "cluster", "guard", "connection", "test"],
   line_length: 120
 ]

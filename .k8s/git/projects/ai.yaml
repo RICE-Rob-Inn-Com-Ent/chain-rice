@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/projects/ai.yaml — Argo CD AppProject for AI apps (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__projects__ai_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__projects__ai.yaml.cue
 # TODO:
 # [ ] kind: AppProject; allowed repos from RICE_GITHUB_REPO_URL patterns; destinations from RICE_K8S_ALLOWED_CLUSTERS
 
@@ -10,5 +10,5 @@ metadata:
   name: king-stub-project-ai
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__projects__ai_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__projects__ai.yaml.cue
 data: {}

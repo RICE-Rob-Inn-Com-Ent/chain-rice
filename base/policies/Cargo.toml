@@ -1,22 +1,43 @@
 [package]
-name = "clerk-policies"
+name = "policies"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "RICE policy engine — CEL, FIX, ISO 4217, schedules, audit"
+description = "Policy — CEL, FIX, ISO 4217, schedules, audit"
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
-clerk-util = { path = "../util" }
+# Organ: `util` only; no direct path deps to other base organs.
+util = { path = "../util" }
+# --- CEL & wire ---
 cel-interpreter.workspace = true
-fefix.workspace = true
+cel-parser.workspace = true
+fefix = { workspace = true, optional = true }
 quick-xml.workspace = true
 iso_currency.workspace = true
+k256.workspace = true
 chrono.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
+hex.workspace = true
+rust_decimal.workspace = true
+rayon.workspace = true
+sha2.workspace = true
+ulid.workspace = true
+prost = { workspace = true, optional = true }
+nats = { workspace = true, optional = true }
+
+[features]
+default = ["fix-protocol"]
+calc-bridge = ["util/calc-bridge"]
+audit-proto = ["dep:prost"]
+audit-nats = ["dep:nats"]
+fix-protocol = ["dep:fefix"]
+xml-interchange = []
+# Marker for CosmWasm-adjacent call sites; on-chain types live in the `contract` crate, not here.
+chain = []

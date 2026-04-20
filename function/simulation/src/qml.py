@@ -1,5 +1,11 @@
 """PennyLane — QNode, urządzenia, obwody wariacyjne, warstwy kwantowe."""
 
+# TODO(rice):
+# [ ] SAGE / function — ML & orchestration; no secrets in code.
+# [ ] Soft-code: pydantic-settings / env vars; never API keys in repo.
+# [ ] Contracts: gRPC/proto from gen when wired; schema changes via MASON.
+# [ ] Stack surface: numpy, pydantic, httpx, langgraph, qdrant-client, etc. — extend per package.
+#
 from __future__ import annotations
 
 from collections.abc import Callable

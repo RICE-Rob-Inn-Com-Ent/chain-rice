@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# CUE source: infra/configs/docker/docker__etc__pull.sh.cue (package docker; aggregator infra/configs/config.cue)
+# CUE source: infra/configs/docker/etc__pull.sh.cue (package docker; aggregator infra/configs/config.cue)
 # Do not overwrite from CUE gen until shard content is wired; edit the .cue shard.
 
 # KING TODO map

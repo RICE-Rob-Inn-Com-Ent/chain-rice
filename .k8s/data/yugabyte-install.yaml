@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/data/yugabyte-install.yaml — distributed SQL (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__data__yugabyte-install_yaml.cue
+# CUE mirror: infra/configs/kubernetes/data__yugabyte-install.yaml.cue
 # TODO:
 # [ ] YugabyteDB helm/operator; replication from RICE_YUGABYTE_RF, storage from RICE_YUGABYTE_STORAGE_CLASS
 # [ ] SQL connection string composed at runtime from RICE_YUGABYTE_HOST, RICE_YUGABYTE_PORT, RICE_YUGABYTE_DB
@@ -12,5 +12,5 @@ metadata:
   name: king-placeholder-yugabyte-install
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__data__yugabyte-install_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/data__yugabyte-install.yaml.cue
 data: {}

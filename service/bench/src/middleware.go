@@ -17,9 +17,9 @@ import (
 
 	otelfiber "github.com/gofiber/contrib/otelfiber/v2"
 	"github.com/gofiber/fiber/v2"
+	ricegrpc "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src/ricegrpc"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-	"google.golang.org/grpc"
 )
 
 // FiberOTel returns Fiber middleware that traces HTTP server spans and optional metrics.
@@ -28,13 +28,13 @@ func FiberOTel(opts ...otelfiber.Option) fiber.Handler {
 }
 
 // GRPCServerStatsHandler instruments incoming gRPC with OpenTelemetry (use with grpc.NewServer).
-func GRPCServerStatsHandler(opts ...otelgrpc.Option) grpc.ServerOption {
-	return grpc.StatsHandler(otelgrpc.NewServerHandler(opts...))
+func GRPCServerStatsHandler(opts ...otelgrpc.Option) ricegrpc.ServerOption {
+	return ricegrpc.StatsHandler(otelgrpc.NewServerHandler(opts...))
 }
 
 // GRPCClientStatsHandler instruments outgoing gRPC client calls.
-func GRPCClientStatsHandler(opts ...otelgrpc.Option) grpc.DialOption {
-	return grpc.WithStatsHandler(otelgrpc.NewClientHandler(opts...))
+func GRPCClientStatsHandler(opts ...otelgrpc.Option) ricegrpc.DialOption {
+	return ricegrpc.WithStatsHandler(otelgrpc.NewClientHandler(opts...))
 }
 
 // InstrumentHTTPHandler wraps a net/http.Handler with client/server semantic conventions.

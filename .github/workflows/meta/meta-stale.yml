@@ -1,5 +1,5 @@
 # KING TODO map
-# .github/workflows/meta/meta-stale.yml — CUE mirror: infra/configs/github/github__workflows__meta__meta-stale_yml.cue
+# .github/workflows/meta/meta-stale.yml — CUE mirror: infra/configs/github/workflows__meta__meta-stale.yml.cue
 # TODO:
 # [ ] align stale exempt labels with rice-core taxonomy; RICE_STALE_EXEMPT_ISSUES / RICE_STALE_EXEMPT_PRS from org vars if needed
 # [ ] optional: post to RICE_CI_SLACK_WEBHOOK on mass-close (secret ref)

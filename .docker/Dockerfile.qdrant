@@ -1,7 +1,7 @@
-# CUE source: infra/configs/docker/docker__Dockerfile.qdrant.cue (package docker; aggregator infra/configs/config.cue)
-# KING TODO map
-# TODO:
-# [ ] FROM qdrant/qdrant:${QDRANT_VERSION}
-# [ ] COPY .docker/conf/qdrant.conf /qdrant/config/production.yaml
-# [ ] EXPOSE RICE_QDRANT_HTTP_PORT RICE_QDRANT_GRPC_PORT
-# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_QDRANT_HTTP_PORT}/readyz
+# syntax=docker/dockerfile:1
+# Qdrant — official image (Rust static binary in minimal base). Upstream, not distroless, but single-binary layout.
+ARG QDRANT_VERSION=v1.12.5
+FROM qdrant/qdrant:${QDRANT_VERSION}
+COPY .docker/conf/qdrant.yaml /qdrant/config/production.yaml
+ENV QDRANT__CONFIG_PATH=/qdrant/config/production.yaml
+EXPOSE 6333 6334

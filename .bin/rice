@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+COMMAND=$1
+ARGS="${@:1}"
+
+if [[ "$COMMAND" == "help" || "$COMMAND" == "" ]]; then
+    just "$@"
+    exit $?
+fi
+
+echo -n "🎬 Record this .rice session? [y/N]: "
+read -t 3 -n 1 ans
+echo ""
+
+if [[ "$ans" == "y" || "$ans" == "Y" ]]; then
+    export RICE_CMD="just $ARGS"
+    vhs vhs.tape -o "assets/demo_${COMMAND}.gif"
+else
+    just "$@"
+fi

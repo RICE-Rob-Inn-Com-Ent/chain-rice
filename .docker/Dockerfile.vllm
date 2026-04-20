@@ -1,15 +1,4 @@
-# CUE source: infra/configs/docker/docker__Dockerfile.vllm.cue (package docker; aggregator infra/configs/config.cue)
-# KING TODO map
-# TODO:
-# [ ] FROM vllm/vllm-openai:${VLLM_VERSION} — OpenAI-compatible server
-# [ ] ARG BASE_FROM — switch to nvidia/cuda base when RICE_VLLM_CUDA_BASE=true
-# [ ] ENV VLLM_MODEL=${RICE_VLLM_MODEL}
-#     VLLM_ENABLE_LORA=true
-#     VLLM_MAX_LORA_RANK=${RICE_VLLM_MAX_LORA_RANK} (default: 128)
-#     VLLM_GPU_MEMORY_UTIL=${RICE_VLLM_GPU_MEM_UTIL} (default: 0.90)
-#     VLLM_MAX_NUM_SEQS=${RICE_VLLM_MAX_SEQS} (default: 1 for 6GB VRAM)
-#     VLLM_TENSOR_PARALLEL_SIZE=${RICE_VLLM_TENSOR_PARALLEL} (default: 1)
-# [ ] VOLUME /lora — LoRA adapters from function/model/lora/
-# [ ] VOLUME /weights — base GGUF weights from function/model/weights/
-# [ ] EXPOSE RICE_VLLM_PORT (default: 8000)
-# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_VLLM_PORT}/health
+# syntax=docker/dockerfile:1
+# vLLM — NVIDIA CUDA image; not distroless by design.
+FROM vllm/vllm-openai:latest
+EXPOSE 8000

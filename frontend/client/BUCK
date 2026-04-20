@@ -1,0 +1,2 @@
+# Buck2 source manifest — `client` application package.
+# glob(["lib/src/**/*.dart", "lib/unit.dart", "lib/main.dart"])

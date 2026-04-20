@@ -33,6 +33,11 @@ func MustNewV4() UUID {
 	return uuid.Must(uuid.NewRandom())
 }
 
+// NewString returns a new random UUID string (version 4), same as google/uuid.NewString.
+func NewString() string {
+	return uuid.NewString()
+}
+
 // NewV7 returns a time-ordered UUID version 7.
 func NewV7() (UUID, error) {
 	return uuid.NewV7()

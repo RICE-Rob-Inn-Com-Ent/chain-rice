@@ -14,7 +14,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"google.golang.org/grpc"
+	ricegrpc "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src/ricegrpc"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -60,7 +60,7 @@ func (m Module) ExportGenesis(ctx sdk.Context) []byte {
 }
 
 // RegisterGRPCServices registers gRPC services on the app (alternative path for some SDK versions).
-func (m Module) RegisterGRPCServices(reg grpc.ServiceRegistrar) {
+func (m Module) RegisterGRPCServices(reg ricegrpc.ServiceRegistrar) {
 	_ = reg
 	_ = m
 }

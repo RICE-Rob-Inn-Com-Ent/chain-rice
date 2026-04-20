@@ -14,23 +14,20 @@ package web
 import (
 	"net"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
-	healthpb "google.golang.org/grpc/health/grpc_health_v1"
-	"google.golang.org/grpc/reflection"
+	ricegrpc "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src/ricegrpc"
 )
 
 // NewGRPCServer builds a gRPC server with reflection and the standard health service (for probes and mesh checks).
-func NewGRPCServer(opts ...grpc.ServerOption) *grpc.Server {
-	s := grpc.NewServer(opts...)
-	hs := health.NewServer()
-	healthpb.RegisterHealthServer(s, hs)
-	reflection.Register(s)
+func NewGRPCServer(opts ...ricegrpc.ServerOption) *ricegrpc.Server {
+	s := ricegrpc.NewServer(opts...)
+	hs := ricegrpc.NewHealthServer()
+	ricegrpc.RegisterHealthServer(s, hs)
+	ricegrpc.RegisterReflection(s)
 	return s
 }
 
 // ListenGRPC listens on addr (e.g. ":50051") and blocks until the server stops.
-func ListenGRPC(s *grpc.Server, addr string) error {
+func ListenGRPC(s *ricegrpc.Server, addr string) error {
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err

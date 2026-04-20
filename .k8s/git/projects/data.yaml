@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/projects/data.yaml — Argo CD AppProject for data plane (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__projects__data_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__projects__data.yaml.cue
 # TODO:
 # [ ] Restrict sources to Helm repos / OCI registries from RICE_HELM_REPO_ALLOWLIST
 
@@ -10,5 +10,5 @@ metadata:
   name: king-stub-project-data
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__projects__data_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__projects__data.yaml.cue
 data: {}

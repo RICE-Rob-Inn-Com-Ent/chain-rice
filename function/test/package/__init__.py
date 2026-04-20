@@ -1,1 +1,0 @@
-"""Testy jednostkowe modułów `function/`."""

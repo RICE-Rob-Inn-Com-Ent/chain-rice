@@ -19,8 +19,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
+
+	"github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src"
 )
 
 // SessionStore is user session state in Valkey (opaque blobs; PASETO/JWT ids live as keys).
@@ -48,7 +49,7 @@ func (s *SessionStore) CreateSession(ctx context.Context, ttl time.Duration, dat
 	if s == nil || s.Client == nil {
 		return "", errors.New("database: nil session store")
 	}
-	sessionID = uuid.NewString()
+	sessionID = kit.NewString()
 	b, err := json.Marshal(data)
 	if err != nil {
 		return "", err

@@ -1,0 +1,3 @@
+# Buck2 source manifest — `model` Dart package.
+# Dart requires libraries under `lib/`. Equivalent to requested:
+#   glob(["src/**/*.dart", "unit.dart"])  →  lib/src/**/*.dart, lib/unit.dart

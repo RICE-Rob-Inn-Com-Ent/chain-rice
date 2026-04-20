@@ -1,7 +1,0 @@
-apiVersion: v2
-name: cockroachdb
-description: CockroachDB Core (open-source) on Kubernetes
-type: application
-version: 1.0.0
-appVersion: "23.2"
-

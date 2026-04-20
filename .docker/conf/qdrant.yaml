@@ -1,0 +1,8 @@
+# Minimal Qdrant config for local compose (MASON CUE TODOs above remain in qdrant.conf as design notes).
+log_level: INFO
+telemetry_disabled: true
+storage:
+  storage_path: /qdrant/storage
+service:
+  http_port: 6333
+  grpc_port: 6334

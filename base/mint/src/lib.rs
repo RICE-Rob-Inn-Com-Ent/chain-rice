@@ -1,5 +1,11 @@
 //! RICE `.rice` compiler — lexer (`logos`), parser (`chumsky`), CST (`rowan`), incremental queries (`salsa`).
 
+// TODO(rice):
+// [ ] CLERK / base — cryptographic & policy correctness; no UI.
+// [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
+// [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
+// [ ] Stack surface: tokio, cosmwasm-std, serde, thiserror, k256, arkworks, etc. — extend per crate purpose.
+//
 // [ ] https://docs.rs/logos/ https://docs.rs/chumsky/ https://docs.rs/rowan/ https://docs.rs/salsa/
 // [ ] pub mod lexer..lsp, error; export Lexer, Parser, AstNode, Codegen, Database; features lsp, parallel
 

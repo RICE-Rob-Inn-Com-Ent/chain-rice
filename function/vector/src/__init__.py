@@ -1,5 +1,11 @@
 """Vector — embeddingi, Qdrant, BM25, hybryda RRF, chunking, RAG pipeline."""
 
+# TODO(rice):
+# [ ] SAGE / function — ML & orchestration; no secrets in code.
+# [ ] Soft-code: pydantic-settings / env vars; never API keys in repo.
+# [ ] Contracts: gRPC/proto from gen when wired; schema changes via MASON.
+# [ ] Stack surface: numpy, pydantic, httpx, langgraph, qdrant-client, etc. — extend per package.
+#
 from __future__ import annotations
 
 from .chunk import TextChunk, chunk_document, split_fixed_windows, split_paragraphs_then_windows, strip_html

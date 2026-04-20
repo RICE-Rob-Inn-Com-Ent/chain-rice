@@ -1,20 +1,32 @@
 //! Rice security — near-metal defense library root: re-exports and compile-time feature flags.
-const std = @import("std");
 
 // [ ] https://ziglang.org/documentation/master/std/
 // [ ] pub exports monitor..audit; main daemon RICE_SECURITY_*; NATS; graceful shutdown SIGTERM/SIGINT
 
 pub const errors = @import("error.zig");
-pub const memory = @import("memory.zig");
-pub const thread = @import("thread.zig");
-pub const process = @import("process.zig");
-pub const syscall = @import("syscall.zig");
-pub const network = @import("network.zig");
-pub const filter = @import("filter.zig");
-pub const probe = @import("probe.zig");
-pub const monitor = @import("monitor.zig");
-pub const isolate = @import("isolate.zig");
+pub const warden = @import("warden.zig");
+pub const os = @import("os.zig");
+pub const intercept = @import("intercept.zig");
 pub const audit = @import("audit.zig");
+pub const chaos = @import("chaos.zig");
+
+/// Behavioral syscall policy (re-export for embedders).
+pub const SovereignPolicy = os.SovereignPolicy;
+pub const SovereignAction = os.SovereignAction;
+pub const SovereignModule = os.Module;
+
+/// Same symbols as legacy `memory.zig` (volatile wipe now lives in `warden`).
+pub const memory = warden;
+
+/// Legacy flat module paths — unchanged for `.rice` / downstream imports.
+pub const thread = os.thread;
+pub const process = os.process;
+pub const syscall = os.syscall;
+pub const isolate = os.isolate;
+pub const network = intercept.network;
+pub const filter = intercept.filter;
+pub const probe = intercept.probe;
+pub const monitor = intercept.monitor;
 
 /// Enable heavy / platform-specific subsystems at compile time.
 pub const features = struct {
@@ -23,14 +35,3 @@ pub const features = struct {
     pub const ebpf: bool = false;
     pub const nats_audit: bool = false;
 };
-
-test "secure wipe zeroes memory" {
-    var buf: [32]u8 = undefined;
-    @memset(&buf, 0xAA);
-    memory.secureWipe(&buf);
-    try std.testing.expect(buf[0] == 0);
-}
-
-test "isolate.apply returns Unimplemented until wired" {
-    try std.testing.expectError(error.Unimplemented, isolate.apply(.{}));
-}

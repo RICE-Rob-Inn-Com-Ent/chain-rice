@@ -15,23 +15,22 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
+	ricegrpc "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src/ricegrpc"
 )
 
 // UnaryLoggingInterceptor is a gRPC unary interceptor stub (attach OTel / zap here).
-func UnaryLoggingInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, h grpc.UnaryHandler) (any, error) {
+func UnaryLoggingInterceptor(ctx context.Context, req any, info *ricegrpc.UnaryServerInfo, h ricegrpc.UnaryHandler) (any, error) {
 	return h(ctx, req)
 }
 
 // StreamLoggingInterceptor is a gRPC stream interceptor stub.
-func StreamLoggingInterceptor(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, h grpc.StreamHandler) error {
+func StreamLoggingInterceptor(srv any, ss ricegrpc.ServerStream, info *ricegrpc.StreamServerInfo, h ricegrpc.StreamHandler) error {
 	return h(srv, ss)
 }
 
 // UnaryAuthInterceptor reads gRPC metadata (e.g. authorization) before invoking the handler.
-func UnaryAuthInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, h grpc.UnaryHandler) (any, error) {
-	_, _ = metadata.FromIncomingContext(ctx)
+func UnaryAuthInterceptor(ctx context.Context, req any, info *ricegrpc.UnaryServerInfo, h ricegrpc.UnaryHandler) (any, error) {
+	_, _ = ricegrpc.FromIncomingContext(ctx)
 	return h(ctx, req)
 }
 

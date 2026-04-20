@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/apps/root.yaml — root Argo CD Application (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__apps__root_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__apps__root.yaml.cue
 # TODO:
 # [ ] kind: Application; metadata.name from RICE_ARGOCD_ROOT_APP_NAME
 # [ ] spec.source.repoURL: ${RICE_GITHUB_REPO_URL}, targetRevision: ${RICE_K8S_TARGET_REV}
@@ -13,5 +13,5 @@ metadata:
   name: king-stub-git-apps-root
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__apps__root_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__apps__root.yaml.cue
 data: {}

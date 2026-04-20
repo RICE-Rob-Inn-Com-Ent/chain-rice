@@ -1,4 +1,4 @@
-# Contributing to .rice (NOT READY)
+# Contributing to .rice SDK
 
 Welcome to the pit stop. If you want to push code to .rice, you need to follow
 the High-Performance Protocol. No bloat, no legacy, just pure logic.
@@ -19,8 +19,6 @@ In .rice, we use the right tool for the job. Here’s the "logic-gate" for our 8
 - **Mojo** – AI infrastructure. Performance of C, flexibility of Python.
 
 - **Go** – Networking & Cloud (Traefik/Gateway). Keep it simple, keep it fast.
-
-- **Ruby** – Live-coding audio & rapid prototyping. Imagination over syntax.
 
 - **TypeScript** – Frontend interfaces (Muse/Bard). Strict types only.
 

@@ -1,0 +1,9 @@
+# .lefthook-local.yml — personal overrides, never commit
+# skip slow checks locally — CI runs them all
+
+pre-push:
+  commands:
+    flutter-test:
+      skip: true    # slow on local — CI handles it
+    trufflehog-full:
+      skip: true    # slow — runs in pre-commit already

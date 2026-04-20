@@ -1,0 +1,2 @@
+# Buck2 source manifest — `lang` Dart package.
+# glob(["lib/src/**/*.dart", "lib/unit.dart", "lib/i18n/**/*"])

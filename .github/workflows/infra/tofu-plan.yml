@@ -1,6 +1,6 @@
 # KING TODO map
 # .github/workflows/infra/tofu-plan.yml — OpenTofu plan (soft-coded)
-# CUE mirror for IaC intent: infra/configs/terraform/opentofu__** (generator → .opentofu/)
+# CUE mirror for IaC intent: infra/configs/terraform/** (generator → .opentofu/)
 # TODO:
 # [ ] tofu init/plan per RICE_TOFU_WORKSPACE (dev/stag/prod); backend config from RICE_TOFU_BACKEND_* secrets/vars
 # [ ] no plaintext cloud keys — OIDC or RICE_AWS_ROLE_ARN / RICE_GCP_WORKLOAD_ID_PROVIDER style vars only

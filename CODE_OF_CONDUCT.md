@@ -1,4 +1,4 @@
-# Code of Conduct: .rice OS (NOT READY)
+# Code of Conduct: .rice SDK
 
 ## 0. The Root Philosophy 🧠
 

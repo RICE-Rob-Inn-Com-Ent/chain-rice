@@ -1,24 +1,28 @@
-//! CosmWasm-facing hot paths: hashing and amount conversions (extend with `cw-multi-test` flows later).
-use rice_contract::crypto::sha256_digest;
-use rice_contract::types::uint128_to_decimal;
-use cosmwasm_std::Uint128;
-use criterion::{black_box, Criterion};
+//! CosmWasm [`contract::crypto`] hot paths.
 
-// [ ] https://docs.rs/criterion/ — https://docs.cosmwasm.com/
-// [ ] transfer, mint, verify_proof, query_balance, query_all_balances, policy in contract
+use criterion::{Criterion, black_box};
+
+use crate::{BenchRow, smoke_ns};
+
+pub fn smoke_rows() -> Vec<BenchRow> {
+    let data = b"rice-clerk-contract-smoke";
+    let ns = smoke_ns(|| {
+        let _ = black_box(contract::crypto::sha256_digest(data));
+    });
+    let digest = contract::crypto::sha256_digest(data);
+    vec![BenchRow {
+        module: "contract/crypto",
+        scenario: "sha256_digest",
+        ns,
+        notes: format!("digest0={:02x}", digest[0]),
+    }]
+}
 
 pub fn register(c: &mut Criterion) {
     let mut g = c.benchmark_group("contracts");
+    let data = b"rice-clerk-contract-bench";
     g.bench_function("sha256_digest", |b| {
-        b.iter(|| {
-            sha256_digest(black_box(
-                b"rice benchmark payload - instantiate/execute/query workloads",
-            ))
-        })
-    });
-    let amt = Uint128::from(987_654_321u128);
-    g.bench_function("uint128_to_decimal", |b| {
-        b.iter(|| uint128_to_decimal(black_box(amt)))
+        b.iter(|| black_box(contract::crypto::sha256_digest(black_box(data))));
     });
     g.finish();
 }

@@ -1,1 +1,0 @@
-"""Bezpieczeństwo: SAST, audyt zależności."""

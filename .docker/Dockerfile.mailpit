@@ -1,9 +1,5 @@
-# CUE source: infra/configs/docker/docker__Dockerfile.mailpit.cue (package docker; aggregator infra/configs/config.cue)
-# KING TODO map
-# TODO:
-# [ ] FROM axllent/mailpit:${MAILPIT_VERSION}
-# [ ] COPY .docker/conf/mailpit.conf /etc/mailpit/mailpit.conf
-# [ ] ENV MP_SMTP_BIND_ADDR=0.0.0.0:${RICE_MAILPIT_SMTP_PORT}
-# [ ] EXPOSE RICE_MAILPIT_SMTP_PORT RICE_MAILPIT_UI_PORT
-# [ ] profiles: [dev] enforced — never in production
-# [ ] HEALTHCHECK curl -sf http://localhost:${RICE_MAILPIT_UI_PORT}/healthz
+# syntax=docker/dockerfile:1
+# Mailpit — small Go binary on Alpine (upstream-maintained).
+ARG MAILPIT_VERSION=v1.22
+FROM axllent/mailpit:${MAILPIT_VERSION}
+EXPOSE 1025 8025

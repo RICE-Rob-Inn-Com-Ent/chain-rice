@@ -1,7 +1,7 @@
 [project]
-name = "sage-job"
+name = "job"
 version = "0.1.0"
-description = "SAGE job — Polars, NumPy, SciPy, Mojo kernels"
+description = "Job — Polars, NumPy, SciPy, Mojo kernels"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
 requires-python = ">=3.13"

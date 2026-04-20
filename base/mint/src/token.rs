@@ -1,5 +1,11 @@
 //! Token kinds for `.rice` — `logos` lexer.
 
+// TODO(rice):
+// [ ] CLERK / base — cryptographic & policy correctness; no UI.
+// [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
+// [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
+// [ ] Stack surface: tokio, cosmwasm-std, serde, thiserror, k256, arkworks, etc. — extend per crate purpose.
+//
 use logos::Logos;
 
 // [ ] https://docs.rs/logos/ — https://docs.rs/rowan/

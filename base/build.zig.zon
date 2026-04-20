@@ -1,17 +1,27 @@
-// TODO: https://ziglang.org/documentation/master/std/
-// [ ] .name — package enum literal from cue export / env mapping, not ad-hoc string
-// [ ] .version — semver from release tooling / env
-// [ ] .minimum_zig_version — toolchain floor from infra matrix, not a single hardcoded patch
-// [ ] .fingerprint — regenerate when renaming package (Zig 0.15+)
-// [ ] optional dep zig-network when RICE_SECURITY_NETWORK — .url + .hash from zig fetch output
-// [ ] document libpcap: system path via pixi / NIX; linkSystemLibrary("pcap") in build.zig
-// [ ] .paths — include build.zig, build.zig.zon, security/, future modules via glob from cue
 .{
-    .name = .rice_clerk_base,
+    // Identity — declares the Clerk root package for the .rice sovereign machine (resolver id + semver).
+    .name = .security,
     .version = "0.1.0",
-    .fingerprint = 0xe9f7b839cba0f758,
+
+    // Toolchain — compiler floor so ZON fields and package manifests match the supported matrix.
     .minimum_zig_version = "0.15.0",
-    .dependencies = .{},
+
+    // Security Envelope — immutable package fingerprint for reproducible graphs (rotate if .name changes).
+    .fingerprint = 0xc59bd5c176f9dd21,
+
+    // Security Envelope — external roots: watchdog module binds financial / logical operations to audited Zig.
+    .dependencies = .{
+        .security = .{
+            .path = "security",
+        },
+        // Enable via RICE_SECURITY_NETWORK; requires .url and .hash from zig fetch.
+        // .@"zig-network" = .{
+        //     .url = "https://github.com/MasterQ32/zig-network/archive/refs/heads/master.tar.gz",
+        //     .hash = "1220…",
+        // },
+    },
+
+    // Security Envelope — publish set: ship build scripts plus nested security tree for recursive dependency builds.
     .paths = .{
         "build.zig",
         "build.zig.zon",

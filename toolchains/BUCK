@@ -1,0 +1,4 @@
+# Demo toolchains from bundled Buck2 prelude — enough for genrule / command_alias shims.
+load("@prelude//toolchains:demo.bzl", "system_demo_toolchains")
+
+system_demo_toolchains()

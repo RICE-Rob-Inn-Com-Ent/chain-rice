@@ -17,6 +17,7 @@ out/
 *.tsbuildinfo
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -48,9 +49,6 @@ logs/
 *.temp
 tmp/
 temp/
-.env
-.env.local
-.env.*.local
 *.pem
 *.key
 *.cert
@@ -90,3 +88,6 @@ release/
 *.rej
 .vscode-test
 .github/instructions/snyk_rules.instructions.md
+
+# Trunk CLI — tworzy symlinki do ~/.cache/trunk/repos/… przy `trunk check` itd.
+.trunk/

@@ -1,17 +1,20 @@
 [package]
-name = "clerk-private"
+name = "private"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "RICE ZK layer — Groth16, BN254/BLS12-381 circuits, proof lifecycle"
+description = "ZK layer — Groth16, BN254/BLS12-381 circuits, proof lifecycle"
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
-clerk-util = { path = "../util" }
+util = { path = "../util" }
+bytes.workspace = true
+num-bigint.workspace = true
+num-traits.workspace = true
 ark-bls12-381.workspace = true
 ark-bn254.workspace = true
 ark-crypto-primitives.workspace = true
@@ -20,7 +23,14 @@ ark-ff.workspace = true
 ark-groth16.workspace = true
 ark-serialize.workspace = true
 ark-relations.workspace = true
+ark-r1cs-std.workspace = true
 ark-snark.workspace = true
 ark-std.workspace = true
 thiserror.workspace = true
 rand.workspace = true
+sha2.workspace = true
+tracing.workspace = true
+rayon.workspace = true
+chacha20poly1305.workspace = true
+hex.workspace = true
+memmap2.workspace = true

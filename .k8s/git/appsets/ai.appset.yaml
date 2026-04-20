@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/appsets/ai.appset.yaml — ApplicationSet for AI roles (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__appsets__ai.appset_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__appsets__ai.appset.yaml.cue
 # TODO:
 # [ ] generators: matrix/list from RICE_ARGOCD_AI_CLUSTERS, RICE_ARGOCD_AI_PATHS
 # [ ] template.spec.source.repoURL never hardcoded — use RICE_GITHUB_REPO_URL
@@ -12,5 +12,5 @@ metadata:
   name: king-stub-appset-ai
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__appsets__ai.appset_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__appsets__ai.appset.yaml.cue
 data: {}

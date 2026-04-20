@@ -30,15 +30,13 @@
     }
   ],
   "settings": {
+    // ── editor — global ───────────────────────────────────
     "workbench.colorTheme": "Cursor Dark Midnight",
     "workbench.iconTheme": "material-icon-theme",
     "material-icon-theme.activeIconPack": "react_redux",
     "material-icon-theme.folders.theme": "specific",
     "material-icon-theme.saturation": 1,
     "material-icon-theme.opacity": 1,
-    "vscode-pets.petSize": "medium",
-    "vscode-pets.theme": "forest",
-    "vscode-pets.throwBallWithMouse": true,
     "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorBlinking": "smooth",
     "editor.smoothScrolling": true,
@@ -49,58 +47,13 @@
     "editor.renderLineHighlight": "all",
     "editor.letterSpacing": 0.33,
     "editor.lineHeight": 25,
-    "npm.enableScriptExplorer": false,
-    "git.openRepositoryInParentFolders": "always",
-    "explorer.confirmDragAndDrop": false,
-    "outline.showVariables": false,
-    "outline.showFields": false,
-    "scm.diffDecorations": "gutter",
     "editor.linkedEditing": true,
     "editor.formatOnSave": true,
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
-    "errorLens.enabledDiagnosticLevels": [
-      "error",
-      "warning"
-    ],
-    "errorLens.fontStyleItalic": true,
-    "[python]": {
-      "editor.defaultFormatter": "charliermarsh.ruff",
-      "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit"
-      }
-    },
-    "[typescript][javascript][json][jsonc]": {
-      "editor.defaultFormatter": "biomejs.biome"
-    },
-    "[rust]": {
-      "editor.defaultFormatter": "rust-lang.rust-analyzer"
-    },
-    "[opentofu]": {
-      "editor.formatOnSave": false
-    },
-    "[glsl]": {
-      "editor.defaultFormatter": "slevesque.vscode-glsl"
-    },
-    "todo-tree.highlights.defaultHighlight": {
-      "type": "text",
-      "fontWeight": "bold",
-      "borderRadius": "4px"
-    },
-    // TODO:
-    // [ ] add todo-tree tag configurations for all rice TODO categories:
-    //     "TODO" (white), "FIXME" (red), "HACK" (orange), "NOTE" (blue)
-    //     tag regex should match `# [ ]` and `# [x]` patterns from Justfile TODOs
-    // [ ] add "remote.SSH.remotePlatform" if dev happens on remote Linux machine
-    //     reads RICE_REMOTE_HOST from .envrc — not hardcoded
-    // [ ] add "terminal.integrated.env.linux" pointing to pixi-activated PATH
-    //     reads from .envrc via direnv — not hardcoded
-    // [ ] add language-specific LSP settings for OLS (Odin Language Server):
-    //     "ols.server.path": reads from pixi env bin path
-    // [ ] add "cue.path" extension setting — reads cue binary from pixi env
-    // [ ] add Haskell LSP settings: "haskell.toolchain": "stack"
+    // ── files — global ────────────────────────────────────
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
     "files.associations": {
       "Justfile": "just",
       "*.mojo": "mojo",
@@ -111,18 +64,352 @@
       "*.frag": "glsl",
       "*.vert": "glsl",
       "*.glsl": "glsl",
-      "*.odin": "odin"
+      "*.odin": "odin",
+      "*.rice": "rice"
+    },
+    // ── explorer ──────────────────────────────────────────
+    "explorer.confirmDragAndDrop": false,
+    "outline.showVariables": false,
+    "outline.showFields": false,
+    "scm.diffDecorations": "gutter",
+    "git.openRepositoryInParentFolders": "always",
+    // ── error lens ────────────────────────────────────────
+    "errorLens.enabledDiagnosticLevels": [
+      "error",
+      "warning"
+    ],
+    "errorLens.fontStyleItalic": true,
+    // ── todo tree ─────────────────────────────────────────
+    "todo-tree.highlights.defaultHighlight": {
+      "type": "text",
+      "fontWeight": "bold",
+      "borderRadius": "4px"
+    },
+    "todo-tree.highlights.customHighlight": {
+      "TODO": {
+        "foreground": "#ffffff",
+        "background": "#3a3a3a",
+        "iconColour": "#ffffff",
+        "icon": "check"
+      },
+      "FIXME": {
+        "foreground": "#ff5555",
+        "background": "#3a0000",
+        "iconColour": "#ff5555",
+        "icon": "flame"
+      },
+      "HACK": {
+        "foreground": "#ffb86c",
+        "background": "#3a2000",
+        "iconColour": "#ffb86c",
+        "icon": "alert"
+      },
+      "NOTE": {
+        "foreground": "#8be9fd",
+        "background": "#00202a",
+        "iconColour": "#8be9fd",
+        "icon": "info"
+      }
+    },
+    "todo-tree.regex.regex": "(//|#|--|\\*|<!--)\\s*($TAGS)|\\[ \\]|\\[x\\]",
+    "todo-tree.general.tags": [
+      "TODO",
+      "FIXME",
+      "HACK",
+      "NOTE",
+      "[ ]",
+      "[x]"
+    ],
+    // ── vscode-pets ───────────────────────────────────────
+    "vscode-pets.petSize": "medium",
+    "vscode-pets.theme": "forest",
+    "vscode-pets.throwBallWithMouse": true,
+    // ── formatters per language ───────────────────────────
+    // 🫅 KING — JSON/JSONC
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[jsonc]": {
       "editor.defaultFormatter": "vscode.json-language-features"
     },
-    "[json]": {
-      "editor.defaultFormatter": "vscode.json-language-features"
+    // 👷 MASON — CUE + Proto + YAML + TOML
+    "[cue]": {
+      "editor.defaultFormatter": "cuelangorg.vscode-cue",
+      "editor.formatOnSave": true
     },
+    "[proto3]": {
+      "editor.defaultFormatter": "zxh404.vscode-proto3",
+      "editor.formatOnSave": true
+    },
+    "[yaml]": {
+      "editor.defaultFormatter": "redhat.vscode-yaml",
+      "editor.formatOnSave": true
+    },
+    "[toml]": {
+      "editor.defaultFormatter": "tamasfe.even-better-toml",
+      "editor.formatOnSave": true
+    },
+    // 🧑‍🏭 SMITH — Go + Elixir
+    "[go]": {
+      "editor.defaultFormatter": "golang.go",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      }
+    },
+    "[elixir]": {
+      "editor.defaultFormatter": "elixir-lsp.elixir-ls",
+      "editor.formatOnSave": true
+    },
+    "[eex]": {
+      "editor.defaultFormatter": "elixir-lsp.elixir-ls",
+      "editor.formatOnSave": true
+    },
+    "[html-eex]": {
+      "editor.defaultFormatter": "elixir-lsp.elixir-ls",
+      "editor.formatOnSave": true
+    },
+    // 👨‍💼 CLERK — Rust + Haskell + Zig
+    "[rust]": {
+      "editor.defaultFormatter": "rust-lang.rust-analyzer",
+      "editor.formatOnSave": true
+    },
+    "[haskell]": {
+      "editor.defaultFormatter": "haskell.haskell",
+      "editor.formatOnSave": true
+    },
+    "[zig]": {
+      "editor.defaultFormatter": "ziglang.vscode-zig",
+      "editor.formatOnSave": true
+    },
+    // 🧑‍🔬 SAGE — Python + Mojo
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      }
+    },
+    "[mojo]": {
+      "editor.defaultFormatter": "modular-mojotools.vscode-mojo",
+      "editor.formatOnSave": true
+    },
+    // 🧑‍🎤 BARD — TypeScript + Dart + Odin + GLSL
+    "[typescript][javascript][typescriptreact][javascriptreact]": {
+      "editor.defaultFormatter": "biomejs.biome",
+      "editor.formatOnSave": true
+    },
+    "[dart]": {
+      "editor.defaultFormatter": "Dart-Code.flutter",
+      "editor.formatOnSave": true
+    },
+    // BARD — Dart/Flutter: hide generated noise in Explorer / search (files still exist for tooling)
+    "dart.enableSdkFormatter": true,
+    "files.watcherExclude": {
+      "**/.dart_tool/**": true,
+      "**/frontend/**/build/**": true
+    },
+    "files.exclude": {
+      "**/.dart_tool": true,
+      "**/.flutter-plugins-dependencies": true
+    },
+    "search.exclude": {
+      "**/.dart_tool": true,
+      "**/frontend/**/build/**": true
+    },
+    "[odin]": {
+      "editor.defaultFormatter": "DanielGavin.ols",
+      "editor.formatOnSave": true
+    },
+    "[glsl]": {
+      "editor.defaultFormatter": "slevesque.vscode-glsl",
+      "editor.formatOnSave": false
+    },
+    "[opentofu]": {
+      "editor.defaultFormatter": "hashicorp.terraform",
+      "editor.formatOnSave": false
+    },
+    // ── language server settings ──────────────────────────
+    // 🧑‍🏭 SMITH — Go
+    "go.toolsManagement.autoUpdate": false,
+    "go.useLanguageServer": true,
+    "go.lintTool": "golangci-lint",
+    "go.lintFlags": [
+      "--fast"
+    ],
+    "go.formatTool": "gofumpt",
+    // 🧑‍🏭 SMITH — ElixirLS
+    "elixirLS.projectDir": "service",
+    "elixirLS.mixEnv": "dev",
+    "elixirLS.fetchDeps": false,
+    "elixirLS.dialyzerEnabled": true,
+    "elixirLS.suggestSpecs": true,
+    // 👨‍💼 CLERK — Haskell (pixi supplies ghc/hls/stack)
+    "haskell.manageHLS": "PATH",
+    "haskell.serverEnvironment": {
+      "PATH": "${workspaceFolder:🫅KING}/.pixi/envs/default/bin${pathSeparator}${env:PATH}"
+    },
+    "haskell.formattingProvider": "fourmolu",
+    // 🧑‍🎤 BARD — Odin
+    "ols.server.path": "${workspaceFolder:🫅KING}/.pixi/envs/default/bin/ols",
+    // 👷 MASON — CUE
+    "cue.path": "${workspaceFolder:🫅KING}/.pixi/envs/default/bin/cue",
+    // ── remote ────────────────────────────────────────────
+    // Remote-SSH: `remote.SSH.remotePlatform` is not applied from .code-workspace
+    // (VS Code reads it from User settings before connect — see microsoft/vscode#238783).
+    // 1. Set RICE_REMOTE_HOST in .envrc to your SSH `Host` name (~/.ssh/config).
+    // 2. In User settings.json (JSON), merge — use the same host string as the key:
+    //    "remote.SSH.remotePlatform": { "your-host-alias": "linux" }
+    // Direnv can expose RICE_REMOTE_HOST to the editor; the mapping must still live
+    // in User settings because keys cannot reference ${env:...} reliably.
+    // ── terminal ──────────────────────────────────────────
+    "terminal.integrated.env.linux": {
+      "PATH": "${workspaceFolder:🫅KING}/.pixi/envs/default/bin:${env:PATH}",
+      "CARGO_TARGET_DIR": "${workspaceFolder:🫅KING}/.build/rust",
+      "ZIG_CACHE_DIR": "${workspaceFolder:🫅KING}/.build/zig-cache"
+    },
+    "terminal.integrated.env.osx": {
+      "PATH": "${workspaceFolder:🫅KING}/.pixi/envs/default/bin:${env:PATH}"
+    }
   },
   "tasks": {
     "version": "2.0.0",
+    "inputs": [
+      {
+        "id": "project",
+        "type": "promptString",
+        "description": "Project name (custom/{project}/)"
+      },
+      {
+        "id": "role",
+        "type": "pickString",
+        "description": "Rice role to delegate to",
+        "options": [
+          "mason",
+          "smith",
+          "clerk",
+          "sage",
+          "bard",
+          "chief"
+        ]
+      },
+      {
+        "id": "task",
+        "type": "promptString",
+        "description": "Task description for the role"
+      }
+    ],
     "tasks": [
+      {
+        "label": "Rice: pour",
+        "type": "shell",
+        "command": "rice pour",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: forge",
+        "type": "shell",
+        "command": "rice forge",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: think",
+        "type": "shell",
+        "command": "rice think",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: audit",
+        "type": "shell",
+        "command": "rice audit",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: cook",
+        "type": "shell",
+        "command": "rice cook ${input:project}",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: serve",
+        "type": "shell",
+        "command": "rice serve ${input:project}",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: prepare",
+        "type": "shell",
+        "command": "rice prepare ${input:project}",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Rice: rule",
+        "type": "shell",
+        "command": "rice rule ${input:role} \"${input:task}\"",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
       {
         "label": "King: generate root from CUE",
         "type": "shell",
@@ -135,21 +422,12 @@
           "reveal": "silent",
           "panel": "shared"
         }
-      },
-      // TODO:
-      // [ ] add task: "Rice: pour" — runs `rice pour` via just, group: build
-      // [ ] add task: "Rice: forge" — runs `rice forge`, group: build, isDefault
-      // [ ] add task: "Rice: audit" — runs `rice audit`, group: test, isDefault
-      // [ ] add task: "Rice: cook ${input:project}" — runs `rice cook ${input:project}`
-      //     with input variable prompting for project name
-      // [ ] add task: "Rice: rule ${input:role} ${input:task}" — rice rule delegation
-      //     with input variables for role and task description
-      // [ ] all tasks: "presentation": {"reveal": "always", "panel": "dedicated"}
-      //     each rice command gets its own terminal panel
+      }
     ]
   },
   "extensions": {
     "recommendations": [
+      // ── editor UX ─────────────────────────────────────
       "emeraldwalk.runonsave",
       "enkia.tokyo-night",
       "pkief.material-icon-theme",
@@ -158,31 +436,37 @@
       "oderwat.indent-rainbow",
       "aaron-bond.better-comments",
       "gruntfuggly.todo-tree",
-      "DanielGavin.ols",
-      "rust-lang.rust-analyzer",
-      "ziglang.vscode-zig",
-      "modular-mojotools.mojo",
-      "charliermarsh.ruff",
-      "biomejs.biome",
-      "cuelangorg.vscode-cue",
-      "golang.go",
-      "elixir-lsp.elixir-ls",
-      "haskell.haskell",
-      "dart-code.flutter",
-      "slevesque.vscode-glsl",
-      "circledev.glsl-canvas",
-      "iden3.circom",
-      "mkhl.direnv",
+      // ── 🫅 KING ───────────────────────────────────────
       "skellock.just",
-      "signageos.signageos-vscode-sops",
+      "mkhl.direnv",
+      "signageos.signagoes-vscode-sops",
+      "github.vscode-github-actions",
+      "antfu.browse-lite",
+      // ── 👷 MASON ──────────────────────────────────────
+      "cuelangorg.vscode-cue",
+      "zxh404.vscode-proto3",
+      "redhat.vscode-yaml",
       "tamasfe.even-better-toml",
       "gamunu.vscode-opentofu",
-      "redhat.vscode-yaml",
-      "zxh404.vscode-proto3",
       "bierner.markdown-mermaid",
-      "antfu.browse-lite",
       "aquasecurity.trivy-vulnerability-scanner",
-      "github.vscode-github-actions"
+      // ── 🧑‍🏭 SMITH ─────────────────────────────────────
+      "golang.go",
+      "JakeBecker.elixir-ls",
+      // ── 👨‍💼 CLERK ─────────────────────────────────────
+      "rust-lang.rust-analyzer",
+      "haskell.haskell",
+      "ziglang.vscode-zig",
+      "iden3.circom",
+      // ── 🧑‍🔬 SAGE ──────────────────────────────────────
+      "charliermarsh.ruff",
+      "modular-mojotools.mojo",
+      // ── 🧑‍🎤 BARD ──────────────────────────────────────
+      "biomejs.biome",
+      "dart-code.flutter",
+      "DanielGavin.ols",
+      "slevesque.vscode-glsl",
+      "circledev.glsl-canvas"
     ]
   }
 }

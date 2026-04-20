@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/appsets/platform.appset.yaml — platform components ApplicationSet (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__appsets__platform.appset_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__appsets__platform.appset.yaml.cue
 # TODO:
 # [ ] Cilium, cert-manager, gateway, Kyverno ordering; cluster-specific overrides via RICE_K8S_PLATFORM_PROFILE
 
@@ -10,5 +10,5 @@ metadata:
   name: king-stub-appset-platform
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__appsets__platform.appset_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__appsets__platform.appset.yaml.cue
 data: {}

@@ -1,10 +1,6 @@
-# CUE source: infra/configs/docker/docker__Dockerfile.temporal.cue (package docker; aggregator infra/configs/config.cue)
-# KING TODO map
-# TODO:
-# [ ] FROM temporalio/auto-setup:${TEMPORAL_VERSION} — auto-setup handles schema init
-# [ ] COPY .docker/conf/temporal.conf /etc/temporal/config/development.yaml
-# [ ] ENV DB=postgresql DB_PORT=${RICE_TEMPORAL_DB_PORT}
-#     POSTGRES_USER=${RICE_TEMPORAL_DB_USER} — password via Docker secret
-#     POSTGRES_SEEDS=${RICE_TEMPORAL_DB_HOST}
-# [ ] EXPOSE RICE_TEMPORAL_GRPC_PORT RICE_TEMPORAL_UI_PORT
-# [ ] HEALTHCHECK temporal operator cluster health
+# syntax=docker/dockerfile:1
+# Temporal auto-setup — official image (glibc + temporal CLI; not distroless).
+# Dynamic config: mount .docker/conf/temporal-dynamic.yaml at runtime if needed.
+ARG TEMPORAL_VERSION=1.25.2
+FROM temporalio/auto-setup:${TEMPORAL_VERSION}
+EXPOSE 7233 8088

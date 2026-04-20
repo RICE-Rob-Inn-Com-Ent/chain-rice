@@ -1,7 +1,7 @@
 [project]
-name = "sage-helper"
+name = "helper"
 version = "0.1.0"
-description = "SAGE helper — settings, schemas, validation, retry, logs"
+description = "Helper — settings, schemas, validation, retry, logs"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
 requires-python = ">=3.13"

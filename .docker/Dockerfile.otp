@@ -1,4 +1,4 @@
-# CUE source: infra/configs/docker/docker__Dockerfile.otp.cue (package docker; aggregator infra/configs/config.cue)
+# CUE source: infra/configs/docker/Dockerfile.otp.cue (package docker; aggregator infra/configs/config.cue)
 # KING TODO map
 # TODO:
 # [ ] FROM erlang:${OTP_VERSION}-slim — OTP release base for Elixir services

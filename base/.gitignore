@@ -1,0 +1,6 @@
+# Local build outputs (prefer `buck2 build //base:clerk_*` → buck-out/clerk-artifacts)
+/target/
+/.zig-cache/
+/zig-out/
+.env.local
+*.stamp

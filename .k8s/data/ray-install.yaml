@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/data/ray-install.yaml — Ray cluster for batch/GPU paths (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__data__ray-install_yaml.cue
+# CUE mirror: infra/configs/kubernetes/data__ray-install.yaml.cue
 # TODO:
 # [ ] KubeRay operator or Helm; versions from RICE_RAY_CHART_VERSION, RICE_RAY_IMAGE
 # [ ] Autoscaling: RICE_RAY_MIN_WORKERS, RICE_RAY_MAX_WORKERS, GPU node selectors via RICE_K8S_GPU_NODE_LABELS
@@ -12,5 +12,5 @@ metadata:
   name: king-placeholder-ray-install
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__data__ray-install_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/data__ray-install.yaml.cue
 data: {}

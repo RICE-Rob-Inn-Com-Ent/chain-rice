@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/data/nats-install.yaml — NATS / JetStream for rice roles (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__data__nats-install_yaml.cue
+# CUE mirror: infra/configs/kubernetes/data__nats-install.yaml.cue
 # TODO:
 # [ ] Install via Helm (nats/nats) or Timoni bundle; pin chart version from RICE_NATS_CHART_VERSION
 # [ ] Namespace: RICE_K8S_NAMESPACE_DATA (default: rice-data)
@@ -13,5 +13,5 @@ metadata:
   name: king-placeholder-nats-install
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__data__nats-install_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/data__nats-install.yaml.cue
 data: {}

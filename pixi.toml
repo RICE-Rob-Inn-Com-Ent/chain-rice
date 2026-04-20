@@ -1,7 +1,7 @@
 [project]
-name = "rice"
+name = "rice SDK"
 version = "0.1.0"
-description = ".rice OS — sovereign programming language and enterprise operating system"
+description = ".rice SDK — sovereign programming language and enterprise operating system"
 channels = ["conda-forge", "modular-channels"]
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 
@@ -106,14 +106,14 @@ bacon = "2.18"         # Rust background code checker
 cargo-expand = "0.6"   # macro expansion viewer
 cargo-audit = "0.20"   # Rust CVE scanner
 cargo-nextest = "0.9"  # faster Rust test runner
-ghc = "9.6"            # Haskell compiler
+ghc = "9.10"           # Haskell compiler (GHC2024 needs ≥9.10) — PATH via pixi; IDE: rice.code-workspace
 stack = "2.15"         # Haskell build tool
-haskell-language-server = "2.9" # Haskell LSP
+haskell-language-server = "2.9" # Haskell LSP — no GHCup; PATH includes .pixi/envs/default/bin
 fourmolu = "0.14"      # Haskell formatter
 hlint = "3.8"          # Haskell linter
 stan = "0.0.1"         # Haskell static analyzer
-zig = "0.13.0"         # Zig compiler
-zls = "0.13.0"         # Zig LSP
+zig = "0.15.2"         # Zig compiler (align with build.zig / ZLS)
+zls = "0.15.2"         # Zig LSP
 
 # ============================================================
 # 🧑‍🔬 SAGE — function/
@@ -147,6 +147,7 @@ ols = "*"              # Odin Language Server
 [tasks]
 install-buck2 = "curl --proto '=https' --tlsv1.2 -sSf https://github.com/facebook/buck2/releases/latest/download/buck2-x86_64-unknown-linux-musl.zst | zstd -d > ~/.local/bin/buck2 && chmod +x ~/.local/bin/buck2"
 install-odin = "git clone https://github.com/odin-lang/Odin && cd Odin && make"
+test-mojo = "mojo package function/job/src/mojo -o function/job/src/mojo/__mojocache__/sage.mojopkg"
 # TODO:
 # [ ] add task: install-cosign — cosign for signing 🚚 bundle
 # [ ] add task: install-syft — SBOM generator

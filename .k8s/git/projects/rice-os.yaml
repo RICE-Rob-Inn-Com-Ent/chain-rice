@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/projects/rice-os.yaml — Argo CD AppProject umbrella (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__projects__rice-os_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__projects__rice-os.yaml.cue
 # TODO:
 # [ ] Top-level project linking child projects; RBAC groups from RICE_ARGOCD_RBAC_POLICY (SSO/Dex)
 
@@ -10,5 +10,5 @@ metadata:
   name: king-stub-project-rice-os
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__projects__rice-os_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__projects__rice-os.yaml.cue
 data: {}

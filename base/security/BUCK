@@ -1,0 +1,24 @@
+genrule(
+    name = "check",
+    srcs = ["build.zig.zon"],
+    out = "check.stamp",
+    cmd = """set -euo pipefail
+cd "$SRCDIR"
+HERE=`pwd`
+REPO=`git rev-parse --show-toplevel`
+export CLERK_ARTIFACT_ROOT="$REPO/buck-out/clerk-artifacts"
+export ZIG_GLOBAL_CACHE_DIR="$CLERK_ARTIFACT_ROOT/zig-global-cache"
+export ZIG_LOCAL_CACHE_DIR="$CLERK_ARTIFACT_ROOT/zig-local-cache"
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+if ! command -v zig >/dev/null 2>&1; then echo "security: zig is required for //base/security:check" >&2; exit 1; fi
+mkdir -p "$CLERK_ARTIFACT_ROOT/zig-out/lib" "$ZIG_GLOBAL_CACHE_DIR" "$ZIG_LOCAL_CACHE_DIR"
+cd "$REPO/base"
+zig build verify
+zig build-lib security/src/root.zig -target native -O ReleaseSafe -lc -lpcap -lseccomp --cache-dir "$ZIG_LOCAL_CACHE_DIR" --global-cache-dir "$ZIG_GLOBAL_CACHE_DIR" -femit-bin="$CLERK_ARTIFACT_ROOT/zig-out/lib/libclerk-security.a"
+mkdir -p "$REPO/base/zig-out/lib"
+cp "$CLERK_ARTIFACT_ROOT/zig-out/lib/libclerk-security.a" "$REPO/base/zig-out/lib/libclerk-security.a"
+cd "$HERE"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)

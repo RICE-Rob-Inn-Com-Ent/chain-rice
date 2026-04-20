@@ -1,0 +1,37 @@
+name: content
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  just_audio: ^0.10.4
+  just_audio_background: ^0.0.1-beta.13
+  audio_session: ^0.1.21
+  video_player: ^2.9.3
+  chewie: ^1.8.5
+  media_kit: ^1.2.6
+  media_kit_video: ^2.0.1
+  # Native video libs — add Android/iOS/macOS packages when those targets ship.
+  media_kit_libs_linux: ^1.2.1
+  media_kit_libs_windows_video: ^1.0.11
+  lottie: ^3.3.1
+  rive: ^0.13.20
+  ffi: ^2.1.3
+  plugin_platform_interface: ^2.1.8
+  image: ^4.3.0
+  palette_generator: ^0.3.3+4
+  camera: ^0.11.0+2
+  mobile_scanner: ^6.0.4
+  file_picker: ^8.3.7
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0

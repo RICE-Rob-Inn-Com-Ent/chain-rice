@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/appsets/namespaces.appset.yaml — namespace provisioning (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__appsets__namespaces.appset_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__appsets__namespaces.appset.yaml.cue
 # TODO:
 # [ ] Generate per-role namespaces (rice-king, rice-sage, …) from RICE_K8S_ROLE_LIST or similar
 # [ ] Labels/annotations for network policies and RICE_ENV (dev/stag/prod)
@@ -11,5 +11,5 @@ metadata:
   name: king-stub-appset-namespaces
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__appsets__namespaces.appset_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__appsets__namespaces.appset.yaml.cue
 data: {}

@@ -1,0 +1,4 @@
+# Minimal Temporal dynamic config — extend via infra/configs/docker (MASON).
+frontend.enableClientVersionCheck:
+  - value: true
+    constraints: {}

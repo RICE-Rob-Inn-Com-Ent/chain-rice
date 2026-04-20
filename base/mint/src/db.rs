@@ -1,5 +1,11 @@
 //! Incremental compiler database — `salsa` storage and [`salsa::Database`] impl.
 
+// TODO(rice):
+// [ ] CLERK / base — cryptographic & policy correctness; no UI.
+// [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
+// [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
+// [ ] Stack surface: tokio, cosmwasm-std, serde, thiserror, k256, arkworks, etc. — extend per crate purpose.
+//
 // [ ] https://docs.rs/salsa/
 // [ ] inputs SourceFile; tracked parse/check/lower/codegen; file watch; parallel queries
 

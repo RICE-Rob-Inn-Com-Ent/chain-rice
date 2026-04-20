@@ -1,25 +1,47 @@
-//! Policy engine — CEL compile/eval and XML scan (`quick-xml`).
-use criterion::{black_box, Criterion};
-use rice_policies::engine::{compile, evaluate, root_context};
-use rice_policies::legal::root_element_name;
+//! CEL compile + evaluate ([`policies::engine`]).
 
-// [ ] https://docs.rs/criterion/ — cel-interpreter, fefix, quick-xml
-// [ ] cel_eval, fix_parse, xml_parse, audit_publish, rule_load
+use criterion::{Criterion, black_box};
+
+use crate::{BenchRow, smoke_ns};
+
+const CEL: &str = "1 + 2 * 3";
+
+pub fn smoke_rows() -> Vec<BenchRow> {
+    let mut rows = Vec::new();
+    let ns_compile = smoke_ns(|| {
+        let _ = black_box(policies::engine::compile(CEL));
+    });
+    let prog = policies::engine::compile(CEL).expect("cel");
+    let ns_eval = smoke_ns(|| {
+        let ctx = policies::engine::root_context();
+        let _ = black_box(policies::engine::evaluate(&prog, &ctx));
+    });
+    rows.push(BenchRow {
+        module: "policies/engine",
+        scenario: "compile",
+        ns: ns_compile,
+        notes: format!("expr_len={}", CEL.len()),
+    });
+    rows.push(BenchRow {
+        module: "policies/engine",
+        scenario: "evaluate",
+        ns: ns_eval,
+        notes: "root_context + evaluate".into(),
+    });
+    rows
+}
 
 pub fn register(c: &mut Criterion) {
-    let program = compile("true").expect("cel compile");
-    let ctx = root_context();
-    let xml = r#"<?xml version="1.0"?><ComplianceEnvelope><item/></ComplianceEnvelope>"#;
-
     let mut g = c.benchmark_group("policies");
-    g.bench_function("cel_compile_literal", |b| {
-        b.iter(|| compile(black_box("true")).unwrap())
+    g.bench_function("cel_compile", |b| {
+        b.iter(|| black_box(policies::engine::compile(black_box(CEL)).unwrap()));
     });
-    g.bench_function("cel_eval_literal", |b| {
-        b.iter(|| evaluate(black_box(&program), black_box(&ctx)).unwrap())
-    });
-    g.bench_function("xml_root_element_name", |b| {
-        b.iter(|| root_element_name(black_box(xml)).unwrap())
+    let prog = policies::engine::compile(CEL).unwrap();
+    g.bench_function("cel_evaluate", |b| {
+        b.iter(|| {
+            let ctx = policies::engine::root_context();
+            let _ = black_box(policies::engine::evaluate(black_box(&prog), &ctx));
+        });
     });
     g.finish();
 }

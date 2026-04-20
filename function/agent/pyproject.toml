@@ -1,7 +1,7 @@
 [project]
-name = "sage-agent"
+name = "agent"
 version = "0.1.0"
-description = "SAGE agent — LangGraph, LiteLLM, Instructor, Outlines, Guardrails"
+description = "Agent — LangGraph, LiteLLM, Instructor, Outlines, Guardrails"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
 requires-python = ">=3.13"

@@ -14,6 +14,7 @@ pub const SecurityError = error{
     EbpfError,
     IsolateError,
     AuditError,
+    ChaosInvariantFailed,
     Unimplemented,
 };
 

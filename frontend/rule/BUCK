@@ -1,0 +1,2 @@
+# Buck2 source manifest — `rule` Dart package.
+# glob(["lib/src/**/*.dart", "lib/unit.dart"])

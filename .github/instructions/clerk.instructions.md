@@ -67,7 +67,7 @@ When a ZK proof fails — the operation does not exist.
 - Invent inter-role contracts — every proto lives in `infra/schemas/`, nowhere else
 - Touch floating point for any calculation that moves money — Haskell `Decimal` and Rust `rust_decimal` only
 - Let an unproven proof leave `base/private/` — ark-groth16 must verify before any ZK output is used
-- Let an unverified contract leave `base/contracts/` — CosmWasm verification is not optional
+- Let an unverified contract leave `base/contract/` — CosmWasm verification is not optional
 
 ---
 
@@ -93,7 +93,7 @@ When a ZK proof fails — the operation does not exist.
 
 ---
 
-### 🔗 `base/contracts/` — Smart Contracts
+### 🔗 `base/contract/` — Smart Contracts
 
 CosmWasm contracts written in Rust. Every on-chain financial operation, token rule, and governance action lives here. Nothing leaves without formal verification.
 

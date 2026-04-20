@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/projects/platform.yaml — Argo CD AppProject for platform (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__projects__platform_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__projects__platform.yaml.cue
 # TODO:
 # [ ] Orphaned resources policy; namespace whitelist via RICE_K8S_PLATFORM_NAMESPACES
 
@@ -10,5 +10,5 @@ metadata:
   name: king-stub-project-platform
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__projects__platform_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__projects__platform.yaml.cue
 data: {}

@@ -1,6 +1,6 @@
 # KING TODO map
 # .k8s/git/appsets/data.appset.yaml — data plane ApplicationSet (soft-coded)
-# CUE mirror: infra/configs/kubernetes/k8s__git__appsets__data.appset_yaml.cue
+# CUE mirror: infra/configs/kubernetes/git__appsets__data.appset.yaml.cue
 # TODO:
 # [ ] Scope NATS/Qdrant/Yugabyte/Ray apps; chart versions from RICE_*_CHART_VERSION env vars
 # [ ] Namespace pattern rice-data or RICE_K8S_NAMESPACE_DATA
@@ -12,5 +12,5 @@ metadata:
   name: king-stub-appset-data
   namespace: default
   annotations:
-    rice.king/source-cue: infra/configs/kubernetes/k8s__git__appsets__data.appset_yaml.cue
+    rice.king/source-cue: infra/configs/kubernetes/git__appsets__data.appset.yaml.cue
 data: {}

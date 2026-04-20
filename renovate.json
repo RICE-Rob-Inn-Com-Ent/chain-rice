@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Renovate configuration for Rice Monorepo - Automated dependency updates",
+  "description": "Renovate configuration for .rice OS monorepo",
   "extends": [
     "config:base",
     ":dependencyDashboard",
@@ -11,8 +11,10 @@
     "replacements:all",
     "workarounds:all"
   ],
-  "timezone": "UTC",
-  "schedule": ["before 6am on Monday"],
+  "timezone": "Europe/Warsaw",
+  "schedule": [
+    "before 6am on Monday"
+  ],
   "prConcurrentLimit": 10,
   "prHourlyLimit": 5,
   "rebaseWhen": "conflicted",
@@ -24,13 +26,25 @@
   "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}}",
   "commitMessageExtra": "to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
-  "labels": ["dependencies", "renovate"],
-  "assignees": ["@mrDinkelman"],
-  "reviewers": ["@mrDinkelman"],
+  "labels": [
+    "dependencies",
+    "renovate"
+  ],
+  "assignees": [
+    "@mrDinkelman"
+  ],
+  "reviewers": [
+    "@mrDinkelman"
+  ],
   "vulnerabilityAlerts": {
-    "labels": ["security", "dependencies"],
+    "labels": [
+      "security",
+      "dependencies"
+    ],
     "automerge": false,
-    "schedule": ["at any time"]
+    "schedule": [
+      "at any time"
+    ]
   },
   "separateMajorMinor": true,
   "separateMultipleMajor": true,
@@ -38,33 +52,502 @@
   "ignoreUnstable": true,
   "respectLatest": true,
   "packageRules": [
-    {"description": "Group all non-major updates together", "matchUpdateTypes": ["minor", "patch", "pin", "digest"], "groupName": "all non-major dependencies", "groupSlug": "all-minor-patch"},
-    {"description": "Automerge non-major updates", "matchUpdateTypes": ["minor", "patch", "pin", "digest"], "automerge": true, "automergeType": "pr", "platformAutomerge": true},
-    {"description": "Major updates require manual review", "matchUpdateTypes": ["major"], "automerge": false, "labels": ["dependencies", "major-update"]},
-    {"description": "Bun - Frontend/JS packages", "matchManagers": ["bun"], "matchPaths": ["**/package.json"], "groupName": "frontend dependencies", "schedule": ["before 6am on Monday"], "labels": ["dependencies", "frontend"]},
-    {"description": "Python - Bot packages", "matchManagers": ["pip_requirements", "pip_setup", "pipenv", "poetry"], "matchPaths": [".bot/*"], "groupName": "bots dependencies", "labels": ["dependencies", "bots", "python"]},
-    {"description": "Go - Backend packages", "matchManagers": ["gomod"], "matchPaths": [".backend/*"], "groupName": "backend dependencies", "labels": ["dependencies", "backend", "go"]},
-    {"description": "Rust - Smart contracts", "matchManagers": ["cargo"], "matchPaths": [".backend/contract/rust/*"], "groupName": "rust contract dependencies", "labels": ["dependencies", "rust", "smart-contracts"]},
-    {"description": "Solidity - EVM contracts", "matchManagers": ["bun"], "matchPaths": [".backend/contract/solidity/*"], "groupName": "solidity dependencies", "labels": ["dependencies", "solidity", "smart-contracts"]},
-    {"description": "Terraform - Infrastructure", "matchManagers": ["terraform"], "matchPaths": [".devcontainer/terraform/*"], "groupName": "terraform dependencies", "labels": ["dependencies", "terraform", "infrastructure"]},
-    {"description": "Kubernetes - Container orchestration", "matchManagers": ["helm-values", "helmv3", "kubernetes"], "matchPaths": [".devcontainer/kubernetes/*"], "groupName": "kubernetes dependencies", "labels": ["dependencies", "kubernetes"]},
-    {"description": "Dart/Flutter - Mobile", "matchManagers": ["pub"], "matchPaths": [".project/*/desktop/**", ".project/*/mobile/**"], "groupName": "dart/flutter dependencies", "labels": ["dependencies", "dart", "flutter"]},
-    {"description": "DevOps tools - High priority", "matchPackageNames": ["docker", "kubernetes", "terraform", "ansible", "helm"], "priority": 10},
-    {"description": "Security packages - Immediate", "matchPackagePatterns": ["^security-", "^@security/"], "schedule": ["at any time"], "automerge": false, "labels": ["security", "dependencies"]},
-    {"description": "TypeScript and related", "matchPackageNames": ["typescript", "@types/node"], "groupName": "typescript", "labels": ["dependencies", "typescript"]},
-    {"description": "React ecosystem", "matchPackagePatterns": ["^react", "^@types/react"], "groupName": "react", "labels": ["dependencies", "react"]},
-    {"description": "Testing packages", "matchPackagePatterns": ["jest", "vitest", "playwright", "cypress", "^@testing-library/"], "groupName": "testing", "labels": ["dependencies", "testing"]},
-    {"description": "Linting and formatting", "matchPackagePatterns": ["eslint", "prettier", "^@typescript-eslint/", "^eslint-"], "groupName": "linting", "labels": ["dependencies", "linting"]},
-    {"description": "Pixi - root toolchain (pixi.toml)", "matchManagers": ["pixi"], "matchPaths": ["pixi.toml"], "groupName": "pixi toolchain", "labels": ["dependencies", "tool-versions", "pixi"], "schedule": ["before 6am on Monday"], "automerge": false, "commitMessagePrefix": "chore(tools):"},
-    {"description": "Pin action digests", "matchManagers": ["github-actions"], "pinDigests": true},
-    {"description": "GitHub Actions", "matchManagers": ["github-actions"], "groupName": "github-actions", "labels": ["dependencies", "github-actions"], "schedule": ["before 6am on Monday"]}
+    {
+      "description": "Group all non-major updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    },
+    {
+      "description": "Automerge non-major updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Major updates require manual review",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false,
+      "labels": [
+        "dependencies",
+        "major-update"
+      ]
+    },
+    {
+      "description": "KING — pixi.toml toolchain runtimes",
+      "matchManagers": [
+        "pixi"
+      ],
+      "matchPaths": [
+        "pixi.toml"
+      ],
+      "groupName": "pixi toolchain",
+      "labels": [
+        "dependencies",
+        "king",
+        "toolchain",
+        "pixi"
+      ],
+      "schedule": [
+        "before 6am on Monday"
+      ],
+      "automerge": false,
+      "commitMessagePrefix": "chore(tools):"
+    },
+    {
+      "description": "MASON — infra CUE and Protobuf tooling",
+      "matchPaths": [
+        "infra/**"
+      ],
+      "groupName": "mason infra",
+      "labels": [
+        "dependencies",
+        "mason",
+        "infra"
+      ]
+    },
+    {
+      "description": "MASON — Timoni, Dagger, buf tooling",
+      "matchPackageNames": [
+        "timoni",
+        "dagger",
+        "buf"
+      ],
+      "groupName": "mason tooling",
+      "labels": [
+        "dependencies",
+        "mason",
+        "tooling"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "MASON — OpenTofu infrastructure",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchPaths": [
+        ".opentofu/**"
+      ],
+      "groupName": "opentofu infrastructure",
+      "labels": [
+        "dependencies",
+        "mason",
+        "opentofu",
+        "infrastructure"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "MASON — Kubernetes manifests",
+      "matchManagers": [
+        "kubernetes",
+        "helm-values",
+        "helmv3"
+      ],
+      "matchPaths": [
+        ".k8s/**"
+      ],
+      "groupName": "kubernetes dependencies",
+      "labels": [
+        "dependencies",
+        "mason",
+        "kubernetes"
+      ]
+    },
+    {
+      "description": "SMITH — Go microservices",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPaths": [
+        "service/go.mod"
+      ],
+      "groupName": "smith go dependencies",
+      "labels": [
+        "dependencies",
+        "smith",
+        "go"
+      ]
+    },
+    {
+      "description": "SMITH — Elixir",
+      "matchManagers": [
+        "mix"
+      ],
+      "matchPaths": [
+        "service/mix.exs"
+      ],
+      "groupName": "smith elixir dependencies",
+      "labels": [
+        "dependencies",
+        "smith",
+        "elixir"
+      ]
+    },
+    {
+      "description": "SMITH — Atlas database migrations",
+      "matchPackageNames": [
+        "atlas",
+        "ariga.io/atlas"
+      ],
+      "groupName": "smith atlas",
+      "labels": [
+        "dependencies",
+        "smith",
+        "database"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "SMITH — Docker base images",
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchPaths": [
+        ".docker/**"
+      ],
+      "groupName": "smith docker images",
+      "labels": [
+        "dependencies",
+        "smith",
+        "docker"
+      ],
+      "pinDigests": true
+    },
+    {
+      "description": "CLERK — Rust workspace",
+      "matchManagers": [
+        "cargo"
+      ],
+      "matchPaths": [
+        "base/Cargo.toml"
+      ],
+      "groupName": "clerk rust dependencies",
+      "labels": [
+        "dependencies",
+        "clerk",
+        "rust"
+      ]
+    },
+    {
+      "description": "CLERK — Haskell",
+      "matchManagers": [
+        "cabal"
+      ],
+      "matchPaths": [
+        "base/package.yaml"
+      ],
+      "groupName": "clerk haskell dependencies",
+      "labels": [
+        "dependencies",
+        "clerk",
+        "haskell"
+      ]
+    },
+    {
+      "description": "BARD — TypeScript browser",
+      "matchManagers": [
+        "bun"
+      ],
+      "matchPaths": [
+        "frontend/package.json"
+      ],
+      "groupName": "bard typescript dependencies",
+      "labels": [
+        "dependencies",
+        "bard",
+        "typescript"
+      ]
+    },
+    {
+      "description": "BARD — Dart/Flutter screen",
+      "matchManagers": [
+        "pub"
+      ],
+      "matchPaths": [
+        "frontend/pubspec.yaml"
+      ],
+      "groupName": "bard dart flutter dependencies",
+      "labels": [
+        "dependencies",
+        "bard",
+        "dart",
+        "flutter"
+      ]
+    },
+    {
+      "description": "SAGE — Python AI pipelines",
+      "matchManagers": [
+        "uv"
+      ],
+      "matchPaths": [
+        "function/pyproject.toml"
+      ],
+      "groupName": "sage python dependencies",
+      "labels": [
+        "dependencies",
+        "sage",
+        "python"
+      ]
+    },
+    {
+      "description": "GitHub Actions",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions",
+      "labels": [
+        "dependencies",
+        "github-actions"
+      ],
+      "schedule": [
+        "before 6am on Monday"
+      ],
+      "pinDigests": true
+    },
+    {
+      "description": "Security packages — immediate",
+      "matchPackagePatterns": [
+        "^security-",
+        "^@security/"
+      ],
+      "schedule": [
+        "at any time"
+      ],
+      "automerge": false,
+      "labels": [
+        "security",
+        "dependencies"
+      ]
+    },
+    {
+      "description": "Vulnerability alerts — immediate",
+      "matchUpdateTypes": [
+        "pin",
+        "digest"
+      ],
+      "matchPackagePatterns": [
+        ".*"
+      ],
+      "schedule": [
+        "at any time"
+      ],
+      "labels": [
+        "security",
+        "dependencies"
+      ]
+    },
+    {
+      "description": "React ecosystem",
+      "matchPackagePatterns": [
+        "^react",
+        "^@types/react"
+      ],
+      "groupName": "react ecosystem",
+      "labels": [
+        "dependencies",
+        "bard",
+        "react"
+      ]
+    },
+    {
+      "description": "TanStack ecosystem",
+      "matchPackagePatterns": [
+        "^@tanstack/"
+      ],
+      "groupName": "tanstack ecosystem",
+      "labels": [
+        "dependencies",
+        "bard",
+        "tanstack"
+      ]
+    },
+    {
+      "description": "Radix UI ecosystem",
+      "matchPackagePatterns": [
+        "^@radix-ui/"
+      ],
+      "groupName": "radix ui ecosystem",
+      "labels": [
+        "dependencies",
+        "bard",
+        "radix"
+      ]
+    },
+    {
+      "description": "Three.js ecosystem",
+      "matchPackagePatterns": [
+        "^three",
+        "^@react-three/"
+      ],
+      "groupName": "threejs ecosystem",
+      "labels": [
+        "dependencies",
+        "bard",
+        "three"
+      ]
+    },
+    {
+      "description": "Cosmos SDK ecosystem",
+      "matchPackagePatterns": [
+        "^cosmossdk",
+        "^cosmos/",
+        "^cometbft"
+      ],
+      "groupName": "cosmos sdk ecosystem",
+      "labels": [
+        "dependencies",
+        "smith",
+        "cosmos"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "CosmWasm ecosystem",
+      "matchPackagePatterns": [
+        "^cosmwasm",
+        "^cw-"
+      ],
+      "groupName": "cosmwasm ecosystem",
+      "labels": [
+        "dependencies",
+        "clerk",
+        "cosmwasm"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Ark cryptography ecosystem",
+      "matchPackagePatterns": [
+        "^ark-"
+      ],
+      "groupName": "ark crypto ecosystem",
+      "labels": [
+        "dependencies",
+        "clerk",
+        "crypto"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Ory identity ecosystem",
+      "matchPackagePatterns": [
+        "^ory/",
+        "^@ory/"
+      ],
+      "groupName": "ory identity ecosystem",
+      "labels": [
+        "dependencies",
+        "smith",
+        "auth"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "LangChain/LangGraph AI ecosystem",
+      "matchPackagePatterns": [
+        "^langchain",
+        "^langgraph",
+        "^langsmith"
+      ],
+      "groupName": "langchain ecosystem",
+      "labels": [
+        "dependencies",
+        "sage",
+        "ai"
+      ]
+    },
+    {
+      "description": "Qiskit quantum ecosystem",
+      "matchPackagePatterns": [
+        "^qiskit"
+      ],
+      "groupName": "qiskit ecosystem",
+      "labels": [
+        "dependencies",
+        "sage",
+        "quantum"
+      ]
+    },
+    {
+      "description": "OpenTelemetry ecosystem",
+      "matchPackagePatterns": [
+        "^opentelemetry",
+        "^@opentelemetry/"
+      ],
+      "groupName": "opentelemetry ecosystem",
+      "labels": [
+        "dependencies",
+        "smith",
+        "observability"
+      ]
+    },
+    {
+      "description": "Testing packages",
+      "matchPackagePatterns": [
+        "vitest",
+        "playwright",
+        "pytest",
+        "patrol",
+        "mocktail"
+      ],
+      "groupName": "testing dependencies",
+      "labels": [
+        "dependencies",
+        "testing"
+      ]
+    }
   ],
   "regexManagers": [
-    {"description": "Update _VERSION variables in Dockerfiles", "fileMatch": ["(^|/)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"], "matchStrings": ["# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s(ARG|ENV) .*?_VERSION=(?<currentValue>.*)\\s"], "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"}
+    {
+      "description": "Update VERSION variables in Dockerfiles",
+      "fileMatch": [
+        "(^|/).docker/Dockerfile\\.[^/]*$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s(ARG|ENV) .*?_VERSION=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "description": "Update versions in CUE configs",
+      "fileMatch": [
+        "(^|/)infra/configs/.*\\.cue$"
+      ],
+      "matchStrings": [
+        "// renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\s.*version:\\s*\"(?<currentValue>.*)\""
+      ],
+      "versioningTemplate": "semver"
+    }
   ],
-  "docker": {"enabled": true, "pinDigests": true, "major": {"enabled": true}},
-  "hostRules": [],
-  "prBodyColumns": ["Package", "Type", "Update", "Change", "Pending"],
+  "docker": {
+    "enabled": true,
+    "pinDigests": true,
+    "major": {
+      "enabled": true
+    }
+  },
+  "prBodyColumns": [
+    "Package",
+    "Type",
+    "Update",
+    "Change",
+    "Pending"
+  ],
   "prBodyDefinitions": {
     "Age": "[![age](https://developer.mend.io/api/mc/badges/age/{{datasource}}/{{replace '/' '%2f' depName}}/{{newVersion}}?slim=true)](https://docs.renovatebot.com/merge-confidence/)",
     "Adoption": "[![adoption](https://developer.mend.io/api/mc/badges/adoption/{{datasource}}/{{replace '/' '%2f' depName}}/{{newVersion}}?slim=true)](https://docs.renovatebot.com/merge-confidence/)",
@@ -73,6 +556,8 @@
   },
   "prBodyNotes": [
     "This PR was generated by [Renovate](https://github.com/renovatebot/renovate).",
-    "🔒 To stop Renovate from automatically updating this dependency, add it to the `ignoreDeps` array of your `renovate.json`."
+    "⚠️ All version changes flow through `infra/configs/*.cue` — never edit manifests directly.",
+    "After merging: run `rice pour` to regenerate all manifests from CUE.",
+    "🔒 To pin a dependency, add it to `ignoreDeps` in `renovate.json`."
   ]
 }

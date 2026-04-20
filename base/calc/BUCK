@@ -1,0 +1,17 @@
+genrule(
+    name = "check",
+    srcs = ["calc.cabal"],
+    out = "check.stamp",
+    cmd = """set -euo pipefail
+cd "$SRCDIR"
+HERE=`pwd`
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+if ! command -v cabal >/dev/null 2>&1; then echo "calc: skip (no cabal on PATH)" >&2; cd "$SRCDIR"; touch "$OUT"; exit 0; fi
+cd "$REPO/base/calc"
+cabal build foreign-library:rice_calc_ffi
+cd "$HERE"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)

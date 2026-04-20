@@ -1,11 +1,11 @@
 [package]
-name = "clerk-mint"
+name = "mint"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "RICE .rice compiler — lexer, parser, rowan CST, salsa queries, LSP"
+description = "Compiler — lexer, parser, rowan CST, salsa queries, LSP"
 
 [lib]
 path = "src/lib.rs"
@@ -15,7 +15,8 @@ name = "rice-lsp"
 path = "src/lsp.rs"
 
 [dependencies]
-clerk-util = { path = "../util" }
+util = { path = "../util" }
+serde_json.workspace = true
 logos.workspace = true
 chumsky.workspace = true
 rowan.workspace = true
@@ -27,3 +28,8 @@ petgraph.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 async-trait.workspace = true
+
+[features]
+default = []
+# `rice-lsp`: refresh `base/` smoke timings (subprocess `bench --json-smoke`). Build: `cargo build -p mint --bin rice-lsp --features lsp-perf`.
+lsp-perf = []

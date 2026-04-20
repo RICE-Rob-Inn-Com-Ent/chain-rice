@@ -1,7 +1,7 @@
 [project]
-name = "sage-vector"
+name = "vector"
 version = "0.1.0"
-description = "SAGE vector — Qdrant, BM25S, Torch embeddings, RAG"
+description = "Vector — Qdrant, BM25S, Torch embeddings, RAG"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
 requires-python = ">=3.13"

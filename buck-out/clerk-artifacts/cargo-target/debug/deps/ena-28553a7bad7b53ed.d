@@ -1,0 +1,11 @@
+/home/mrDinkelman/rice-mono/buck-out/clerk-artifacts/cargo-target/debug/deps/ena-28553a7bad7b53ed.d: /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/lib.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/snapshot_vec.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/undo_log.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/mod.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/backing_vec.rs
+
+/home/mrDinkelman/rice-mono/buck-out/clerk-artifacts/cargo-target/debug/deps/libena-28553a7bad7b53ed.rlib: /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/lib.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/snapshot_vec.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/undo_log.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/mod.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/backing_vec.rs
+
+/home/mrDinkelman/rice-mono/buck-out/clerk-artifacts/cargo-target/debug/deps/libena-28553a7bad7b53ed.rmeta: /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/lib.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/snapshot_vec.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/undo_log.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/mod.rs /home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/backing_vec.rs
+
+/home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/lib.rs:
+/home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/snapshot_vec.rs:
+/home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/undo_log.rs:
+/home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/mod.rs:
+/home/mrDinkelman/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ena-0.14.4/src/unify/backing_vec.rs:
