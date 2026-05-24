@@ -12,9 +12,14 @@ REPO="${RICE_MONO_ROOT:-/src}"
 cd "$REPO"
 export PATH="$REPO/infra/bootstrap/.pixi/envs/default/bin:$REPO/.pixi/envs/default/bin:/root/.pixi/bin:/usr/local/bin:/usr/bin:$PATH"
 
-if [[ ! -f cue.mod/module.cue ]] && [[ -f cue.mod.example ]]; then
+if [[ ! -f cue.mod/module.cue ]]; then
   mkdir -p cue.mod
-  cp cue.mod.example cue.mod/module.cue
+  cat > cue.mod/module.cue <<'CUEMOD'
+module: "github.com/rice-rob-inn-com-ent/rice"
+language: {
+	version: "v0.9.0"
+}
+CUEMOD
 fi
 
 echo "── pour: cue emit ──"

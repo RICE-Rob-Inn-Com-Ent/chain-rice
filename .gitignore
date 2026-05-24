@@ -10,9 +10,12 @@ Cargo.lock
 **/*.rs.bk
 /vendor/
 dist/
-build/
+/build/
 /out/
+!infra/build/
 !infra/out/
+# CUE module root — keep tracked; do not add cue.mod/ to gitignore
+!cue.mod/
 .next/
 .cache/
 *.tsbuildinfo

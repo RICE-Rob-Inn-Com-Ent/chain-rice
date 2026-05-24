@@ -19,6 +19,8 @@
     ".buckconfig",
     "pixi.toml",
     "pixi.lock",
+    "cue.mod/",
+    "cue.mod/module.cue",
     "taplo.toml",
     ".vale.ini",
     "cliff.toml",

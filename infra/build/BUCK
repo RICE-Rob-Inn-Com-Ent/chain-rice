@@ -1,0 +1,39 @@
+# MASON build — `build.cue` + `cue/*.cue`. Rebuild when any slice changes (`validate_build_cue`, `render_build`).
+
+_BUILD_CUE = ["build.cue"] + glob(["cue/*.cue"])
+
+genrule(
+    name = "validate_build_cue",
+    srcs = _BUILD_CUE,
+    out = "validate_build.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO/infra/build"
+shopt -s nullglob
+inputs=(build.cue cue/*.cue)
+cue export "${inputs[@]}" -e buildPlan --out json > /dev/null
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "render_build",
+    srcs = _BUILD_CUE,
+    out = "render_build.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO/infra/build"
+shopt -s nullglob
+inputs=(build.cue cue/*.cue)
+cue export "${inputs[@]}" -e buildPlan.emitFiles --out json | jq -c '.[]' | while IFS= read -r line; do
+  rel="$(jq -r .path <<<"$line")"
+  mkdir -p "$(dirname "$REPO/$rel")"
+  jq -r .content <<<"$line" >"$REPO/$rel"
+done
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
