@@ -1,0 +1,60 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/out
+# MASON — workspace: `cue/*.cue` + `_tool.cue`. Embed script: `infra/scripts/gen_workspace_cue.sh`.
+# Rebuild: buck2 build '//infra/out:validate_workspace_cue' '//infra/out:render_workspace' '//infra/out:gen_workspace_cue'
+
+genrule(
+    name = "validate_workspace_cue",
+    srcs = ["_tool.cue"] + glob(["cue/*.cue", "cue/docs.cue"]),
+    out = "validate_workspace.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+cue vet ./infra/out/...
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "render_workspace",
+    srcs = ["_tool.cue"] + glob(["cue/*.cue", "cue/docs.cue"]),
+    out = "render_workspace.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+cue cmd emit ./infra/out/_tool.cue
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "gen_workspace_cue",
+    srcs = ["_tool.cue", "cue/pack.cue"] + glob(["cue/*.cue"]) + ["../scripts/gen_workspace_cue.sh"],
+    out = "gen_workspace_cue.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+bash "$REPO/infra/scripts/gen_workspace_cue.sh"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "check",
+    srcs = ["_tool.cue"] + glob(["cue/*.cue"]),
+    out = "check.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+cue vet ./infra/out/...
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

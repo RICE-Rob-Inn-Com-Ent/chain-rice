@@ -3,10 +3,36 @@ package main
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 )
 
-// Perform writes BARD hardware placeholder and refreshes MASON .envrc; skips interactive IDE/cloud prompts.
+// Perform runs Odin hardware discovery and writes atlas.sys at repository root.
 func (m *Rice) Perform(ctx context.Context) error {
-	fmt.Println("perform: TODO BARD/MASON — hardware placeholder + .envrc refresh")
+	src, err := workspaceDir()
+	if err != nil {
+		return err
+	}
+	runner := filepath.ToSlash(filepath.Join("frontend", "inventory", "perform"))
+	atlasOut := filepath.ToSlash(filepath.Join("/src", "atlas.sys"))
+	script := fmt.Sprintf(`
+set -euo pipefail
+echo "── perform ── hardware discovery (Odin)"
+if ! command -v odin >/dev/null 2>&1; then
+  echo "odin compiler not found in environment"
+  exit 1
+fi
+cd /src/%s
+odin run . -file -define:RICE_ATLAS_OUT="%s"
+test -s "%s"
+echo "atlas.sys generated at %s"
+`, runner, atlasOut, atlasOut, atlasOut)
+	ctr := withPixi(src)
+	ctr = withBash(ctr, script)
+	if err := mustSync(ctx, ctr, "perform-odin"); err != nil {
+		return err
+	}
+	if _, err := ctr.Directory("/src").Export(ctx, "."); err != nil {
+		return fmt.Errorf("export workspace after perform: %w", err)
+	}
 	return nil
 }

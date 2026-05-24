@@ -1,8 +1,0 @@
-# KING TODO map
-# .k8s/cluster/rice-platform.yaml — platform Application
-# TODO:
-# [ ] ArgoCD Application for platform stack:
-#     Cilium, cert-manager, external-secrets, Kyverno, Harbor, Crossplane
-# [ ] all install.yaml image versions: renovate pinDigests tracks them
-
-

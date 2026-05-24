@@ -1,8 +1,0 @@
-{
-  "trace_id": "3a0616d6-af52-402d-8b24-459632fe102e",
-  "exit_code": 3,
-  "error_messages": [
-    "Failed to build 'root//base/bench:check (prelude//platforms:default#904931f735703749)'",
-    "Failed to build 'root//base/contract:check (prelude//platforms:default#904931f735703749)'"
-  ]
-}

@@ -1,7 +1,0 @@
-{
-  "trace_id": "67c4ed3d-dec0-4040-b0ff-b73a95a10a9f",
-  "exit_code": 3,
-  "error_messages": [
-    "Error running analysis for `root//base/contract:check (prelude//platforms:default#904931f735703749)`\n\nCaused by:\n    0: Error resolving `$(pwd)`.\n    1: There was no mapping for pwd."
-  ]
-}

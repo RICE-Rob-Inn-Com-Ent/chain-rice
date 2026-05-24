@@ -1,7 +1,0 @@
-{
-  "trace_id": "139da7a6-93d5-4c5b-928a-3d76a6b9462d",
-  "exit_code": 1,
-  "error_messages": [
-    "Error creating cell resolver: Parsing cells: No cell name for the root path, add an entry for `.`"
-  ]
-}

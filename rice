@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# rice — high-level entrypoint for CHIEF workflows.
+# Current focus: `rice cook <project>` for custom/EgOS and custom/code-rice.com.
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage:
+  rice pour
+  rice cook <project>
+
+Examples:
+  rice pour
+  rice cook EgOS
+  rice cook code-rice.com
+
+Notes:
+  - Requires the Dagger CLI on PATH: https://docs.dagger.io/
+  - `pour` → `dagger -m . -c 'rice | pour'` (MASON + hydrate; service/ci/src/pour.go).
+  - `cook` → `dagger -m . -c 'rice | cook --project …'` (Flutter web dev; service/ci/src/cook.go).
+  - Command map: README.md (MASON / Dagger) and CONTRIBUTING.md
+EOF
+}
+
+ensure_repo_root() {
+  if git rev-parse --show-toplevel >/dev/null 2>&1; then
+    git rev-parse --show-toplevel
+  else
+    echo "error: run rice from inside the rice-mono repo" >&2
+    exit 1
+  fi
+}
+
+ensure_dagger() {
+  if ! command -v dagger >/dev/null 2>&1; then
+    echo "error: dagger CLI not found on PATH." >&2
+    echo "       Install: https://docs.dagger.io/install" >&2
+    exit 1
+  fi
+}
+
+cmd_pour() {
+  ensure_dagger
+  local root
+  root="$(ensure_repo_root)"
+  cd "$root"
+  echo "rice pour → dagger -m . -c 'rice | pour'"
+  exec dagger -m . -c 'rice | pour'
+}
+
+cmd_cook() {
+  local project="${1:-}"
+  if [[ -z "$project" ]]; then
+    echo "error: missing project name for 'cook'." >&2
+    usage
+    exit 1
+  fi
+
+  ensure_dagger
+
+  local root
+  root="$(ensure_repo_root)"
+  cd "$root"
+
+  case "$project" in
+    EgOS|egos)
+      echo "rice cook EgOS → dagger shell (Flutter web dev, port 8080)"
+      exec dagger -m . -c 'rice | cook --project EgOS'
+      ;;
+    code-rice.com|code-rice|coderice)
+      echo "rice cook code-rice.com → dagger shell (Flutter web dev, port 8081)"
+      exec dagger -m . -c 'rice | cook --project code-rice.com'
+      ;;
+    *)
+      echo "error: unknown project '$project' for 'rice cook'." >&2
+      echo "       Known projects: EgOS, code-rice.com" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main() {
+  local subcmd="${1:-}"
+  shift || true
+
+  case "$subcmd" in
+    pour)
+      cmd_pour
+      ;;
+    cook)
+      ensure_repo_root >/dev/null
+      cmd_cook "${1:-}"
+      ;;
+    ""|-h|--help|help)
+      usage
+      ;;
+    *)
+      echo "error: unknown subcommand '$subcmd'." >&2
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

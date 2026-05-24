@@ -1,7 +1,0 @@
-{
-  "trace_id": "e4e01c69-9dbd-4b5c-84ca-d8bee7cc1445",
-  "exit_code": 3,
-  "error_messages": [
-    "Failed to build 'root//base:clerk_all (prelude//platforms:default#904931f735703749)'"
-  ]
-}

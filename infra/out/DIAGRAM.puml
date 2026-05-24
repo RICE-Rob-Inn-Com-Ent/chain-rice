@@ -1,0 +1,3 @@
+' infra/out — workspace CUE (`cue/`) + `_tool.cue` + `embed.bash`
+!include DIAGRAM.gen.puml
+!include DIAGRAM.edges.puml

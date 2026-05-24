@@ -1,3 +1,10 @@
+package workspace
+
+// cue cmd embed — regenerated from repo files
+emitFiles_ws: [
+		{
+			path:    "rice.code-workspace"
+			content: #"""
 {
   "folders": [
     {
@@ -40,6 +47,11 @@
     //   `~/.vscode/extensions/icons/` (або `~/.cursor/extensions/icons/` у Cursor),
     //   далі в User settings додай folders.associations: { "gpu": "../../../../icons/folder-gpu" }
     //   (кількість `../` залежить від шляху встановлення Material Icon Theme — див. README розширення).
+    // `custom/*`: кастомні папки `folder-project*.svg` (лого вшито в SVG, один файл без залежності).
+    //   У Material Icon Theme кастомні folder SVG зареєстровані офіційно лише через User settings —
+    //   див. ~/.config/Cursor/User/settings.json → `material-icon-theme.folders.associations`.
+    //   Іконки: скопіюй з `.vscode/extensions/icons/folder-project*.svg` у `…/cursor/extensions/icons/`.
+    //   Новий каталог під `custom/`: додай ключ (точне ім’я папки) у тій самій секції User settings (glob недоступний).
     "material-icon-theme.folders.customClones": [
       {
         "name": "gpu-nvidia-shader",
@@ -228,11 +240,7 @@
       "**/.zig-cache/**": true,
       "**/zig-out/**": true,
       "**/buck-out/**": true,
-      "**/.buck-cache/**": true,
-      "**/.github/**": true,
-      "**/function/**/__pycache__/**": true,
-      "**/function/.venv/**": true,
-      "**/function/**/.venv/**": true
+      "**/.buck-cache/**": true
     },
     "files.exclude": {
       "**/.dart_tool": true,
@@ -241,118 +249,7 @@
       "**/.zig-cache": true,
       "**/zig-out": true,
       "**/buck-out": true,
-      "**/.buck-cache": true,
-      "**/.rice": true,
-      "**/.docker": true,
-      "**/.k8s": true,
-      "**/.opentofu": true,
-      "**/.claude": true,
-      "**/.cursor": true,
-      "**/.continue": true,
-      "**/.windsurf": true,
-      "**/.reuse": true,
-      "**/cue.mod": true,
-      "**/infra/out/docker": true,
-      "**/infra/out/tofu": true,
-      "**/infra/out/k8s": true,
-      "**/service/ci/dagger.gen.go": true,
-      "**/service/ci/internal/dagger": true,
-      "**/service/go.mod": true,
-      "**/service/mix.exs": true,
-      "**/service/sqlc.yaml": true,
-      "**/service/.golangci.yml": true,
-      "**/service/.credo.exs": true,
-      "**/service/.formatter.exs": true,
-      "**/service/index.tpl": true,
-      "**/service/ARCHITECTURE.md": true,
-      "**/service/CHANGELOG.md": true,
-      "**/service/ROADMAP.md": true,
-      "**/service/.env": true,
-      "**/base/Cargo.toml": true,
-      "**/base/package.yaml": true,
-      "**/base/build.zig": true,
-      "**/base/build.zig.zon": true,
-      "**/base/security/build.zig.zon": true,
-      "**/base/rustfmt.toml": true,
-      "**/base/.clippy.toml": true,
-      "**/base/fourmolu.yaml": true,
-      "**/base/.hlint.yaml": true,
-      "**/base/index.tpl": true,
-      "**/base/ARCHITECTURE.md": true,
-      "**/base/CHANGELOG.md": true,
-      "**/base/ROADMAP.md": true,
-      "**/base/.env": true,
-      "**/base/**/*.cabal": true,
-      "**/frontend/tsconfig.json": true,
-      "**/frontend/package.json": true,
-      "**/frontend/**/pubspec.yaml": true,
-      "**/frontend/biome.json": true,
-      "**/frontend/analysis_options.yaml": true,
-      "**/frontend/index.tpl": true,
-      "**/frontend/ARCHITECTURE.md": true,
-      "**/frontend/CHANGELOG.md": true,
-      "**/frontend/ROADMAP.md": true,
-      "**/frontend/.env": true,
-      "**/frontend/**/BUCK": true,
-      "**/frontend/**/unit.odin": true,
-      "**/base/**/BUCK": true,
-      "**/service/**/BUCK": true,
-      "**/infra/**/BUCK": true,
-      "**/custom/**/BUCK": true,
-      "**/function/**/pyproject.toml": true,
-      "**/function/**/BUCK": true,
-      "**/function/**/__pycache__": true,
-      "**/function/.venv": true,
-      "**/function/**/.venv": true,
-      "**/function/index.tpl": true,
-      "**/function/ARCHITECTURE.md": true,
-      "**/function/CHANGELOG.md": true,
-      "**/function/ROADMAP.md": true,
-      "**/function/.env": true,
-      "**/infra/mint/overlay-schema/*.json": true,
-      "**/gen": true,
-      "**/service/gen": true,
-      "**/.buckconfig": true,
-      "**/.buckroot": true,
-      "**/Justfile": true,
-      "**/argocd.yaml": true,
-      "**/lefthook.yml": true,
-      "**/renovate.json": true,
-      "**/.envrc": true,
-      "**/.sops.yaml": true,
-      "**/cliff.toml": true,
-      "**/.convco.toml": true,
-      "**/.vale.ini": true,
-      "**/taplo.toml": true,
-      "**/.editorconfig": true,
-      "**/.aider.conf.yml": true,
-      "**/.aiderignore": true,
-      "**/.pixi": true,
-      "**/.ruff_cache": true,
-      "**/.vscode": true,
-      "**/.dockerignore": true,
-      "**/.gitattributes": true,
-      "**/.gitignore": true,
-      "**/.lefthook-local.yml": true,
-      "**/CODE_OF_CONDUCT.md": true,
-      "**/dagger.json": true,
-      "**/DIAGRAM.puml": true,
-      "**/docker-compose.yml": true,
-      "**/LICENSE.md": true,
-      "**/pixi.lock": true,
-      "**/pixi.toml": true,
-      "**/README.md": true,
-      "**/SECURITY.md": true,
-      "**/CONTRIBUTING.md": true,
-      "**/.github": true,
-      "**/vhs.tape": true,
-      "**/function/uv.lock": true,
-      "**/uv.lock": true,
-      "**/pubspec.lock": true,
-      "**/mix.lock": true,
-      "**/Cargo.lock": true,
-      "**/.pytest_cache": true,
-      "**/.mypy_cache": true
+      "**/.buck-cache": true
     },
     "search.exclude": {
       "**/.dart_tool": true,
@@ -361,102 +258,7 @@
       "**/.zig-cache": true,
       "**/zig-out": true,
       "**/buck-out": true,
-      "**/.buck-cache": true,
-      "**/.rice": true,
-      "**/.docker": true,
-      "**/.k8s": true,
-      "**/.opentofu": true,
-      "**/.claude": true,
-      "**/.cursor": true,
-      "**/.continue": true,
-      "**/.windsurf": true,
-      "**/.reuse": true,
-      "**/cue.mod": true,
-      "**/infra/out/docker": true,
-      "**/infra/out/tofu": true,
-      "**/infra/out/k8s": true,
-      "**/service/ci/dagger.gen.go": true,
-      "**/service/ci/internal/dagger": true,
-      "**/gen": true,
-      "**/service/gen": true,
-      "**/infra/mint/overlay-schema/*.json": true,
-      "**/.pixi": true,
-      "**/.ruff_cache": true,
-      "**/.vscode": true,
-      "**/.dockerignore": true,
-      "**/.gitattributes": true,
-      "**/.gitignore": true,
-      "**/service/go.mod": true,
-      "**/service/mix.exs": true,
-      "**/service/sqlc.yaml": true,
-      "**/service/.golangci.yml": true,
-      "**/service/.credo.exs": true,
-      "**/service/.formatter.exs": true,
-      "**/service/index.tpl": true,
-      "**/service/ARCHITECTURE.md": true,
-      "**/service/CHANGELOG.md": true,
-      "**/service/ROADMAP.md": true,
-      "**/service/.env": true,
-      "**/base/Cargo.toml": true,
-      "**/base/package.yaml": true,
-      "**/base/build.zig": true,
-      "**/base/build.zig.zon": true,
-      "**/base/security/build.zig.zon": true,
-      "**/base/rustfmt.toml": true,
-      "**/base/.clippy.toml": true,
-      "**/base/fourmolu.yaml": true,
-      "**/base/.hlint.yaml": true,
-      "**/base/index.tpl": true,
-      "**/base/ARCHITECTURE.md": true,
-      "**/base/CHANGELOG.md": true,
-      "**/base/ROADMAP.md": true,
-      "**/base/.env": true,
-      "**/base/**/*.cabal": true,
-      "**/frontend/tsconfig.json": true,
-      "**/frontend/package.json": true,
-      "**/frontend/biome.json": true,
-      "**/frontend/analysis_options.yaml": true,
-      "**/frontend/index.tpl": true,
-      "**/frontend/ARCHITECTURE.md": true,
-      "**/frontend/CHANGELOG.md": true,
-      "**/frontend/ROADMAP.md": true,
-      "**/frontend/.env": true,
-      "**/function/index.tpl": true,
-      "**/function/ARCHITECTURE.md": true,
-      "**/function/CHANGELOG.md": true,
-      "**/function/ROADMAP.md": true,
-      "**/function/.env": true,
-      "**/function/uv.lock": true,
-      "**/CODE_OF_CONDUCT.md": true,
-      "**/dagger.json": true,
-      "**/DIAGRAM.puml": true,
-      "**/docker-compose.yml": true,
-      "**/LICENSE.md": true,
-      "**/pixi.lock": true,
-      "**/pixi.toml": true,
-      "**/README.md": true,
-      "**/SECURITY.md": true,
-      "**/CONTRIBUTING.md": true,
-      "**/.github": true,
-      "**/frontend/**/pubspec.yaml": true,
-      "**/frontend/**/BUCK": true,
-      "**/frontend/**/unit.odin": true,
-      "**/base/**/BUCK": true,
-      "**/service/**/BUCK": true,
-      "**/infra/**/BUCK": true,
-      "**/custom/**/BUCK": true,
-      "**/function/**/pyproject.toml": true,
-      "**/function/**/BUCK": true,
-      "**/function/**/__pycache__": true,
-      "**/function/.venv": true,
-      "**/function/**/.venv": true,
-      "**/vhs.tape": true,
-      "**/uv.lock": true,
-      "**/pubspec.lock": true,
-      "**/mix.lock": true,
-      "**/Cargo.lock": true,
-      "**/.pytest_cache": true,
-      "**/.mypy_cache": true
+      "**/.buck-cache": true
     },
     "[odin]": {
       "editor.defaultFormatter": "DanielGavin.ols",
@@ -654,9 +456,22 @@
         }
       },
       {
-        "label": "King: generate root from CUE",
+        "label": "MASON: genMonorepo (pour)",
         "type": "shell",
-        "command": "cue cmd gen ./infra",
+        "command": "cue cmd genMonorepo ./infra/_tool.cue",
+        "options": {
+          "cwd": "${workspaceFolder:🫅KING}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "CHIEF: genChief (cook)",
+        "type": "shell",
+        "command": "cue cmd genChief ./infra/_tool.cue",
         "options": {
           "cwd": "${workspaceFolder:🫅KING}"
         },
@@ -719,3 +534,148 @@
 
 
 
+"""#
+		}
+,
+		{
+			path:    ".editorconfig"
+			content: #"""
+# .editorconfig
+# Generated by: cue export infra/configs/editorconfig.cue
+# Do not edit manually — edit infra/configs/editorconfig.cue instead
+
+root = true
+
+# ── global defaults ───────────────────────────────────────
+[*]
+charset                  = utf-8
+end_of_line              = lf
+insert_final_newline     = true
+trim_trailing_whitespace = true
+indent_style             = space
+indent_size              = 2
+
+# ── MASON — CUE + Proto + docs ────────────────────────────
+[*.cue]
+indent_style = space
+indent_size  = 4
+max_line_length = 100
+
+[*.proto]
+indent_style = space
+indent_size  = 2
+max_line_length = 100
+
+[*.md]
+trim_trailing_whitespace = false
+max_line_length          = off
+
+# ── SMITH — Go + Elixir ───────────────────────────────────
+[*.go]
+indent_style    = tab           # gofmt enforces tabs — never spaces
+indent_size     = 4
+max_line_length = 120
+
+[*.{ex,exs}]
+indent_style    = space
+indent_size     = 2
+max_line_length = 120
+
+# ── SAGE — Python + Mojo ──────────────────────────────────
+[*.py]
+indent_style    = space
+indent_size     = 4             # PEP8
+max_line_length = 88            # ruff default
+
+[*.mojo]
+indent_style    = space
+indent_size     = 4
+max_line_length = 88
+
+# ── BARD — Odin + TypeScript + Dart ──────────────────────
+[*.odin]
+indent_style    = space
+indent_size     = 4
+max_line_length = 120
+
+[*.{ts,tsx,js,jsx}]
+indent_style    = space
+indent_size     = 2
+max_line_length = 100
+
+[*.dart]
+indent_style    = space
+indent_size     = 2
+max_line_length = 120
+
+# ── CLERK — Rust + Haskell + Zig ─────────────────────────
+[*.rs]
+indent_style    = space
+indent_size     = 4
+max_line_length = 100           # rustfmt default
+
+[*.{hs,lhs}]
+indent_style    = space
+indent_size     = 2
+max_line_length = 100
+
+[*.zig]
+indent_style    = space
+indent_size     = 4
+max_line_length = 100
+
+# ── CHIEF — .rice language ────────────────────────────────
+[*.rice]
+indent_style    = space
+indent_size     = 2
+max_line_length = 120
+
+# ── build system — tab sensitive ─────────────────────────
+[justfile]
+indent_style = tab
+indent_size  = 4
+
+[{BUCK,BUCK2,.buckversion}]
+indent_style = space
+indent_size  = 4
+
+# ── config formats ────────────────────────────────────────
+[*.{yaml,yml}]
+indent_style = space
+indent_size  = 2
+
+[*.{json,jsonc}]
+indent_style = space
+indent_size  = 2
+
+[*.toml]
+indent_style = space
+indent_size  = 2
+
+[*.{tf,tfvars}]
+indent_style    = space
+indent_size     = 2
+max_line_length = 120
+
+# ── shell ─────────────────────────────────────────────────
+[*.sh]
+indent_style = space
+indent_size  = 2
+
+# ── never touch ───────────────────────────────────────────
+[*.lock]
+insert_final_newline     = false
+trim_trailing_whitespace = false
+
+[{*.min.js,*.min.css}]
+insert_final_newline     = false
+trim_trailing_whitespace = false
+
+
+
+
+
+
+"""#
+		}
+]

@@ -1,7 +1,9 @@
 {
-  "name": "ci",
-  "engineVersion": "v0.15.3",
-  "sdk": "go",
+  "name": "rice",
+  "engineVersion": "v0.20.8",
+  "sdk": {
+    "source": "go"
+  },
   "include": [
     ".git/",
     ".docker/",
@@ -23,20 +25,18 @@
     ".vale.ini",
     "cliff.toml",
     ".convco.toml",
-    "secrets.enc.env"
-  ],
-  "exclude": [
-    "buck-out/",
-    ".buck-cache/",
-    "node_modules/",
-    "__pycache__/",
-    ".dart_tool/",
-    "_build/",
-    "deps/",
-    ".pixi/",
-    ".rice-model",
-    ".rice-hardware.json",
-    ".rice-compute.json"
+    "secrets.enc.env",
+    "!buck-out/",
+    "!.buck-cache/",
+    "!node_modules/",
+    "!__pycache__/",
+    "!.dart_tool/",
+    "!_build/",
+    "!deps/",
+    "!.pixi/",
+    "!.rice-model",
+    "!.rice-hardware.json",
+    "!.rice-compute.json"
   ],
   "source": "service/ci"
 }

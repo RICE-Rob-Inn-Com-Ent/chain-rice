@@ -5,7 +5,16 @@ the High-Performance Protocol. No bloat, no legacy, just pure logic.
 
 ## The Toolbox (Zero-Config)
 
-We don't do manual installs. We use Pixi.
+We don't do manual installs for core roles. We use Pixi (conda-forge); **TS/JS-only conda tools** (`biome`, `lightningcss`) stay out of root `pixi.toml` — install those per frontend project.
+
+After clone (or when CUE / MASON inputs change):
+
+- `pixi install`
+- `direnv allow` (loads generated `.envrc` that walks **git-tracked** `*.env*` paths — never commit secrets)
+- `git ls-files | grep -E '\.env($|\.)' || true` — preview env-like paths tracked by git
+- **MASON pipeline:** `dagger -m . -c 'rice | pour'` (implementation: [`service/ci/src/pour.go`](service/ci/src/pour.go))
+- **Ad-hoc CUE emit:** `cue cmd emit ./infra/out/_tool.cue`
+- **Workspace CUE embed:** `buck2 build //infra/out:gen_workspace_cue`
 
 ## The Polyglot Manifesto (How we code)
 
@@ -54,3 +63,9 @@ If the CI isn't green, the code is broken. No exceptions. We ship only
 Maximum Performance.
 
 Ready to race? Open a PR and let's build the future.
+
+
+
+
+
+

@@ -1,7 +1,0 @@
-{
-  "trace_id": "8c83d6ea-1672-40b1-91cc-b2e5729de23c",
-  "exit_code": 3,
-  "error_messages": [
-    "Invalid relative target pattern `//base:*` is not allowed\n\nCaused by:\n    Invalid target name `*`. Target names are non-empty strings and can only contain alpha numeric characters, and symbols `,`, `.`, `=`, `-`, `/`, `~`, `@`, `!`, `+`, `$`, and `_`. No other characters are allowed."
-  ]
-}

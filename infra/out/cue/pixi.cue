@@ -1,3 +1,10 @@
+package workspace
+
+// cue cmd embed — pixi.toml
+emitFiles_pixi: [
+		{
+			path:    "pixi.toml"
+			content: #"""
 [project]
 name = "rice SDK"
 version = "0.1.0"
@@ -152,3 +159,7 @@ mason-gen-workspace-cue = "buck2 build //infra/out:gen_workspace_cue"
 #     reads RICE_GEO_TARGETS from env — list of URLs to audit
 #     outputs: infra/docs/geo-report.md
 
+
+"""#
+		}
+]

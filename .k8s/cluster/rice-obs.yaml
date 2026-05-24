@@ -1,9 +1,0 @@
-# KING TODO map
-# .k8s/cluster/rice-obs.yaml — observability Application
-# TODO:
-# [ ] ArgoCD Application for observability stack:
-#     includes: VictoriaMetrics, Tempo, Grafana, Loki, AlertManager
-#     source.path: .k8s/stack/victoria-metrics/ + .k8s/stack/tempo/ + .k8s/stack/grafana/
-# [ ] all Grafana datasources templated: VM_URL, TEMPO_URL, LOKI_URL from env vars
-
-

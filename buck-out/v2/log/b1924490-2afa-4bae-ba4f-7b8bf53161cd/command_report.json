@@ -1,7 +1,0 @@
-{
-  "trace_id": "b1924490-2afa-4bae-ba4f-7b8bf53161cd",
-  "exit_code": 3,
-  "error_messages": [
-    "Error running analysis for `root//base:clerk_cargo_check (prelude//platforms:default#904931f735703749)`\n\nCaused by:\n    0: Error in configured node dependency, dependency chain follows (-> indicates depends on, ^ indicates same configuration as previous):\n              root//base:clerk_cargo_check (prelude//platforms:default#904931f735703749)\n           -> root//base:buck-scripts/cargo_check_workspace.sh (^)\n       \n    1: looking up unconfigured target node `root//base:buck-scripts/cargo_check_workspace.sh`\n    2: Unknown target `buck-scripts/cargo_check_workspace.sh` from package `root//base`.\n       Did you mean one of the 10 targets in root//base:BUCK?"
-  ]
-}

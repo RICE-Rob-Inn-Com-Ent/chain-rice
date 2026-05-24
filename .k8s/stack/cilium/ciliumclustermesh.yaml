@@ -1,9 +1,0 @@
-# KING TODO map
-# .k8s/stack/cilium — soft-coded
-# TODO:
-# [ ] ciliumconfig.yaml: tunnel = RICE_CILIUM_TUNNEL (default: vxlan)
-#     hubble.enabled = RICE_CILIUM_HUBBLE (default: true)
-#     kubeProxyReplacement = RICE_CILIUM_KUBE_PROXY_REPLACE (default: strict)
-# [ ] l2announcement.yaml: loadBalancerIPs = RICE_CILIUM_LB_IP_POOL (CIDR)
-
-

@@ -11,7 +11,8 @@ Cargo.lock
 /vendor/
 dist/
 build/
-out/
+/out/
+!infra/out/
 .next/
 .cache/
 *.tsbuildinfo
@@ -60,7 +61,6 @@ temp/
 .turbo/
 .ruff_cache/
 .mypy_cache/
-docker-compose.override.yml
 .terraform/
 *.tfstate
 *.tfstate.*
@@ -91,3 +91,9 @@ release/
 
 # Trunk CLI — tworzy symlinki do ~/.cache/trunk/repos/… przy `trunk check` itd.
 .trunk/
+
+
+
+
+
+

@@ -1,7 +1,0 @@
-{
-  "trace_id": "b4bc2d67-6930-4cdf-bb5d-3bd6ccb1869f",
-  "exit_code": 3,
-  "error_messages": [
-    "Failed to build 'root//base:clerk_cargo_check (prelude//platforms:default#904931f735703749)'"
-  ]
-}

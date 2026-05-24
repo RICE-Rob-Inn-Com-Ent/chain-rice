@@ -1,7 +1,0 @@
-{
-  "trace_id": "ba35237e-cba1-490d-b9fc-810931a6a599",
-  "exit_code": 3,
-  "error_messages": [
-    "Error running analysis for `root//base/contract:check (prelude//platforms:default#904931f735703749)`\n\nCaused by:\n    0: Error looking up configured node root//base/contract:check (prelude//platforms:default#904931f735703749)\n    1: `root//base:clerk_contract_check` is not visible to `root//base/contract:check` (run `buck2 uquery --output-attribute visibility root//base:clerk_contract_check` to check the visibility)"
-  ]
-}

@@ -1,7 +1,0 @@
-# KING TODO map
-# .k8s/gpu — soft-coded
-# TODO:
-# [ ] operator-install.yaml: GPU operator version via ARG, renovate tracks
-# [ ] mig-config.yaml: RICE_GPU_MIG_STRATEGY when RICE_GPU_MIG_ENABLED=true
-# [ ] time-slicing.yaml: RICE_GPU_TIME_SLICE_REPLICAS when RICE_GPU_TIME_SLICING=true (dev)
-
