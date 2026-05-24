@@ -1,0 +1,26 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+.git
+.github
+.pixi
+.buck-cache
+buck-out
+__pycache__
+.dart_tool
+_build
+deps
+.model-cache
+*.md
+!README.md
+.cursor
+.vscode
+custom
+frontend
+service
+function
+infra
+base
+**/*.log
+**/.env
+**/.env.*
+!secrets.enc.env

@@ -29,7 +29,7 @@ import qualified Prelude as P
 import Data.Text (Text)
 import qualified Data.Text as T
 import Text.Read (readMaybe)
-import Decimal (RiceDecimal, minus, plus, times)
+import Decimal (Numeric, minus, plus, times)
 
 -- ---------------------------------------------------------------------------
 -- Money (from former Money.hs)
@@ -38,19 +38,19 @@ import Decimal (RiceDecimal, minus, plus, times)
 -- | A currency-tagged fixed-point amount (ISO code as "Text" for now).
 data Money = Money
   { moneyCurrency :: !Text
-  , moneyAmount :: !RiceDecimal
+  , moneyAmount :: !Numeric
   }
   deriving (Eq, Show)
 
 zeroMoney :: Text -> Money
-zeroMoney c = Money c (0 :: RiceDecimal)
+zeroMoney c = Money c (0 :: Numeric)
 
 addMoney :: Money -> Money -> Either Text Money
 addMoney (Money c1 a1) (Money c2 a2)
   | c1 /= c2 = Left "currency mismatch"
   | otherwise = Right (Money c1 (plus a1 a2))
 
-scaleMoney :: RiceDecimal -> Money -> Money
+scaleMoney :: Numeric -> Money -> Money
 scaleMoney k (Money c a) = Money c (times k a)
 
 -- ---------------------------------------------------------------------------
@@ -58,16 +58,16 @@ scaleMoney k (Money c a) = Money c (times k a)
 -- ---------------------------------------------------------------------------
 
 -- | Simple interest: @principal * rate * time@ (time in consistent units with the rate period).
-simpleInterest :: RiceDecimal -> RiceDecimal -> RiceDecimal -> RiceDecimal
+simpleInterest :: Numeric -> Numeric -> Numeric -> Numeric
 simpleInterest principal rate time = principal `times` rate `times` time
 
 -- | Discrete compounding over @periods@ steps at @ratePerPeriod@ per step.
-compoundPeriods :: RiceDecimal -> RiceDecimal -> Integer -> RiceDecimal
+compoundPeriods :: Numeric -> Numeric -> Integer -> Numeric
 compoundPeriods principal ratePerPeriod periods =
   principal `times` ((1 `plus` ratePerPeriod) ^ periods)
 
 -- | Level payment for @n@ periods at fixed rate @r@ per period (annuity formula).
-monthlyPayment :: RiceDecimal -> RiceDecimal -> Int -> Maybe RiceDecimal
+monthlyPayment :: Numeric -> Numeric -> Int -> Maybe Numeric
 monthlyPayment principal periodicRate n
   | n <= 0 = Nothing
   | periodicRate == 0 = Just (principal / fromIntegral n)
@@ -83,23 +83,23 @@ monthlyPayment principal periodicRate n
 -- ---------------------------------------------------------------------------
 
 -- | Value-added style: tax = net * rate.
-vatOnNet :: RiceDecimal -> RiceDecimal -> RiceDecimal
+vatOnNet :: Numeric -> Numeric -> Numeric
 vatOnNet net rate = net `times` rate
 
 -- | Single bracket: tax = max(0, income - allowance) * rate.
-flatIncomeTax :: RiceDecimal -> RiceDecimal -> RiceDecimal -> RiceDecimal
+flatIncomeTax :: Numeric -> Numeric -> Numeric -> Numeric
 flatIncomeTax allowance rate income =
   let taxable = if income `minus` allowance < 0 then 0 else income `minus` allowance
    in taxable `times` rate
 
 -- | Piecewise-linear marginal schedule: @(upperBound, marginalRate)@ sorted ascending;
 -- | last bound should exceed any realistic income (acts like top bracket).
-progressiveMarginal :: [(RiceDecimal, RiceDecimal)] -> RiceDecimal -> RiceDecimal
+progressiveMarginal :: [(Numeric, Numeric)] -> Numeric -> Numeric
 progressiveMarginal raw income =
   snd $ foldl go (0, 0) (sortOn fst raw)
   where
     go (prevBound, acc) (lim, rate) =
-      let slice = max (0 :: RiceDecimal) (min income lim `minus` prevBound)
+      let slice = max (0 :: Numeric) (min income lim `minus` prevBound)
           acc' = acc `plus` (slice `times` rate)
        in (lim, acc')
 

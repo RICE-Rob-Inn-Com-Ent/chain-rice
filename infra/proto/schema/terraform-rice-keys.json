@@ -1,0 +1,31 @@
+{
+  "terraform_rice_variable_names": [
+    "rice_availability_zones",
+    "rice_aws_assume_role_arn",
+    "rice_aws_region",
+    "rice_azure_subscription_id",
+    "rice_azure_tenant_id",
+    "rice_cloud_provider",
+    "rice_db_instance_class",
+    "rice_deployments",
+    "rice_domain",
+    "rice_enabled_clouds",
+    "rice_enable_gpu",
+    "rice_environment",
+    "rice_gcp_project_id",
+    "rice_gcp_region",
+    "rice_github_org",
+    "rice_github_repo",
+    "rice_gpu_instance_type",
+    "rice_k8s_cluster_name",
+    "rice_primary_cloud",
+    "rice_kubeconfig_path",
+    "rice_region",
+    "rice_regions_aws",
+    "rice_regions_azure",
+    "rice_regions_gcp",
+    "rice_registry",
+    "rice_tf_backend",
+    "rice_vpc_cidr"
+  ]
+}

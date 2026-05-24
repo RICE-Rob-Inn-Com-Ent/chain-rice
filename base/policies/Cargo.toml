@@ -39,5 +39,3 @@ audit-proto = ["dep:prost"]
 audit-nats = ["dep:nats"]
 fix-protocol = ["dep:fefix"]
 xml-interchange = []
-# Marker for CosmWasm-adjacent call sites; on-chain types live in the `contract` crate, not here.
-chain = []

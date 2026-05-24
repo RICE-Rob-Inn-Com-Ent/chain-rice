@@ -1,0 +1,30 @@
+name: coderice_frontend
+description: Code Rice — CHIEF BARD shell (configured via frontend/site.rice).
+publish_to: none
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  client:
+    path: ../../../frontend/client
+  browser:
+    path: ../../../frontend/browser
+  content:
+    path: ../../../frontend/content
+  lang:
+    path: ../../../frontend/lang
+  flutter_riverpod: ^2.6.1
+  hooks_riverpod: ^2.6.1
+  go_router: ^14.8.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

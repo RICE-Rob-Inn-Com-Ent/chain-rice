@@ -1,0 +1,68 @@
+use infra as docker
+
+// EgOS — local device stack (Ollama: think → code → visual; SAGE orchestrates).
+// Package: bowl [package] infra → MASON infra/proto/cue/infra.cue (facet docker).
+
+rc docker let {
+	db set {
+		name = "egos.app"
+		user = "egos.app"
+		init_sql = (pgcrypto, uuid-ossp, pg_trgm)
+	}
+
+	memory set {
+		redis = 512M
+		yugabyte = 4G
+		qdrant = 2G
+		nats = 1G
+		temporal = 2G
+		ollama = 8G
+	}
+
+	qdrant set {
+		hnsw_m = 16
+		ef_construct = 100
+		max_request_size_mb = 32
+		quantization = int8
+	}
+
+	nats set {
+		jetstream_max_mem = 512MB
+		jetstream_max_file = 5GB
+		max_payload = 4MB
+	}
+
+	postal set {
+		profile = _disabled
+	}
+
+	mailpit set {
+		profile = mailpit
+		max_messages = 1000
+		database.mount = "/data/mailpit.db"
+	}
+
+	ollama set {
+		profile = ollama
+		auto_pull = true
+		max_models = 1
+		backend = ollama
+		keep_alive = -1
+		num_parallel = 1
+		gpu_count = 1
+		models = (
+			think.model_id = qwen3:8b,
+			think.pull_on_start = true,
+			code.model_id = qwen2.5-coder:7b,
+			code.pull_on_start = true,
+			visual.model_id = qwen2.5vl:7b,
+			visual.pull_on_start = true,
+		)
+	}
+
+	bot set {
+		pull_on_start_default = true
+		pull_retries = 3
+		fallback_chain = (ollama)
+	}
+}

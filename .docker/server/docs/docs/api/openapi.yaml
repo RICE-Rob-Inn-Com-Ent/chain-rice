@@ -1,0 +1,7 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+openapi: 3.1.0
+info:
+  title: egos.app Docs API
+  version: "0.1.0"
+paths: {}

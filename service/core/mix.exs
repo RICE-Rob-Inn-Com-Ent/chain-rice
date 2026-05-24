@@ -25,9 +25,11 @@ defmodule Smith.Core.MixProject do
   defp deps do
     [
       {:phoenix,                "~> 1.7"},
+      {:phoenix_live_view,      "~> 1.0"},
       {:bandit,                 "~> 1.5"},
       {:phoenix_pubsub,         "~> 2.1"},
       {:phoenix_live_dashboard, "~> 0.8"},
+      {:messages,   in_umbrella: true},
       {:guard,      in_umbrella: true},
       {:connection, in_umbrella: true}
     ]

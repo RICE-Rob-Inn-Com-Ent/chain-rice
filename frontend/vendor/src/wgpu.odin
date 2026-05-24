@@ -1,4 +1,4 @@
-package gpu
+package vendor
 // TODO:
 // [ ] wgpuCreateInstance; RICE_RENDER backend vulkan/metal/dx12/webgl/auto — https://wgpu.rs/doc/wgpu/
 // [ ] requestAdapter HighPerformance; requestDevice features/limits
@@ -7,8 +7,9 @@ package gpu
 //
 
 when ODIN_OS == .Linux {
+	// Prefer system wgpu-native; override with RICE_WGPU_LIB or vendor/lib copy if needed.
 	foreign import libwgpu {
-		"lib/libwgpu.so",
+		"system:wgpu_native",
 	}
 } else when ODIN_OS == .Darwin {
 	foreign import libwgpu {
@@ -172,3 +173,10 @@ foreign libwgpu {
 	wgpuBufferGetMappedRange :: proc(buffer: WGPUBuffer, offset: u64, size: u64) -> rawptr ---
 	wgpuBufferUnmap :: proc(buffer: WGPUBuffer) ---
 }
+
+// vendor_wgpu_create_instance — мінімальна ініціалізація WebGPU instance (wgpu-native).
+vendor_wgpu_create_instance :: proc() -> WGPUInstance {
+	desc: WGPUInstanceDescriptor
+	return wgpuCreateInstance(&desc)
+}
+

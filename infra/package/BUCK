@@ -1,0 +1,46 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/package
+# MASON — polyglot package CUE (`polyglot.cue` + `cue/*.cue` + `infra/build/build.cue` + `infra/build/cue/*.cue`).
+# Rebuild: buck2 build '//infra/package:validate_package_cue' '//infra/package:render_all'
+
+genrule(
+    name = "validate_package_cue",
+    srcs = glob(["polyglot.cue", "cue/*.cue", "../build/build.cue", "../build/cue/*.cue"]),
+    out = "validate.stamp",
+    cmd = """set -euo pipefail
+cd "$SRCDIR"
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO/infra/package"
+shopt -s nullglob
+build_inputs=("$REPO/infra/build/build.cue")
+readarray -t build_cue < <(find "$REPO/infra/build/cue" -name '*.cue' | LC_ALL=C sort -u)
+build_inputs+=("${build_cue[@]}")
+pkg=(cue/*.cue)
+readarray -t pksort < <(printf '%s\n' "${pkg[@]}" | LC_ALL=C sort -u)
+for e in packageIndex packageLanguages packageLanguagesFull renderPlan emitTextFiles; do
+  cue export polyglot.cue "${pksort[@]}" "${build_inputs[@]}" -e "$e" --out json > /dev/null
+done
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "render_all",
+    srcs = glob(["polyglot.cue", "cue/*.cue"])
+    + glob(["../build/build.cue", "../build/cue/*.cue", "../out/_tool.cue", "../out/cue/*.cue", "../out/cue/docs.cue", "../docs/docs.cue"]),
+    out = "render_all.stamp",
+    cmd = """set -euo pipefail
+REPO=`git rev-parse --show-toplevel`
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+if command -v buck2 >/dev/null 2>&1; then
+  buck2 build //infra/build:render_build
+fi
+cue cmd emit ./infra/out/_tool.cue
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

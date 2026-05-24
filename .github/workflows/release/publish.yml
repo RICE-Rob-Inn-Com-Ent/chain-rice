@@ -1,6 +1,8 @@
 # KING TODO map
-# .github/workflows/release/publish.yml — CUE mirror: infra/configs/github/workflows__release__publish.yml.cue
+# GitHub-only release/deploy skeleton — main repo CI: infra/ci/README.md.
 # TODO:
 # [ ] push Docker images to RICE_REGISTRY (default: ghcr.io)
 # [ ] image: ${RICE_REGISTRY}/${RICE_GITHUB_ORG}/rice:${version}
 # [ ] sign with cosign, attach SBOM via syft
+
+

@@ -1,0 +1,32 @@
+# Template — wire secrets (e.g. RICE_DOCS_RSYNC_TARGET, SSH key) for your apex host.
+name: docs-apex-publish
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "docs-site/**"
+      - ".github/workflows/docs-apex-publish.yml"
+concurrency:
+  group: docs-apex
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install MkDocs
+        run: pip install mkdocs-material
+      - name: Build static site
+        run: mkdocs build --strict -f docs-site/mkdocs.yml
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkdocs-site
+          path: docs-site/site
+      - name: Publish placeholder
+        run: |
+          echo "Add a publish step: aws s3 sync, rsync, or cloudflare/pages-action with OIDC."

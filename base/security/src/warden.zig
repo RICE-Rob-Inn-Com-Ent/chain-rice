@@ -3,8 +3,8 @@
 const std = @import("std");
 const errors = @import("error.zig");
 
-// [ ] https://ziglang.org/documentation/master/std/ — mprotect, mlock, explicit_bzero, guard pages, RICE_SECURITY_ALLOC_THRESHOLD
-// [ ] — platform secure_zero / libsodium; RICE_SECURITY_* caps in CI
+// [ ] https://ziglang.org/documentation/master/std/ — mprotect, mlock, explicit_bzero, guard pages, CLERK_SECURITY_ALLOC_THRESHOLD
+// [ ] — platform secure_zero / libsodium; CLERK_SECURITY_* caps in CI
 
 /// Zero sensitive bytes with per-store `volatile` stores (compiler must not elide).
 pub fn secureWipeVolatile(bytes: []u8) void {
@@ -32,7 +32,7 @@ pub fn guardPagePlaceholder() errors.SecurityError!void {
 
 /// Reject oversize principal or out-of-range basis points (mirrors CALC Haskell bounds).
 /// Returns `0` if ok; `1` if `principal_len > max_principal_len`; `2` if `bps` outside `[0, max_bps]`.
-export fn rice_warden_check_leverage_limit(
+export fn warden_check_leverage_limit(
     principal_len: usize,
     max_principal_len: usize,
     bps: i64,
@@ -52,32 +52,32 @@ fn wipeOpaque(ptr: ?*anyopaque, len: usize) void {
 
 /// Zero `len` bytes at `ptr` (no-op if `ptr` is null or `len == 0`). Caller must own the memory.
 /// **Rust CLERK:** stable `export fn` symbol — keep name and ABI.
-export fn rice_warden_prune_memory_remnants(ptr: ?*anyopaque, len: usize) void {
+export fn warden_prune_memory_remnants(ptr: ?*anyopaque, len: usize) void {
     wipeOpaque(ptr, len);
 }
 
-/// Explicit volatile secure wipe for C/Rust callers (same effect as `rice_warden_prune_memory_remnants`).
+/// Explicit volatile secure wipe for C/Rust callers (same effect as `warden_prune_memory_remnants`).
 /// **Rust CLERK:** stable `export fn` symbol.
-export fn rice_warden_secure_wipe(ptr: ?*anyopaque, len: usize) void {
+export fn warden_secure_wipe(ptr: ?*anyopaque, len: usize) void {
     wipeOpaque(ptr, len);
 }
 
 test "warden rejects oversized principal" {
-    try std.testing.expectEqual(@as(i32, 1), rice_warden_check_leverage_limit(5000, 4096, 100, 1_000_000));
+    try std.testing.expectEqual(@as(i32, 1), warden_check_leverage_limit(5000, 4096, 100, 1_000_000));
 }
 
 test "warden rejects negative bps" {
-    try std.testing.expectEqual(@as(i32, 2), rice_warden_check_leverage_limit(10, 4096, -1, 1_000_000));
+    try std.testing.expectEqual(@as(i32, 2), warden_check_leverage_limit(10, 4096, -1, 1_000_000));
 }
 
 test "warden accepts in-range input" {
-    try std.testing.expectEqual(@as(i32, 0), rice_warden_check_leverage_limit(10, 4096, 250, 1_000_000));
+    try std.testing.expectEqual(@as(i32, 0), warden_check_leverage_limit(10, 4096, 250, 1_000_000));
 }
 
 test "warden prune zeroes buffer" {
     var buf: [16]u8 = undefined;
     @memset(&buf, 0xAB);
-    rice_warden_prune_memory_remnants(@ptrCast(@alignCast(buf[0..].ptr)), buf.len);
+    warden_prune_memory_remnants(@ptrCast(@alignCast(buf[0..].ptr)), buf.len);
     try std.testing.expectEqual(@as(u8, 0), buf[0]);
 }
 

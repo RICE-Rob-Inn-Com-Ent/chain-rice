@@ -243,7 +243,7 @@ mod mason_xml {
     /// XML namespace URI for MASON legal documents (hint for generators / validators).
     #[must_use]
     pub fn mason_xml_namespace_uri() -> String {
-        std::env::var("RICE_MASON_XML_NAMESPACE")
+        std::env::var("CLERK_MASON_XML_NAMESPACE")
             .unwrap_or_else(|_| "https://schemas.rice.os/mason/legal/v1".into())
     }
 

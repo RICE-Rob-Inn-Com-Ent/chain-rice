@@ -1,11 +1,27 @@
 defmodule Smith.Core.Socket do
-  # TODO:
-  # [ ] implement Phoenix.Socket:
-  #     connect/3 — validates PASETO token from params
-  #     id/1 — socket ID = user_id from Claims
-  # [ ] implement socket transport:
-  #     :websocket — primary transport
-  #     :longpoll — fallback when WebSocket unavailable
-  # [ ] implement socket timeouts:
-  #     timeout from RICE_CORE_SOCKET_TIMEOUT_MS env var
+  @moduledoc """
+  WebSocket entry for **Phoenix Channels** (BARD ↔ microservices).
+
+  Optional token in `connect` (`params["token"]`) — kept for a future PASETO integration.
+  """
+
+  use Phoenix.Socket
+
+  channel "rice:bridge:*", Smith.Core.Channel
+
+  @impl true
+  def connect(params, socket, _connect_info) do
+    _ = params["token"]
+    session_id = params["session_id"] || Base.encode16(:crypto.strong_rand_bytes(8), case: :lower)
+
+    socket =
+      socket
+      |> assign(:session_id, session_id)
+      |> assign(:interface, params["interface"] || "bard")
+
+    {:ok, socket}
+  end
+
+  @impl true
+  def id(socket), do: "smith_socket:#{socket.assigns.session_id}"
 end

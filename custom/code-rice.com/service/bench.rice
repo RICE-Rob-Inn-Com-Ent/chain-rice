@@ -1,0 +1,9 @@
+// code-rice.com — SMITH service/bench business overlay.
+rc smith let {
+	bench set {
+		enabled = true
+	}
+}
+
+fn hook_bench_init {}
+fn hook_bench_handler {}

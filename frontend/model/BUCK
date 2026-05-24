@@ -1,3 +1,22 @@
-# Buck2 source manifest — `model` Dart package.
-# Dart requires libraries under `lib/`. Equivalent to requested:
-#   glob(["src/**/*.dart", "unit.dart"])  →  lib/src/**/*.dart, lib/unit.dart
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/frontend.cue — watches frontend/model
+# Rebuild: buck2 build '//frontend/model:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["pubspec.yaml", "../pubspec.yaml", "lib/**/*.dart"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:$HOME/.pub-cache/bin:/usr/bin:$PATH"
+cd "$REPO/frontend"
+dart pub get
+cd "$REPO/frontend/model"
+dart run build_runner build --delete-conflicting-outputs
+dart analyze --fatal-warnings lib
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

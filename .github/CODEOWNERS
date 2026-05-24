@@ -1,5 +1,6 @@
-# Do not edit manually — edit infra/configs/github.cue instead
-
+# Canonical CODEOWNERS (KING). GitHub reads `.github/CODEOWNERS`; after editing here run:
+#   ./scripts/ci/sync-github-meta.sh
+#
 # TODO:
 # [ ] replace all /backend/ paths → /service/ (SMITH domain)
 # [ ] replace all /frontend/node/ paths → /frontend/browser/ (BARD browser)
@@ -16,7 +17,6 @@
 #     /frontend/ @mrDinkelman    — BARD: TypeScript + Dart + Odin
 #     /function/ @mrDinkelman    — SAGE: Python + Mojo
 #     /custom/ @mrDinkelman      — CHIEF: .rice projects
-#     /.docker/ @mrDinkelman     — all Dockerfiles + configs
 #     /.k8s/ @mrDinkelman        — Kubernetes manifests
 #     /.opentofu/ @mrDinkelman   — OpenTofu infrastructure
 # [ ] add RICE_CODEOWNERS_TEAM env var support for team repos — not hardcoded here
@@ -47,11 +47,8 @@ CHANGELOG @mrDinkelman
 /.editorconfig @mrDinkelman
 /.gitignore @mrDinkelman
 /.gitattributes @mrDinkelman
-/.devcontainer/node/.prettierrc* @mrDinkelman
 /.eslintrc* @mrDinkelman
-/.devcontainer/node/.releaserc.js @mrDinkelman
 /renovate.json @mrDinkelman
-/.devcontainer/node/tsconfig.json @mrDinkelman
 
 # Bazel build system
 
@@ -64,11 +61,10 @@ CHANGELOG @mrDinkelman
 # CI/CD and DevOps
 
 /.github/ @mrDinkelman
+/infra/ci/ @mrDinkelman
+/scripts/ci/ @mrDinkelman
 /.circleci/ @mrDinkelman
-/.gitlab-ci.yml @mrDinkelman
 /Makefile @mrDinkelman
-/docker-compose.yml @mrDinkelman
-/Dockerfile @mrDinkelman
 /dev/terraform/ @mrDinkelman
 /dev/k8s/ @mrDinkelman
 /dev/ansible/ @mrDinkelman
@@ -161,3 +157,5 @@ pnpm-lock.yaml @mrDinkelman
 
 /LICENSE @mrDinkelman
 /SECURITY.md @mrDinkelman
+
+

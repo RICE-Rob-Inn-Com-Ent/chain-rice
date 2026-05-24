@@ -1,77 +1,151 @@
 //! Language Server Protocol — IDE integration via `tower-lsp`.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
 // [ ] Stack surface: tokio, cosmwasm-std, serde, thiserror, k256, arkworks, etc. — extend per crate purpose.
 //
 use async_trait::async_trait;
-use tower_lsp::jsonrpc::Result;
+use std::collections::{HashMap, HashSet};
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, Mutex};
+use tower_lsp::jsonrpc::Result as JsonRpcResult;
 use tower_lsp::lsp_types::*;
-use tower_lsp::{Client, LanguageServer, LspService, Server};
+use tower_lsp::{Client, LanguageServer as TowerLanguageServer, LspService, Server};
+
+use crate::rice_infra_fmt;
+use crate::rice_lsp::{self, RiceDiagnostic};
 
 #[cfg(feature = "lsp-perf")]
 use std::borrow::Cow;
-#[cfg(feature = "lsp-perf")]
-use std::path::{Path, PathBuf};
-#[cfg(feature = "lsp-perf")]
-use std::sync::atomic::{AtomicU64, Ordering};
-#[cfg(feature = "lsp-perf")]
-use std::sync::Arc;
 #[cfg(feature = "lsp-perf")]
 use tower_lsp::jsonrpc::Error;
 #[cfg(feature = "lsp-perf")]
 use tower_lsp::jsonrpc::ErrorCode;
 
-/// Minimal LSP backend — extend with workspace symbols, hover, etc.
-pub struct RiceLanguageServer {
+const DIAG_DEBOUNCE_MS: u64 = 400;
+
+/// LSP backend for CHIEF infra `.rice` diagnostics and formatting.
+pub struct MintLspBackend {
     client: Client,
-    /// Debounce generation for `did_save` → `bench --json-smoke` (feature `lsp-perf`).
+    allowed_tf: HashSet<String>,
+    documents: Arc<Mutex<HashMap<Url, String>>>,
+    diag_seq: Arc<AtomicU64>,
     #[cfg(feature = "lsp-perf")]
     perf_seq: Arc<AtomicU64>,
 }
 
-impl RiceLanguageServer {
+impl MintLspBackend {
     pub fn new(client: Client) -> Self {
+        let allowed_tf = crate::overlay::terraform_rice_variable_names()
+            .into_iter()
+            .collect();
         Self {
             client,
+            allowed_tf,
+            documents: Arc::new(Mutex::new(HashMap::new())),
+            diag_seq: Arc::new(AtomicU64::new(0)),
             #[cfg(feature = "lsp-perf")]
             perf_seq: Arc::new(AtomicU64::new(0)),
         }
     }
+
+    fn is_chief_infra_uri(&self, uri: &Url) -> bool {
+        if uri.scheme() != "file" {
+            return false;
+        }
+        let Ok(path) = uri.to_file_path() else {
+            return false;
+        };
+        rice_lsp::classify_chief_path(&path).is_some()
+    }
+
+    fn schedule_validate(&self, uri: Url) {
+        if !self.is_chief_infra_uri(&uri) {
+            return;
+        }
+        let seq = self.diag_seq.fetch_add(1, Ordering::Relaxed) + 1;
+        let client = self.client.clone();
+        let documents = self.documents.clone();
+        let allowed_tf = self.allowed_tf.clone();
+        let diag_seq = self.diag_seq.clone();
+        tokio::spawn(async move {
+            tokio::time::sleep(std::time::Duration::from_millis(DIAG_DEBOUNCE_MS)).await;
+            if diag_seq.load(Ordering::Relaxed) != seq {
+                return;
+            }
+            let (path, src) = {
+                let docs = documents.lock().ok();
+                let Some(docs) = docs else {
+                    return;
+                };
+                let Some(src) = docs.get(&uri).cloned() else {
+                    return;
+                };
+                let Ok(path) = uri.to_file_path() else {
+                    return;
+                };
+                (path, src)
+            };
+            let diags = tokio::task::spawn_blocking(move || {
+                rice_lsp::validate_chief_rice(&path, &src, &allowed_tf)
+            })
+            .await
+            .unwrap_or_default();
+            let lsp_diags: Vec<Diagnostic> = diags.iter().map(to_lsp_diagnostic).collect();
+            client.publish_diagnostics(uri, lsp_diags, None).await;
+        });
+    }
+}
+
+fn to_lsp_diagnostic(d: &RiceDiagnostic) -> Diagnostic {
+    Diagnostic {
+        range: Range {
+            start: Position {
+                line: d.line,
+                character: d.col,
+            },
+            end: Position {
+                line: d.line,
+                character: d.col.saturating_add(1),
+            },
+        },
+        severity: Some(match d.severity {
+            rice_lsp::DiagnosticSeverity::Error => DiagnosticSeverity::ERROR,
+            rice_lsp::DiagnosticSeverity::Warning => DiagnosticSeverity::WARNING,
+        }),
+        message: d.message.clone(),
+        source: Some("rice-lsp".into()),
+        ..Default::default()
+    }
 }
 
 #[async_trait]
-impl LanguageServer for RiceLanguageServer {
-    async fn initialize(&self, _: InitializeParams) -> Result<InitializeResult> {
-        #[cfg(feature = "lsp-perf")]
+impl TowerLanguageServer for MintLspBackend {
+    async fn initialize(&self, _: InitializeParams) -> JsonRpcResult<InitializeResult> {
         let capabilities = ServerCapabilities {
             text_document_sync: Some(TextDocumentSyncCapability::Options(TextDocumentSyncOptions {
                 open_close: Some(true),
-                change: Some(TextDocumentSyncKind::INCREMENTAL),
+                change: Some(TextDocumentSyncKind::FULL),
                 save: Some(
                     SaveOptions {
-                        include_text: Some(false),
+                        include_text: Some(true),
                     }
                     .into(),
                 ),
                 ..Default::default()
             })),
-            execute_command_provider: Some(ExecuteCommandOptions {
+            document_formatting_provider: Some(OneOf::Left(true)),
+            ..Default::default()
+        };
+        #[cfg(feature = "lsp-perf")]
+        {
+            capabilities.execute_command_provider = Some(ExecuteCommandOptions {
                 commands: vec![String::from(lsp_perf::REFRESH_BASE_PERF_CMD)],
                 work_done_progress_options: Default::default(),
-            }),
-            ..Default::default()
-        };
-
-        #[cfg(not(feature = "lsp-perf"))]
-        let capabilities = ServerCapabilities {
-            text_document_sync: Some(TextDocumentSyncCapability::Kind(
-                TextDocumentSyncKind::INCREMENTAL,
-            )),
-            ..Default::default()
-        };
+            });
+        }
 
         Ok(InitializeResult {
             capabilities,
@@ -87,38 +161,92 @@ impl LanguageServer for RiceLanguageServer {
         self.client
             .log_message(
                 MessageType::INFO,
-                "lsp-perf: command `rice.refreshBasePerf`; optional save-hook set RICE_LSP_PERF=1 (debounced); RICE_BENCH_BIN or target/{debug,release}/bench",
+                "lsp-perf: command `clerk.refreshBasePerf`; optional save-hook set CLERK_LSP_PERF=1 (debounced); CLERK_BENCH_BIN or target/{debug,release}/bench",
             )
             .await;
     }
 
-    async fn shutdown(&self) -> Result<()> {
+    async fn shutdown(&self) -> JsonRpcResult<()> {
         Ok(())
     }
 
-    async fn did_save(&self, params: DidSaveTextDocumentParams) {
-        #[cfg(feature = "lsp-perf")]
-        {
-            if std::env::var_os("RICE_LSP_PERF").is_none() {
-                return;
-            }
-            let uri = params.text_document.uri;
-            if uri.scheme() != "file" {
-                return;
-            }
-            let Ok(path) = uri.to_file_path() else {
-                return;
-            };
-            if path.extension().and_then(|s| s.to_str()) != Some("rice") {
-                return;
-            }
-            self.schedule_refresh_base_perf(path);
+    async fn did_open(&self, params: DidOpenTextDocumentParams) {
+        let uri = params.text_document.uri;
+        if let Ok(mut docs) = self.documents.lock() {
+            docs.insert(uri.clone(), params.text_document.text);
         }
-        #[cfg(not(feature = "lsp-perf"))]
-        let _ = params;
+        self.schedule_validate(uri);
     }
 
-    async fn execute_command(&self, params: ExecuteCommandParams) -> Result<Option<serde_json::Value>> {
+    async fn did_change(&self, params: DidChangeTextDocumentParams) {
+        let uri = params.text_document.uri;
+        if let Some(change) = params.content_changes.into_iter().next() {
+            if let Ok(mut docs) = self.documents.lock() {
+                docs.insert(uri.clone(), change.text);
+            }
+        }
+        self.schedule_validate(uri);
+    }
+
+    async fn did_close(&self, params: DidCloseTextDocumentParams) {
+        if let Ok(mut docs) = self.documents.lock() {
+            docs.remove(&params.text_document.uri);
+        }
+    }
+
+    async fn did_save(&self, params: DidSaveTextDocumentParams) {
+        let uri = params.text_document.uri.clone();
+        if let Some(text) = params.text {
+            if let Ok(mut docs) = self.documents.lock() {
+                docs.insert(uri.clone(), text);
+            }
+        }
+        self.schedule_validate(uri.clone());
+
+        #[cfg(feature = "lsp-perf")]
+        if std::env::var_os("CLERK_LSP_PERF").is_some() {
+            if uri.scheme() == "file" {
+                if let Ok(path) = uri.to_file_path() {
+                    if path.extension().and_then(|s| s.to_str()) == Some("rice") {
+                        self.schedule_refresh_base_perf(path);
+                    }
+                }
+            }
+        }
+    }
+
+    async fn formatting(
+        &self,
+        params: DocumentFormattingParams,
+    ) -> JsonRpcResult<Option<Vec<TextEdit>>> {
+        let uri = params.text_document.uri;
+        let src = {
+            let docs = self.documents.lock().map_err(|_| {
+                tower_lsp::jsonrpc::Error::internal_error()
+            })?;
+            docs.get(&uri).cloned()
+        };
+        let Some(src) = src else {
+            return Ok(None);
+        };
+        let formatted = rice_infra_fmt::format_rice_infra(&src);
+        if formatted == src {
+            return Ok(None);
+        }
+        let range = Range {
+            start: Position::new(0, 0),
+            end: Position::new(u32::MAX, 0),
+        };
+        Ok(Some(vec![TextEdit {
+            range,
+            new_text: formatted,
+        }]))
+    }
+
+    async fn execute_command(
+        &self,
+        params: ExecuteCommandParams,
+    ) -> JsonRpcResult<Option<serde_json::Value>> {
         #[cfg(feature = "lsp-perf")]
         if params.command == lsp_perf::REFRESH_BASE_PERF_CMD {
             return self.run_refresh_base_perf_command(None).await;
@@ -134,7 +262,7 @@ mod lsp_perf {
     use std::path::{Path, PathBuf};
     use std::process::Command;
 
-    pub const REFRESH_BASE_PERF_CMD: &str = "rice.refreshBasePerf";
+    pub const REFRESH_BASE_PERF_CMD: &str = "clerk.refreshBasePerf";
 
     pub const DEBOUNCE_MS: u64 = 900;
     pub const LOG_CHUNK: usize = 3500;
@@ -148,7 +276,7 @@ mod lsp_perf {
     }
 
     pub fn resolve_bench_binary(walk_from_dir: Option<&Path>) -> Option<PathBuf> {
-        if let Ok(p) = std::env::var("RICE_BENCH_BIN") {
+        if let Ok(p) = std::env::var("CLERK_BENCH_BIN") {
             let pb = PathBuf::from(p);
             if pb.is_file() {
                 return Some(pb);
@@ -173,7 +301,7 @@ mod lsp_perf {
 
     pub fn run_bench_json_smoke(walk_from_dir: Option<&Path>) -> Result<String, String> {
         let bench = resolve_bench_binary(walk_from_dir)
-            .ok_or_else(|| "bench: could not resolve binary (set RICE_BENCH_BIN or build with `cargo build -p bench` from a workspace ancestor)".to_string())?;
+            .ok_or_else(|| "bench: could not resolve binary (set CLERK_BENCH_BIN or build with `cargo build -p bench` from a workspace ancestor)".to_string())?;
         let out = Command::new(&bench)
             .arg("--json-smoke")
             .output()
@@ -190,11 +318,11 @@ mod lsp_perf {
 }
 
 #[cfg(feature = "lsp-perf")]
-impl RiceLanguageServer {
+impl MintLspBackend {
     async fn run_refresh_base_perf_command(
         &self,
         walk_from_dir: Option<PathBuf>,
-    ) -> Result<Option<serde_json::Value>> {
+    ) -> JsonRpcResult<Option<serde_json::Value>> {
         let walk_from = walk_from_dir;
         let json_str = tokio::task::spawn_blocking(move || {
             lsp_perf::run_bench_json_smoke(walk_from.as_deref())
@@ -314,12 +442,10 @@ fn summarize_bench_json(json: &str) -> String {
     }
 }
 
-// Binary entrypoint for `rice-lsp`; unused when `lsp` is built as part of the library.
-#[allow(dead_code)]
-#[tokio::main]
-async fn main() {
+/// Start the Rice LSP (stdio transport).
+pub async fn run_server() {
     let stdin = tokio::io::stdin();
     let stdout = tokio::io::stdout();
-    let (service, socket) = LspService::new(|client| RiceLanguageServer::new(client));
+    let (service, socket) = LspService::new(|client| MintLspBackend::new(client));
     Server::new(stdin, stdout, socket).serve(service).await;
 }

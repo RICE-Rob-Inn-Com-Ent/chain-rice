@@ -1,4 +1,4 @@
-package window
+package vendor
 // TODO:
 // [ ] glfwCreateWindow RICE_APP_NAME RICE_WINDOW_*; RICE_WINDOW_MODE — https://www.glfw.org/docs/latest/
 //
@@ -6,11 +6,12 @@ package window
 import "core:c"
 import glfw "vendor:glfw"
 
-init :: proc() -> bool {
+// glfw_init — GLFW; для Vulkan поверхні використовуйте vulkan_supported / get_required_instance_extensions.
+glfw_init :: proc() -> bool {
 	return bool(glfw.Init())
 }
 
-terminate :: proc() {
+glfw_terminate :: proc() {
 	glfw.Terminate()
 }
 

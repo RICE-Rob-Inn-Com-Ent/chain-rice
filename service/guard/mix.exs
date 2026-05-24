@@ -17,20 +17,24 @@ defmodule Smith.Guard.MixProject do
 
   def application do
     [
-      extra_applications: [:logger, :runtime_tools],
+      extra_applications: [:logger, :runtime_tools, :os_mon],
       mod: {Smith.Guard.Application, []}
     ]
   end
 
   defp deps do
     [
+      {:pipeline, in_umbrella: true},
+      {:gnat, "~> 1.9"},
+      {:jason, "~> 1.4"},
       {:opentelemetry,          "~> 1.5"},
       {:opentelemetry_api,      "~> 1.4"},
       {:opentelemetry_exporter, "~> 1.8"},
       {:opentelemetry_phoenix,  "~> 2.0"},
       {:telemetry,              "~> 1.3"},
       {:telemetry_metrics,      "~> 1.0"},
-      {:telemetry_poller,       "~> 1.1"}
+      {:telemetry_poller,       "~> 1.1"},
+      {:finch,                   "~> 0.19"}
     ]
   end
 end

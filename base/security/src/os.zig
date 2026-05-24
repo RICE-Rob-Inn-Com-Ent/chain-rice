@@ -4,10 +4,10 @@ const builtin = @import("builtin");
 const errors = @import("error.zig");
 const audit = @import("audit.zig");
 
-// [ ] — ptrace dev; seccomp prod; RICE_SECURITY_ALLOWED_PATHS/HOSTS; NATS security.syscall.*
-// [ ] — /proc tree; RICE_SECURITY_PROC_WHITELIST; kill RICE_SECURITY_KILL_ENABLED; ancestry NATS audit.clerk.kills
-// [ ] — namespaces clone/setrlimit RICE_SECURITY_*; chroot RICE_SECURITY_JAIL_PATH; capability drop
-// [ ] — RICE_SECURITY_MAX_THREADS; runaway detection; affinity RICE_SECURITY_SAGE_CORES; prctl names
+// [ ] — ptrace dev; seccomp prod; CLERK_SECURITY_ALLOWED_PATHS/HOSTS; NATS security.syscall.*
+// [ ] — /proc tree; CLERK_SECURITY_PROC_WHITELIST; kill CLERK_SECURITY_KILL_ENABLED; ancestry NATS audit.clerk.kills
+// [ ] — namespaces clone/setrlimit CLERK_SECURITY_*; chroot CLERK_SECURITY_JAIL_PATH; capability drop
+// [ ] — CLERK_SECURITY_MAX_THREADS; runaway detection; affinity CLERK_SECURITY_SAGE_CORES; prctl names
 // [ ] — /proc + policy sync; SIGKILL vs SIGTERM; NATS security.reaper.*
 
 // ── Process reaper (non-whitelisted children vs .rice policy) ───────────────

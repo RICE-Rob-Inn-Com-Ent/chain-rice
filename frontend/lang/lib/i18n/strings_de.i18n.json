@@ -1,0 +1,39 @@
+{
+  "core": {
+    "welcome": "Willkommen bei .rice",
+    "boot": "Start",
+    "shutdown": "Herunterfahren",
+    "synchronization": "Synchronisation"
+  },
+  "errors": {
+    "guardOffline": "Guard-Verbindung ist offline",
+    "smithTimeout": "Smith hat nicht rechtzeitig geantwortet",
+    "unknown": "Etwas ist schiefgelaufen"
+  },
+  "ui": {
+    "ok": "OK",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "retry": "Erneut versuchen"
+  },
+  "hardware": {
+    "temperature": "Temperatur",
+    "voltage": "Spannung",
+    "load": "Last",
+    "memory": "Arbeitsspeicher"
+  },
+  "network": {
+    "connected": "Verbunden",
+    "searching": "Suche nach Geräten",
+    "interference": "Funkstörungen erkannt",
+    "devicesFound": {
+      "one": "$n Gerät im Netzwerk gefunden",
+      "other": "$n Geräte im Netzwerk gefunden"
+    }
+  },
+  "chat": {
+    "title": "SAGE",
+    "inputHint": "Nachricht an SAGE…",
+    "send": "Senden"
+  }
+}

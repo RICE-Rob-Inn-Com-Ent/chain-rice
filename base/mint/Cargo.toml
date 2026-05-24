@@ -12,10 +12,18 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "rice-lsp"
-path = "src/lsp.rs"
+path = "src/bin/rice_lsp.rs"
+
+[[bin]]
+name = "mint_overlay_check"
+path = "src/bin/mint_overlay_check.rs"
+
+[[bin]]
+name = "mint_prepare"
+path = "src/bin/mint_prepare.rs"
 
 [dependencies]
-util = { path = "../util" }
+serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
 logos.workspace = true
 chumsky.workspace = true

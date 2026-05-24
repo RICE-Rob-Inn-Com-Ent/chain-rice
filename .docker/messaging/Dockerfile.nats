@@ -1,0 +1,10 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# syntax=docker/dockerfile:1
+ARG NATS_VERSION=2.10
+FROM nats:${NATS_VERSION}-alpine
+COPY .docker/messaging/nats.conf /etc/nats/nats.conf
+EXPOSE 4222 8222 6222
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+  CMD wget -q -O- http://127.0.0.1:8222/healthz
+CMD ["--config", "/etc/nats/nats.conf"]

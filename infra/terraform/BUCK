@@ -1,0 +1,39 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/terraform
+# Rebuild: buck2 build '//infra/terraform:gen_opentofu_variables'
+
+genrule(
+    name = "gen_opentofu_variables",
+    srcs = glob(["cue/*.cue", "_tool.cue"]),
+    out = "gen_opentofu_variables.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+shopt -s nullglob
+tf=(./infra/terraform/_tool.cue ./infra/terraform/cue/*.cue)
+cue vet "${tf[@]}"
+cue cmd gen "${tf[@]}"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "check",
+    srcs = glob(["cue/*.cue", "_tool.cue"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+shopt -s nullglob
+tf=(./infra/terraform/_tool.cue ./infra/terraform/cue/*.cue)
+cue vet "${tf[@]}"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

@@ -1,6 +1,6 @@
 //! Incremental compiler database — `salsa` storage and [`salsa::Database`] impl.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
@@ -15,14 +15,14 @@ pub trait Db: salsa::Database {}
 
 #[salsa::db]
 #[derive(Clone, Default)]
-pub struct RiceDatabase {
+pub struct Database {
     storage: salsa::Storage<Self>,
 }
 
 #[salsa::db]
-impl salsa::Database for RiceDatabase {
+impl salsa::Database for Database {
     fn salsa_event(&self, _event: &dyn Fn() -> salsa::Event) {}
 }
 
 #[salsa::db]
-impl Db for RiceDatabase {}
+impl Db for Database {}

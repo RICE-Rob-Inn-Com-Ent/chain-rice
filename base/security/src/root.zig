@@ -1,7 +1,7 @@
-//! Rice security — near-metal defense library root: re-exports and compile-time feature flags.
+//! Clerk security — near-metal defense library root: re-exports and compile-time feature flags.
 
 // [ ] https://ziglang.org/documentation/master/std/
-// [ ] pub exports monitor..audit; main daemon RICE_SECURITY_*; NATS; graceful shutdown SIGTERM/SIGINT
+// [ ] pub exports monitor..audit; main daemon CLERK_SECURITY_*; NATS; graceful shutdown SIGTERM/SIGINT
 
 pub const errors = @import("error.zig");
 pub const warden = @import("warden.zig");

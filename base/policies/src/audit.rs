@@ -9,12 +9,12 @@
 //!
 //! | Variable | Effect |
 //! |----------|--------|
-//! | `RICE_POLICY_AUDIT_LOG` | If set, append one JSON line per [`try_append_audit_log_env`] call. |
-//! | `RICE_POLICY_AUDIT_SUBJECT` | NATS subject when [`try_publish_audit_nats`] is used (requires `audit-nats`). |
+//! | `CLERK_POLICY_AUDIT_LOG` | If set, append one JSON line per [`try_append_audit_log_env`] call. |
+//! | `CLERK_POLICY_AUDIT_SUBJECT` | NATS subject when [`try_publish_audit_nats`] is used (requires `audit-nats`). |
 //! | `NATS_URL` | Broker URL for NATS (default `nats://127.0.0.1:4222`). |
-//! | `RICE_POLICY_AUDIT_STRICT` | If truthy, file / NATS audit failures become `PolicyError::Clerk`. |
-//! | `RICE_POLICY_AUDIT_NATS_REQUIRED` | If truthy (with **audit-nats**), NATS publish failure is an error. |
-//! | `RICE_POLICY_BLOCK_HEIGHT` | Optional `u64` merged into [`AuditEvent::block_height`] when unset in the API. |
+//! | `CLERK_POLICY_AUDIT_STRICT` | If truthy, file / NATS audit failures become `PolicyError::Clerk`. |
+//! | `CLERK_POLICY_AUDIT_NATS_REQUIRED` | If truthy (with **audit-nats**), NATS publish failure is an error. |
+//! | `CLERK_POLICY_BLOCK_HEIGHT` | Optional `u64` merged into [`AuditEvent::block_height`] when unset in the API. |
 
 use std::io::Write;
 
@@ -22,7 +22,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use ulid::Ulid;
-use util::RiceError;
+use util::Error;
 
 use crate::error::PolicyResult;
 
@@ -436,19 +436,19 @@ pub fn write_audit_json_line<W: Write>(writer: &mut W, event: &AuditEvent) -> st
     Ok(())
 }
 
-/// If `RICE_POLICY_AUDIT_LOG` is set, append a JSON line to that path.
+/// If `CLERK_POLICY_AUDIT_LOG` is set, append a JSON line to that path.
 pub fn try_append_audit_log_env(event: &AuditEvent) -> std::io::Result<()> {
-    let Ok(path) = std::env::var("RICE_POLICY_AUDIT_LOG") else {
+    let Ok(path) = std::env::var("CLERK_POLICY_AUDIT_LOG") else {
         return Ok(());
     };
     let mut f = std::fs::OpenOptions::new().create(true).append(true).open(path)?;
     write_audit_json_line(&mut f, event).map_err(std::io::Error::other)
 }
 
-/// Subject for NATS when using [`try_publish_audit_nats`] (`RICE_POLICY_AUDIT_SUBJECT`).
+/// Subject for NATS when using [`try_publish_audit_nats`] (`CLERK_POLICY_AUDIT_SUBJECT`).
 #[must_use]
 pub fn audit_subject_from_env() -> Option<String> {
-    std::env::var("RICE_POLICY_AUDIT_SUBJECT").ok()
+    std::env::var("CLERK_POLICY_AUDIT_SUBJECT").ok()
 }
 
 // --- NATS (optional) -----------------------------------------------------------
@@ -456,7 +456,7 @@ pub fn audit_subject_from_env() -> Option<String> {
 #[cfg(feature = "audit-nats")]
 #[derive(Debug, thiserror::Error)]
 pub enum AuditPublishError {
-    #[error("RICE_POLICY_AUDIT_SUBJECT is not set")]
+    #[error("CLERK_POLICY_AUDIT_SUBJECT is not set")]
     SubjectUnset,
     #[error("JSON serialization: {0}")]
     Json(#[from] serde_json::Error),
@@ -471,10 +471,10 @@ impl AuditPublishError {
     }
 }
 
-/// Publish JSON payload to `RICE_POLICY_AUDIT_SUBJECT` (requires **audit-nats** feature).
+/// Publish JSON payload to `CLERK_POLICY_AUDIT_SUBJECT` (requires **audit-nats** feature).
 #[cfg(feature = "audit-nats")]
 pub fn try_publish_audit_nats(event: &AuditEvent) -> Result<(), AuditPublishError> {
-    let subject = std::env::var("RICE_POLICY_AUDIT_SUBJECT").map_err(|_| AuditPublishError::SubjectUnset)?;
+    let subject = std::env::var("CLERK_POLICY_AUDIT_SUBJECT").map_err(|_| AuditPublishError::SubjectUnset)?;
     let url = std::env::var("NATS_URL").unwrap_or_else(|_| "nats://127.0.0.1:4222".into());
     let nc = nats::connect(&url).map_err(AuditPublishError::nats)?;
     let payload = serde_json::to_vec(event)?;
@@ -489,10 +489,10 @@ fn env_truthy(key: &str) -> bool {
     )
 }
 
-/// Optional block height from `RICE_POLICY_BLOCK_HEIGHT`.
+/// Optional block height from `CLERK_POLICY_BLOCK_HEIGHT`.
 #[must_use]
 pub fn block_height_from_env() -> Option<u64> {
-    std::env::var("RICE_POLICY_BLOCK_HEIGHT").ok()?.parse().ok()
+    std::env::var("CLERK_POLICY_BLOCK_HEIGHT").ok()?.parse().ok()
 }
 
 /// Derive audit actor bytes: legal signing key, else rule-context author string, else empty.
@@ -509,17 +509,17 @@ pub fn actor_identity_for_audit(req: &crate::engine::TransactionRequest) -> Vec<
 
 /// Append JSON audit line / optional NATS publish. Failures are ignored unless strict env flags are set.
 pub fn dispatch_audit_streams(event: &AuditEvent) -> PolicyResult<()> {
-    let strict = env_truthy("RICE_POLICY_AUDIT_STRICT");
+    let strict = env_truthy("CLERK_POLICY_AUDIT_STRICT");
     if let Err(e) = try_append_audit_log_env(event) {
         if strict {
-            return Err(RiceError::message(e.to_string()).into());
+            return Err(Error::message(e.to_string()).into());
         }
     }
     #[cfg(feature = "audit-nats")]
     if audit_subject_from_env().is_some() {
         if let Err(e) = try_publish_audit_nats(event) {
-            if strict || env_truthy("RICE_POLICY_AUDIT_NATS_REQUIRED") {
-                return Err(RiceError::message(e.to_string()).into());
+            if strict || env_truthy("CLERK_POLICY_AUDIT_NATS_REQUIRED") {
+                return Err(Error::message(e.to_string()).into());
             }
         }
     }
@@ -1067,7 +1067,7 @@ mod tests {
     use super::*;
     use crate::engine::PolicyDecision;
     use crate::error::PolicyError;
-    use util::RiceError;
+    use util::Error;
 
     fn sample_trace() -> ResolutionTrace {
         ResolutionTrace {
@@ -1180,7 +1180,7 @@ mod tests {
     fn from_decision_deny() {
         let d = PolicyDecision::Deny {
             trace: ResolutionTrace::default(),
-            reason: PolicyError::Clerk(RiceError::message("privacy attestation missing")),
+            reason: PolicyError::Clerk(Error::message("privacy attestation missing")),
         };
         let ev = audit_event_from_decision(
             Ulid::new(),

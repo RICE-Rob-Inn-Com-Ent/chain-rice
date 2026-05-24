@@ -325,12 +325,12 @@ pub fn validate_contract_safety(
     Ok(())
 }
 
-/// Declared API surface between CLERK policy payloads and on-chain contracts (`RICE_CLERK_CW_API_VERSION`).
+/// Declared API surface between CLERK policy payloads and on-chain contracts (`CLERK_CW_API_VERSION`).
 ///
 /// CosmWasm types and execution live in the **`contract`** crate; this is a version string for wire alignment only.
 #[must_use]
 pub fn clerk_cw_api_version() -> String {
-    std::env::var("RICE_CLERK_CW_API_VERSION").unwrap_or_else(|_| "clerk.policy.v1".into())
+    std::env::var("CLERK_CW_API_VERSION").unwrap_or_else(|_| "clerk.policy.v1".into())
 }
 
 #[cfg(test)]

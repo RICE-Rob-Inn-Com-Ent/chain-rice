@@ -1,0 +1,9 @@
+// code-rice.com — BARD frontend/client business overlay (extend site.rice modules).
+rc frontend let {
+	client set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_client_init {}
+fn hook_frontend_client_configure {}

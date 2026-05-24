@@ -1,0 +1,23 @@
+use infra as docs
+
+// code-rice.com — published docs (MkDocs + PlantUML + OpenAPI).
+rc docs let {
+	site_url = "https://code-rice.com"
+
+	mkdocs site_name = "Code Rice"
+	mkdocs theme = material
+	mkdocs nav = (Home, Architecture, API)
+
+	openapi path = "api/openapi.yaml"
+
+	plantuml theme = plain
+	plantuml diagram architecture {
+		component OTP as "SMITH OTP"
+		component DB as "Yugabyte"
+		component VLLM as "vLLM"
+		component Docs as "Docs"
+		OTP --> DB
+		OTP --> VLLM
+		OTP --> Docs
+	}
+}

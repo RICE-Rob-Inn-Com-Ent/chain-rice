@@ -1,0 +1,49 @@
+use infra as k8s
+
+// EgOS — local cluster (kind/k3d). Helm pins: MASON defaults (override in helm set { chart.version = x }).
+// Package: bowl [package] infra → MASON infra/proto/cue/infra.cue (facet k8s).
+
+rc k8s let {
+	profile set { name = local }
+
+	gitops set {
+		repo_url = https://github.com/REPLACE_ORG/rice.git
+		target_revision = HEAD
+		cluster_server = https://kubernetes.default.svc
+		argocd_namespace = argocd
+		root_app_name = gitops-root
+	}
+
+	gpu set {
+		enabled = false
+		time_slice_replicas = 4
+	}
+
+	bots set {
+		image_registry = ghcr.io
+		image_org = REPLACE_ORG
+		image_tag = dev
+		namespace = bots
+		roles = (king, mason, chief, clerk, bard, sage, smith)
+		sage.mem_limit = 2Gi
+		sage.mem_request = 512Mi
+		sage.cpu_limit = 2000m
+		sage.cpu_request = 200m
+		sage.concurrency = 40
+		smith.mem_limit = 2Gi
+		smith.mem_request = 512Mi
+		smith.cpu_limit = 2000m
+		smith.cpu_request = 200m
+		smith.concurrency = 40
+	}
+
+	obs set {
+		profile = standard
+		tempo.enabled = false
+		otelOperator.enabled = false
+	}
+
+	cluster set {
+		slices = (platform, knative, data, workflow, bots, obs)
+	}
+}

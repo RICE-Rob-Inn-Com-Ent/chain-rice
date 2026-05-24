@@ -1,0 +1,9 @@
+// code-rice.com — SMITH service/token business overlay.
+rc smith let {
+	token set {
+		enabled = true
+	}
+}
+
+fn hook_token_init {}
+fn hook_token_handler {}

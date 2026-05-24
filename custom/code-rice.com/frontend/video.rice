@@ -1,0 +1,9 @@
+// code-rice.com — BARD frontend/video business overlay (extend site.rice modules).
+rc frontend let {
+	video set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_video_init {}
+fn hook_frontend_video_configure {}

@@ -1,8 +1,10 @@
 # KING TODO map
-# .github/workflows/release/deploy.yml — CUE mirror: infra/configs/github/workflows__release__deploy.yml.cue
+# GitHub-only release/deploy skeleton — main repo CI: infra/ci/README.md.
 # TODO:
 # [ ] trigger on workflow_run(publish) completed
 # [ ] tofu apply .opentofu/ with -var-file environments/${RICE_K8S_ENV}/terraform.tfvars
 # [ ] kubectl apply .k8s/
 # [ ] argocd app sync ${RICE_ARGOCD_APP} — app name from env var, never hardcoded
 # [ ] smoke tests: curl ${RICE_PROD_URL}/health per service
+
+

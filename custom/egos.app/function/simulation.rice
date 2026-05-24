@@ -1,0 +1,9 @@
+// egos.app — SAGE function/simulation business overlay.
+rc sage let {
+	simulation set {
+		enabled = true
+	}
+}
+
+fn hook_simulation_run {}
+fn hook_simulation_configure {}

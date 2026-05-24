@@ -14,13 +14,13 @@
 //!   chunking for ZK-aligned layouts. Clean buffers feed the encoders and keep allocations honest.
 //! - **[`proto`] — DNA sequencing.** [`prost::Message`] values become length-delimited **organism
 //!   signals** for streaming (NATS, multiplexed readers). It consumes the byte vocabulary from
-//!   [`bytes`] and returns [`RiceResult`] when the genome does not parse.
-//! - **[`error`] — pain.** [`RiceError`] is the shared nerve signal: crypto, policy, contract,
+//!   [`bytes`] and returns [`Result`](crate::error::Result) when the genome does not parse.
+//! - **[`error`] — pain.** [`Error`](crate::error::Error) is the shared nerve signal: crypto, policy, contract,
 //!   finance, protocol, I/O, and context chains. Every variant documents *what went wrong* so
 //!   operators route retries and alerts without guessing.
-//! - **[`result`] — synapses.** Extension traits ([`RiceResultExt`], [`RiceOptionExt`],
-//!   [`RiceBoolExt`]) attach context, classify failures, and guard options/bools without boilerplate
-//!   `match`es everywhere. They translate foreign `Result`s into [`RiceResult`] at crate boundaries.
+//! - **[`result`] — synapses.** Extension traits ([`ResultExt`], [`OptionExt`],
+//!   [`BoolExt`]) attach context, classify failures, and guard options/bools without boilerplate
+//!   `match`es everywhere. They translate foreign [`std::result::Result`]s into [`Result`](crate::error::Result) at crate boundaries.
 //! - **[`prop`] — immune stress tests (optional).** [`proptest`] strategies and invariants live
 //!   here when the **`test-utils`** feature is enabled (see below). They randomly probe [`bytes`]
 //!   and [`proto`] so regressions surface before production load.
@@ -28,14 +28,14 @@
 //! ## Crate name and imports
 //!
 //! The package is named **`util`** in `Cargo.toml`. Downstream code typically uses
-//! `use util::{RiceError, RiceResult, RiceResultExt, …}` or a glob:
+//! `use util::{Error, Result, ResultExt, …}` or a glob:
 //!
 //! ```rust,ignore
-//! use util::{RiceError, RiceResult, RiceResultExt, RiceOptionExt, RiceBoolExt};
+//! use util::{Error, Result, ResultExt, OptionExt, BoolExt};
 //! ```
 //!
 //! A glob import pulls in the **reflex** traits so `.context()`, `.ok_or_policy()`, and friends
-//! resolve on [`RiceResult`] and [`Option`] without extra prelude boilerplate.
+//! resolve on [`Result`](crate::error::Result) and [`Option`] without extra prelude boilerplate.
 //!
 //! ## Feature: `test-utils`
 //!
@@ -54,7 +54,7 @@
 //!
 //! ## Feature: `calc-bridge` (Unix native only)
 //!
-//! Optional **Haskell CALC** FFI: dlopens `librice_calc_ffi.so` (path from `RICE_CALC_LIB`), exposes
+//! Optional **Haskell CALC** FFI: dlopens `libcalc_ffi.so` (path from `CLERK_CALC_LIB`), exposes
 //! [`calc`](crate::calc) (in [`bridge`](crate::bridge)) for policy math on **native** targets. **Not for wasm32** — contracts keep
 //! `Uint128` and pre-attested deltas. Initialise the RTS once per process; see [`calc`] module docs.
 //!
@@ -62,14 +62,14 @@
 //!
 //! Links the Zig static library **`libclerk-security.a`** from [`base/zig-out/lib/`](../zig-out/lib/)
 //! after `zig build` in **`base/`**. [`warden`](crate::warden) and [`stress`](crate::stress) live under [`bridge`](crate::bridge)
-//! (`rice_warden_*` in [`security/src/warden.zig`](../../security/src/warden.zig); `rice_security_stress_test` in
+//! (`warden_*` in [`security/src/warden.zig`](../../security/src/warden.zig); `security_stress_test` in
 //! [`security/src/chaos.zig`](../../security/src/chaos.zig)).
 //! Combine with **`calc-bridge`** to run warden checks and buffer wipe around Haskell CALC FFI.
 //! See **`base/ZIG_WARDEN.md`** for CI.
 //!
 //! ## Public surface
 //!
-//! Prefer **`use util::{RiceError, RiceResult, …}`** from this crate root. Core modules are `bytes` and `proto`;
+//! Prefer **`use util::{Error, Result, …}`** from this crate root. Core modules are `bytes` and `proto`;
 //! native FFI (`calc`, `warden`, `stress`) is under [`bridge`](crate::bridge) and re-exported when features are on.
 
 pub mod bytes;
@@ -88,29 +88,30 @@ pub mod result;
 #[cfg(feature = "test-utils")]
 pub mod prop;
 
-pub use error::{RiceError, RiceResult};
-pub use result::{RiceBoolExt, RiceOptionExt, RiceResultExt};
-/// Alias for [`RiceResultExt`] for legacy `use util::ResultExt` imports.
-pub use result::RiceResultExt as ResultExt;
+pub use error::{Error, Result};
+pub use result::{BoolExt, OptionExt, ResultExt};
 
-/// Return [`Err`](std::result::Result::Err) with [`RiceError::message`](RiceError::message) from the enclosing function.
+// Re-export `bytes` crate types at `util` root so embedders use `util::Bytes` (not a second `bytes` dep).
+pub use ::bytes::{Buf, BufMut, Bytes, BytesMut};
+
+/// Return [`Err`](std::result::Result::Err) with [`Error::message`](Error::message) from the enclosing function.
 ///
 /// **Why:** Early exit with a typed, displayable error without `?` on `Option` or manual `return Err`.
 #[macro_export]
 macro_rules! bail {
     ($($arg:tt)*) => {
-        return Err($crate::error::RiceError::message(format!($($arg)*)))
+        return Err($crate::error::Error::message(format!($($arg)*)))
     };
 }
 
-/// Return [`Err`](std::result::Result::Err) with [`RiceError::message`](RiceError::message) if the condition is false.
+/// Return [`Err`](std::result::Result::Err) with [`Error::message`](Error::message) if the condition is false.
 ///
 /// **Why:** Invariant checks read like guards; failures stay in the `Message` channel for generic preconditions.
 #[macro_export]
 macro_rules! ensure {
     ($cond:expr, $($arg:tt)*) => {
         if !$cond {
-            return Err($crate::error::RiceError::message(format!($($arg)*)));
+            return Err($crate::error::Error::message(format!($($arg)*)));
         }
     };
 }

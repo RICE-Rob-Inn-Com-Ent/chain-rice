@@ -1,23 +1,25 @@
-//! Lossless syntax layer — `rowan` [`Language`], [`SyntaxKind`](rowan::SyntaxKind) mapping, green tree builders.
+//! Lossless syntax layer — `rowan` [`RowanLanguage`], [`RowanSyntaxKind`](rowan::SyntaxKind) mapping, green tree builders.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
 // [ ] Stack surface: tokio, cosmwasm-std, serde, thiserror, k256, arkworks, etc. — extend per crate purpose.
 //
-use rowan::{GreenNode, GreenNodeBuilder, Language, SyntaxKind};
+use rowan::{
+    GreenNode, GreenNodeBuilder, Language as RowanLanguage, SyntaxKind as RowanSyntaxKind,
+};
 
 // [ ] https://docs.rs/rowan/
 // [ ] typed SyntaxNode wrappers; incremental reparsing; lossless round-trip
 
 /// `.rice` language marker for typed [`rowan::SyntaxNode`] / [`rowan::SyntaxToken`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct RiceLanguage;
+pub struct CstLanguage;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u16)]
-pub enum RiceSyntaxKind {
+pub enum CstSyntaxKind {
     Root = 0,
     SourceFile = 1,
     Whitespace = 2,
@@ -26,36 +28,36 @@ pub enum RiceSyntaxKind {
     Error = 5,
 }
 
-impl From<RiceSyntaxKind> for SyntaxKind {
-    fn from(k: RiceSyntaxKind) -> SyntaxKind {
-        SyntaxKind(k as u16)
+impl From<CstSyntaxKind> for RowanSyntaxKind {
+    fn from(kind: CstSyntaxKind) -> Self {
+        RowanSyntaxKind(kind as u16)
     }
 }
 
-impl Language for RiceLanguage {
-    type Kind = RiceSyntaxKind;
+impl RowanLanguage for CstLanguage {
+    type Kind = CstSyntaxKind;
 
-    fn kind_from_raw(raw: SyntaxKind) -> Self::Kind {
+    fn kind_from_raw(raw: RowanSyntaxKind) -> Self::Kind {
         match raw.0 {
-            0 => RiceSyntaxKind::Root,
-            1 => RiceSyntaxKind::SourceFile,
-            2 => RiceSyntaxKind::Whitespace,
-            3 => RiceSyntaxKind::FnKw,
-            4 => RiceSyntaxKind::Ident,
-            _ => RiceSyntaxKind::Error,
+            0 => CstSyntaxKind::Root,
+            1 => CstSyntaxKind::SourceFile,
+            2 => CstSyntaxKind::Whitespace,
+            3 => CstSyntaxKind::FnKw,
+            4 => CstSyntaxKind::Ident,
+            _ => CstSyntaxKind::Error,
         }
     }
 
-    fn kind_to_raw(kind: Self::Kind) -> SyntaxKind {
-        SyntaxKind(kind as u16)
+    fn kind_to_raw(kind: Self::Kind) -> RowanSyntaxKind {
+        RowanSyntaxKind(kind as u16)
     }
 }
 
 /// Minimal green tree for plumbing tests — extend with real CST from `parser`.
 pub fn green_minimal_root() -> GreenNode {
     let mut b = GreenNodeBuilder::new();
-    b.start_node(RiceSyntaxKind::Root.into());
-    b.token(RiceSyntaxKind::Ident.into(), "placeholder");
+    b.start_node(CstSyntaxKind::Root.into());
+    b.token(CstSyntaxKind::Ident.into(), "placeholder");
     b.finish_node();
     b.finish()
 }

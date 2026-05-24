@@ -1,4 +1,4 @@
-package gpu
+package vendor
 // TODO:
 // [ ] vkCreateInstance; app version RICE_APP_VERSION — https://docs.vulkan.org/spec/latest/chapters/initialization.html
 // [ ] enumerate devices discrete>integrated>virtual; expose VRAM/queues/extensions

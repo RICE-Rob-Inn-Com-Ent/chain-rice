@@ -1,0 +1,9 @@
+// egos.app — BARD frontend/lang business overlay (extend site.rice modules).
+rc frontend let {
+	lang set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_lang_init {}
+fn hook_frontend_lang_configure {}

@@ -1,0 +1,19 @@
+use infra as frontend
+
+// code-rice.com — BARD client shell (full modules for marketing site).
+rc frontend let {
+	site set {
+		title = "Code Rice"
+		api_base_url = "http://127.0.0.1:4000"
+		seed_color = "0xFF1B4965"
+	}
+
+	modules set {
+		client = true
+		browser = true
+		content = true
+		lang = true
+		rule = false
+		model = false
+	}
+}

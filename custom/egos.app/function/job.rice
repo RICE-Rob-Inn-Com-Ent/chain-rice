@@ -1,0 +1,9 @@
+// egos.app — SAGE function/job business overlay.
+rc sage let {
+	job set {
+		enabled = true
+	}
+}
+
+fn hook_job_run {}
+fn hook_job_configure {}

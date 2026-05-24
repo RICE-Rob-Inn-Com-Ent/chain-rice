@@ -1,0 +1,9 @@
+// code-rice.com — SAGE function/agent business overlay.
+rc sage let {
+	agent set {
+		enabled = true
+	}
+}
+
+fn hook_agent_run {}
+fn hook_agent_configure {}

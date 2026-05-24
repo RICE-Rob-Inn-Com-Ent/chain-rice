@@ -1,49 +1,54 @@
-defmodule Service.Connection.Proto do
+defmodule Smith.Messages.Proto do
   @moduledoc """
-  Protobuf helpers for `protoc`-generated modules (Go `gen/` parity: generate Elixir stubs with `protobuf` / protoc-gen-elixir).
+  Protobuf-backed `Smith.Messages.Codec` using generated message modules (`encode/1`, `decode/1`).
 
-  Assumes each message module defines `decode/1` and `encode/1` on the module (standard plugin output).
-  Optional `type_registry/0` maps logical names to modules for codec negotiation.
+  Register message names under `config :messages, Smith.Messages.Proto, registry: %{\"Foo\" => MyApp.Foo}`.
   """
 
-  # TODO:
-  # [ ] implement protobuf decode for Elixir:
-  #     decode(binary, module) → {:ok, struct} | {:error, reason}
-  #     module = generated Protobuf module from gen/
-  # [ ] implement protobuf encode:
-  #     encode(struct) → binary
-  # [ ] implement proto ↔ JSON conversion:
-  #     proto_to_json(struct) → {:ok, binary}
-  #     json_to_proto(binary, module) → {:ok, struct}
+  @behaviour Smith.Messages.Codec
 
-  @type message_module :: module()
-
-  @spec decode(message_module(), binary()) :: struct()
-  def decode(mod, data) when is_atom(mod) and is_binary(data) do
-    mod.decode(data)
-  end
-
-  @spec encode(struct()) :: binary()
-  def encode(%_{} = msg) do
-    mod = msg.__struct__
+  @impl Smith.Messages.Codec
+  def encode(%_{} = data) do
+    mod = data.__struct__
 
     if function_exported?(mod, :encode, 1) do
-      mod.encode(msg)
+      try do
+        {:ok, mod.encode(data)}
+      rescue
+        e -> {:error, {:smith_messages, :proto_encode, e}}
+      end
     else
-      raise ArgumentError, "expected protobuf message module with encode/1, got #{inspect(mod)}"
+      {:error, {:smith_messages, :proto_encode, {:missing_encode, mod}}}
     end
   end
 
-  @doc """
-  Lookup a message module by name (atoms or strings). Configure under `config :service, Service.Connection.Proto, registry: %{...}`.
-  """
-  @spec registry() :: %{optional(String.t()) => message_module()}
+  def encode(_),
+    do: {:error, {:smith_messages, :proto_encode, :not_a_struct}}
+
+  @impl Smith.Messages.Codec
+  def decode(binary, type) when is_binary(binary) and is_atom(type) do
+    case module_for(type) do
+      {:ok, mod} ->
+        try do
+          {:ok, mod.decode(binary)}
+        rescue
+          e -> {:error, {:smith_messages, :proto_decode, e}}
+        end
+
+      :error ->
+        {:error, {:smith_messages, :proto_unknown_type, type}}
+    end
+  end
+
+  @doc false
+  @spec registry() :: %{optional(String.t()) => module()}
   def registry do
-    Application.get_env(:service, Service.Connection.Proto, [])
+    Application.get_env(:messages, Smith.Messages.Proto, [])
     |> Keyword.get(:registry, %{})
   end
 
-  @spec module_for(String.t() | atom()) :: {:ok, message_module()} | :error
+  @doc "Resolve a protobuf message module by struct name (atom or string)."
+  @spec module_for(atom() | String.t()) :: {:ok, module()} | :error
   def module_for(name) when is_atom(name) do
     Map.fetch(registry(), Atom.to_string(name))
   end

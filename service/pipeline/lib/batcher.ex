@@ -1,21 +1,19 @@
-defmodule Service.Pipeline.Batcher do
+defmodule Smith.Pipeline.Batcher do
   @moduledoc """
-  Broadway batcher defaults: batch key (`:default`), flush by size and timeout, concurrency.
+  Broadway batcher defaults — size **10** or flush every **500 ms** (whichever hits first),
+  overridable via `config :service, Smith.Pipeline, :batchers`.
   """
-
-  # TODO:
-  # [ ] implement Broadway batcher config:
-  #     batch_size from RICE_PIPELINE_BATCH_SIZE env var
-  #     batch_timeout from RICE_PIPELINE_BATCH_TIMEOUT_MS env var
-  # [ ] implement multiple batcher keys:
-  #     route messages to different batchers by type
-  #     batcher key from message metadata
 
   @spec batchers() :: keyword()
   def batchers do
+    Application.get_env(:service, Smith.Pipeline, [])
+    |> Keyword.get(:batchers, default_batchers())
+  end
+
+  defp default_batchers do
     [
       default: [
-        batch_size: 50,
+        batch_size: 10,
         batch_timeout: 500,
         concurrency: 2
       ]

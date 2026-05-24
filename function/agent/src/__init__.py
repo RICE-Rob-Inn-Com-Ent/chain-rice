@@ -1,67 +1,126 @@
-"""SAGE agent — LangGraph (workflow), LiteLLM (routing), Instructor / Outlines / Guardrails (jakość wyjść)."""
+"""Public API for the SAGE agent module.
 
-# TODO(rice):
-# [ ] SAGE / function — ML & orchestration; no secrets in code.
-# [ ] Soft-code: pydantic-settings / env vars; never API keys in repo.
-# [ ] Contracts: gRPC/proto from gen when wired; schema changes via MASON.
-# [ ] Stack surface: numpy, pydantic, httpx, langgraph, qdrant-client, etc. — extend per package.
-#
+Primary entry points:
+- ``ask_sage(prompt, session_id)`` for one-shot async calls returning final text.
+- ``chat_sage(prompt, session_id)`` for incremental async UI streaming.
+"""
+
 from __future__ import annotations
 
-from .constrain import (
-    ConstraintKind,
-    match_regex,
-    outlines_cfg_hook,
-    outlines_json_schema_hook,
-    outlines_regex_hook,
-    validate_json_to_model,
+import os
+from collections.abc import AsyncIterator
+from typing import Any
+
+from helper import logger
+
+from .graph import ainvoke_sage, graph, invoke_sage
+from .guard import build_rice_guard
+from .memory import build_memory_saver, get_thread_config
+from .state import AgentState
+from .stream import stream_graph_updates, stream_text
+from .typed import AgentRole, RiceMessage
+
+__version__ = "0.1.0"
+
+
+def _extract_final_text(result: dict[str, Any]) -> str:
+    msgs = list(result.get("messages", []))
+    if not msgs:
+        return ""
+    last = msgs[-1]
+    if isinstance(last, dict):
+        return str(last.get("content") or "")
+    return str(getattr(last, "content", "") or "")
+
+
+async def ask_sage(prompt: str, session_id: str = "default") -> str:
+    """Run SAGE once and return final assistant text.
+
+    This is the preferred high-level API for non-streaming workflows.
+    """
+    cfg = get_thread_config(session_id)
+    out = await ainvoke_sage(prompt, config=cfg)
+    return _extract_final_text(out)
+
+
+async def chat_sage(prompt: str, session_id: str = "default") -> AsyncIterator[str]:
+    """Stream user-facing chunks for UI chat surfaces.
+
+    Yields UTF-8 safe text snippets. Primarily streams graph updates and extracts
+    assistant content deltas from message payloads.
+    """
+    cfg = get_thread_config(session_id)
+    state: AgentState = {
+        "messages": [{"role": "user", "content": prompt}],
+        "context": {},
+        "simulation_results": {},
+        "next_step": "reasoning",
+        "metadata": {},
+        "status": "thinking",
+    }
+    last_seen = ""
+    async for ev in stream_graph_updates(graph, state, cfg):
+        if ev.type == "error":
+            yield f"[stream-error] {ev.content or 'unknown'}"
+            continue
+        if ev.type != "graph":
+            continue
+        payload = ev.payload
+        msgs = payload.get("messages", []) if isinstance(payload, dict) else []
+        if not isinstance(msgs, list) or not msgs:
+            continue
+        m = msgs[-1]
+        content = ""
+        if isinstance(m, dict):
+            content = str(m.get("content") or "")
+        else:
+            content = str(getattr(m, "content", "") or "")
+        if not content:
+            continue
+        if content.startswith(last_seen):
+            delta = content[len(last_seen) :]
+        else:
+            delta = content
+        if delta:
+            yield delta
+        last_seen = content
+
+
+def _check_environment() -> None:
+    keys = (
+        "LITELLM_API_KEY",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+    )
+    if not any(os.getenv(k) for k in keys):
+        logger.warning(
+            "SAGE init warning: no API key found in {}. "
+            "Local backends may still work if configured via api_base.",
+            keys,
+        )
+
+
+# Eager subsystem init for operational readiness.
+_MEMORY_SAVER = build_memory_saver()
+try:
+    _RICE_GUARD = build_rice_guard()
+except Exception as exc:  # noqa: BLE001
+    _RICE_GUARD = None
+    logger.warning("SAGE init warning: guard bootstrap failed | err={!r}", exc)
+_check_environment()
+logger.info(
+    "SAGE Agent Core v0.1.0 initialized. Logic: LangGraph | Safety: Guardrails | Performance: LiteLLM.",
 )
-from .context import estimate_tokens_litellm, truncate_messages
-from .graph import build_sage_react_graph
-from .guard import apply_guard, build_default_guard, validate_output
-from .memory import build_cross_thread_store, build_memory_saver, build_sqlite_saver
-from .prompt import few_shot_block, render_template, sage_system_prompt
-from .retry import CircuitBreaker, async_llm_retry
-from .router import CostLedger, SageRouter, default_fallbacks, default_model_list
-from .state import SageAgentState, SageToolAuditState
-from .stream import astream_events_sse, astream_graph_updates, format_sse
-from .tools import build_tool_node, default_sage_tools, echo_text, now_iso
-from .typed import complete_structured, instructor_client
 
 __all__ = [
-    "CircuitBreaker",
-    "ConstraintKind",
-    "CostLedger",
-    "SageAgentState",
-    "SageRouter",
-    "SageToolAuditState",
-    "apply_guard",
-    "async_llm_retry",
-    "astream_events_sse",
-    "astream_graph_updates",
-    "build_cross_thread_store",
-    "build_default_guard",
-    "build_memory_saver",
-    "build_sage_react_graph",
-    "build_sqlite_saver",
-    "build_tool_node",
-    "complete_structured",
-    "default_fallbacks",
-    "default_model_list",
-    "default_sage_tools",
-    "echo_text",
-    "estimate_tokens_litellm",
-    "few_shot_block",
-    "format_sse",
-    "instructor_client",
-    "match_regex",
-    "now_iso",
-    "outlines_cfg_hook",
-    "outlines_json_schema_hook",
-    "outlines_regex_hook",
-    "render_template",
-    "sage_system_prompt",
-    "truncate_messages",
-    "validate_json_to_model",
-    "validate_output",
+    "__version__",
+    "AgentRole",
+    "AgentState",
+    "RiceMessage",
+    "ask_sage",
+    "chat_sage",
+    "graph",
+    "invoke_sage",
+    "stream_graph_updates",
+    "stream_text",
 ]

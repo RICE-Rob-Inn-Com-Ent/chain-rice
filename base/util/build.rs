@@ -2,7 +2,7 @@
 use std::path::PathBuf;
 
 fn main() {
-    println!("cargo:rerun-if-env-changed=RICE_CLERK_SECURITY_LIB_DIR");
+    println!("cargo:rerun-if-env-changed=CLERK_SECURITY_LIB_DIR");
 
     if std::env::var("CARGO_FEATURE_ZIG_WARDEN").ok().as_deref() != Some("1") {
         return;
@@ -13,7 +13,7 @@ fn main() {
     }
 
     let manifest_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
-    let lib_dir = std::env::var("RICE_CLERK_SECURITY_LIB_DIR")
+    let lib_dir = std::env::var("CLERK_SECURITY_LIB_DIR")
         .map(PathBuf::from)
         .unwrap_or_else(|_| manifest_dir.join("..").join("zig-out").join("lib"));
 

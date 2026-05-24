@@ -1,0 +1,9 @@
+// egos.app — SAGE function/vector business overlay.
+rc sage let {
+	vector set {
+		enabled = true
+	}
+}
+
+fn hook_vector_run {}
+fn hook_vector_configure {}

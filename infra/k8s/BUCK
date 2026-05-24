@@ -1,0 +1,39 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/k8s
+# Rebuild: buck2 build '//infra/k8s:gen_kubernetes_cue'
+
+genrule(
+    name = "gen_kubernetes_cue",
+    srcs = glob(["_tool.cue", "cue/**/*.cue"]),
+    out = "gen_kubernetes_cue.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+shopt -s globstar nullglob
+files=(./infra/k8s/_tool.cue ./infra/k8s/cue/**/*.cue ./infra/gen/chief/k8s_project.cue)
+cue vet "${files[@]}"
+cue cmd genK8s "${files[@]}"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "check",
+    srcs = glob(["_tool.cue", "cue/**/*.cue"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+shopt -s globstar nullglob
+files=(./infra/k8s/_tool.cue ./infra/k8s/cue/**/*.cue ./infra/gen/chief/k8s_project.cue)
+cue vet "${files[@]}"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

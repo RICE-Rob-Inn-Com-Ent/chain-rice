@@ -1,0 +1,10 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# syntax=docker/dockerfile:1
+ARG QDRANT_VERSION=v1.12.5
+FROM qdrant/qdrant:${QDRANT_VERSION}
+COPY .docker/db/qdrant.yaml /qdrant/config/production.yaml
+ENV QDRANT__CONFIG_PATH=/qdrant/config/production.yaml
+EXPOSE 6333 6334
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+  CMD curl -sf http://127.0.0.1:6333/healthz || exit 1

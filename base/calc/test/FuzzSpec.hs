@@ -11,10 +11,10 @@ import Verify (
   prop_moneySameCurrencyAdd,
  )
 
--- | @maxQc@ from @RICE_CALC_QC_CASES@ (or default) — passed from "Main".
+-- | @maxQc@ from @CLERK_CALC_QC_CASES@ (or default) — passed from "Main".
 fuzzSpec :: Int -> Spec
 fuzzSpec maxQc = do
-  describe "Decimal (laws via RiceDecimal / Verify props)" $ do
+  describe "Decimal (laws via Numeric / Verify props)" $ do
     it "addition is associative" $
       modifyMaxSuccess (const maxQc) (property prop_decimalAddAssoc)
     it "multiplication distributes over addition" $

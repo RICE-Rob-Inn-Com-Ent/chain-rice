@@ -1,8 +1,8 @@
 //! Trusted setup — Groth16 CRS lifecycle with ceremony binding, environment guards, and efficient I/O.
 //!
-//! **Production:** `RICE_ENV=production` (or `prod`) forces **load-only** from
+//! **Production:** `CLERK_ENV=production` (or `prod`) forces **load-only** from
 //! [`ParameterStore::from_env`]. Inline generation returns [`PrivateError::SetupPolicy`]. Ceremony
-//! bytes must match [`RiceCircuit::ceremony_sha256`]; optional sidecar [`CEREMONY_FILE`] must agree.
+//! bytes must match [`Circuit::ceremony_sha256`]; optional sidecar [`CEREMONY_FILE`] must agree.
 //!
 //! **Development:** With [`DEV_CEREMONY_SHA256_PLACEHOLDER`], [`get_or_generate_params`] may generate
 //! once and cache under [`ParameterStore::from_env_or_dev_fallback`].
@@ -15,7 +15,7 @@ use ark_ec::pairing::Pairing;
 use ark_groth16::{Groth16, ProvingKey, VerifyingKey};
 use ark_relations::r1cs::ConstraintSynthesizer;
 use ark_std::rand::{CryptoRng, RngCore};
-use hex::encode as hex_encode;
+use util::bytes::{decode_hex, encode_hex_lower as hex_encode};
 use sha2::{Digest, Sha256};
 use std::fmt;
 use std::fs;
@@ -36,7 +36,7 @@ pub const CEREMONY_FILE: &str = "ceremony.sha256";
 pub const VK_FILE: &str = "verifying_key.cmp";
 pub const PK_FILE: &str = "proving_key.cmp";
 
-/// Sentinel [`RiceCircuit::ceremony_sha256`]: non-production may generate/cache; **production forbids**.
+/// Sentinel [`Circuit::ceremony_sha256`]: non-production may generate/cache; **production forbids**.
 pub const DEV_CEREMONY_SHA256_PLACEHOLDER: [u8; 32] = [0u8; 32];
 
 /// Human-short verifying-key fingerprint for logs (first 4 bytes of SHA-256 over compressed VK).
@@ -45,7 +45,7 @@ pub struct VkId(pub [u8; 4]);
 
 impl fmt::Display for VkId {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", hex_encode(self.0))
+        write!(f, "{}", hex_encode(&self.0[..]))
     }
 }
 
@@ -68,7 +68,7 @@ pub struct Groth16Params<E: Pairing> {
 }
 
 /// Circuits eligible for [`get_or_generate_params`] / [`ParameterStore`].
-pub trait RiceCircuit<E: Pairing> {
+pub trait Circuit<E: Pairing> {
     type CS: ConstraintSynthesizer<E::ScalarField>;
 
     fn for_setup() -> Self::CS;
@@ -84,9 +84,9 @@ pub trait RiceCircuit<E: Pairing> {
 
 /// Harness for [`MulCircuit`] (teaching / integration).
 #[derive(Clone, Copy, Debug, Default)]
-pub struct MulCircuitRice;
+pub struct MulSetup;
 
-impl<E: Pairing> RiceCircuit<E> for MulCircuitRice {
+impl<E: Pairing> Circuit<E> for MulSetup {
     type CS = MulCircuit<E::ScalarField>;
 
     fn for_setup() -> Self::CS {
@@ -104,9 +104,9 @@ impl<E: Pairing> RiceCircuit<E> for MulCircuitRice {
 
 /// Registry entry for [`crate::circuit::IdentityOpeningCircuit`] (BN254).
 #[derive(Clone, Copy, Debug, Default)]
-pub struct IdentityOpeningRice;
+pub struct IdentityOpeningSetup;
 
-impl RiceCircuit<Bn254> for IdentityOpeningRice {
+impl Circuit<Bn254> for IdentityOpeningSetup {
     type CS = IdentityOpeningCircuit;
 
     fn for_setup() -> Self::CS {
@@ -124,9 +124,9 @@ impl RiceCircuit<Bn254> for IdentityOpeningRice {
 
 /// Registry entry for [`crate::circuit::ShieldedTransferCircuit`] (BN254).
 #[derive(Clone, Copy, Debug, Default)]
-pub struct ShieldedTransferRice;
+pub struct ShieldedTransferSetup;
 
-impl RiceCircuit<Bn254> for ShieldedTransferRice {
+impl Circuit<Bn254> for ShieldedTransferSetup {
     type CS = ShieldedTransferCircuit;
 
     fn for_setup() -> Self::CS {
@@ -155,11 +155,11 @@ impl ParameterStore {
         Self { root }
     }
 
-    /// Load store from `RICE_ZK_TRUSTED_SETUP_PATH`.
+    /// Load store from `CLERK_ZK_TRUSTED_SETUP_PATH`.
     pub fn from_env() -> Result<Self, PrivateError> {
-        let path = std::env::var("RICE_ZK_TRUSTED_SETUP_PATH").map_err(|_| {
+        let path = std::env::var("CLERK_ZK_TRUSTED_SETUP_PATH").map_err(|_| {
             PrivateError::SetupMissing(
-                "RICE_ZK_TRUSTED_SETUP_PATH is not set".into(),
+                "CLERK_ZK_TRUSTED_SETUP_PATH is not set".into(),
             )
         })?;
         Ok(Self {
@@ -173,14 +173,14 @@ impl ParameterStore {
         std::env::temp_dir().join("rice-zk-dev-cache")
     }
 
-    /// Prefer `RICE_ZK_TRUSTED_SETUP_PATH`; in non-production only, fall back to temp dev cache.
+    /// Prefer `CLERK_ZK_TRUSTED_SETUP_PATH`; in non-production only, fall back to temp dev cache.
     pub fn from_env_or_dev_fallback() -> Result<Self, PrivateError> {
-        match std::env::var("RICE_ZK_TRUSTED_SETUP_PATH") {
+        match std::env::var("CLERK_ZK_TRUSTED_SETUP_PATH") {
             Ok(p) => Ok(Self { root: PathBuf::from(p) }),
             Err(_) => {
-                if is_production_rice_env() {
+                if is_production_clerk_env() {
                     Err(PrivateError::SetupMissing(
-                        "RICE_ZK_TRUSTED_SETUP_PATH must be set when RICE_ENV=production".into(),
+                        "CLERK_ZK_TRUSTED_SETUP_PATH must be set when CLERK_ENV=production".into(),
                     ))
                 } else {
                     Ok(Self {
@@ -196,7 +196,7 @@ impl ParameterStore {
         &self.root
     }
 
-    fn circuit_dir<C: RiceCircuit<E>, E: Pairing>(&self) -> PathBuf {
+    fn circuit_dir<C: Circuit<E>, E: Pairing>(&self) -> PathBuf {
         self.root.join(C::circuit_id())
     }
 
@@ -206,7 +206,7 @@ impl ParameterStore {
     /// pin [`VkId`] at policy boundaries when you need ceremony discipline without reading PK bytes.
     pub fn load_verifying_key<C, E>(&self) -> Result<(VerifyingKey<E>, VkId), PrivateError>
     where
-        C: RiceCircuit<E>,
+        C: Circuit<E>,
         E: Pairing,
     {
         let vk_path = self.circuit_dir::<C, E>().join(VK_FILE);
@@ -224,7 +224,7 @@ impl ParameterStore {
     /// Load PK/VK from disk (mmap). Verifies ceremony binding.
     pub fn load_groth16_params<C, E>(&self) -> Result<Groth16Params<E>, PrivateError>
     where
-        C: RiceCircuit<E>,
+        C: Circuit<E>,
         E: Pairing,
     {
         let dir = self.circuit_dir::<C, E>();
@@ -247,10 +247,10 @@ impl ParameterStore {
         let ceremony_path = dir.join(CEREMONY_FILE);
         let on_disk = read_ceremony_hex_file(&ceremony_path)?;
 
-        if is_production_rice_env() {
+        if is_production_clerk_env() {
             if C::ceremony_sha256() == DEV_CEREMONY_SHA256_PLACEHOLDER {
                 return Err(PrivateError::SetupPolicy(
-                    "production refuses DEV_CEREMONY_SHA256_PLACEHOLDER; pin RiceCircuit::ceremony_sha256"
+                    "production refuses DEV_CEREMONY_SHA256_PLACEHOLDER; pin Circuit::ceremony_sha256"
                         .into(),
                 ));
             }
@@ -258,8 +258,8 @@ impl ParameterStore {
                 return Err(PrivateError::SetupCorrupted(format!(
                     "ceremony SHA-256 mismatch for {}: expected {}, got {}",
                     C::circuit_id(),
-                    hex_encode(C::ceremony_sha256()),
-                    hex_encode(computed)
+                    hex_encode(C::ceremony_sha256().as_slice()),
+                    hex_encode(computed.as_slice())
                 )));
             }
             let sidecar = on_disk.ok_or_else(|| {
@@ -314,10 +314,10 @@ impl ParameterStore {
         auth: Option<&ParameterUpdateAuthorization>,
     ) -> Result<(), PrivateError>
     where
-        C: RiceCircuit<E>,
+        C: Circuit<E>,
         E: Pairing,
     {
-        if is_production_rice_env() && auth.is_none() {
+        if is_production_clerk_env() && auth.is_none() {
             return Err(PrivateError::SetupPolicy(
                 "production persists Groth16 params only with ParameterUpdateAuthorization from .rice identity"
                     .into(),
@@ -377,37 +377,44 @@ fn read_ceremony_hex_file(path: &Path) -> Result<Option<[u8; 32]>, PrivateError>
             line.len()
         )));
     }
-    let mut out = [0u8; 32];
-    hex::decode_to_slice(line, &mut out).map_err(|e| {
+    let decoded = decode_hex(line).map_err(|e| {
         PrivateError::SetupCorrupted(format!("{CEREMONY_FILE} invalid hex: {e}"))
     })?;
+    if decoded.len() != 32 {
+        return Err(PrivateError::SetupCorrupted(format!(
+            "{CEREMONY_FILE}: expected 32 decoded bytes, got {}",
+            decoded.len()
+        )));
+    }
+    let mut out = [0u8; 32];
+    out.copy_from_slice(&decoded);
     Ok(Some(out))
 }
 
 fn write_ceremony_hex_file(path: &Path, hash: &[u8; 32]) -> Result<(), PrivateError> {
     let mut f = fs::File::create(path).map_err(PrivateError::StorageIo)?;
-    writeln!(f, "{}", hex_encode(hash)).map_err(PrivateError::StorageIo)?;
+    writeln!(f, "{}", hex_encode(hash.as_slice())).map_err(PrivateError::StorageIo)?;
     Ok(())
 }
 
-/// `true` when `RICE_ENV` is `production` or `prod` (ASCII case-insensitive).
-pub fn is_production_rice_env() -> bool {
+/// `true` when `CLERK_ENV` is `production` or `prod` (ASCII case-insensitive).
+pub fn is_production_clerk_env() -> bool {
     matches!(
-        std::env::var("RICE_ENV")
+        std::env::var("CLERK_ENV")
             .map(|s| s.to_ascii_lowercase())
             .as_deref(),
         Ok("production" | "prod")
     )
 }
 
-/// Load from store, or generate + cache in **non-production** when [`RiceCircuit::ceremony_sha256`]
+/// Load from store, or generate + cache in **non-production** when [`Circuit::ceremony_sha256`]
 /// is [`DEV_CEREMONY_SHA256_PLACEHOLDER`].
 pub fn get_or_generate_params<C, E, R>(
     store: &ParameterStore,
     rng: &mut R,
 ) -> Result<Groth16Params<E>, PrivateError>
 where
-    C: RiceCircuit<E>,
+    C: Circuit<E>,
     E: Pairing,
     R: RngCore + CryptoRng,
 {
@@ -417,9 +424,9 @@ where
         Err(e) => return Err(e),
     }
 
-    if is_production_rice_env() {
+    if is_production_clerk_env() {
         return Err(PrivateError::SetupPolicy(
-            "RICE_ENV=production: refuse inline Groth16 generation; load ceremony from RICE_ZK_TRUSTED_SETUP_PATH"
+            "CLERK_ENV=production: refuse inline Groth16 generation; load ceremony from CLERK_ZK_TRUSTED_SETUP_PATH"
                 .into(),
         ));
     }
@@ -470,7 +477,7 @@ mod tests {
     fn dev_cache_roundtrip_mul_harness() {
         let _guard = SETUP_ENV_LOCK.lock().expect("setup test lock poisoned");
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         let root = std::env::temp_dir().join(format!(
             "rice-zk-setup-test-{}",
@@ -482,8 +489,8 @@ mod tests {
         let _ = fs::remove_dir_all(&root);
         let store = ParameterStore::with_root(root.clone());
         let mut rng = StdRng::from_seed([9u8; 32]);
-        let p1 = get_or_generate_params::<MulCircuitRice, Bn254, _>(&store, &mut rng).unwrap();
-        let p2 = get_or_generate_params::<MulCircuitRice, Bn254, _>(&store, &mut rng).unwrap();
+        let p1 = get_or_generate_params::<MulSetup, Bn254, _>(&store, &mut rng).unwrap();
+        let p2 = get_or_generate_params::<MulSetup, Bn254, _>(&store, &mut rng).unwrap();
         assert_eq!(p1.ceremony_sha256, p2.ceremony_sha256);
         assert_eq!(
             p1.verifying_key_id.to_string().len(),
@@ -502,11 +509,11 @@ mod tests {
         let mut rng = StdRng::from_seed([1u8; 32]);
         // SAFETY: test is single-threaded; `set_var` is `unsafe` in Rust 2024 due to process-wide races.
         unsafe {
-            std::env::set_var("RICE_ENV", "production");
+            std::env::set_var("CLERK_ENV", "production");
         }
-        let out = get_or_generate_params::<MulCircuitRice, Bn254, _>(&store, &mut rng);
+        let out = get_or_generate_params::<MulSetup, Bn254, _>(&store, &mut rng);
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         assert!(matches!(out, Err(PrivateError::SetupPolicy(_))));
     }

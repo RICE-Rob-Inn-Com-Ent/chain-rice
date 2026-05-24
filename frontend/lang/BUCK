@@ -1,2 +1,22 @@
-# Buck2 source manifest — `lang` Dart package.
-# glob(["lib/src/**/*.dart", "lib/unit.dart", "lib/i18n/**/*"])
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/frontend.cue — watches frontend/lang
+# Rebuild: buck2 build '//frontend/lang:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["pubspec.yaml", "../pubspec.yaml", "slang.yaml", "lib/**/*.dart", "lib/i18n/**/*.json"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:$HOME/.pub-cache/bin:/usr/bin:$PATH"
+cd "$REPO/frontend"
+dart pub get
+cd "$REPO/frontend/lang"
+dart run build_runner build --delete-conflicting-outputs
+dart analyze --fatal-warnings lib
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

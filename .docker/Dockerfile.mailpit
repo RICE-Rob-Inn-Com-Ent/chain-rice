@@ -1,5 +1,0 @@
-# syntax=docker/dockerfile:1
-# Mailpit — small Go binary on Alpine (upstream-maintained).
-ARG MAILPIT_VERSION=v1.22
-FROM axllent/mailpit:${MAILPIT_VERSION}
-EXPOSE 1025 8025

@@ -66,14 +66,14 @@ pub struct PairingSecurityBits {
 }
 
 // ---------------------------------------------------------------------------
-// RiceCurve
+// Curve
 // ---------------------------------------------------------------------------
 
 /// Unified pairing surface for BN254, BLS12-381, and future ark [`Pairing`] engines in CLERK.
 ///
 /// **Why:** Verifiers should call one vocabulary for `e(G1, G2) → GT`, MSM, and security metadata
 /// instead of scattering curve-specific helpers.
-pub trait RiceCurve: Pairing + Sized + 'static {
+pub trait Curve: Pairing + Sized + 'static {
     /// Human-readable curve id (logs, `CurveMismatch` strings).
     fn curve_name() -> &'static str;
 
@@ -111,7 +111,7 @@ pub trait RiceCurve: Pairing + Sized + 'static {
     }
 }
 
-impl RiceCurve for Bn254 {
+impl Curve for Bn254 {
     fn curve_name() -> &'static str {
         "BN254"
     }
@@ -130,7 +130,7 @@ impl RiceCurve for Bn254 {
     }
 }
 
-impl RiceCurve for Bls12_381 {
+impl Curve for Bls12_381 {
     fn curve_name() -> &'static str {
         "BLS12-381"
     }
@@ -148,7 +148,7 @@ impl RiceCurve for Bls12_381 {
 }
 
 // ---------------------------------------------------------------------------
-// Pairing & MSM (free functions; mirror [`RiceCurve`] for turbofish ergonomics)
+// Pairing & MSM (free functions; mirror [`Curve`] for turbofish ergonomics)
 // ---------------------------------------------------------------------------
 
 /// `e(g1, g2)` — pairing into `GT`.
@@ -321,7 +321,7 @@ mod tests {
     use rand::rngs::StdRng;
 
     #[test]
-    fn rice_curve_security_ordering() {
+    fn curve_security_ordering() {
         let bn = Bn254::pairing_security_bits();
         let bls = Bls12_381::pairing_security_bits();
         assert!(bls.classical_pairing_bits >= bn.classical_pairing_bits);

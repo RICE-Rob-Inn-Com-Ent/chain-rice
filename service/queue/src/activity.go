@@ -1,23 +1,13 @@
 package queue
 
-// TODO:
-// [ ] implement Temporal activities:
-//     activities are single units of work within workflows
-//     each activity has: retry policy, timeout, heartbeat
-// [ ] implement kingdom activities:
-//     DBSnapshotActivity — calls database/snapshot.go
-//     EmailActivity — calls web/mail.go
-//     NATSPublishActivity — calls publish.go
-//     InferenceActivity — calls SAGE via ConnectRPC
-//     ProofActivity — calls CLERK ZK via ConnectRPC
-// [ ] all activity timeouts from env vars:
-//     RICE_ACTIVITY_{NAME}_TIMEOUT_S — per activity
-
 import (
 	"context"
+	"log/slog"
 
 	"go.temporal.io/sdk/activity"
+	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/temporal"
+	"go.temporal.io/sdk/worker"
 	"go.temporal.io/sdk/workflow"
 )
 
@@ -52,4 +42,55 @@ func RecordHeartbeat(ctx context.Context, details ...interface{}) {
 // GetHeartbeatDetails restores details from a previous failed attempt.
 func GetHeartbeatDetails(ctx context.Context, d ...interface{}) error {
 	return activity.GetHeartbeatDetails(ctx, d...)
+}
+
+// Activities is the SMITH activity base struct: embed it in your app-specific struct and add methods.
+// Dependencies are injected once per worker; each new exported method becomes a Temporal activity when
+// you pass the concrete struct to [RegisterActivities].
+//
+//	DB: your persistence layer (typed in the app; stored as [any] here to keep queue free of database imports).
+//	Log: optional; defaults are applied in helpers when nil.
+//	Client: optional Temporal client for activities that need to drive other workflows.
+type Activities struct {
+	DB     any
+	Log    *slog.Logger
+	Client client.Client
+}
+
+func (a *Activities) logger() *slog.Logger {
+	if a != nil && a.Log != nil {
+		return a.Log
+	}
+	return slog.Default()
+}
+
+// RegisterActivities registers all exported methods on a as Temporal activities.
+func RegisterActivities(w worker.Worker, a *Activities) {
+	if w == nil || a == nil {
+		return
+	}
+	w.RegisterActivity(a)
+}
+
+// Heartbeat records a Temporal activity heartbeat with optional detail payloads (training epoch, loss, etc.).
+// Call this periodically in long-running work so the worker is not marked stalled when HeartbeatTimeout is set.
+func (a *Activities) Heartbeat(ctx context.Context, details ...interface{}) error {
+	activity.RecordHeartbeat(ctx, details...)
+	return nil
+}
+
+// SagaStepNoop is a template no-op forward step; replace with real business activities on your embedded struct.
+func (a *Activities) SagaStepNoop(ctx context.Context, stepName string) error {
+	a.logger().InfoContext(ctx, "queue.activity.saga_step", slog.String("step", stepName))
+	return nil
+}
+
+// SagaRollback is the default compensating activity used by [ManagedTemplateWorkflow]; override or register your own.
+func (a *Activities) SagaRollback(ctx context.Context, in RollbackInput) error {
+	a.logger().WarnContext(ctx, "queue.activity.saga_rollback",
+		slog.String("step", in.Step),
+		slog.String("reason", in.Reason),
+		slog.String("meta", in.Meta),
+	)
+	return nil
 }

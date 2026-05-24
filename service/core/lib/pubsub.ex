@@ -1,13 +1,13 @@
 defmodule Smith.Core.PubSub do
-  # TODO:
-  # [ ] implement Phoenix.PubSub wrapper:
-  #     broadcast(topic, event, payload) — kingdom-wide
-  #     subscribe(topic) — per-process subscription
-  #     local_broadcast(topic, event, payload) — node-local
-  # [ ] implement NATS bridge:
-  #     NATS message → Phoenix.PubSub.broadcast
-  #     subscribes to NATS subjects on startup
-  #     subject list from RICE_CORE_NATS_TOPICS env var
-  # [ ] implement topic namespacing:
-  #     all topics prefixed with RICE_ENV — never hardcoded
+  @moduledoc """
+  Registered name for clustered **Phoenix.PubSub** (`Phoenix.PubSub.PG2`) in the SMITH cluster (aligned with `Smith.Connection`).
+
+  Child under **`Smith.Core.Runtime`**: `{Phoenix.PubSub, name: Smith.Core.PubSub, adapter: Phoenix.PubSub.PG2}`.
+  """
+
+  @spec name() :: atom()
+  def name do
+    Application.get_env(:service, Smith.Core.PubSub, [])
+    |> Keyword.get(:name, Smith.Core.PubSub)
+  end
 end

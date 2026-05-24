@@ -1,6 +1,6 @@
 //! Token kinds for `.rice` — `logos` lexer.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
@@ -19,6 +19,12 @@ pub enum Token {
     KwFn,
     #[token("let")]
     KwLet,
+    #[regex(r#""[^"]*""#, |lex| lex.slice()[1..lex.slice().len() - 1].to_string())]
+    StrLit(String),
+    #[token("=")]
+    Eq,
+    #[token(";")]
+    Semi,
     #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*")]
     Ident,
     #[token("(")]

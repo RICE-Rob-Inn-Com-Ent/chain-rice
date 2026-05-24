@@ -7,3 +7,9 @@ pre-push:
       skip: true    # slow on local — CI handles it
     trufflehog-full:
       skip: true    # slow — runs in pre-commit already
+
+
+
+
+
+

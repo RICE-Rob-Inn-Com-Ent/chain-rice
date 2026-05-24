@@ -1,0 +1,13 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# syntax=docker/dockerfile:1
+ARG YUGABYTE_VERSION=2024.2.2.0-b140
+FROM yugabytedb/yugabyte:${YUGABYTE_VERSION}
+USER root
+RUN mkdir -p /opt/app-init
+COPY .docker/db/init.sql /opt/app-init/init.sql
+USER yugabyte
+EXPOSE 5433 9042 7000 9000
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=10 \
+  CMD ["yugabyted", "status"]
+CMD ["bin/yugabyted", "start", "--background=false", "--ui", "true"]

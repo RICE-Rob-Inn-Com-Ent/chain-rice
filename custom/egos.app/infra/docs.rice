@@ -1,0 +1,14 @@
+use infra as docs
+
+// egos.app — documentation site overlay.
+rc docs let {
+	site set {
+		url = "https://docs.egos.app.invalid"
+	}
+
+	mkdocs set {
+		site_name = "egos.app Docs"
+		theme = material
+		nav = (Home, API)
+	}
+}

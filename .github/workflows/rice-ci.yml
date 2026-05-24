@@ -1,0 +1,37 @@
+# Forge-agnostic CI: real work is `dagger call rice audit` (service/ci). Spec: infra/ci/cue/spec.cue
+name: Rice — audit
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: service/ci/go.mod
+          cache-dependency-path: service/ci/go.sum
+
+      - name: Install Dagger CLI
+        env:
+          DAGGER_VERSION: 0.20.8
+        run: |
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR="$HOME/.local/bin" sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Rice audit
+        run: dagger call rice audit

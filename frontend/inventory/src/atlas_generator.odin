@@ -33,6 +33,7 @@ generate_atlas_sys :: proc(
 	strings.builder_init(&sb, context.temp_allocator)
 	defer strings.builder_destroy(&sb)
 
+	fmt.sbprintf(&sb, "schema=atlas.sys.v2\n")
 	fmt.sbprintf(&sb, "format_version=%s\n", ATLAS_FORMAT_VERSION)
 	fmt.sbprintf(&sb, "generator=bard_inventory\n\n")
 
@@ -109,7 +110,7 @@ generate_atlas_sys :: proc(
 	}
 
 	text := strings.to_string(sb)
-	return os.write_entire_file(output_path, transmute([]u8) text, true)
+	return os.write_entire_file_from_string(output_path, text) == os.ERROR_NONE
 }
 
 // atlas_path_in_inventory — …/inventory/atlas.sys dla podanego katalogu inventory (folder zawierający src/).

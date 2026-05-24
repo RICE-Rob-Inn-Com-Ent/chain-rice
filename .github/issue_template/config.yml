@@ -1,3 +1,4 @@
+# GitHub issue chooser only — fork hosts: duplicate or replace URLs (see infra/ci/README.md).
 blank_issues_enabled: false
 contact_links:
   - name: 💬 GitHub Discussions
@@ -31,3 +32,5 @@ contact_links:
   - name: 🐛 Stack Overflow
     url: https://stackoverflow.com/questions/tagged/rice-mono
     about: Ask technical questions on Stack Overflow with the 'rice-mono' tag
+
+

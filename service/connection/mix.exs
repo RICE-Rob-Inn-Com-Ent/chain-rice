@@ -26,7 +26,7 @@ defmodule Smith.Connection.MixProject do
     [
       {:libcluster, "~> 3.4"},
       {:horde,      "~> 0.9"},
-      {:guard, in_umbrella: true}
+      {:telemetry,  "~> 1.3"}
     ]
   end
 end

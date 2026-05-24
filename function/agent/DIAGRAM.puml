@@ -1,0 +1,3 @@
+' function/agent — leaf diagram
+!include DIAGRAM.gen.puml
+!include DIAGRAM.edges.puml

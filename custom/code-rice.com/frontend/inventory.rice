@@ -1,0 +1,9 @@
+// code-rice.com — BARD frontend/inventory business overlay (extend site.rice modules).
+rc frontend let {
+	inventory set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_inventory_init {}
+fn hook_frontend_inventory_configure {}

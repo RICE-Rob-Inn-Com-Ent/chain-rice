@@ -1,0 +1,89 @@
+cabal-version: 3.8
+
+-- Regenerate: `just _hpack-clerk` (hpack reads ../package.yaml, writes this file next to lib/).
+
+name: calc
+version: 0.1.0
+synopsis:
+  Clerk financial kernel — Decimal money, hledger-backed ledger, interest, tax, QuickCheck laws
+author: Clerk contributors
+maintainer: clerk@example.invalid
+license: AGPL-3.0-only
+build-type: Simple
+
+source-repository head
+  type: git
+  location: https://github.com/mrDinkelman/rice
+
+common shared
+  default-language: GHC2024
+  ghc-options:
+    -Wall
+    -Wcompat
+    -Widentities
+    -Wincomplete-record-updates
+    -Wincomplete-uni-patterns
+    -Wmissing-export-lists
+    -Wmissing-home-modules
+    -Wpartial-fields
+    -Wredundant-constraints
+    -O2
+  default-extensions:
+    OverloadedStrings
+    DeriveGeneric
+    DerivingStrategies
+    GeneralizedNewtypeDeriving
+    LambdaCase
+    TupleSections
+
+library
+  import: shared
+  exposed-modules:
+    Lib
+    Decimal
+    Finance
+    Ledger
+    Risk
+    FFI
+    Wire
+    Verify
+  hs-source-dirs: lib
+  build-depends:
+    Decimal >= 0.5,
+    QuickCheck >= 2.15,
+    aeson >= 2.2,
+    base >= 4.18 && < 5,
+    bytestring >= 0.12,
+    containers >= 0.7,
+    hledger-lib >= 1.34,
+    scientific >= 0.3,
+    text >= 2.1,
+    time >= 1.12,
+
+test-suite clerk-calc-test
+  import: shared
+  type: exitcode-stdio-1.0
+  main-is: LogicSpec.hs
+  hs-source-dirs: test
+  other-modules:
+    AuditSpec
+    FuzzSpec
+  build-depends:
+    base >= 4.18 && < 5,
+    bytestring >= 0.12,
+    calc,
+    hspec >= 2.11,
+    QuickCheck >= 2.15,
+
+-- Rust util::calc dlopens FFI (C symbols calc_*); JSON via Wire; binary v1 in same FFI module.
+
+foreign-library calc_ffi
+  import: shared
+  type: native-shared
+  visibility: public
+  ghc-options: -fPIC -threaded
+  hs-source-dirs: lib
+  other-modules: FFILink
+  build-depends:
+    base >= 4.18 && < 5,
+    calc,

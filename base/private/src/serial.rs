@@ -20,7 +20,7 @@ use std::path::Path;
 use ark_ec::pairing::Pairing;
 use ark_groth16::{Proof, ProvingKey, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, SerializationError};
-use bytes::Bytes;
+use util::Bytes;
 use chacha20poly1305::aead::{Aead, KeyInit, Payload};
 use chacha20poly1305::{ChaCha20Poly1305, Key, Nonce};
 use rand::RngCore;

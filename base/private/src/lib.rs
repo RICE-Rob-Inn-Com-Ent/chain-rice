@@ -1,6 +1,6 @@
 //! # The silent heart of `.rice`
 //!
-//! **`private`** is the zero-knowledge layer for the RICE operating system: the place where secrets
+//! **`private`** is the zero-knowledge layer for the Clerk stack: the place where secrets
 //! become **provable** without becoming **public**. SMITH, CLERK, and contracts should treat this
 //! crate as the **single entry** for Groth16 lifecycle, vault serialization, identity, shielded
 //! balance, and compliance math.
@@ -9,7 +9,7 @@
 //!
 //! | Pillar | Question | Home in this crate |
 //! |--------|----------|--------------------|
-//! | **Who** | Which sovereign identity is speaking? | [`identity`], [`prove::prove_identity`], [`verify`] against [`setup::IdentityOpeningRice`] |
+//! | **Who** | Which sovereign identity is speaking? | [`identity`], [`prove::prove_identity`], [`verify`] against [`setup::IdentityOpeningSetup`] |
 //! | **What** | Which hidden value moved, under which asset tag? | [`balance`], [`circuit::ShieldedTransferCircuit`], Pedersen in [`commitment`] |
 //! | **How** | Which rules (policy, lists, quorum) were satisfied? | [`compliance`], [`error::PrivateError::ComplianceVeto`], policy digests |
 //!
@@ -19,14 +19,14 @@
 //! ## Errors
 //!
 //! Every failure path should surface as [`PrivateError`] (and [`PrivateResult`]). Use
-//! [`PrivateError::into_rice`] at the CLERK / `util` boundary.
+//! [`PrivateError::into_util_error`] at the CLERK / `util` boundary.
 //!
 //! ## Environment
 //!
-//! - **`RICE_ENV`**: `production` / `prod` (case-insensitive) → production ceremony discipline; see
-//!   [`setup::is_production_rice_env`], [`rice_zk_environment`].
-//! - **`RICE_ZK_MOCK_VERIFY`**: in **non-production** only, `1` / `true` / `yes` makes
-//!   [`StandardRiceZkEngine`] **skip pairing checks** on verify paths (development only; never ship
+//! - **`CLERK_ENV`**: `production` / `prod` (case-insensitive) → production ceremony discipline; see
+//!   [`setup::is_production_clerk_env`], [`zk_environment`].
+//! - **`CLERK_ZK_MOCK_VERIFY`**: in **non-production** only, `1` / `true` / `yes` makes
+//!   [`StandardZkEngine`] **skip pairing checks** on verify paths (development only; never ship
 //!   with real assets).
 
 pub mod balance;
@@ -49,7 +49,7 @@ pub mod verify;
 pub use error::{PrivateError, PrivateResult};
 
 // ---------------------------------------------------------------------------
-// Flattened “Rice public API” (most common types for SMITH / CLERK)
+// Flattened public API (most common types for SMITH / CLERK)
 // ---------------------------------------------------------------------------
 
 pub use balance::{
@@ -59,45 +59,45 @@ pub use compliance::{
     AggregatedComplianceStatement, ComplianceMerklePath, ComplianceMerkleTree, ComplianceProof,
     FrBls12, MembershipClaim, PolicyBinding, ThresholdCompliance,
 };
-pub use field::{FrBn254, RiceScalar};
+pub use field::{FrBn254, Scalar};
 pub use identity::{
     IdentityAttestationPayload, IdentityProof, IdentityRotationReceipt, IdentityWitness,
     ParameterUpdateAuthorization, PublicIdentityCommitment, SovereignIdentity,
 };
 pub use serial::{ComplianceMask, ComplianceOperation, VaultEnvelope};
-pub use setup::{ParameterStore, get_or_generate_params, is_production_rice_env};
+pub use setup::{ParameterStore, get_or_generate_params, is_production_clerk_env};
 
 // ---------------------------------------------------------------------------
 // Environment
 // ---------------------------------------------------------------------------
 
-/// Operating mode for ZK I/O and ceremony policy (derived from **`RICE_ENV`**).
+/// Operating mode for ZK I/O and ceremony policy (derived from **`CLERK_ENV`**).
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub enum RiceZkEnvironment {
-    /// Local / staging: may use dev caches, optional mock verify (see [`StandardRiceZkEngine`]).
+pub enum ZkEnvironment {
+    /// Local / staging: may use dev caches, optional mock verify (see [`StandardZkEngine`]).
     Development,
     /// Ceremony load-only, stricter persistence rules, mock verify **disabled**.
     Production,
 }
 
-/// Read [`RiceZkEnvironment`] from the process environment.
+/// Read [`ZkEnvironment`] from the process environment.
 #[inline]
-pub fn rice_zk_environment() -> RiceZkEnvironment {
-    if is_production_rice_env() {
-        RiceZkEnvironment::Production
+pub fn zk_environment() -> ZkEnvironment {
+    if is_production_clerk_env() {
+        ZkEnvironment::Production
     } else {
-        RiceZkEnvironment::Development
+        ZkEnvironment::Development
     }
 }
 
-/// When set to `1` / `true` / `yes`, [`StandardRiceZkEngine`] may skip Groth16 verification in
-/// **non-production** only. Ignored when [`rice_zk_environment`] is [`RiceZkEnvironment::Production`].
-pub const RICE_ZK_MOCK_VERIFY_ENV: &str = "RICE_ZK_MOCK_VERIFY";
+/// When set to `1` / `true` / `yes`, [`StandardZkEngine`] may skip Groth16 verification in
+/// **non-production** only. Ignored when [`zk_environment`] is [`ZkEnvironment::Production`].
+pub const CLERK_ZK_MOCK_VERIFY_ENV: &str = "CLERK_ZK_MOCK_VERIFY";
 
 #[inline]
 fn mock_verify_requested() -> bool {
     matches!(
-        std::env::var(RICE_ZK_MOCK_VERIFY_ENV)
+        std::env::var(CLERK_ZK_MOCK_VERIFY_ENV)
             .map(|s| s.to_ascii_lowercase())
             .as_deref(),
         Ok("1") | Ok("true") | Ok("yes")
@@ -106,7 +106,7 @@ fn mock_verify_requested() -> bool {
 
 #[inline]
 fn effective_mock_verify() -> bool {
-    !is_production_rice_env() && mock_verify_requested()
+    !is_production_clerk_env() && mock_verify_requested()
 }
 
 // ---------------------------------------------------------------------------
@@ -119,9 +119,9 @@ use ark_std::rand::{CryptoRng, RngCore};
 /// High-level ZK **action suites** for hosts that prefer a trait over free functions.
 ///
 /// Implementations may short-circuit verification in development when
-/// [`RICE_ZK_MOCK_VERIFY_ENV`] is set; production builds must always run real pairing checks.
-pub trait RiceZkEngine {
-    fn environment(&self) -> RiceZkEnvironment;
+/// [`CLERK_ZK_MOCK_VERIFY_ENV`] is set; production builds must always run real pairing checks.
+pub trait ZkEngine {
+    fn environment(&self) -> ZkEnvironment;
 
     /// **Who:** prove identity opening (BN254 Groth16).
     fn identify(
@@ -165,14 +165,14 @@ pub trait RiceZkEngine {
     ) -> Result<(), PrivateError>;
 }
 
-/// Default engine: real Groth16 prove; verify obeys [`RICE_ZK_MOCK_VERIFY_ENV`] outside production.
+/// Default engine: real Groth16 prove; verify obeys [`CLERK_ZK_MOCK_VERIFY_ENV`] outside production.
 #[derive(Clone, Copy, Debug, Default)]
-pub struct StandardRiceZkEngine {
+pub struct StandardZkEngine {
     /// If `true`, identity and shielded **verifiers** return `Ok` without pairing (dev only).
     pub mock_verify: bool,
 }
 
-impl StandardRiceZkEngine {
+impl StandardZkEngine {
     /// Production-safe: mock verify is **off** in production even if the env var is set.
     #[inline]
     pub fn from_env() -> Self {
@@ -187,9 +187,9 @@ impl StandardRiceZkEngine {
     }
 }
 
-impl RiceZkEngine for StandardRiceZkEngine {
-    fn environment(&self) -> RiceZkEnvironment {
-        rice_zk_environment()
+impl ZkEngine for StandardZkEngine {
+    fn environment(&self) -> ZkEnvironment {
+        zk_environment()
     }
 
     fn identify(
@@ -213,11 +213,11 @@ impl RiceZkEngine for StandardRiceZkEngine {
                 target: "rice.zk",
                 mock = true,
                 "skipping Groth16 identity verification ({})",
-                RICE_ZK_MOCK_VERIFY_ENV
+                CLERK_ZK_MOCK_VERIFY_ENV
             );
             return Ok(());
         }
-        verify::verify_with_store::<setup::IdentityOpeningRice, Bn254>(
+        verify::verify_with_store::<setup::IdentityOpeningSetup, Bn254>(
             store,
             &[identity_commitment, identity_nullifier],
             proof,
@@ -246,7 +246,7 @@ impl RiceZkEngine for StandardRiceZkEngine {
                 target: "rice.zk",
                 mock = true,
                 "skipping Groth16 shielded transfer verification ({})",
-                RICE_ZK_MOCK_VERIFY_ENV
+                CLERK_ZK_MOCK_VERIFY_ENV
             );
             return Ok(());
         }
@@ -308,12 +308,12 @@ mod tests {
 
         let _guard = LIB_ENGINE_LOCK.lock().expect("lib test lock");
         unsafe {
-            std::env::remove_var("RICE_ENV");
-            std::env::remove_var(RICE_ZK_MOCK_VERIFY_ENV);
+            std::env::remove_var("CLERK_ENV");
+            std::env::remove_var(CLERK_ZK_MOCK_VERIFY_ENV);
         }
 
-        let eng = StandardRiceZkEngine::from_env();
-        assert_eq!(eng.environment(), RiceZkEnvironment::Development);
+        let eng = StandardZkEngine::from_env();
+        assert_eq!(eng.environment(), ZkEnvironment::Development);
 
         let mut rng = StdRng::from_seed([99u8; 32]);
         let root = std::env::temp_dir().join(format!("rice-lib-engine-{}", line!()));

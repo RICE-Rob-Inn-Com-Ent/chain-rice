@@ -1,0 +1,23 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/service.cue — watches service/database
+# Rebuild: buck2 build '//service/database:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["go.mod", "go.sum", "src/**/*.go"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:$HOME/go/bin:/usr/bin:$PATH"
+cd "$REPO/service/database"
+if [ -f go.sum ]; then
+  go build -mod=readonly ./...
+else
+  go build ./...
+fi
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

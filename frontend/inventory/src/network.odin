@@ -210,7 +210,10 @@ scan_ip_camera_hints :: proc(path: string) -> int {
 
 @(private)
 path_exists :: proc(path: string) -> bool {
-	_, err := os.stat(path)
+	fi, err := os.stat(path, context.temp_allocator)
+	if err == os.ERROR_NONE {
+		os.file_info_delete(fi, context.temp_allocator)
+	}
 	return err == os.ERROR_NONE
 }
 
@@ -291,7 +294,7 @@ discover_wifi_interfaces :: proc(rep: ^Network_Report) {
 
 // network_probe — wypełnia Network_Report.
 network_probe :: proc(rep: ^Network_Report) {
-	clear(rep)
+	rep^ = Network_Report{}
 	rep.tcp_socket_rows = count_data_lines("/proc/net/tcp")
 	rep.tcp_socket_rows += count_data_lines("/proc/net/tcp6")
 	rep.udp_socket_rows = count_data_lines("/proc/net/udp")

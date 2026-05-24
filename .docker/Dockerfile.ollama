@@ -1,4 +1,0 @@
-# syntax=docker/dockerfile:1
-# Ollama — GPU runtime; upstream Debian-based. Not distroless (CUDA + drivers).
-FROM ollama/ollama:latest
-EXPOSE 11434

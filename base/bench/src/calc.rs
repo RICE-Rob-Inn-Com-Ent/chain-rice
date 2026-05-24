@@ -31,7 +31,7 @@ pub fn smoke_rows() -> Vec<BenchRow> {
             module: "util/calc",
             scenario: "basis_points_fee_minor_units",
             ns: 0,
-            notes: "skipped: build with --features calc-bench on unix + RICE_CALC_LIB".into(),
+            notes: "skipped: build with --features calc-bench on unix + CLERK_CALC_LIB".into(),
         });
     }
     rows

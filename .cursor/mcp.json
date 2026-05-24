@@ -1,0 +1,68 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "pixi",
+      "args": [
+        "run",
+        "bun",
+        "x",
+        "--bun",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "description": "Fetches online documentation from URL on demand.",
+      "env": {
+        "ALLOWED_DOMAINS": "docs.rs,pkg.go.dev,hexdocs.pm,pub.dev,modular.com,odin-lang.org,ziglang.org,cuelang.org,buf.build,docs.anthropic.com,qwen.readthedocs.io"
+      }
+    },
+    "context7": {
+      "command": "pixi",
+      "args": [
+        "run",
+        "bun",
+        "x",
+        "--bun",
+        "@upstash/context7-mcp"
+      ],
+      "description": "Auto-resolves library docs: Go, Rust, Elixir, TS, Flutter, Zig, Mojo, Haskell, CUE, Proto, Odin.",
+      "env": {
+        "UPSTASH_CONTEXT7_TOKEN": "${CONTEXT7_TOKEN}"
+      }
+    },
+    "filesystem": {
+      "command": "pixi",
+      "args": [
+        "run",
+        "bun",
+        "x",
+        "--bun",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ],
+      "description": "Read-only access to repo root. IDE reads context — Aider writes files directly."
+    },
+    "git": {
+      "command": "pixi",
+      "args": [
+        "run",
+        "uvx",
+        "mcp-server-git",
+        "--repository",
+        "."
+      ],
+      "description": "KING reads git history, blame, branches, diffs. Never commits — rice audit gate owns commits."
+    },
+    "sequential-thinking": {
+      "command": "pixi",
+      "args": [
+        "run",
+        "bun",
+        "x",
+        "--bun",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "description": "Structured multi-step reasoning for KING — breaks complex tasks before delegating to roles."
+    }
+  }
+}
+
+

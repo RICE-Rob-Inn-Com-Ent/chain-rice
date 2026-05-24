@@ -10,6 +10,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.5.3
   slang: ^3.31.0
   slang_flutter: ^3.31.0
 

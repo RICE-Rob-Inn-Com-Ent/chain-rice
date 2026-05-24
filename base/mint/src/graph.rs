@@ -1,6 +1,6 @@
 //! Module dependency graph — topological order, cycle detection, dead-code reachability.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
@@ -11,7 +11,7 @@ use petgraph::graph::DiGraph;
 use petgraph::visit::Topo;
 
 // [ ] https://docs.rs/petgraph/
-// [ ] cycle detection; toposort; dead code; RICE_MINT_PARALLEL_BATCH
+// [ ] cycle detection; toposort; dead code; CLERK_MINT_PARALLEL_BATCH
 
 pub type ModuleGraph = DiGraph<String, ()>;
 

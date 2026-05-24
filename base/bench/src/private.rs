@@ -6,7 +6,7 @@ use crate::{BenchRow, smoke_ns};
 
 pub fn smoke_rows() -> Vec<BenchRow> {
     let ns_env = smoke_ns(|| {
-        let _ = black_box(private::rice_zk_environment());
+        let _ = black_box(private::zk_environment());
     });
     let ns_field = smoke_ns(|| {
         let x = private::FrBn254::from(42u64);
@@ -15,9 +15,9 @@ pub fn smoke_rows() -> Vec<BenchRow> {
     vec![
         BenchRow {
             module: "private",
-            scenario: "rice_zk_environment",
+            scenario: "zk_environment",
             ns: ns_env,
-            notes: "RiceZkEnvironment probe".into(),
+            notes: "ZkEnvironment probe".into(),
         },
         BenchRow {
             module: "private",
@@ -30,8 +30,8 @@ pub fn smoke_rows() -> Vec<BenchRow> {
 
 pub fn register(c: &mut Criterion) {
     let mut g = c.benchmark_group("private");
-    g.bench_function("rice_zk_environment", |b| {
-        b.iter(|| black_box(private::rice_zk_environment()));
+    g.bench_function("zk_environment", |b| {
+        b.iter(|| black_box(private::zk_environment()));
     });
     g.bench_function("FrBn254_from_u64", |b| {
         b.iter(|| black_box(private::FrBn254::from(black_box(42u64))));

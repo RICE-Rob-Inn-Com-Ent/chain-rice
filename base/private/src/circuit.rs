@@ -23,7 +23,7 @@ use crate::field::{FrBn254, poseidon_config_bn254_rate2};
 // ---------------------------------------------------------------------------
 
 /// Domain tag for Poseidon **identity commitment** (`secret`, `blinding`); keep in sync with provers.
-pub const RICE_IDENTITY_POSEIDON_DOMAIN: u64 = 7;
+pub const CLERK_IDENTITY_POSEIDON_DOMAIN: u64 = 7;
 
 // ---------------------------------------------------------------------------
 // Gadgets
@@ -135,7 +135,7 @@ impl ConstraintSynthesizer<FrBn254> for IdentityOpeningCircuit {
         let c = gadgets::poseidon_commitment_digest_var(
             cs.clone(),
             &params,
-            RICE_IDENTITY_POSEIDON_DOMAIN,
+            CLERK_IDENTITY_POSEIDON_DOMAIN,
             &secret,
             &blinding,
         )?;
@@ -216,7 +216,7 @@ impl ConstraintSynthesizer<FrBn254> for ShieldedTransferCircuit {
         let c = gadgets::poseidon_commitment_digest_var(
             cs.clone(),
             &params,
-            RICE_IDENTITY_POSEIDON_DOMAIN,
+            CLERK_IDENTITY_POSEIDON_DOMAIN,
             &secret,
             &blinding,
         )?;
@@ -281,7 +281,7 @@ mod tests {
         let blinding = FrBn254::rand(&mut rng);
         let nullifier_key = FrBn254::rand(&mut rng);
 
-        let c = poseidon_commit_digest_bn254(RICE_IDENTITY_POSEIDON_DOMAIN, secret, blinding);
+        let c = poseidon_commit_digest_bn254(CLERK_IDENTITY_POSEIDON_DOMAIN, secret, blinding);
         let nf = poseidon_nullifier_digest_bn254(secret, FrBn254::ZERO, nullifier_key);
 
         let cs = ConstraintSystem::<FrBn254>::new_ref();
@@ -309,7 +309,7 @@ mod tests {
         let v_out2 = FrBn254::from(15u64);
         let fee = FrBn254::from(5u64);
 
-        let c = poseidon_commit_digest_bn254(RICE_IDENTITY_POSEIDON_DOMAIN, secret, blinding);
+        let c = poseidon_commit_digest_bn254(CLERK_IDENTITY_POSEIDON_DOMAIN, secret, blinding);
         let nf = poseidon_nullifier_digest_bn254(secret, FrBn254::ZERO, nullifier_key);
 
         let cs = ConstraintSystem::<FrBn254>::new_ref();

@@ -1,45 +1,42 @@
-defmodule Service.Guard.Supervisor do
+defmodule Smith.Guard.Supervisor do
   @moduledoc """
-  Rest-for-one root: ordered stacks for **core**, **pipeline**, **cluster**, **connection**, then alert → watcher → healer → metal.
+  Root supervision tree for `:guard`: **infrastructure** (core, pipeline, cluster, connection),
+  then **`Smith.Guard.ObserveStack`** — telemetry, metrics, alerts, **Watcher**, **Healer**, Metal.
 
-  Uses a very high restart intensity so the VM keeps attempting recovery.
+  Inside `ObserveStack`, children run in order: Telemetry → Metrics → Alert → Watcher → Healer → Metal
+  (`:rest_for_one`) so failures to the right of the first child do not tear down core/pipeline.
   """
-
-  # TODO:
-  # [ ] implement DynamicSupervisor for Go services:
-  #     supervises: rice-web, rice-auth, rice-bench, rice-database,
-  #                 rice-queue, rice-token Go binaries
-  #     spawns each as Port (OS process)
-  # [ ] implement restart policy:
-  #     restart: :permanent — always restart on crash
-  #     shutdown: RICE_GUARD_SHUTDOWN_TIMEOUT_MS env var
-  # [ ] implement crash notification:
-  #     on child crash → publish to NATS security.crash.{service}
-  #     guard/ subscribes and alerts via alert.ex
 
   use Supervisor
 
   @rest_intensity 999_999_999
   @rest_period 1
 
+  @observe_stack Smith.Guard.ObserveStack
+
+  @spec child_spec(keyword()) :: Supervisor.child_spec()
+  def child_spec(opts \\ []) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      type: :supervisor,
+      restart: :permanent
+    }
+  end
+
   @spec start_link(keyword()) :: Supervisor.on_start()
-  def start_link(opts) do
+  def start_link(opts \\ []) do
     Supervisor.start_link(__MODULE__, :ok, opts)
   end
 
   @impl true
   def init(:ok) do
     children = [
-      Service.Guard.Telemetry,
-      Service.Guard.Metrics,
       core_stack(),
       pipeline_stack(),
       cluster_stack(),
       connection_stack(),
-      Service.Guard.Alert,
-      Service.Guard.Watcher,
-      Service.Guard.Healer,
-      Service.Guard.Metal
+      observe_stack()
     ]
 
     Supervisor.init(children,
@@ -47,6 +44,34 @@ defmodule Service.Guard.Supervisor do
       max_restarts: @rest_intensity,
       max_seconds: @rest_period
     )
+  end
+
+  defp observe_stack do
+    observe_children = [
+      Smith.Guard.Telemetry,
+      Smith.Guard.Metrics,
+      Smith.Guard.Alert,
+      Smith.Guard.Watcher,
+      Smith.Guard.Healer,
+      Smith.Guard.Metal
+    ]
+
+    %{
+      id: @observe_stack,
+      start:
+        {Supervisor, :start_link,
+         [
+           observe_children,
+           [
+             strategy: :rest_for_one,
+             name: @observe_stack,
+             max_restarts: 500,
+             max_seconds: 5
+           ]
+         ]},
+      type: :supervisor,
+      restart: :permanent
+    }
   end
 
   defp core_stack do
@@ -57,11 +82,13 @@ defmodule Service.Guard.Supervisor do
          [
            [
              Service.Telemetry,
-             {Phoenix.PubSub, name: Service.PubSub},
              Service.ProcessRegistry,
-             Service.Presence,
-             Service.Endpoint,
-             Service.Supervisor
+             %{
+               id: Service.Supervisor,
+               start: {Supervisor, :start_link, [[], [strategy: :one_for_one, name: Service.Supervisor]]},
+               type: :supervisor,
+               restart: :permanent
+             }
            ],
            [strategy: :one_for_one, name: Service.Guard.CoreStack]
          ]},
@@ -73,7 +100,15 @@ defmodule Service.Guard.Supervisor do
   defp pipeline_stack do
     children =
       if pipeline_enabled?() do
-        [{Service.Pipeline, []}]
+        [
+          {Smith.Pipeline.Nats, []},
+          %{
+            id: Smith.Pipeline.Media.State,
+            start: {Agent, :start_link, [fn -> %{} end, [name: Smith.Pipeline.Media.State]]},
+            restart: :permanent
+          },
+          {Smith.Pipeline, []}
+        ]
       else
         []
       end
@@ -97,7 +132,7 @@ defmodule Service.Guard.Supervisor do
       start:
         {Supervisor, :start_link,
          [
-           Service.Cluster.Topology.children(),
+           Smith.Connection.Topology.children(),
            [strategy: :one_for_one, name: Service.Guard.ClusterStack]
          ]},
       type: :supervisor,

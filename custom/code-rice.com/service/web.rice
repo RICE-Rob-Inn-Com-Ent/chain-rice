@@ -1,0 +1,9 @@
+// code-rice.com — SMITH service/web business overlay.
+rc smith let {
+	web set {
+		enabled = true
+	}
+}
+
+fn hook_web_init {}
+fn hook_web_handler {}

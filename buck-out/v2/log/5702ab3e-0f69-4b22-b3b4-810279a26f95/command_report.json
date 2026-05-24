@@ -1,0 +1,7 @@
+{
+  "trace_id": "5702ab3e-0f69-4b22-b3b4-810279a26f95",
+  "exit_code": 3,
+  "error_messages": [
+    "Error evaluating build file: `root//base:BUCK`\n\nCaused by:\n    0: Traceback (most recent call last):\n         * base/BUCK:9, in <module>\n             genrule(\n       \n       error: Error coercing attribute `cmd` of `root//base:clerk_cargo_check`\n         --> base/BUCK:9:1\n          |\n        9 | / genrule(\n       10 | |     name = \"clerk_cargo_check\",\n       11 | |     srcs = [\":clerk_scripts\"],\n       12 | |     out = \"clerk_cargo_check.stamp\",\n       13 | |     cmd = \"bash $(location buck-scripts/cargo_check_workspace.sh) && touch $OUT\",\n       14 | | )\n          | |_^\n          |\n    1: Error coercing attribute `cmd` of type `attrs.option(attrs.arg(), default=None)`\n    2: Error coercing \"bash $(location buck-scripts/cargo_check_workspace.sh) && touch $OUT\"\n    3: Invalid absolute target pattern `buck-scripts/cargo_check_workspace.sh` is not allowed\n    4: Expected a `:`, a trailing `/...` or the literal `...`."
+  ]
+}

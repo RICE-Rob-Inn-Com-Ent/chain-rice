@@ -1,0 +1,11 @@
+avoid-breaking-exported-api = false
+avoid-missing-docs-in-crate-items = false
+avoid-missing-docs-in-implementations = false
+avoid-missing-docs-in-traits = false
+single-char-binding-names-threshold = 4
+too-many-arguments-threshold = 7
+type-complexity-threshold = 250
+verbose-group-macro-expansion = false
+disallowed-methods = []
+disallowed-types = []
+disallowed-macros = []

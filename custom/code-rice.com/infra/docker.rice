@@ -1,0 +1,82 @@
+use infra as docker
+
+// code-rice.com — prod stack (vLLM sales; LoRA mounts).
+// Package: bowl [package] infra → MASON infra/proto/cue/infra.cue (facet docker).
+
+rc docker let {
+	db set {
+		name = "code-rice.com"
+		user = "code-rice.com"
+		init_sql = (pgcrypto, uuid-ossp, pg_trgm)
+	}
+
+	memory set {
+		redis = 512M
+		yugabyte = 4G
+		qdrant = 2G
+		nats = 1G
+		temporal = 2G
+		vllm = 8G
+	}
+
+	qdrant set {
+		hnsw_m = 16
+		ef_construct = 128
+		max_request_size_mb = 64
+		quantization = int8
+	}
+
+	nats set {
+		jetstream_max_mem = 1GB
+		jetstream_max_file = 10GB
+		max_payload = 8MB
+	}
+
+	postal set {
+		profile = postal
+	}
+
+	mailpit set {
+		profile = mailpit
+		max_messages = 1000
+		database.mount = "/data/mailpit.db"
+	}
+
+	vllm set {
+		profile = vllm
+		model = "Qwen/Qwen2.5-7B-Instruct"
+		lora.mount = "../models/lora:/lora:ro"
+		weights.mount = "../models/weights:/weights:ro"
+		enable_lora = true
+		max_lora_rank = 128
+		gpu_memory_utilization = 0.90
+		max_num_seqs = 1
+		gpu_count = 1
+	}
+
+	bot set {
+		pull_on_start_default = false
+		pull_retries = 3
+		fallback_chain = (vllm)
+	}
+
+	otp set {
+		enabled = true
+		port = 4000
+		memory = 1G
+	}
+
+	docs set {
+		enabled = true
+		port = 8080
+		memory = 512M
+	}
+
+	rpc set {
+		enabled = false
+	}
+
+	agent set {
+		enabled = false
+	}
+}

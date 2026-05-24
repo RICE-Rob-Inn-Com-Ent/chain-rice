@@ -1,0 +1,249 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# docker-compose.yml — generated from infra/docker/_tool.cue (cue cmd genDocker)
+# Run: docker compose -f .docker/docker-compose.yml up -d
+
+name: egos.app
+
+x-logging: &stack-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-defaults: &stack-defaults
+  restart: unless-stopped
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  logging: *stack-logging
+
+networks:
+  edge:
+    driver: bridge
+  data:
+    driver: bridge
+    internal: true
+  inference:
+    driver: bridge
+    internal: true
+  mail:
+    driver: bridge
+    internal: true
+
+volumes:
+  yugabyte-data:
+  redis-data:
+  nats-data:
+  temporal-data:
+  qdrant-data:
+  ollama-data:
+  mailpit-data:
+
+services:
+  yugabyte:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/db/Dockerfile.yugabyte
+    container_name: yugabyte
+    ports:
+      - "5433:5433"
+      - "9042:9042"
+      - "7000:7000"
+      - "9000:9000"
+    volumes:
+      - yugabyte-data:/home/yugabyte/yb_data
+    environment:
+      POSTGRES_DB: egos.app
+      POSTGRES_USER: egos.app
+      POSTGRES_PASSWORD: "${YUGABYTE_PASSWORD:?set YUGABYTE_PASSWORD}"
+    networks: [data, edge]
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: ["CMD", "yugabyted", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
+
+  redis:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/db/Dockerfile.valkey
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./db/valkey.conf:/etc/valkey/valkey.conf:ro
+    networks: [data, edge]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  qdrant:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/db/Dockerfile.qdrant
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks: [data, inference, edge]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:6333/healthz || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  nats:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/messaging/Dockerfile.nats
+    container_name: nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+      - "6222:6222"
+    volumes:
+      - nats-data:/data
+      - ./messaging/nats.conf:/etc/nats/nats.conf:ro
+    command: ["--config", "/etc/nats/nats.conf"]
+    networks: [data, edge]
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:8222/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  temporal:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/messaging/Dockerfile.temporal
+    container_name: temporal
+    ports:
+      - "7233:7233"
+      - "8088:8088"
+    volumes:
+      - temporal-data:/etc/temporal
+      - ./messaging/temporal-dynamic.yaml:/etc/temporal/config/development.yaml:ro
+    environment:
+      DB: postgresql
+      DB_PORT: "5433"
+      POSTGRES_USER: egos.app
+      POSTGRES_PWD: "${YUGABYTE_PASSWORD:?set YUGABYTE_PASSWORD}"
+      POSTGRES_SEEDS: yugabyte
+      DYNAMIC_CONFIG_FILE_PATH: /etc/temporal/config/development.yaml
+      BIND_ON_IP: 0.0.0.0
+    networks: [data, edge]
+    depends_on:
+      yugabyte:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  mailpit:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/mail/Dockerfile.mailpit
+    container_name: mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MP_MAX_MESSAGES: 1000
+      MP_DATABASE: /data/mailpit.db
+    volumes:
+      - mailpit-data:/data
+    networks: [mail, edge]
+    profiles: [mailpit]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:8025/livez"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+  ollama:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/bot/Dockerfile.ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_HOST: "0.0.0.0:11434"
+      MODEL_AUTO_PULL: true
+      MODEL_BACKEND: ollama
+      MODEL_PULL_RETRIES: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks: [inference, edge]
+    profiles: [ollama]
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:11434/api/version"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 60s
+  docs:
+    <<: *stack-defaults
+    build:
+      context: ..
+      dockerfile: .docker/server/Dockerfile.docs
+    container_name: docs
+    ports:
+      - "8080:8080"
+    networks: [edge]
+    deploy:
+      resources:
+        limits:
+          memory: 0

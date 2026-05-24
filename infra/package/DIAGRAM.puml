@@ -1,0 +1,43 @@
+@startuml infra_package_mason_cue
+title MASON — polyglot package vs workspace emit (CUE)
+
+skinparam handwritten false
+skinparam defaultTextAlignment center
+skinparam wrapWidth 220
+
+legend right
+  | **Ім’я файлу** |
+  | `infra/package/polyglot.cue` — **корінь `cue export`** для пакета `package package`. |
+  | Не можна перейменувати на `infra/package/_tool.cue`: CUE **ігнорує** `*_tool.cue` у `cue export` / `cue vet` (див. `cue help inputs`). |
+  | **Семантичний паралель** до `infra/out/_tool.cue`: той файл — **entry `cue cmd emit`**, цей — **дані + `emitTextFiles` лише для cells**. |
+end legend
+
+rectangle "**infra/package/**" as pkg #E8F4FC {
+  file "polyglot.cue\n(languageBuck, packageIndex,\nemitTextFiles …)" as poly
+  folder "cue/*.cue" as lcue
+  file "../build/build.cue\n+ ../build/cue/*.cue" as mb
+}
+
+rectangle "**infra/out/**" as out #FCE8E8 {
+  file "_tool.cue\n(command: emit …)" as outtool
+  folder "cue/pack.cue …" as outcue
+}
+
+poly --> lcue : той самий package
+mb ..> poly : buildPlan\n(унікальний basename)
+
+outtool --> outcue : workspace roll-up
+outtool --> poly : bash: cue export\npolyglot.cue + …\n(у складі emit)
+
+note bottom of poly
+  **validate** (`//infra/package:BUCK`):
+  `infra/build/build.cue` + `infra/build/cue/*.cue` →
+  `cue export polyglot.cue … -e packageIndex | … | emitTextFiles`
+end note
+
+note bottom of outtool
+  **render_all**: `cue cmd emit ./infra/out/_tool.cue`
+  (пакет + workspace `emitTextFiles`)
+end note
+
+@enduml

@@ -1,6 +1,0 @@
-# syntax=docker/dockerfile:1
-# Temporal auto-setup — official image (glibc + temporal CLI; not distroless).
-# Dynamic config: mount .docker/conf/temporal-dynamic.yaml at runtime if needed.
-ARG TEMPORAL_VERSION=1.25.2
-FROM temporalio/auto-setup:${TEMPORAL_VERSION}
-EXPOSE 7233 8088

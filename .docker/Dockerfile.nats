@@ -1,7 +1,0 @@
-# syntax=docker/dockerfile:1
-# NATS — official Alpine tag (small glibc-free userland). Scratch tags exist but omit shell; healthchecks use HTTP from host mesh.
-ARG NATS_VERSION=2.10
-FROM nats:${NATS_VERSION}-alpine
-COPY .docker/conf/nats.conf /etc/nats/nats.conf
-EXPOSE 4222 8222 6222
-CMD ["--config", "/etc/nats/nats.conf"]

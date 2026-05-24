@@ -1,0 +1,19 @@
+use infra as frontend
+
+// egos.app — BARD site shell (Mint → frontend_project.cue on cook).
+rc frontend let {
+	site set {
+		title = "egos app"
+		api_base_url = "http://127.0.0.1:4000"
+		seed_color = "0xFF2D6A4F"
+	}
+
+	modules set {
+		client = true
+		browser = true
+		content = true
+		lang = true
+		rule = false
+		model = false
+	}
+}

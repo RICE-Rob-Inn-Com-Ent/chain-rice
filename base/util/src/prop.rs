@@ -71,7 +71,7 @@ pub fn arb_bytes_mut(len_range: impl Strategy<Value = usize>) -> impl Strategy<V
 
 /// Hex-like strings that **`hex::decode`** should reject — odd length, bad symbols, or whitespace.
 ///
-/// **Why:** Adversarial and sloppy inputs must surface as [`crate::error::RiceError::Hex`], not panic.
+/// **Why:** Adversarial and sloppy inputs must surface as [`crate::error::Error::Hex`], not panic.
 /// **How:** `prop_oneof!` mixes structural violations (odd count of valid nybbles) with illegal
 /// alphabets and separators.
 pub fn corrupt_hex_string() -> impl Strategy<Value = String> {
@@ -107,7 +107,7 @@ mod tests {
     use crate::bytes::{
         bytes_slice, decode_hex, encode_hex_lower, pad_to_exact_length, secure_compare, PadSide,
     };
-    use crate::error::RiceError;
+    use crate::error::Error;
     use crate::proto::{decode_length_delimited, encode_length_delimited, length_delimited_frame_byte_count};
 
     /// Minimal prost message carrying arbitrary bytes — stands in for MASON `gen/` types until
@@ -162,7 +162,7 @@ mod tests {
         }
 
         /// **Organism invariant — slice boundaries:** [`bytes_slice`] never panics; it either
-        /// returns the correct sub-range or [`RiceError::InvalidArgument`].
+        /// returns the correct sub-range or [`Error::InvalidArgument`].
         ///
         /// **Pain if broken:** Framing code would abort the process instead of returning a typed error.
         #[test]
@@ -182,10 +182,10 @@ mod tests {
                 prop_assert_eq!(&got[..], &buf[start..end], "slice content must match source window");
             } else {
                 let err = res.expect_err(
-                    "CLERK slice invariant: invalid ranges must be RiceError, not panic",
+                    "CLERK slice invariant: invalid ranges must be Error, not panic",
                 );
                 prop_assert!(
-                    matches!(err, RiceError::InvalidArgument(_)),
+                    matches!(err, Error::InvalidArgument(_)),
                     "invalid slice range must map to InvalidArgument — wrong pain channel: {err:?}",
                 );
             }

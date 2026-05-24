@@ -1,0 +1,9 @@
+// egos.app — BARD frontend/audio business overlay (extend site.rice modules).
+rc frontend let {
+	audio set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_audio_init {}
+fn hook_frontend_audio_configure {}

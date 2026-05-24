@@ -1,0 +1,12 @@
+{
+  "elixirLS.mixEnv": "dev",
+  "elixirLS.fetchDeps": false,
+  "elixirLS.dialyzerEnabled": true,
+  "elixirLS.suggestSpecs": true,
+  "elixirLS.elixirPath": "${workspaceFolder}/../.pixi/envs/default/bin/elixir",
+  "elixirLS.mixPath": "${workspaceFolder}/../.pixi/envs/default/bin/mix",
+  "elixirLS.envVariables": {
+    "PATH": "${workspaceFolder}/../.pixi/envs/default/bin${pathSeparator}${workspaceFolder}/../.bin${pathSeparator}${env:PATH}"
+  },
+  "direnv.enable": false
+}

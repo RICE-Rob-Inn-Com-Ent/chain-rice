@@ -1,0 +1,9 @@
+fn egos_base_contract_cosmwasm {}
+fn role_attested_delta_Uint128 {}
+fn deny_f64_on_wire {}
+fn hook_contract_execute_msg {}
+fn hook_contract_instantiate {}
+fn hook_contract_query {}
+fn env_CLERK_CW_API_VERSION {}
+fn proto_from_infra_schemas_only {}
+fn no_ghc_inside_wasm_module {}

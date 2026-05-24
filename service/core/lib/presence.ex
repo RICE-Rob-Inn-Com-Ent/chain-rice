@@ -1,10 +1,11 @@
 defmodule Smith.Core.Presence do
-  # TODO:
-  # [ ] implement Phoenix.Presence for tracking:
-  #     track connected users per channel
-  #     track active rice cook sessions per project
-  # [ ] implement presence diff:
-  #     push presence_diff to channel on join/leave
-  # [ ] implement presence heartbeat:
-  #     interval from RICE_CORE_PRESENCE_INTERVAL_S env var
+  @moduledoc """
+  **Phoenix.Presence** for `.rice`: online sessions and metadata (role, project, SMITH resources), diffs for clients (BARD).
+
+  Topics like `rice:session:<id>` are tracked; external services use `list/1` / `get_by_key/2`.
+  """
+
+  use Phoenix.Presence,
+    otp_app: :service,
+    pubsub_server: Smith.Core.PubSub
 end

@@ -15,7 +15,7 @@ path = "src/lib.rs"
 default = ["test-utils"]
 # Proptest strategies (`prop`); use `default-features = false` on `util` for a slimmer dependency graph.
 test-utils = ["dep:proptest"]
-# Native-only: dlopen @libHS…@ / @librice_calc_ffi@ from @cabal build foreign-library:rice_calc_ffi@.
+# Native-only: dlopen @libHS…@ / @libcalc_ffi.so@ from @cabal build foreign-library:calc_ffi@.
 calc-bridge = ["dep:libloading", "dep:libc", "dep:serde", "dep:serde_json"]
 # Links `base/zig-out/lib/libclerk-security.a` (run `zig build` in `base/`). Combine with `calc-bridge` for CALC hooks. See `base/ZIG_WARDEN.md`.
 zig-warden = []

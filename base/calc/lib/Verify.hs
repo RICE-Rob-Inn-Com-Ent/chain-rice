@@ -15,11 +15,11 @@ import qualified Data.Text as T
 import Test.QuickCheck
 import Text.Read (readMaybe)
 import Wire (BasisPointsResponse (..), basisPointsFee)
-import Decimal (RiceDecimal, plus, times)
+import Decimal (Numeric, plus, times)
 import Finance (Money (..), addMoney)
 
--- [ ] QuickCheck law generators; accounting identities; maxSuccess from RICE_CALC_QC_CASES
--- [ ] verify entry points for Rust FFI; RICE_* validators; VerifyResult proofs
+-- [ ] QuickCheck law generators; accounting identities; maxSuccess from CLERK_CALC_QC_CASES
+-- [ ] verify entry points for Rust FFI; CLERK_* validators; VerifyResult proofs
 
 instance Arbitrary Decimal where
   arbitrary = do
@@ -32,11 +32,11 @@ instance Arbitrary Money where
     code <- elements ["USD", "EUR", "PLN", "GBP"]
     Money (T.pack code) <$> arbitrary
 
-prop_decimalAddAssoc :: RiceDecimal -> RiceDecimal -> RiceDecimal -> Property
+prop_decimalAddAssoc :: Numeric -> Numeric -> Numeric -> Property
 prop_decimalAddAssoc a b c =
   (a `plus` b) `plus` c === a `plus` (b `plus` c)
 
-prop_decimalMulDistrib :: RiceDecimal -> RiceDecimal -> RiceDecimal -> Property
+prop_decimalMulDistrib :: Numeric -> Numeric -> Numeric -> Property
 prop_decimalMulDistrib a b c =
   (a `plus` b) `times` c === (a `times` c) `plus` (b `times` c)
 
@@ -51,7 +51,7 @@ prop_basisPointsFeeParses (NonNegative p) =
           Nothing -> counterexample ("fee not a Decimal: " ++ T.unpack fee) False
           Just _ -> property True
 
-prop_moneySameCurrencyAdd :: String -> RiceDecimal -> RiceDecimal -> Property
+prop_moneySameCurrencyAdd :: String -> Numeric -> Numeric -> Property
 prop_moneySameCurrencyAdd cur a b =
   let c = T.pack cur
    in addMoney (Money c a) (Money c b) === Right (Money c (a `plus` b))

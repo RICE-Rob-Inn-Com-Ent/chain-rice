@@ -1,0 +1,9 @@
+// egos.app — SMITH service/messages business overlay.
+rc smith let {
+	messages set {
+		enabled = true
+	}
+}
+
+fn hook_messages_init {}
+fn hook_messages_handler {}

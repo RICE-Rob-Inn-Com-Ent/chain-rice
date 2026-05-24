@@ -6,13 +6,13 @@
 //! **Telemetry:** spans use the `rice.zk.verify` target (OpenTelemetry via a `tracing` subscriber at
 //! the OS boundary). **Batch:** [`batch_verify_proofs`] uses a random linear combination (one
 //! `final_exponentiation` per chunk) when a chunk has length ≥ 2; chunk size is capped by
-//! [`RICE_ZK_VERIFY_BATCH_SIZE_ENV`] when set.
+//! [`CLERK_ZK_VERIFY_BATCH_SIZE_ENV`] when set.
 
 use std::fmt;
 use std::marker::PhantomData;
 
 use crate::error::PrivateError;
-use crate::setup::{ParameterStore, RiceCircuit};
+use crate::setup::{ParameterStore, Circuit};
 use ark_crypto_primitives::snark::SNARK;
 use ark_ec::pairing::Pairing;
 use ark_ec::{AffineRepr, CurveGroup};
@@ -20,13 +20,13 @@ use ark_ff::{Field, PrimeField, UniformRand};
 use ark_groth16::{Groth16, PreparedVerifyingKey, Proof, VerifyingKey, prepare_verifying_key};
 use ark_relations::r1cs::ConstraintSynthesizer;
 use ark_serialize::CanonicalSerialize;
-use hex::encode as hex_encode;
+use util::bytes::encode_hex_lower as hex_encode;
 use num_traits::{One, Zero};
 use rand::rngs::OsRng;
 use sha2::{Digest, Sha256};
 
 /// Max proofs per random-linear batch chunk (`None` / invalid → no limit).
-pub const RICE_ZK_VERIFY_BATCH_SIZE_ENV: &str = "RICE_ZK_VERIFY_BATCH_SIZE";
+pub const CLERK_ZK_VERIFY_BATCH_SIZE_ENV: &str = "CLERK_ZK_VERIFY_BATCH_SIZE";
 
 /// Short fingerprint for logs (first 4 bytes of SHA-256 over compressed public inputs).
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
@@ -34,7 +34,7 @@ pub struct PublicInputsFingerprint(pub [u8; 4]);
 
 impl fmt::Display for PublicInputsFingerprint {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", hex_encode(self.0))
+        write!(f, "{}", hex_encode(&self.0[..]))
     }
 }
 
@@ -118,7 +118,7 @@ pub fn verify_proof_bool<E: Pairing>(vk: &VerifyingKey<E>, public_inputs: &[E::S
     verify_proof(vk, public_inputs, proof).is_ok()
 }
 
-/// Type-directed alias: ties the VK to a concrete `RiceCircuit` synthesizer at the callsite.
+/// Type-directed alias: ties the VK to a concrete `Circuit` synthesizer at the callsite.
 #[inline]
 pub fn verify_proof_for_circuit<E, CS>(
     vk: &VerifyingKey<E>,
@@ -135,7 +135,7 @@ where
 
 #[inline]
 fn verify_batch_chunk_cap() -> usize {
-    std::env::var(RICE_ZK_VERIFY_BATCH_SIZE_ENV)
+    std::env::var(CLERK_ZK_VERIFY_BATCH_SIZE_ENV)
         .ok()
         .and_then(|s| s.parse::<usize>().ok())
         .filter(|&n| n > 0)
@@ -227,7 +227,7 @@ pub fn verify_with_store<RC, E>(
     proof: &Proof<E>,
 ) -> Result<(), PrivateError>
 where
-    RC: RiceCircuit<E>,
+    RC: Circuit<E>,
     E: Pairing,
 {
     let (vk, vk_id) = store.load_verifying_key::<RC, E>()?;
@@ -263,7 +263,7 @@ mod tests {
 
     use super::*;
     use crate::prove::prove_mul;
-    use crate::setup::{MulCircuitRice, ParameterStore, get_or_generate_params, trusted_setup};
+    use crate::setup::{MulSetup, ParameterStore, get_or_generate_params, trusted_setup};
 
     static VERIFY_ENV_LOCK: Mutex<()> = Mutex::new(());
 
@@ -313,7 +313,7 @@ mod tests {
     fn verify_with_store_smoke() {
         let _guard = VERIFY_ENV_LOCK.lock().expect("verify test lock poisoned");
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         let root = std::env::temp_dir().join(format!(
             "rice-zk-verify-store-{}",
@@ -325,13 +325,13 @@ mod tests {
         let _ = std::fs::remove_dir_all(&root);
         let store = ParameterStore::with_root(root.clone());
         let mut rng = StdRng::from_seed([8u8; 32]);
-        let params = get_or_generate_params::<MulCircuitRice, Bn254, _>(&store, &mut rng).unwrap();
+        let params = get_or_generate_params::<MulSetup, Bn254, _>(&store, &mut rng).unwrap();
         let a = crate::field::FrBn254::rand(&mut rng);
         let b = crate::field::FrBn254::rand(&mut rng);
         let mut c = a;
         c *= b;
         let proof = prove_mul(&params.pk, a, b, &mut rng).unwrap();
-        verify_with_store::<MulCircuitRice, Bn254>(&store, &[c], &proof).unwrap();
+        verify_with_store::<MulSetup, Bn254>(&store, &[c], &proof).unwrap();
         let _ = std::fs::remove_dir_all(&root);
     }
 

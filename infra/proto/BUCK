@@ -1,0 +1,20 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/proto
+# Rebuild: buck2 build '//infra/proto:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["cue/*.cue", "buf.yaml", "buf.gen.yaml", "DIAGRAM.puml"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+cue vet ./infra/proto/cue/...
+if command -v buf >/dev/null 2>&1 && [ -d node/proto ]; then buf lint -f infra/proto/buf.yaml; fi
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

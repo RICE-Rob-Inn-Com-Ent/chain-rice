@@ -1,5 +1,4 @@
-# KING TODO map
-# .github/workflows/meta/meta-stale.yml — CUE mirror: infra/configs/github/workflows__meta__meta-stale.yml.cue
+# Optional GitHub automation — canonical CI is `dagger call rice audit` (see infra/ci/README.md).
 # TODO:
 # [ ] align stale exempt labels with rice-core taxonomy; RICE_STALE_EXEMPT_ISSUES / RICE_STALE_EXEMPT_PRS from org vars if needed
 # [ ] optional: post to RICE_CI_SLACK_WEBHOOK on mass-close (secret ref)
@@ -76,3 +75,5 @@ jobs:
 
           exempt-issue-assignees: "mrDInkelman185"
           exempt-pr-assignees: "mrDInkelman185"
+
+

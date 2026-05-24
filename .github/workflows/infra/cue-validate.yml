@@ -1,10 +1,5 @@
-# KING TODO map
-# .github/workflows/infra/cue-validate.yml — validate CUE (soft-coded)
-# TODO:
-# [ ] checkout + setup cue; run cue vet ./infra/configs and cue export ./infra -e order (matches rice manifest)
-# [ ] env: RICE_GITHUB_ORG, RICE_GITHUB_REPO from github context vars — never hardcoded org/repo strings
-# [ ] optional: fail if infra/configs/kubernetes paths drift from .k8s (diff gate)
-
+# Thin wrapper: CUE contracts for CI live in infra/ci/cue.
+# Full monorepo audit: .github/workflows/rice-ci.yml (dagger call rice audit).
 name: Infra — CUE validate
 
 on:
@@ -23,5 +18,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Placeholder (implement vet steps above)
-        run: "true"
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Install CUE CLI
+        run: go install cuelang.org/go/cmd/cue@v0.9.2
+
+      - name: Vet CI / manifest CUE
+        run: |
+          set -euo pipefail
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          cue version
+          for d in ./infra/ci/cue; do
+            if compgen -G "${d}/*.cue" > /dev/null; then
+              cue vet "${d}"
+            fi
+          done
+
+

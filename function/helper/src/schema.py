@@ -10,9 +10,11 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
-from typing import Annotated, Any
+from typing import Annotated, Any, Generic, TypeVar
 
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, computed_field
+
+T = TypeVar("T")
 
 # TODO:
 # [ ] define base Pydantic config: ConfigDict(strict=True, frozen=False, extra="forbid")
@@ -67,6 +69,22 @@ class TimestampedSchema(SchemaBase):
     @property
     def created_at_iso(self) -> str:
         return self.created_at.isoformat()
+
+
+class Page(SchemaBase, Generic[T]):
+    """Offset/limit window over ``items`` (search, list APIs). ``total`` optional when unknown."""
+
+    items: list[T] = Field(default_factory=list)
+    offset: int = Field(ge=0, default=0)
+    limit: int = Field(ge=1, default=20)
+    total: int | None = Field(
+        default=None,
+        description="Total matching rows when the store reports it; omit when unknown.",
+    )
+    has_next: bool = Field(
+        default=False,
+        description="True when another page likely exists (e.g. ``len(items) == limit``).",
+    )
 
 
 def dumps_json_value(v: Any) -> str:

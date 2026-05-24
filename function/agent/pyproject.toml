@@ -8,12 +8,15 @@ requires-python = ">=3.13"
 dependencies = [
   "litellm>=1.60.0",
   "langgraph>=0.5.0",
+  "langchain-core>=0.3.0",
   "instructor>=1.6.0",
   "outlines>=0.1.0,<2.0.0",
   "guardrails-ai>=0.5.0",
   "pydantic>=2.10.0",
   "loguru>=0.7.0",
   "tenacity>=9.0.0",
+  "helper",
+  "h5py>=3.11.0",
 ]
 
 [build-system]
@@ -25,3 +28,6 @@ packages = ["src"]
 
 [tool.uv]
 package = true
+
+[tool.uv.sources]
+helper = { workspace = true }

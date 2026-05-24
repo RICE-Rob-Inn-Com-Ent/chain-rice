@@ -17,16 +17,16 @@ use sha2::{Digest, Sha256};
 
 use crate::commitment::{CommitmentOpening, PedersenCommitment, PedersenGenerators};
 use crate::error::PrivateError;
-use crate::field::{FrBn254, RiceScalar, prime_field_from_be_bytes_strict};
+use crate::field::{FrBn254, Scalar, prime_field_from_be_bytes_strict};
 use crate::identity::{IdentityAttestationPayload, PublicIdentityCommitment, SovereignIdentity};
 use crate::prove::{ShieldedTransferWitness, prove_shielded_transfer};
-use crate::setup::{ParameterStore, ShieldedTransferRice};
+use crate::setup::{ParameterStore, ShieldedTransferSetup};
 use crate::verify;
 
 pub type BalanceProof = Proof<Bn254>;
 
 /// Domain separation for [`AssetType`] labels (UTF-8 commodity / ticker / SKU).
-pub const RICE_ASSET_LABEL_DOMAIN: &[u8] = b"rice.asset_type.v1";
+pub const CLERK_ASSET_LABEL_DOMAIN: &[u8] = b"rice.asset_type.v1";
 
 // ---------------------------------------------------------------------------
 // Asset tag (multi-asset)
@@ -62,7 +62,7 @@ impl AssetType {
 fn hash_label_to_fr(label: &str) -> Result<FrBn254, PrivateError> {
     for attempt in 0u64..256 {
         let mut h = Sha256::new();
-        h.update(RICE_ASSET_LABEL_DOMAIN);
+        h.update(CLERK_ASSET_LABEL_DOMAIN);
         h.update(label.as_bytes());
         h.update(attempt.to_le_bytes());
         let out = h.finalize();
@@ -224,7 +224,7 @@ pub fn verify_shielded_ledger_transfer(
     public_fee: FrBn254,
     proof: &Proof<Bn254>,
 ) -> Result<(), PrivateError> {
-    verify::verify_with_store::<ShieldedTransferRice, Bn254>(
+    verify::verify_with_store::<ShieldedTransferSetup, Bn254>(
         store,
         &[identity_commitment, identity_nullifier, public_fee],
         proof,
@@ -340,7 +340,7 @@ mod tests {
     fn ledger_transfer_proves_and_verifies() {
         let _g = BAL_ENV_LOCK.lock().expect("lock");
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         let mut rng = StdRng::from_seed([18u8; 32]);
         let root = std::env::temp_dir().join(format!("rice-balance-{}", line!()));

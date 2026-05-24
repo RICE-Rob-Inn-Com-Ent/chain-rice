@@ -1,5 +1,5 @@
 // Package main is the Dagger CI module for .rice: the [Rice] type and its methods orchestrate
-// audit, forge, prepare, cook, pour, perform, think, and serve workflows across the monorepo.
+// audit, forge, prepare, cook, pour, perform, think, serve, and pipeline workflows across the monorepo.
 //
 // rice CLI ↔ Dagger: repo [README.md](../../README.md) and [CONTRIBUTING.md](../../CONTRIBUTING.md).
 //

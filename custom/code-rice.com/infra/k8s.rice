@@ -1,0 +1,55 @@
+use infra as k8s
+
+// code-rice.com — production GitOps. Helm pins: MASON defaults (override in helm set { chart.version = x }).
+// Package: bowl [package] infra → MASON infra/proto/cue/infra.cue (facet k8s).
+
+rc k8s let {
+	profile set { name = prod }
+
+	gitops set {
+		repo_url = https://github.com/REPLACE_ORG/rice.git
+		target_revision = main
+		cluster_server = https://kubernetes.default.svc
+		argocd_namespace = argocd
+		root_app_name = gitops-root
+	}
+
+	gpu set {
+		enabled = true
+		time_slice_replicas = 1
+	}
+
+	bots set {
+		image_registry = ghcr.io
+		image_org = REPLACE_ORG
+		image_tag = prod
+		namespace = bots
+		roles = (king, mason, chief, clerk, bard, sage, smith)
+		sage.mem_limit = 4Gi
+		sage.mem_request = 1Gi
+		sage.cpu_limit = 4000m
+		sage.cpu_request = 500m
+		sage.concurrency = 20
+		sage.scale_max = 5
+		smith.mem_limit = 4Gi
+		smith.mem_request = 1Gi
+		smith.cpu_limit = 4000m
+		smith.cpu_request = 500m
+		smith.concurrency = 20
+		smith.scale_max = 5
+	}
+
+	obs set {
+		profile = full
+		tempo.enabled = true
+		otelOperator.enabled = true
+	}
+
+	policy set {
+		kyverno_digest_required = true
+	}
+
+	cluster set {
+		slices = (platform, gpu, knative, data, workflow, bots, obs)
+	}
+}

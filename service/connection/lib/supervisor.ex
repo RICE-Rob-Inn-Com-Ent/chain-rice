@@ -1,18 +1,12 @@
-defmodule Service.Cluster.Supervisor do
+defmodule Smith.Connection.Supervisor do
   @moduledoc """
-  Horde `Horde.DynamicSupervisor` — one cluster-wide supervisor for dynamic workers (distribution strategy, members).
+  **`Horde.DynamicSupervisor`** for dynamic SMITH workers in the cluster.
 
-  Name and strategy default from `config :service, Service.Cluster, :horde`. Use `Horde.DynamicSupervisor.start_child/2`
-  with `Service.Cluster.Supervisor.name/0` as the supervisor reference.
+  Distribution strategy is set in `config :service, Smith.Connection, horde: [distribution_strategy: …]`
+  (e.g. `Smith.Connection.Strategy.LeastRunQueue` or `Smith.Connection.Strategy.RoundRobinHorde`).
+
+  After node membership changes, call `Smith.Connection.Handoff.sync_horde_members!/0` (Observer does this on boot).
   """
-
-  # TODO:
-  # [ ] implement Horde.DynamicSupervisor:
-  #     distributes children across cluster nodes
-  #     on node failure → children migrate to healthy nodes
-  # [ ] implement child migration policy:
-  #     RICE_CLUSTER_MIGRATION=true activates auto-migration
-  #     migration timeout from RICE_CLUSTER_MIGRATION_TIMEOUT_S
 
   @spec child_spec(keyword()) :: Supervisor.child_spec()
   def child_spec(opts \\ []) do
@@ -22,7 +16,8 @@ defmodule Service.Cluster.Supervisor do
       name: Keyword.get(opts, :dynamic_supervisor_name, cfg[:dynamic_supervisor_name]),
       strategy: :one_for_one,
       members: :auto,
-      distribution_strategy: Keyword.get(opts, :distribution_strategy, cfg[:distribution_strategy])
+      distribution_strategy:
+        Keyword.get(opts, :distribution_strategy, cfg[:distribution_strategy] || Horde.UniformDistribution)
     ]
 
     Horde.DynamicSupervisor.child_spec(Keyword.merge(defaults, opts))
@@ -31,11 +26,11 @@ defmodule Service.Cluster.Supervisor do
   @spec name() :: atom()
   def name do
     horde_cfg()[:dynamic_supervisor_name] ||
-      raise "missing :horde :dynamic_supervisor_name in Service.Cluster config"
+      raise ArgumentError, "missing :horde :dynamic_supervisor_name in :service, Smith.Connection config"
   end
 
   defp horde_cfg do
-    Application.get_env(:service, Service.Cluster, [])
+    Application.get_env(:service, Smith.Connection, [])
     |> Keyword.get(:horde, [])
   end
 end

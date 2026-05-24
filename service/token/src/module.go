@@ -1,28 +1,21 @@
 package token
 
-// TODO:
-// [ ] implement AppModule interface:
-//     Name() string — module name from RICE_TOKEN_MODULE_NAME
-//     RegisterServices(cfg module.Configurator) — registers msg + query servers
-//     ConsensusVersion() uint64 — bumped on breaking changes
-// [ ] implement module depinject:
-//     ProvideModule() — depinject provider
-//     injects: keeper, codec, storeService, logger
-
 import (
 	"context"
+	"encoding/json"
 
+	kit "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	ricegrpc "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src/ricegrpc"
+	gwruntime "github.com/grpc-ecosystem/grpc-gateway/runtime"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// ConsensusVersion is the x/token module consensus version.
-const ConsensusVersion = 1
+var (
+	_ module.HasServices = Module{}
+)
 
-// Module is the AppModule / AppModuleBasic wiring for x/token (RegisterServices, genesis).
+// Module is the internal engine for [TokenAppModule] (RegisterServices, genesis helpers).
 type Module struct {
 	keeper Keeper
 }
@@ -33,34 +26,42 @@ func NewModule(k Keeper) Module {
 }
 
 // Name returns the module name for the module manager.
-func (Module) Name() string { return "token" }
+func (Module) Name() string { return ModuleName }
 
-// RegisterGRPCGatewayRoutes registers REST/gRPC-gateway routes (stub).
-func (Module) RegisterGRPCGatewayRoutes(_ context.Context, _ *runtime.ServeMux, _ string) error {
+// RegisterGRPCGatewayRoutes registers REST/gRPC-gateway routes once proto + RegisterQueryHandlerClient are generated.
+func (Module) RegisterGRPCGatewayRoutes(_ context.Context, _ *gwruntime.ServeMux, _ string) error {
 	return nil
 }
 
-// RegisterServices registers Msg and Query gRPC services on the module configurator.
+// RegisterServices registers store migrations and prepares gRPC registration.
+// Full [module.Configurator.RegisterService] paths require protobuf FileDescriptors in the interface registry;
+// query/msg services can also be registered via [module.Configurator.QueryServer]/MsgServer().RegisterService
+// once codegen is available. Until then use [DispatchTokenMsg] for txs.
 func (m Module) RegisterServices(cfg module.Configurator) {
-	// cfg.RegisterService(&MsgServer{keeper: m.keeper})
-	// cfg.RegisterService(&QueryServer{keeper: m.keeper})
-	_ = cfg
+	if err := RegisterTokenStoreMigrations(cfg); err != nil {
+		panic(err)
+	}
+	_ = m.keeper
 }
 
 // InitGenesis initializes module state from genesis.
 func (m Module) InitGenesis(ctx sdk.Context, data []byte) {
-	_ = ctx
-	_ = data
+	if err := InitGenesis(ctx, m.keeper, json.RawMessage(data)); err != nil {
+		panic(err)
+	}
 }
 
 // ExportGenesis exports module state.
 func (m Module) ExportGenesis(ctx sdk.Context) []byte {
-	_ = ctx
-	return nil
+	raw, err := ExportGenesis(ctx, m.keeper)
+	if err != nil {
+		panic(err)
+	}
+	return raw
 }
 
 // RegisterGRPCServices registers gRPC services on the app (alternative path for some SDK versions).
-func (m Module) RegisterGRPCServices(reg ricegrpc.ServiceRegistrar) {
+func (m Module) RegisterGRPCServices(reg kit.ServiceRegistrar) {
 	_ = reg
 	_ = m
 }

@@ -1,0 +1,9 @@
+// code-rice.com — SMITH service/connection business overlay.
+rc smith let {
+	connection set {
+		enabled = true
+	}
+}
+
+fn hook_connection_init {}
+fn hook_connection_handler {}

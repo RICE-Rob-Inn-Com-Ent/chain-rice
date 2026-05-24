@@ -1,0 +1,175 @@
+# ============================================================================
+# GOLANGCI-LINT – Rice Monorepo (root)
+# https://golangci-lint.run/usage/configuration/
+# ============================================================================
+
+run:
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+  allow-parallel-runners: true
+  go: "1.21"
+  build-tags: []
+  modules-download-mode: readonly
+  skip-dirs:
+    - vendor
+    - third_party
+    - bazel-*
+    - .bazel
+  skip-files:
+    - ".*\\.pb\\.go$"
+    - ".*_generated\\.go$"
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  uniq-by-line: true
+  sort-results: true
+  path-prefix: ""
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  govet:
+    check-shadowing: true
+    enable-all: true
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: github.com/mrDinkelman/rice-mono
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  cyclop:
+    max-complexity: 15
+    skip-tests: true
+  dupl:
+    threshold: 100
+  funlen:
+    lines: 100
+    statements: 50
+  gocognit:
+    min-complexity: 20
+  nestif:
+    min-complexity: 4
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+      - style
+    disabled-checks:
+      - commentedOutCode
+      - whyNoLint
+  gosec:
+    severity: medium
+    confidence: medium
+    excludes:
+      - G104
+  lll:
+    line-length: 120
+    tab-width: 4
+  misspell:
+    locale: US
+  nakedret:
+    max-func-lines: 30
+  unparam:
+    check-exported: true
+  revive:
+    ignore-generated-header: true
+    severity: warning
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - gofmt
+    - goimports
+    - misspell
+    - revive
+    - cyclop
+    - gocognit
+    - nestif
+    - gocritic
+    - prealloc
+    - gosec
+    - bodyclose
+    - dupl
+    - funlen
+    - goconst
+    - goprintffuncname
+    - nakedret
+    - noctx
+    - nolintlint
+    - rowserrcheck
+    - sqlclosecheck
+    - unconvert
+    - unparam
+    - whitespace
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
+  fix: false
+  exclude-dirs:
+    - vendor
+    - third_party
+    - bazel-*
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - funlen
+    - text: "should have a package comment"
+      linters:
+        - revive
+    - path: ".*\\.pb\\.go$"
+      linters:
+        - all
+    - path: ".*_generated\\.go$"
+      linters:
+        - all
+
+severity:
+  default-severity: error
+  rules:
+    - linters: [dupl]
+      severity: info
+    - linters: [gocritic]
+      severity: warning

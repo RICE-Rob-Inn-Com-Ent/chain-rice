@@ -4,6 +4,8 @@ package video
 //
 
 import "core:c"
+import "core:dynlib"
+import "core:strings"
 
 when ODIN_OS == .Linux {
 	foreign import libnvenc {
@@ -164,4 +166,112 @@ foreign libnvdec {
 
 	cuvidParseVideoData :: proc(pCtx: CUvideoparser, pPacket: rawptr) -> c.int ---
 	cuvidGetDecodeStatus :: proc(dec: CUvideodecoder, picIdx: c.int, pDecodeStatus: rawptr) -> c.int ---
+}
+
+// nvcodec_system_gpu_decode_available — NVML (динамічно libnvidia-ml.so.1): ініціалізація без статичного лінку.
+nvcodec_system_gpu_decode_available :: proc() -> bool {
+	when ODIN_OS != .Linux {
+		return false
+	}
+	lib, ok := dynlib.load_library("libnvidia-ml.so.1")
+	if !ok {
+		return false
+	}
+	defer dynlib.unload_library(lib)
+	p, ok2 := dynlib.symbol_address(lib, "nvmlInit_v2")
+	if !ok2 {
+		return false
+	}
+	nvmlInit_v2_t :: #type proc() -> c.int
+	init := cast(nvmlInit_v2_t)p
+	if init() != 0 {
+		return false
+	}
+	p_s, ok3 := dynlib.symbol_address(lib, "nvmlShutdown")
+	if ok3 {
+		shutdown := cast(proc() -> c.int)p_s
+		_ = shutdown()
+	}
+	return true
+}
+
+NvCodec_State :: struct {
+	cfg:           VideoConfig,
+	decoder_ready: bool,
+}
+
+@(private = "file")
+_nv_name :: proc(user: rawptr) -> string {
+	return "nvcodec"
+}
+
+@(private = "file")
+_nv_init :: proc(user: rawptr, cfg: ^VideoConfig) -> bool {
+	s := cast(^NvCodec_State)user
+	if s == nil {
+		return false
+	}
+	s.cfg = cfg^
+	s.cfg.source_uri = strings.clone(cfg.source_uri, context.allocator)
+	s.cfg.extra_options = strings.clone(cfg.extra_options, context.allocator)
+	s.decoder_ready = nvcodec_system_gpu_decode_available()
+	return s.decoder_ready
+}
+
+@(private = "file")
+_nv_shutdown :: proc(user: rawptr) {
+	s := cast(^NvCodec_State)user
+	if s != nil {
+		delete(s.cfg.source_uri)
+		delete(s.cfg.extra_options)
+		s^ = {}
+	}
+}
+
+@(private = "file")
+_nv_decode_next :: proc(user: rawptr, out: ^VideoFrame) -> bool {
+	_ = user
+	_ = out
+	return false
+}
+
+@(private = "file")
+_nv_encode :: proc(user: rawptr, frame: ^VideoFrame) -> bool {
+	_ = user
+	_ = frame
+	return false
+}
+
+@(private = "file")
+_nv_export_gpu :: proc(user: rawptr, frame: ^VideoFrame) -> u64 {
+	_ = user
+	if frame != nil && frame.is_zero_copy {
+		return frame.gpu_ptr
+	}
+	return 0
+}
+
+// nvcodec_backend_table — VideoBackend для NVDEC/NVENC; zero-copy: cuvidMapVideoFrame → gpu_ptr у VideoFrame.
+nvcodec_backend_table :: proc() -> VideoBackend {
+	st := new(NvCodec_State)
+	return VideoBackend {
+		user = st,
+		name = _nv_name,
+		init = _nv_init,
+		shutdown = _nv_shutdown,
+		decode_next_frame = _nv_decode_next,
+		encode_submit_frame = _nv_encode,
+		export_gpu_handle = _nv_export_gpu,
+	}
+}
+
+video_nvcodec_destroy_backend :: proc(b: VideoBackend) {
+	if b.user == nil {
+		return
+	}
+	if b.shutdown != nil {
+		b.shutdown(b.user)
+	}
+	st := cast(^NvCodec_State)b.user
+	delete(st)
 }

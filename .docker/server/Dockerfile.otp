@@ -1,0 +1,26 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# Dockerfile.otp — SMITH Elixir umbrella (generated from infra/docker/cue/server.cue)
+FROM hexpm/elixir:1.18.3-erlang-27.3.2-debian-bookworm-20250317-slim AS build
+RUN apt-get update && apt-get install -y build-essential git && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY service/mix.exs service/mix.lock ./
+COPY service/config config
+COPY service/messages service/messages
+COPY service/guard service/guard
+COPY service/core service/core
+COPY service/pipeline service/pipeline
+COPY service/cluster service/cluster
+COPY service/connection service/connection
+ENV MIX_ENV=prod
+RUN mix local.hex --force && mix local.rebar --force
+RUN mix deps.get --only prod
+RUN mix release core
+
+FROM gcr.io/distroless/cc-debian12:nonroot
+WORKDIR /app
+COPY --from=build /app/_build/prod/rel/core ./
+ENV HOME=/app
+USER nonroot:nonroot
+EXPOSE 4000
+ENTRYPOINT ["/app/bin/core", "start"]

@@ -6,7 +6,7 @@
 //! on the wire) and to [`PrivateError::FieldInvalid`](crate::error::PrivateError::FieldInvalid) so
 //! out-of-range integers are **rejected**, not silently reduced mod the group order.
 //!
-//! BN254 and BLS12-381 scalars share the [`RiceScalar`] API via a blanket implementation for every
+//! BN254 and BLS12-381 scalars share the [`Scalar`] API via a blanket implementation for every
 //! [`PrimeField`] + [`Copy`] type (ark’s [`Field`] already includes [`UniformRand`] for sampling).
 
 use std::convert::TryFrom;
@@ -16,7 +16,7 @@ use ark_crypto_primitives::sponge::poseidon::{find_poseidon_ark_and_mds, Poseido
 use ark_crypto_primitives::sponge::{CryptographicSponge, FieldBasedCryptographicSponge};
 use ark_ff::{BigInteger, Field, PrimeField};
 use ark_std::rand::Rng;
-use bytes::Bytes;
+use util::Bytes;
 use num_bigint::BigUint;
 use num_traits::Zero;
 
@@ -26,10 +26,10 @@ use crate::error::PrivateError;
 // Curve scalar aliases
 // ---------------------------------------------------------------------------
 
-/// BLS12-381 scalar field element (`Fr`). Implements [`RiceScalar`] via the blanket impl.
+/// BLS12-381 scalar field element (`Fr`). Implements [`Scalar`] via the blanket impl.
 pub type FrBls12 = ark_bls12_381::Fr;
 
-/// BN254 scalar field element (`Fr`). Implements [`RiceScalar`] via the blanket impl.
+/// BN254 scalar field element (`Fr`). Implements [`Scalar`] via the blanket impl.
 pub type FrBn254 = ark_bn254::Fr;
 
 // ---------------------------------------------------------------------------
@@ -40,24 +40,24 @@ pub type FrBn254 = ark_bn254::Fr;
 ///
 /// **Why:** Hash parameters must match proving and verifying circuits exactly; loading them from a
 /// single configured path avoids baking ceremony material into binaries.
-pub const RICE_ZK_POSEIDON_PARAMS_ENV: &str = "RICE_ZK_POSEIDON_PARAMS";
+pub const CLERK_ZK_POSEIDON_PARAMS_ENV: &str = "CLERK_ZK_POSEIDON_PARAMS";
 
-/// Placeholder for parsed Poseidon configuration until `RICE_ZK_POSEIDON_PARAMS` loading is wired.
+/// Placeholder for parsed Poseidon configuration until `CLERK_ZK_POSEIDON_PARAMS` loading is wired.
 ///
 /// **Why:** Call sites can depend on this type while SMITH/infra finalize artifact formats.
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
-pub struct RicePoseidonParamsPlaceholder {
+pub struct PoseidonParamsPlaceholder {
     _private: (),
 }
 
-impl RicePoseidonParamsPlaceholder {
-    /// Reserved hook: will read [`RICE_ZK_POSEIDON_PARAMS_ENV`] and deserialize params.
+impl PoseidonParamsPlaceholder {
+    /// Reserved hook: will read [`CLERK_ZK_POSEIDON_PARAMS_ENV`] and deserialize params.
     ///
     /// **Today:** returns [`PrivateError::SetupMissing`] so callers fail closed instead of hashing
     /// with implicit defaults.
     pub fn from_env() -> Result<Self, PrivateError> {
         Err(PrivateError::SetupMissing(format!(
-            "Poseidon parameters not loaded; set {RICE_ZK_POSEIDON_PARAMS_ENV} to a parameter path (placeholder)"
+            "Poseidon parameters not loaded; set {CLERK_ZK_POSEIDON_PARAMS_ENV} to a parameter path (placeholder)"
         )))
     }
 }
@@ -66,12 +66,12 @@ impl RicePoseidonParamsPlaceholder {
 ///
 /// **Why:** ZK-friendly hashing must use the same permutation as in-circuit gadgets; this stub
 /// documents the legacy env-gated path. Prefer [`poseidon_config_bn254_rate2`] + sponge APIs for
-/// BN254, or load [`RICE_ZK_POSEIDON_PARAMS_ENV`] when SMITH finalizes artifacts.
+/// BN254, or load [`CLERK_ZK_POSEIDON_PARAMS_ENV`] when SMITH finalizes artifacts.
 #[inline]
 pub fn poseidon_hash_field_elements_placeholder<F: PrimeField>(
     _inputs: &[F],
 ) -> Result<F, PrivateError> {
-    RicePoseidonParamsPlaceholder::from_env()?;
+    PoseidonParamsPlaceholder::from_env()?;
     Err(PrivateError::SetupMissing(
         "Poseidon sponge hash not implemented past the parameter stub".into(),
     ))
@@ -142,14 +142,14 @@ pub fn poseidon_nullifier_digest_bn254(
 }
 
 // ---------------------------------------------------------------------------
-// RiceScalar
+// Scalar
 // ---------------------------------------------------------------------------
 
 /// Shared scalar surface for BN254, BLS12-381, and future prime fields used in `.rice` ZK.
 ///
 /// **Why:** Contracts and services should not special-case each curve for common reads/writes,
 /// RNG draws, and equality checks.
-pub trait RiceScalar: PrimeField + Copy {
+pub trait Scalar: PrimeField + Copy {
     /// Parse a big-endian unsigned integer; **rejects** values ≥ field modulus (no silent reduction).
     #[inline]
     fn from_be_bytes_strict(bytes: &[u8]) -> Result<Self, PrivateError> {
@@ -164,7 +164,7 @@ pub trait RiceScalar: PrimeField + Copy {
 
     /// Fixed-width big-endian encoding (`ceil(modulus bits / 8)` bytes), left-padded with zeros.
     ///
-    /// **Why:** Constant-time equality ([`RiceScalar::ct_eq`]) needs a stable width so comparisons
+    /// **Why:** Constant-time equality ([`Scalar::ct_eq`]) needs a stable width so comparisons
     /// do not leak the magnitude of scalars through length.
     #[inline]
     fn to_be_bytes_fixed(self) -> Vec<u8> {
@@ -185,7 +185,7 @@ pub trait RiceScalar: PrimeField + Copy {
 
     /// Whether this scalar is zero (via [`Zero::is_zero`]; not guaranteed constant-time).
     ///
-    /// **Call sites:** Use `RiceScalar::is_zero(x)` if method resolution is ambiguous.
+    /// **Call sites:** Use `Scalar::is_zero(x)` if method resolution is ambiguous.
     #[inline]
     fn is_zero(self) -> bool {
         Zero::is_zero(&self)
@@ -198,7 +198,7 @@ pub trait RiceScalar: PrimeField + Copy {
     }
 }
 
-impl<F> RiceScalar for F where F: PrimeField + Copy {}
+impl<F> Scalar for F where F: PrimeField + Copy {}
 
 // ---------------------------------------------------------------------------
 // Strict bytes ↔ field (util::Bytes compatible)
@@ -375,8 +375,8 @@ mod tests {
         let mut rng = StdRng::from_seed([9u8; 32]);
         let a = FrBls12::rand(&mut rng);
         let b = FrBls12::rand(&mut rng);
-        assert!(RiceScalar::ct_eq(a, a));
-        assert!(!RiceScalar::ct_eq(a, b) || a == b);
+        assert!(Scalar::ct_eq(a, a));
+        assert!(!Scalar::ct_eq(a, b) || a == b);
     }
 
     #[test]

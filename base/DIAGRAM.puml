@@ -1,0 +1,5 @@
+' CLERK / base — diagram leaf (MASON renders manifests here).
+note as N_BASE
+  **base/** workspace
+  Rust · Haskell · Zig
+end note

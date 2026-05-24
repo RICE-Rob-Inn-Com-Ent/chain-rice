@@ -1,6 +1,6 @@
 //! Typed AST views — thin wrappers over `rowan` cursors.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
@@ -8,15 +8,15 @@
 //
 use rowan::{SyntaxNode, SyntaxToken};
 
-use crate::syntax::RiceLanguage;
+use crate::syntax::CstLanguage;
 
 // [ ] https://docs.rs/rowan/
 // [ ] AST nodes for all constructs; visitor; pretty print; salsa hash
 
-pub type RiceNode = SyntaxNode<RiceLanguage>;
-pub type RiceToken = SyntaxToken<RiceLanguage>;
+pub type Node = SyntaxNode<CstLanguage>;
+pub type Token = SyntaxToken<CstLanguage>;
 
 /// Build a syntax tree root from a finished green node.
-pub fn root_node(green: rowan::GreenNode) -> RiceNode {
+pub fn root_node(green: rowan::GreenNode) -> Node {
     SyntaxNode::new_root(green)
 }

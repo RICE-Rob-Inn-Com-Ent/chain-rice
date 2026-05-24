@@ -1,0 +1,20 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/function.cue — watches function/simulation
+# Rebuild: buck2 build '//function/simulation:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["pyproject.toml", "../pyproject.toml", "src/**/*.py"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:$HOME/.local/bin:/usr/bin:$PATH"
+cd "$REPO/function"
+uv sync
+uv run ruff check simulation/src
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

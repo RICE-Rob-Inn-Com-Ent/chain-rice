@@ -1,18 +1,25 @@
-defmodule Service.Pipeline.Stream do
+defmodule Smith.Pipeline.Stream do
   @moduledoc """
-  Live output paths — HLS, RTMP, WebRTC sinks and muxers (bring in Membrane plugins per target).
+  Lazy bridges between Broadway batches and Membrane-friendly enumerables.
 
-  Typically the terminal branch of `Service.Pipeline.Media` after encode/mix.
+  Prefer `Elixir.Stream` for large files so full payloads are not materialized in RAM.
   """
 
-  # TODO:
-  # [ ] implement GenStage stream source:
-  #     produces messages from NATS for Broadway
-  #     back-pressure aware — respects demand
-  # [ ] implement stream transformation:
-  #     map, filter, reduce over message stream
-  #     transformation config from RICE_PIPELINE_* env vars
+  alias Broadway.Message
 
-  @spec sink_children() :: []
-  def sink_children, do: []
+  @doc "Lazily maps Broadway messages to their `:data` payloads."
+  @spec from_broadway_messages(Enumerable.t()) :: Enumerable.t()
+  def from_broadway_messages(messages) do
+    Stream.map(messages, fn
+      %Message{data: data} -> data
+      other -> other
+    end)
+  end
+
+  @doc "Lazily reads a file in fixed-size chunks (default 64 KiB)."
+  @spec file_chunks(Path.t(), pos_integer()) :: Enumerable.t()
+  def file_chunks(path, chunk_bytes \\ 65_536) do
+    File.stream!(path, [], chunk_bytes)
+  end
+
 end

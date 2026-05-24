@@ -1,0 +1,19 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/docs
+# Rebuild: buck2 build '//infra/docs:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["docs.cue", "DIAGRAM.puml", "*.md"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+cue vet ./infra/docs/docs.cue
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

@@ -1,18 +1,8 @@
-defmodule Service.Cluster.Observer do
+defmodule Smith.Connection.Observer do
   @moduledoc """
-  Subscribes to Erlang node visibility (`:net_kernel.monitor_nodes/2`) and emits telemetry + handoff hooks.
-
-  Requires distributed Erlang (`-name` / `-sname`, cookie) when clustering is enabled.
+  Subscribes to **`:net_kernel.monitor_nodes/2`** (`nodeup` / `nodedown`), logging, telemetry for Guard,
+  invokes `Smith.Connection.Handoff`, and syncs Horde after a node joins.
   """
-
-  # TODO:
-  # [ ] implement cluster observer:
-  #     monitors node up/down events via :net_kernel.monitor_nodes
-  #     publishes to NATS events.smith.cluster.{up|down}
-  # [ ] implement cluster metrics:
-  #     rice.cluster.node.count — active nodes
-  #     rice.cluster.process.count — distributed processes
-  #     forwarded to VictoriaMetrics via guard/metrics.ex
 
   use GenServer
 
@@ -35,42 +25,60 @@ defmodule Service.Cluster.Observer do
 
   @impl true
   def init(_opts) do
-    :net_kernel.monitor_nodes(true, node_type: :visible)
+    Smith.Connection.Handoff.ensure_handoff_table!()
+    :ok = :net_kernel.monitor_nodes(true, node_type: :visible)
+    Process.send_after(self(), :sync_horde, 250)
     {:ok, %{}}
   end
 
   @impl true
+  def handle_info(:sync_horde, state) do
+    Smith.Connection.Handoff.sync_horde_members!()
+    {:noreply, state}
+  end
+
   def handle_info({:nodeup, node}, state) do
-    log_and_telemetry(:up, node)
-    Service.Cluster.Handoff.on_node_up(node)
+    emit(:up, node)
+    Smith.Connection.Handoff.on_node_up(node)
     {:noreply, state}
   end
 
   def handle_info({:nodeup, node, _info}, state) do
-    log_and_telemetry(:up, node)
-    Service.Cluster.Handoff.on_node_up(node)
+    emit(:up, node)
+    Smith.Connection.Handoff.on_node_up(node)
     {:noreply, state}
   end
 
   def handle_info({:nodedown, node}, state) do
-    log_and_telemetry(:down, node)
-    Service.Cluster.Handoff.on_node_down(node)
+    emit(:down, node)
+    Smith.Connection.Handoff.on_node_down(node)
     {:noreply, state}
   end
 
   def handle_info({:nodedown, node, _info}, state) do
-    log_and_telemetry(:down, node)
-    Service.Cluster.Handoff.on_node_down(node)
+    emit(:down, node)
+    Smith.Connection.Handoff.on_node_down(node)
     {:noreply, state}
   end
 
   def handle_info(msg, state) do
-    Logger.debug("Service.Cluster.Observer ignore: #{inspect(msg)}")
+    Logger.debug("Smith.Connection.Observer ignore: #{inspect(msg)}")
     {:noreply, state}
   end
 
-  defp log_and_telemetry(event, node) do
-    Logger.info("cluster node #{event} #{node}")
-    :telemetry.execute([:service, :cluster, :node], %{}, %{event: event, node: node})
+  defp emit(event, node) do
+    Logger.info("smith.connection cluster node #{event} #{node}")
+
+    :telemetry.execute(
+      [:smith, :cluster, :node],
+      %{count: 1},
+      %{event: event, node: node, visible: [Node.self() | Node.list()]}
+    )
+
+    :telemetry.execute(
+      [:smith, :guard, :cluster, :topology],
+      %{count: 1},
+      %{event: event, node: node, visible_count: length([Node.self() | Node.list()])}
+    )
   end
 end

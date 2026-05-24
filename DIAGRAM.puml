@@ -1,0 +1,31 @@
+@startuml rice_diagram
+left to right direction
+title "rice DIAGRAM"
+
+skinparam packageStyle rectangle
+
+package "root" as ROOT {
+  left to right direction
+
+  package "base/" as BASE {
+    !include base/DIAGRAM.puml
+  }
+
+  package "function/" as FUNCTION {
+    !include function/DIAGRAM.puml
+  }
+
+  package "service/" as SERVICE {
+    !include service/DIAGRAM.puml
+  }
+  
+  package "frontend/" as FRONTEND {
+    !include frontend/DIAGRAM.puml
+  }
+
+  package "infra/" as INFRA {
+    !include infra/DIAGRAM.puml
+  }
+}
+
+@enduml

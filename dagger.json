@@ -6,7 +6,6 @@
   },
   "include": [
     ".git/",
-    ".docker/",
     ".k8s/",
     ".opentofu/",
     "base/",
@@ -20,7 +19,6 @@
     ".buckconfig",
     "pixi.toml",
     "pixi.lock",
-    "docker-compose.yml",
     "taplo.toml",
     ".vale.ini",
     "cliff.toml",
@@ -40,3 +38,9 @@
   ],
   "source": "service/ci"
 }
+
+
+
+
+
+

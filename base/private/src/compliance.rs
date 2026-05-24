@@ -29,16 +29,16 @@ pub type ComplianceProof = Proof<Bls12_381>;
 pub type FrBls12 = ark_bls12_381::Fr;
 
 /// Maximum Merkle depth supported by `.rice` compliance trees (`2^depth` leaves after padding).
-pub const RICE_ZK_TREE_DEPTH: usize = 20;
+pub const CLERK_ZK_TREE_DEPTH: usize = 20;
 
 /// Env: `m/n` quorum (e.g. `3/5` guardians).
-pub const RICE_ZK_THRESHOLD_ENV: &str = "RICE_ZK_THRESHOLD";
+pub const CLERK_ZK_THRESHOLD_ENV: &str = "CLERK_ZK_THRESHOLD";
 
 /// Optional filesystem root for policy blobs (e.g. checkout of `base/policies`).
-pub const RICE_ZK_POLICY_ROOT_ENV: &str = "RICE_ZK_POLICY_ROOT";
+pub const CLERK_ZK_POLICY_ROOT_ENV: &str = "CLERK_ZK_POLICY_ROOT";
 
 /// Poseidon domain tag for internal Merkle compression (distinct from leaf hashing).
-pub const RICE_ZK_MERKLE_COMPRESS_DOMAIN: u64 = 0x4D524B4C_4D45524Au64; // "MRK" "MERA" — numeric tag only
+pub const CLERK_ZK_MERKLE_COMPRESS_DOMAIN: u64 = 0x4D524B4C_4D45524Au64; // "MRK" "MERA" — numeric tag only
 
 // ---------------------------------------------------------------------------
 // Poseidon compress + leaf hashing (BLS12-381 Fr)
@@ -48,7 +48,7 @@ pub const RICE_ZK_MERKLE_COMPRESS_DOMAIN: u64 = 0x4D524B4C_4D45524Au64; // "MRK"
 pub fn compress_merkle_pair(left: FrBls12, right: FrBls12) -> FrBls12 {
     let params = poseidon_config_bls12_fr_rate2();
     let mut sponge = PoseidonSponge::new(params);
-    sponge.absorb(&vec![FrBls12::from(RICE_ZK_MERKLE_COMPRESS_DOMAIN), left, right]);
+    sponge.absorb(&vec![FrBls12::from(CLERK_ZK_MERKLE_COMPRESS_DOMAIN), left, right]);
     sponge.squeeze_native_field_elements(1)[0]
 }
 
@@ -83,17 +83,17 @@ pub struct ComplianceMerkleTree {
 }
 
 impl ComplianceMerkleTree {
-    /// Build with [`RICE_ZK_TREE_DEPTH`] (production layout).
+    /// Build with [`CLERK_ZK_TREE_DEPTH`] (production layout).
     #[inline]
     pub fn new(leaves: &[FrBls12]) -> Result<Self, PrivateError> {
-        Self::with_depth(leaves, RICE_ZK_TREE_DEPTH)
+        Self::with_depth(leaves, CLERK_ZK_TREE_DEPTH)
     }
 
-    /// `depth` ≤ [`RICE_ZK_TREE_DEPTH`]; pads with `Fr::ZERO` to `2^depth` leaves.
+    /// `depth` ≤ [`CLERK_ZK_TREE_DEPTH`]; pads with `Fr::ZERO` to `2^depth` leaves.
     pub fn with_depth(leaves: &[FrBls12], depth: usize) -> Result<Self, PrivateError> {
-        if depth == 0 || depth > RICE_ZK_TREE_DEPTH {
+        if depth == 0 || depth > CLERK_ZK_TREE_DEPTH {
             return Err(PrivateError::CircuitConstraint(format!(
-                "Merkle depth must be in 1..={RICE_ZK_TREE_DEPTH} (got {depth})"
+                "Merkle depth must be in 1..={CLERK_ZK_TREE_DEPTH} (got {depth})"
             )));
         }
         let cap = 1usize << depth;
@@ -190,10 +190,10 @@ pub fn policy_commitment_bytes(policy_blob: &[u8]) -> Result<FrBls12, PrivateErr
     hash_to_fr_with_domain(b"rice.compliance.policy.v1", policy_blob)
 }
 
-/// Read a file under optional [`RICE_ZK_POLICY_ROOT_ENV`] + `relative` and hash it.
+/// Read a file under optional [`CLERK_ZK_POLICY_ROOT_ENV`] + `relative` and hash it.
 pub fn policy_commitment_from_relative_path(relative: impl AsRef<Path>) -> Result<FrBls12, PrivateError> {
-    let root = std::env::var(RICE_ZK_POLICY_ROOT_ENV).map_err(|_| {
-        PrivateError::SetupMissing(format!("{RICE_ZK_POLICY_ROOT_ENV} is not set (cannot load policy file)"))
+    let root = std::env::var(CLERK_ZK_POLICY_ROOT_ENV).map_err(|_| {
+        PrivateError::SetupMissing(format!("{CLERK_ZK_POLICY_ROOT_ENV} is not set (cannot load policy file)"))
     })?;
     let path: PathBuf = Path::new(&root).join(relative.as_ref());
     let bytes = fs::read(&path).map_err(PrivateError::StorageIo)?;
@@ -237,9 +237,9 @@ pub struct ThresholdCompliance {
 }
 
 impl ThresholdCompliance {
-    /// Parse `m/n` from env [`RICE_ZK_THRESHOLD_ENV`].
+    /// Parse `m/n` from env [`CLERK_ZK_THRESHOLD_ENV`].
     pub fn from_env() -> Result<Option<Self>, PrivateError> {
-        let Ok(raw) = std::env::var(RICE_ZK_THRESHOLD_ENV) else {
+        let Ok(raw) = std::env::var(CLERK_ZK_THRESHOLD_ENV) else {
             return Ok(None);
         };
         Self::parse(&raw).map(Some)
@@ -249,7 +249,7 @@ impl ThresholdCompliance {
         let parts: Vec<&str> = raw.split('/').map(str::trim).collect();
         if parts.len() != 2 {
             return Err(PrivateError::ComplianceVeto(format!(
-                "{RICE_ZK_THRESHOLD_ENV} must look like m/n (got {raw:?})"
+                "{CLERK_ZK_THRESHOLD_ENV} must look like m/n (got {raw:?})"
             )));
         }
         let m: u32 = parts[0]
@@ -282,7 +282,7 @@ impl ThresholdCompliance {
 
 /// Compress ordered component digests (KYC ∧ AML ∧ group …) for a single public **statement** field.
 pub fn aggregate_compliance_digests(components: &[FrBls12]) -> FrBls12 {
-    let mut acc = FrBls12::from(RICE_ZK_MERKLE_COMPRESS_DOMAIN);
+    let mut acc = FrBls12::from(CLERK_ZK_MERKLE_COMPRESS_DOMAIN);
     for c in components {
         acc = compress_merkle_pair(acc, *c);
     }

@@ -1,0 +1,9 @@
+// egos.app — SMITH service/pipeline business overlay.
+rc smith let {
+	pipeline set {
+		enabled = true
+	}
+}
+
+fn hook_pipeline_init {}
+fn hook_pipeline_handler {}

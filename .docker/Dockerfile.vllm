@@ -1,4 +1,0 @@
-# syntax=docker/dockerfile:1
-# vLLM — NVIDIA CUDA image; not distroless by design.
-FROM vllm/vllm-openai:latest
-EXPOSE 8000

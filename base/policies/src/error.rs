@@ -4,10 +4,10 @@
 //! [`PolicyError`] is the single arbiter when *code-as-law* refuses to proceed: asset / unit rules,
 //! decimal arithmetic invariants, CEL evaluation, schedule windows, specification translation, and
 //! the **banker's rule** (value conservation). Auditors read the variants; [`engine`](crate::engine)
-//! matches on them to halt, retry, or escalate across the CLERK boundary via [`util::RiceError`].
+//! matches on them to halt, retry, or escalate across the CLERK boundary via [`util::Error`].
 
 use thiserror::Error;
-use util::RiceError;
+use util::Error;
 
 // --- Financial & currency ----------------------------------------------------
 
@@ -305,7 +305,7 @@ pub enum PolicyError {
     #[error(transparent)]
     Accounting(#[from] AccountingError),
 
-    /// Value conservation / double-entry — maps to [`RiceError::Finance`] when lifted.
+    /// Value conservation / double-entry — maps to [`Error::Finance`] when lifted.
     #[error(transparent)]
     BankersRule(#[from] BankersRuleError),
 
@@ -317,7 +317,7 @@ pub enum PolicyError {
 
     /// Upstream/downstream CLERK or `util` failure wrapped for `?` inside the policy engine.
     #[error(transparent)]
-    Clerk(#[from] RiceError),
+    Clerk(#[from] Error),
 }
 
 /// Standard [`Result`] alias for policy operations.
@@ -330,7 +330,7 @@ impl PolicyError {
         matches!(self, PolicyError::BankersRule(_))
     }
 
-    /// Conservative hint for workers: only transient I/O inside a wrapped [`RiceError`] may retry.
+    /// Conservative hint for workers: only transient I/O inside a wrapped [`Error`] may retry.
     #[must_use]
     pub fn is_retryable(&self) -> bool {
         match self {
@@ -340,19 +340,19 @@ impl PolicyError {
     }
 }
 
-impl From<PolicyError> for RiceError {
+impl From<PolicyError> for Error {
     fn from(e: PolicyError) -> Self {
         match e {
             PolicyError::Clerk(r) => r,
-            PolicyError::BankersRule(b) => RiceError::finance(b.to_string()),
-            PolicyError::Finance(f) => RiceError::finance(f.to_string()),
-            PolicyError::Currency(c) => RiceError::policy(c.to_string()),
-            PolicyError::Rule(r) => RiceError::policy(r.to_string()),
-            PolicyError::Specification(s) => RiceError::policy(s.to_string()),
-            PolicyError::Schedule(s) => RiceError::policy(s.to_string()),
-            PolicyError::Accounting(a) => RiceError::policy(a.to_string()),
-            PolicyError::InterchangeParse(p) => RiceError::policy(p.to_string()),
-            PolicyError::Legal(l) => RiceError::policy(l.to_string()),
+            PolicyError::BankersRule(b) => Error::finance(b.to_string()),
+            PolicyError::Finance(f) => Error::finance(f.to_string()),
+            PolicyError::Currency(c) => Error::policy(c.to_string()),
+            PolicyError::Rule(r) => Error::policy(r.to_string()),
+            PolicyError::Specification(s) => Error::policy(s.to_string()),
+            PolicyError::Schedule(s) => Error::policy(s.to_string()),
+            PolicyError::Accounting(a) => Error::policy(a.to_string()),
+            PolicyError::InterchangeParse(p) => Error::policy(p.to_string()),
+            PolicyError::Legal(l) => Error::policy(l.to_string()),
         }
     }
 }
@@ -385,19 +385,19 @@ mod tests {
             context: "close batch".into(),
         }
         .into();
-        let r = RiceError::from(p);
+        let r = Error::from(p);
         match r {
-            RiceError::Finance(msg) => assert!(msg.contains("settlement residual")),
+            Error::Finance(msg) => assert!(msg.contains("settlement residual")),
             other => panic!("expected Finance, got {other:?}"),
         }
     }
 
     #[test]
     fn clerk_unwraps_to_inner_rice_error() {
-        let p = PolicyError::Clerk(RiceError::invalid_argument("bad"));
-        let out: RiceError = p.into();
+        let p = PolicyError::Clerk(Error::invalid_argument("bad"));
+        let out: Error = p.into();
         match out {
-            RiceError::InvalidArgument(_) => {},
+            Error::InvalidArgument(_) => {},
             _ => panic!("expected InvalidArgument"),
         }
     }

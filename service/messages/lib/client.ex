@@ -1,118 +1,170 @@
-defmodule Service.Connection.Client do
+defmodule Smith.Messages.Client do
   @moduledoc """
-  Role-scoped HTTP calls: resolves `base_url` from `config :service, Service.Connection, :roles`
-  and runs `Finch` via `Service.Connection.Http` with optional `Service.Connection.Retry`.
+  KING-oriented HTTP client: Finch transport (`Smith.Messages.Http`), codec selection from
+  `Content-Type`, and `Smith.Messages.Retry` on every outbound call.
+
+  Request encoding uses the **request** `Content-Type` when present; otherwise it infers
+  JSON vs protobuf from the body shape (struct → protobuf).
+
+  Response decoding uses the **response** `Content-Type`. For protobuf responses you must
+  pass `proto_message: :MyMessageName` (registered under `Smith.Messages.Proto`).
   """
 
-  # TODO:
-  # [ ] implement HTTP client via Finch:
-  #     start_link/1 — starts Finch pool
-  #     pool size from RICE_CONNECTION_POOL_SIZE env var
-  #     timeout from RICE_CONNECTION_TIMEOUT_MS env var
-  # [ ] implement inter-role HTTP calls:
-  #     get(url, headers) — GET with OTel span
-  #     post(url, body, headers) — POST with OTel span
-  #     all URLs from env vars — never hardcoded
-
-  @type role :: :smith | :sage | :bard | :clerk | :king | :chief | :mason
-
-  @spec roles() :: [role()]
-  def roles do
-    Application.get_env(:service, Service.Connection, [])
-    |> Keyword.get(:roles, %{})
-    |> Map.keys()
-  end
+  @type response_map :: %{response: Finch.Response.t(), decoded: term() | nil}
 
   @doc """
-  `path` is relative (e.g. `"/health"`). Body is iodata or nil.
+  Performs an HTTP request with retries, then decodes the body when possible.
 
-  Options: `:headers`, `:receive_timeout`, `:finch`, `:build_opts` (Mint/Finch), `:retry` (keyword or `false` to disable).
+  Options:
+  - `:retry` — `keyword()` passed to `Smith.Messages.Retry.with_retry/2`, or `false` to disable
+  - `:request_format` — force `:json` | `:protobuf` when there is no `content-type` header
+  - `:proto_message` — atom name of the protobuf message for **response** decoding
+  - `:json_decode_type` — `:default`, `:atoms`, or `:atoms!` for `Smith.Messages.Json.decode/2`
+  - `:content_type` — override default `content-type` value inserted when absent
+  - other options forwarded to `Smith.Messages.Http.request/5` (`:finch`, `:receive_timeout`, `:build_opts`, …)
   """
-  @spec request(role(), Service.Connection.Http.method(), String.t(), iodata() | nil, keyword()) ::
-          {:ok, Finch.Response.t()} | {:error, term()}
-  def request(role, method, path, body \\ nil, opts \\ []) do
-    url = join_url(base_url!(role), path)
-    headers = build_headers(method, body, opts)
-    build_opts = Keyword.get(opts, :build_opts, [])
+  @spec request(Smith.Messages.Http.method(), String.t(), Smith.Messages.Http.headers(), term(), keyword()) ::
+          {:ok, response_map()} | {:error, term()}
+  def request(method, url, headers \\ [], body \\ nil, opts \\ []) do
+    headers = normalize_headers(headers)
 
-    req = Service.Connection.Http.build(method, url, headers, body, build_opts)
-    http_opts = Keyword.drop(opts, [:headers, :build_opts, :retry, :content_type])
+    with {:ok, wire} <- request_wire_format(headers, body, opts),
+         {:ok, body_out, headers_out} <- encode_request_body(body, headers, wire, opts) do
+      http_opts = Keyword.drop(opts, [:retry, :request_format, :proto_message, :json_decode_type, :content_type])
 
-    run =
-      fn ->
-        Service.Connection.Http.request(req, http_opts)
+      http_fun = fn ->
+        Smith.Messages.Http.request(method, url, headers_out, body_out, http_opts)
       end
 
-    case Keyword.get(opts, :retry, []) do
-      false -> run.()
-      [] -> run.()
-      retry_opts -> Service.Connection.Retry.with_retry(run, retry_opts)
+      case run_retry(http_fun, Keyword.get(opts, :retry, [])) do
+        {:ok, %Finch.Response{} = resp} -> decode_success(resp, opts)
+        {:error, _} = err -> err
+      end
     end
   end
 
-  defp base_url!(role) do
-    roles = Application.get_env(:service, Service.Connection, [])[:roles] || %{}
+  defp run_retry(fun, false), do: fun.()
 
-    case Map.fetch(roles, role) do
-      {:ok, conf} -> Keyword.fetch!(conf, :base_url)
-      :error -> raise ArgumentError, "unknown Service.Connection role #{inspect(role)}"
+  defp run_retry(fun, retry_opts) when is_list(retry_opts) do
+    Smith.Messages.Retry.with_retry(fun, retry_opts)
+  end
+
+  defp decode_success(%Finch.Response{body: body} = resp, opts) when body in [nil, ""] do
+    {:ok, %{response: resp, decoded: nil}}
+  end
+
+  defp decode_success(%Finch.Response{body: body, headers: rh} = resp, opts) when is_binary(body) do
+    case header_value(rh, "content-type") |> classify_content_type() do
+      :json ->
+        json_type = Keyword.get(opts, :json_decode_type, :default)
+
+        case Smith.Messages.Json.decode(body, json_type) do
+          {:ok, data} -> {:ok, %{response: resp, decoded: data}}
+          {:error, _} = err -> err
+        end
+
+      :protobuf ->
+        case Keyword.fetch(opts, :proto_message) do
+          {:ok, msg_name} ->
+            case Smith.Messages.Proto.decode(body, msg_name) do
+              {:ok, data} -> {:ok, %{response: resp, decoded: data}}
+              {:error, _} = err -> err
+            end
+
+          :error ->
+            {:error, {:smith_messages, :client, :proto_message_required_for_protobuf_response}}
+        end
+
+      :unknown ->
+        {:ok, %{response: resp, decoded: body}}
     end
   end
 
-  defp join_url(base, path) do
-    base = String.trim_trailing(base, "/")
-    path = if String.starts_with?(path, "/"), do: path, else: "/" <> path
-    base <> path
+  defp normalize_headers(headers) when is_list(headers) do
+    Enum.map(headers, fn {k, v} ->
+      {to_string(k), to_string(v)}
+    end)
   end
 
-  defp build_headers(method, body, opts) when method in [:post, :put, :patch] and not (body in [nil, ""]) do
-    extra = Keyword.get(opts, :headers, [])
-    ct = Keyword.get(opts, :content_type, "application/json")
+  defp header_value(headers, name) do
+    n = String.downcase(name)
 
-    merge_headers(
-      [{"accept", "application/json"}, {"content-type", header_value(ct)}],
-      extra
-    )
+    Enum.find_value(headers, fn {k, v} ->
+      if String.downcase(to_string(k)) == n, do: v
+    end)
   end
 
-  defp build_headers(_method, _body, opts) do
-    merge_headers([{"accept", "application/json"}], Keyword.get(opts, :headers, []))
+  defp request_wire_format(headers, body, opts) do
+    cond do
+      v = header_value(headers, "content-type") ->
+        {:ok, classify_content_type(v)}
+
+      f = Keyword.get(opts, :request_format) ->
+        {:ok, f}
+
+      true ->
+        {:ok, infer_wire_from_body(body)}
+    end
   end
 
-  defp header_value(ct) when is_binary(ct), do: ct
-  defp header_value(ct) when is_atom(ct), do: Atom.to_string(ct)
+  defp infer_wire_from_body(%_{}), do: :protobuf
+  defp infer_wire_from_body(_), do: :json
 
-  defp merge_headers(base, extra) when is_list(extra) do
-    Enum.uniq_by(base ++ extra, fn {k, _} -> String.downcase(to_string(k)) end)
+  defp classify_content_type(nil), do: :unknown
+
+  defp classify_content_type(ct) when is_binary(ct) do
+    h = String.downcase(ct)
+
+    cond do
+      String.contains?(h, "json") -> :json
+      String.contains?(h, "protobuf") or String.contains?(h, "x-protobuf") -> :protobuf
+      true -> :unknown
+    end
   end
-end
 
-defmodule Service.Connection.Client.Smith do
-  @moduledoc "Typed client for SMITH role backends."
-  def request(m, p, b \\ nil, o \\ []), do: Service.Connection.Client.request(:smith, m, p, b, o)
-  def get(p, o \\ []), do: request(:get, p, nil, o)
-  def post(p, b, o \\ []), do: request(:post, p, b, o)
-  def put(p, b, o \\ []), do: request(:put, p, b, o)
-  def delete(p, o \\ []), do: request(:delete, p, nil, o)
-end
+  defp encode_request_body(nil, headers, _wire, _opts), do: {:ok, nil, headers}
 
-defmodule Service.Connection.Client.Sage do
-  @moduledoc "Typed client for SAGE role backends."
-  def request(m, p, b \\ nil, o \\ []), do: Service.Connection.Client.request(:sage, m, p, b, o)
-  def get(p, o \\ []), do: request(:get, p, nil, o)
-  def post(p, b, o \\ []), do: request(:post, p, b, o)
-end
+  defp encode_request_body(body, headers, _wire, _opts) when is_binary(body),
+    do: {:ok, body, headers}
 
-defmodule Service.Connection.Client.Bard do
-  @moduledoc "Typed client for BARD role backends."
-  def request(m, p, b \\ nil, o \\ []), do: Service.Connection.Client.request(:bard, m, p, b, o)
-  def get(p, o \\ []), do: request(:get, p, nil, o)
-  def post(p, b, o \\ []), do: request(:post, p, b, o)
-end
+  defp encode_request_body(body, headers, :json, opts) do
+    case Smith.Messages.Json.encode(body) do
+      {:ok, bin} ->
+        headers_out = ensure_header(headers, "content-type", "application/json", opts)
+        {:ok, bin, headers_out}
 
-defmodule Service.Connection.Client.Clerk do
-  @moduledoc "Typed client for CLERK role backends."
-  def request(m, p, b \\ nil, o \\ []), do: Service.Connection.Client.request(:clerk, m, p, b, o)
-  def get(p, o \\ []), do: request(:get, p, nil, o)
-  def post(p, b, o \\ []), do: request(:post, p, b, o)
+      {:error, _} = err ->
+        err
+    end
+  end
+
+  defp encode_request_body(%_{} = body, headers, :protobuf, opts) do
+    case Smith.Messages.Proto.encode(body) do
+      {:ok, bin} ->
+        headers_out = ensure_header(headers, "content-type", "application/x-protobuf", opts)
+        {:ok, bin, headers_out}
+
+      {:error, _} = err ->
+        err
+    end
+  end
+
+  defp encode_request_body(_body, _headers, :protobuf, _opts),
+    do: {:error, {:smith_messages, :client, :protobuf_request_body_must_be_struct}}
+
+  defp encode_request_body(body, headers, :unknown, opts) when is_binary(body),
+    do: {:ok, body, headers}
+
+  defp encode_request_body(body, headers, :unknown, opts) do
+    encode_request_body(body, headers, infer_wire_from_body(body), opts)
+  end
+
+  defp ensure_header(headers, name, default_value, opts) do
+    if header_value(headers, name) do
+      headers
+    else
+      value = Keyword.get(opts, :content_type, default_value)
+      [{name, value} | headers]
+    end
+  end
 end

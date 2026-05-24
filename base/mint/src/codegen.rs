@@ -1,6 +1,6 @@
 //! Code generation — `minijinja` templates for multi-target / role-specific emission.
 
-// TODO(rice):
+// TODO(mint):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
 // [ ] Soft-code: env + workspace Cargo features; never hardcode chain or tenant IDs.
 // [ ] Contracts: cosmwasm / proto from infra/schemas/ via MASON.
@@ -8,7 +8,7 @@
 //
 use minijinja::Environment;
 
-// [ ] https://docs.rs/minijinja/ — targets Go, Rust, TS, Dart, Python, CUE, Proto from RICE_CODEGEN_TEMPLATES_DIR
+// [ ] https://docs.rs/minijinja/ — targets Go, Rust, TS, Dart, Python, CUE, Proto from CLERK_CODEGEN_TEMPLATES_DIR
 
 pub fn render_role_stub(role: &str) -> Result<String, minijinja::Error> {
     let mut env = Environment::new();

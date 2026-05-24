@@ -1,7 +1,0 @@
-# syntax=docker/dockerfile:1
-# Qdrant — official image (Rust static binary in minimal base). Upstream, not distroless, but single-binary layout.
-ARG QDRANT_VERSION=v1.12.5
-FROM qdrant/qdrant:${QDRANT_VERSION}
-COPY .docker/conf/qdrant.yaml /qdrant/config/production.yaml
-ENV QDRANT__CONFIG_PATH=/qdrant/config/production.yaml
-EXPOSE 6333 6334

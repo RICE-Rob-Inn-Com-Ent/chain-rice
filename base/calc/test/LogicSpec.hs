@@ -39,7 +39,7 @@ i64le v =
 
 qcMaxSuccess :: IO Int
 qcMaxSuccess =
-  lookupEnv "RICE_CALC_QC_CASES" >>= \case
+  lookupEnv "CLERK_CALC_QC_CASES" >>= \case
     Just s
       | [(n, "")] <- reads s,
         n > 0 ->

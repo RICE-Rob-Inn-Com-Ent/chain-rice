@@ -1,0 +1,15 @@
+fn egos_base_private_zk_layer {}
+fn curve_bn254_groth16 {}
+fn curve_bls12_381_compliance {}
+fn prove_identity_opening {}
+fn verify_shielded_transfer {}
+fn prove_shielded_balance {}
+fn serialize_vault_commitments {}
+fn compliance_merkle_threshold {}
+fn map_PrivateError_into_util_Error {}
+fn env_CLERK_ENV {}
+fn env_CLERK_ZK_TRUSTED_SETUP_PATH {}
+fn env_CLERK_ZK_VERIFY_BATCH_SIZE {}
+fn env_CLERK_ZK_MOCK_VERIFY {}
+fn const_identity_poseidon_domain_bytes {}
+fn production_ceremony_discipline_when_CLERK_ENV_prod {}

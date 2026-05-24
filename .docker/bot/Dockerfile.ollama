@@ -1,0 +1,11 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# syntax=docker/dockerfile:1
+FROM ollama/ollama:latest
+COPY .docker/bot/pull.sh /usr/local/bin/model-pull
+COPY .docker/bot/model.json /etc/ollama/model.json
+RUN chmod +x /usr/local/bin/model-pull
+EXPOSE 11434
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+  CMD curl -sf http://127.0.0.1:11434/api/version
+ENTRYPOINT ["/bin/sh", "-c", "model-pull || true; exec /bin/ollama serve"]

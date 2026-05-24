@@ -1,0 +1,27 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/function.cue — watches function/job
+# Rebuild: buck2 build '//function/job:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["pyproject.toml", "../pyproject.toml", "src/**/*.py", "mojo/**/*.mojo"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:$HOME/.local/bin:/usr/bin:$PATH"
+cd "$REPO/function"
+uv sync
+uv run ruff check job/src
+if command -v mojo >/dev/null 2>&1; then
+  mkdir -p "$REPO/function/job/mojo/__mojocache__"
+  mojo package "$REPO/function/job/mojo" -o "$REPO/function/job/mojo/__mojocache__/sage.mojopkg"
+else
+  echo "mojo not on PATH — add mojo to root pixi.toml" >&2
+  exit 1
+fi
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

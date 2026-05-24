@@ -32,17 +32,12 @@ rice think      # load AI models — matched to your hardware
 rice audit      # verify everything — security, CVEs, full check
 ```
 
-**Local pixi:** Root [`pixi.toml`](pixi.toml) is the **default monorepo toolchain** (KING/MASON/SMITH/CLERK/SAGE/BARD via conda-forge). **TS/JS-only conda packages** (`biome`, `lightningcss`) are omitted — use project-local `bun`/`npm`. **SBOM:** `syft` and `grype` are conda deps; tools without conda pins use **`pixi run install-*`** (see `[tasks]`). Locks **`linux-64` only**; run `pixi lock` after edits.
-
-**`rice cook <project>`:** Needs [**Dagger**](https://docs.dagger.io/) — `dagger -m . -c 'rice | cook --project …'` → [`service/ci/src/cook.go`](service/ci/src/cook.go).
-
 ### MASON
 
-- **Polyglot package** (`infra/package/`): [`polyglot.cue`](infra/package/polyglot.cue) + language-only [`infra/package/cue/*.cue`](infra/package/cue/). `languageBuck` is in `polyglot.cue` (`buildPlan` from [`infra/build/_tool.cue`](infra/build/_tool.cue)). `cue export` copies `infra/{build,docker}/_tool.cue` to `merge_build.cue` / `merge_docker.cue` plus [`infra/docker/cue/*.cue`](infra/docker/cue/). Then `packageLanguages`, `packageIndex`, `renderPlan`, and **`emitTextFiles`** cover `.buckconfig`, `docker-compose.yml`, `.dockerignore`, cell `BUCK`, and cell manifests. Workspace roll-up lives in [`infra/out/cue/pack.cue`](infra/out/cue/pack.cue) (`emitTextFiles` + `pathPack`). Workflow entrypoints use `cue cmd` with an explicit tool path, for example [`infra/out/_tool.cue`](infra/out/_tool.cue) (next to [`infra/out/BUCK`](infra/out/BUCK)), plus [`infra/k8s/_tool.cue`](infra/k8s/_tool.cue), [`infra/terraform/_tool.cue`](infra/terraform/_tool.cue), [`infra/_tool.cue`](infra/_tool.cue).
+- **Polyglot package** (`infra/package/`): [`polyglot.cue`](infra/package/polyglot.cue) + language-only [`infra/package/cue/*.cue`](infra/package/cue/). `cue export` uses `merge_build.cue` (copy of [`infra/build/_tool.cue`](infra/build/_tool.cue)); **`emitTextFiles`** covers `.buckconfig`, cell `BUCK`, and cell manifests. Workspace roll-up lives in [`infra/out/cue/pack.cue`](infra/out/cue/pack.cue) (`emitTextFiles` + `pathPack`). Workflow entrypoints: [`infra/out/_tool.cue`](infra/out/_tool.cue), [`infra/k8s/_tool.cue`](infra/k8s/_tool.cue), [`infra/terraform/_tool.cue`](infra/terraform/_tool.cue), [`infra/_tool.cue`](infra/_tool.cue).
 - **Workspace root** (`infra/out/cue/`): category slices (`vcs.cue`, `env.cue`, `docs.cue` → [`infra/docs/cue/docs.cue`](infra/docs/cue/docs.cue), `ws.cue`, …) — repo-root files at emit time. See [`infra/out/README.md`](infra/out/README.md).
-- **MASON emit / workspace CUE / mint overlay:** run **`dagger -m . -c 'rice | pour'`** — steps live in [`service/ci/src/pour.go`](service/ci/src/pour.go) (`mason-cue-emit`, `mason-gen-workspace-cue`, `mason-overlay-schema`, `mason-overlay-check`).
-- **Render CUE only (local):** `cue cmd emit ./infra/out/_tool.cue` (same as former `pixi run mason-render`).
-- **Refresh embedded workspace CUE:** `buck2 build //infra/out:gen_workspace_cue` (needs `buck2` on `PATH`).
+- **Render everything**: `pixi run mason-render` (runs `cue cmd emit ./infra/out/_tool.cue`; same as `buck2 build //infra/package:render_all` or `//infra/out:render_workspace`). Regenerate embedded workspace CUE: `pixi run mason-gen-workspace-cue` (same as `buck2 build //infra/out:gen_workspace_cue`).
+- **Refresh CUE snapshots after editing root files**: `pixi run mason-gen-workspace-cue`.
 - **Validate**: `buck2 build //infra/package:validate_package_cue`, `buck2 build //infra/out:validate_workspace_cue`.
 
 ---
@@ -77,8 +72,6 @@ If it threatens the system — it is neutralized here.
 Owns `frontend/` — TypeScript browser interfaces, Dart device shells,
 Odin GPU/audio/video at bare-metal speed.
 59 FPS is not 60 FPS. A bad UI is a broken promise.
-
-**Pixi (BARD installs):** `pixi run install-flutter`, `pixi run install-odin` (need **`git`** on the host). SBOM: **`syft` / `grype`** are conda deps; **`dagger` CLI**: `pixi run install-dagger`. TS/JS conda tools stay out of root `pixi.toml` — use per-project `bun`/`npm` where needed.
 
 ### 🧑‍🔬 SAGE
 

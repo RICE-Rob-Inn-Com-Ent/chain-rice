@@ -1,0 +1,18 @@
+# Minimal conda-forge env for rice perform/pour in CI (Dagger) when full pixi.lock is stale.
+# Host dev uses root pixi.toml; bootstrap uses: pixi install -m infra/pixi-bootstrap.toml
+[project]
+name = "rice-bootstrap"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+cue = "0.16.*"           # CUE CLI (0.9.x conda package is cuepls/LSP, not `cue cmd`)
+buf = "1.*"
+go = "1.23.*"
+just = "1.42.*"
+go-sops = "3.9.*"
+direnv = "2.37.*"
+jq = "1.7.*"
+go-yq = "4.44.*"
+curl = "8.*"

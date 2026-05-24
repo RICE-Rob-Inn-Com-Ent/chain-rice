@@ -1,23 +1,40 @@
-defmodule Service.Guard.Application do
+defmodule Smith.Guard.Application do
   @moduledoc """
-  OTP application entry — root is `Service.Guard.Supervisor` with effectively immortal restart policy.
-
-  Replaces the legacy `Service.Application` callback; all runtime trees start under the Guard supervisor.
+  OTP entry for the **`:guard`** application: initialize **OpenTelemetry** (SDK + exporter), then
+  `Smith.Guard.Supervisor` with its subtree (Metrics, Watcher, Healer, etc. — see `Smith.Guard.ObserveStack`).
   """
-
-  # TODO:
-  # [ ] implement Application.start/2:
-  #     start_permanent: true — GUARD NEVER STOPS
-  #     children: Supervisor, Watcher, Metrics, Tracer, Alert
-  # [ ] implement restart strategy:
-  #     strategy: :one_for_one — independent child restarts
-  #     max_restarts from RICE_GUARD_MAX_RESTARTS env var
-  #     max_seconds from RICE_GUARD_MAX_SECONDS env var
 
   use Application
 
+  require Logger
+
   @impl true
   def start(_type, _args) do
-    Service.Guard.Supervisor.start_link(name: Service.Guard.Supervisor)
+    :ok = ensure_opentelemetry_started()
+    Smith.Guard.Supervisor.start_link(name: Smith.Guard.Supervisor)
+  end
+
+  @doc false
+  @spec ensure_opentelemetry_started() :: :ok
+  def ensure_opentelemetry_started do
+    # Order: SDK (`:opentelemetry`), then OTLP exporter — from `config :opentelemetry*`.
+    _ = start_otel_app(:opentelemetry, "OpenTelemetry SDK")
+    _ = start_otel_app(:opentelemetry_exporter, "OpenTelemetry exporter")
+    :ok
+  end
+
+  defp start_otel_app(app, label) do
+    case Application.ensure_all_started(app) do
+      {:ok, _} ->
+        :ok
+
+      {:error, {_failed_app, reason}} ->
+        Logger.warning("smith.guard: #{label} (#{app}) ensure_all_started: #{inspect(reason)}")
+        :error
+
+      {:error, reason} ->
+        Logger.warning("smith.guard: #{label} (#{app}) ensure_all_started: #{inspect(reason)}")
+        :error
+    end
   end
 end

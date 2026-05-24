@@ -1,19 +1,23 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/base.cue — watches base/mint
+# Rebuild: buck2 build '//base/mint:check'
+
 genrule(
     name = "check",
-    srcs = ["Cargo.toml"],
+    srcs = glob(["src/**/*.rs", "Cargo.toml", "../Cargo.toml"]),
     out = "check.stamp",
-    cmd = """set -euo pipefail
-cd "$SRCDIR"
-HERE=`pwd`
-REPO=`git rev-parse --show-toplevel`
-export CLERK_ARTIFACT_ROOT="$REPO/buck-out/clerk-artifacts"
-export CARGO_TARGET_DIR="$CLERK_ARTIFACT_ROOT/cargo-target"
-export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
-mkdir -p "$CARGO_TARGET_DIR"
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:$HOME/.cargo/bin:/usr/bin:$PATH"
 cd "$REPO/base"
-cargo check -p mint --locked
-cd "$HERE"
+if [ -f Cargo.lock ]; then
+  cargo build -p mint --locked
+else
+  cargo build -p mint
+fi
 touch "$OUT"
 """,
     visibility = ["PUBLIC"],
 )
+

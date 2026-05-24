@@ -1,0 +1,9 @@
+// code-rice.com — SMITH service/guard business overlay.
+rc smith let {
+	guard set {
+		enabled = true
+	}
+}
+
+fn hook_guard_init {}
+fn hook_guard_handler {}

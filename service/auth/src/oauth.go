@@ -1,30 +1,98 @@
 package auth
 
-// TODO:
-// [ ] implement OAuth2 authorization code flow:
-//     AuthURL(state, scopes string) string
-//     Exchange(ctx, code string) (*oauth2.Token, error)
-//     state from RICE_AUTH_OAUTH_STATE env var
-// [ ] implement token refresh:
-//     Refresh(ctx, token *oauth2.Token) (*oauth2.Token, error)
-//     store tokens in Valkey with TTL
-// [ ] implement OAuth2 providers:
-//     provider config from RICE_AUTH_OAUTH_* env vars
-//     never hardcode client_id, client_secret — SOPS only
-
 import (
 	"context"
+	"fmt"
+	"strings"
 
+	kit "github.com/RICE-Rob-Inn-Com-Ent/rice/service/kit/src"
 	"golang.org/x/oauth2"
 )
 
-// OAuth2 client helpers (authorization code + PKCE).
+// OAuthSession is the SMITH session after a successful external OIDC/OAuth2 authorization code exchange.
+type OAuthSession struct {
+	Identity Identity
+	Token    *oauth2.Token
+}
+
+// ExchangeCode swaps an authorization code for tokens, verifies the ID token when present, and maps claims to [Identity].
+// Pass PKCE [oauth2.VerifierOption] from [NewPKCEPair] when the auth request used PKCE.
+func (c *OIDCClient) ExchangeCode(ctx *kit.Context, code string, opts ...oauth2.AuthCodeOption) (*OAuthSession, *kit.Error) {
+	if c == nil || c.OAuth2 == nil || c.OIDC == nil {
+		return nil, oidcKitErr(ctx, kit.Internal("auth.oauth: nil OIDC client"))
+	}
+	if strings.TrimSpace(code) == "" {
+		return nil, oidcKitErr(ctx, kit.BadRequest("auth.oauth: empty code"))
+	}
+	gctx := context.Background()
+	if ctx != nil {
+		gctx = ctx.ToContext()
+	}
+	tok, err := c.OAuth2.Exchange(gctx, code, opts...)
+	if err != nil {
+		return nil, oidcKitErr(ctx, kit.BadRequest("auth.oauth: token exchange failed: "+err.Error()))
+	}
+	id, kerr := c.identityFromTokenExchange(gctx, tok)
+	if kerr != nil {
+		return nil, oidcKitErr(ctx, kerr)
+	}
+	return &OAuthSession{Identity: id, Token: tok}, nil
+}
+
+func (c *OIDCClient) identityFromTokenExchange(gctx context.Context, tok *oauth2.Token) (Identity, *kit.Error) {
+	raw, ok := idTokenStringFromToken(tok)
+	if ok && raw != "" {
+		idTok, err := c.OIDC.VerifyIDToken(gctx, raw)
+		if err != nil {
+			return Identity{}, kit.BadRequest("auth.oauth: id_token verify: " + err.Error())
+		}
+		if idTok.AccessTokenHash != "" && tok.AccessToken != "" {
+			if err := idTok.VerifyAccessToken(tok.AccessToken); err != nil {
+				return Identity{}, kit.Unauthorized("auth.oauth: " + err.Error())
+			}
+		}
+		id, err := IdentityFromIDToken(idTok)
+		if err != nil {
+			return Identity{}, kit.Internal("auth.oauth: id_token claims: " + err.Error())
+		}
+		return id, nil
+	}
+	ui, err := c.OIDC.Provider.UserInfo(gctx, oauth2.StaticTokenSource(tok))
+	if err != nil {
+		return Identity{}, kit.BadRequest("auth.oauth: missing id_token and userinfo failed: " + err.Error())
+	}
+	id, err := IdentityFromUserInfo(ui)
+	if err != nil {
+		return Identity{}, kit.Internal("auth.oauth: userinfo claims: " + err.Error())
+	}
+	return id, nil
+}
+
+func idTokenStringFromToken(tok *oauth2.Token) (string, bool) {
+	if tok == nil {
+		return "", false
+	}
+	switch v := tok.Extra("id_token").(type) {
+	case string:
+		s := strings.TrimSpace(v)
+		return s, s != ""
+	case []byte:
+		s := strings.TrimSpace(string(v))
+		return s, s != ""
+	default:
+		if v == nil {
+			return "", false
+		}
+		s := strings.TrimSpace(fmt.Sprint(v))
+		return s, s != ""
+	}
+}
 
 // PKCEPair holds verifier and AuthCodeURL / Exchange options.
 type PKCEPair struct {
-	Verifier       string
-	ChallengeOpt   oauth2.AuthCodeOption
-	VerifierOpt    oauth2.AuthCodeOption
+	Verifier     string
+	ChallengeOpt oauth2.AuthCodeOption
+	VerifierOpt  oauth2.AuthCodeOption
 }
 
 // NewPKCEPair generates a new RFC 7636 PKCE verifier and S256 challenge options.

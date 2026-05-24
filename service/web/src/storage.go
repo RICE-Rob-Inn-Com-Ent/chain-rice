@@ -1,33 +1,37 @@
 package web
 
-// TODO:
-// [ ] implement gocloud.dev blob storage:
-//     NewBucket(ctx) (*blob.Bucket, error)
-//     reads RICE_STORAGE_URL from env:
-//     s3://bucket → AWS S3
-//     gs://bucket → GCS
-//     azblob://container → Azure Blob
-// [ ] implement file operations:
-//     Upload(ctx, key string, r io.Reader) error
-//     Download(ctx, key string) (io.ReadCloser, error)
-//     Delete(ctx, key string) error
-//     Exists(ctx, key string) (bool, error)
-// [ ] implement presigned URLs:
-//     SignedURL(ctx, key string, ttl time.Duration) (string, error)
+// Blob storage via gocloud.dev (AWS S3, GCS, Azure Blob, local file://). URLs are read from
+// config/env at runtime — never hardcode buckets.
 
 import (
 	"context"
 	"io"
+	"os"
+	"strings"
+	"time"
 
 	"gocloud.dev/blob"
+	_ "gocloud.dev/blob/azureblob"
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/gcsblob"
 	_ "gocloud.dev/blob/s3blob"
 )
 
-// OpenBucket opens a blob bucket from a URL (e.g. s3://, gs://, file://).
+// EnvStorageURL is the default bucket URL for [OpenBucketFromEnv] (s3://, gs://, azblob://, file://).
+const EnvStorageURL = "RICE_STORAGE_URL"
+
+// OpenBucket opens a blob bucket from a URL (e.g. s3://, gs://, azblob://, file://).
 func OpenBucket(ctx context.Context, urlstr string) (*blob.Bucket, error) {
 	return blob.OpenBucket(ctx, urlstr)
+}
+
+// OpenBucketFromEnv opens the bucket at [EnvStorageURL]; returns an error if unset or empty.
+func OpenBucketFromEnv(ctx context.Context) (*blob.Bucket, error) {
+	u := strings.TrimSpace(os.Getenv(EnvStorageURL))
+	if u == "" {
+		return nil, errStorageURLUnset
+	}
+	return OpenBucket(ctx, u)
 }
 
 // Upload writes reader into key using optional content type.
@@ -51,17 +55,38 @@ func Upload(ctx context.Context, b *blob.Bucket, key string, r io.Reader, conten
 }
 
 // Download opens key for read.
-func Download(ctx context.Context, b *blob.Bucket, key string) (io.ReadCloser, error) {
+func Download(ctx context.Context, b *blob.Bucket, key string) (*blob.Reader, error) {
 	if b == nil {
 		return nil, errNilBucket
 	}
 	return b.NewReader(ctx, key, nil)
 }
 
-// SignedURL returns a time-limited URL when the driver supports it (S3/GCS).
+// Delete removes an object from the bucket.
+func Delete(ctx context.Context, b *blob.Bucket, key string) error {
+	if b == nil {
+		return errNilBucket
+	}
+	return b.Delete(ctx, key)
+}
+
+// Exists reports whether key is present.
+func Exists(ctx context.Context, b *blob.Bucket, key string) (bool, error) {
+	if b == nil {
+		return false, errNilBucket
+	}
+	return b.Exists(ctx, key)
+}
+
+// SignedURL returns a time-limited URL when the driver supports it (S3/GCS/Azure).
 func SignedURL(ctx context.Context, b *blob.Bucket, key string, opts *blob.SignedURLOptions) (string, error) {
 	if b == nil {
 		return "", errNilBucket
 	}
 	return b.SignedURL(ctx, key, opts)
+}
+
+// SignedURLGET builds a GET signed URL valid for ttl.
+func SignedURLGET(ctx context.Context, b *blob.Bucket, key string, ttl time.Duration) (string, error) {
+	return SignedURL(ctx, b, key, &blob.SignedURLOptions{Expiry: ttl, Method: "GET"})
 }

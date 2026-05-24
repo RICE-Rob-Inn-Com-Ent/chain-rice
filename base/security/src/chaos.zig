@@ -6,7 +6,7 @@ const warden = @import("warden.zig");
 const intercept = @import("intercept.zig");
 const os_mod = @import("os.zig");
 
-// [ ] — RICE_CHAOS_RLIMIT_AS / setrlimit simulation; multi-process fault injection; CALC binary corpus
+// [ ] — CLERK_CHAOS_RLIMIT_AS / setrlimit simulation; multi-process fault injection; CALC binary corpus
 // [ ] — hook real Haskell CALC entry; record reproducer blobs to NATS security.chaos.*
 
 // ── Memory pressure (fragmentation / soft ceiling; RLIMIT_AS wiring later) ─
@@ -60,7 +60,7 @@ pub fn fuzzCalcPayloadAgainstWarden(
     bps: i64,
     max_bps: i64,
 ) i32 {
-    return warden.rice_warden_check_leverage_limit(payload_len, max_principal_len, bps, max_bps);
+    return warden.warden_check_leverage_limit(payload_len, max_principal_len, bps, max_bps);
 }
 
 // ── Latency injection (timing / race probes on FFI boundaries) ──────────────
@@ -122,7 +122,7 @@ fn writeStderrAll(bytes: []const u8) void {
 }
 
 /// **Rust CLERK / CI:** run the full sovereign stress suite; writes audit trail to stderr. Returns `0` on success.
-export fn rice_security_stress_test() i32 {
+export fn security_stress_test() i32 {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const alloc = arena.allocator();
@@ -152,6 +152,6 @@ test "chaos sovereign suite invariants" {
     try std.testing.expect(std.mem.indexOf(u8, list.items, "sovereign_suite_complete") != null);
 }
 
-test "rice_security_stress_test export returns success" {
-    try std.testing.expectEqual(@as(i32, 0), rice_security_stress_test());
+test "security_stress_test export returns success" {
+    try std.testing.expectEqual(@as(i32, 0), security_stress_test());
 }

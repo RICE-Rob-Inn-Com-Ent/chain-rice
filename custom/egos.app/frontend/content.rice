@@ -1,0 +1,9 @@
+// egos.app — BARD frontend/content business overlay (extend site.rice modules).
+rc frontend let {
+	content set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_content_init {}
+fn hook_frontend_content_configure {}

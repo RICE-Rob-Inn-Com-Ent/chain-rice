@@ -41,3 +41,9 @@ Report issues to: [infocoderice@gmail.com](mailto:infocoderice@gmail.com)
 Optimized from the Contributor Covenant and Mozilla's Ladder.
 
 .rice – Architecture, Imagination, Sound, and Code.
+
+
+
+
+
+

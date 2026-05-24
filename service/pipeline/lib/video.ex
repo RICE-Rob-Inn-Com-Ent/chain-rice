@@ -1,18 +1,24 @@
-defmodule Service.Pipeline.Video do
+defmodule Smith.Pipeline.Video do
   @moduledoc """
-  Video graph building blocks — source, decode, encode, sink. Add H264/H265 plugins when needed.
+  Membrane pipeline staging for **SAGE** downstream AI: copies/transfers a media file to a
+  prepared location (byte-preserving) so heavier decode / frame servers can attach later.
 
-  Compose alongside `Service.Pipeline.Audio` under `Service.Pipeline.Media`.
+  Extend this module with demuxers and decoders when matching plugins are added to `mix.exs`.
   """
 
-  # TODO:
-  # [ ] implement Membrane video pipeline:
-  #     reads video frames from NATS
-  #     processes via Membrane plugins
-  #     outputs to NATS or storage
-  # [ ] implement video transcoding:
-  #     codec config from RICE_PIPELINE_VIDEO_* env vars
+  use Membrane.Pipeline
 
-  @spec element_children() :: []
-  def element_children, do: []
+  @impl true
+  def handle_init(_ctx, opts) do
+    opts = if(is_list(opts), do: Map.new(opts), else: opts)
+    input = Map.fetch!(opts, :input_path)
+    output = Map.fetch!(opts, :output_path)
+
+    spec = [
+      child(:src, %Membrane.File.Source{location: input})
+      |> child(:sink, %Membrane.File.Sink{location: output})
+    ]
+
+    {[spec: spec], opts}
+  end
 end

@@ -6,7 +6,7 @@
 //! Pipeline: **Policy window (informational)** → **Legal** → **Finance** → **Privacy (phase-1)** →
 //! **CEL** → **Escrow (if buffering)** → **External gate** (`Allow` vs `Buffered`).
 //!
-//! Set `RICE_POLICY_PARALLEL=1` (or `true` / `yes` / `on`) for parallel rule evaluation.
+//! Set `CLERK_POLICY_PARALLEL=1` (or `true` / `yes` / `on`) for parallel rule evaluation.
 
 // TODO(rice):
 // [ ] CLERK / base — cryptographic & policy correctness; no UI.
@@ -367,14 +367,14 @@ impl PolicyEngine {
 
     pub fn reload_policies_from_dir(&mut self, dir: &Path) -> PolicyResult<usize> {
         let mut loaded = 0usize;
-        let entries = std::fs::read_dir(dir).map_err(|e| PolicyError::Clerk(util::RiceError::from(e)))?;
+        let entries = std::fs::read_dir(dir).map_err(|e| PolicyError::Clerk(util::Error::from(e)))?;
         for ent in entries {
-            let ent = ent.map_err(|e| PolicyError::Clerk(util::RiceError::from(e)))?;
+            let ent = ent.map_err(|e| PolicyError::Clerk(util::Error::from(e)))?;
             let path = ent.path();
             if path.extension().and_then(|s| s.to_str()) != Some("json") {
                 continue;
             }
-            let text = std::fs::read_to_string(&path).map_err(|e| PolicyError::Clerk(util::RiceError::from(e)))?;
+            let text = std::fs::read_to_string(&path).map_err(|e| PolicyError::Clerk(util::Error::from(e)))?;
             let policy: Policy = crate::serial::from_json(&text)?;
             policy.validate().map_err(PolicyError::from)?;
             let id = policy.id.clone();
@@ -773,7 +773,7 @@ impl PolicyEngine {
     }
 
     /// Like [`Self::evaluate_intent`], but optionally advances `audit_chain` and overrides block height
-    /// (else `RICE_POLICY_BLOCK_HEIGHT` is merged when set).
+    /// (else `CLERK_POLICY_BLOCK_HEIGHT` is merged when set).
     pub fn evaluate_intent_with_audit(
         &mut self,
         req: &TransactionRequest,
@@ -851,7 +851,7 @@ fn eval_rule_record(rule: &Rule, host: &Context<'_>, facts: &RuleContext, limits
 
 #[must_use]
 pub fn parallel_rules_from_env() -> bool {
-    match std::env::var("RICE_POLICY_PARALLEL") {
+    match std::env::var("CLERK_POLICY_PARALLEL") {
         Ok(v) => {
             let v = v.to_ascii_lowercase();
             matches!(v.as_str(), "1" | "true" | "yes" | "on")

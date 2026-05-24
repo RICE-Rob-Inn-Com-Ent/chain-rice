@@ -4,6 +4,8 @@ package video
 //
 
 import "core:c"
+import "core:fmt"
+import "core:strings"
 
 when ODIN_OS == .Linux {
 	foreign import libgst {
@@ -195,4 +197,127 @@ make_element_filesrc :: proc(name: cstring) -> GstElement {
 
 make_element_filesink :: proc(name: cstring) -> GstElement {
 	return gst_element_factory_make("filesink", name)
+}
+
+// video_gstreamer_parse_launch — рядок пайплайна ззовні (жодних захардкожених елементів усередині API).
+video_gstreamer_parse_launch :: proc(pipeline_description: string) -> (GstElement, rawptr) {
+	err: rawptr
+	cs := strings.clone_to_cstring(pipeline_description, context.temp_allocator)
+	el := gst_parse_launch(cs, &err)
+	return el, err
+}
+
+Gst_Video_Backend_State :: struct {
+	cfg:       VideoConfig,
+	pipeline:  GstElement,
+	owns_gst:  bool,
+}
+
+@(private = "file")
+_gstv_name :: proc(user: rawptr) -> string {
+	return "gstreamer"
+}
+
+@(private = "file")
+_gstv_init :: proc(user: rawptr, cfg: ^VideoConfig) -> bool {
+	s := cast(^Gst_Video_Backend_State)user
+	if s == nil || cfg == nil {
+		return false
+	}
+	s.cfg = cfg^
+	s.cfg.source_uri = strings.clone(cfg.source_uri, context.allocator)
+	s.cfg.extra_options = strings.clone(cfg.extra_options, context.allocator)
+	argc: c.int
+	gst_init(&argc, nil)
+	err: rawptr
+	if len(cfg.extra_options) > 0 {
+		launch := strings.clone_to_cstring(cfg.extra_options, context.temp_allocator)
+		s.pipeline = gst_parse_launch(launch, &err)
+	} else {
+		desc := gst_build_pipeline_desc_from_config(cfg)
+		cs := strings.clone_to_cstring(desc, context.temp_allocator)
+		s.pipeline = gst_parse_launch(cs, &err)
+	}
+	if s.pipeline == nil {
+		return false
+	}
+	s.owns_gst = true
+	return true
+}
+
+@(private = "file")
+gst_build_pipeline_desc_from_config :: proc(cfg: ^VideoConfig) -> string {
+	if len(cfg.source_uri) == 0 {
+		return ""
+	}
+	low := strings.to_lower(cfg.source_uri, context.temp_allocator)
+	defer delete(low)
+	if strings.has_prefix(low, "rtsp://") || strings.has_prefix(low, "rtsps://") {
+		return fmt.tprintf(
+			"rtspsrc location=%s latency=0 ! decodebin ! videoconvert ! autovideosink",
+			cfg.source_uri,
+		)
+	}
+	return fmt.tprintf("filesrc location=%s ! decodebin ! videoconvert ! autovideosink", cfg.source_uri)
+}
+
+@(private = "file")
+_gstv_shutdown :: proc(user: rawptr) {
+	s := cast(^Gst_Video_Backend_State)user
+	if s == nil {
+		return
+	}
+	if s.pipeline != nil {
+		gst_element_set_state(s.pipeline, GST_STATE_NULL)
+		gst_object_unref(s.pipeline)
+		s.pipeline = nil
+	}
+	delete(s.cfg.source_uri)
+	delete(s.cfg.extra_options)
+	s^ = {}
+}
+
+@(private = "file")
+_gstv_decode :: proc(user: rawptr, out: ^VideoFrame) -> bool {
+	_ = user
+	_ = out
+	return false
+}
+
+@(private = "file")
+_gstv_encode :: proc(user: rawptr, frame: ^VideoFrame) -> bool {
+	_ = user
+	_ = frame
+	return false
+}
+
+@(private = "file")
+_gstv_export :: proc(user: rawptr, frame: ^VideoFrame) -> u64 {
+	_ = user
+	_ = frame
+	return 0
+}
+
+// gstreamer_video_backend_table — складні пайплайни: або extra_options (повний рядок parse_launch), або автозбірка з source_uri.
+gstreamer_video_backend_table :: proc() -> VideoBackend {
+	st := new(Gst_Video_Backend_State)
+	return VideoBackend {
+		user = st,
+		name = _gstv_name,
+		init = _gstv_init,
+		shutdown = _gstv_shutdown,
+		decode_next_frame = _gstv_decode,
+		encode_submit_frame = _gstv_encode,
+		export_gpu_handle = _gstv_export,
+	}
+}
+
+video_gstreamer_destroy_backend :: proc(b: VideoBackend) {
+	if b.user == nil {
+		return
+	}
+	if b.shutdown != nil {
+		b.shutdown(b.user)
+	}
+	delete(cast(^Gst_Video_Backend_State)b.user)
 }

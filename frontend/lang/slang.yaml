@@ -3,3 +3,4 @@ fallback_strategy: base_locale
 input_directory: lib/i18n
 output_directory: lib/i18n
 translate_var: t
+string_interpolation: dart

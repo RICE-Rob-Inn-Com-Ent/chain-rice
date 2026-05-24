@@ -1,0 +1,10 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# syntax=docker/dockerfile:1
+ARG VALKEY_VERSION=8.0
+FROM valkey/valkey:${VALKEY_VERSION}-alpine
+COPY .docker/db/valkey.conf /etc/valkey/valkey.conf
+EXPOSE 6379
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+  CMD ["valkey-cli", "ping"]
+CMD ["valkey-server", "/etc/valkey/valkey.conf"]

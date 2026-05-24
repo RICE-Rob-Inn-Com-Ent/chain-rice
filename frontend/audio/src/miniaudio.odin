@@ -110,3 +110,106 @@ foreign libminiaudio {
 	ma_noise_init :: proc(pNoise: ^ma_noise, format: ma_format, channels: u32, type: u32, amplitude: f64, seed: i32) -> c.int ---
 	ma_waveform_init :: proc(pWaveform: ^ma_waveform, format: ma_format, channels: u32, sampleRate: u32, type: u32, amplitude: f64, frequency: f64) -> c.int ---
 }
+
+import "core:strings"
+
+Ma_Audio_State :: struct {
+	cfg:    AudioConfig,
+	device: ma_device,
+	inited: bool,
+}
+
+@(private = "file")
+_ma_name :: proc(user: rawptr) -> string {
+	return "miniaudio"
+}
+
+@(private = "file")
+_ma_init_device :: proc(user: rawptr, cfg: ^AudioConfig) -> bool {
+	s := cast(^Ma_Audio_State)user
+	if s == nil {
+		return false
+	}
+	s.cfg = cfg^
+	s.cfg.device_name = strings.clone(cfg.device_name, context.allocator)
+	dc := ma_device_config {
+		deviceType     = ma_device_type_duplex,
+		sampleRate     = cfg.sample_rate_hz,
+		periodSizeInFrames = cfg.buffer_frames,
+		periods        = 2,
+	}
+	if ma_device_init(nil, &dc, &s.device) != 0 {
+		return false
+	}
+	s.inited = true
+	return true
+}
+
+@(private = "file")
+_ma_shutdown :: proc(user: rawptr) -> bool {
+	s := cast(^Ma_Audio_State)user
+	if s == nil {
+		return true
+	}
+	if s.inited {
+		ma_device_uninit(&s.device)
+	}
+	delete(s.cfg.device_name)
+	s^ = {}
+	return true
+}
+
+@(private = "file")
+_ma_start :: proc(user: rawptr) -> bool {
+	s := cast(^Ma_Audio_State)user
+	if s == nil {
+		return false
+	}
+	return ma_device_start(&s.device) == 0
+}
+
+@(private = "file")
+_ma_stop :: proc(user: rawptr) -> bool {
+	s := cast(^Ma_Audio_State)user
+	if s == nil {
+		return false
+	}
+	ma_device_stop(&s.device)
+	return true
+}
+
+@(private = "file")
+_ma_read :: proc(user: rawptr, out: ^AudioBuffer) -> bool {
+	_ = user
+	_ = out
+	return false
+}
+
+@(private = "file")
+_ma_write :: proc(user: rawptr, in_buf: ^AudioBuffer) -> bool {
+	_ = user
+	_ = in_buf
+	return false
+}
+
+// miniaudio_device_table — duplex ma_device; real-time DSP — через ma_device callback у нативному C-шарі (див. miniaud.io).
+miniaudio_device_table :: proc() -> AudioDevice {
+	st := new(Ma_Audio_State)
+	return AudioDevice {
+		user = st,
+		name = _ma_name,
+		init_device = _ma_init_device,
+		shutdown = _ma_shutdown,
+		start = _ma_start,
+		stop = _ma_stop,
+		read_capture = _ma_read,
+		write_playback = _ma_write,
+	}
+}
+
+miniaudio_destroy_device :: proc(d: AudioDevice) {
+	if d.shutdown != nil {
+		_ = d.shutdown(d.user)
+	}
+	delete(cast(^Ma_Audio_State)d.user)
+}

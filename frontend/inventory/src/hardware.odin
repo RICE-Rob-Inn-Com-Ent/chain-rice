@@ -217,7 +217,7 @@ hardware_probe :: proc(rep: ^Hardware_Report) -> bool {
 		device_s := string(dpath_buf[:nd])
 		vs, vok := os.read_entire_file(vendor_s, context.temp_allocator)
 		ds, dok := os.read_entire_file(device_s, context.temp_allocator)
-		if !vok && !dok {
+		if len(vs) == 0 && len(ds) == 0 {
 			continue
 		}
 		vstr := strings.trim_space(string(vs))
@@ -228,7 +228,7 @@ hardware_probe :: proc(rep: ^Hardware_Report) -> bool {
 		gi := rep.gpu_count
 		gbuf := rep.gpu_lines[gi][:]
 		gn := fmt.bprintf(gbuf, "card%d vendor=%s device=%s", i, vstr, dstr)
-		rep.gpu_line_lens[gi] = gn
+		rep.gpu_line_lens[gi] = int(gn)
 		rep.gpu_count += 1
 	}
 

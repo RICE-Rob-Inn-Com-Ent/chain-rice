@@ -5,16 +5,15 @@ the High-Performance Protocol. No bloat, no legacy, just pure logic.
 
 ## The Toolbox (Zero-Config)
 
-We don't do manual installs for core roles. We use Pixi (conda-forge); **TS/JS-only conda tools** (`biome`, `lightningcss`) stay out of root `pixi.toml` — install those per frontend project.
+We don't do manual installs. We use Pixi.
 
 After clone (or when CUE / MASON inputs change):
 
 - `pixi install`
 - `direnv allow` (loads generated `.envrc` that walks **git-tracked** `*.env*` paths — never commit secrets)
-- `git ls-files | grep -E '\.env($|\.)' || true` — preview env-like paths tracked by git
-- **MASON pipeline:** `dagger -m . -c 'rice | pour'` (implementation: [`service/ci/src/pour.go`](service/ci/src/pour.go))
-- **Ad-hoc CUE emit:** `cue cmd emit ./infra/out/_tool.cue`
-- **Workspace CUE embed:** `buck2 build //infra/out:gen_workspace_cue`
+- `pixi run mason-env-list` — preview which env-like paths `git ls-files` would match
+- `pixi run mason-render` — materialize package + workspace `emitTextFiles` via `cue cmd emit ./infra/out/_tool.cue` ([`infra/package/polyglot.cue`](infra/package/polyglot.cue) + [`infra/out/cue/pack.cue`](infra/out/cue/pack.cue) and other slices under [`infra/out/cue/`](infra/out/cue/))
+- `pixi run mason-gen-workspace-cue` — re-embed tracked root files into `infra/out/cue/*.cue` and [`infra/docs/cue/docs.cue`](infra/docs/cue/docs.cue) via `buck2 build //infra/out:gen_workspace_cue` (script is `_EMBED_B64` in [`infra/out/BUCK`](infra/out/BUCK))
 
 ## The Polyglot Manifesto (How we code)
 

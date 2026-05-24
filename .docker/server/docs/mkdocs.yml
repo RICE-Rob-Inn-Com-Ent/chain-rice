@@ -1,0 +1,9 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+site_name: egos.app Docs
+site_url: https://code-rice.com
+theme:
+  name: material
+nav:
+  - Home
+  - API

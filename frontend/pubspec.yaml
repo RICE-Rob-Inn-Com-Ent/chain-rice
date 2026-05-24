@@ -1,0 +1,15 @@
+name: rice_bard
+description: Rice Bard
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+workspace:
+  - model
+  - rule
+  - lang
+  - browser
+  - content
+  - client

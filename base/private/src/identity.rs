@@ -13,22 +13,22 @@ use std::fmt;
 
 use ark_ff::Field;
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
-use hex::encode as hex_encode;
+use util::bytes::encode_hex_lower as hex_encode;
 use rand::RngCore;
 use sha2::{Digest, Sha256};
 
-use crate::circuit::RICE_IDENTITY_POSEIDON_DOMAIN;
+use crate::circuit::CLERK_IDENTITY_POSEIDON_DOMAIN;
 use crate::error::PrivateError;
 use crate::field::{
-    FrBn254, RiceScalar, poseidon_commit_digest_bn254, poseidon_nullifier_digest_bn254,
+    FrBn254, Scalar, poseidon_commit_digest_bn254, poseidon_nullifier_digest_bn254,
     prime_field_from_be_bytes_strict,
 };
 use crate::serial::{ComplianceMask, ComplianceOperation, VaultEnvelope, VaultMasterKeySource};
-use crate::setup::{IdentityOpeningRice, ParameterStore};
+use crate::setup::{IdentityOpeningSetup, ParameterStore};
 use crate::verify;
 
 /// Qdrant / vector index collection name for spent nullifiers (wire with SMITH ingest).
-pub const RICE_ZK_NULLIFIER_COLLECTION_ENV: &str = "RICE_ZK_NULLIFIER_COLLECTION";
+pub const CLERK_ZK_NULLIFIER_COLLECTION_ENV: &str = "CLERK_ZK_NULLIFIER_COLLECTION";
 
 /// Minimum high-entropy seed length (e.g. decoded mnemonic entropy, OS RNG blob).
 pub const SOVEREIGN_SEED_MIN_BYTES: usize = 32;
@@ -68,11 +68,11 @@ impl SovereignIdentity {
         })
     }
 
-    /// Poseidon commitment published to the world (`RICE_IDENTITY_POSEIDON_DOMAIN` domain tag).
+    /// Poseidon commitment published to the world (`CLERK_IDENTITY_POSEIDON_DOMAIN` domain tag).
     #[inline]
     pub fn public_commitment(&self) -> PublicIdentityCommitment {
         PublicIdentityCommitment(poseidon_commit_digest_bn254(
-            RICE_IDENTITY_POSEIDON_DOMAIN,
+            CLERK_IDENTITY_POSEIDON_DOMAIN,
             self.secret,
             self.blinding,
         ))
@@ -199,7 +199,7 @@ pub fn seal_identity_attestation(
 // ---------------------------------------------------------------------------
 
 /// Authorizes writing ceremony material: must verify an **identity-opening** proof under the **current**
-/// [`IdentityOpeningRice`] VK in [`ParameterStore`] before keys are replaced.
+/// [`IdentityOpeningSetup`] VK in [`ParameterStore`] before keys are replaced.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParameterUpdateAuthorization {
     /// Replay / policy epoch (operator-defined).
@@ -230,7 +230,7 @@ impl ParameterUpdateAuthorization {
     /// **Important:** On first install the identity VK may be missing — use non-production paths or
     /// bootstrap without this token; when rotating, this checks the proof under the **existing** VK.
     pub fn verify_identity_gate(&self, store: &ParameterStore) -> Result<(), PrivateError> {
-        verify::verify_with_store::<IdentityOpeningRice, Bn254>(
+        verify::verify_with_store::<IdentityOpeningSetup, Bn254>(
             store,
             &[self.identity_commitment, self.identity_nullifier],
             &self.identity_opening_proof,
@@ -242,7 +242,7 @@ impl ParameterUpdateAuthorization {
 // Nullifier index (Qdrant / SMITH hooks)
 // ---------------------------------------------------------------------------
 
-/// Configuration for a nullifier collection (set [`RICE_ZK_NULLIFIER_COLLECTION_ENV`] in deployment).
+/// Configuration for a nullifier collection (set [`CLERK_ZK_NULLIFIER_COLLECTION_ENV`] in deployment).
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct NullifierIndexConfig {
     pub collection_name: String,
@@ -251,8 +251,8 @@ pub struct NullifierIndexConfig {
 impl NullifierIndexConfig {
     #[inline]
     pub fn from_env() -> Result<Self, PrivateError> {
-        let collection_name = std::env::var(RICE_ZK_NULLIFIER_COLLECTION_ENV).map_err(|_| {
-            PrivateError::SetupMissing(format!("{RICE_ZK_NULLIFIER_COLLECTION_ENV} is not set (nullifier index)"))
+        let collection_name = std::env::var(CLERK_ZK_NULLIFIER_COLLECTION_ENV).map_err(|_| {
+            PrivateError::SetupMissing(format!("{CLERK_ZK_NULLIFIER_COLLECTION_ENV} is not set (nullifier index)"))
         })?;
         if collection_name.is_empty() {
             return Err(PrivateError::SetupMissing("nullifier collection name is empty".into()));
@@ -344,7 +344,7 @@ mod tests {
             nullifier_key: FrBn254::rand(&mut rng),
         };
         let c = id.public_commitment();
-        let expected = poseidon_commit_digest_bn254(RICE_IDENTITY_POSEIDON_DOMAIN, id.secret, id.blinding);
+        let expected = poseidon_commit_digest_bn254(CLERK_IDENTITY_POSEIDON_DOMAIN, id.secret, id.blinding);
         assert_eq!(c.0, expected);
     }
 
@@ -352,7 +352,7 @@ mod tests {
     fn parameter_auth_verifies_real_proof() {
         let _g = ID_ENV_LOCK.lock().expect("lock");
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         let mut rng = StdRng::from_seed([2u8; 32]);
         let root = std::env::temp_dir().join(format!("rice-id-auth-{}", line!()));

@@ -6,6 +6,8 @@ license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Code-Rice", email = "infocoderice@gmail.com" }]
 requires-python = ">=3.13"
 dependencies = [
+  "helper",
+  "sentence-transformers>=3.3.0",
   "torch>=2.6.0",
   "qdrant-client>=1.13.0",
   "bm25s>=0.2.0",
@@ -23,3 +25,6 @@ packages = ["src"]
 
 [tool.uv]
 package = true
+
+[tool.uv.sources]
+helper = { workspace = true }

@@ -161,3 +161,103 @@ foreign libswresample {
 	swr_free :: proc(s: ^SwrContext) ---
 	swr_convert :: proc(s: SwrContext, out: [^]rawptr, out_count: c.int, in_: [^]rawptr, in_count: c.int) -> c.int ---
 }
+
+import "core:strings"
+
+FFmpeg_Session :: struct {
+	cfg:     VideoConfig,
+	fmt_ctx: AVFormatContext,
+	opened:  bool,
+}
+
+@(private = "file")
+_ff_name :: proc(user: rawptr) -> string {
+	return "ffmpeg"
+}
+
+@(private = "file")
+_ff_init :: proc(user: rawptr, cfg: ^VideoConfig) -> bool {
+	s := cast(^FFmpeg_Session)user
+	if s == nil || cfg == nil {
+		return false
+	}
+	s.cfg = cfg^
+	s.cfg.source_uri = strings.clone(cfg.source_uri, context.allocator)
+	s.cfg.extra_options = strings.clone(cfg.extra_options, context.allocator)
+	if len(s.cfg.source_uri) == 0 {
+		return false
+	}
+	opts: ^AVDictionary
+	uri := strings.clone_to_cstring(s.cfg.source_uri, context.temp_allocator)
+	rc := avformat_open_input(&s.fmt_ctx, uri, nil, &opts)
+	if rc != 0 {
+		return false
+	}
+	if avformat_find_stream_info(s.fmt_ctx, nil) < 0 {
+		avformat_close_input(&s.fmt_ctx)
+		s.fmt_ctx = nil
+		return false
+	}
+	s.opened = true
+	return true
+}
+
+@(private = "file")
+_ff_shutdown :: proc(user: rawptr) {
+	s := cast(^FFmpeg_Session)user
+	if s == nil {
+		return
+	}
+	if s.opened && s.fmt_ctx != nil {
+		avformat_close_input(&s.fmt_ctx)
+		s.fmt_ctx = nil
+	}
+	delete(s.cfg.source_uri)
+	delete(s.cfg.extra_options)
+	s^ = {}
+}
+
+@(private = "file")
+_ff_decode :: proc(user: rawptr, out: ^VideoFrame) -> bool {
+	_ = user
+	_ = out
+	return false
+}
+
+@(private = "file")
+_ff_encode :: proc(user: rawptr, frame: ^VideoFrame) -> bool {
+	_ = user
+	_ = frame
+	return false
+}
+
+@(private = "file")
+_ff_export :: proc(user: rawptr, frame: ^VideoFrame) -> u64 {
+	_ = user
+	_ = frame
+	return 0
+}
+
+// ffmpeg_backend_table — libavformat/libavcodec; RTSP/файл через source_uri у VideoConfig.
+ffmpeg_backend_table :: proc() -> VideoBackend {
+	st := new(FFmpeg_Session)
+	return VideoBackend {
+		user = st,
+		name = _ff_name,
+		init = _ff_init,
+		shutdown = _ff_shutdown,
+		decode_next_frame = _ff_decode,
+		encode_submit_frame = _ff_encode,
+		export_gpu_handle = _ff_export,
+	}
+}
+
+video_ffmpeg_destroy_backend :: proc(b: VideoBackend) {
+	if b.user == nil {
+		return
+	}
+	if b.shutdown != nil {
+		b.shutdown(b.user)
+	}
+	delete(cast(^FFmpeg_Session)b.user)
+}

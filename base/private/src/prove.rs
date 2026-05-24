@@ -2,11 +2,11 @@
 //!
 //! **Pipeline:** [`preflight_witness_satisfied`] (or implicit via [`generate_proof`]) runs a scratch
 //! constraint system; on failure you get [`PrivateError::WitnessInconsistent`] before the heavy
-//! prover. Groth16 itself runs on a dedicated Rayon pool ([`RICE_ZK_RAYON_THREADS_ENV`]) so it stacks
+//! prover. Groth16 itself runs on a dedicated Rayon pool ([`CLERK_ZK_RAYON_THREADS_ENV`]) so it stacks
 //! with ark’s `parallel` feature.
 //!
 //! **Telemetry:** Spans use the `rice.zk.prove` target — wire `tracing` to OpenTelemetry at the OS
-//! boundary. **CUDA:** read [`cuda_acceleration_requested`] / [`RICE_ZK_CUDA_ENV`] (placeholder).
+//! boundary. **CUDA:** read [`cuda_acceleration_requested`] / [`CLERK_ZK_CUDA_ENV`] (placeholder).
 
 use std::fmt;
 use std::sync::OnceLock;
@@ -18,35 +18,35 @@ use ark_ff::Field;
 use ark_groth16::{Groth16, Proof, ProvingKey};
 use ark_relations::r1cs::{ConstraintSynthesizer, ConstraintSystem};
 use ark_std::rand::{CryptoRng, RngCore};
-use hex::encode as hex_encode;
+use util::bytes::encode_hex_lower as hex_encode;
 use sha2::{Digest, Sha256};
 
-use crate::circuit::{IdentityOpeningCircuit, MulCircuit, RICE_IDENTITY_POSEIDON_DOMAIN, ShieldedTransferCircuit};
+use crate::circuit::{IdentityOpeningCircuit, MulCircuit, CLERK_IDENTITY_POSEIDON_DOMAIN, ShieldedTransferCircuit};
 use crate::error::PrivateError;
 use crate::identity::IdentityWitness;
 use crate::field::{FrBn254, poseidon_commit_digest_bn254, poseidon_nullifier_digest_bn254};
 use crate::serial::{
     ComplianceMask, ComplianceOperation, VaultEnvelope, VaultMasterKeySource, proof_to_bytes_compressed,
 };
-use crate::setup::{IdentityOpeningRice, ParameterStore, RiceCircuit, ShieldedTransferRice, get_or_generate_params};
+use crate::setup::{IdentityOpeningSetup, ParameterStore, Circuit, ShieldedTransferSetup, get_or_generate_params};
 
 /// Hint for batch proving pipelines (scheduling / future amortization). `None` if unset or invalid.
-pub const RICE_ZK_BATCH_SIZE_ENV: &str = "RICE_ZK_BATCH_SIZE";
+pub const CLERK_ZK_BATCH_SIZE_ENV: &str = "CLERK_ZK_BATCH_SIZE";
 
 /// When set to `1` / `true` / `yes`, a GPU prover may be selected once implemented ([`CudaProverPlaceholder`]).
-pub const RICE_ZK_CUDA_ENV: &str = "RICE_ZK_CUDA";
+pub const CLERK_ZK_CUDA_ENV: &str = "CLERK_ZK_CUDA";
 
 /// Optional Rayon thread count for the dedicated ZK pool (defaults to Rayon’s global default).
-pub const RICE_ZK_RAYON_THREADS_ENV: &str = "RICE_ZK_RAYON_THREADS";
+pub const CLERK_ZK_RAYON_THREADS_ENV: &str = "CLERK_ZK_RAYON_THREADS";
 
 static ZK_RAYON_POOL: OnceLock<rayon::ThreadPool> = OnceLock::new();
 
 /// Dedicated Rayon pool for ZK (ark Groth16 `parallel` also uses Rayon globally; this pool is for
-/// isolating thread counts via [`RICE_ZK_RAYON_THREADS_ENV`] when future work is `install`d here).
+/// isolating thread counts via [`CLERK_ZK_RAYON_THREADS_ENV`] when future work is `install`d here).
 #[inline]
 pub fn zk_rayon_pool() -> &'static rayon::ThreadPool {
     ZK_RAYON_POOL.get_or_init(|| {
-        let threads = std::env::var(RICE_ZK_RAYON_THREADS_ENV)
+        let threads = std::env::var(CLERK_ZK_RAYON_THREADS_ENV)
             .ok()
             .and_then(|s| s.parse::<usize>().ok())
             .filter(|&n| n > 0)
@@ -61,13 +61,13 @@ pub fn zk_rayon_pool() -> &'static rayon::ThreadPool {
 
 #[inline]
 pub fn batch_prove_configured_size_hint() -> Option<usize> {
-    std::env::var(RICE_ZK_BATCH_SIZE_ENV).ok()?.parse().ok()
+    std::env::var(CLERK_ZK_BATCH_SIZE_ENV).ok()?.parse().ok()
 }
 
 #[inline]
 pub fn cuda_acceleration_requested() -> bool {
     matches!(
-        std::env::var(RICE_ZK_CUDA_ENV).map(|s| s.to_ascii_lowercase()).as_deref(),
+        std::env::var(CLERK_ZK_CUDA_ENV).map(|s| s.to_ascii_lowercase()).as_deref(),
         Ok("1") | Ok("true") | Ok("yes")
     )
 }
@@ -82,7 +82,7 @@ pub struct ProofId(pub [u8; 4]);
 
 impl fmt::Display for ProofId {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", hex_encode(self.0))
+        write!(f, "{}", hex_encode(&self.0[..]))
     }
 }
 
@@ -124,10 +124,10 @@ where
     let _enter = span.enter();
 
     if cuda_acceleration_requested() {
-        tracing::debug!(target: "rice.zk.prove", "RICE_ZK_CUDA is set; GPU path not implemented in this crate");
+        tracing::debug!(target: "rice.zk.prove", "CLERK_ZK_CUDA is set; GPU path not implemented in this crate");
     }
     if let Some(cap) = batch_prove_configured_size_hint() {
-        tracing::trace!(target: "rice.zk.prove", batch_cap = cap, "RICE_ZK_BATCH_SIZE hint (single-proof call)");
+        tracing::trace!(target: "rice.zk.prove", batch_cap = cap, "CLERK_ZK_BATCH_SIZE hint (single-proof call)");
     }
 
     preflight_witness_satisfied::<E, _>(circuit.clone())?;
@@ -152,7 +152,7 @@ pub fn generate_proof_with_store<RC, E, R>(
     rng: &mut R,
 ) -> Result<Proof<E>, PrivateError>
 where
-    RC: RiceCircuit<E>,
+    RC: Circuit<E>,
     E: Pairing,
     RC::CS: ConstraintSynthesizer<E::ScalarField> + Clone,
     R: RngCore + CryptoRng,
@@ -161,7 +161,7 @@ where
     generate_proof(&params.pk, circuit, rng)
 }
 
-/// Prove many circuits **sequentially** (RNG advances). Honors [`RICE_ZK_BATCH_SIZE_ENV`] as a hard cap.
+/// Prove many circuits **sequentially** (RNG advances). Honors [`CLERK_ZK_BATCH_SIZE_ENV`] as a hard cap.
 pub fn batch_generate_proofs<E, CS, R, I>(
     pk: &ProvingKey<E>,
     circuits: I,
@@ -183,7 +183,7 @@ where
                     target: "rice.zk.prove.batch",
                     index = idx,
                     max,
-                    "RICE_ZK_BATCH_SIZE cap reached; stopping batch"
+                    "CLERK_ZK_BATCH_SIZE cap reached; stopping batch"
                 );
                 break;
             }
@@ -209,14 +209,14 @@ pub fn seal_proof_for_vault<E: Pairing>(
 // BN254 high-level provers
 // ---------------------------------------------------------------------------
 
-/// Identity opening proof: loads or dev-caches PK for [`IdentityOpeningRice`], builds the circuit, proves.
+/// Identity opening proof: loads or dev-caches PK for [`IdentityOpeningSetup`], builds the circuit, proves.
 pub fn prove_identity<R: RngCore + CryptoRng>(
     store: &ParameterStore,
     w: IdentityWitness,
     rng: &mut R,
 ) -> Result<Proof<Bn254>, PrivateError> {
-    let params = get_or_generate_params::<IdentityOpeningRice, Bn254, _>(store, rng)?;
-    let commitment = poseidon_commit_digest_bn254(RICE_IDENTITY_POSEIDON_DOMAIN, w.secret, w.blinding);
+    let params = get_or_generate_params::<IdentityOpeningSetup, Bn254, _>(store, rng)?;
+    let commitment = poseidon_commit_digest_bn254(CLERK_IDENTITY_POSEIDON_DOMAIN, w.secret, w.blinding);
     let nullifier = poseidon_nullifier_digest_bn254(w.secret, FrBn254::ZERO, w.nullifier_key);
     let circuit = IdentityOpeningCircuit {
         public_commitment_digest: Some(commitment),
@@ -246,8 +246,8 @@ pub fn prove_shielded_transfer<R: RngCore + CryptoRng>(
     w: ShieldedTransferWitness,
     rng: &mut R,
 ) -> Result<Proof<Bn254>, PrivateError> {
-    let params = get_or_generate_params::<ShieldedTransferRice, Bn254, _>(store, rng)?;
-    let commitment = poseidon_commit_digest_bn254(RICE_IDENTITY_POSEIDON_DOMAIN, w.secret, w.blinding);
+    let params = get_or_generate_params::<ShieldedTransferSetup, Bn254, _>(store, rng)?;
+    let commitment = poseidon_commit_digest_bn254(CLERK_IDENTITY_POSEIDON_DOMAIN, w.secret, w.blinding);
     let nullifier = poseidon_nullifier_digest_bn254(w.secret, FrBn254::ZERO, w.nullifier_key);
     let circuit = ShieldedTransferCircuit {
         public_commitment_digest: Some(commitment),
@@ -293,18 +293,18 @@ mod tests {
     fn witness_inconsistent_fails_fast() {
         let _g = PROVE_ENV_LOCK.lock().expect("lock");
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         let mut rng = StdRng::from_seed([5u8; 32]);
         let root = std::env::temp_dir().join(format!("rice-prove-preflight-{}", line!()));
         let _ = fs::remove_dir_all(&root);
         let store = ParameterStore::with_root(root.clone());
-        let params = get_or_generate_params::<IdentityOpeningRice, Bn254, _>(&store, &mut rng).unwrap();
+        let params = get_or_generate_params::<IdentityOpeningSetup, Bn254, _>(&store, &mut rng).unwrap();
 
         let secret = FrBn254::from(11u64);
         let blinding = FrBn254::from(22u64);
         let nullifier_key = FrBn254::from(33u64);
-        let commitment = poseidon_commit_digest_bn254(RICE_IDENTITY_POSEIDON_DOMAIN, secret, blinding);
+        let commitment = poseidon_commit_digest_bn254(CLERK_IDENTITY_POSEIDON_DOMAIN, secret, blinding);
         let nullifier_wrong = FrBn254::from(999u64);
 
         let circuit = IdentityOpeningCircuit {
@@ -323,7 +323,7 @@ mod tests {
     fn prove_identity_smoke() {
         let _g = PROVE_ENV_LOCK.lock().expect("lock");
         unsafe {
-            std::env::remove_var("RICE_ENV");
+            std::env::remove_var("CLERK_ENV");
         }
         let mut rng = StdRng::from_seed([6u8; 32]);
         let root = std::env::temp_dir().join(format!("rice-prove-id-{}", line!()));

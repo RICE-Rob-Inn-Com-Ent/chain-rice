@@ -3,9 +3,9 @@
 //! Run full Criterion: `cargo bench -p bench`. Quick snapshot: `cargo run -p bench -- --json-smoke`.
 //! Optional native stacks: `--features full-native-benches` (Haskell CALC + Zig static lib paths).
 //!
-//! **`rice-lsp` (feature `lsp-perf`)** runs this binary with `--json-smoke` (subprocess). Set **`RICE_BENCH_BIN`**
+//! **`rice-lsp` (feature `lsp-perf`)** runs this binary with `--json-smoke` (subprocess). Set **`CLERK_BENCH_BIN`**
 //! to the `bench` executable, or build with `cargo build -p bench` so **`target/{debug,release}/bench`**
-//! exists under a workspace ancestor. Optional save refresh: env **`RICE_LSP_PERF=1`**, command **`rice.refreshBasePerf`**.
+//! exists under a workspace ancestor. Optional save refresh: env **`CLERK_LSP_PERF=1`**, command **`clerk.refreshBasePerf`**.
 
 use serde::Serialize;
 

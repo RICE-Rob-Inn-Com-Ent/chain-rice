@@ -1,0 +1,6 @@
+[project]
+name = "code-rice.com"
+
+# Infra Rice syntax package (schema: infra/proto/cue/infra.cue). Empty version = workspace MASON.
+[package]
+infra = ""

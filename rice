@@ -1,25 +1,23 @@
 #!/usr/bin/env bash
-# rice — high-level entrypoint for CHIEF workflows.
-# Current focus: `rice cook <project>` for custom/EgOS and custom/code-rice.com.
+# rice — Dagger entrypoint for SMITH CI (service/ci). All steps run via dagger call.
 
 set -euo pipefail
 
 usage() {
   cat <<'EOF'
 Usage:
+  rice pipeline               # pour → perform → forge → think → prepare → cook → audit → serve
   rice pour
+  rice perform
+  rice forge
+  rice think
+  rice audit
+  rice prepare <project>
   rice cook <project>
+  rice serve <project>
 
-Examples:
-  rice pour
-  rice cook EgOS
-  rice cook code-rice.com
-
-Notes:
-  - Requires the Dagger CLI on PATH: https://docs.dagger.io/
-  - `pour` → `dagger -m . -c 'rice | pour'` (MASON + hydrate; service/ci/src/pour.go).
-  - `cook` → `dagger -m . -c 'rice | cook --project …'` (Flutter web dev; service/ci/src/cook.go).
-  - Command map: README.md (MASON / Dagger) and CONTRIBUTING.md
+CHIEF projects (pipeline): RICE_CHIEF_PROJECTS="code-rice.com egos.app"
+Requires Dagger CLI: https://docs.dagger.io/
 EOF
 }
 
@@ -27,7 +25,7 @@ ensure_repo_root() {
   if git rev-parse --show-toplevel >/dev/null 2>&1; then
     git rev-parse --show-toplevel
   else
-    echo "error: run rice from inside the rice-mono repo" >&2
+    echo "error: run rice from inside the rice repo" >&2
     exit 1
   fi
 }
@@ -40,44 +38,69 @@ ensure_dagger() {
   fi
 }
 
-cmd_pour() {
-  ensure_dagger
-  local root
-  root="$(ensure_repo_root)"
-  cd "$root"
-  echo "rice pour → dagger -m . -c 'rice | pour'"
-  exec dagger -m . -c 'rice | pour'
-}
-
-cmd_cook() {
-  local project="${1:-}"
+require_project() {
+  local cmd="$1"
+  local project="${2:-}"
   if [[ -z "$project" ]]; then
-    echo "error: missing project name for 'cook'." >&2
+    echo "error: missing project name for 'rice ${cmd}'." >&2
     usage
     exit 1
   fi
+  printf '%s' "$project"
+}
 
-  ensure_dagger
-
+run_dagger() {
   local root
   root="$(ensure_repo_root)"
   cd "$root"
+  dagger call "$@"
+}
 
-  case "$project" in
-    EgOS|egos)
-      echo "rice cook EgOS → dagger shell (Flutter web dev, port 8080)"
-      exec dagger -m . -c 'rice | cook --project EgOS'
-      ;;
-    code-rice.com|code-rice|coderice)
-      echo "rice cook code-rice.com → dagger shell (Flutter web dev, port 8081)"
-      exec dagger -m . -c 'rice | cook --project code-rice.com'
-      ;;
-    *)
-      echo "error: unknown project '$project' for 'rice cook'." >&2
-      echo "       Known projects: EgOS, code-rice.com" >&2
-      exit 1
-      ;;
-  esac
+chief_projects() {
+  # shellcheck disable=SC2086
+  printf '%s\n' ${RICE_CHIEF_PROJECTS:-code-rice.com egos.app}
+}
+
+run_pipeline() {
+  ensure_dagger
+  local root p
+  root="$(ensure_repo_root)"
+  cd "$root"
+
+  echo "══ rice pipeline: pour ══"
+  dagger call pour
+
+  echo "══ rice pipeline: perform ══"
+  dagger call perform
+
+  echo "══ rice pipeline: forge ══"
+  dagger call forge
+
+  echo "══ rice pipeline: think ══"
+  dagger call think
+
+  while IFS= read -r p; do
+    [[ -n "$p" ]] || continue
+    echo "══ rice pipeline: prepare ${p} ══"
+    dagger call prepare --project "$p"
+  done < <(chief_projects)
+
+  while IFS= read -r p; do
+    [[ -n "$p" ]] || continue
+    echo "══ rice pipeline: cook ${p} ══"
+    dagger call cook --project "$p"
+  done < <(chief_projects)
+
+  echo "══ rice pipeline: audit ══"
+  dagger call audit
+
+  while IFS= read -r p; do
+    [[ -n "$p" ]] || continue
+    echo "══ rice pipeline: serve ${p} ══"
+    dagger call serve --project "$p"
+  done < <(chief_projects)
+
+  echo "✅ rice pipeline complete"
 }
 
 main() {
@@ -85,15 +108,26 @@ main() {
   shift || true
 
   case "$subcmd" in
-    pour)
-      cmd_pour
+    pipeline)
+      run_pipeline
       ;;
-    cook)
-      ensure_repo_root >/dev/null
-      cmd_cook "${1:-}"
+    pour|perform|forge|think|audit)
+      ensure_dagger
+      run_dagger "$subcmd"
       ;;
-    ""|-h|--help|help)
+    cook|serve|prepare)
+      ensure_dagger
+      local project
+      project="$(require_project "$subcmd" "${1:-}")"
+      run_dagger "$subcmd" --project "$project"
+      ;;
+    -h|--help|help)
       usage
+      ;;
+    "")
+      echo "error: missing subcommand." >&2
+      usage
+      exit 1
       ;;
     *)
       echo "error: unknown subcommand '$subcmd'." >&2

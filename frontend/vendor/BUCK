@@ -1,0 +1,23 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/frontend.cue — watches frontend/vendor
+# Rebuild: buck2 build '//frontend/vendor:check'
+
+genrule(
+    name = "check",
+    srcs = glob(["src/**/*.odin"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/bin:$PATH"
+if ! command -v odin >/dev/null 2>&1; then
+  echo "odin not on PATH — run: pixi run install-odin" >&2
+  exit 1
+fi
+cd "$REPO/frontend/vendor"
+odin check src/ -vet
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

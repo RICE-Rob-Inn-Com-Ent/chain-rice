@@ -50,11 +50,6 @@ BUCK2       text eol=lf
 *.sql               text eol=lf
 *.txt               text eol=lf
 
-# ── Docker ────────────────────────────────────────────────
-Dockerfile          text eol=lf
-*.dockerfile        text eol=lf
-.dockerignore       text eol=lf
-
 # ── Windows scripts — crlf only ──────────────────────────
 *.{ps1,bat,cmd}     text eol=crlf
 
@@ -113,9 +108,7 @@ vendor/**           linguist-vendored
 node_modules/**     linguist-vendored
 frontend/vendor/**  linguist-vendored
 
-# Dagger SDK (service/ci) — `dagger develop` / codegen
-service/ci/dagger.gen.go linguist-generated=true
-service/ci/internal/dagger/** linguist-generated=true
+
 
 
 

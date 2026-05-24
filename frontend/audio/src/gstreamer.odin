@@ -4,6 +4,7 @@ package audio
 //
 
 import "core:c"
+import "core:strings"
 
 when ODIN_OS == .Linux {
 	foreign import libgst {
@@ -145,4 +146,124 @@ gst_bin_add_many :: proc(bin: GstElement, elements: []GstElement) -> bool {
 		}
 	}
 	return true
+}
+
+// audio_gstreamer_parse_launch — мережеві/радіо пайплайни з рядка (без захардкожених елементів у виклику).
+audio_gstreamer_parse_launch :: proc(pipeline_description: string) -> (GstElement, rawptr) {
+	err: rawptr
+	cs := strings.clone_to_cstring(pipeline_description, context.temp_allocator)
+	el := gst_parse_launch(cs, &err)
+	return el, err
+}
+
+// audio_gstreamer_bus_poll_one — неблокуюче читання одного повідомлення з шини (помилки, EOS, стан).
+audio_gstreamer_bus_poll_one :: proc(element: GstElement, timeout_ns: u64) -> GstMessage {
+	bus := gst_bus_get(element)
+	if bus == nil {
+		return nil
+	}
+	defer gst_object_unref(bus)
+	mask: u32 = 0
+	mask |= u32(GST_MESSAGE_ERROR)
+	mask |= u32(GST_MESSAGE_WARNING)
+	mask |= u32(GST_MESSAGE_EOS)
+	mask |= u32(GST_MESSAGE_STATE_CHANGED)
+	return gst_bus_timed_pop_filtered(bus, timeout_ns, mask)
+}
+
+Gst_Audio_Backend_State :: struct {
+	cfg:       AudioConfig,
+	pipeline:  GstElement,
+}
+
+@(private = "file")
+_gsta_name :: proc(user: rawptr) -> string {
+	return "gstreamer-audio"
+}
+
+@(private = "file")
+_gsta_init :: proc(user: rawptr, cfg: ^AudioConfig) -> bool {
+	s := cast(^Gst_Audio_Backend_State)user
+	if s == nil {
+		return false
+	}
+	s.cfg = cfg^
+	s.cfg.device_name = strings.clone(cfg.device_name, context.allocator)
+	argc: c.int
+	gst_init(&argc, nil)
+	desc := strings.clone_to_cstring(cfg.device_name, context.temp_allocator)
+	err: rawptr
+	s.pipeline = gst_parse_launch(desc, &err)
+	return s.pipeline != nil
+}
+
+@(private = "file")
+_gsta_shutdown :: proc(user: rawptr) -> bool {
+	s := cast(^Gst_Audio_Backend_State)user
+	if s == nil {
+		return true
+	}
+	if s.pipeline != nil {
+		gst_element_set_state(s.pipeline, GST_STATE_NULL)
+		gst_object_unref(s.pipeline)
+		s.pipeline = nil
+	}
+	delete(s.cfg.device_name)
+	s^ = {}
+	return true
+}
+
+@(private = "file")
+_gsta_start :: proc(user: rawptr) -> bool {
+	s := cast(^Gst_Audio_Backend_State)user
+	if s == nil || s.pipeline == nil {
+		return false
+	}
+	return gst_element_set_state(s.pipeline, GST_STATE_PLAYING) == .SUCCESS
+}
+
+@(private = "file")
+_gsta_stop :: proc(user: rawptr) -> bool {
+	s := cast(^Gst_Audio_Backend_State)user
+	if s == nil || s.pipeline == nil {
+		return false
+	}
+	_ = gst_element_set_state(s.pipeline, GST_STATE_NULL)
+	return true
+}
+
+@(private = "file")
+_gsta_read :: proc(user: rawptr, out: ^AudioBuffer) -> bool {
+	_ = user
+	_ = out
+	return false
+}
+
+@(private = "file")
+_gsta_write :: proc(user: rawptr, in_buf: ^AudioBuffer) -> bool {
+	_ = user
+	_ = in_buf
+	return false
+}
+
+// gstreamer_audio_device_table — device_name трактується як повний рядок parse_launch (радіо/мережа).
+gstreamer_audio_device_table :: proc() -> AudioDevice {
+	st := new(Gst_Audio_Backend_State)
+	return AudioDevice {
+		user = st,
+		name = _gsta_name,
+		init_device = _gsta_init,
+		shutdown = _gsta_shutdown,
+		start = _gsta_start,
+		stop = _gsta_stop,
+		read_capture = _gsta_read,
+		write_playback = _gsta_write,
+	}
+}
+
+gstreamer_audio_destroy_device :: proc(d: AudioDevice) {
+	if d.shutdown != nil {
+		_ = d.shutdown(d.user)
+	}
+	delete(cast(^Gst_Audio_Backend_State)d.user)
 }

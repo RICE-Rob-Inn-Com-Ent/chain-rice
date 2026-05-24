@@ -18,7 +18,7 @@ use ark_ec::pairing::Pairing;
 use ark_ec::{AffineRepr, CurveGroup, Group};
 use ark_ff::{BigInteger, PrimeField};
 use ark_serialize::CanonicalSerialize;
-use bytes::Bytes;
+use util::Bytes;
 use rand::RngCore;
 use sha2::{Digest, Sha256};
 use std::sync::OnceLock;

@@ -1,18 +1,10 @@
-defmodule Service.Cluster.Registry do
+defmodule Smith.Connection.Registry do
   @moduledoc """
-  Horde `Horde.Registry` — cluster-wide names (`register/3`, `lookup/2`, `dispatch/4`) compatible with `Registry` API.
+  Cluster-wide **`Horde.Registry`** — global names for Pipeline, Guard, and other SMITH services.
 
-  For single-node dev, keep using `Service.ProcessRegistry`; switch `via/1` to this module when `Service.Cluster.Topology.enabled?/0`.
+  Use `via/1` in `GenServer`, `lookup/1`, `register/2`, `dispatch/2` — like standard `Registry`,
+  but keys are unique across the whole cluster.
   """
-
-  # TODO:
-  # [ ] implement Horde.Registry for distributed process registry:
-  #     register process by name across cluster
-  #     lookup process by name — returns pid on any node
-  # [ ] implement registry namespacing:
-  #     names prefixed with RICE_ENV — never hardcoded
-  # [ ] implement registry failure handling:
-  #     on node down → Horde redistributes processes automatically
 
   @spec child_spec(keyword()) :: Supervisor.child_spec()
   def child_spec(opts \\ []) do
@@ -30,27 +22,24 @@ defmodule Service.Cluster.Registry do
   @spec registry_name() :: atom()
   def registry_name do
     horde_cfg()[:registry_name] ||
-      raise "missing :horde :registry_name in Service.Cluster config"
+      raise ArgumentError, "missing :horde :registry_name in :service, Smith.Connection config"
   end
 
-  @doc "Via tuple for Horde.Registry (unique keys)."
+  @doc "Tuple `{:via, Horde.Registry, {name, key}}` for `GenServer.start_link(..., name: via(key))`."
   @spec via(term()) :: {:via, Horde.Registry, {atom(), term()}}
   def via(key), do: {:via, Horde.Registry, {registry_name(), key}}
 
-  @doc "See `Horde.Registry.lookup/2`."
   @spec lookup(term()) :: [{pid(), term()}]
   def lookup(key), do: Horde.Registry.lookup(registry_name(), key)
 
-  @doc "See `Horde.Registry.register/3`."
   @spec register(term(), term()) :: {:ok, pid()} | {:error, {:already_registered, pid()}}
   def register(key, value \\ nil), do: Horde.Registry.register(registry_name(), key, value)
 
-  @doc "See `Horde.Registry.dispatch/4`."
   @spec dispatch(term(), term()) :: :ok
   def dispatch(key, mfa_or_fun), do: Horde.Registry.dispatch(registry_name(), key, mfa_or_fun)
 
   defp horde_cfg do
-    Application.get_env(:service, Service.Cluster, [])
+    Application.get_env(:service, Smith.Connection, [])
     |> Keyword.get(:horde, [])
   end
 end

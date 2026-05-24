@@ -1,0 +1,29 @@
+package "MASON package/" as INFRA_PACKAGE {
+  !include package/DIAGRAM.puml
+}
+
+package "out/" as INFRA_OUT {
+  !include out/DIAGRAM.puml
+}
+
+package "docker/" as INFRA_DOCKER {
+  !include docker/DIAGRAM.puml
+}
+
+package "k8s/" as INFRA_K8S {
+  !include k8s/DIAGRAM.puml
+}
+
+package "terraform/" as INFRA_TERRAFORM {
+  !include terraform/DIAGRAM.puml
+}
+
+package "proto/" as INFRA_PROTO_LAYER {
+  !include proto/DIAGRAM.puml
+}
+
+INFRA_PACKAGE ..> INFRA_OUT : cue cmd emit\nROLE emitTextFiles +\ninfra/out/cue → root
+INFRA_PACKAGE ..> INFRA_DOCKER : renderPlan / index\nfeeds rendered docker packaging
+INFRA_PACKAGE ..> INFRA_K8S : renderPlan / index\nfeeds rendered k8s packaging
+INFRA_PACKAGE ..> INFRA_TERRAFORM : renderPlan / index\nfeeds rendered OpenTofu packaging
+INFRA_PACKAGE ..> INFRA_PROTO_LAYER : renderPlan / index\nfeeds codegen packaging map

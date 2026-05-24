@@ -1,0 +1,63 @@
+use infra as terraform
+
+// EgOS — OpenTofu overlay (MASON rice_* → .opentofu/terraform.tfvars).
+// Package: bowl [package] infra → MASON infra/proto/cue/infra.cue (facet terraform).
+
+rc terraform let {
+	environment set {
+		name = dev
+		cloud_provider = aws
+		domain = egos.app
+		region = eu-west-1
+	}
+
+	github set {
+		org = rice-rob-inn-com-ent
+		repo = rice
+	}
+
+	cluster set {
+		k8s_name = egos-dev
+		db_class = db.t4g.micro
+		registry = ghcr.io
+	}
+
+	clouds set {
+		enabled = (aws)
+		primary = aws
+	}
+
+	regions set {
+		aws = (eu-west-1)
+	}
+
+	network set {
+		vpc_cidr = 10.0.0.0/16
+		availability_zones = (eu-west-1a, eu-west-1b)
+	}
+
+	aws set {
+		region = eu-west-1
+		assume_role_arn =
+	}
+
+	gcp set {
+		project_id = replace-with-gcp-project-id
+		region = europe-west1
+	}
+
+	azure set {
+		subscription_id =
+		tenant_id =
+	}
+
+	gpu set {
+		enabled = false
+		instance_type =
+	}
+
+	state set {
+		backend = local
+		kubeconfig_path = "~/.kube/config"
+	}
+}

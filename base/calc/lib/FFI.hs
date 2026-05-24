@@ -2,13 +2,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
--- | C ABI for Rust: RTS lifecycle, JSON slow path, binary v1 fast path ("rice_calc_*" symbols).
+-- | C ABI for Rust: RTS lifecycle, JSON slow path, binary v1 fast path ("calc_*" symbols).
 module FFI (
-  riceBpsBinaryMagicV1,
-  riceBpsBinaryMaxPrincipalLen,
+  bpsBinaryMagicV1,
+  bpsBinaryMaxPrincipalLen,
   decodeBpsBinaryRequestV1,
   encodeBpsBinaryResponseV1,
-  riceCalcBasisPointsFeeBinary,
+  calcBasisPointsFeeBinaryImpl,
 ) where
 
 import Data.Bits (shiftL, shiftR, (.&.))
@@ -27,12 +27,12 @@ import Wire (WireJsonErr (..), basisPointsFeeJsonWire)
 import Finance (BpsFeeOutcome (..), basisPointsFee)
 
 -- | Request/response magic for v1 binary layout (LE @0x00000001@).
-riceBpsBinaryMagicV1 :: Word32
-riceBpsBinaryMagicV1 = 1
+bpsBinaryMagicV1 :: Word32
+bpsBinaryMagicV1 = 1
 
 -- | Maximum UTF-8 length accepted for principal string in v1 binary requests.
-riceBpsBinaryMaxPrincipalLen :: Int
-riceBpsBinaryMaxPrincipalLen = 4096
+bpsBinaryMaxPrincipalLen :: Int
+bpsBinaryMaxPrincipalLen = 4096
 
 le32 :: BS.ByteString -> Int -> Word32
 le32 bs i =
@@ -67,10 +67,10 @@ decodeBpsBinaryRequestV1 bs
       let mag = le32 bs 0
           plen = fromIntegral (le32 bs 4) :: Int
           bps = le64 bs 8
-       in if mag /= riceBpsBinaryMagicV1
+       in if mag /= bpsBinaryMagicV1
             then Left "binary bps v1: bad magic"
             else
-              if plen < 0 || plen > riceBpsBinaryMaxPrincipalLen
+              if plen < 0 || plen > bpsBinaryMaxPrincipalLen
                 then Left "binary bps v1: principal_len out of range"
                 else
                   if BS.length bs < 16 + plen
@@ -86,16 +86,16 @@ encodeBpsBinaryResponseV1 :: Text -> BS.ByteString
 encodeBpsBinaryResponseV1 feeTxt =
   let feeBs = TE.encodeUtf8 feeTxt
       flen = fromIntegral (BS.length feeBs) :: Word32
-   in word32le riceBpsBinaryMagicV1 <> word32le flen <> feeBs
+   in word32le bpsBinaryMagicV1 <> word32le flen <> feeBs
 
 -- | @0@ ok; @-1@ parse/UTF-8; @-2@ domain; @-3@ alloc/copy.
-riceCalcBasisPointsFeeBinary ::
+calcBasisPointsFeeBinaryImpl ::
   Ptr Word8 ->
   CSize ->
   Ptr (Ptr Word8) ->
   Ptr CSize ->
   IO CInt
-riceCalcBasisPointsFeeBinary inPtr inLen outPtrPtr outLenPtr = do
+calcBasisPointsFeeBinaryImpl inPtr inLen outPtrPtr outLenPtr = do
   let nIn = fromIntegral inLen
   inp <- BS.packCStringLen (castPtr inPtr :: Ptr Word8, nIn)
   case decodeBpsBinaryRequestV1 inp of
@@ -136,25 +136,25 @@ foreign import ccall "hs_init" hs_init :: Ptr CInt -> Ptr (Ptr CChar) -> IO ()
 
 foreign import ccall "hs_exit" hs_exit :: IO ()
 
-foreign export ccall rice_calc_init :: IO ()
-rice_calc_init :: IO ()
-rice_calc_init = hs_init nullPtr nullPtr
+foreign export ccall calc_init :: IO ()
+calc_init :: IO ()
+calc_init = hs_init nullPtr nullPtr
 
-foreign export ccall rice_calc_shutdown :: IO ()
-rice_calc_shutdown :: IO ()
-rice_calc_shutdown = hs_exit
+foreign export ccall calc_shutdown :: IO ()
+calc_shutdown :: IO ()
+calc_shutdown = hs_exit
 
-foreign export ccall rice_calc_free :: Ptr Word8 -> IO ()
-rice_calc_free :: Ptr Word8 -> IO ()
-rice_calc_free = free
+foreign export ccall calc_free :: Ptr Word8 -> IO ()
+calc_free :: Ptr Word8 -> IO ()
+calc_free = free
 
-foreign export ccall rice_calc_amount_from_basis_points_json ::
+foreign export ccall calc_amount_from_basis_points_json ::
   Ptr Word8 ->
   CSize ->
   Ptr (Ptr Word8) ->
   Ptr CSize ->
   IO CInt
-rice_calc_amount_from_basis_points_json inPtr inLen outPtrPtr outLenPtr = do
+calc_amount_from_basis_points_json inPtr inLen outPtrPtr outLenPtr = do
   let nIn = fromIntegral inLen
   bs <- BS.packCStringLen (castPtr inPtr :: Ptr Word8, nIn)
   case basisPointsFeeJsonWire bs of
@@ -188,10 +188,10 @@ rice_calc_amount_from_basis_points_json inPtr inLen outPtrPtr outLenPtr = do
           pokeOutEmpty
           return (-3)
 
-foreign export ccall rice_calc_basis_points_fee_binary ::
+foreign export ccall calc_basis_points_fee_binary ::
   Ptr Word8 ->
   CSize ->
   Ptr (Ptr Word8) ->
   Ptr CSize ->
   IO CInt
-rice_calc_basis_points_fee_binary = riceCalcBasisPointsFeeBinary
+calc_basis_points_fee_binary = calcBasisPointsFeeBinaryImpl

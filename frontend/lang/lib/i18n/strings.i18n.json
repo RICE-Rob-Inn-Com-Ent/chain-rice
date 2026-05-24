@@ -1,0 +1,39 @@
+{
+  "core": {
+    "welcome": "Welcome to .rice",
+    "boot": "Booting",
+    "shutdown": "Shutting down",
+    "synchronization": "Synchronization"
+  },
+  "errors": {
+    "guardOffline": "Guard link is offline",
+    "smithTimeout": "Smith did not respond in time",
+    "unknown": "Something went wrong"
+  },
+  "ui": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "retry": "Retry"
+  },
+  "hardware": {
+    "temperature": "Temperature",
+    "voltage": "Voltage",
+    "load": "Load",
+    "memory": "Memory"
+  },
+  "network": {
+    "connected": "Connected",
+    "searching": "Searching for devices",
+    "interference": "Wireless interference detected",
+    "devicesFound": {
+      "one": "$n device found on the network",
+      "other": "$n devices found on the network"
+    }
+  },
+  "chat": {
+    "title": "SAGE",
+    "inputHint": "Message SAGE…",
+    "send": "Send"
+  }
+}

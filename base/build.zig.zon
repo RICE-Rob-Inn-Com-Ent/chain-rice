@@ -1,0 +1,30 @@
+.{
+    // Identity — declares the Clerk root package for the .rice sovereign machine (resolver id + semver).
+    .name = .clerk,
+    .version = "0.1.0",
+
+    // Toolchain — compiler floor so ZON fields and package manifests match the supported matrix.
+    .minimum_zig_version = "0.15.0",
+
+    // Security Envelope — immutable package fingerprint (rotate when `.name` / graph changes; `zig build` may suggest a value).
+    .fingerprint = 0xe82fa413605bee27,
+
+    // Security Envelope — external roots: watchdog module binds financial / logical operations to audited Zig.
+    .dependencies = .{
+        .security = .{
+            .path = "security",
+        },
+        // Enable via CLERK_SECURITY_NETWORK; requires .url and .hash from zig fetch.
+        // .@"zig-network" = .{
+        //     .url = "https://github.com/MasterQ32/zig-network/archive/refs/heads/master.tar.gz",
+        //     .hash = "1220…",
+        // },
+    },
+
+    // Security Envelope — publish set: ship build scripts plus nested security tree for recursive dependency builds.
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "security",
+    },
+}

@@ -1,6 +1,6 @@
 -- | Fixed-point decimal layer: mantissa/exponent model via "Data.Decimal", no "Double" in the API surface.
 module Decimal (
-  RiceDecimal,
+  Numeric,
   plus,
   minus,
   times,
@@ -24,33 +24,33 @@ import Data.Decimal
 import Data.Scientific (Scientific)
 import Data.Word (Word8)
 
--- [ ] Data.Decimal — https://hackage.haskell.org/package/Decimal — RiceDecimal wrapper; Num/Fractional
--- [ ] rounding modes from RICE_CALC_ROUNDING_MODE; precision from RICE_CALC_PRECISION; QuickCheck laws; no Double/Float in API
+-- [ ] Data.Decimal — https://hackage.haskell.org/package/Decimal — Numeric alias; Num/Fractional
+-- [ ] rounding modes from CLERK_CALC_ROUNDING_MODE; precision from CLERK_CALC_PRECISION; QuickCheck laws; no Double/Float in API
 
 -- | Canonical fixed-point amount (mantissa + decimal places).
-type RiceDecimal = Decimal
+type Numeric = Decimal
 
-plus :: RiceDecimal -> RiceDecimal -> RiceDecimal
+plus :: Numeric -> Numeric -> Numeric
 plus = (+)
 
-minus :: RiceDecimal -> RiceDecimal -> RiceDecimal
+minus :: Numeric -> Numeric -> Numeric
 minus = (-)
 
-times :: RiceDecimal -> RiceDecimal -> RiceDecimal
+times :: Numeric -> Numeric -> Numeric
 times = (*)
 
 -- | Splittable division that preserves the sum invariant (see "divide").
-divideExact :: Integral i => RiceDecimal -> [i] -> [RiceDecimal]
+divideExact :: Integral i => Numeric -> [i] -> [Numeric]
 divideExact = divide
 
-roundPlaces :: Word8 -> RiceDecimal -> RiceDecimal
+roundPlaces :: Word8 -> Numeric -> Numeric
 roundPlaces = roundTo
 
-normalize :: RiceDecimal -> RiceDecimal
+normalize :: Numeric -> Numeric
 normalize = normalizeDecimal
 
-fromScientific :: Scientific -> RiceDecimal
+fromScientific :: Scientific -> Numeric
 fromScientific = fromRational . toRational
 
-toScientific :: RiceDecimal -> Scientific
+toScientific :: Numeric -> Scientific
 toScientific = fromRational . toRational

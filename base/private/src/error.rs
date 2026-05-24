@@ -1,13 +1,13 @@
 //! The ZK **pain map** for the `private` crate — every failure mode in setup, proving, verification,
 //! identity, and compliance is typed here before it crosses into broader CLERK code via
-//! [`PrivateError::into_rice`].
+//! [`PrivateError::into_util_error`].
 //!
 //! **Why:** Privacy operations fail for subtle reasons (wrong curve, bad SRS, invalid witness).
 //! Operators and upper layers must see *which* phase broke without reverse-engineering logs.
 //! **How:** A single [`PrivateError`] enum groups lifecycle stages; arkworks failures use
 //! `#[error(transparent)]` where appropriate. Rust’s orphan rules prevent defining
-//! `impl From<PrivateError> for util::RiceError` here — use [`PrivateError::into_rice`] (and
-//! [`util::RiceError::context`](util::RiceError::context) at the callsite) to attach breadcrumbs.
+//! `impl From<PrivateError> for util::Error` here — use [`PrivateError::into_util_error`] (and
+//! [`util::Error::context`](util::Error::context) at the callsite) to attach breadcrumbs.
 
 use std::io;
 
@@ -15,7 +15,7 @@ use ark_relations::r1cs::SynthesisError;
 use ark_serialize::SerializationError;
 use thiserror::Error;
 
-use util::RiceError;
+use util::Error;
 
 /// Unified failure type for the zero-knowledge lifecycle (R1CS, Groth16, identity, wire format).
 #[derive(Debug, Error)]
@@ -122,7 +122,7 @@ pub enum PrivateError {
     /// A private-side rule vetoed the operation (e.g. attestation does not match claimed status).
     ///
     /// **Pain:** The conscience of the private layer refused — distinct from R1CS bugs; often
-    /// maps to [`RiceError::Policy`] when lifted to CLERK.
+    /// maps to [`Error::Policy`] when lifted to CLERK.
     #[error("private compliance veto: {0}")]
     ComplianceVeto(String),
 
@@ -137,7 +137,7 @@ pub enum PrivateError {
     /// Persistent or streaming I/O around proof/key material failed.
     ///
     /// **Pain:** The organism cannot load or persist secrets/parameters; retry may help for transient
-    /// faults — maps to [`RiceError::Io`] when lifted.
+    /// faults — maps to [`Error::Io`] when lifted.
     #[error(transparent)]
     StorageIo(#[from] io::Error),
 
@@ -160,47 +160,47 @@ pub enum PrivateError {
 pub type PrivateResult<T> = Result<T, PrivateError>;
 
 impl PrivateError {
-    /// Map this error into [`RiceError`] for contracts, `util`, or SMITH boundaries.
+    /// Map this error into [`Error`] for contracts, `util`, or SMITH boundaries.
     ///
     /// **Why:** CLERK uses one error surface upstream; ZK-specific detail stays in the [`Display`]
     /// string and optional [`std::error::Error::source`] chain from transparent variants.
-    /// **How:** Compliance → [`RiceError::policy`]; I/O → [`RiceError::Io`]; the rest →
-    /// [`RiceError::crypto`] so telemetry can bucket “cryptographic / ZK” failures together.
+    /// **How:** Compliance → [`Error::policy`]; I/O → [`Error::Io`]; the rest →
+    /// [`Error::crypto`] so telemetry can bucket “cryptographic / ZK” failures together.
     #[must_use]
-    pub fn into_rice(self) -> RiceError {
+    pub fn into_util_error(self) -> Error {
         match self {
-            PrivateError::FieldInvalid(d) => RiceError::crypto(format!("zk field: {d}")),
-            PrivateError::ComplianceVeto(msg) => RiceError::policy(msg),
-            PrivateError::StorageIo(e) => RiceError::Io(e),
-            PrivateError::R1cs(e) => RiceError::crypto(format!("zk R1CS: {e}")),
-            PrivateError::CircuitConstraint(d) => RiceError::crypto(format!("zk circuit: {d}")),
-            PrivateError::SetupMissing(d) => RiceError::crypto(format!("zk setup missing: {d}")),
-            PrivateError::SetupCorrupted(d) => RiceError::crypto(format!("zk setup corrupted: {d}")),
+            PrivateError::FieldInvalid(d) => Error::crypto(format!("zk field: {d}")),
+            PrivateError::ComplianceVeto(msg) => Error::policy(msg),
+            PrivateError::StorageIo(e) => Error::Io(e),
+            PrivateError::R1cs(e) => Error::crypto(format!("zk R1CS: {e}")),
+            PrivateError::CircuitConstraint(d) => Error::crypto(format!("zk circuit: {d}")),
+            PrivateError::SetupMissing(d) => Error::crypto(format!("zk setup missing: {d}")),
+            PrivateError::SetupCorrupted(d) => Error::crypto(format!("zk setup corrupted: {d}")),
             PrivateError::SetupIncompatible(d) => {
-                RiceError::crypto(format!("zk setup incompatible: {d}"))
+                Error::crypto(format!("zk setup incompatible: {d}"))
             }
-            PrivateError::SetupPolicy(d) => RiceError::crypto(format!("zk setup policy: {d}")),
-            PrivateError::ProvingWitness(d) => RiceError::crypto(format!("zk proving: {d}")),
+            PrivateError::SetupPolicy(d) => Error::crypto(format!("zk setup policy: {d}")),
+            PrivateError::ProvingWitness(d) => Error::crypto(format!("zk proving: {d}")),
             PrivateError::WitnessInconsistent(d) => {
-                RiceError::crypto(format!("zk witness inconsistent: {d}"))
+                Error::crypto(format!("zk witness inconsistent: {d}"))
             }
-            PrivateError::ProofInvalid => RiceError::crypto(String::from(
+            PrivateError::ProofInvalid => Error::crypto(String::from(
                 "zk proof rejected by verifier (invalid for public inputs)",
             )),
             PrivateError::VerifyMalformed(d) => {
-                RiceError::crypto(format!("zk verify malformed: {d}"))
+                Error::crypto(format!("zk verify malformed: {d}"))
             }
             PrivateError::IdentityNullifierCollision(d) => {
-                RiceError::crypto(format!("zk identity nullifier: {d}"))
+                Error::crypto(format!("zk identity nullifier: {d}"))
             }
             PrivateError::IdentityMalformedKey(d) => {
-                RiceError::crypto(format!("zk identity key: {d}"))
+                Error::crypto(format!("zk identity key: {d}"))
             }
-            PrivateError::Serialization(e) => RiceError::crypto(format!("zk serialize: {e}")),
-            PrivateError::CurveMismatch { expected, got } => RiceError::crypto(format!(
+            PrivateError::Serialization(e) => Error::crypto(format!("zk serialize: {e}")),
+            PrivateError::CurveMismatch { expected, got } => Error::crypto(format!(
                 "zk curve mismatch: expected {expected}, got {got}"
             )),
-            PrivateError::SecretLeak(d) => RiceError::crypto(format!("zk safety: {d}")),
+            PrivateError::SecretLeak(d) => Error::crypto(format!("zk safety: {d}")),
         }
     }
 }

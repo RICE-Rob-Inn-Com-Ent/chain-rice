@@ -1,7 +1,7 @@
 //! Central error surface for the CLERK / `base/` layer of `.rice` OS.
 //!
-//! [`RiceError`] is the typed boundary for failures that cross crate lines: contracts, ZK private
-//! modules, mint, policies, and transport. Callers use [`RiceResult`] with `?` thanks to narrow
+//! [`Error`] is the typed boundary for failures that cross crate lines: contracts, ZK private
+//! modules, mint, policies, and transport. Callers use [`Result`] with `?` thanks to narrow
 //! [`From`] impls; domain code constructs variants through the associated constructors so intent
 //! stays explicit without resorting to unstructured logs.
 
@@ -14,7 +14,7 @@ use std::io::ErrorKind;
 /// disagreed on ordering. Keeping these labels stable lets operators and higher layers map errors
 /// to retries, alerts, or user-visible messages without parsing ad-hoc strings.
 #[derive(Debug, thiserror::Error)]
-pub enum RiceError {
+pub enum Error {
     /// Caller supplied a value outside accepted domains — wrong length, range, or shape.
     ///
     /// **Pain:** The system refuses to guess; bad inputs stop here so invariants downstream (keys,
@@ -53,7 +53,7 @@ pub enum RiceError {
     /// Underlying OS or standard I/O operation failed.
     ///
     /// **Pain:** Disks, sockets, or pipes refused the operation — often transient (timeouts) but
-    /// sometimes permanent permission or format errors. See [`RiceError::is_retryable`].
+    /// sometimes permanent permission or format errors. See [`Error::is_retryable`].
     #[error("io: {0}")]
     Io(#[from] std::io::Error),
 
@@ -111,14 +111,14 @@ pub enum RiceError {
         context: String,
         /// Underlying error being wrapped.
         #[source]
-        source: Box<RiceError>,
+        source: Box<Error>,
     },
 }
 
-/// Standard [`Result`] alias using [`RiceError`].
-pub type RiceResult<T> = Result<T, RiceError>;
+/// Standard [`std::result::Result`] alias using [`Error`].
+pub type Result<T> = std::result::Result<T, Error>;
 
-impl RiceError {
+impl Error {
     /// Attach `msg` as outer context, preserving the original error as [`std::error::Error::source`].
     ///
     /// **Why:** Long `format!` chains lose structure; this keeps a chain for observers and
@@ -139,55 +139,55 @@ impl RiceError {
     #[must_use]
     pub fn is_retryable(&self) -> bool {
         match self {
-            RiceError::Io(e) => io_error_is_retryable(e),
-            RiceError::Context { source, .. } => source.is_retryable(),
+            Error::Io(e) => io_error_is_retryable(e),
+            Error::Context { source, .. } => source.is_retryable(),
             _ => false,
         }
     }
 
-    /// Build a [`RiceError::Message`] with `msg` as the display text.
+    /// Build a [`Error::Message`] with `msg` as the display text.
     #[must_use]
     pub fn message(msg: impl Into<String>) -> Self {
         Self::Message(msg.into())
     }
 
-    /// Build [`RiceError::InvalidArgument`].
+    /// Build [`Error::InvalidArgument`].
     #[must_use]
     pub fn invalid_argument(msg: impl Into<String>) -> Self {
         Self::InvalidArgument(msg.into())
     }
 
-    /// Build [`RiceError::Crypto`].
+    /// Build [`Error::Crypto`].
     #[must_use]
     pub fn crypto(msg: impl Into<String>) -> Self {
         Self::Crypto(msg.into())
     }
 
-    /// Build [`RiceError::Policy`].
+    /// Build [`Error::Policy`].
     #[must_use]
     pub fn policy(msg: impl Into<String>) -> Self {
         Self::Policy(msg.into())
     }
 
-    /// Build [`RiceError::Contract`].
+    /// Build [`Error::Contract`].
     #[must_use]
     pub fn contract(msg: impl Into<String>) -> Self {
         Self::Contract(msg.into())
     }
 
-    /// Build [`RiceError::Finance`].
+    /// Build [`Error::Finance`].
     #[must_use]
     pub fn finance(msg: impl Into<String>) -> Self {
         Self::Finance(msg.into())
     }
 
-    /// Build [`RiceError::Protocol`].
+    /// Build [`Error::Protocol`].
     #[must_use]
     pub fn protocol(msg: impl Into<String>) -> Self {
         Self::Protocol(msg.into())
     }
 
-    /// Build [`RiceError::ProtoEncode`].
+    /// Build [`Error::ProtoEncode`].
     #[must_use]
     pub fn proto_encode(msg: impl Into<String>) -> Self {
         Self::ProtoEncode(msg.into())
@@ -206,13 +206,13 @@ fn io_error_is_retryable(e: &std::io::Error) -> bool {
     )
 }
 
-impl From<std::string::FromUtf8Error> for RiceError {
+impl From<std::string::FromUtf8Error> for Error {
     fn from(_: std::string::FromUtf8Error) -> Self {
         Self::InvalidUtf8
     }
 }
 
-impl From<std::str::Utf8Error> for RiceError {
+impl From<std::str::Utf8Error> for Error {
     fn from(_: std::str::Utf8Error) -> Self {
         Self::InvalidUtf8
     }
@@ -220,4 +220,4 @@ impl From<std::str::Utf8Error> for RiceError {
 
 // The `bytes` crate (workspace `1.10+`) does not define a public `FromUtf8Error`; invalid UTF-8
 // from `Vec<u8>` / `String::from_utf8` continues to map through [`std::string::FromUtf8Error`]
-// into [`RiceError::InvalidUtf8`] above.
+// into [`Error::InvalidUtf8`] above.

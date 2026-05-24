@@ -1,0 +1,9 @@
+// code-rice.com — BARD frontend/model business overlay (extend site.rice modules).
+rc frontend let {
+	model set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_model_init {}
+fn hook_frontend_model_configure {}

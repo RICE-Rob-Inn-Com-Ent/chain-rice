@@ -4,10 +4,10 @@ const errors = @import("error.zig");
 const audit = @import("audit.zig");
 const os_mod = @import("os.zig");
 
-// [ ] — libpcap RICE_SECURITY_MONITOR_IFACE; rate limit; zig-network abstraction; NATS security.network.*
-// [ ] — pcap_compile BPF; RICE_SECURITY_BPF_FILTER; role-specific allowlists; violation NATS
-// [ ] — RICE_SECURITY_EBPF_PROG; perf buffer; kprobe/uprobe; NATS security.probe.*
-// [ ] — poll RICE_SECURITY_POLL_MS; CPU/mem/fd thresholds; inotify/kqueue; NATS security.monitor.*
+// [ ] — libpcap CLERK_SECURITY_MONITOR_IFACE; rate limit; zig-network abstraction; NATS security.network.*
+// [ ] — pcap_compile BPF; CLERK_SECURITY_BPF_FILTER; role-specific allowlists; violation NATS
+// [ ] — CLERK_SECURITY_EBPF_PROG; perf buffer; kprobe/uprobe; NATS security.probe.*
+// [ ] — poll CLERK_SECURITY_POLL_MS; CPU/mem/fd thresholds; inotify/kqueue; NATS security.monitor.*
 // [ ] — inotify/fsnotify encryption velocity; SIGSTOP via pidfd; NATS security.ransom.*
 // [ ] — XDP/BPF tc hook for per-agent hash; QUIC-aware token bucket; NATS security.ddos.*
 

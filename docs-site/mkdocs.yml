@@ -1,0 +1,24 @@
+site_name: Rice MASON docs (template)
+site_url: https://docs.example.invalid/
+site_description: Generated static site — point site_url at your docs apex (CNAME to hosting).
+repo_url: https://github.com/RICE-Rob-Inn-Com-Ent/rice
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+nav:
+  - Home: index.md
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences

@@ -5,20 +5,21 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
+	"sort"
 
+	telemetry "github.com/dagger/otel-go"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/resource"
-	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
 	"go.opentelemetry.io/otel/trace"
 
-	bench "github.com/RICE-Rob-Inn-Com-Ent/rice/service/bench/src"
 	"dagger/ci/internal/dagger"
-	"dagger/ci/internal/querybuilder"
+
+	"dagger.io/dagger/querybuilder"
 )
 
 var dag = dagger.Connect()
@@ -83,21 +84,47 @@ func main() {
 	}
 }
 
-func unwrapError(rerr error) string {
-	var gqlErr *gqlerror.Error
-	if errors.As(rerr, &gqlErr) {
-		return gqlErr.Message
+func convertError(rerr error) *dagger.Error {
+	if gqlErr := findSingleGQLError(rerr); gqlErr != nil {
+		dagErr := dag.Error(gqlErr.Message)
+		if gqlErr.Extensions != nil {
+			keys := make([]string, 0, len(gqlErr.Extensions))
+			for k := range gqlErr.Extensions {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				val, err := json.Marshal(gqlErr.Extensions[k])
+				if err != nil {
+					fmt.Println("failed to marshal error value:", err)
+				}
+				dagErr = dagErr.WithValue(k, dagger.JSON(val))
+			}
+		}
+		return dagErr
 	}
-	return rerr.Error()
+	return dag.Error(rerr.Error())
 }
 
+func findSingleGQLError(rerr error) *gqlerror.Error {
+	switch x := rerr.(type) {
+	case *gqlerror.Error:
+		return x
+	case interface{ Unwrap() []error }:
+		return nil
+	case interface{ Unwrap() error }:
+		return findSingleGQLError(x.Unwrap())
+	default:
+		return nil
+	}
+}
 func dispatch(ctx context.Context) (rerr error) {
-	ctx = bench.InitDaggerModuleOTel(ctx, resource.NewWithAttributes(
+	ctx = telemetry.InitEmbedded(ctx, resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.ServiceNameKey.String("dagger-go-sdk"),
 		// TODO version?
 	))
-	defer func() { _ = bench.ShutdownDaggerModuleOTel(context.WithoutCancel(ctx)) }()
+	defer telemetry.Close()
 
 	// A lot of the "work" actually happens when we're marshalling the return
 	// value, which entails getting object IDs, which happens in MarshalJSON,
@@ -107,8 +134,8 @@ func dispatch(ctx context.Context) (rerr error) {
 	fnCall := dag.CurrentFunctionCall()
 	defer func() {
 		if rerr != nil {
-			if err := fnCall.ReturnError(ctx, dag.Error(unwrapError(rerr))); err != nil {
-				fmt.Println("failed to return error:", err)
+			if err := fnCall.ReturnError(ctx, convertError(rerr)); err != nil {
+				fmt.Println("failed to return error:", err, "\noriginal error:", rerr)
 			}
 		}
 	}()
@@ -145,10 +172,6 @@ func dispatch(ctx context.Context) (rerr error) {
 
 	result, err := invoke(ctx, []byte(parentJson), parentName, fnName, inputArgs)
 	if err != nil {
-		var exec *dagger.ExecError
-		if errors.As(err, &exec) {
-			return exec.Unwrap()
-		}
 		return err
 	}
 	resultBytes, err := json.Marshal(result)
@@ -166,13 +189,6 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 	switch parentName {
 	case "Rice":
 		switch fnName {
-		case "Think":
-			var parent Rice
-			err = json.Unmarshal(parentJSON, &parent)
-			if err != nil {
-				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
-			}
-			return nil, (*Rice).Think(&parent, ctx)
 		case "Audit":
 			var parent Rice
 			err = json.Unmarshal(parentJSON, &parent)
@@ -180,27 +196,6 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
 			}
 			return nil, (*Rice).Audit(&parent, ctx)
-		case "Prepare":
-			var parent Rice
-			err = json.Unmarshal(parentJSON, &parent)
-			if err != nil {
-				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
-			}
-			var project string
-			if inputArgs["project"] != nil {
-				err = json.Unmarshal([]byte(inputArgs["project"]), &project)
-				if err != nil {
-					panic(fmt.Errorf("%s: %w", "failed to unmarshal input arg project", err))
-				}
-			}
-			return nil, (*Rice).Prepare(&parent, ctx, project)
-		case "Perform":
-			var parent Rice
-			err = json.Unmarshal(parentJSON, &parent)
-			if err != nil {
-				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
-			}
-			return nil, (*Rice).Perform(&parent, ctx)
 		case "Cook":
 			var parent Rice
 			err = json.Unmarshal(parentJSON, &parent)
@@ -222,6 +217,34 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
 			}
 			return nil, (*Rice).Forge(&parent, ctx)
+		case "Perform":
+			var parent Rice
+			err = json.Unmarshal(parentJSON, &parent)
+			if err != nil {
+				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
+			}
+			return nil, (*Rice).Perform(&parent, ctx)
+		case "Pour":
+			var parent Rice
+			err = json.Unmarshal(parentJSON, &parent)
+			if err != nil {
+				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
+			}
+			return nil, (*Rice).Pour(&parent, ctx)
+		case "Prepare":
+			var parent Rice
+			err = json.Unmarshal(parentJSON, &parent)
+			if err != nil {
+				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
+			}
+			var project string
+			if inputArgs["project"] != nil {
+				err = json.Unmarshal([]byte(inputArgs["project"]), &project)
+				if err != nil {
+					panic(fmt.Errorf("%s: %w", "failed to unmarshal input arg project", err))
+				}
+			}
+			return nil, (*Rice).Prepare(&parent, ctx, project)
 		case "Serve":
 			var parent Rice
 			err = json.Unmarshal(parentJSON, &parent)
@@ -236,63 +259,16 @@ func invoke(ctx context.Context, parentJSON []byte, parentName string, fnName st
 				}
 			}
 			return nil, (*Rice).Serve(&parent, ctx, project)
-		case "Pour":
+		case "Think":
 			var parent Rice
 			err = json.Unmarshal(parentJSON, &parent)
 			if err != nil {
 				panic(fmt.Errorf("%s: %w", "failed to unmarshal parent object", err))
 			}
-			return nil, (*Rice).Pour(&parent, ctx)
+			return nil, (*Rice).Think(&parent, ctx)
 		default:
 			return nil, fmt.Errorf("unknown function %s", fnName)
 		}
-	case "":
-		return dag.Module().
-			WithObject(
-				dag.TypeDef().WithObject("Rice", dagger.TypeDefWithObjectOpts{Description: "Rice is the module root type; methods become `dagger call <method>`.", SourceMap: dag.SourceMap("pour.go", 13, 6)}).
-					WithFunction(
-						dag.Function("Think",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Think checks that forge is up and prints compute / routing placeholders (SAGE TODOs).").
-							WithSourceMap(dag.SourceMap("think.go", 9, 1))).
-					WithFunction(
-						dag.Function("Audit",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Audit runs format, lint, test, verify in parallel, then optional gate steps.").
-							WithSourceMap(dag.SourceMap("audit.go", 97, 1))).
-					WithFunction(
-						dag.Function("Prepare",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Prepare creates a minimal custom/{project} scaffold (CHIEF TODO: mint generator).").
-							WithSourceMap(dag.SourceMap("prepare.go", 9, 1)).
-							WithArg("project", dag.TypeDef().WithKind(dagger.TypeDefKindStringKind), dagger.FunctionWithArgOpts{SourceMap: dag.SourceMap("prepare.go", 9, 45)})).
-					WithFunction(
-						dag.Function("Perform",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Perform writes BARD hardware placeholder and refreshes MASON .envrc; skips interactive IDE/cloud prompts.").
-							WithSourceMap(dag.SourceMap("perform.go", 9, 1))).
-					WithFunction(
-						dag.Function("Cook",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Cook prints compiler TODOs for CHIEF (mint not yet implemented).").
-							WithSourceMap(dag.SourceMap("cook.go", 9, 1)).
-							WithArg("project", dag.TypeDef().WithKind(dagger.TypeDefKindStringKind), dagger.FunctionWithArgOpts{SourceMap: dag.SourceMap("cook.go", 9, 42)})).
-					WithFunction(
-						dag.Function("Forge",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Forge runs buck2 build //... then docker compose up -d via experimental privileged nesting (host Docker).").
-							WithSourceMap(dag.SourceMap("forge.go", 9, 1))).
-					WithFunction(
-						dag.Function("Serve",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Serve runs a full Audit then prints production deploy TODOs.").
-							WithSourceMap(dag.SourceMap("serve.go", 9, 1)).
-							WithArg("project", dag.TypeDef().WithKind(dagger.TypeDefKindStringKind), dagger.FunctionWithArgOpts{SourceMap: dag.SourceMap("serve.go", 9, 43)})).
-					WithFunction(
-						dag.Function("Pour",
-							dag.TypeDef().WithKind(dagger.TypeDefKindVoidKind).WithOptional(true)).
-							WithDescription("Pour installs toolchains (pixi), exports CUE, generates protos, syncs language deps,\nruns CLERK hpack layout, writes MASON .envrc from CUE, and BARD hardware placeholder.").
-							WithSourceMap(dag.SourceMap("pour.go", 57, 1)))), nil
 	default:
 		return nil, fmt.Errorf("unknown object %s", parentName)
 	}

@@ -1,0 +1,44 @@
+---
+description: MASON infra/docker — schema in proto/cue; gen in infra/gen; CHIEF in custom/
+globs: infra/docker/**/*
+alwaysApply: false
+---
+
+# MASON `infra/docker` layout (fixed)
+
+**Never** flatten `infra/docker/cue/` into `infra/docker/` root.
+
+```
+infra/
+  proto/cue/infra.cue      ← #DockerParams + Rice docker.rice contract (Mint schema)
+  proto/schema/            ← committed Mint/terraform schemas (not CHIEF snapshots)
+  gen/                     ← generated only (gitignore); Mint writes chief/docker_project.cue
+  docker/
+    _tool.cue              ← cue cmd genDocker (writes .docker/)
+    cue/pack.cue           ← params, paths, allFiles roll-up
+    cue/schema.cue         ← re-export infra.#DockerParams
+    cue/defaults.cue       ← _masonDefaults (CHIEF/Mint override)
+    cue/*.cue              ← platform emit templates
+```
+
+**CHIEF** = `custom/<slug>/bowl` (`[package] infra = ""`) + `custom/<slug>/infra/docker.rice` (`use infra as docker` + `rc docker let`).
+
+```ini
+# bowl — declares infra syntax package ("" = workspace MASON schema)
+[package]
+infra = ""
+
+# docker.rice — imports facet from that package
+use infra as docker
+rc docker let { ... }
+```
+
+**Generate** (`CHIEF_PROJECT` required):
+
+```bash
+export CHIEF_PROJECT=egos.app
+cargo run -p mint --bin mint_overlay_check -- --apply-docker
+cue cmd gen ./infra/_tool.cue
+```
+
+Vet/gen load: `docker/_tool.cue`, `docker/cue/**`, `gen/chief/docker_project.cue` (proto via import).

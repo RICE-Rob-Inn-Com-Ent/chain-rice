@@ -1,0 +1,68 @@
+schema=atlas.sys.v2
+format=manifest
+os=linux
+
+[Touch]
+0="sensor:Power Button"
+1="sensor:Sleep Button"
+2="sensor:Lid Switch"
+3="sensor:AT Translated Set 2 keyboard"
+4="sensor:SINO WEALTH Mouse"
+5="sensor:SINO WEALTH Mouse Keyboard"
+6="sensor:Video Bus"
+7="sensor:Acer Wireless Radio Control"
+8="sensor:PC Speaker"
+9="sensor:Acer WMI hotkeys"
+10="sensor:ELAN050A:00 04F3:31B1 Mouse"
+11="sensor:ELAN050A:00 04F3:31B1 Touchpad"
+12="sensor:HDA NVidia HDMI/DP,pcm=3"
+13="sensor:HDA NVidia HDMI/DP,pcm=7"
+14="sensor:HDA NVidia HDMI/DP,pcm=8"
+15="sensor:HDA NVidia HDMI/DP,pcm=9"
+16="sensor:HD-Audio Generic Headphone"
+count=17
+
+[Ears]
+count=0
+
+[Eyes]
+0="camera:video0:HD User Facing: HD User Facing"
+1="camera:video1:HD User Facing: HD User Facing"
+2="gpu:card0:vendor=0x10de:device=0x2520"
+3="gpu:card1:vendor=0x1002:device=0x1638"
+count=4
+
+[Perception]
+0="bluetooth:hci0"
+1="node:172.17.0.1"
+count=2
+
+[Motion]
+count=0
+
+[drivers]
+0=id:touch:sensor:Power Button status=resolved source=perform-scan
+1=id:touch:sensor:Sleep Button status=resolved source=perform-scan
+2=id:touch:sensor:Lid Switch status=resolved source=perform-scan
+3=id:touch:sensor:AT Translated Set 2 keyboard status=resolved source=perform-scan
+4=id:touch:sensor:SINO WEALTH Mouse status=resolved source=perform-scan
+5=id:touch:sensor:SINO WEALTH Mouse Keyboard status=resolved source=perform-scan
+6=id:touch:sensor:Video Bus status=resolved source=perform-scan
+7=id:touch:sensor:Acer Wireless Radio Control status=resolved source=perform-scan
+8=id:touch:sensor:PC Speaker status=resolved source=perform-scan
+9=id:touch:sensor:Acer WMI hotkeys status=resolved source=perform-scan
+10=id:touch:sensor:ELAN050A:00 04F3:31B1 Mouse status=resolved source=perform-scan
+11=id:touch:sensor:ELAN050A:00 04F3:31B1 Touchpad status=resolved source=perform-scan
+12=id:touch:sensor:HDA NVidia HDMI/DP,pcm=3 status=resolved source=perform-scan
+13=id:touch:sensor:HDA NVidia HDMI/DP,pcm=7 status=resolved source=perform-scan
+14=id:touch:sensor:HDA NVidia HDMI/DP,pcm=8 status=resolved source=perform-scan
+15=id:touch:sensor:HDA NVidia HDMI/DP,pcm=9 status=resolved source=perform-scan
+16=id:touch:sensor:HD-Audio Generic Headphone status=resolved source=perform-scan
+17=id:video:camera:video0:HD User Facing: HD User Facing status=resolved source=perform-scan
+18=id:video:camera:video1:HD User Facing: HD User Facing status=resolved source=perform-scan
+19=id:video:gpu:card0:vendor=0x10de:device=0x2520 status=resolved source=perform-scan
+20=id:video:gpu:card1:vendor=0x1002:device=0x1638 status=resolved source=perform-scan
+21=id:perception:bluetooth:hci0 status=resolved source=perform-scan
+22=id:perception:node:172.17.0.1 status=resolved source=perform-scan
+count=23
+

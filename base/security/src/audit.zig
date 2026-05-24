@@ -3,7 +3,7 @@ const std = @import("std");
 const errors = @import("error.zig");
 const Sha256 = std.crypto.hash.sha2.Sha256;
 
-// [ ] — RICE_SECURITY_AUDIT_LOG_PATH; rotate RICE_SECURITY_LOG_MAX_BYTES; NATS msgpack; append-only persistence
+// [ ] — CLERK_SECURITY_AUDIT_LOG_PATH; rotate CLERK_SECURITY_LOG_MAX_BYTES; NATS msgpack; append-only persistence
 // [ ] — remote witness / notary; dual-write to WORM storage
 
 /// Tip of the tamper-evident chain (SHA-256 over `prev || canonical_record`). Starts at zero.
@@ -67,7 +67,7 @@ pub fn liabilityReport(writer: anytype, failure: []const u8, last_phase: []const
     const ts: i64 = @intCast(@divTrunc(std.time.nanoTimestamp(), 1_000_000));
     try log(writer, .{ .ts = ts, .kind = "liability", .detail = "report_begin" });
     try std.fmt.format(writer,
-        \\=== RICE SOVEREIGN LIABILITY REPORT ===
+        \\=== CLERK SOVEREIGN LIABILITY REPORT ===
         \\timestamp_ms: {d}
         \\last_phase: {s}
         \\failure: {s}

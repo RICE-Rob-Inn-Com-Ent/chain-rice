@@ -1,6 +1,6 @@
 //! Protobuf encode/decode helpers — the “DNA sequencer” for MASON-generated [`prost::Message`] types.
 //!
-//! All paths normalize failures through [`RiceError`] so contracts, private, and SMITH transport share
+//! All paths normalize failures through [`Error`] so contracts, private, and SMITH transport share
 //! one vocabulary. Length-delimited framing matches what NATS streams and multiplexed readers expect:
 //! varint size, then exactly that many payload bytes.
 
@@ -10,31 +10,31 @@ use bytes::buf::Limit as BufLimit;
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use prost::{decode_length_delimiter, length_delimiter_len, DecodeError, EncodeError, Message};
 
-use crate::error::{RiceError, RiceResult};
+use crate::error::{Error, Result};
 
 // ---------------------------------------------------------------------------
 // Error mapping (“pain model”)
 // ---------------------------------------------------------------------------
 
 #[inline]
-fn map_encode<M: Message>(e: EncodeError) -> RiceError {
-    RiceError::proto_encode(format!(
+fn map_encode<M: Message>(e: EncodeError) -> Error {
+    Error::proto_encode(format!(
         "failed to encode protobuf message {}: {e}",
         type_name::<M>()
     ))
 }
 
 #[inline]
-fn map_decode<M: Message>(e: DecodeError) -> RiceError {
-    RiceError::ProtoDecode(e).context(format!(
+fn map_decode<M: Message>(e: DecodeError) -> Error {
+    Error::ProtoDecode(e).context(format!(
         "failed to decode protobuf message {}",
         type_name::<M>()
     ))
 }
 
 #[inline]
-fn map_decode_prefix(e: DecodeError) -> RiceError {
-    RiceError::ProtoDecode(e).context("invalid length-delimited length prefix")
+fn map_decode_prefix(e: DecodeError) -> Error {
+    Error::ProtoDecode(e).context("invalid length-delimited length prefix")
 }
 
 // ---------------------------------------------------------------------------
@@ -58,10 +58,10 @@ pub fn get_encoded_len<M: Message>(msg: &M) -> usize {
 /// **How:** Decodes the varint prefix with [`decode_length_delimiter`] on a non-destructive view;
 /// if fewer than 10 bytes are available and the prefix fails, returns `Ok(None)` (need more on the
 /// wire). If 10+ bytes are present and the prefix is still invalid, returns [`Err`] with
-/// [`RiceError::ProtoDecode`]. If the prefix is valid but trailing payload bytes are missing,
+/// [`Error::ProtoDecode`]. If the prefix is valid but trailing payload bytes are missing,
 /// returns `Ok(None)`.
 #[inline]
-pub fn length_delimited_frame_byte_count(data: &[u8]) -> RiceResult<Option<usize>> {
+pub fn length_delimited_frame_byte_count(data: &[u8]) -> Result<Option<usize>> {
     if data.is_empty() {
         return Ok(None);
     }
@@ -93,7 +93,7 @@ pub fn length_delimited_frame_byte_count(data: &[u8]) -> RiceResult<Option<usize
 /// **How:** Wraps the [`Vec`] in a [`BufMut::limit`] window so [`Message::encode`] cannot expand
 /// the buffer; any spare-capacity lie from [`Vec`]'s [`BufMut`] impl cannot hide an overrun.
 #[inline]
-pub fn encode_to_vec<M: Message>(msg: &M) -> RiceResult<Vec<u8>> {
+pub fn encode_to_vec<M: Message>(msg: &M) -> Result<Vec<u8>> {
     let n = msg.encoded_len();
     let mut buf = Vec::with_capacity(n);
     let mut lim = (&mut buf).limit(n);
@@ -109,7 +109,7 @@ pub fn encode_to_vec<M: Message>(msg: &M) -> RiceResult<Vec<u8>> {
 /// copy when the value is moved into a frame.
 /// **How:** Same bounded [`limit`](BufMut::limit) pattern on a [`BytesMut`], then [`freeze`](BytesMut::freeze).
 #[inline]
-pub fn encode_to_bytes<M: Message>(msg: &M) -> RiceResult<Bytes> {
+pub fn encode_to_bytes<M: Message>(msg: &M) -> Result<Bytes> {
     let n = msg.encoded_len();
     let mut buf = BytesMut::with_capacity(n);
     let mut lim = (&mut buf).limit(n);
@@ -126,7 +126,7 @@ pub fn encode_to_bytes<M: Message>(msg: &M) -> RiceResult<Bytes> {
 /// **How:** Applies [`BufMut::limit`] around `encoded_len`; [`Message::encode`] fails fast if the
 /// true spare region is smaller than prost expects.
 #[inline]
-pub fn encode_to_buf<M: Message, B: BufMut>(msg: &M, buf: &mut B) -> RiceResult<()> {
+pub fn encode_to_buf<M: Message, B: BufMut>(msg: &M, buf: &mut B) -> Result<()> {
     let n = msg.encoded_len();
     let mut lim = (&mut *buf).limit(n);
     msg.encode(&mut lim).map_err(|e| map_encode::<M>(e))?;
@@ -143,9 +143,9 @@ pub fn encode_to_buf<M: Message, B: BufMut>(msg: &M, buf: &mut B) -> RiceResult<
 ///
 /// **Why:** `prost` build outputs map1:1 to full serialized blobs (files, single gRPC frames).
 /// **How:** [`Message::decode`] merges fields into `M::default()`; errors become
-/// [`RiceError::ProtoDecode`] with the Rust type name in [`RiceError::Context`].
+/// [`Error::ProtoDecode`] with the Rust type name in [`Error::Context`].
 #[inline]
-pub fn decode_from_slice<M: Message + Default>(data: &[u8]) -> RiceResult<M> {
+pub fn decode_from_slice<M: Message + Default>(data: &[u8]) -> Result<M> {
     M::decode(data).map_err(map_decode::<M>)
 }
 
@@ -154,7 +154,7 @@ pub fn decode_from_slice<M: Message + Default>(data: &[u8]) -> RiceResult<M> {
 /// **Why:** Streaming parsers keep a [`Bytes`] ring; this consumes exactly what the cursor holds.
 /// **How:** Delegates to [`Message::decode`]; the buffer advances to the end on success.
 #[inline]
-pub fn decode_from_buf<M: Message + Default, B: Buf>(buf: &mut B) -> RiceResult<M> {
+pub fn decode_from_buf<M: Message + Default, B: Buf>(buf: &mut B) -> Result<M> {
     M::decode(&mut *buf).map_err(map_decode::<M>)
 }
 
@@ -168,7 +168,7 @@ pub fn decode_from_buf<M: Message + Default, B: Buf>(buf: &mut B) -> RiceResult<
 /// **How:** Reserves `length_delimiter_len(encoded_len) + encoded_len` and uses a bounded
 /// [`BufMut::limit`] so [`Message::encode_length_delimited`] cannot grow the backing chunk.
 #[inline]
-pub fn encode_length_delimited<M: Message>(msg: &M) -> RiceResult<Bytes> {
+pub fn encode_length_delimited<M: Message>(msg: &M) -> Result<Bytes> {
     let len = msg.encoded_len();
     let hdr = length_delimiter_len(len);
     let total = hdr.saturating_add(len);
@@ -187,7 +187,7 @@ pub fn encode_length_delimited<M: Message>(msg: &M) -> RiceResult<Bytes> {
 /// **How:** Same total size as [`encode_length_delimited`], applied through [`BufMut::limit`] on
 /// the caller-owned mutator.
 #[inline]
-pub fn encode_length_delimited_to_buf<M: Message, B: BufMut>(msg: &M, buf: &mut B) -> RiceResult<()> {
+pub fn encode_length_delimited_to_buf<M: Message, B: BufMut>(msg: &M, buf: &mut B) -> Result<()> {
     let len = msg.encoded_len();
     let hdr = length_delimiter_len(len);
     let total = hdr.saturating_add(len);
@@ -205,6 +205,6 @@ pub fn encode_length_delimited_to_buf<M: Message, B: BufMut>(msg: &M, buf: &mut 
 /// **How:** [`Message::decode_length_delimited`] peels the varint, then merges exactly that many
 /// bytes into `M::default()`.
 #[inline]
-pub fn decode_length_delimited<M: Message + Default, B: Buf>(src: &mut B) -> RiceResult<M> {
+pub fn decode_length_delimited<M: Message + Default, B: Buf>(src: &mut B) -> Result<M> {
     M::decode_length_delimited(&mut *src).map_err(map_decode::<M>)
 }

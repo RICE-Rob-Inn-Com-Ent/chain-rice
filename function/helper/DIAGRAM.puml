@@ -1,0 +1,3 @@
+' function/helper — leaf diagram
+!include DIAGRAM.gen.puml
+!include DIAGRAM.edges.puml

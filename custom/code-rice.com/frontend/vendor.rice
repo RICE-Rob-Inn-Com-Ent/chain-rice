@@ -1,0 +1,9 @@
+// code-rice.com — BARD frontend/vendor business overlay (extend site.rice modules).
+rc frontend let {
+	vendor set {
+		enabled = true
+	}
+}
+
+fn hook_frontend_vendor_init {}
+fn hook_frontend_vendor_configure {}

@@ -1,4 +1,4 @@
-package window
+package vendor
 // TODO:
 // [ ] SDL3 Vulkan window; gamepad → NATS input.gamepad.*; audio fallback — https://wiki.libsdl.org/SDL3/FrontPage
 //
@@ -7,7 +7,7 @@ import "core:c"
 
 when ODIN_OS == .Linux {
 	foreign import libsdl3 {
-		"lib/libSDL3.so",
+		"system:SDL3",
 	}
 } else when ODIN_OS == .Darwin {
 	foreign import libsdl3 {
@@ -166,4 +166,33 @@ foreign libsdl3 {
 
 	SDL_OpenAudioDeviceStream :: proc(devid: u32, spec: ^SDL_AudioSpec, callback: rawptr, userdata: rawptr) -> SDL_AudioStream ---
 	SDL_ResumeAudioStreamDevice :: proc(stream: SDL_AudioStream) -> bool ---
+}
+
+// vendor_sdl3_boot_video — SDL_Init(VIDEO) + вікно з прапором Vulkan (контекст Vulkan поза SDL).
+vendor_sdl3_boot_video :: proc(title: cstring, w, h: c.int) -> (win: SDL_Window, ok: bool) {
+	if !SDL_Init(SDL_INIT_VIDEO) {
+		return nil, false
+	}
+	win = SDL_CreateWindow(title, w, h, SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE)
+	if win == nil {
+		return nil, false
+	}
+	return win, true
+}
+
+// vendor_sdl3_create_renderer_window — швидке 2D-вікно з SDL_Renderer (без Vulkan).
+vendor_sdl3_create_renderer_window :: proc(title: cstring, w, h: c.int) -> (win: SDL_Window, ren: SDL_Renderer, ok: bool) {
+	if !SDL_Init(SDL_INIT_VIDEO) {
+		return nil, nil, false
+	}
+	win = SDL_CreateWindow(title, w, h, SDL_WINDOW_RESIZABLE)
+	if win == nil {
+		return nil, nil, false
+	}
+	ren = SDL_CreateRenderer(win, nil)
+	if ren == nil {
+		SDL_DestroyWindow(win)
+		return nil, nil, false
+	}
+	return win, ren, true
 }

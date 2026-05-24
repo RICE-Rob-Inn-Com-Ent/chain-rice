@@ -26,7 +26,7 @@ pub fn smoke_rows() -> Vec<BenchRow> {
             module: "util/stress",
             scenario: "run_security_stress_test",
             ns: ns_stress,
-            notes: "Zig rice_security_stress_test (0=pass)".into(),
+            notes: "Zig security_stress_test (0=pass)".into(),
         });
     }
     #[cfg(not(all(feature = "zig-security-bench", unix)))]
@@ -49,10 +49,10 @@ pub fn smoke_rows() -> Vec<BenchRow> {
 }
 
 fn smoke_zig_smoke() -> (u64, String) {
-    if std::env::var("RICE_BENCH_RUN_ZIG").ok().as_deref() != Some("1") {
+    if std::env::var("CLERK_BENCH_RUN_ZIG").ok().as_deref() != Some("1") {
         return (
             0,
-            "skip: set RICE_BENCH_RUN_ZIG=1 to run `zig build test` from base/ (slow)".into(),
+            "skip: set CLERK_BENCH_RUN_ZIG=1 to run `zig build test` from base/ (slow)".into(),
         );
     }
     let root = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");

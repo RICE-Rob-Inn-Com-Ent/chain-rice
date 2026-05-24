@@ -40,13 +40,13 @@ pub fn validate_basis_points(bps: i64) -> PolicyResult<i64> {
 /// `base * bps / 10_000` with overflow checks; result tagged like `base` (same [`AssetTag`]).
 ///
 /// With feature **`calc-bridge`** on Unix, delegates to the Haskell CALC kernel via [`util::calc`]
-/// when **`RICE_USE_CALC_FFI=1`** is set; otherwise uses the in-crate Rust implementation.
-/// Set **`RICE_CALC_USE_BINARY=1`** with the CALC `.so` built from this repo to use the binary v1 ABI
+/// when **`CLERK_USE_CALC_FFI=1`** is set; otherwise uses the in-crate Rust implementation.
+/// Set **`CLERK_CALC_USE_BINARY=1`** with the CALC `.so` built from this repo to use the binary v1 ABI
 /// (fast path); omit it to use JSON (slow path).
 pub fn amount_from_basis_points(base: &Amount, bps: i64) -> PolicyResult<Amount> {
     #[cfg(all(feature = "calc-bridge", unix))]
     {
-        if std::env::var("RICE_USE_CALC_FFI").ok().as_deref() == Some("1") {
+        if std::env::var("CLERK_USE_CALC_FFI").ok().as_deref() == Some("1") {
             return amount_from_basis_points_calc(base, bps);
         }
     }

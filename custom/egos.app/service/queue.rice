@@ -1,0 +1,9 @@
+// egos.app — SMITH service/queue business overlay.
+rc smith let {
+	queue set {
+		enabled = true
+	}
+}
+
+fn hook_queue_init {}
+fn hook_queue_handler {}

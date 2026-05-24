@@ -1,0 +1,36 @@
+# MASON-generated Buck2 manifest — do not edit by hand.
+# Source: infra/build/cue/infra.cue — watches infra/docker
+# Rebuild: buck2 build '//infra/docker:gen_docker'
+
+genrule(
+    name = "gen_docker",
+    srcs = glob(["docker.cue", "cue/**/*.cue"]),
+    out = "gen_docker.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+cue cmd gen ./infra/_tool.cue
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+
+genrule(
+    name = "check",
+    srcs = glob(["docker.cue", "cue/**/*.cue"]),
+    out = "check.stamp",
+    cmd = """
+set -euo pipefail
+REPO=$(git rev-parse --show-toplevel)
+export PATH="$REPO/.pixi/envs/default/bin:/usr/local/bin:/usr/bin:$HOME/.local/bin:$PATH"
+cd "$REPO"
+shopt -s globstar nullglob
+files=(./infra/docker/_tool.cue ./infra/docker/cue/**/*.cue ./infra/gen/chief/docker_project.cue)
+cue vet "${files[@]}"
+touch "$OUT"
+""",
+    visibility = ["PUBLIC"],
+)
+

@@ -1,0 +1,9 @@
+// egos.app — SMITH service/database business overlay.
+rc smith let {
+	database set {
+		enabled = true
+	}
+}
+
+fn hook_database_init {}
+fn hook_database_handler {}

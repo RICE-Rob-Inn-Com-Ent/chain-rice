@@ -1,0 +1,1 @@
+# CHIEF — EgOS protobuf overlay (MASON buf root: infra/schemas). Add `let` bindings when overlay schema includes proto.

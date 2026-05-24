@@ -1,0 +1,8 @@
+# Generated — cue cmd gen ./infra
+# Params: infra/proto/cue/infra.cue + infra/gen/chief/ (Mint from custom/*/infra/docker.rice)
+# syntax=docker/dockerfile:1
+ARG TEMPORAL_VERSION=1.25.2
+FROM temporalio/auto-setup:${TEMPORAL_VERSION}
+EXPOSE 7233 8088
+HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=10 \
+  CMD temporal operator cluster health
