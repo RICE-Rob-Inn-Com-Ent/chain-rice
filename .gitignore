@@ -11,6 +11,7 @@ Cargo.lock
 /vendor/
 dist/
 /build/
+buck-out/
 /out/
 !infra/build/
 !infra/out/
